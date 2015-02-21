@@ -14,6 +14,6 @@ print $flashii->twig->render('main/index.tpl',
     array(
         'sakura_version'    => SAKURA_VERSION,
         'configuration'     => $fiiConf,
-        'pageTitle'         => 'Flashii_Sakura'
+        'pageTitle'         => 'Flashii Even More Nightly :^)'
     )
 );
