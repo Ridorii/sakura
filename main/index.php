@@ -12,7 +12,8 @@ $flashii->initTwig();
 // Print page contents
 print $flashii->twig->render('main/index.tpl',
     array(
-        'configuration' => $fiiConf,
-        'pageTitle'     => 'Flashii_Sakura'
+        'sakura_version'    => SAKURA_VERSION,
+        'configuration'     => $fiiConf,
+        'pageTitle'         => 'Flashii_Sakura'
     )
 );
