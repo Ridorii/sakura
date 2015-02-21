@@ -1,0 +1,39 @@
+AddType application/vnd.ms-fontobject .eot
+AddType font/ttf .ttf
+AddType font/otf .otf
+AddType font/woff .woff
+
+<FilesMatch "\.(ttf|otf|eot|woff)$">
+	<IfModule mod_headers.c>
+		Header set Access-Control-Allow-Origin "*"
+	</IfModule>
+</FilesMatch>
+
+<FilesMatch "global.css">
+	Header set Cache-Control "max-age=0, must-revalidate"
+</FilesMatch>
+
+Options -Indexes
+
+RewriteEngine On
+
+#
+#RewriteCond %{HTTP_REFERER} !^$
+#RewriteCond %{HTTP_REFERER} !^http://(.+\.)?flashii\.net [NC]
+#RewriteCond %{HTTP_REFERER} !^http://(.+\.)?flashii\.org [NC]
+#RewriteRule .*\.(jpe?g|gif|bmp|png|swf)$ http://i.imgur.com/Bv0MKtu.gif [L]
+#
+#RewriteCond %{HTTP_REFERER} !^$
+#RewriteCond %{HTTP_REFERER} !^http://(.+\.)?flashii\.net [NC]
+#RewriteCond %{HTTP_REFERER} !^http://(.+\.)?flashii\.org [NC]
+#RewriteRule .*\.(wav|mp3)$ http://chat.flashii.net/sandstorm.mp3 [L]
+#
+#RewriteCond %{HTTP_REFERER} !^$
+#RewriteCond %{HTTP_REFERER} !^http://(.+\.)?flashii\.net [NC]
+#RewriteCond %{HTTP_REFERER} !^http://(.+\.)?flashii\.org [NC]
+#RewriteRule .*\.(ogg)$ http://chat.flashii.net/sandstorm.ogg [L]
+#
+
+ErrorDocument 403 /index.php
+ErrorDocument 404 /index.php
+ErrorDocument 500 /index.php

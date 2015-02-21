@@ -1,0 +1,59 @@
+/* Fix unwanted shit some browsers do *looks at chrome* */
+* {
+	font-size-adjust: none !important;
+	-webkit-appearance: none !important;
+}
+
+/* Image border fix */
+img {
+	border: 0px solid transparent;
+}
+
+/* Font faces (not taken from microsoft.com at all) */
+@font-face {
+    font-family: 'Segoe UI';
+    src: url('//cdn.flashii.net/fonts/segoeui.eot');
+    src: local("Segoe UI"),
+         local("Segoe"),
+         local("Segoe WP"),
+         url('//cdn.flashii.net/fonts/segoeui.eot?#iefix') format('embedded-opentype'),
+         url('//cdn.flashii.net/fonts/segoeui.woff') format('woff'),
+         url('//cdn.flashii.net/fonts/segoeui.svg#SegoeUI') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Segoe UI Semibold';
+    src: url('//cdn.flashii.net/fonts/seguisb.eot');
+    src: local("Segoe Semibold"),
+         local("Segoe WP Semibold"), 
+         url('//cdn.flashii.net/fonts/seguisb.eot?#iefix') format('embedded-opentype'),
+         url('//cdn.flashii.net/fonts/seguisb.woff') format('woff'),
+         url('//cdn.flashii.net/fonts/seguisb.svg#SegoeUISemibold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Segoe UI Bold';
+    src: url('//cdn.flashii.net/fonts/segoeuib.eot');
+    src: local("Segoe Bold"),
+         local("Segoe WP Bold"),
+         url('//cdn.flashii.net/fonts/segoeuib.eot?#iefix') format('eot'), /* Wrong format will tell IE9+ to ignore and use WOFF instead. MSHAR-2822 */
+         url('//cdn.flashii.net/fonts/segoeuib.woff') format('woff'),
+         url('//cdn.flashii.net/fonts/segoeuib.svg#SegoeUIBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Aller';
+    src: url('//cdn.flashii.net/fonts/aller.eot');
+    src: local("Aller"),
+         url('//cdn.flashii.net/fonts/aller.eot?#iefix') format('embedded-opentype'),
+         url('//cdn.flashii.net/fonts/aller.woff') format('woff'),
+         url('//cdn.flashii.net/fonts/aller.svg#SegoeUILight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
