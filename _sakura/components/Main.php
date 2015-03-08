@@ -49,8 +49,8 @@ class Flashii {
     private function initTwig($templateName = null, $templatesFolder = null) {
         
         // Assign default values set in the configuration if $templateName and $templatesFolder are null
-        $templateName       = is_null($templateName)    ? self::getConfig('etc', 'design')          : $templateName;
-        $templatesFolder    = is_null($templatesFolder) ? self::getConfig('etc', 'templatesPath')   : $templatesFolder;
+        $templateName       = is_null($templateName)    ? self::getLocalConfig('etc', 'design')          : $templateName;
+        $templatesFolder    = is_null($templatesFolder) ? self::getLocalConfig('etc', 'templatesPath')   : $templatesFolder;
         
         // Initialise Twig Filesystem Loader
         $twigLoader = new \Twig_Loader_Filesystem($templatesFolder . $templateName);
