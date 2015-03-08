@@ -7,33 +7,44 @@ namespace Flashii;
 
 class Flashii {
 
-	public static $_CONF;
-	public static $_DB;
-    public $twig;
-
+	public $_TPL;
+	public $_MD;
+    public static $_CNF;
+    public static $_TPLPUBPATH;
+    
 	// Constructor
 	function __construct($config) {
+        
 		// Stop the execution if the PHP Version is older than 5.4.0
 		if(version_compare(phpversion(), '5.4.0', '<'))
 			die('<h3>Upgrade your PHP Version to at least PHP 5.4!</h3>');
 	
-		// Assign $config values to $_CONF
-		self::$_CONF = $config;
+        // Start session
+        if(session_status() != PHP_SESSION_ACTIVE)
+            session_start();
+    
+		// Configuration Management and local configuration
+		Configuration::init($config);
 		
-		// Initialise database
-		self::$_DB = new Database();
+		// Database
+		Database::init();
+        
+        // "Dynamic" Configuration
+        Configuration::initDB();
+        
+        // Templating engine
+        $this->initTwig();
+        
+        // Markdown Parser
+        $this->initParsedown();
+        
 	}
     
-	// Get values from the configuration
-	public static function getConfig($key, $subkey = null) {
-		if(array_key_exists($key, self::$_CONF)) {
-			if($subkey)
-				return self::$_CONF[$key][$subkey];
-			else
-				return self::$_CONF[$key];
-		} else {
-			return false;
-        }
+	// Alias for Configuration::getConfig(), only exists because I'm lazy
+	public static function getConfig($key) {
+        
+		return Configuration::getConfig($key);
+        
 	}
     
     // Initialise Twig
@@ -49,6 +60,13 @@ class Flashii {
         $this->twig = new \Twig_Environment($twigLoader, array(
            // 'cache' => $satoko['cacheFolder']
         ));
+    }
+    
+    // Initialise Parsedown
+    private function initParsedown() {
+        
+        $this->_MD = new \Parsedown();
+        
     }
 	
 	// Error Handler
