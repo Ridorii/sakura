@@ -9,10 +9,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <!-- CSS -->
         <link rel="stylesheet" type="text/css" href="//{{ sakura.urls.content }}/global.css" />
-        <link rel="stylesheet" type="text/css" href="//{{ sakura.urls.content }}/css/yuuno.css" />
-        <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" type="text/css" href="//{{ sakura.urls.content }}/css/yuuno/yuuno.css" />
+        <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
         <!-- JS -->
-        <script type="text/javascript" src="//{{ sakura.urls.content }}/js/flashii.test.js"></script>
+        <script type="text/javascript" src="//{{ sakura.urls.content }}/js/yuuno.min.js"></script>
     </head>
     <body>
         <div id="container">

@@ -16,7 +16,7 @@ $fiiConf['db']['prefix']            = 'flashii_';
 // URLs (for modularity)
 $fiiConf['urls']['main']            = 'iihsalf.net';
 $fiiConf['urls']['api']             = 'api.iihsalf.net';
-$fiiConf['urls']['content']         = 'cdn.flashii.net';
+$fiiConf['urls']['content']         = 'cdn.iihsalf.net';
 $fiiConf['urls']['chat']            = 'chat.iihsalf.net';
 $fiiConf['urls']['manage']          = 'manage.iihsalf.net';
 $fiiConf['urls']['system']          = 'sys.iihsalf.net';

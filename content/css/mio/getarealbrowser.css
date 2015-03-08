@@ -1,0 +1,92 @@
+.realbrowserbox {
+	position: fixed;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	height: 125px;
+	z-index: 9999;
+	background: rgba(0, 0, 0, .9);
+	color: #FFF;
+	text-align: left;
+}
+
+.firefoxtan {
+	background: url('//cdn.flashii.net/img/firefox.png') no-repeat scroll left top / cover transparent;
+	position: fixed;
+	bottom: 0px;
+	right: 0px;
+	z-index: 10001;
+	height: 400px;
+	width: 462px;
+}
+
+.intexptan {
+	background: url('//cdn.flashii.net/img/inori.png') no-repeat scroll left top / cover transparent;
+	position: fixed;
+	bottom: 0px;
+	right: 450px;
+	z-index: 10000;
+	height: 400px;
+	width: 288px;
+}
+
+.realbrowsertext {
+	position: fixed;
+	bottom: 75px;
+	left: 0px;
+	padding: 15px 10px;
+	font-size: 40px;
+	font-family: "Segoe UI", sans-serif;
+}
+
+.realbrowsersmalltext {
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	padding: 15px 10px;
+	font-size: 15px;
+	font-family: "Segoe UI", sans-serif;
+}
+
+@media (max-width: 1600px) {
+	.realbrowserbox {
+		height: 530px;
+		text-align: right;
+	}
+
+	.realbrowsertext {
+		bottom: 475px;
+		right: 0px;
+	}
+
+	.realbrowsersmalltext {
+		bottom: 400px;
+		right: 0px;
+	}
+}
+
+@media (max-width: 900px) {
+	.realbrowserbox {
+		height: auto;
+		top: 0px;
+		text-align: center;
+	}
+
+	.realbrowsertext {
+		position: static;
+		line-height: 100%;
+	}
+
+	.realbrowsersmalltext {
+		position: static;
+	}
+}
+
+@media (max-width: 600px) {
+	.firefoxtan {
+		right: -100px;
+	}
+	.intexptan {
+		right: 300px;
+	}
+}
