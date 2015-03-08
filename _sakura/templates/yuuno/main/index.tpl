@@ -6,7 +6,7 @@
             <a class="button registerbutton" href="/register">Register!</a>
             <a class="button loginbutton" href="/login">Login</a>
             <div class="head">Stats</div>
-            We have <b>109 users</b>, 
+            We have <b>{{ frontpage.stats.usercount }}</b>, 
             <b><a href="/u/{{ frontpage.stats.latestid }}" class="default">{{ frontpage.stats.latestname }}</a></b> is the newest user, 
             it has been <b>{{ frontpage.stats.lastsignup }}</b> since the last user registered and 
             there are <b>{{ frontpage.stats.usersinchat }}</b> in chat right now.
