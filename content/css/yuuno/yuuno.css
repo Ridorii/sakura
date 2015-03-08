@@ -206,7 +206,7 @@ a.gotop:active {
     transition: color .2s, text-shadow .2s;
 }
 .header .logo:after {
-    content: "Iihsalf.net";
+    content: "Flashii Dev";
 }
 .header .logo:hover {
     color: #C17BD5;
