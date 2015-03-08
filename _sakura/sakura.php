@@ -9,21 +9,24 @@ ob_start();
  
 // Define Sakura version
 define('SAKURA_VERSION', '20150221');
+
+// Define Sakura Path
+define('ROOT_DIRECTORY', str_replace('_sakura', '', dirname(__FILE__)));
  
 // Error Reporting: 0 for production and -1 for testing 
 error_reporting(-1);
 
 // Include Configuration
-require_once 'config/config.php';
+require_once ROOT_DIRECTORY .'config/config.php';
 
 // Include libraries
-require_once 'vendor/autoload.php';
-require_once 'components/Main.php';
-require_once 'components/Hashing.php';
-require_once 'components/Configuration.php';
+require_once ROOT_DIRECTORY .'vendor/autoload.php';
+require_once ROOT_DIRECTORY .'components/Main.php';
+require_once ROOT_DIRECTORY .'components/Hashing.php';
+require_once ROOT_DIRECTORY .'components/Configuration.php';
 
 // Generate path to database driver
-$_DBNGNPATH = 'components/database/' . $fiiConf['db']['driver'] . '.php';
+$_DBNGNPATH = ROOT_DIRECTORY .'components/database/' . $fiiConf['db']['driver'] . '.php';
 
 // Include database driver
 if(file_exists($_DBNGNPATH))
