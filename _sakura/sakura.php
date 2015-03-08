@@ -40,3 +40,11 @@ set_error_handler(array('Flashii\Flashii', 'ErrorHandler'));
 
 // Initialise Flashii Class
 $flashii = new Flashii\Flashii($fiiConf);
+
+// Set base page rendering data
+$renderData = array(
+    'sakura' => [
+        'sakura_version'    => SAKURA_VERSION,
+        'urls'              => $fiiConf['urls']
+    ]
+);
