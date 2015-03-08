@@ -74,6 +74,7 @@ class Flashii {
 	
 	// Error Handler
 	public static function ErrorHandler($errno, $errstr, $errfile, $errline) {
+        
         // Set some variables to work with including A HUGE fallback hackjob for the templates folder
         $errstr     = str_replace(self::getConfig('etc', 'localPath'), '', $errstr);
         $errfile    = str_replace(self::getConfig('etc', 'localPath'), '', $errfile);
@@ -111,11 +112,14 @@ class Flashii {
 
 		// Die and display error message
 		die($error);
+        
 	}
     
     // Legacy password hashing to be able to validate passwords from users on the old backend.
     public static function legacyPasswordHash($data) {
+        
         return hash('sha512', strrev(hash('sha512', $data)));
+        
     }
     
 }
