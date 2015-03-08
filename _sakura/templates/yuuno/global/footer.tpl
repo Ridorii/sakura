@@ -4,12 +4,12 @@
                     <div class="copycentre">Copyright &copy; 2013-2015 <a href="http://flash.moe/" target="_blank">Flashwave</a> ~ Sakura Version {{ sakura_version }}<br />This is a development site, the actual site is located at <a href="http://flashii.net/">Flashii.net</a>.</div>
                     <ul class="ftsection">
                         <li class="fthead">General</li>
-                        <li><a href="http://{{ configuration.urls.main }}/" title="Flashii Frontpage">Home</a></li>
-                        <li><a href="http://{{ configuration.urls.main }}/news" title="Flashii News &amp; Updates">News</a></li>
-                        <li><a href="http://{{ configuration.urls.main }}/contact" title="Contact Flashii Staff">Contact</a></li>
-                        <li><a href="http://{{ configuration.urls.main }}/r/terms" title="Our Terms of Service">Terms of Service</a></li>
-                        <li><a href="http://{{ configuration.urls.main }}/r/rules" title="Some Rules and Information kind of summing up the ToS">Rules and Information</a></li>
-                        <li><a href="http://{{ configuration.urls.main }}/r/faq" title="Questions that get Asked Frequently">Frequently Asked Questions</a></li>
+                        <li><a href="http://{{ sakura.urls.main }}/" title="Flashii Frontpage">Home</a></li>
+                        <li><a href="http://{{ sakura.urls.main }}/news" title="Flashii News &amp; Updates">News</a></li>
+                        <li><a href="http://{{ sakura.urls.main }}/contact" title="Contact Flashii Staff">Contact</a></li>
+                        <li><a href="http://{{ sakura.urls.main }}/r/terms" title="Our Terms of Service">Terms of Service</a></li>
+                        <li><a href="http://{{ sakura.urls.main }}/r/rules" title="Some Rules and Information kind of summing up the ToS">Rules and Information</a></li>
+                        <li><a href="http://{{ sakura.urls.main }}/r/faq" title="Questions that get Asked Frequently">Frequently Asked Questions</a></li>
                     </ul>
                     <ul class="ftsection">
                         <li class="fthead">Affiliates</li>
@@ -29,8 +29,8 @@
                     <ul class="ftsection">
                         <li class="fthead">Contribution</li>
                         <li><a href="http://flashii.net/changelog.php" title="All the changes made to Flashii are listed here">Changelog</a></li>
-                        <li><a href="http://{{ configuration.urls.main }}/r/credits" title="Here everyone who's helped Flashii get to where it is now is listed">Credits</a></li>
-                        <li><a href="http://{{ configuration.urls.main }}/feedback" target="_blank" title="Give us feedback on what to do">Feedback &amp; Suggestions</a></li>
+                        <li><a href="http://{{ sakura.urls.main }}/r/credits" title="Here everyone who's helped Flashii get to where it is now is listed">Credits</a></li>
+                        <li><a href="http://{{ sakura.urls.main }}/feedback" target="_blank" title="Give us feedback on what to do">Feedback &amp; Suggestions</a></li>
                         <li><a href="http://github.com/flashii" target="_blank" title="Our Open Source repository thing">Github</a></li>
                     </ul>
                 </div>
