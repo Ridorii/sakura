@@ -1,0 +1,9 @@
+Options -Indexes
+
+<Files "passwd">
+    Require all denied
+</Files>
+
+<Files "git.php">
+    Require all denied
+</Files>
