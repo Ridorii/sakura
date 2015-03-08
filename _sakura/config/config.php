@@ -4,6 +4,7 @@ $fiiConf = array(); // Define configuration array
 
 // PDO Database Connection
 $fiiConf['db']                      = array();
+$fiiConf['db']['driver']            = 'mysql';
 $fiiConf['db']['unixsocket']        = false;
 $fiiConf['db']['host']              = 'localhost';
 $fiiConf['db']['port']              = 3306;
