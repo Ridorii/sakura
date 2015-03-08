@@ -9,8 +9,6 @@ class Flashii {
 
 	public $_TPL;
 	public $_MD;
-    public static $_CNF;
-    public static $_TPLPUBPATH;
     
 	// Constructor
 	function __construct($config) {
@@ -48,16 +46,14 @@ class Flashii {
 	}
     
     // Initialise Twig
-    private function initTwig($templateName = null) {
+    private function initTwig($templateName = null, $templatesFolder = null) {
         
         // Assign default values set in the configuration if $templateName and $templatesFolder are null
-        $templateName       = is_null($templateName)    ? Configuration::getConfig('template')  : $templateName;
-
-        // Set variable for public access
-        self::$_TPLPUBPATH = 'http'. (isset($_SERVER['HTTPS']) ? 's' : '') .'://'. $_SERVER['SERVER_NAME'] . '/templates/'. $templateName;
+        $templateName       = is_null($templateName)    ? self::getConfig('etc', 'design')          : $templateName;
+        $templatesFolder    = is_null($templatesFolder) ? self::getConfig('etc', 'templatesPath')   : $templatesFolder;
         
         // Initialise Twig Filesystem Loader
-        $twigLoader = new \Twig_Loader_Filesystem(ROOT_DIRECTORY .'templates/'. $templateName .'/templates');
+        $twigLoader = new \Twig_Loader_Filesystem($templatesFolder . $templateName);
 
         // And now actually initialise the templating engine
         $this->_TPL = new \Twig_Environment($twigLoader, array(
