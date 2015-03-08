@@ -3,7 +3,7 @@
     <head>
         <!-- META -->
         <meta charset="UTF-8" />
-        <title>{{ pageTitle }}</title>
+        <title>{{ page.title }}</title>
         <meta name="description" content="Any community that gets its laughs by pretending to be idiots will eventually be flooded by actual idiots who mistakenly believe that they're in good company. Welcome to Flashii." />
         <meta name="keywords" content="Flashii, Media, Flashwave, Murasaki, Misaka, Circle, Zeniea, MalwareUp, Cybernetics, Saibateku, Community" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
