@@ -1,4 +1,4 @@
-                <a id="gotop" class="gotop" href="#top"></a>
+                <a id="gotop" class="gotop hidden" href="#top"></a>
             </div>
             <div class="footer">
                 <div class="ftsections">

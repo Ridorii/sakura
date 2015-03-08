@@ -118,7 +118,7 @@ a.default:active {
 }
 a.gotop {
     display: inline-block;
-    background: url('//cdn.flashii.net/img/arrow.png') #111;
+    background: url('//cdn.iihsalf.net/img/arrow.png') #111;
     color: #FFF;
     width: 60px;
     height: 60px;
@@ -195,15 +195,6 @@ a.gotop:active {
     background: linear-gradient(180deg, #C2AFFE, #CCBAFE);
     box-shadow: 0 0 5px #8364A1;
 }
-/*.header .logo {
-    display: block;
-    height: 120px;
-    width: 350px;
-    border: 0px;
-    background: url('//cdn.flashii.net/img/satorilogo.png') no-repeat scroll left top transparent;
-    background-size: cover;
-    margin: 0px auto;
-}*/
 .header .logo {
     background: none;
     height: auto;
@@ -215,7 +206,7 @@ a.gotop:active {
     transition: color .2s, text-shadow .2s;
 }
 .header .logo:after {
-    content: "Flashii.net";
+    content: "Iihsalf.net";
 }
 .header .logo:hover {
     color: #C17BD5;
@@ -267,7 +258,7 @@ a.gotop:active {
 .header .menu .menu-item.avatar {
     width: auto;
     padding-left: 36px;
-    background: url('//cdn.flashii.net/pixel.png') no-repeat scroll left center / contain transparent;
+    background: url('//cdn.iihsalf.net/pixel.png') no-repeat scroll left center / contain transparent;
 }
 .header .menu .menu-item:hover {
     border-color: #503180 !important;
