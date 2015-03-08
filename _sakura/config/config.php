@@ -25,3 +25,8 @@ $fiiConf['urls']['system']          = 'sys.iihsalf.net';
 $fiiConf['etc']['localPath']        = '/var/www/flashii.net/';
 $fiiConf['etc']['templatesPath']    = $fiiConf['etc']['localPath'] .'_sakura/templates/';
 $fiiConf['etc']['design']           = 'yuuno';
+
+// Administrator details
+$fiiConf['admin']['name']           = 'Flashwave';
+$fiiConf['admin']['twitter']        = '_flashii';
+$fiiConf['admin']['statuspage']     = 'status.flashii.net';
