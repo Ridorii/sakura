@@ -17,16 +17,16 @@ define('ROOT_DIRECTORY', str_replace('_sakura', '', dirname(__FILE__)));
 error_reporting(-1);
 
 // Include Configuration
-require_once ROOT_DIRECTORY .'config/config.php';
+require_once ROOT_DIRECTORY .'_sakura/config/config.php';
 
 // Include libraries
-require_once ROOT_DIRECTORY .'vendor/autoload.php';
-require_once ROOT_DIRECTORY .'components/Main.php';
-require_once ROOT_DIRECTORY .'components/Hashing.php';
-require_once ROOT_DIRECTORY .'components/Configuration.php';
+require_once ROOT_DIRECTORY .'_sakura/vendor/autoload.php';
+require_once ROOT_DIRECTORY .'_sakura/components/Main.php';
+require_once ROOT_DIRECTORY .'_sakura/components/Hashing.php';
+require_once ROOT_DIRECTORY .'_sakura/components/Configuration.php';
 
 // Generate path to database driver
-$_DBNGNPATH = ROOT_DIRECTORY .'components/database/' . $fiiConf['db']['driver'] . '.php';
+$_DBNGNPATH = ROOT_DIRECTORY .'_sakura/components/database/' . $fiiConf['db']['driver'] . '.php';
 
 // Include database driver
 if(file_exists($_DBNGNPATH))
