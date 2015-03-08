@@ -18,9 +18,9 @@ require_once 'config/config.php';
 
 // Include libraries
 require_once 'vendor/autoload.php';
-require_once 'components/SockBase.php';
-require_once 'components/SockHashing.php';
-require_once 'components/SockConfiguration.php';
+require_once 'components/Base.php';
+require_once 'components/Hashing.php';
+require_once 'components/Configuration.php';
 
 // Generate path to database driver
 $_DBNGNPATH = 'components/database/' . $fiiConf['db']['driver'] . '.php';
