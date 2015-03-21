@@ -39,7 +39,7 @@ else
 
 
 // Set Error handler
-set_error_handler(array('Flashii\Flashii', 'ErrorHandler'));
+set_error_handler(array('Flashii\Main', 'ErrorHandler'));
 
 // Initialise Flashii Class
 Main::init($fiiConf);
