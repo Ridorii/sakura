@@ -92,9 +92,9 @@ class Main {
 	public static function ErrorHandler($errno, $errstr, $errfile, $errline) {
 
         // Set some variables to work with including A HUGE fallback hackjob for the templates folder
-        $errstr     = str_replace(self::getConfig('etc', 'localPath'), '', $errstr);
-        $errfile    = str_replace(self::getConfig('etc', 'localPath'), '', $errfile);
-        $templates  = (self::getConfig('etc', 'templatesPath') !== null && !empty(self::getConfig('etc', 'templatesPath'))) ? self::getConfig('etc', 'templatesPath') : '/var/www/flashii.net/_sakuya/templates/';
+        $errstr     = str_replace(Configuration::getLocalConfig('etc', 'localPath'), '', $errstr);
+        $errfile    = str_replace(Configuration::getLocalConfig('etc', 'localPath'), '', $errfile);
+        $templates  = (Configuration::getLocalConfig('etc', 'templatesPath') !== null && !empty(Configuration::getLocalConfig('etc', 'templatesPath'))) ? Configuration::getLocalConfig('etc', 'templatesPath') : '/var/www/flashii.net/_sakuya/templates/';
 
 		switch ($errno) {
 
