@@ -7,8 +7,8 @@ namespace Flashii;
 
 class Main {
 
-	public $_TPL;
-	public $_MD;
+	public static $_TPL;
+	public static $_MD;
 
 	// Constructor
 	public static function init($config) {
