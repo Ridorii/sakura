@@ -71,7 +71,7 @@
             </div>
             <br />
             <div class="contact">
-                Contact the System Operator at <a href="mailto:flashwave@flashii.net">flashwave@flashii.net</a> or check our <a href="http://status.flashii.net/" target="_blank">Status Page</a> and <a href="http://twitter.com/_flashii" target="_blank">Twitter Account</a> to see if anything is going on.
+                Contact the System Operator at <a href="mailto:me@flash.moe">me@flash.moe</a> or check our <a href="http://status.flashii.net/" target="_blank">Status Page</a> and <a href="http://twitter.com/_flashii" target="_blank">Twitter Account</a> to see if anything is going on.
             </div>
         </div>
     </body>
