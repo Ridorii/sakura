@@ -64,7 +64,7 @@ class Main {
     }
 
     // Initialise Parsedown
-    private function initParsedown() {
+    private static function initParsedown() {
 
         self::$_MD = new \Parsedown();
 
