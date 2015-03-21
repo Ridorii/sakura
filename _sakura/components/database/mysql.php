@@ -21,29 +21,29 @@ class Database {
         
         if(!extension_loaded('PDO')) {
             // Return error and die
-            die('<h1>PDO extension not loaded.</h1>');
+            trigger_error('<b>SQL Driver</b>: PDO extension not loaded.', E_USER_ERROR);
         }
 
         // Initialise connection
         self::initConnect(
             (
-            Configuration::getLocalConfig('db', 'unixsocket') ?
+                Board::getConfig('db', 'unixsocket') ?
                 self::prepareSock(
-                    Configuration::getLocalConfig('db', 'host'),
-                    Configuration::getLocalConfig('db', 'database')
+                    Board::getConfig('db', 'host'),
+                    Board::getConfig('db', 'database')
                 ) :
                 self::prepareHost(
-                    Configuration::getLocalConfig('db', 'host'),
-                    Configuration::getLocalConfig('db', 'database'),
+                    Board::getConfig('db', 'host'),
+                    Board::getConfig('db', 'database'),
                     (
-                        Configuration::getLocalConfig('db', 'port') !== null ?
-                        Configuration::getLocalConfig('db', 'port') :
+                        Board::getConfig('db', 'port') !== null ?
+                        Board::getConfig('db', 'port') :
                         3306
                     )
                 )
             ),
-            Configuration::getLocalConfig('db', 'username'),
-            Configuration::getLocalConfig('db', 'password')
+            Board::getConfig('db', 'username'),
+            Board::getConfig('db', 'password')
         );
         
     }
@@ -74,7 +74,7 @@ class Database {
             self::$sql = new PDO($DSN, $dbUname, $dbPword);
         } catch(PDOException $e) {
             // Catch connection errors
-            die("<h3>" . $e->getMessage() . "</h3>");
+            trigger_error('SQL Driver: '. $e->getMessage(), E_USER_ERROR);
         }
         
         return true;
@@ -82,30 +82,74 @@ class Database {
     }
 
     // Fetch array from database
-    public static function fetch($table, $fetchAll = true, $data = null) {
-        
+    public static function fetch($table, $fetchAll = true, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*') {
+
         // Begin preparation of the statement
-        $prepare = 'SELECT * FROM `' . Configuration::getLocalConfig('db', 'prefix') . $table . '`';
-        
+        $prepare = 'SELECT '. ($distinct ? 'DISTINCT ' : '') . $column .' FROM `' . Board::getConfig('db', 'prefix') . $table . '`';
+
         // If $data is set and is an array continue
         if(is_array($data)) {
-            
+
             $prepare .= ' WHERE';
-            
+
             foreach($data as $key => $value) {
-                $prepare .= ' `'. $key .'` '. $value[1] .' :'. $key .($key == key(array_slice($data, -1, 1, true)) ? ';' : ' AND');
+                $prepare .= ' `'. $key .'` '. $value[1] .' :'. $key . ($key == key(array_slice($data, -1, 1, true)) ? '' : ' AND');
+
+                // Unset variables to be safe
+                unset($key);
+                unset($value);
             }
-            
+
+        }
+
+        // If $order is set and is an array continue
+        if(is_array($order)) {
+
+            $prepare .= ' ORDER BY `'. $order[0] .'`'. (!empty($order[1]) && $order[1] ? ' DESC' : '');
+
+        }
+
+        // If $group is set and is an array continue
+        if(is_array($group)) {
+
+            $prepare .= ' GROUP BY';
+
+            foreach($group as $key => $value) {
+                $prepare .= ' `'. $value .'`'. ($key == key(array_slice($group, -1, 1, true)) ? '' : ',');
+
+                // Unset variables to be safe
+                unset($key);
+                unset($value);
+            }
+
         }
         
+        // If $limit is set and is an array continue
+        if(is_array($limit)) {
+
+            $prepare .= ' LIMIT';
+
+            foreach($limit as $key => $value) {
+                $prepare .= ' '. $value . ($key == key(array_slice($limit, -1, 1, true)) ? '' : ',');
+
+                // Unset variables to be safe
+                unset($key);
+                unset($value);
+            }
+
+        }
+
+        // Add the finishing semicolon
+        $prepare .= ';';
+
         // Actually prepare the preration
         $query = self::$sql->prepare($prepare);
-        
+
         // Bind those parameters if $data is an array that is
         if(is_array($data)) {
             foreach($data as $key => $value) {
                 $query->bindParam(':'. $key, $value[0]);
-            
+
                 // Unset variables to be safe
                 unset($key);
                 unset($value);
@@ -114,23 +158,24 @@ class Database {
 
         // Execute the prepared statements with parameters bound
         $query->execute();
-        
+
         // Do fetch or fetchAll
         if($fetchAll)
             $result = $query->fetchAll(PDO::FETCH_BOTH);
         else
             $result = $query->fetch(PDO::FETCH_BOTH);
-        
+
+
         // And return the output
         return $result;
-        
+
     }
     
     // Insert data to database
     public static function insert($table, $data) {
         
         // Begin preparation of the statement
-        $prepare = 'INSERT INTO `' . Configuration::getLocalConfig('db', 'prefix') . $table . '` ';
+        $prepare = 'INSERT INTO `' . Board::getConfig('db', 'prefix') . $table . '` ';
         
         // Run the foreach statement twice for (`stuff`) VALUES (:stuff)
         for($i = 0; $i < 2; $i++) {
@@ -170,7 +215,7 @@ class Database {
     public static function update($table, $data) {
         
         // Begin preparation of the statement
-        $prepare = 'UPDATE `' . Configuration::getLocalConfig('db', 'prefix') . $table . '`';
+        $prepare = 'UPDATE `' . Board::getConfig('db', 'prefix') . $table . '`';
         
         // Run a foreach on $data and complete the statement
         foreach($data as $key => $values) {

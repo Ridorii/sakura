@@ -3,6 +3,9 @@
  * Flashii.net Main Index
  */
 
+// Declare Namespace
+namespace Flashii;
+
 // Include components
 require_once('/var/www/flashii.net/_sakura/sakura.php');
 
@@ -12,4 +15,4 @@ $renderData['page'] = [
 ];
 
 // Print page contents
-print $flashii->_TPL->render('main/index.tpl', $renderData);
+print Main::$_TPL->render('main/index.tpl', $renderData);

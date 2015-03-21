@@ -4,11 +4,14 @@
  * (c)Flashwave/Flashii Media 2013-2015 <http://flash.moe>
  */
 
+// Declare Namespace
+namespace Flashii;
+
 // Start output buffering
 ob_start();
  
 // Define Sakura version
-define('SAKURA_VERSION', '20150221');
+define('SAKURA_VERSION', '20150321');
 
 // Define Sakura Path
 define('ROOT_DIRECTORY', str_replace('_sakura', '', dirname(__FILE__)));
@@ -39,7 +42,7 @@ else
 set_error_handler(array('Flashii\Flashii', 'ErrorHandler'));
 
 // Initialise Flashii Class
-$flashii = new Flashii\Flashii($fiiConf);
+Main::init($fiiConf);
 
 // Set base page rendering data
 $renderData = array(
