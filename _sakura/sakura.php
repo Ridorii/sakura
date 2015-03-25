@@ -27,6 +27,7 @@ require_once ROOT_DIRECTORY .'_sakura/vendor/autoload.php';
 require_once ROOT_DIRECTORY .'_sakura/components/Main.php';
 require_once ROOT_DIRECTORY .'_sakura/components/Hashing.php';
 require_once ROOT_DIRECTORY .'_sakura/components/Configuration.php';
+require_once ROOT_DIRECTORY .'_sakura/components/Sessions.php';
 
 // Generate path to database driver
 $_DBNGNPATH = ROOT_DIRECTORY .'_sakura/components/database/' . $fiiConf['db']['driver'] . '.php';
