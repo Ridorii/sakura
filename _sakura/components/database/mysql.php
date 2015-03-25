@@ -3,7 +3,7 @@
  * MySQL PDO based database engine
  */
 
-namespace Flashii;
+namespace Sakura;
 
 use PDO;
 use PDOException;

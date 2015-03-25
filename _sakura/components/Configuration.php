@@ -3,7 +3,7 @@
  * Configuration Management
  */
 
-namespace Flashii;
+namespace Sakura;
 
 class Configuration {
 

@@ -3,7 +3,7 @@
  * Main Class
  */
  
-namespace Flashii;
+namespace Sakura;
 
 class Main {
 

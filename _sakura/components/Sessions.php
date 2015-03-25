@@ -3,7 +3,7 @@
  * Session Handler
  */
 
-namespace Flashii;
+namespace Sakura;
 
 class Session {
     

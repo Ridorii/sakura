@@ -2,7 +2,7 @@
             </div>
             <div class="footer">
                 <div class="ftsections">
-                    <div class="copycentre">Copyright &copy; 2013-2015 <a href="http://flash.moe/" target="_blank">Flashwave</a> | Sakura Version {{ sakura_version }} | This is a development site, the actual site is located at <a href="http://flashii.net/">Flashii.net</a>.</div>
+                    <div class="copycentre">Copyright &copy; 2013-2015 <a href="http://flash.moe/" target="_blank">Flashwave</a> | Sakura Version {{ sakura.version }} | This is a development site, the actual site is located at <a href="http://flashii.net/">Flashii.net</a>.</div>
                     <ul class="ftsection">
                         <li class="fthead">General</li>
                         <li><a href="http://{{ sakura.urls.main }}/" title="Flashii Frontpage">Home</a></li>
