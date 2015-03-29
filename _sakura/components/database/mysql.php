@@ -1,6 +1,6 @@
 <?php
 /*
- * MySQL PDO based database engine
+ * Sakura MySQL Database Engine
  */
 
 namespace Sakura;
@@ -85,7 +85,7 @@ class Database {
     public static function fetch($table, $fetchAll = true, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*') {
 
         // Begin preparation of the statement
-        $prepare = 'SELECT '. ($distinct ? 'DISTINCT ' : '') . $column .' FROM `' . Configuration::getLocalConfig('db', 'prefix') . $table . '`';
+        $prepare = 'SELECT '. ($distinct ? 'DISTINCT ' : '') . ($column == '*' ? '' : '`') . $column . ($column == '*' ? '' : '`') .' FROM `' . Configuration::getLocalConfig('db', 'prefix') . $table . '`';
 
         // If $data is set and is an array continue
         if(is_array($data)) {
@@ -173,31 +173,33 @@ class Database {
     
     // Insert data to database
     public static function insert($table, $data) {
-        
+
         // Begin preparation of the statement
         $prepare = 'INSERT INTO `' . Configuration::getLocalConfig('db', 'prefix') . $table . '` ';
-        
+
         // Run the foreach statement twice for (`stuff`) VALUES (:stuff)
         for($i = 0; $i < 2; $i++) {
-            
+
             $prepare .= '(';
-            
+
             // Do more shit, don't feel like describing this so yeah
             foreach($data as $key => $value) {
-                $prepare .= ($i ? ':' : '`') . $key . ($i ? '' : '`') . ($key == key(array_slice($data, -1, 1, true)) ? '' : ', ');
+                if(strlen($value))
+                    $prepare .= ($i ? ':' : '`') . $key . ($i ? '' : '`') . ($key == key(array_slice($data, -1, 1, true)) ? '' : ', ');
             }
-            
+
             $prepare .= ')' . ($i ? ';' : ' VALUES ');
-            
+
         }
-        
+
         // Actually prepare the preration
         $query = self::$sql->prepare($prepare);
-        
+
         // Bind those parameters
         foreach($data as $key => $value) {
-            $query->bindParam(':'. $key, $value);
-            
+            if(strlen($value))
+                $query->bindParam(':'. $key, $value);
+
             // Unset variables to be safe
             unset($key);
             unset($value);
@@ -205,12 +207,12 @@ class Database {
 
         // Execute the prepared statements with parameters bound
         $result = $query->execute();
-        
+
         // Return whatever can be returned
         return $result;
-        
+
     }
-    
+
     // Update data in the database
     public static function update($table, $data) {
         
