@@ -51,5 +51,8 @@ $renderData = array(
         'version'   => SAKURA_VERSION,
         'urls'      => Configuration::getLocalConfig('urls'),
         'charset'   => Configuration::getConfig('charset')
+    ],
+    'user' => [
+        'loggedin' => Users::loggedIn()
     ]
 );

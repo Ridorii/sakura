@@ -12,7 +12,21 @@
         <link rel="stylesheet" type="text/css" href="//{{ sakura.urls.content }}/css/yuuno/yuuno.css" />
         <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
         <!-- JS -->
-        <script type="text/javascript" src="//{{ sakura.urls.content }}/js/yuuno.min.js"></script>
+        <script type="text/javascript" src="//{{ sakura.urls.content }}/js/yuuno.js"></script>
+        <script type="text/javascript">
+        {% if user.loggedin %}
+            var headerLoginBtn = document.getElementById('headerLoginBtn');
+
+            headerLoginBtn.setAtrribute('href', 'javascript:;');
+            headerLoginBtn.setAtrribute('onclick', 'toggleLoginForm();');
+
+            function toggleLoginForm() {
+                var headerLoginForm = document.getElementById('headerLoginForm');
+
+                headerLoginForm.className = (headerLoginForm.className == 'hidden' ? '' : 'hidden');
+            }
+        {% endif %}
+        </script>
     </head>
     <body>
         <div id="container">
@@ -27,7 +41,7 @@
                     </div>
                     <div class="menu-ucp" id="navMenuUser">
                         <!-- "UCP" menu, displayed on right side of the bar. -->
-                        <a class="menu-item" href="http://{{ sakura.urls.main }}/login" title="Login to Flashii">Login</a>
+                        <a class="menu-item" id="headerLoginBtn" href="http://{{ sakura.urls.main }}/login" title="Login to Flashii">Login</a>
                         <a class="menu-item" href="http://{{ sakura.urls.main }}/register" title="Create an account">Register</a>
                     </div>
                     <div class="menu-mob">
@@ -36,4 +50,9 @@
                     <div class="clear"></div>
                 </div>
             </div>
-            <div id="contentwrapper"> <!-- I DIDN'T WANT TO DO THIS -->
+            <div id="contentwrapper">
+                {% if user.loggedin %}
+                    <div class="hidden" id="headerLoginForm">
+                        login form
+                    </div>
+                {% endif %}
