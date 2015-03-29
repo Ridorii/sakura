@@ -6,11 +6,8 @@
 // Declare Namespace
 namespace Sakura;
 
-// Define Sakura Path
-define('ROOT_DIRECTORY', str_replace('main', '', dirname(__FILE__)));
-
 // Include components
-require_once ROOT_DIRECTORY .'_sakura/sakura.php';
+require_once '/var/www/flashii.net/_sakura/sakura.php';
 
 // Add page specific things
 $renderData['page'] = [

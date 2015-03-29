@@ -6,8 +6,8 @@
 // Declare Namespace
 namespace Sakura;
 
-// Define Sakura Path
-define('ROOT_DIRECTORY', str_replace('main', '', dirname(__FILE__)));
+// Include components
+require_once '/var/www/flashii.net/_sakura/sakura.php';
 
 // Set Content type
 header('Content-Type: application/octet-stream');
