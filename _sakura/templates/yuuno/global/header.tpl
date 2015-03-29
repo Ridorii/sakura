@@ -15,13 +15,23 @@
         <script type="text/javascript" src="//{{ sakura.urls.content }}/js/yuuno.js"></script>
         <script type="text/javascript">
         {% if user.loggedin != true %}
-            document.getElementById('headerLoginBtn').setAtrribute('href', 'javascript:;');
-            document.getElementById('headerLoginBtn').setAtrribute('onclick', 'toggleLoginForm();');
+            // Setting the shit so clicking the login link doesn't redirect to /login
+            function initLoginForm() {
 
+                var headerLoginLink = document.getElementById('headerLoginLink');
+
+                headerLoginLink.setAtrribute('href', 'javascript:;');
+                headerLoginLink.setAtrribute('onclick', 'toggleLoginForm();');
+
+            }
+
+            // Toggling the dynamic login form
             function toggleLoginForm() {
+
                 var headerLoginForm = document.getElementById('headerLoginForm');
 
                 headerLoginForm.className = (headerLoginForm.className == 'hidden' ? '' : 'hidden');
+
             }
         {% endif %}
         </script>
@@ -39,7 +49,7 @@
                     </div>
                     <div class="menu-ucp" id="navMenuUser">
                         <!-- User menu, displayed on right side of the bar. -->
-                        <a class="menu-item" id="headerLoginBtn" href="http://{{ sakura.urls.main }}/login" title="Login to Flashii">Login</a>
+                        <a class="menu-item" id="headerLoginLink" onload="initLoginForm();" href="http://{{ sakura.urls.main }}/login" title="Login to Flashii">Login</a>
                         <a class="menu-item" href="http://{{ sakura.urls.main }}/register" title="Create an account">Register</a>
                     </div>
                     <div class="menu-mob">
@@ -53,4 +63,4 @@
                     <div class="hidden" id="headerLoginForm">
                         login form
                     </div>
-                {% endif %}
+                {% endif %}{{ sakura.currentpage }}

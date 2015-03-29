@@ -48,9 +48,10 @@ Main::init($sakuraConf);
 // Set base page rendering data
 $renderData = array(
     'sakura' => [
-        'version'   => SAKURA_VERSION,
-        'urls'      => Configuration::getLocalConfig('urls'),
-        'charset'   => Configuration::getConfig('charset')
+        'version'       => SAKURA_VERSION,
+        'urls'          => Configuration::getLocalConfig('urls'),
+        'charset'       => Configuration::getConfig('charset'),
+        'currentpage'   => $_SERVER['PHP_SELF']
     ],
     'user' => [
         'loggedin' => Users::loggedIn()
