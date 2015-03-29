@@ -60,6 +60,6 @@ $renderData = array(
     'user' => [
         'loggedin' => Users::loggedIn()
     ],
-    'users' => \create_function('$uid', 'return Users::getUser($uid);')//,
-    //'groups' => Users::getGroup($gid)
+    'users' => Users::getAllUsers(),
+    'groups' => Users::getAllGroups()
 );
