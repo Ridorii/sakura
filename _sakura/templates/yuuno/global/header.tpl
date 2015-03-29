@@ -64,6 +64,23 @@
             <div id="contentwrapper">
                 {% if user.loggedin != true %}
                     <div class="hidden" id="headerLoginForm">
-                        login form
+                        <form method="post" action="/login">
+                            <input type="hidden" name="redirect" value="{{ sakura.currentpage }}" />
+                            <div class="leftAlign">
+                                <label for="headerLoginUserName">Username:</label>
+                            </div>
+                            <div class="centreAlign">
+                                <input class="inputStyling" type="text" id="headerLoginUserName" name="username" />
+                            </div>
+                            <div class="leftAlign">
+                                <label for="headerLoginPassword">Password:</label>
+                            </div>
+                            <div class="centreAlign">
+                                <input class="inputStyling" type="password" id="headerLoginPassword" name="password" />
+                            </div>
+                            <div class="centreAlign">
+                                <input class="inputStyling" type="submit" id="headerLoginButton" name="submit" value="Login" />
+                            </div>
+                        </form>
                     </div>
-                {% endif %}{{ sakura.currentpage }}
+                {% endif %}
