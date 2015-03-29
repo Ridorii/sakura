@@ -3,6 +3,8 @@ require_once '/var/www/flashii.net/_sakura/sakura.php';
 
 if(isset($_POST['submit'])) {
 
+    header('Content-Type: text/plain;charset=utf-8');
+
     $pass = Sakura\Hashing::create_hash($_POST['password']);
 
     $regData = [
