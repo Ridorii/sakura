@@ -17,10 +17,6 @@ class Main {
 		if(version_compare(phpversion(), '5.4.0', '<'))
 			die('<h3>Upgrade your PHP Version to at least PHP 5.4!</h3>');
 
-        // Start session
-        if(session_status() != PHP_SESSION_ACTIVE)
-            session_start();
-
 		// Configuration Management and local configuration
 		Configuration::init($config);
 
@@ -29,6 +25,9 @@ class Main {
 
         // "Dynamic" Configuration
         Configuration::initDB();
+
+        // Create new session
+        Session::init();
 
         // Templating engine
         self::initTwig();

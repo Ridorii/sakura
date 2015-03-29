@@ -4,11 +4,14 @@
  * (c)Flashwave/Flashii Media 2013-2015 <http://flash.moe>
  */
 
+// Declare namespace
+namespace Sakura;
+
 // Start output buffering
 ob_start();
- 
+
 // Define Sakura version
-define('SAKURA_VERSION', '20150325');
+define('SAKURA_VERSION', '20150329');
 
 // Define Sakura Path
 define('ROOT_DIRECTORY', str_replace('_sakura', '', dirname(__FILE__)));
@@ -25,6 +28,7 @@ require_once ROOT_DIRECTORY .'_sakura/components/Main.php';
 require_once ROOT_DIRECTORY .'_sakura/components/Hashing.php';
 require_once ROOT_DIRECTORY .'_sakura/components/Configuration.php';
 require_once ROOT_DIRECTORY .'_sakura/components/Sessions.php';
+require_once ROOT_DIRECTORY .'_sakura/components/Users.php';
 
 // Generate path to database driver
 $_DBNGNPATH = ROOT_DIRECTORY .'_sakura/components/database/' . $fiiConf['db']['driver'] . '.php';
@@ -40,12 +44,12 @@ else
 set_error_handler(array('Sakura\Main', 'ErrorHandler'));
 
 // Initialise Flashii Class
-Sakura\Main::init($fiiConf);
+Main::init($fiiConf);
 
 // Set base page rendering data
 $renderData = array(
     'sakura' => [
         'version'   => SAKURA_VERSION,
-        'urls'      => $fiiConf['urls']
+        'urls'      => Configuration::getLocalConfig('urls')
     ]
 );
