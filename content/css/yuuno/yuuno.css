@@ -1061,8 +1061,7 @@ input[type="submit"].inputStyling.small, input[type="button"].inputStyling.small
     margin: -2px 0 0;
     font-size: 16px;
     border-radius: 0;
-    line-height: 21px;
-    min-width: 80px;
+    min-width: 80px !important;
 }
 input[type="submit"].inputStyling:hover, input[type="button"].inputStyling:hover {
     box-shadow: inset #222 0 0 3px;
