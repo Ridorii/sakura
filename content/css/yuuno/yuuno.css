@@ -1057,10 +1057,12 @@ input[type="submit"].inputStyling, input[type="button"].inputStyling {
     min-width: 120px;
 }
 input[type="submit"].inputStyling.small, input[type="button"].inputStyling.small {
-    padding: 1px 6px;
-    margin: 0;
+    padding: 0 4px 1px;
+    margin: -2px 0 0;
     font-size: 16px;
     border-radius: 0;
+    line-height: 21px;
+    min-width: 80px;
 }
 input[type="submit"].inputStyling:hover, input[type="button"].inputStyling:hover {
     box-shadow: inset #222 0 0 3px;
@@ -1226,4 +1228,5 @@ textarea.inputStyling {
 #headerLoginForm label {
     font-family: "Segoe UI", sans-serif;
     font-weight: 100;
+    font-size: 15px;
 }

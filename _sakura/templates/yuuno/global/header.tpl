@@ -70,7 +70,7 @@
                             <input type="hidden" name="time" value="{{ php.time }}" />
                             <label for="headerLoginUserName">Username:</label>
                             <input type="text" id="headerLoginUserName" name="username" class="inputStyling" placeholder="Username" />
-                            <label for="headerLoginPassword">Username:</label>
+                            <label for="headerLoginPassword">Password:</label>
                             <input type="password" id="headerLoginPassword" name="password" class="inputStyling" placeholder="Password" />
                             <input type="submit" id="headerLoginButton" name="submit" class="inputStyling small" value="Login" />
                         </form>
