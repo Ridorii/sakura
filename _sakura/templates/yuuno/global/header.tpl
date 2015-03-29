@@ -20,8 +20,8 @@
 
                 var headerLoginLink = document.getElementById('headerLoginLink');
 
-                headerLoginLink.setAtrribute('href', 'javascript:;');
-                headerLoginLink.setAtrribute('onclick', 'toggleLoginForm();');
+                headerLoginLink.setAttribute('href', 'javascript:;');
+                headerLoginLink.setAttribute('onclick', 'toggleLoginForm();');
 
             }
 
