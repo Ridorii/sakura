@@ -1,6 +1,5 @@
 /*
- * Flashii.net BrokenScript
- * Somehow works, I really don't know how
+ * Sakura Yuuno JavaScript
  */
 
 function cookieData(action, name, data) {
