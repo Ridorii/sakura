@@ -73,6 +73,8 @@
                             <label for="headerLoginPassword">Password:</label>
                             <input type="password" id="headerLoginPassword" name="password" class="inputStyling" placeholder="Password" />
                             <input type="submit" id="headerLoginButton" name="submit" class="inputStyling small" value="Login" />
+                            <input type="checkbox" name="remember" id="headerLoginRemember" />
+                            <label for="headerLoginRemember">Remember Me</label>
                         </form>
                     </div>
                 {% endif %}
