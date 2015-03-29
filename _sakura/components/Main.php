@@ -144,4 +144,15 @@ class Main {
 
     }
 
+    // Getting news posts
+    public static function getNewsPosts($limit = null) {
+
+        // Get news posts
+        $newsPosts = Database::fetch('news', true, null, ['id', true], ($limit ? [$limit] : null));
+
+        // Return posts
+        return $newsPosts;
+
+    }
+
 }

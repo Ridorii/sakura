@@ -60,7 +60,7 @@ class Users {
 
     }
 
-    // Get all users
+    // Get all groups
     public static function getAllGroups() {
 
         // Execute query
