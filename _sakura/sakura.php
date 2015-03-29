@@ -31,7 +31,7 @@ require_once ROOT_DIRECTORY .'_sakura/components/Sessions.php';
 require_once ROOT_DIRECTORY .'_sakura/components/Users.php';
 
 // Generate path to database driver
-$_DBNGNPATH = ROOT_DIRECTORY .'_sakura/components/database/'. Configuration::getLocalConfig('db', 'driver') .'.php';
+$_DBNGNPATH = ROOT_DIRECTORY .'_sakura/components/database/'. $sakuraConf['db']['driver'] .'.php';
 
 // Include database driver
 if(file_exists($_DBNGNPATH))
@@ -43,7 +43,7 @@ else
 set_error_handler(array('Sakura\Main', 'ErrorHandler'));
 
 // Initialise Flashii Class
-Main::init($fiiConf);
+Main::init($sakuraConf);
 
 // Set base page rendering data
 $renderData = array(

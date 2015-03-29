@@ -1,27 +1,26 @@
 <?php
 // Flashii Configuration
-$fiiConf = array(); // Define configuration array
+$sakuraConf = array(); // Define configuration array
 
 // PDO Database Connection
-$fiiConf['db']                      = array();
-$fiiConf['db']['driver']            = 'mysql';
-$fiiConf['db']['unixsocket']        = false;
-$fiiConf['db']['host']              = 'localhost';
-$fiiConf['db']['port']              = 3306;
-$fiiConf['db']['username']          = 'flashii';
-$fiiConf['db']['password']          = 'Ky2YQMr4vu4zcZE&yLZT!gQ&Wdf-CxrQLej+^PS6jS5AgAQh52yf6Br&mq-C8J=F3Yw$3wnMU7?ebA9r+Abe4J_kzzs57C8U22&#wytuf-veF9WEuHfP-GRHQ^?5pXbx';
-$fiiConf['db']['database']          = 'flashii';
-$fiiConf['db']['prefix']            = 'fii_';
+$sakuraConf['db']               = array();
+$sakuraConf['db']['driver']     = 'mysql';
+$sakuraConf['db']['unixsocket'] = false;
+$sakuraConf['db']['host']       = 'localhost';
+$sakuraConf['db']['port']       = 3306;
+$sakuraConf['db']['username']   = 'flashii';
+$sakuraConf['db']['password']   = 'Ky2YQMr4vu4zcZE&yLZT!gQ&Wdf-CxrQLej+^PS6jS5AgAQh52yf6Br&mq-C8J=F3Yw$3wnMU7?ebA9r+Abe4J_kzzs57C8U22&#wytuf-veF9WEuHfP-GRHQ^?5pXbx';
+$sakuraConf['db']['database']   = 'flashii';
+$sakuraConf['db']['prefix']     = 'fii_';
 
 // URLs (for modularity)
-$fiiConf['urls']['main']            = 'iihsalf.net';
-$fiiConf['urls']['api']             = 'api.iihsalf.net';
-$fiiConf['urls']['content']         = 'cdn.iihsalf.net';
-$fiiConf['urls']['chat']            = 'chat.iihsalf.net';
-$fiiConf['urls']['manage']          = 'manage.iihsalf.net';
-$fiiConf['urls']['system']          = 'sys.iihsalf.net';
+$sakuraConf['urls']['main']     = 'iihsalf.net';
+$sakuraConf['urls']['api']      = 'api.iihsalf.net';
+$sakuraConf['urls']['content']  = 'cdn.iihsalf.net';
+$sakuraConf['urls']['chat']     = 'chat.iihsalf.net';
+$sakuraConf['urls']['manage']   = 'manage.iihsalf.net';
 
 // Errata
-$fiiConf['etc']['localPath']        = '/var/www/flashii.net/';
-$fiiConf['etc']['templatesPath']    = $fiiConf['etc']['localPath'] .'_sakura/templates/';
-$fiiConf['etc']['design']           = 'yuuno';
+$sakuraConf['etc']['localPath']     = '/var/www/flashii.net/';
+$sakuraConf['etc']['templatesPath'] = $sakuraConf['etc']['localPath'] .'_sakura/templates/';
+$sakuraConf['etc']['design']        = 'yuuno';
