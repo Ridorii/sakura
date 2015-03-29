@@ -37,13 +37,6 @@ class Main {
 
 	}
 
-	// Alias for Configuration::getConfig(), only exists because I'm lazy
-	public static function getConfig($key) {
-
-		return Configuration::getConfig($key);
-
-	}
-
     // Initialise Twig
     private static function initTwig() {
 
@@ -73,7 +66,7 @@ class Main {
     public static function verifyCaptcha($response) {
 
         // Attempt to get the response
-        $resp = @file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='. self::getConfig('recaptcha_private') .'&response='. $response);
+        $resp = @file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='. Configuration::getConfig('recaptcha_private') .'&response='. $response);
 
         // In the highly unlikely case that it failed to get anything forge a false
         if(!$resp)
@@ -135,6 +128,19 @@ class Main {
     public static function legacyPasswordHash($data) {
 
         return hash('sha512', strrev(hash('sha512', $data)));
+
+    }
+
+    // Cleaning strings
+    public static function cleanString($string, $lower = false) {
+
+		$string = htmlentities($string, ENT_QUOTES | ENT_IGNORE, Configuration::getConfig('charset'));
+		$string = stripslashes($string);
+		$string = strip_tags($string);
+        if($lower)
+            $string = strtolower($string);
+
+		return $string;
 
     }
 

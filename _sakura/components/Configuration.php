@@ -45,7 +45,7 @@ class Configuration {
 			else
 				return self::$_LCNF[$key];
 		} else
-			return null;
+			trigger_error('Unable to get local configuration value!', E_USER_ERROR);
 
 	}
     
@@ -68,7 +68,7 @@ class Configuration {
 		if(array_key_exists($key, self::$_DCNF))
             return self::$_DCNF[$key];
 		else
-			return null;
+			trigger_error('Unable to get configuration value!', E_USER_ERROR);
 
 	}
 

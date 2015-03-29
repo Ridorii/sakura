@@ -1,6 +1,6 @@
 <?php
 /*
- * Flashii Sakura Backend
+ * Sakura C/PMS
  * (c)Flashwave/Flashii Media 2013-2015 <http://flash.moe>
  */
 
@@ -31,14 +31,13 @@ require_once ROOT_DIRECTORY .'_sakura/components/Sessions.php';
 require_once ROOT_DIRECTORY .'_sakura/components/Users.php';
 
 // Generate path to database driver
-$_DBNGNPATH = ROOT_DIRECTORY .'_sakura/components/database/' . $fiiConf['db']['driver'] . '.php';
+$_DBNGNPATH = ROOT_DIRECTORY .'_sakura/components/database/'. Configuration::getLocalConfig('db', 'driver') .'.php';
 
 // Include database driver
 if(file_exists($_DBNGNPATH))
     require_once $_DBNGNPATH;
 else
     die('<h1>Failed to load database driver.</h1>');
-
 
 // Set Error handler
 set_error_handler(array('Sakura\Main', 'ErrorHandler'));
@@ -50,6 +49,7 @@ Main::init($fiiConf);
 $renderData = array(
     'sakura' => [
         'version'   => SAKURA_VERSION,
-        'urls'      => Configuration::getLocalConfig('urls')
+        'urls'      => Configuration::getLocalConfig('urls'),
+        'charset'   => Configuration::getConfig('charset')
     ]
 );

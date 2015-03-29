@@ -7,7 +7,7 @@
 namespace Sakura;
 
 // Include components
-require_once('/var/www/flashii.net/_sakura/sakura.php');
+require_once '/var/www/flashii.net/_sakura/sakura.php';
 
 // Add page specific things
 $renderData['page'] = [

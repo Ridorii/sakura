@@ -2,7 +2,7 @@
 <html>
     <head>
         <!-- META -->
-        <meta charset="UTF-8" />
+        <meta charset="{{ sakura.charset }}" />
         <title>{{ page.title }}</title>
         <meta name="description" content="Any community that gets its laughs by pretending to be idiots will eventually be flooded by actual idiots who mistakenly believe that they're in good company. Welcome to Flashii." />
         <meta name="keywords" content="Flashii, Media, Flashwave, Murasaki, Misaka, Circle, Zeniea, MalwareUp, Cybernetics, Saibateku, Community" />
