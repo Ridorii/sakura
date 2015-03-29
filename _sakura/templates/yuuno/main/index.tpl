@@ -13,6 +13,7 @@
         </div>
         <div class="content-left content-column">
             <div class="head">News <a href="/news.xml" class="fa fa-rss news-rss default"></a></div>
+            {{ users.1.username }}
         </div>
         <div class="clear"></div>
     </div>

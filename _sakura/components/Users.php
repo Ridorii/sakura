@@ -15,4 +15,19 @@ class Users {
 
     }
 
+    // Get user
+    public static function getUser($id) {
+
+        // Execute query
+        $user = Database::fetch('users', false, ['id' => [$id, '=']]);
+
+        // Return false if no user was found
+        if(empty($user))
+            return false;
+
+        // If user was found return user data
+        return $user;
+
+    }
+
 }
