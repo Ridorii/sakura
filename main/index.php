@@ -1,6 +1,6 @@
 <?php
 /*
- * Flashii.net Main Index
+ * Sakura Main Index
  */
 
 // Declare Namespace
