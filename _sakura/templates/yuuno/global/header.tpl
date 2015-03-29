@@ -14,7 +14,7 @@
         <!-- JS -->
         <script type="text/javascript" src="//{{ sakura.urls.content }}/js/yuuno.js"></script>
         <script type="text/javascript">
-        {% if user.loggedin is not true %}
+        {% if !user.loggedin %}
             var headerLoginBtn = document.getElementById('headerLoginBtn');
 
             headerLoginBtn.setAtrribute('href', 'javascript:;');
@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div id="contentwrapper">
-                {% if user.loggedin is not true %}
+                {% if !user.loggedin %}
                     <div class="hidden" id="headerLoginForm">
                         login form
                     </div>
