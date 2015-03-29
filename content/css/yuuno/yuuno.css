@@ -1209,3 +1209,8 @@ textarea.inputStyling {
         border-bottom-left-radius: 4px;
     }
 }
+
+/* Header login thing */
+#headerLoginForm {
+    background: #9475B2;
+}
