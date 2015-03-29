@@ -15,10 +15,8 @@
         <script type="text/javascript" src="//{{ sakura.urls.content }}/js/yuuno.js"></script>
         <script type="text/javascript">
         {% if user.loggedin != true %}
-            var headerLoginBtn = document.getElementById('headerLoginBtn');
-
-            headerLoginBtn.setAtrribute('href', 'javascript:;');
-            headerLoginBtn.setAtrribute('onclick', 'toggleLoginForm();');
+            document.getElementById('headerLoginBtn').setAtrribute('href', 'javascript:;');
+            document.getElementById('headerLoginBtn').setAtrribute('onclick', 'toggleLoginForm();');
 
             function toggleLoginForm() {
                 var headerLoginForm = document.getElementById('headerLoginForm');
@@ -40,7 +38,7 @@
                         <a class="menu-item" href="http://{{ sakura.urls.main }}/news" title="Here you can read updates on Flashii">News</a>
                     </div>
                     <div class="menu-ucp" id="navMenuUser">
-                        <!-- "UCP" menu, displayed on right side of the bar. -->
+                        <!-- User menu, displayed on right side of the bar. -->
                         <a class="menu-item" id="headerLoginBtn" href="http://{{ sakura.urls.main }}/login" title="Login to Flashii">Login</a>
                         <a class="menu-item" href="http://{{ sakura.urls.main }}/register" title="Create an account">Register</a>
                     </div>
