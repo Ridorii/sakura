@@ -33,6 +33,9 @@
                 headerLoginForm.className = (headerLoginForm.className == 'hidden' ? '' : 'hidden');
 
             }
+
+            // Execute initLoginForm() on load
+            window.onload = function(){initLoginForm();};
         {% endif %}
         </script>
     </head>
@@ -49,7 +52,7 @@
                     </div>
                     <div class="menu-ucp" id="navMenuUser">
                         <!-- User menu, displayed on right side of the bar. -->
-                        <a class="menu-item" id="headerLoginLink" onload="initLoginForm();" href="http://{{ sakura.urls.main }}/login" title="Login to Flashii">Login</a>
+                        <a class="menu-item" id="headerLoginLink" href="http://{{ sakura.urls.main }}/login" title="Login to Flashii">Login</a>
                         <a class="menu-item" href="http://{{ sakura.urls.main }}/register" title="Create an account">Register</a>
                     </div>
                     <div class="menu-mob">
