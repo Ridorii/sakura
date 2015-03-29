@@ -13,3 +13,7 @@ RewriteEngine on
 Options +FollowSymLinks -Indexes
 
 # Rewrite Rules
+
+# Serving Images
+RewriteRule ^a/([0-9]+)$ imageserve.php?m=avatar&u=$1
+RewriteRule ^a/([0-9]+).png$ imageserve.php?m=avatar&u=$1
