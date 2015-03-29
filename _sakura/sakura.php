@@ -53,6 +53,10 @@ $renderData = array(
         'charset'       => Configuration::getConfig('charset'),
         'currentpage'   => $_SERVER['PHP_SELF']
     ],
+    'php' => [
+        'sessionid' => \session_id(),
+        'time'      => \time()
+    ],
     'user' => [
         'loggedin' => Users::loggedIn()
     ]

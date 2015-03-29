@@ -66,11 +66,13 @@
                     <div class="hidden" id="headerLoginForm">
                         <form method="post" action="/login">
                             <input type="hidden" name="redirect" value="{{ sakura.currentpage }}" />
+                            <input type="hidden" name="session" value="{{ php.sessionid }}" />
+                            <input type="hidden" name="time" value="{{ php.time }}" />
                             <label for="headerLoginUserName">Username:</label>
-                            <input class="inputStyling" type="text" id="headerLoginUserName" name="username" />
+                            <input type="text" id="headerLoginUserName" name="username" />
                             <label for="headerLoginPassword">Password:</label>
-                            <input class="inputStyling" type="password" id="headerLoginPassword" name="password" />
-                            <input class="inputStyling" type="submit" id="headerLoginButton" name="submit" value="Login" />
+                            <input type="password" id="headerLoginPassword" name="password" />
+                            <input type="submit" id="headerLoginButton" name="submit" value="Login" />
                         </form>
                     </div>
                 {% endif %}

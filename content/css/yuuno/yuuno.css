@@ -1213,4 +1213,6 @@ textarea.inputStyling {
 /* Header login thing */
 #headerLoginForm {
     background: #9475B2;
+    box-shadow: 0 0 5px #8364A1;
+    text-align: center;
 }
