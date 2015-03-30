@@ -20,7 +20,7 @@ class Users {
 
         // Execute query
         $user = Database::fetch('users', false, ['id' => [$id, '=']]);
-
+print_r($user);
         // Return false if no user was found
         if(empty($user))
             return false;
@@ -35,7 +35,7 @@ class Users {
 
         // Execute query
         $group = Database::fetch('groups', false, ['id' => [$id, '=']]);
-
+print_r($group);
         // Return false if no group was found
         if(empty($group))
             return false;
