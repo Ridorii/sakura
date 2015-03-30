@@ -11,7 +11,7 @@ namespace Sakura;
 ob_start();
 
 // Define Sakura version
-define('SAKURA_VERSION', '20150329');
+define('SAKURA_VERSION', '20150330');
 
 // Define Sakura Path
 define('ROOT_DIRECTORY', str_replace('_sakura', '', dirname(__FILE__)));
@@ -59,7 +59,5 @@ $renderData = array(
     ],
     'user' => [
         'loggedin' => Users::loggedIn()
-    ],
-    'users' => Users::getAllUsers(),
-    'groups' => Users::getAllGroups()
+    ]
 );

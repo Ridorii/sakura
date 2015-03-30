@@ -150,6 +150,12 @@ class Main {
         // Get news posts
         $newsPosts = Database::fetch('news', true, null, ['id', true], ($limit ? [$limit] : null));
 
+        // Get user data
+        foreach($newsPosts as $newsPost) {
+            $newsPost['udata'] = Users::getUser($newsPost['uid']);
+            $newsPost['gdata'] = Users::getGroup($newsPost['udata']['group_main']);
+        }
+
         // Return posts
         return $newsPosts;
 
