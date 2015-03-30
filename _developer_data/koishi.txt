@@ -1,0 +1,19 @@
+Array
+(
+    [username] => Koishi
+    [username_clean] => koishi
+    [password_hash] => mmDn534fv34zkv9EHVZimPcMO48mrhi+8al0DmxpqmNl5ZLlIK64ogVU3/l+mguk # Not hashed: WKL*y+dW!6WQ7N=9^h@m%yBfY-Lf8H!s
+    [password_salt] => lQu9FYA0c4/ZWG0DESaAGBSrOY08HFgH
+    [password_algo] => sha256
+    [password_iter] => 1000
+    [password_chan] => 1427737740
+    [email] => system@flashii.net
+    [group_main] => 1
+    [groups] => [1]
+    [register_ip] => 94.211.73.132
+    [last_ip] => 94.211.73.132
+    [regdate] => 1427737740
+    [lastdate] => 1427737740
+    [lastunamechange] => 1427737740
+    [profile_data] => []
+)
