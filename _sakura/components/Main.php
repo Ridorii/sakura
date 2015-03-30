@@ -153,7 +153,7 @@ class Main {
         // Get user data
         foreach($newsPosts as $newsId => $newsPost) {
             $newsPosts[$newsId]['udata'] = Users::getUser($newsPost['uid']);
-            $newsPosts[$newsId]['gdata'] = Users::getGroup($newsPost['udata']['group_main']);
+            $newsPosts[$newsId]['gdata'] = Users::getGroup($newsPosts[$newsId]['udata']['group_main']);
         }
 
         // Return posts
