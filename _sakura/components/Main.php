@@ -155,7 +155,7 @@ class Main {
             $newsPost['udata'] = Users::getUser($newsPost['uid']);
             $newsPost['gdata'] = Users::getGroup($newsPost['udata']['group_main']);
         }
-
+print_r($newsPosts);print '<br />';
         // Return posts
         return $newsPosts;
 
