@@ -1,14 +1,14 @@
 <?php
 /*
  * Sakura C/PMS
- * (c)Flashwave/Flashii Media 2013-2015 <http://flash.moe>
+ * (c)Flashwave/Flashii.net 2013-2015 <http://flash.moe>
  */
 
 // Declare namespace
 namespace Sakura;
-print '1';
+
 // Start output buffering
-\ob_start();
+ob_start();
 print '2';
 // Define Sakura version
 define('SAKURA_VERSION', '20150330');
