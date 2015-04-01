@@ -63,7 +63,7 @@ class Main {
     }
 
     // Parse markdown
-    private static function mdParse($text) {
+    public static function mdParse($text) {
 
         return $_MD->text($text);
 
