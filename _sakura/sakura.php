@@ -6,46 +6,46 @@
 
 // Declare namespace
 namespace Sakura;
-
+print '1';
 // Start output buffering
 ob_start();
-
+print '2';
 // Define Sakura version
 define('SAKURA_VERSION', '20150330');
-
+print '3';
 // Define Sakura Path
 define('ROOT_DIRECTORY', str_replace('_sakura', '', dirname(__FILE__)));
- 
-// Error Reporting: 0 for production and -1 for testing 
+print '4';
+// Error Reporting: 0 for production and -1 for testing
 error_reporting(-1);
-
+print '5';
 // Include Configuration
 require_once ROOT_DIRECTORY .'_sakura/config/config.php';
-
+print '6';
 // Include libraries
-require_once ROOT_DIRECTORY .'_sakura/vendor/autoload.php';
-require_once ROOT_DIRECTORY .'_sakura/components/Main.php';
-require_once ROOT_DIRECTORY .'_sakura/components/Hashing.php';
-require_once ROOT_DIRECTORY .'_sakura/components/Configuration.php';
-//require_once ROOT_DIRECTORY .'_sakura/components/Templates.php';
-require_once ROOT_DIRECTORY .'_sakura/components/Sessions.php';
-require_once ROOT_DIRECTORY .'_sakura/components/Users.php';
-
+require_once ROOT_DIRECTORY .'_sakura/vendor/autoload.php';print ':twig';
+require_once ROOT_DIRECTORY .'_sakura/components/Main.php';print ':main';
+require_once ROOT_DIRECTORY .'_sakura/components/Hashing.php';print ':hash';
+require_once ROOT_DIRECTORY .'_sakura/components/Configuration.php';print ':conf';
+require_once ROOT_DIRECTORY .'_sakura/components/Templates.php';print ':temp';
+require_once ROOT_DIRECTORY .'_sakura/components/Sessions.php';print ':sess';
+require_once ROOT_DIRECTORY .'_sakura/components/Users.php';print ':user:';
+print '7';
 // Generate path to database driver
 $_DBNGNPATH = ROOT_DIRECTORY .'_sakura/components/database/'. $sakuraConf['db']['driver'] .'.php';
-
+print '8';
 // Include database driver
 if(file_exists($_DBNGNPATH))
     require_once $_DBNGNPATH;
 else
     die('<h1>Failed to load database driver.</h1>');
-
+print '9';
 // Set Error handler
 set_error_handler(array('Sakura\Main', 'ErrorHandler'));
-
+print 'x1';
 // Initialise Flashii Class
 Main::init($sakuraConf);
-
+print 'x2';
 // Set base page rendering data
 $renderData = array(
     'sakura' => [
@@ -62,3 +62,4 @@ $renderData = array(
         'loggedin' => Users::loggedIn()
     ]
 );
+print 'x3';
