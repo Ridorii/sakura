@@ -8,7 +8,7 @@
 namespace Sakura;
 print '1';
 // Start output buffering
-ob_start();
+\ob_start();
 print '2';
 // Define Sakura version
 define('SAKURA_VERSION', '20150330');
