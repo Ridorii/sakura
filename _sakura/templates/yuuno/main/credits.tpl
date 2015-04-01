@@ -3,7 +3,7 @@
         <h1>Credits</h1>
         <p>This is the Flashii Sakura contributor list.</p>
         <h3>People</h3>
-        <table>
+        <table style="width: 100%;">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -14,13 +14,13 @@
                 {% for contribname, contributor in contributors %}
                 <tr>
                     <td><a href="{{ contributors[1] }}" target="_blank">{{ contribname }}</a></td>
-                    <td>{{ contributors[0] }}</td>
+                    <td>{{ contributor[0] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         <h3>Tools</h3>
-        <table>
+        <table style="width: 100%;">
             <thead>
                 <tr>
                     <th>Service</th>
