@@ -10,8 +10,9 @@ namespace Sakura;
 // Error Reporting: 0 for production and -1 for testing
 error_reporting(-1);
 
-// Start output buffering
-ob_start();
+// Start output buffering with gzip and no gzip fallback
+if(!ob_start('ob_gzhandler'))
+    ob_start();
 
 // Define Sakura version
 define('SAKURA_VERSION', '20150330');
