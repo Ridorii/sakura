@@ -85,7 +85,7 @@ class Configuration {
 			trigger_error('Unable to get configuration value!', E_USER_ERROR);
 
 	}
-/*
+
     // Parse .cfg files, mainly/only used for templates
 	public static function parseCfg($data) {
 
@@ -115,6 +115,6 @@ class Configuration {
         // Return the output variable
 		return $out;
 
-	}*/
+	}
 
 }
