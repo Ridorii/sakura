@@ -3,7 +3,7 @@
         <h1>Credits</h1>
         <p>This is the Flashii Sakura contributor list.</p>
         <h3>People</h3>
-        <table style="width: 100%;">
+        <table style="margin: 0 auto;">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -20,7 +20,7 @@
             </tbody>
         </table>
         <h3>Tools</h3>
-        <table style="width: 100%;">
+        <table style="margin: 0 auto;">
             <thead>
                 <tr>
                     <th>Service</th>
