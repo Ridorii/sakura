@@ -47,9 +47,9 @@ class Configuration {
 	public static function getLocalConfig($key, $subkey = null) {
 
         // Check if the key that we're looking for exists
-		if(array_key_exists($key, self::$_LCNF)) {          // If we also have a subkey we check
-			if($subkey && array_key_exists($subkey, $key))  // if that exists, else we just return 
-				return self::$_LCNF[$key][$subkey];         // the default value.
+		if(array_key_exists($key, self::$_LCNF)) { // If we also have a subkey we check if that exists, else we just return the default value.
+			if($subkey && is_array($key) && array_key_exists($subkey, $key))
+				return self::$_LCNF[$key][$subkey];
 			else
 				return self::$_LCNF[$key];
 		} else // If it doesn't exist trigger an error to avoid explosions
