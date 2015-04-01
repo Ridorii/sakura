@@ -1,0 +1,5 @@
+===
+  todo list
+===
+
+> Fix footer resizing because of the removal of the Affiliates section

@@ -10,7 +10,14 @@ ErrorDocument 401 /404.php
 
 # Rewrite Stuff
 RewriteEngine on
+RewriteBase /
 Options +FollowSymLinks -Indexes
+
+# Remove .php from the url
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php
 
 # Rewrite Rules
 
