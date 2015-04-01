@@ -17,7 +17,7 @@ if(isset($_GET['m'])) {
     switch($_GET['m']) {
         case 'avatar':
             // Set path to no avatar picture
-            $noAvatar = ROOT_DIRECTORY .'content/img/no-av.png';
+            $noAvatar = ROOT .'content/img/no-av.png';
 
             // If ?u= isn't set or if it isn't numeric
             if(!isset($_GET['u']) || !is_numeric($_GET['u'])) {
@@ -31,7 +31,7 @@ if(isset($_GET['m'])) {
         
         case 'background':
             // Set path to no avatar picture
-            $noBackground = ROOT_DIRECTORY .'content/pixel.png';
+            $noBackground = ROOT .'content/pixel.png';
 
             // If ?u= isn't set or if it isn't numeric
             if(!isset($_GET['u']) || !is_numeric($_GET['u'])) {
@@ -44,10 +44,10 @@ if(isset($_GET['m'])) {
         break;
         
         default:
-            $serveImage = ROOT_DIRECTORY .'content/pixel.png';
+            $serveImage = ROOT .'content/pixel.png';
     }
 } else {
-    $serveImage = ROOT_DIRECTORY .'content/pixel.png';
+    $serveImage = ROOT .'content/pixel.png';
 }
 
 $serveImage = file_get_contents($serveImage);
