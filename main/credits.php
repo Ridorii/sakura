@@ -1,6 +1,6 @@
 <?php
 /*
- * Sakura Main Index
+ * Sakura Credits Page
  */
 
 // Declare Namespace
@@ -21,7 +21,8 @@ $renderData['contributors'] = [
 ];
 $renderData['thirdParty'] = [
     'ReCAPTCHA'     => ['Providing the Captcha system we use.', 'http://recaptcha.net'],
-    'Twig'          => ['The templating engine used by Sakura.', 'http://twig.sensiolabs.org/']
+    'Twig'          => ['The templating engine used by Sakura.', 'http://twig.sensiolabs.org/'],
+    'Parsedown'     => ['A PHP markdown parser.', 'http://parsedown.org/']
 ];
 
 // Print page contents

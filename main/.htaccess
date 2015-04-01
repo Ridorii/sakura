@@ -21,6 +21,9 @@ RewriteRule ^(.*)$ $1.php
 
 # Rewrite Rules
 
+## Info pages
+RewriteRule ^r/([a-z]+)$ infopage.php?r=$1
+
 # Serving Images
 RewriteRule ^a/([0-9]+)$ imageserve.php?m=avatar&u=$1
 RewriteRule ^a/([0-9]+).png$ imageserve.php?m=avatar&u=$1
