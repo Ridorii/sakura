@@ -83,7 +83,7 @@ class Configuration {
 	}
 
     // Parse .cfg files, mainly/only used for templates
-	public function parseCfg($data) {
+	public static function parseCfg($data) {
 
         // Create storage variable
 		$out = array();
