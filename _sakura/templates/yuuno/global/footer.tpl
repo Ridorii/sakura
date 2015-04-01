@@ -2,7 +2,7 @@
             </div>
             <div class="footer">
                 <div class="ftsections">
-                    <div class="copycentre">Copyright &copy; 2013-2015 <a href="http://flash.moe/" target="_blank">Flashwave</a> | Sakura Version {{ sakura.version }} | This is a development site, the actual site is located at <a href="http://flashii.net/">Flashii.net</a>.</div>
+                    <div class="copycentre">Copyright &copy; 2013-2015 <a href="http://flash.moe/" target="_blank">Flashwave</a>, <a href="http://{{ sakura.urls.main }}/credits">et al</a> | Sakura Version {{ sakura.version }} | This is a development site, the actual site is located at <a href="http://flashii.net/">Flashii.net</a>.</div>
                     <ul class="ftsection">
                         <li class="fthead">General</li>
                         <li><a href="http://{{ sakura.urls.main }}/" title="Flashii Frontpage">Home</a></li>
@@ -11,14 +11,6 @@
                         <li><a href="http://{{ sakura.urls.main }}/r/terms" title="Our Terms of Service">Terms of Service</a></li>
                         <li><a href="http://{{ sakura.urls.main }}/r/rules" title="Some Rules and Information kind of summing up the ToS">Rules and Information</a></li>
                         <li><a href="http://{{ sakura.urls.main }}/r/faq" title="Questions that get Asked Frequently">Frequently Asked Questions</a></li>
-                    </ul>
-                    <ul class="ftsection">
-                        <li class="fthead">Affiliates</li>
-                        <li><a href="http://flash.moe" title="Site of the Creator and Owner">Flash.moe</a></li>
-                        <li><a href="http://malwareup.org" target="_blank" title="Community about everything except malware">MalwareUp</a></li>
-                        <li><a href="http://aroltd.com" target="_blank" title="Where e meets the rest of the alvabet">Aroltd</a></li>
-                        <li><a href="http://zeniea.com" target="_blank" title="Fun to read webcomic for if you\'re bored at some point">Zeniea</a></li>
-                        <li><a href="http://nookls.org" target="_blank" title="I don\'t even know">Nookls</a></li>
                     </ul>
                     <ul class="ftsection">
                         <li class="fthead">Status &amp; Social</li>
@@ -30,7 +22,7 @@
                     <ul class="ftsection">
                         <li class="fthead">Contribution</li>
                         <li><a href="http://flashii.net/changelog.php" title="All the changes made to Flashii are listed here">Changelog</a></li>
-                        <li><a href="http://{{ sakura.urls.main }}/r/credits" title="Here everyone who's helped Flashii get to where it is now is listed">Credits</a></li>
+                        <li><a href="http://{{ sakura.urls.main }}/credits" title="Here everyone who's helped Flashii get to where it is now is listed">Credits</a></li>
                         <li><a href="http://{{ sakura.urls.main }}/feedback" target="_blank" title="Give us feedback on what to do">Feedback &amp; Suggestions</a></li>
                         <li><a href="http://github.com/flashii" target="_blank" title="Our Open Source repository thing">Github</a></li>
                     </ul>
