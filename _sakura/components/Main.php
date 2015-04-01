@@ -161,4 +161,14 @@ class Main {
 
     }
 
+    // Loading info pages
+    public static function loadInfoPage($id) {
+
+        // Get contents from the database
+        $infopage = Database::fetch('infopages', false, ['shorthand' => [$id, '=']]);
+
+        print_r($infopage);
+
+    }
+
 }
