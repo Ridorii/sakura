@@ -27,6 +27,7 @@ require_once ROOT_DIRECTORY .'_sakura/vendor/autoload.php';
 require_once ROOT_DIRECTORY .'_sakura/components/Main.php';
 require_once ROOT_DIRECTORY .'_sakura/components/Hashing.php';
 require_once ROOT_DIRECTORY .'_sakura/components/Configuration.php';
+require_once ROOT_DIRECTORY .'_sakura/components/Templates.php';
 require_once ROOT_DIRECTORY .'_sakura/components/Sessions.php';
 require_once ROOT_DIRECTORY .'_sakura/components/Users.php';
 
