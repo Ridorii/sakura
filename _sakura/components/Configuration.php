@@ -29,12 +29,16 @@ class Configuration {
      */
     public static function initDB() {
 
+        // Get config table from the database
         $_DATA = Database::fetch('config', true);
+
+        // Create variable to temporarily store values in
         $_DBCN = array();
 
-        foreach($_DATA as $_CONF)
+        foreach($_DATA as $_CONF) // Properly sort the values
             $_DBCN[$_CONF[0]] = $_CONF[1];
 
+        // Assign the temporary array to the static one
         self::$_DCNF = $_DBCN;
 
     }
@@ -81,7 +85,7 @@ class Configuration {
 			trigger_error('Unable to get configuration value!', E_USER_ERROR);
 
 	}
-
+/*
     // Parse .cfg files, mainly/only used for templates
 	public static function parseCfg($data) {
 
@@ -111,6 +115,6 @@ class Configuration {
         // Return the output variable
 		return $out;
 
-	}
+	}*/
 
 }
