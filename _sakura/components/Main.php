@@ -62,6 +62,13 @@ class Main {
 
     }
 
+    // Parse markdown
+    private static function mdParse($text) {
+
+        return $_MD->text($text);
+
+    }
+
     // Verify ReCAPTCHA
     public static function verifyCaptcha($response) {
 
@@ -167,7 +174,8 @@ class Main {
         // Get contents from the database
         $infopage = Database::fetch('infopages', false, ['shorthand' => [$id, '=']]);
 
-        print_r($infopage);
+        // Return the data if there is any else just return false
+        return count($infopage) ? $infopage : false;
 
     }
 
