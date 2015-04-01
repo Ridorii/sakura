@@ -1,5 +1,5 @@
 {% include 'global/header.tpl' %}
     <div class="content standalone markdown">
-        {{ page.parsed }}
+        {{ page.content }}
     </div>
 {% include 'global/footer.tpl' %}

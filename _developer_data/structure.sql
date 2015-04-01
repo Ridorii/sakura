@@ -1,11 +1,9 @@
--- Adminer 4.2.0 MySQL dump
+-- Adminer 4.2.1 MySQL dump
 
-SET NAMES utf8mb4;
+SET NAMES utf8;
 SET time_zone = '+00:00';
-
-DROP DATABASE IF EXISTS `flashii`;
-CREATE DATABASE `flashii` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
-USE `flashii`;
+SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 DROP TABLE IF EXISTS `fii_apikeys`;
 CREATE TABLE `fii_apikeys` (
@@ -42,9 +40,18 @@ DROP TABLE IF EXISTS `fii_groups`;
 CREATE TABLE `fii_groups` (
   `id` bigint(128) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
   `groupname` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Display name of the group.',
+  `multi` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Can this group name have an s at the end?',
   `colour` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Colour used for the username of a member of this group.',
   `description` text COLLATE utf8_bin NOT NULL COMMENT 'A description of what a user in this group can do/is supposed to do.',
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+DROP TABLE IF EXISTS `fii_infopages`;
+CREATE TABLE `fii_infopages` (
+  `shorthand` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Name used for calling this page up in the /r/URL',
+  `pagetitle` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title displayed on the top of the page',
+  `content` text COLLATE utf8_bin NOT NULL COMMENT 'Content of the page'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -114,10 +121,10 @@ CREATE TABLE `fii_users` (
   `name_colour` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Additional name colour, when empty colour defaults to group colour.',
   `register_ip` varchar(16) COLLATE utf8_bin NOT NULL COMMENT 'IP used for the creation of this account.',
   `last_ip` varchar(16) COLLATE utf8_bin NOT NULL COMMENT 'Last IP that was used to log into this account.',
-  `usertitle` varchar(64) COLLATE utf8_bin NOT NULL COMMENT 'Custom user title of the user, when empty reverts to their derault group name.',
+  `usertitle` varchar(64) COLLATE utf8_bin DEFAULT NULL COMMENT 'Custom user title of the user, when empty reverts to their derault group name.',
   `profile_md` text COLLATE utf8_bin COMMENT 'Markdown customise page thing on the profile of the user.',
-  `avatar_url` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Full url to the user''s avatar.',
-  `background_url` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Full url to the user''s profile background.',
+  `avatar_url` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Full url to the user''s avatar.',
+  `background_url` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Full url to the user''s profile background.',
   `regdate` int(16) unsigned NOT NULL COMMENT 'Timestamp of account creation.',
   `lastdate` int(16) unsigned NOT NULL COMMENT 'Last time anything was done on this account.',
   `lastunamechange` int(16) unsigned NOT NULL COMMENT 'Last username change.',
@@ -140,4 +147,4 @@ CREATE TABLE `fii_warnings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
--- 2015-03-08 09:35:16
+-- 2015-04-01 17:26:49

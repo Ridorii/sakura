@@ -11,7 +11,8 @@ require_once '/var/www/flashii.net/_sakura/sakura.php';
 
 // Do parsing etc.
 $renderData['page'] = [
-    'title' => 'Infopage'
+    'title'     => 'Info pages',
+    'content'   => 'Unable to load the requested info page.'
 ];
 
 // Print page contents
