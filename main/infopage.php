@@ -20,7 +20,7 @@ if($ipData = Main::loadInfoPage(isset($_GET['r']) ? strtolower($_GET['r']) : '')
 
     // Assign new proper variable
     $renderData['page'] = [
-        'title'     => $ipData['title'],
+        'title'     => $ipData['pagetitle'],
         'content'   => Main::mdParse($ipData['content'])
     ];
 
