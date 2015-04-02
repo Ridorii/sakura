@@ -7,7 +7,7 @@
         </div>
     </a>
     <div class="markdown">
-        {{ newsPost.parsed }}
+        {{ newsPost.parsed|raw }}
     </div>
 </div>
 <div class="clear"></div>
