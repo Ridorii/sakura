@@ -25,6 +25,7 @@ RewriteRule ^(.*)$ $1.php
 RewriteRule ^r/([a-z]+)$ infopage.php?r=$1
 
 ## News
+RewriteRule ^news?/?$ news.php
 RewriteRule ^news/([0-9]+)$ news.php?id=$1
 RewriteRule ^news.xml$ news.php?xml
 
