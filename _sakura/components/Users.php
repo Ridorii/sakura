@@ -7,6 +7,43 @@ namespace Sakura;
 
 class Users {
 
+    // Empty user template
+    public static $emptyUser = [
+        'id'                => 0,
+        'username'          => 'Non-existent user',
+        'username_clean'    => 'non-existent user',
+        'password_hash'     => '',
+        'password_salt'     => '',
+        'password_algo'     => 'sha256',
+        'password_iter'     => 1000,
+        'password_chan'     => 0,
+        'password_new'      => '',
+        'email'             => 'deleted@flashii.net',
+        'group_main'        => 0,
+        'groups'            => '[0]',
+        'name_colour'       => '',
+        'register_ip'       => '127.0.0.1',
+        'last_ip'           => '127.0.0.1',
+        'usertitle'         => 'Non-existent user account',
+        'profile_md'        => '',
+        'avatar_url'        => '',
+        'background_url'    => '',
+        'regdate'           => 0,
+        'lastdate'          => 0,
+        'lastunamechange'   => 0,
+        'birthday'          => '',
+        'profile_data'      => '[]'
+    ];
+
+    // Empty group template
+    public static $emptyGroup = [
+        'id'            => 0,
+        'groupname'     => 'Non-existent group',
+        'multi'         => 0,
+        'colour'        => '',
+        'description'   => 'A hardcoded dummy group for fallback.'
+    ];
+
     // Check if a user is logged in
     public static function loggedIn() {
 
@@ -23,7 +60,7 @@ class Users {
 
         // Return false if no user was found
         if(empty($user))
-            return false;
+            return self::$emptyUser;
 
         // If user was found return user data
         return $user;
@@ -38,7 +75,7 @@ class Users {
 
         // Return false if no group was found
         if(empty($group))
-            return false;
+            return self::$emptyGroup;
 
         // If group was found return group data
         return $group;
