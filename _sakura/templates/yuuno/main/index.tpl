@@ -6,10 +6,10 @@
             <a class="button registerbutton" href="/register">Register!</a>
             <a class="button loginbutton" href="/login">Login</a>
             <div class="head">Stats</div>
-            We have <b>{{ frontpage.stats.usercount }}</b>, 
-            <b><a href="/u/{{ frontpage.stats.latestid }}" class="default">{{ frontpage.stats.latestname }}</a></b> is the newest user, 
-            it has been <b>{{ frontpage.stats.lastsignup }}</b> since the last user registered and 
-            there are <b>{{ frontpage.stats.usersinchat }}</b> in chat right now.
+            We have <b>{{ stats.userCount }}</b>, 
+            <b><a href="/u/{{ stats.newestUser.id }}" class="default">{{ stats.newestUser.username }}</a></b> is the newest user, 
+            it has been <b>{{ stats.lastRegDate }}</b> since the last user registered and 
+            there are <b>{{ stats.chatOnline }}</b> in chat right now.
         </div>
         <div class="content-left content-column">
             <div class="head">News <a href="/news.xml" class="fa fa-rss news-rss default"></a></div>
