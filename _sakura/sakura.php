@@ -18,9 +18,8 @@ error_reporting(-1);
 ini_set('log_errors', 1);
 ini_set('error_log', ROOT .'errors.log');
 
-// Start output buffering with gzip and no gzip fallback
-//if(!ob_start('ob_gzhandler'))
-    ob_start();
+// Start output buffering
+ob_start();
 
 // Include Configuration
 require_once ROOT .'_sakura/config/config.php';
