@@ -24,6 +24,10 @@ RewriteRule ^(.*)$ $1.php
 ## Info pages
 RewriteRule ^r/([a-z]+)$ infopage.php?r=$1
 
+## News
+RewriteRule ^news/([0-9]+)$ news.php?id=$1
+RewriteRule ^news.xml$ news.php?xml
+
 # Serving Images
 RewriteRule ^a/([0-9]+)$ imageserve.php?m=avatar&u=$1
 RewriteRule ^a/([0-9]+).png$ imageserve.php?m=avatar&u=$1
