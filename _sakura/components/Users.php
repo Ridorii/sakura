@@ -10,8 +10,8 @@ class Users {
     // Empty user template
     public static $emptyUser = [
         'id'                => 0,
-        'username'          => 'Non-existent user',
-        'username_clean'    => 'non-existent user',
+        'username'          => 'Deleted User',
+        'username_clean'    => 'deleted user',
         'password_hash'     => '',
         'password_salt'     => '',
         'password_algo'     => 'sha256',
