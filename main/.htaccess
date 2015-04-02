@@ -13,12 +13,6 @@ RewriteEngine on
 RewriteBase /
 Options +FollowSymLinks -Indexes
 
-# Remove .php from the url
-RewriteEngine on
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}\.php -f
-RewriteRule ^(.*)$ $1.php
-
 # Rewrite Rules
 
 ## Info pages
@@ -32,3 +26,9 @@ RewriteRule ^news.xml$ news.php?xml
 # Serving Images
 RewriteRule ^a/([0-9]+)$ imageserve.php?m=avatar&u=$1
 RewriteRule ^a/([0-9]+).png$ imageserve.php?m=avatar&u=$1
+
+# Remove .php from the url
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php
