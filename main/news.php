@@ -1,6 +1,6 @@
 <?php
 /*
- * Sakura Main Index
+ * Sakura News Page
  */
 
 // Declare Namespace
@@ -11,9 +11,9 @@ require_once '/var/www/flashii.net/_sakura/sakura.php';
 
 // Add page specific things
 $renderData['page'] = [
-    'title' => 'Flashii Dev'
+    'title' => 'Flashii News'
 ];
-$renderData['newsPosts'] = Main::getNewsPosts(3);
+$renderData['newsPosts'] = Main::getNewsPosts();
 
 // Print page contents
-print Main::tplRender('main/index.tpl', $renderData);
+print Main::tplRender('main/news.tpl', $renderData);

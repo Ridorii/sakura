@@ -30,15 +30,15 @@ class Main {
         Session::init();
 
         // Templating engine
-        self::initTwig();
+        self::initTpl();
 
         // Markdown Parser
-        self::initParsedown();
+        self::initMD();
 
 	}
 
     // Initialise Twig
-    private static function initTwig() {
+    private static function initTpl() {
 
         // Initialise Twig Filesystem Loader
         $twigLoader = new \Twig_Loader_Filesystem(Configuration::getLocalConfig('etc', 'templatesPath') .'/'. Configuration::getLocalConfig('etc', 'design'));
@@ -55,8 +55,15 @@ class Main {
 
     }
 
+    // Render template
+    public static function tplRender($file, $tags) {
+
+        return self::$_TPL->render($file, $tags);
+
+    }
+
     // Initialise Parsedown
-    private static function initParsedown() {
+    private static function initMD() {
 
         self::$_MD = new \Parsedown();
 
