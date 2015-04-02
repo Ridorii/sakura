@@ -17,7 +17,7 @@ $renderData['stats'] = [
     'userCount' => ($userCount = count($users = Users::getAllUsers())) .' user'. ($userCount == 1 ? '' : 's'),
     'newestUser' => max($users),
     'lastRegDate' => ($lastRegDate = date_diff(date_create(date('Y-m-d', max($users)['regdate'])), date_create(date('Y-m-d')))->format('%a')) .' day'. ($lastRegDate == 1 ? '' : 's'),
-    'chatOnline' => ($chatOnline = 0) .'user'. ($chatOnline == 1 ? '' : 's')
+    'chatOnline' => ($chatOnline = 0) .' user'. ($chatOnline == 1 ? '' : 's')
 ];
 $renderData['newsPosts'] = Main::getNewsPosts(3);
 
