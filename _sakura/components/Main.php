@@ -65,7 +65,7 @@ class Main {
     // Parse markdown
     public static function mdParse($text) {
 
-        return $_MD->text($text);
+        return self::$_MD->text($text);
 
     }
 
