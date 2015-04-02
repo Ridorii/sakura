@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20150330');
+define('SAKURA_VERSION', '20150402');
 
 // Define Sakura Path
 define('ROOT', str_replace('_sakura', '', dirname(__FILE__)));
