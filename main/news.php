@@ -39,8 +39,8 @@ if(isset($_GET['xml'])) {
         print '<link>http://flashii.net/news/'. $newsPost['id'] .'</link>';
         print '<guid>http://flashii.net/news/'. $newsPost['id'] .'</guid>';
         print '<pubDate>'. date('D, d M Y G:i:s O', $newsPost['date']) .'</pubDate>';
-        print '<dc:publisher>'. $flashii->getUserdata($newsPost['uid'])['username'] .'</dc:publisher>';
-        print '<description><![CDATA['. $mdparser->text($newsPost['content']) .']]></description>';
+        print '<dc:publisher>'. $newsPost['udata']['username'] .'</dc:publisher>';
+        print '<description><![CDATA['. $newsPost['parsed'] .']]></description>';
 
         print '</item>';
 
