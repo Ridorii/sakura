@@ -15,20 +15,19 @@ Options +FollowSymLinks -Indexes
 
 # Rewrite Rules
 
+# Remove .php from the url
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php
+
 ## Info pages
 RewriteRule ^r/([a-z]+)$ infopage.php?r=$1
 
 ## News
-RewriteRule ^news?/?$ news.php
 RewriteRule ^news/([0-9]+)$ news.php?id=$1
 RewriteRule ^news.xml$ news.php?xml
 
 # Serving Images
 RewriteRule ^a/([0-9]+)$ imageserve.php?m=avatar&u=$1
 RewriteRule ^a/([0-9]+).png$ imageserve.php?m=avatar&u=$1
-
-# Remove .php from the url
-RewriteEngine on
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}\.php -f
-RewriteRule ^(.*)$ $1.php

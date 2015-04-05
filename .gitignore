@@ -41,6 +41,7 @@ local.properties
 #################
 
 errors.log
+config.php
 
 
 #################

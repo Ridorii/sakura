@@ -159,10 +159,10 @@ class Main {
     }
 
     // Getting news posts
-    public static function getNewsPosts($limit = null) {
+    public static function getNewsPosts($limit = null, $pid = false) {
 
         // Get news posts
-        $newsPosts = Database::fetch('news', true, null, ['id', true], ($limit ? [$limit] : null));
+        $newsPosts = Database::fetch('news', true, ($pid ? ['id' => [$limit, '=']] : null), ['id', true], ($limit && !$pid ? [$limit] : null));
 
         // Get user data
         foreach($newsPosts as $newsId => $newsPost) {

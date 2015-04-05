@@ -13,7 +13,7 @@ require_once '/var/www/flashii.net/_sakura/sakura.php';
 $renderData['page'] = [
     'title' => 'Flashii News'
 ];
-$renderData['newsPosts'] = Main::getNewsPosts((isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])) ? $_GET['id'] : null);
+$renderData['newsPosts'] = Main::getNewsPosts((isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])) ? $_GET['id'] : null, (isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])));
 
 // News XML, don't really care so yeah
 if(isset($_GET['xml'])) {
