@@ -11,7 +11,8 @@ require_once '/var/www/flashii.net/_sakura/sakura.php';
 
 // Add page specific things
 $renderData['page'] = [
-    'title' => 'Flashii Dev'
+    'title'         => 'Flashii Dev',
+    'newsComments'  => false
 ];
 $renderData['stats'] = [
     'userCount' => ($userCount = count($users = Users::getAllUsers())) .' user'. ($userCount == 1 ? '' : 's'),

@@ -10,10 +10,11 @@ namespace Sakura;
 require_once '/var/www/flashii.net/_sakura/sakura.php';
 
 // Add page specific things
-$renderData['page'] = [
-    'title' => 'Flashii News'
-];
 $renderData['newsPosts'] = Main::getNewsPosts((isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])) ? $_GET['id'] : null, (isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])));
+$renderData['page'] = [
+    'title'         => 'Flashii News',
+    'newsComments'  => false
+];
 
 // News XML, don't really care so yeah
 if(isset($_GET['xml'])) {
