@@ -14,16 +14,18 @@ RewriteBase /
 Options +FollowSymLinks -Indexes
 
 # Rewrite Rules
-
-# Remove .php from the url
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}\.php -f
-RewriteRule ^(.*)$ $1.php
+RewriteRule ^feedback?/? http://forum.flash.moe/viewforum.php?f=22
+RewriteRule ^credits?/? credits.php
+RewriteRule ^index?/? index.php
+RewriteRule ^login|register|forgotpassword?/? authenticate.php
+RewriteRule ^donate?/? donate.php
+RewriteRule ^contact?/? contact.php
 
 ## Info pages
 RewriteRule ^r/([a-z]+)$ infopage.php?r=$1
 
 ## News
+RewriteRule ^news?/?$ news.php
 RewriteRule ^news/([0-9]+)$ news.php?id=$1
 RewriteRule ^news.xml$ news.php?xml
 
