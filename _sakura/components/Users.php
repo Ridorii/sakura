@@ -35,13 +35,13 @@ class Users {
         'profile_data'      => '[]'
     ];
 
-    // Empty group template
-    public static $emptyGroup = [
+    // Empty rank template
+    public static $emptyRank = [
         'id'            => 0,
-        'groupname'     => 'Non-existent group',
+        'rankname'     => 'Non-existent Rank',
         'multi'         => 0,
         'colour'        => '',
-        'description'   => 'A hardcoded dummy group for fallback.'
+        'description'   => 'A hardcoded dummy rank for fallback.'
     ];
 
     // Check if a user is logged in
@@ -67,18 +67,18 @@ class Users {
 
     }
 
-    // Get group data by id
-    public static function getGroup($id) {
+    // Get rank data by id
+    public static function getRank($id) {
 
         // Execute query
-        $group = Database::fetch('groups', false, ['id' => [$id, '=']]);
+        $rank = Database::fetch('ranks', false, ['id' => [$id, '=']]);
 
-        // Return false if no group was found
-        if(empty($group))
-            return self::$emptyGroup;
+        // Return false if no rank was found
+        if(empty($rank))
+            return self::$emptyRank;
 
-        // If group was found return group data
-        return $group;
+        // If rank was found return rank data
+        return $rank;
 
     }
 
@@ -97,18 +97,18 @@ class Users {
 
     }
 
-    // Get all groups
-    public static function getAllGroups() {
+    // Get all ranks
+    public static function getAllRanks() {
 
         // Execute query
-        $getGroups = Database::fetch('groups', true);
+        $getRanks = Database::fetch('ranks', true);
 
         // Reorder shit
-        foreach($getGroups as $group)
-            $groups[$group['id']] = $group;
+        foreach($getRanks as $rank)
+            $ranks[$rank['id']] = $rank;
 
-        // and return an array with the users
-        return $groups;
+        // and return an array with the ranks
+        return $ranks;
 
     }
 

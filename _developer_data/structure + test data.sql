@@ -5,9 +5,9 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-DROP DATABASE IF EXISTS `flashii`;
-CREATE DATABASE `flashii` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
-USE `flashii`;
+DROP DATABASE IF EXISTS `flashiidev`;
+CREATE DATABASE `flashiidev` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
+USE `flashiidev`;
 
 DROP TABLE IF EXISTS `fii_apikeys`;
 CREATE TABLE `fii_apikeys` (
@@ -39,31 +39,6 @@ CREATE TABLE `fii_config` (
   `config_value` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The value, obviously.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO `fii_config` (`config_name`, `config_value`) VALUES
-('recaptcha_public',	'6LdiMAMTAAAAAMABBieBGBOVJv0HSC44oJPTxef4'),
-('recaptcha_private',	'6LdiMAMTAAAAAKKDqjtJcGQD3RyOdrPD9dlnRU77'),
-('charset',	'utf-8');
-
-DROP TABLE IF EXISTS `fii_groups`;
-CREATE TABLE `fii_groups` (
-  `id` bigint(128) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
-  `groupname` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Display name of the group.',
-  `multi` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Can this group name have an s at the end?',
-  `colour` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Colour used for the username of a member of this group.',
-  `description` text COLLATE utf8_bin NOT NULL COMMENT 'A description of what a user in this group can do/is supposed to do.',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-INSERT INTO `fii_groups` (`id`, `groupname`, `multi`, `colour`, `description`) VALUES
-(1,	'Deactivated',	0,	'555',	'Users that are yet to be activated or that deactivated their own account.'),
-(2,	'Regular user',	1,	'',	'Regular users with regular permissions.'),
-(3,	'Site moderator',	1,	'0A0',	'Users with special permissions like being able to ban and modify users if needed.'),
-(4,	'Administrator',	1,	'C00',	'Users that manage the server and everything around that.'),
-(5,	'Developer',	1,	'824CA0',	'Users that either create or test new features of the site.'),
-(6,	'Bot',	1,	'9E8DA7',	'Reserved user accounts for services.'),
-(7,	'Chat moderator',	1,	'09F',	'Moderators of the chat room.'),
-(8,	'Tenshi',	0,	'EE9400',	'Users that donated $5.00 or more in order to keep the site and it\'s services alive!'),
-(9,	'Alumnii',	0,	'FF69B4',	'People who have contributed to the community but have moved on or resigned.');
 
 DROP TABLE IF EXISTS `fii_infopages`;
 CREATE TABLE `fii_infopages` (
@@ -103,7 +78,7 @@ CREATE TABLE `fii_news` (
   `title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title of the post.',
   `content` text COLLATE utf8_bin NOT NULL COMMENT 'Contents of the post',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO `fii_news` (`id`, `uid`, `date`, `title`, `content`) VALUES
 (1,	2,	1398635705,	'Testing',	'Gotta have one of these, hope it fucking works...'),
@@ -133,7 +108,30 @@ INSERT INTO `fii_news` (`id`, `uid`, `date`, `title`, `content`) VALUES
 (26,	2,	1423831447,	'VISIBLE PROGRESS SOON',	'So in the past few however long I spent working my ass off to get that new design out, with the new design and it was worth the weight! I\'ll try to get the new shit up by Monday and if it\'s not out by then kill me like literally.'),
 (27,	2,	1427302674,	'The state of things 2: electric boogaloo',	'I don\'t even remember when I did it but somewhere in the past 2 months I released the new design and completely forgot to make a new post about it...\r\n\r\nWell here it is! Extremely late \"WOW LOOK AT THE NEW DESIGN\"-post.\r\n\r\nIn the next few months in the Flashii Productivity Index I have a newer backend planned?\r\nWhy you ask? Well I want to get a rid of the current exploit ridden piece of shit (the whole new backend I used to speak of was more of a bug fix to make the exploit ridden piece of shit less exploit ridden).\r\n\r\nI\'m also working on making the originally promised features (we\'re talking literally a year ago) a thing. These being Private Messages and Friends (and blocking).\r\n\r\nThat is all \'n shit.'),
 (28,	2,	1427821877,	'Genders!',	'So after a discussion with some staff members I\'ve decided to add a gender profile setting to the site.\r\n\r\nYou can access it from the Settings panel under the General section as displayed in the image below.\r\n\r\n![Gender Setting](//cdn.flashii.net/img/gendersetting.png)\r\n\r\nOver the period of next week I\'ll also be introducing a fully featured blogging system with custom styles and all that good stuff.\r\n\r\nThe thing is; our current backend and site style are not really that great for the new platform we\'re aiming for so we\'ve been working on a new panel and such as well.\r\n\r\n[Click here to get a sneak peek!](//cdn.flashii.net/img/flashiifuture.png)\r\n\r\nI hope you guys will appreciate these changes and I wish you all a good day.\r\n\r\n\r\n-------\r\n\r\n**Mokanote**: for those who didn\'t get the memo; this was a joke\r\n'),
-(29,	2,	1428101617,	'April begins',	'So you probably tried accessing the site today and got http://flash.moe/flashiiisfucked, that is because I did a server reinstall. Why? Because I completely fucked up something on the server and had to do the obligatory purge.\r\n\r\nThis did make me able to reconsider some of the ways shit was set up and it\'s now 4ms faster! Go server management!\r\n\r\nDuring the fuckery I also did some change;\r\n\r\n- files.flashii.net is dead\r\n- devchat.flashii.net is dead as well\r\n- Saved public chatlogs have been moved to http://flashii.net/logs/\r\n- Added a Japanese status mirror\r\n- and shit which I probably forgot\r\n\r\nSo yeah, hopefully I can keep running shit for 2 weeks without breaking things. But that\'s ok.\r\n\r\nHave a nice day everywaifu.');
+(29,	2,	1428101617,	'April begins',	'So you probably tried accessing the site today and got http://flash.moe/flashiiisfucked, that is because I did a server reinstall. Why? Because I completely fucked up something on the server and had to do the obligatory purge.\r\n\r\nThis did make me able to reconsider some of the ways shit was set up and it\'s now 4ms faster! Go server management!\r\n\r\nDuring the fuckery I also did some change;\r\n\r\n- files.flashii.net is dead\r\n- devchat.flashii.net is dead as well\r\n- Saved public chatlogs have been moved to http://flashii.net/logs/\r\n- Added a Japanese status mirror\r\n- and shit which I probably forgot\r\n\r\nSo yeah, hopefully I can keep running shit for 2 weeks without breaking things. But that\'s ok.\r\n\r\nHave a nice day everywaifu.'),
+(30,	2,	1428270783,	'Resigning from administrator',	'So most of you have probably already heard it in chat but I am resigning from my Administrative Position on this Web Zone.\r\n\r\nYou might think this is a meme or a kek but it is not. Even though I\'m resigning from the administrator rank I\'ll still be the one working on the site\'s backend and operating the server.\r\n\r\nI may consider stepping up again but for now I\'m going to stay as just a developer.\r\n\r\nIn my place I\'m giving you [malloc](/u/303) so you have something to hate me for.\r\n\r\nHave a good day everyone!\r\n');
+
+DROP TABLE IF EXISTS `fii_ranks`;
+CREATE TABLE `fii_ranks` (
+  `id` bigint(128) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
+  `name` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Display name of the rank.',
+  `multi` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Can the rank name have an s at the end?',
+  `colour` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Colour used for the username of a member of this rank.',
+  `description` text COLLATE utf8_bin NOT NULL COMMENT 'A description of what a user of this rank can do/is supposed to do.',
+  `title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Default user title if user has none set.',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+INSERT INTO `fii_ranks` (`id`, `name`, `multi`, `colour`, `description`, `title`) VALUES
+(1,	'Deactivated',	0,	'555',	'Users that are yet to be activated or that deactivated their own account.',	'Deactivated'),
+(2,	'Regular user',	1,	'',	'Regular users with regular permissions.',	'Regular user'),
+(3,	'Site moderator',	1,	'0A0',	'Users with special permissions like being able to ban and modify users if needed.',	'Staff'),
+(4,	'Administrator',	1,	'C00',	'Users that manage the server and everything around that.',	'Administrator'),
+(5,	'Developer',	1,	'824CA0',	'Users that either create or test new features of the site.',	'Staff'),
+(6,	'Bot',	1,	'9E8DA7',	'Reserved user accounts for services.',	'Bot'),
+(7,	'Chat moderator',	1,	'09F',	'Moderators of the chat room.',	'Staff'),
+(8,	'Tenshi',	0,	'EE9400',	'Users that donated $5.00 or more in order to keep the site and it\'s services alive!',	'Tenshi'),
+(9,	'Alumnii',	0,	'FF69B4',	'People who have contributed to the community but have moved on or resigned.',	'Alumnii');
 
 DROP TABLE IF EXISTS `fii_regcodes`;
 CREATE TABLE `fii_regcodes` (
@@ -171,8 +169,8 @@ CREATE TABLE `fii_users` (
   `password_chan` int(16) unsigned NOT NULL COMMENT 'Last time the user changed their password.',
   `password_new` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Field with array containing new password data beit that they requested a password change.',
   `email` varchar(32) COLLATE utf8_bin NOT NULL COMMENT 'E-mail of the user for password restoring etc.',
-  `group_main` mediumint(4) unsigned NOT NULL COMMENT 'Main usergroup of the user.',
-  `groups` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Array containing the groups the user is in.',
+  `rank_main` mediumint(4) unsigned NOT NULL COMMENT 'Main rank of the user.',
+  `ranks` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Array containing the ranks the user is part of.',
   `name_colour` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Additional name colour, when empty colour defaults to group colour.',
   `register_ip` varchar(16) COLLATE utf8_bin NOT NULL COMMENT 'IP used for the creation of this account.',
   `last_ip` varchar(16) COLLATE utf8_bin NOT NULL COMMENT 'Last IP that was used to log into this account.',
@@ -189,8 +187,6 @@ CREATE TABLE `fii_users` (
   UNIQUE KEY `username_clean` (`username_clean`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO `fii_users` (`id`, `username`, `username_clean`, `password_hash`, `password_salt`, `password_algo`, `password_iter`, `password_chan`, `password_new`, `email`, `group_main`, `groups`, `name_colour`, `register_ip`, `last_ip`, `usertitle`, `profile_md`, `avatar_url`, `background_url`, `regdate`, `lastdate`, `lastunamechange`, `birthday`, `profile_data`) VALUES
-(1,	'Koishi',	'koishi',	'mmDn534fv34zkv9EHVZimPcMO48mrhi+8al0DmxpqmNl5ZLlIK64ogVU3/l+mguk',	'lQu9FYA0c4/ZWG0DESaAGBSrOY08HFgH',	'sha256',	1000,	1427646902,	NULL,	'system@flashii.net',	6,	'[6]',	NULL,	'127.0.0.1',	'127.0.0.1',	NULL,	NULL,	NULL,	NULL,	1427646902,	1427646902,	1427646902,	NULL,	'[]');
 
 DROP TABLE IF EXISTS `fii_warnings`;
 CREATE TABLE `fii_warnings` (
@@ -204,4 +200,4 @@ CREATE TABLE `fii_warnings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
--- 2015-04-05 17:43:31
+-- 2015-04-06 20:04:15

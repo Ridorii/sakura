@@ -1,5 +1,5 @@
 <?php
-require_once '/var/www/flashii.net/_sakura/sakura.php';
+require_once '../../_sakura/sakura.php';
 
 if(isset($_POST['submit'])) {
 

@@ -14,12 +14,12 @@ RewriteBase /
 Options +FollowSymLinks -Indexes
 
 # Rewrite Rules
-RewriteRule ^feedback?/? http://forum.flash.moe/viewforum.php?f=22
-RewriteRule ^credits?/? credits.php
-RewriteRule ^index?/? index.php
-RewriteRule ^login|register|forgotpassword?/? authenticate.php
-RewriteRule ^donate?/? donate.php
-RewriteRule ^contact?/? contact.php
+RewriteRule ^feedback?/?$ http://forum.flash.moe/viewforum.php?f=22
+RewriteRule ^credits?/?$ credits.php
+RewriteRule ^index?/?$ index.php
+RewriteRule ^login?/?$|register?/?$|forgotpassword?/?$ authenticate.php
+RewriteRule ^donate?/?$ donate.php
+RewriteRule ^contact?/?$ contact.php
 
 ## Info pages
 RewriteRule ^r/([a-z]+)$ infopage.php?r=$1

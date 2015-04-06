@@ -5,6 +5,10 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
+DROP DATABASE IF EXISTS `flashiidev`;
+CREATE DATABASE `flashiidev` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
+USE `flashiidev`;
+
 DROP TABLE IF EXISTS `fii_apikeys`;
 CREATE TABLE `fii_apikeys` (
   `id` bigint(128) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
@@ -33,17 +37,6 @@ DROP TABLE IF EXISTS `fii_config`;
 CREATE TABLE `fii_config` (
   `config_name` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Array key for configuration value',
   `config_value` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The value, obviously.'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-
-DROP TABLE IF EXISTS `fii_groups`;
-CREATE TABLE `fii_groups` (
-  `id` bigint(128) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
-  `groupname` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Display name of the group.',
-  `multi` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Can this group name have an s at the end?',
-  `colour` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Colour used for the username of a member of this group.',
-  `description` text COLLATE utf8_bin NOT NULL COMMENT 'A description of what a user in this group can do/is supposed to do.',
-  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -77,7 +70,19 @@ CREATE TABLE `fii_news` (
   `title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title of the post.',
   `content` text COLLATE utf8_bin NOT NULL COMMENT 'Contents of the post',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+DROP TABLE IF EXISTS `fii_ranks`;
+CREATE TABLE `fii_ranks` (
+  `id` bigint(128) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
+  `name` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Display name of the rank.',
+  `multi` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Can the rank name have an s at the end?',
+  `colour` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Colour used for the username of a member of this rank.',
+  `description` text COLLATE utf8_bin NOT NULL COMMENT 'A description of what a user of this rank can do/is supposed to do.',
+  `title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Default user title if user has none set.',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_regcodes`;
@@ -116,8 +121,8 @@ CREATE TABLE `fii_users` (
   `password_chan` int(16) unsigned NOT NULL COMMENT 'Last time the user changed their password.',
   `password_new` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Field with array containing new password data beit that they requested a password change.',
   `email` varchar(32) COLLATE utf8_bin NOT NULL COMMENT 'E-mail of the user for password restoring etc.',
-  `group_main` mediumint(4) unsigned NOT NULL COMMENT 'Main usergroup of the user.',
-  `groups` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Array containing the groups the user is in.',
+  `rank_main` mediumint(4) unsigned NOT NULL COMMENT 'Main rank of the user.',
+  `ranks` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Array containing the ranks the user is part of.',
   `name_colour` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Additional name colour, when empty colour defaults to group colour.',
   `register_ip` varchar(16) COLLATE utf8_bin NOT NULL COMMENT 'IP used for the creation of this account.',
   `last_ip` varchar(16) COLLATE utf8_bin NOT NULL COMMENT 'Last IP that was used to log into this account.',
@@ -132,7 +137,7 @@ CREATE TABLE `fii_users` (
   `profile_data` text COLLATE utf8_bin NOT NULL COMMENT 'Modular array containing profile data.',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_clean` (`username_clean`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_warnings`;
@@ -147,4 +152,4 @@ CREATE TABLE `fii_warnings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
--- 2015-04-01 17:26:49
+-- 2015-04-06 20:03:32

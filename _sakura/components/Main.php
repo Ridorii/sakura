@@ -168,7 +168,7 @@ class Main {
         foreach($newsPosts as $newsId => $newsPost) {
             $newsPosts[$newsId]['parsed']   = self::mdParse($newsPost['content']);
             $newsPosts[$newsId]['udata']    = Users::getUser($newsPost['uid']);
-            $newsPosts[$newsId]['gdata']    = Users::getGroup($newsPosts[$newsId]['udata']['group_main']);
+            $newsPosts[$newsId]['rdata']    = Users::getRank($newsPosts[$newsId]['udata']['rank_main']);
         }
 
         // Return posts
