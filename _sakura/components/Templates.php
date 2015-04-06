@@ -11,7 +11,7 @@ class Templates {
     public static $_ENG;
     public static $_TPL;
     public static $_CFG;
-    
+
     // Initialise templating engine and data
     public static function init($template) {
 
