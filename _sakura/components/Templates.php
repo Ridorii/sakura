@@ -12,7 +12,7 @@ class Templates {
     public static $_TPL;
     public static $_CFG;
     
-	// Initialise templating engine and data
+    // Initialise templating engine and data
     public static function init($template) {
 
         // Set template folder name
@@ -57,40 +57,40 @@ class Templates {
     }
 
     // Parse .cfg files
-	public static function parseCfg($data) {
+    public static function parseCfg($data) {
 
         // Create storage variable
-		$out = array();
+        $out = array();
 
         // Remove comments and empty lines
-		$data = preg_replace('/#.*?\r\n/im',    null, $data);
-		$data = preg_replace('/^\r\n/im',       null, $data);
+        $data = preg_replace('/#.*?\r\n/im',    null, $data);
+        $data = preg_replace('/^\r\n/im',       null, $data);
 
         // Break line breaks up into array values
-		$data = str_replace("\r\n", "\n", $data);
-		$data = explode("\n", $data);
+        $data = str_replace("\r\n", "\n", $data);
+        $data = explode("\n", $data);
 
-		foreach($data as $var) {
+        foreach($data as $var) {
 
             // Make sure no whitespaces escaped the check
             if(empty($var))
                 continue;
 
             // Remove whitespace between key, equals sign and value
-			$var = preg_replace('/[\s+]=[\s+]/i', '=', $var);
+            $var = preg_replace('/[\s+]=[\s+]/i', '=', $var);
 
             // Then break this up
-			$var = explode('=', $var);
+            $var = explode('=', $var);
 
             // And assign the value with the key to the output variable
-			$out[$var[0]] = $var[1];
+            $out[$var[0]] = $var[1];
 
-		}
+        }
 
         // Return the output variable
-		return $out;
+        return $out;
 
-	}
+    }
 
     // Render template
     public static function render($file, $tags) {
