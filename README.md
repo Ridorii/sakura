@@ -1,4 +1,4 @@
-# Flashii Sakura
+# Sakura
 
 _A backend that doesn't suck_
 
@@ -8,5 +8,6 @@ _A backend that doesn't suck_
 - All the (good) features of the old backend
 - Templating!
 - PDO!
+- Groups (different from ranks)
 
-Might even consider open-sourcing this but for now I'm keeping this private.
+Now with 100% more open source!
