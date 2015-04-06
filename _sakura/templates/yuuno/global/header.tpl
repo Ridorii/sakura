@@ -64,10 +64,11 @@
             <div id="contentwrapper">
                 {% if user.loggedin != true %}
                     <div class="hidden" id="headerLoginForm">
-                        <form method="post" action="/login">
+                        <form method="post" action="/authenticate">
                             <input type="hidden" name="redirect" value="{{ sakura.currentpage }}" />
                             <input type="hidden" name="session" value="{{ php.sessionid }}" />
                             <input type="hidden" name="time" value="{{ php.time }}" />
+                            <input type="hidden" name="mode" value="login" />
                             <label for="headerLoginUserName">Username:</label>
                             <input type="text" id="headerLoginUserName" name="username" class="inputStyling" placeholder="Username" />
                             <label for="headerLoginPassword">Password:</label>

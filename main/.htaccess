@@ -17,7 +17,7 @@ Options +FollowSymLinks -Indexes
 RewriteRule ^feedback?/?$ http://forum.flash.moe/viewforum.php?f=22
 RewriteRule ^credits?/?$ credits.php
 RewriteRule ^index?/?$ index.php
-RewriteRule ^login?/?$|register?/?$|forgotpassword?/?$ authenticate.php
+RewriteRule ^login?/?$|register?/?$|forgotpassword?/?|authenticate?/?$ authenticate.php
 RewriteRule ^donate?/?$ donate.php
 RewriteRule ^contact?/?$ contact.php
 
