@@ -9,6 +9,7 @@ class Main {
 
 	public static $_TPL;
 	public static $_MD;
+    public static $_IN_MANAGE = false;
 
 	// Constructor
 	public static function init($config) {
@@ -30,37 +31,12 @@ class Main {
         Session::init();
 
         // Templating engine
-        self::initTpl();
+        Templates::init(Configuration::getLocalConfig('etc', 'design'));
 
         // Markdown Parser
         self::initMD();
 
 	}
-
-    // Initialise Twig
-    private static function initTpl() {
-
-        // Initialise Twig Filesystem Loader
-        $twigLoader = new \Twig_Loader_Filesystem(Configuration::getLocalConfig('etc', 'templatesPath') .'/'. Configuration::getLocalConfig('etc', 'design'));
-
-        // And now actually initialise the templating engine
-        self::$_TPL = new \Twig_Environment($twigLoader, array(
-
-           // 'cache' => SATOKO_ROOT_DIRECTORY. self::getConfig('path', 'cache') // Set cache directory
-
-        ));
-
-        // Load String template loader
-        self::$_TPL->addExtension(new \Twig_Extension_StringLoader());
-
-    }
-
-    // Render template
-    public static function tplRender($file, $tags) {
-
-        return self::$_TPL->render($file, $tags);
-
-    }
 
     // Initialise Parsedown
     private static function initMD() {

@@ -55,4 +55,4 @@ if(isset($_GET['xml'])) {
 }
 
 // Print page contents
-print Main::tplRender('main/news.tpl', $renderData);
+print Templates::render('main/news.tpl', $renderData);

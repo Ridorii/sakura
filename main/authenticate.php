@@ -30,4 +30,4 @@ $renderData['auth'] = [
 ];
 
 // Print page contents
-print Main::tplRender('main/authenticate.tpl', $renderData);
+print Templates::render('main/authenticate.tpl', $renderData);

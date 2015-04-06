@@ -23,4 +23,4 @@ $renderData['stats'] = [
 ];
 
 // Print page contents
-print Main::tplRender('main/index.tpl', $renderData);
+print Templates::render('main/index.tpl', $renderData);

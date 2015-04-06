@@ -27,4 +27,4 @@ if($ipData = Main::loadInfoPage(isset($_GET['r']) ? strtolower($_GET['r']) : '')
 }
 
 // Print page contents
-print Main::$_TPL->render('main/infopage.tpl', $renderData);
+print Templates::render('main/infopage.tpl', $renderData);

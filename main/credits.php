@@ -26,4 +26,4 @@ $renderData['thirdParty'] = [
 ];
 
 // Print page contents
-print Main::tplRender('main/credits.tpl', $renderData);
+print Templates::render('main/credits.tpl', $renderData);

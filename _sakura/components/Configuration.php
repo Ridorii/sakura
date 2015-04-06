@@ -86,35 +86,4 @@ class Configuration {
 
 	}
 
-    // Parse .cfg files, mainly/only used for templates
-	public static function parseCfg($data) {
-
-        // Create storage variable
-		$out = array();
-
-        // Remove comments and empty lines
-		$data = preg_replace('/#.*?\r\n/im',    null, $data);
-		$data = preg_replace('/^\r\n/im',       null, $data);
-
-        // Break line breaks up into array values
-		$data = explode("\r\n", $data);
-
-		foreach($data as $var) {
-
-            // Remove whitespace between key, equals sign and value
-			$var = preg_replace('/[\s+]=[\s+]/i', '=', $var);
-
-            // Then break this up
-			$var = explode('=', $var);
-
-            // And assign the value with the key to the output variable
-			$out[$var[0]] = $var[1];
-
-		}
-
-        // Return the output variable
-		return $out;
-
-	}
-
 }
