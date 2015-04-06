@@ -12,8 +12,8 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sak
 // Add page specific things
 $renderData['newsPosts'] = Main::getNewsPosts((isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])) ? $_GET['id'] : null, (isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])));
 $renderData['page'] = [
-    'title'         => 'Flashii News',
-    'newsComments'  => false
+    'articleCount'  => ($postCount = count($renderData['newsPosts'])),
+    'title'         => (isset($_GET['id']) ? ($postCount ? $renderData['newsPosts'][0]['title'] : 'Post does not exist!') : 'Flashii News'),
 ];
 
 // News XML, don't really care so yeah

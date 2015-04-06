@@ -1,4 +1,4 @@
-<a href="/news/{{ newsPost.id }}" class="news-head" id="{{ newsPost.id }}">{{ newsPost.title }}</a>
+{% if page.articleCount > 1 %}<a href="/news/{{ newsPost.id }}" class="news-head" id="{{ newsPost.id }}">{{ newsPost.title }}</a>{% endif %}
 <div class="news-body">
     <a class="default" href="/u/{{ newsPost.uid }}">
         <div class="news-poster">
