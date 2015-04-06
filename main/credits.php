@@ -14,7 +14,7 @@ $renderData['page'] = [
     'title' => 'Sakura Credits'
 ];
 $renderData['contributors'] = [
-    'Flashwave'     => ['Main contributer and owner of the site.', 'http://flash.moe'],
+    'Flashwave'     => ['Main developer.', 'http://flash.moe'],
     'Kurasha244'    => ['Writing the base for the old backend.', 'http://saibateku.net'],
     'nookls'        => ['Code guidance and debug help.', 'http://nookls.org'],
     'MallocNull'    => ['Sock Chat and debug help.', 'http://aroltd.com']
