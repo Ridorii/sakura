@@ -6,7 +6,11 @@
 namespace Sakura;
 
 class Session {
-    
+
+    // Current user data
+    public static $userId;
+    public static $sessionId;
+
     // Initiate new session
     public static function init() {
 
@@ -15,5 +19,5 @@ class Session {
             session_start();
 
     }
-    
+
 }
