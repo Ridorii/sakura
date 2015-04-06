@@ -8,10 +8,10 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20150405');
+define('SAKURA_VERSION', '20150406');
 
 // Define Sakura Path
-define('ROOT', str_replace('_sakura', '', dirname(__FILE__)));
+define('ROOT', str_replace(basename(__DIR__), '', dirname(__FILE__)));
 
 // Error Reporting: 0 for production and -1 for testing
 error_reporting(-1);

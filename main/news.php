@@ -7,7 +7,7 @@
 namespace Sakura;
 
 // Include components
-require_once '/var/www/flashii.net/_sakura/sakura.php';
+require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sakura.php';
 
 // Add page specific things
 $renderData['newsPosts'] = Main::getNewsPosts((isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])) ? $_GET['id'] : null, (isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])));
