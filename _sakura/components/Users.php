@@ -52,6 +52,53 @@ class Users {
 
     }
 
+    // Log a user in
+    public static function login($username, $password) {
+
+        // Check if the user that's trying to log in actually exists
+        if(!$uid = self::userExists($username, false))
+            return [0, 'USER_NOT_EXIST'];
+
+        // Get account data
+        $userData = self::getUser($uid);
+
+        // Validate password
+        if($userData['password_algo'] == 'legacy') { // Shitty legacy method of sha512(strrev(sha512()))
+
+            if(Main::legacyPasswordHash($password) != $userData['password_hash'])
+                return [0, 'INCORRECT_PASSWORD'];
+
+        } else { // Dank ass PBKDF2 hashing
+
+            if(!Hashing::validate_password($password, [
+                $userData['password_algo'],
+                $userData['password_iter'],
+                $userData['password_salt'],
+                $userData['password_hash']
+            ]))
+                return [0, 'INCORRECT_PASSWORD'];
+
+        }
+
+        // Successful login! (also has a thing for the legacy password system)
+        return [1, ($userData['password_algo'] == 'legacy' ? 'LEGACY_SUCCESS' : 'LOGIN_SUCESS')];
+
+    }
+
+    // Check if a user exists
+    public static function userExists($user, $id = true) {
+
+        // Clean string
+        $user = Main::cleanString($user, true);
+
+        // Do database request
+        $user = Database::fetch('users', true, [($id ? 'id' : 'username_clean') => [$user, '=']]);
+
+        // Return count (which would return 0, aka false, if nothing was found)
+        return count($user) ? $user[0]['id'] : false;
+
+    }
+
     // Get user data by id
     public static function getUser($id) {
 

@@ -18,21 +18,47 @@ if(
 
     switch($_REQUEST['mode']) {
 
+        // Login processing
         case 'login':
-        case 'register':
-        case 'forgotpassword':
+
             // Add page specific things
             $renderData['page'] = [
-                'title'     => 'auth test',
+                'title'     => 'Login',
                 'redirect'  => $_SERVER['PHP_SELF'],
-                'message'   => 'meow meow meow meow meow meow meow meow meow meow meow meow'
+                'message'   => 'what'
             ];
 
-            // Print page contents
-            print Templates::render('errors/information.tpl', $renderData);
-            exit;
+            break;
+
+        // Registration processing
+        case 'register':
+
+            // Add page specific things
+            $renderData['page'] = [
+                'title'     => 'Register on Flashii',
+                'redirect'  => $_SERVER['PHP_SELF'],
+                'message'   => 'what'
+            ];
+
+            break;
+
+        // Unforgetting passwords
+        case 'forgotpassword':
+
+            // Add page specific things
+            $renderData['page'] = [
+                'title'     => 'Forgot Password',
+                'redirect'  => $_SERVER['PHP_SELF'],
+                'message'   => 'what'
+            ];
+
+            break;
 
     }
+
+    // Print page contents
+    print Templates::render('errors/information.tpl', $renderData);
+    exit;
 
 }
 
