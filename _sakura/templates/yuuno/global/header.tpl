@@ -7,6 +7,9 @@
         <meta name="description" content="Any community that gets its laughs by pretending to be idiots will eventually be flooded by actual idiots who mistakenly believe that they're in good company. Welcome to Flashii." />
         <meta name="keywords" content="Flashii, Media, Flashwave, Murasaki, Misaka, Circle, Zeniea, MalwareUp, Cybernetics, Saibateku, Community" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        {% if page.redirect %}
+            <meta http-equiv="refresh" content="5; URL={{ page.redirect }}" />
+        {% endif %}
         <!-- CSS -->
         <link rel="stylesheet" type="text/css" href="//{{ sakura.urls.content }}/global.css" />
         <link rel="stylesheet" type="text/css" href="//{{ sakura.urls.content }}/css/yuuno/yuuno.css" />
