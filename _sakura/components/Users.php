@@ -129,6 +129,23 @@ class Users {
 
     }
 
+    // Get user(s) by IP
+    public static function getUsersByIP($ip) {
+
+        // Get users by registration IP
+        $registeredFrom = Database::fetch('users', true, ['register_ip' => [$ip, '=']]);
+
+        // Get users by last IP
+        $lastFrom = Database::fetch('users', true, ['last_ip' => [$ip, '='], 'register_ip' => [$ip, '!=']]);
+
+        // Merge the arrays
+        $users = array_merge($registeredFrom, $lastFrom);
+
+        // Return the array with users
+        return $users;
+
+    }
+
     // Get all users
     public static function getAllUsers() {
 
