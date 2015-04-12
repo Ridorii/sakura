@@ -22,7 +22,9 @@ $renderData['contributors'] = [
 $renderData['thirdParty'] = [
     'ReCAPTCHA'     => ['Providing the Captcha system we use.', 'http://recaptcha.net'],
     'Twig'          => ['The templating engine used by Sakura.', 'http://twig.sensiolabs.org/'],
-    'Parsedown'     => ['A PHP markdown parser.', 'http://parsedown.org/']
+    'Parsedown'     => ['A PHP markdown parser.', 'http://parsedown.org/'],
+    'Defuse'        => ['Making the PBKDF2 implementation for PHP', 'http://defuse.ca/'],
+    'PHPMailer'     => ['Writing PHPMailer and making e-mail sending a not pain in the ass', 'https://github.com/PHPMailer/PHPMailer']
 ];
 
 // Print page contents

@@ -22,5 +22,7 @@ $renderData['stats'] = [
     'chatOnline'    => ($chatOnline = 0) .' user'. ($chatOnline == 1 ? '' : 's')
 ];
 
+print Session::$userId;
+
 // Print page contents
 print Templates::render('main/index.tpl', $renderData);

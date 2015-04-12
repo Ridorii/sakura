@@ -21,11 +21,23 @@ if(
         // Login processing
         case 'login':
 
+            // Attempt login
+            $login = Users::login($_REQUEST['username'], $_REQUEST['password'], isset($_REQUEST['remember']));
+
+            // Array containing "human understandable" messages
+            $messages = [
+                'USER_NOT_EXIST'        => 'The user you tried to log into does not exist.',
+                'INCORRECT_PASSWORD'    => 'The password you entered was invalid.',
+                'DEACTIVATED'           => 'Your account is deactivated.',
+                'LEGACY_SUCCESS'        => 'Login successful! Taking you to the password changing page...',
+                'LOGIN_SUCESS'          => 'Login successful!'
+            ];
+
             // Add page specific things
             $renderData['page'] = [
                 'title'     => 'Login',
-                'redirect'  => $_SERVER['PHP_SELF'],
-                'message'   => 'what'
+                'redirect'  => ($login[0] ? ((strpos($_REQUEST['redirect'], '://') ? '' : '//') . $_REQUEST['redirect']) : '/authenticate'),
+                'message'   => $messages[$login[1]]
             ];
 
             break;
@@ -56,8 +68,16 @@ if(
 
     }
 
-    // Print page contents
-    print Templates::render('errors/information.tpl', $renderData);
+    // Print page contents or if the AJAX request is set only display the render data
+    print   isset($_REQUEST['ajax']) ?
+            (
+                $renderData['page']['title']
+                . ':'
+                . $renderData['page']['message']
+                . ':'
+                . $renderData['page']['redirect']
+            ) :
+            Templates::render('errors/information.tpl', $renderData);
     exit;
 
 }

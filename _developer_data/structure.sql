@@ -70,8 +70,31 @@ CREATE TABLE `fii_news` (
   `title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title of the post.',
   `content` text COLLATE utf8_bin NOT NULL COMMENT 'Contents of the post',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+
+DROP TABLE IF EXISTS `fii_profilefields`;
+CREATE TABLE `fii_profilefields` (
+  `id` int(64) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID used for ordering on the userpage.',
+  `name` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Name of the field.',
+  `formtype` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Type attribute in the input element.',
+  `description` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Description of the field displayed in the control panel.',
+  `additional` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Undocumented JSON array containing special options if needed (probably only going to be used for the YouTube field).',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+INSERT INTO `fii_profilefields` (`id`, `name`, `formtype`, `description`, `additional`) VALUES
+(1,	'Website',	'url',	'URL to your website',	''),
+(2,	'Twitter',	'text',	'Your @twitter Username',	''),
+(3,	'GitHub',	'text',	'Your GitHub Username',	''),
+(4,	'Skype',	'text',	'Your Skype Username',	''),
+(5,	'YouTube',	'text',	'ID or Username excluding http://youtube.com/*/',	'{\"youtubetype\": [\"checkbox\", \"I <b>don\'t</b> have a Channel Username (url looks like https://www.youtube.com/channel/UCXZcw5hw5C7Neto-T_nRXBQ).\"]}'),
+(6,	'SoundCloud',	'text',	'Your SoundCloud username',	''),
+(7,	'Steam',	'text',	'Your Steam Community Username (may differ from login username)',	''),
+(8,	'osu!',	'text',	'Your osu! Username',	''),
+(9,	'Origin',	'text',	'Your Origin User ID',	''),
+(10,	'Xbox Live',	'text',	'Your Xbox User ID',	''),
+(11,	'PSN',	'text',	'Your PSN User ID',	'');
 
 DROP TABLE IF EXISTS `fii_ranks`;
 CREATE TABLE `fii_ranks` (
@@ -84,6 +107,16 @@ CREATE TABLE `fii_ranks` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+INSERT INTO `fii_ranks` (`id`, `name`, `multi`, `colour`, `description`, `title`) VALUES
+(1,	'Deactivated',	0,	'555',	'Users that are yet to be activated or that deactivated their own account.',	'Deactivated'),
+(2,	'Regular user',	1,	'',	'Regular users with regular permissions.',	'Regular user'),
+(3,	'Site moderator',	1,	'0A0',	'Users with special permissions like being able to ban and modify users if needed.',	'Staff'),
+(4,	'Administrator',	1,	'C00',	'Users that manage the server and everything around that.',	'Administrator'),
+(5,	'Developer',	1,	'824CA0',	'Users that either create or test new features of the site.',	'Staff'),
+(6,	'Bot',	1,	'9E8DA7',	'Reserved user accounts for services.',	'Bot'),
+(7,	'Chat moderator',	1,	'09F',	'Moderators of the chat room.',	'Staff'),
+(8,	'Tenshi',	0,	'EE9400',	'Users that donated $5.00 or more in order to keep the site and it\'s services alive!',	'Tenshi'),
+(9,	'Alumnii',	0,	'FF69B4',	'People who have contributed to the community but have moved on or resigned.',	'Alumnii');
 
 DROP TABLE IF EXISTS `fii_regcodes`;
 CREATE TABLE `fii_regcodes` (
@@ -105,6 +138,16 @@ CREATE TABLE `fii_sessions` (
   `skey` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Session key, allow direct access to the user''s account. ',
   `started` int(64) unsigned NOT NULL COMMENT 'The timestamp for when the session was started. ',
   `expire` int(64) unsigned NOT NULL COMMENT 'The timestamp for when this session should end, -1 for permanent. ',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+DROP TABLE IF EXISTS `fii_tenshi`;
+CREATE TABLE `fii_tenshi` (
+  `id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
+  `startdate` int(64) unsigned NOT NULL COMMENT 'Purchase timestamp.',
+  `uid` bigint(255) unsigned NOT NULL COMMENT 'ID of the user that purchased Tenshi.',
+  `expiredate` int(64) unsigned NOT NULL COMMENT 'Expiration timestamp.',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -152,4 +195,4 @@ CREATE TABLE `fii_warnings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
--- 2015-04-06 20:03:32
+-- 2015-04-12 01:50:57

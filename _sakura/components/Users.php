@@ -40,7 +40,7 @@ class Users {
         'id'            => 0,
         'rankname'     => 'Non-existent Rank',
         'multi'         => 0,
-        'colour'        => '',
+        'colour'        => '#444',
         'description'   => 'A hardcoded dummy rank for fallback.'
     ];
 
@@ -53,7 +53,7 @@ class Users {
     }
 
     // Log a user in
-    public static function login($username, $password) {
+    public static function login($username, $password, $remember = false) {
 
         // Check if the user that's trying to log in actually exists
         if(!$uid = self::userExists($username, false))
@@ -68,7 +68,7 @@ class Users {
             if(Main::legacyPasswordHash($password) != $userData['password_hash'])
                 return [0, 'INCORRECT_PASSWORD'];
 
-        } else { // Dank ass PBKDF2 hashing
+        } else { // PBKDF2 hashing
 
             if(!Hashing::validate_password($password, [
                 $userData['password_algo'],
@@ -79,6 +79,17 @@ class Users {
                 return [0, 'INCORRECT_PASSWORD'];
 
         }
+
+        // Check if the user is deactivated
+        if(in_array(0, json_decode($userData['ranks'], true)))
+            return [0, 'DEACTIVATED'];
+
+        // Create a new session
+        $sessionKey = Session::newSession($userData['id'], $remember);
+
+        // Set cookies
+        setcookie(Configuration::getConfig('cookie_prefix') .'id',      $userData['id'],    time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
+        setcookie(Configuration::getConfig('cookie_prefix') .'session', $sessionKey,        time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
 
         // Successful login! (also has a thing for the legacy password system)
         return [1, ($userData['password_algo'] == 'legacy' ? 'LEGACY_SUCCESS' : 'LOGIN_SUCESS')];

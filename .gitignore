@@ -42,6 +42,10 @@ local.properties
 
 errors.log
 config.php
+content/images/avatars/*
+!content/images/avatars/.htaccess
+content/images/backgrounds/*
+!content/images/backgrounds/.htaccess
 
 
 #################
