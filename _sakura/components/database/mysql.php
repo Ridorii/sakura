@@ -215,56 +215,60 @@ class Database {
 
     // Update data in the database
     public static function update($table, $data) {
-        
+
         // Begin preparation of the statement
         $prepare = 'UPDATE `' . Configuration::getLocalConfig('db', 'prefix') . $table . '`';
-        
+
         // Run a foreach on $data and complete the statement
         foreach($data as $key => $values) {
-            
+
             // Append WHERE or SET depending on where we are
             $prepare .= ' '. ($key ? 'WHERE' : 'SET');
-            
+
             // Do this complicated shit, I barely know what's going on anymore but it works
-            foreach($values as $column => $column_data) {
+            foreach($values as $column => $column_data)
                 $prepare .= ' `'. $column .'` '. ($key ? $column_data[1] : '=') .' :'. ($key ? 'w' : 's') .'_'. $column . ($column == key(array_slice($values, -1, 1, true)) ? ($key ? ';' : '') : ($key ? ' AND' : ','));
-            }
-            
+
         }
-        
+
         // Actually prepare the preration
         $query = self::$sql->prepare($prepare);
 
         // Seperate the foreaches for the SET and WHERE clauses because it's fucking it up for some odd reason
         // Bind Set Clauses
         foreach($data[0] as $key => $value) {
+
             // Do the binding
             $query->bindParam(':s_'. $key, $value);
-            
+
             // Unset variables to be safe
             unset($key);
             unset($value);
+
         }
+
         // Bind Where Clauses
         foreach($data[1] as $key => $values) {
+
             // Assign the array entry to a variable because fuck strict standards
             $value = $values[0];
-            
+
             // Binding two electrifying memes
             $query->bindParam(':w_'. $key, $value);
-            
+
             // Unset variables to be safe
             unset($key);
             unset($value);
             unset($values);
+
         }
-        
+
         // Execute the prepared statements with parameters bound
         $result = $query->execute();
-        
+
         // Return whatever can be returned
         return $result;
-        
+
     }
     
 }

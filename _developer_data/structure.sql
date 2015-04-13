@@ -94,7 +94,8 @@ INSERT INTO `fii_profilefields` (`id`, `name`, `formtype`, `description`, `addit
 (8,	'osu!',	'text',	'Your osu! Username',	''),
 (9,	'Origin',	'text',	'Your Origin User ID',	''),
 (10,	'Xbox Live',	'text',	'Your Xbox User ID',	''),
-(11,	'PSN',	'text',	'Your PSN User ID',	'');
+(11,	'PSN',	'text',	'Your PSN User ID',	'')
+ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `name` = VALUES(`name`), `formtype` = VALUES(`formtype`), `description` = VALUES(`description`), `additional` = VALUES(`additional`);
 
 DROP TABLE IF EXISTS `fii_ranks`;
 CREATE TABLE `fii_ranks` (
@@ -108,15 +109,16 @@ CREATE TABLE `fii_ranks` (
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO `fii_ranks` (`id`, `name`, `multi`, `colour`, `description`, `title`) VALUES
-(1,	'Deactivated',	0,	'555',	'Users that are yet to be activated or that deactivated their own account.',	'Deactivated'),
-(2,	'Regular user',	1,	'',	'Regular users with regular permissions.',	'Regular user'),
-(3,	'Site moderator',	1,	'0A0',	'Users with special permissions like being able to ban and modify users if needed.',	'Staff'),
-(4,	'Administrator',	1,	'C00',	'Users that manage the server and everything around that.',	'Administrator'),
-(5,	'Developer',	1,	'824CA0',	'Users that either create or test new features of the site.',	'Staff'),
-(6,	'Bot',	1,	'9E8DA7',	'Reserved user accounts for services.',	'Bot'),
-(7,	'Chat moderator',	1,	'09F',	'Moderators of the chat room.',	'Staff'),
-(8,	'Tenshi',	0,	'EE9400',	'Users that donated $5.00 or more in order to keep the site and it\'s services alive!',	'Tenshi'),
-(9,	'Alumnii',	0,	'FF69B4',	'People who have contributed to the community but have moved on or resigned.',	'Alumnii');
+(1,	'Deactivated',	0,	'#555',	'Users that are yet to be activated or that deactivated their own account.',	'Deactivated'),
+(2,	'Regular user',	1,	'inherit',	'Regular users with regular permissions.',	'Regular user'),
+(3,	'Site moderator',	1,	'#0A0',	'Users with special permissions like being able to ban and modify users if needed.',	'Staff'),
+(4,	'Administrator',	1,	'#C00',	'Users that manage the server and everything around that.',	'Administrator'),
+(5,	'Developer',	1,	'#824CA0',	'Users that either create or test new features of the site.',	'Staff'),
+(6,	'Bot',	1,	'#9E8DA7',	'Reserved user accounts for services.',	'Bot'),
+(7,	'Chat moderator',	1,	'#09F',	'Moderators of the chat room.',	'Staff'),
+(8,	'Tenshi',	0,	'#EE9400',	'Users that donated $5.00 or more in order to keep the site and it\'s services alive!',	'Tenshi'),
+(9,	'Alumnii',	0,	'#FF69B4',	'People who have contributed to the community but have moved on or resigned.',	'Alumnii')
+ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `name` = VALUES(`name`), `multi` = VALUES(`multi`), `colour` = VALUES(`colour`), `description` = VALUES(`description`), `title` = VALUES(`title`);
 
 DROP TABLE IF EXISTS `fii_regcodes`;
 CREATE TABLE `fii_regcodes` (
@@ -138,8 +140,9 @@ CREATE TABLE `fii_sessions` (
   `skey` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Session key, allow direct access to the user''s account. ',
   `started` int(64) unsigned NOT NULL COMMENT 'The timestamp for when the session was started. ',
   `expire` int(64) unsigned NOT NULL COMMENT 'The timestamp for when this session should end, -1 for permanent. ',
+  `remember` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'If set to 1 session will be extended each time a page is loaded.',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_tenshi`;
@@ -177,6 +180,7 @@ CREATE TABLE `fii_users` (
   `lastdate` int(16) unsigned NOT NULL COMMENT 'Last time anything was done on this account.',
   `lastunamechange` int(16) unsigned NOT NULL COMMENT 'Last username change.',
   `birthday` varchar(16) COLLATE utf8_bin DEFAULT NULL COMMENT 'Birthdate of the user.',
+  `country` varchar(4) COLLATE utf8_bin NOT NULL COMMENT 'Contains ISO 3166 country code of user''s registration location.',
   `profile_data` text COLLATE utf8_bin NOT NULL COMMENT 'Modular array containing profile data.',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_clean` (`username_clean`)
@@ -195,4 +199,4 @@ CREATE TABLE `fii_warnings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
--- 2015-04-12 01:50:57
+-- 2015-04-13 10:06:13

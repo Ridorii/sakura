@@ -96,6 +96,14 @@ class Users {
 
     }
 
+    // Logout and kill the session
+    public static function logout() {
+
+        // Remove the active session from the database
+        // Session::deleteSession($id, $key);
+
+    }
+
     // Check if a user exists
     public static function userExists($user, $id = true) {
 

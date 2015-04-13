@@ -55,7 +55,8 @@ $renderData = array(
         'urls'              => Configuration::getLocalConfig('urls'),
         'charset'           => Configuration::getConfig('charset'),
         'currentpage'       => $_SERVER['PHP_SELF'],
-        'recaptcha_public'  => Configuration::getConfig('recaptcha_public')
+        'recaptcha_public'  => Configuration::getConfig('recaptcha_public'),
+        'resources'         => '//'. Configuration::getLocalConfig('urls')['content'] .'/data/'. strtolower(Templates::$_TPL)
     ],
     'php' => [
         'sessionid' => \session_id(),

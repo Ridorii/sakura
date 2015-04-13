@@ -1,10 +1,10 @@
 @font-face {
     font-family: 'Aller';
-    src: url('//cdn.flashii.net/fonts/aller.eot');
+    src: url('/fonts/aller.eot');
     src: local("Aller"),
-         url('//cdn.flashii.net/fonts/aller.eot?#iefix') format('embedded-opentype'),
-         url('//cdn.flashii.net/fonts/aller.woff') format('woff'),
-         url('//cdn.flashii.net/fonts/aller.svg#SegoeUILight') format('svg');
+         url('/fonts/aller.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/aller.woff') format('woff'),
+         url('/fonts/aller.svg#SegoeUILight') format('svg');
     font-weight: normal;
     font-style: normal;
 }

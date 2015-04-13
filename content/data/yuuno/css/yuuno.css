@@ -118,7 +118,7 @@ a.default:active {
 }
 a.gotop {
     display: inline-block;
-    background: url('//cdn.iihsalf.net/img/arrow.png') #111;
+    background: url('../images/arrow.png') #111;
     color: #FFF;
     width: 60px;
     height: 60px;
@@ -258,7 +258,7 @@ a.gotop:active {
 .header .menu .menu-item.avatar {
     width: auto;
     padding-left: 36px;
-    background: url('//cdn.iihsalf.net/pixel.png') no-repeat scroll left center / contain transparent;
+    background: url('/pixel.png') no-repeat scroll left center / contain transparent;
 }
 .header .menu .menu-item:hover {
     border-color: #503180 !important;

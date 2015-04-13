@@ -17,7 +17,7 @@ if(isset($_GET['m'])) {
     switch($_GET['m']) {
         case 'avatar':
             // Set path to no avatar picture
-            $noAvatar = ROOT .'content/img/no-av.png';
+            $noAvatar = ROOT .'content/images/no-av.png';
 
             // If ?u= isn't set or if it isn't numeric
             if(!isset($_GET['u']) || !is_numeric($_GET['u'])) {

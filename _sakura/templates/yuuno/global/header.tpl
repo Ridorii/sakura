@@ -12,10 +12,10 @@
         {% endif %}
         <!-- CSS -->
         <link rel="stylesheet" type="text/css" href="//{{ sakura.urls.content }}/global.css" />
-        <link rel="stylesheet" type="text/css" href="//{{ sakura.urls.content }}/css/yuuno/yuuno.css" />
+        <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/yuuno.css" />
         <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
         <!-- JS -->
-        <script type="text/javascript" src="//{{ sakura.urls.content }}/js/yuuno.js"></script>
+        <script type="text/javascript" src="{{ sakura.resources }}/js/yuuno.js"></script>
         <script type="text/javascript">
         {% if user.loggedin != true %}
             // Setting the shit so clicking the login link doesn't redirect to /login
