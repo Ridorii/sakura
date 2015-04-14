@@ -32,7 +32,7 @@ class Session {
 
         // Insert the session into the database
         Database::insert('sessions', [
-            'userip'    => $_SERVER['REMOTE_ADDR'],
+            'userip'    => Main::getRemoteIP(),
             'useragent' => Main::cleanString($_SERVER['HTTP_USER_AGENT']),
             'userid'    => $userID,
             'skey'      => $session,
