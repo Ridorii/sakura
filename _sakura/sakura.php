@@ -54,7 +54,7 @@ $renderData = array(
         'version'           => SAKURA_VERSION,
         'urls'              => Configuration::getLocalConfig('urls'),
         'charset'           => Configuration::getConfig('charset'),
-        'currentpage'       => $_SERVER['PHP_SELF'],
+        'currentpage'       => '//'. $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'],
         'recaptcha_public'  => Configuration::getConfig('recaptcha_public'),
         'resources'         => '//'. Configuration::getLocalConfig('urls')['content'] .'/data/'. strtolower(Templates::$_TPL)
     ],

@@ -126,7 +126,7 @@ class Users {
             return false;
 
         // Remove the active session from the database
-        if(!Session::deleteSession($id, true))
+        if(!Session::deleteSession(Session::$sessionId, true))
             return false;
 
         // Set cookies

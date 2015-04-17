@@ -55,8 +55,12 @@
                     </div>
                     <div class="menu-ucp" id="navMenuUser">
                         <!-- User menu, displayed on right side of the bar. -->
-                        <a class="menu-item" id="headerLoginLink" href="http://{{ sakura.urls.main }}/login" title="Login to Flashii">Login</a>
-                        <a class="menu-item" href="http://{{ sakura.urls.main }}/register" title="Create an account">Register</a>
+                        {% if user.checklogin %}
+                            <a class="menu-item" href="http://{{ sakura.urls.main }}/logout?mode=logout&time={{ php.time }}&session={{ php.sessionid }}&redirect={{ sakura.currentpage }}" title="End your login session">Logout</a>
+                        {% else %}
+                            <a class="menu-item" id="headerLoginLink" href="http://{{ sakura.urls.main }}/login" title="Login to Flashii">Login</a>
+                            <a class="menu-item" href="http://{{ sakura.urls.main }}/register" title="Create an account">Register</a>
+                        {% endif %}
                     </div>
                     <div class="menu-mob">
                         <a class="menu-item" id="mobileNavToggle" href="javascript:;" onclick="mobileMenu(true);">Open Menu</a>

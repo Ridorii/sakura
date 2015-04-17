@@ -38,7 +38,7 @@ class Session {
             'skey'      => $session,
             'started'   => time(),
             'expire'    => time() + 604800,
-            'remember'  => $remember
+            'remember'  => $remember ? '1' : '0'
         ]);
 
         // Return the session key
@@ -86,7 +86,7 @@ class Session {
             return false;
 
         // Run the query
-        Database::delete('sessions', [($key ? 'skey' : 'id'), [$sessionId, '=']]);
+        Database::delete('sessions', [($key ? 'skey' : 'id') => [$sessionId, '=']]);
 
         // Return true if key was found and deleted
         return true;
