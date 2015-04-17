@@ -17,7 +17,7 @@
         <!-- JS -->
         <script type="text/javascript" src="{{ sakura.resources }}/js/yuuno.js"></script>
         <script type="text/javascript">
-        {% if user.loggedin != true %}
+        {% if not user.checklogin %}
             // Setting the shit so clicking the login link doesn't redirect to /login
             function initLoginForm() {
 
@@ -65,7 +65,7 @@
                 </div>
             </div>
             <div id="contentwrapper">
-                {% if user.loggedin != true %}
+                {% if not user.checklogin %}
                     <div class="hidden" id="headerLoginForm">
                         <form method="post" action="/authenticate">
                             <input type="hidden" name="redirect" value="{{ sakura.currentpage }}" />

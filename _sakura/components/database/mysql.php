@@ -270,5 +270,46 @@ class Database {
         return $result;
 
     }
-    
+
+    // Delete data from the database
+    public static function delete($table, $data) {
+
+        // Begin preparation of the statement
+        $prepare = 'DELETE FROM `' . Configuration::getLocalConfig('db', 'prefix') . $table . '`';
+
+        // If $data is set and is an array continue
+        if(is_array($data)) {
+
+            $prepare .= ' WHERE';
+
+            foreach($data as $key => $value) {
+                $prepare .= ' `'. $key .'` '. $value[1] .' :'. $key . ($key == key(array_slice($data, -1, 1, true)) ? '' : ' AND');
+
+                // Unset variables to be safe
+                unset($key);
+                unset($value);
+            }
+
+        }
+
+        // Actually prepare the preration
+        $query = self::$sql->prepare($prepare);
+
+        // Bind those parameters
+        foreach($data as $key => $value) {
+            $query->bindParam(':'. $key, $value[0]);
+
+            // Unset variables to be safe
+            unset($key);
+            unset($value);
+        }
+
+        // Execute the prepared statements with parameters bound
+        $result = $query->execute();
+
+        // Return whatever can be returned
+        return $result;
+
+    }
+
 }

@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20150412');
+define('SAKURA_VERSION', '20150417');
 
 // Define Sakura Path
 define('ROOT', str_replace(basename(__DIR__), '', dirname(__FILE__)));
@@ -63,6 +63,6 @@ $renderData = array(
         'time'      => \time()
     ],
     'user' => [
-        'loggedin' => Users::loggedIn()
+        'checklogin' => Users::checkLogin()
     ]
 );

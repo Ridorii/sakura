@@ -19,8 +19,8 @@ class Session {
             session_start();
 
         // Assign user and session IDs
-        self::$userId       = isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'id'])      ? isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'id'])      : 0;
-        self::$sessionId    = isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'session']) ? isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'session']) : '';
+        self::$userId       = isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'id'])      ? $_COOKIE[Configuration::getConfig('cookie_prefix') .'id']         : 0;
+        self::$sessionId    = isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'session']) ? $_COOKIE[Configuration::getConfig('cookie_prefix') .'session']    : '';
 
     }
 
@@ -49,7 +49,47 @@ class Session {
     // Check session data (expiry, etc.)
     public static function checkSession($userId, $sessionId) {
 
-        
+        // Get session from database
+        $session = Database::fetch('sessions', true, ['userid' => [$userId, '='], 'skey' => [$sessionId, '=']]);
+
+        // Check if we actually got something in return
+        if(!count($session))
+            return false;
+        else
+            $session = $session[0];
+
+        // Check if the session expired
+        if($session['expire'] < time()) {
+
+            // If it is delete the session...
+            self::deleteSession($session['id']);
+
+            // ...and return false
+            return false;
+
+        }
+
+        // If the remember flag is set extend the session time
+        if($session['remember'])
+            Database::update('sessions', [['expire' => time() + 604800], ['id' => [$session['id'], '=']]]);
+
+        // Return 2 if the remember flag is set and return 1 if not
+        return $session['remember'] ? 2 : 1;
+
+    }
+
+    // Delete a session
+    public static function deleteSession($sessionId, $key = false) {
+
+        // Check if the session exists
+        if(!Database::fetch('sessions', [($key ? 'skey' : 'id'), true, [$sessionId, '=']]))
+            return false;
+
+        // Run the query
+        Database::delete('sessions', [($key ? 'skey' : 'id'), [$sessionId, '=']]);
+
+        // Return true if key was found and deleted
+        return true;
 
     }
 

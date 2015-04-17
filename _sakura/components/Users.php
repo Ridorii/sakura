@@ -45,10 +45,32 @@ class Users {
     ];
 
     // Check if a user is logged in
-    public static function loggedIn() {
+    public static function checkLogin() {
 
-        // Just return false for now since we don't have a user system yet
-        return false;
+        // Check if the cookies are set
+        if(
+            !isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'id']) ||
+            !isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'session'])
+        )
+            return false;
+
+        // Check if the session exists
+        if(!$session = Session::checkSession(
+            Session::$userId,
+            Session::$sessionId
+        ))
+            return false;
+
+        // Extend the cookie times if the remember flag is set
+        if($session == 2) {
+
+            setcookie(Configuration::getConfig('cookie_prefix') .'id',      Session::$userId,       time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
+            setcookie(Configuration::getConfig('cookie_prefix') .'session', Session::$sessionId,    time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
+
+        }
+
+        // If everything went through return true
+        return true;
 
     }
 
@@ -99,8 +121,20 @@ class Users {
     // Logout and kill the session
     public static function logout() {
 
+        // Check if user is logged in
+        if(!self::checkLogin())
+            return false;
+
         // Remove the active session from the database
-        // Session::deleteSession($id, $key);
+        if(!Session::deleteSession($id, true))
+            return false;
+
+        // Set cookies
+        setcookie(Configuration::getConfig('cookie_prefix') .'id',      0,  time() - 60, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
+        setcookie(Configuration::getConfig('cookie_prefix') .'session', '', time() - 60, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
+
+        // Return true indicating a successful logout
+        return true;
 
     }
 

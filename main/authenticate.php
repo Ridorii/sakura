@@ -36,7 +36,7 @@ if(
             // Add page specific things
             $renderData['page'] = [
                 'title'     => 'Login',
-                'redirect'  => ($login[0] ? ((strpos($_REQUEST['redirect'], '://') ? '' : '//') . $_REQUEST['redirect']) : '/authenticate'),
+                'redirect'  => ($login[0] ? $_REQUEST['redirect'] : '/authenticate'),
                 'message'   => $messages[$login[1]]
             ];
 
