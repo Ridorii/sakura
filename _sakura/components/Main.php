@@ -7,22 +7,22 @@ namespace Sakura;
 
 class Main {
 
-	public static $_TPL;
-	public static $_MD;
+    public static $_TPL;
+    public static $_MD;
     public static $_IN_MANAGE = false;
 
-	// Constructor
-	public static function init($config) {
+    // Constructor
+    public static function init($config) {
 
-		// Stop the execution if the PHP Version is older than 5.4.0
-		if(version_compare(phpversion(), '5.4.0', '<'))
-			die('<h3>Upgrade your PHP Version to at least PHP 5.4!</h3>');
+        // Stop the execution if the PHP Version is older than 5.4.0
+        if(version_compare(phpversion(), '5.4.0', '<'))
+            die('<h3>Upgrade your PHP Version to at least PHP 5.4!</h3>');
 
-		// Configuration Management and local configuration
-		Configuration::init($config);
+        // Configuration Management and local configuration
+        Configuration::init($config);
 
-		// Database
-		Database::init();
+        // Database
+        Database::init();
 
         // "Dynamic" Configuration
         Configuration::initDB();
@@ -39,7 +39,7 @@ class Main {
         // Markdown Parser
         self::initMD();
 
-	}
+    }
 
     // Initialise Parsedown
     private static function initMD() {
@@ -73,35 +73,35 @@ class Main {
 
     }
 
-	// Error Handler
-	public static function ErrorHandler($errno, $errstr, $errfile, $errline) {
+    // Error Handler
+    public static function ErrorHandler($errno, $errstr, $errfile, $errline) {
 
         // Set some variables to work with including A HUGE fallback hackjob for the templates folder
         $errstr     = str_replace(ROOT, '', $errstr);
         $errfile    = str_replace(ROOT, '', $errfile);
         $templates  = ROOT .'_sakura/templates/';
 
-		switch ($errno) {
+        switch ($errno) {
 
-			case E_ERROR:
-			case E_USER_ERROR:
-				$error = '<b>FATAL ERROR</b>: ' . $errstr . ' on line ' . $errline . ' in ' . $errfile;
+            case E_ERROR:
+            case E_USER_ERROR:
+                $error = '<b>FATAL ERROR</b>: ' . $errstr . ' on line ' . $errline . ' in ' . $errfile;
                 break;
 
-			case E_WARNING:
-			case E_USER_WARNING:
-				$error = '<b>WARNING</b>: ' . $errstr . ' on line ' . $errline . ' in ' . $errfile;
+            case E_WARNING:
+            case E_USER_WARNING:
+                $error = '<b>WARNING</b>: ' . $errstr . ' on line ' . $errline . ' in ' . $errfile;
                 break;
 
-			case E_NOTICE:
-			case E_USER_NOTICE:
-				$error = '<b>NOTICE</b>: ' . $errstr . ' on line ' . $errline . ' in ' . $errfile;
+            case E_NOTICE:
+            case E_USER_NOTICE:
+                $error = '<b>NOTICE</b>: ' . $errstr . ' on line ' . $errline . ' in ' . $errfile;
                 break;
 
-			default:
-				$error = '<b>Unknown error type</b> [' . $errno . ']: ' . $errstr . ' on line ' . $errline . ' in ' . $errfile;
+            default:
+                $error = '<b>Unknown error type</b> [' . $errno . ']: ' . $errstr . ' on line ' . $errline . ' in ' . $errfile;
 
-		}
+        }
 
         // Use file_get_contents instead of Twig in case the problem is related to twig
         $errorPage = file_get_contents($templates. 'errorPage.tpl');
@@ -109,13 +109,13 @@ class Main {
         // str_replace {{ error }} on the error page with the error data
         $error = str_replace('{{ error }}', $error, $errorPage);
 
-		// Truncate all previous outputs
-		ob_clean();
+        // Truncate all previous outputs
+        ob_clean();
 
-		// Die and display error message
-		die($error);
+        // Die and display error message
+        die($error);
 
-	}
+    }
 
     // Send emails
     public static function sendMail($to, $subject, $body) {
@@ -201,13 +201,13 @@ class Main {
     // Cleaning strings
     public static function cleanString($string, $lower = false) {
 
-		$string = htmlentities($string, ENT_QUOTES | ENT_IGNORE, Configuration::getConfig('charset'));
-		$string = stripslashes($string);
-		$string = strip_tags($string);
+        $string = htmlentities($string, ENT_QUOTES | ENT_IGNORE, Configuration::getConfig('charset'));
+        $string = stripslashes($string);
+        $string = strip_tags($string);
         if($lower)
             $string = strtolower($string);
 
-		return $string;
+        return $string;
 
     }
 
