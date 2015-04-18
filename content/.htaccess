@@ -34,6 +34,6 @@ RewriteEngine On
 #RewriteRule .*\.(ogg)$ http://chat.flashii.net/sandstorm.ogg [L]
 #
 
-ErrorDocument 403 /index.php
-ErrorDocument 404 /index.php
-ErrorDocument 500 /index.php
+ErrorDocument 403 "403"
+ErrorDocument 404 "404"
+ErrorDocument 500 "500"

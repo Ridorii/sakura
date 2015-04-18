@@ -47,6 +47,15 @@ if(
 
     }
 
+    // Login check
+    if(Users::checkLogin()) {
+
+        if($_REQUEST['mode'] != 'logout')
+            $continue = false;
+
+    }
+        
+
     if($continue) {
         switch($_REQUEST['mode']) {
 

@@ -50,16 +50,18 @@
                 <div class="menu">
                     <div class="menu-nav" id="navMenuSite">
                         <!-- Navigation menu, displayed on left side of the bar. -->
-                        <a class="menu-item" href="http://{{ sakura.urls.main }}/" title="Return to the front page of Flashii">Home</a>
-                        <a class="menu-item" href="http://{{ sakura.urls.main }}/news" title="Here you can read updates on Flashii">News</a>
+                        <a class="menu-item" href="//{{ sakura.urls.main }}/" title="Return to the front page of Flashii">Home</a>
+                        <a class="menu-item" href="//{{ sakura.urls.main }}/news" title="Here you can read updates on Flashii">News</a>
                     </div>
                     <div class="menu-ucp" id="navMenuUser">
                         <!-- User menu, displayed on right side of the bar. -->
                         {% if user.checklogin %}
-                            <a class="menu-item" href="http://{{ sakura.urls.main }}/logout?mode=logout&time={{ php.time }}&session={{ php.sessionid }}&redirect={{ sakura.currentpage }}" title="End your login session">Logout</a>
+                            <a class="menu-item avatar" href="//{{ sakura.urls.main }}/u/{{ user.data.id }}" title="View and edit your own profile" style="background-image: url('//{{ sakura.urls.main }}/a/{{ user.data.id }}'); width: auto; color: {{ user.rank.colour }}; font-weight: 700;">{{ user.data.username }}</a>
+                            <a class="menu-item" href="//{{ sakura.urls.main }}/settings" title="Change your settings">Settings</a>
+                            <a class="menu-item" href="//{{ sakura.urls.main }}/logout?mode=logout&time={{ php.time }}&session={{ php.sessionid }}&redirect={{ sakura.currentpage }}" title="End your login session">Logout</a>
                         {% else %}
-                            <a class="menu-item" id="headerLoginLink" href="http://{{ sakura.urls.main }}/login" title="Login to Flashii">Login</a>
-                            <a class="menu-item" href="http://{{ sakura.urls.main }}/register" title="Create an account">Register</a>
+                            <a class="menu-item" id="headerLoginLink" href="//{{ sakura.urls.main }}/login" title="Login to Flashii">Login</a>
+                            <a class="menu-item" href="//{{ sakura.urls.main }}/register" title="Create an account">Register</a>
                         {% endif %}
                     </div>
                     <div class="menu-mob">

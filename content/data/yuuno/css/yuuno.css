@@ -1042,7 +1042,9 @@ h1.stylised {
 }
 
 /* Input buttons styling */
-input[type="submit"].inputStyling, input[type="button"].inputStyling {
+input[type="submit"].inputStyling,
+input[type="button"].inputStyling,
+input[type="reset"].inputStyling {
     padding: 3px 10px;
     cursor: pointer;
     border: 0;
@@ -1056,23 +1058,31 @@ input[type="submit"].inputStyling, input[type="button"].inputStyling {
     font-size: 22px;
     min-width: 120px;
 }
-input[type="submit"].inputStyling.small, input[type="button"].inputStyling.small {
+input[type="submit"].inputStyling.small,
+input[type="button"].inputStyling.small,
+input[type="reset"].inputStyling.small {
     padding: 0 4px 1px;
     margin: -2px 0 0;
     font-size: 16px;
     border-radius: 0;
     min-width: 80px !important;
 }
-input[type="submit"].inputStyling:hover, input[type="button"].inputStyling:hover {
+input[type="submit"].inputStyling:hover,
+input[type="button"].inputStyling:hover,
+input[type="reset"].inputStyling:hover {
     box-shadow: inset #222 0 0 3px;
     text-shadow: #F1F1F1 0 0 5px;
 }
-input[type="submit"].inputStyling:active, input[type="button"].inputStyling:active {
+input[type="submit"].inputStyling:active,
+input[type="button"].inputStyling:active,
+input[type="reset"].inputStyling:active {
     box-shadow: inset #222 0 0 5px;
     text-shadow: #F1F1F1 0 0 3px;
     transition: text-shadow .2s, box-shadow .2s;
 }
-input[type="text"].inputStyling, input[type="password"].inputStyling , input[type="date"].inputStyling {
+input[type="text"].inputStyling,
+input[type="password"].inputStyling ,
+input[type="date"].inputStyling {
     padding: 3px 4px;
     border: 1px solid #CCC;
     box-shadow: inset #DDD 0 0 5px;

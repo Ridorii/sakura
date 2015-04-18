@@ -1,10 +1,21 @@
 {% include 'global/header.tpl' %}
     <div class="content homepage">
         <div class="content-right content-column">
-            <div class="head">Welcome!</div>
-            Welcome to Flashii! This is a site for a bunch of friends to hang out, nothing special. Anyone is pretty much welcome to register so why not have a go?
-            <a class="button registerbutton" href="/register">Register!</a>
-            <a class="button loginbutton" href="/login">Login</a>
+            {% if user.checklogin %}
+                <div class="head">Hi, {{ user.data.username }}!</div>
+                <img src="//{{ sakura.urls.main }}/a/{{ user.data.id }}" class="default-avatar-setting homepage-menu-avatar" />
+                <ul>
+                    <li><a href="//{{ sakura.urls.main }}/settings/profile" class="underline">Edit profile</a></li>
+                    <li><a href="//{{ sakura.urls.main }}/settings/avatar" class="underline">Change avatar</a></li>
+                    <li><a href="//{{ sakura.urls.main }}/settings/sessions" class="underline">View active sessions</a></li>
+                </ul>
+                <div class="clear"></div>
+            {% else %}
+                <div class="head">Welcome!</div>
+                Welcome to Flashii! This is a site for a bunch of friends to hang out, nothing special. Anyone is pretty much welcome to register so why not have a go?
+                <a class="button registerbutton" href="/register">Register!</a>
+                <a class="button loginbutton" href="/login">Login</a>
+            {% endif %}
             <div class="head">Stats</div>
             We have <b>{{ stats.userCount }}</b>, 
             <b><a href="/u/{{ stats.newestUser.id }}" class="default">{{ stats.newestUser.username }}</a></b> is the newest user, 

@@ -63,6 +63,9 @@ $renderData = array(
         'time'      => \time()
     ],
     'user' => [
-        'checklogin' => Users::checkLogin()
+        'checklogin'    => Users::checkLogin(),
+        'session'       => Session::$sessionId,
+        'data'          => ($_init_udata = Users::getUser(Session::$userId)),
+        'rank'          => Users::getRank($_init_udata['rank_main'])
     ]
 );
