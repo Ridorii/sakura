@@ -32,6 +32,7 @@ require_once ROOT .'_sakura/components/Configuration.php';
 require_once ROOT .'_sakura/components/Templates.php';
 require_once ROOT .'_sakura/components/Sessions.php';
 require_once ROOT .'_sakura/components/Users.php';
+require_once ROOT .'_sakura/components/Whois.php';
 
 // Generate path to database driver
 $_DBNGNPATH = ROOT .'_sakura/components/database/'. $sakuraConf['db']['driver'] .'.php';

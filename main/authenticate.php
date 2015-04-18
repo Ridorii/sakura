@@ -84,6 +84,7 @@ if(
                     'USER_NOT_EXIST'        => 'The user you tried to log into does not exist.',
                     'INCORRECT_PASSWORD'    => 'The password you entered was invalid.',
                     'DEACTIVATED'           => 'Your account is deactivated.',
+                    'NO_LOGIN'              => 'Logging into this account is disabled.',
                     'LEGACY_SUCCESS'        => 'Login successful! Taking you to the password changing page...',
                     'LOGIN_SUCESS'          => 'Login successful!'
                 ];
@@ -153,10 +154,19 @@ $renderData['auth'] = [
         )
     ),
     'blockRegister' => [
-        'do'        => true,
-        'username'  => 'test' 
+        'do' => false
     ]
 ];
+
+// Check if a user has already registered from the current IP address
+if(count($regUserIP = Users::getUsersByIP(Main::getRemoteIP()))) {
+
+    $renderData['auth']['blockRegister'] = [
+        'do'        => true,
+        'username'  => $regUserIP[array_rand($regUserIP)]['username']
+    ];
+
+}
 
 // Print page contents
 print Templates::render('main/authenticate.tpl', $renderData);

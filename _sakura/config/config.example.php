@@ -21,7 +21,5 @@ $sakuraConf['urls']['chat']     = 'chat.flashii.net'; // Chat url
 $sakuraConf['urls']['manage']   = 'manage.flashii.net'; // Moderator panel url
 
 // Errata
-$sakuraConf['etc']['localPath']     = '/var/www/flashii.net/'; // Local path
-$sakuraConf['etc']['templatesPath'] = $sakuraConf['etc']['localPath'] .'_sakura/templates/'; // Path to templates directory
-$sakuraConf['etc']['design']        = 'yuuno'; // Style name
-$sakuraConf['etc']['cfhosts']       = $sakuraConf['etc']['localPath'] .'_sakura/config/cloudflare.hosts'; // Cloudflare IP subnets file
+$sakuraConf['etc']['cfhosts']       = ROOT .'_sakura/config/cloudflare.hosts'; // Cloudflare IP subnets file
+$sakuraConf['etc']['whoisservers']  = ROOT .'_sakura/config/whois.json'; // JSON with Whois servers

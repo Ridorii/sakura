@@ -52,6 +52,11 @@
                         <!-- Navigation menu, displayed on left side of the bar. -->
                         <a class="menu-item" href="//{{ sakura.urls.main }}/" title="Return to the front page of Flashii">Home</a>
                         <a class="menu-item" href="//{{ sakura.urls.main }}/news" title="Here you can read updates on Flashii">News</a>
+                        <a class="menu-item" href="//{{ sakura.urls.chat }}/" title="Chat with other Flashii members">Chat</a>
+                        {% if user.checklogin %}
+                            <a class="menu-item" href="//{{ sakura.urls.main }}/members" title="View a list with all the activated user accounts">Members</a>
+                            <a class="menu-item menu-donate" href="//{{ sakura.urls.main }}/donate" title="Give us money to keep the site (and other services) up and running">Donate</a>
+                        {% endif %}
                     </div>
                     <div class="menu-ucp" id="navMenuUser">
                         <!-- User menu, displayed on right side of the bar. -->

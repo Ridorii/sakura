@@ -14,7 +14,7 @@ class Users {
         'username_clean'    => 'deleted user',
         'password_hash'     => '',
         'password_salt'     => '',
-        'password_algo'     => 'sha256',
+        'password_algo'     => 'nologin',
         'password_iter'     => 1000,
         'password_chan'     => 0,
         'password_new'      => '',
@@ -38,7 +38,7 @@ class Users {
     // Empty rank template
     public static $emptyRank = [
         'id'            => 0,
-        'rankname'     => 'Non-existent Rank',
+        'rankname'      => 'Non-existent Rank',
         'multi'         => 0,
         'colour'        => '#444',
         'description'   => 'A hardcoded dummy rank for fallback.'
@@ -85,7 +85,11 @@ class Users {
         $userData = self::getUser($uid);
 
         // Validate password
-        if($userData['password_algo'] == 'legacy') { // Shitty legacy method of sha512(strrev(sha512()))
+        if($userData['password_algo'] == 'nologin') { // Disable logging in to an account
+
+            return [0, 'NO_LOGIN'];
+
+        } elseif($userData['password_algo'] == 'legacy') { // Shitty legacy method of sha512(strrev(sha512()))
 
             if(Main::legacyPasswordHash($password) != $userData['password_hash'])
                 return [0, 'INCORRECT_PASSWORD'];
@@ -135,6 +139,214 @@ class Users {
 
         // Return true indicating a successful logout
         return true;
+
+    }
+
+    // Register user
+    public static function register($username, $password, $confirmpass, $email, $tos, $captcha = null, $regkey = null) {
+
+        // Check if registration is even enabled
+        if(Configuration::getConfig('disable_registration'))
+            return [0, 'DISABLED'];
+
+        // Check if registration codes are required
+        if(Configuration::getConfig('require_registration_code')) {
+
+            // Check if the code is valid
+            if(!self::checkRegistrationCode($regkey))
+                return [0, 'INVALID_REG_KEY'];
+
+        }
+
+        // Check if the user agreed to the ToS
+        if(!$tos)
+            return [0, 'TOS'];
+
+        // Verify the captcha if it's enabled
+        if(Configuration::getConfig('recaptcha')) {
+
+            if(!Main::verifyCaptcha($captcha)['success'])
+                return [0, 'CAPTCHA_FAIL'];
+
+        }
+
+        // Check if the username already exists
+        if(self::userExists($username, false))
+            return [0, 'USER_EXISTS'];
+
+        // Username too short
+        if(strlen($username) < 3)
+            return [0, 'NAME_TOO_SHORT'];
+
+        // Username too long
+        if(strlen($username) > 16)
+            return [0, 'NAME_TOO_LONG'];
+
+        // Password too short
+        if(strlen($password) < 8)
+            return [0, 'PASS_TOO_SHORT'];
+
+        // Password too long
+        if(strlen($password) > 256)
+            return [0, 'PASS_TOO_LONG'];
+
+        // Passwords do not match
+        if($password != $confirmpassword)
+            return [0, 'PASS_NOT_MATCH'];
+
+        // Check if the given email address is formatted properly
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+            return [0, 'INVALID_EMAIL'];
+
+        // Check the MX record of the email
+        if(!Main::checkMXRecord($email))
+            return [0, 'INVALID_MX'];
+
+        // Set a few variables
+        $usernameClean  = Main::cleanString($username);
+        $password       = Hashing::create_hash($password);
+        $requireActive  = Configuration::getConfig('require_activation');
+        $userRank       = $requireActive ? [0] : [1];
+        $userRankJson   = json_encode($userRank);
+
+        // Insert the user into the database
+        Database::insert('users', [
+            'username'          => $username,
+            'username_clean'    => $usernameClean,
+            'password_hash'     => $password[3],
+            'password_salt'     => $password[2],
+            'password_algo'     => $password[0],
+            'password_iter'     => $password[1],
+            'email'             => $email,
+            'rank_main'         => $userRank[0],
+            'ranks'             => $userRankJson,
+            'register_ip'       => Main::getRemoteIP(),
+            'last_ip'           => Main::getRemoteIP(),
+            'regdate'           => time(),
+            'lastdate'          => 0,
+            'lastunamechange'   => time(),
+            'country'           => Main::getCountryCode(),
+            'profile_data'      => '[]'
+        ]);
+
+        // Get userid of the new user
+        $uid = Database::fetch('users', false, ['username_clean' => [$usernameClean, '=']])['id'];
+
+        // Check if we require e-mail activation
+        if($requireActive) {
+
+            // Send activation e-mail to user
+            self::sendActivationMail($uid);
+
+        }
+
+        // Check if registration codes are required
+        if(Configuration::getConfig('require_registration_code')) {
+
+            // If we do mark the registration code that was used as used
+            self::markRegistrationCodeUsed($regkey, $uid);
+
+        }
+
+        // Return true with a specific message if needed
+        return [1, ($requireActive ? 'EMAILSENT' : 'SUCCESS')];
+
+    }
+
+    // Send the activation e-mail and do other required stuff
+    public static function sendActivationMail($uid) {
+
+        // Get the user data
+        $user = Database::fetch('users', false, ['id' => [$uid, '=']]);
+
+        // User is already activated or doesn't even exist
+        if(!count($user) > 1 || $user['rank_main'])
+            return false;
+
+        // Generate activation key
+        // $activate = <interface with the shit for the activationkeys table here>;
+        $activate = 'null';
+
+        // Build the e-mail
+        $message  = "Welcome to ". Configuration::getConfig('sitename') ."!\r\n\r\n";
+        $message .= "Please keep this e-mail for your records. Your account intormation is as follows:\r\n\r\n";
+        $message .= "----------------------------\r\n\r\n";
+        $message .= "Username: ". $user['username'] ."\r\n";
+        $message .= "Your profile: http://". Configuration::getLocalConfig('urls', 'main') ."/u/". $user['id'] ."\r\n\r\n";
+        $message .= "----------------------------\r\n\r\n";
+        $message .= "Please visit the following link in order to activate your account:\r\n\r\n";
+        $message .= "http://". Configuration::getLocalConfig('urls', 'main') ."/activate?mode=activate&u=". $user['id'] ."&k=". $activate ."\r\n\r\n";
+        $message .= "Your password has been securely stored in our database and cannot be retrieved. ";
+        $message .= "In the event that it is forgotten, you will be able to reset it using the email address associated with your account.\r\n\r\n";
+        $message .= "Thank you for registering.\r\n\r\n";
+        $message .= "--\r\n\r\nSincerely\r\n\r\n". Configuration::getConfig('mail_signature');
+
+        // Send the message
+        Main::sendMail([$user['email'] => $user['username']], Configuration::getConfig('sitename') .' Activation Mail', $message);
+
+        // Return true indicating that the things have been sent
+        return true;
+
+    }
+
+    // Check if registration code is valid
+    public static function checkRegistrationCode($code) {
+
+        // Get registration key
+        $keyRow = Database::fetch('regcodes', true, ['code' => [$code, '='], 'key_used' => [0, '=']]);
+
+        // Check if it exists and return it
+        return count($keyRow) ? $keyRow[0]['id'] : false;
+
+    }
+
+    // Mark registration code as used
+    public static function markRegistrationCodeUsed($code, $uid = 0) {
+
+        // Check if the code exists
+        if(!$id = self::checkRegistrationCode($code))
+            return false;
+
+        // Mark it as used
+        Database::update('regcodes', [
+            [
+                'used_by'   => $uid,
+                'key_used'  => 1
+            ],
+            [
+                'id' => [$id, '=']
+            ]
+        ]);
+
+        // Return true because yeah
+        return true;
+
+    }
+
+    // Create new registration code
+    public static function createRegistrationCode() {
+
+        // Check if we're logged in
+        if(!self::checkLogin())
+            return false;
+
+        // Check if the user is not exceeding the maximum registration key amount
+        if(count(Database::fetch('regcodes', true, ['uid' => [Session::$userId, '=']])) >= Configuration::getConfig('max_reg_keys'))
+            return false;
+
+        // Generate a code by MD5'ing some random bullshit
+        $code = md5('SAKURA'. rand(0, 99999999) . Session::$userId .'NOOKLSISGOD');
+
+        // Insert the key into the database
+        Database::insert('regcodes', [
+            'code'          => $code,
+            'created_by'    => Session::$userId,
+            'used_by'       => 0,
+            'key_used'      => 0
+        ]);
+
+        // Return the code
+        return $code;
 
     }
 

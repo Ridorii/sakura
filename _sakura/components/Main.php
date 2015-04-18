@@ -31,7 +31,10 @@ class Main {
         Session::init();
 
         // Templating engine
-        Templates::init(Configuration::getLocalConfig('etc', 'design'));
+        Templates::init(Configuration::getConfig('site_style'));
+
+        // Assign servers file to whois class
+        Whois::setServers(Configuration::getLocalConfig('etc', 'whoisservers'));
 
         // Markdown Parser
         self::initMD();
@@ -74,9 +77,9 @@ class Main {
 	public static function ErrorHandler($errno, $errstr, $errfile, $errline) {
 
         // Set some variables to work with including A HUGE fallback hackjob for the templates folder
-        $errstr     = str_replace(Configuration::getLocalConfig('etc', 'localPath'), '', $errstr);
-        $errfile    = str_replace(Configuration::getLocalConfig('etc', 'localPath'), '', $errfile);
-        $templates  = (Configuration::getLocalConfig('etc', 'templatesPath') !== null && !empty(Configuration::getLocalConfig('etc', 'templatesPath'))) ? Configuration::getLocalConfig('etc', 'templatesPath') : '/var/www/flashii.net/_sakuya/templates/';
+        $errstr     = str_replace(ROOT, '', $errstr);
+        $errfile    = str_replace(ROOT, '', $errfile);
+        $templates  = ROOT .'_sakura/templates/';
 
 		switch ($errno) {
 
@@ -113,6 +116,80 @@ class Main {
 		die($error);
 
 	}
+
+    // Send emails
+    public static function sendMail($to, $subject, $body) {
+
+        // Initialise PHPMailer
+        $mail = new \PHPMailer();
+
+        // Set to SMTP
+        $mail->IsSMTP();
+
+        // Set the SMTP server host
+        $mail->Host = Configuration::getConfig('smtp_server');
+
+        // Do we require authentication?
+        $mail->SMTPAuth = Configuration::getConfig('smtp_auth');
+
+        // Do we encrypt as well?
+        $mail->SMTPSecure = Configuration::getConfig('smtp_secure');
+
+        // Set the port to the SMTP server
+        $mail->Port = Configuration::getConfig('smtp_port');
+
+        // If authentication is required log in as well
+        if(Configuration::getConfig('smtp_auth')) {
+
+            $mail->Username = Configuration::getConfig('smtp_username');
+            $mail->Password = base64_decode(Configuration::getConfig('smtp_password'));
+
+        }
+
+        // Add a reply-to header
+        $mail->AddReplyTo(Configuration::getConfig('smtp_replyto_mail'), Configuration::getConfig('smtp_replyto_name'));
+
+        // Set a from address as well
+        $mail->SetFrom(Configuration::getConfig('smtp_from_email'), Configuration::getConfig('smtp_from_name'));
+
+        // Set the addressee
+        foreach($to as $email => $name)
+            $mail->AddBCC($email, $name);
+
+        // Subject line
+        $mail->Subject = $subject;
+
+        // Set the mail type to HTML
+        $mail->isHTML(true);
+
+        // Set email contents
+        $htmlMail = file_get_contents(ROOT .'_sakura/templates/htmlEmail.tpl');
+
+        // Replace template tags
+        $htmlMail = str_replace('{{ sitename }}',   Configuration::getConfig('sitename'),                   $htmlMail);
+        $htmlMail = str_replace('{{ siteurl }}',    '//'. Configuration::getLocalConfig('urls', 'main'),    $htmlMail);
+        $htmlMail = str_replace('{{ contents }}',   self::mdParse($body),                                   $htmlMail);
+
+        // Set HTML body
+        $mail->Body = $htmlMail;
+
+        // Set fallback body
+        $mail->AltBody = $body;
+
+        // Send the message
+        $send = $mail->Send();
+
+        // Clear the addressee list
+        $mail->ClearAddresses();
+
+        // If we got an error return the error
+        if(!$send)
+            return $mail->ErrorInfo;
+
+        // Else just return whatever
+        return $send;
+
+    }
 
     // Legacy password hashing to be able to validate passwords from users on the old backend.
     public static function legacyPasswordHash($data) {
@@ -310,6 +387,23 @@ class Main {
 
         // Return the correct IP
         return $ip;
+
+    }
+
+    // Get country code from CloudFlare header (which just returns EU if not found)
+    public static function getCountryCode() {
+
+        // Check if remote IP is a CloudFlare IP
+        if(self::checkCFIP($_SERVER['REMOTE_ADDR'])) {
+
+            // Check if the required header is set and return it
+            if(isset($_SERVER['HTTP_CF_IPCOUNTRY']))
+                return $_SERVER['HTTP_CF_IPCOUNTRY'];
+
+        }
+
+        // Return EU as a fallback
+        return 'EU';
 
     }
 

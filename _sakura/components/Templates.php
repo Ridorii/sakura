@@ -19,7 +19,7 @@ class Templates {
         self::$_TPL = $template;
 
         // Assign config path to a variable so we don't have to type it out twice
-        $confPath = Configuration::getLocalConfig('etc', 'templatesPath') .'/'. self::$_TPL .'/template.cfg';
+        $confPath = ROOT .'_sakura/templates/'. self::$_TPL .'/template.cfg';
 
         // Check if the configuration file exists
         if(!file_exists($confPath))
@@ -41,7 +41,7 @@ class Templates {
     private static function twigLoader() {
 
         // Initialise Twig Filesystem Loader
-        $twigLoader = new \Twig_Loader_Filesystem(Configuration::getLocalConfig('etc', 'templatesPath') .'/'. Configuration::getLocalConfig('etc', 'design'));
+        $twigLoader = new \Twig_Loader_Filesystem(ROOT .'_sakura/templates/'. self::$_TPL);
 
         // And now actually initialise the templating engine
         self::$_ENG = new \Twig_Environment($twigLoader, array(
