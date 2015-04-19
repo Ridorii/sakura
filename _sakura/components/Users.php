@@ -191,7 +191,7 @@ class Users {
             return [0, 'PASS_TOO_LONG'];
 
         // Passwords do not match
-        if($password != $confirmpassword)
+        if($password != $confirmpass)
             return [0, 'PASS_NOT_MATCH'];
 
         // Check if the given email address is formatted properly
@@ -254,7 +254,7 @@ class Users {
     }
 
     // Send the activation e-mail and do other required stuff
-    public static function sendActivationMail($uid) {
+    public static function sendActivationMail($uid, $customKey = null) {
 
         // Get the user data
         $user = Database::fetch('users', false, ['id' => [$uid, '=']]);
@@ -264,14 +264,18 @@ class Users {
             return false;
 
         // Generate activation key
-        // $activate = <interface with the shit for the activationkeys table here>;
-        $activate = 'null';
+        $activate = ($customKey ? $customKey : Main::newActionCode('ACTIVATE', $uid, [
+            'user' => [
+                'rank_main' => 1,
+                'ranks'     => json_encode([1])
+            ]
+        ]));
 
         // Build the e-mail
         $message  = "Welcome to ". Configuration::getConfig('sitename') ."!\r\n\r\n";
         $message .= "Please keep this e-mail for your records. Your account intormation is as follows:\r\n\r\n";
         $message .= "----------------------------\r\n\r\n";
-        $message .= "Username: ". $user['username'] ."\r\n";
+        $message .= "Username: ". $user['username'] ."\r\n\r\n";
         $message .= "Your profile: http://". Configuration::getLocalConfig('urls', 'main') ."/u/". $user['id'] ."\r\n\r\n";
         $message .= "----------------------------\r\n\r\n";
         $message .= "Please visit the following link in order to activate your account:\r\n\r\n";
@@ -286,6 +290,87 @@ class Users {
 
         // Return true indicating that the things have been sent
         return true;
+
+    }
+
+    // Activating a user
+    public static function activateUser($uid, $requireKey = false, $key = null) {
+
+        // Get the user data
+        $user = Database::fetch('users', false, ['id' => [$uid, '=']]);
+
+        // Check if user exists
+        if(!count($user) > 1)
+            return [0, 'USER_NOT_EXIST'];
+
+        // Check if user is already activated
+        if($user['rank_main'])
+            return [0, 'USER_ALREADY_ACTIVE'];
+
+        // Set default values for activation
+        $rank = 1;
+        $ranks = json_encode([1]);
+
+        // Check if a key is set (there's an option to not set one for user management reasons but you can't really get around this anyway)
+        if($requireKey) {
+
+            // Check the action code
+            $action = Main::useActionCode('ACTIVATE', $key, $uid);
+
+            // Check if we got a negative return
+            if(!$action[0])
+                return [0, $action[1]];
+
+            // Assign the special values
+            $instructionData    = json_decode($action[2], true);
+            $rank               = $instructionData['user']['rank_main'];
+            $ranks              = $instructionData['user']['ranks'];
+
+        }
+
+        // Activate the account
+        Database::update('users', [
+            [
+                'rank_main' => $rank,
+                'ranks'     => $ranks
+            ],
+            [
+                'id' => [$uid, '=']
+            ]
+        ]);
+
+        // Return success
+        return [1, 'SUCCESS'];
+
+    }
+
+    // Deactivating a user
+    public static function deactivateUser($uid) {
+
+        // Get the user data
+        $user = Database::fetch('users', false, ['id' => [$uid, '=']]);
+
+        // Check if user exists
+        if(!count($user) > 1)
+            return [0, 'USER_NOT_EXIST'];
+
+        // Check if user is already deactivated
+        if(!$user['rank_main'])
+            return [0, 'USER_ALREADY_DEACTIVE'];
+
+        // Deactivate the account
+        Database::update('users', [
+            [
+                'rank_main' => 0,
+                'ranks'     => json_encode([0])
+            ],
+            [
+                'id' => [$uid, '=']
+            ]
+        ]);
+
+        // Return success
+        return [1, 'SUCCESS'];
 
     }
 
@@ -412,14 +497,21 @@ class Users {
     }
 
     // Get all users
-    public static function getAllUsers() {
+    public static function getAllUsers($includeInactive = true) {
 
         // Execute query
         $getUsers = Database::fetch('users', true);
 
         // Reorder shit
-        foreach($getUsers as $user)
+        foreach($getUsers as $user) {
+
+            // Skip if inactive and not include deactivated users
+            if(!$includeInactive && $user['rank_main'] == 0)
+                continue;
+
             $users[$user['id']] = $user;
+
+        }
 
         // and return an array with the users
         return $users;

@@ -11,39 +11,42 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sak
 
 // Page actions
 if(
-    isset($_REQUEST['mode']) &&
-    isset($_REQUEST['time']) &&
-    isset($_REQUEST['session'])
+    isset($_REQUEST['mode'])
 ) {
 
     // Continue
     $continue = true;
 
-    // Compare time and session so we know the link isn't forged
-    if($_REQUEST['time'] < time() - 1000) {
+    // Make sure we're not in activate mode since adding a timestamp and accessing the PHP session id is kind of hard when you're in an e-mail client
+    if(!isset($_REQUEST['mode']) || $_REQUEST['mode'] != 'activate') {
 
-        $renderData['page'] = [
-            'title'     => 'Action failed',
-            'redirect'  => '/authenticate',
-            'message'   => 'Timestamps differ too much, please try again.'
-        ];
+        // Compare time and session so we know the link isn't forged
+        if($_REQUEST['time'] < time() - 1000) {
 
-        // Prevent
-        $continue = false;
+            $renderData['page'] = [
+                'title'     => 'Action failed',
+                'redirect'  => '/authenticate',
+                'message'   => 'Timestamps differ too much, please try again.'
+            ];
 
-    }
+            // Prevent
+            $continue = false;
 
-    // Match session ids for the same reason
-    if($_REQUEST['session'] != session_id()) {
+        }
 
-        $renderData['page'] = [
-            'title'     => 'Action failed',
-            'redirect'  => '/authenticate',
-            'message'   => 'Session IDs do not match.'
-        ];
+        // Match session ids for the same reason
+        if(!isset($_REQUEST['session']) || $_REQUEST['session'] != session_id()) {
 
-        // Prevent
-        $continue = false;
+            $renderData['page'] = [
+                'title'     => 'Action failed',
+                'redirect'  => '/authenticate',
+                'message'   => 'Session IDs do not match.'
+            ];
+
+            // Prevent
+            $continue = false;
+
+        }
 
     }
 
@@ -54,7 +57,6 @@ if(
             $continue = false;
 
     }
-        
 
     if($continue) {
         switch($_REQUEST['mode']) {
@@ -71,6 +73,35 @@ if(
                     'message'   => $logout ? 'You are now logged out.' : 'Logout failed.'
                 ];
 
+                break;
+
+            // Activating accounts
+            case 'activate':
+
+                // Attempt activation
+                $activate = Users::activateUser($_REQUEST['u'], true, $_REQUEST['k']);
+
+                // Array containing "human understandable" messages
+                $messages = [
+                    'USER_NOT_EXIST'        => 'The user you tried to activate does not exist.',
+                    'USER_ALREADY_ACTIVE'   => 'The user you tried to activate is already active.',
+                    'INVALID_CODE'          => 'Invalid activation code, if you think this is an error contact the administrator.',
+                    'INVALID_USER'          => 'The used registration code is not designated for this user.',
+                    'SUCCESS'               => 'Successfully activated your account, you may now log in.'
+                ];
+
+                // Add page specific things
+                $renderData['page'] = [
+                    'title'     => 'Activate account',
+                    'redirect'  => '/authenticate',
+                    'message'   => $messages[$activate[1]]
+                ];
+
+                break;
+
+            // Resending the activation e-mail
+            case 'resendactivemail':
+                
                 break;
 
             // Login processing
@@ -101,11 +132,48 @@ if(
             // Registration processing
             case 'register':
 
+                // Attempt registration
+                $register = Users::register(
+                    $_REQUEST['username'],
+                    $_REQUEST['password'],
+                    $_REQUEST['confirmpassword'],
+                    $_REQUEST['email'],
+                    isset($_REQUEST['tos']),
+                    (
+                        Configuration::getConfig('recaptcha') ?
+                        $_REQUEST['g-recaptcha-response'] :
+                        null
+                    ),
+                    (
+                        Configuration::getConfig('require_registration_code') ?
+                        $_REQUEST['registercode'] :
+                        null
+                    )
+                );
+
+                // Array containing "human understandable" messages
+                $messages = [
+                    'DISABLED'          => 'Registration is currently disabled.',
+                    'INVALID_REG_KEY'   => 'The given registration code was invalid.',
+                    'TOS'               => 'You are required to agree to the Terms of Service.',
+                    'CAPTCHA_FAIL'      => 'Captcha verification failed, please try again.',
+                    'USER_EXISTS'       => 'A user with this username already exists, if you lost your password try using the Lost Password form.',
+                    'NAME_TOO_SHORT'    => 'Your name must be at least 3 characters long.',
+                    'NAME_TOO_LONG'     => 'Your name can\'t be longer than 16 characters.',
+                    'PASS_TOO_SHORT'    => 'Your password is too short, it must be at least 8 characters.',
+                    'PASS_TOO_LONG'     => 'A password longer than 256 characters? Seriously?',
+                    'PASS_NOT_MATCH'    => 'Passwords do not match.',
+                    'INVALID_EMAIL'     => 'Your e-mail address is formatted incorrectly.',
+                    'INVALID_MX'        => 'No valid MX-Record found on the e-mail address you supplied.',
+                    'EMAILSENT'         => 'Your registration went through! An activation e-mail has been sent.',
+                    'SUCCESS'           => 'Your registration went through! Welcome to '. Configuration::getConfig('sitename') .'!'
+                ];
+
                 // Add page specific things
                 $renderData['page'] = [
                     'title'     => 'Register on Flashii',
-                    'redirect'  => $_SERVER['PHP_SELF'],
-                    'message'   => 'what'
+                    'redirect'  => ($register[0] ? '/' : '/authenticate'),
+                    'message'   => $messages[$register[1]]
                 ];
 
                 break;

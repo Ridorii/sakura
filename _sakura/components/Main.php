@@ -243,8 +243,8 @@ class Main {
     // Validate MX records
     public static function checkMXRecord($email) {
 
-        // Split up the address in two parts (user and domain)
-        list($user, $domain) = split('@', $email);
+        // Get the domain from the e-mail address
+        $domain = substr(strstr($email, '@'), 1);
 
         // Check the MX record
         $record = checkdnsrr($domain, 'MX');
@@ -404,6 +404,63 @@ class Main {
 
         // Return EU as a fallback
         return 'EU';
+
+    }
+
+    // Create a new action code
+    public static function newActionCode($action, $userid, $instruct) {
+
+        // Make sure the user we're working with exists
+        if(Users::getUser($userid)['id'] == 0)
+            return false;
+
+        // Convert the instruction array to a JSON
+        $instruct = json_encode($instruct);
+
+        // Generate a key
+        $key = sha1(date("r") . time() . $userid . $action . rand(0, 9999));
+
+        // Insert the key into the database
+        Database::insert('actioncodes', [
+            'action'        => $action,
+            'userid'        => $userid,
+            'actkey'        => $key,
+            'instruction'   => $instruct
+        ]);
+
+        // Return the key
+        return $key;
+
+    }
+
+    // Use an action code
+    public static function useActionCode($action, $key, $uid = 0) {
+
+        // Retrieve the row from the database
+        $keyRow = Database::fetch('actioncodes', false, [
+            'actkey' => [$key,      '='],
+            'action' => [$action,   '=']
+        ]);
+
+        // Check if the code exists
+        if(count($keyRow) <= 1)
+            return [0, 'INVALID_CODE'];
+
+        // Check if the code was intended for the user that's using this code
+        if($keyRow['userid'] != 0) {
+
+            if($keyRow['userid'] != $uid)
+                return [0, 'INVALID_USER'];
+
+        }
+
+        // Remove the key from the database
+        Database::delete('actioncodes', [
+            'id' => [$keyRow['id'], '=']
+        ]);
+
+        // Return success
+        return [1, 'SUCCESS', $keyRow['instruction']];
 
     }
 

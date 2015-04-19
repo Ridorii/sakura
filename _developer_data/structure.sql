@@ -5,9 +5,20 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-DROP DATABASE IF EXISTS `flashiidev`;
-CREATE DATABASE `flashiidev` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
-USE `flashiidev`;
+DROP DATABASE IF EXISTS `sakura`;
+CREATE DATABASE `sakura` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
+USE `sakura`;
+
+DROP TABLE IF EXISTS `fii_actioncodes`;
+CREATE TABLE `fii_actioncodes` (
+  `id` bigint(255) NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
+  `action` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Action identifier so the backend knows what to do.',
+  `userid` bigint(255) NOT NULL COMMENT 'ID of the user that would be affected by this action',
+  `actkey` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The URL key for using this code.',
+  `instruction` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Things the backend should do upon using this code',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
 
 DROP TABLE IF EXISTS `fii_apikeys`;
 CREATE TABLE `fii_apikeys` (
@@ -39,6 +50,34 @@ CREATE TABLE `fii_config` (
   `config_value` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The value, obviously.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+TRUNCATE `fii_config`;
+INSERT INTO `fii_config` (`config_name`, `config_value`) VALUES
+('recaptcha_public',	''),
+('recaptcha_private',	''),
+('charset',	'utf-8'),
+('cookie_prefix',	''),
+('cookie_domain',	''),
+('cookie_path',	'/'),
+('site_style',	'yuuno'),
+('manage_style',	'Manage'),
+('allow_registration',	'0'),
+('smtp_server',	''),
+('smtp_auth',	''),
+('smtp_secure',	''),
+('smtp_port',	''),
+('smtp_username',	''),
+('smtp_password',	''),
+('smtp_replyto_mail',	''),
+('smtp_replyto_name',	''),
+('smtp_from_email',	''),
+('smtp_from_name',	'Sakura Noreply'),
+('sitename',	'Sakura'),
+('recaptcha',	'1'),
+('require_activation',	'1'),
+('require_registration_code',	'0'),
+('disable_registration',	'1'),
+('max_reg_keys',	'5'),
+('mail_signature',	'Team Flashii');
 
 DROP TABLE IF EXISTS `fii_infopages`;
 CREATE TABLE `fii_infopages` (
@@ -83,6 +122,7 @@ CREATE TABLE `fii_profilefields` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+TRUNCATE `fii_profilefields`;
 INSERT INTO `fii_profilefields` (`id`, `name`, `formtype`, `description`, `additional`) VALUES
 (1,	'Website',	'url',	'URL to your website',	''),
 (2,	'Twitter',	'text',	'Your @twitter Username',	''),
@@ -94,8 +134,7 @@ INSERT INTO `fii_profilefields` (`id`, `name`, `formtype`, `description`, `addit
 (8,	'osu!',	'text',	'Your osu! Username',	''),
 (9,	'Origin',	'text',	'Your Origin User ID',	''),
 (10,	'Xbox Live',	'text',	'Your Xbox User ID',	''),
-(11,	'PSN',	'text',	'Your PSN User ID',	'')
-ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `name` = VALUES(`name`), `formtype` = VALUES(`formtype`), `description` = VALUES(`description`), `additional` = VALUES(`additional`);
+(11,	'PSN',	'text',	'Your PSN User ID',	'');
 
 DROP TABLE IF EXISTS `fii_ranks`;
 CREATE TABLE `fii_ranks` (
@@ -108,6 +147,7 @@ CREATE TABLE `fii_ranks` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+TRUNCATE `fii_ranks`;
 INSERT INTO `fii_ranks` (`id`, `name`, `multi`, `colour`, `description`, `title`) VALUES
 (1,	'Deactivated',	0,	'#555',	'Users that are yet to be activated or that deactivated their own account.',	'Deactivated'),
 (2,	'Regular user',	1,	'inherit',	'Regular users with regular permissions.',	'Regular user'),
@@ -117,8 +157,7 @@ INSERT INTO `fii_ranks` (`id`, `name`, `multi`, `colour`, `description`, `title`
 (6,	'Bot',	1,	'#9E8DA7',	'Reserved user accounts for services.',	'Bot'),
 (7,	'Chat moderator',	1,	'#09F',	'Moderators of the chat room.',	'Staff'),
 (8,	'Tenshi',	0,	'#EE9400',	'Users that donated $5.00 or more in order to keep the site and it\'s services alive!',	'Tenshi'),
-(9,	'Alumnii',	0,	'#FF69B4',	'People who have contributed to the community but have moved on or resigned.',	'Alumnii')
-ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `name` = VALUES(`name`), `multi` = VALUES(`multi`), `colour` = VALUES(`colour`), `description` = VALUES(`description`), `title` = VALUES(`title`);
+(9,	'Alumnii',	0,	'#FF69B4',	'People who have contributed to the community but have moved on or resigned.',	'Alumnii');
 
 DROP TABLE IF EXISTS `fii_regcodes`;
 CREATE TABLE `fii_regcodes` (
@@ -128,7 +167,7 @@ CREATE TABLE `fii_regcodes` (
   `used_by` bigint(128) unsigned NOT NULL COMMENT 'ID of user who used this code.',
   `key_used` tinyint(1) unsigned NOT NULL COMMENT 'Boolean for setting this key as used.',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_sessions`;
@@ -142,7 +181,7 @@ CREATE TABLE `fii_sessions` (
   `expire` int(64) unsigned NOT NULL COMMENT 'The timestamp for when this session should end, -1 for permanent. ',
   `remember` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'If set to 1 session will be extended each time a page is loaded.',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_tenshi`;
@@ -184,7 +223,7 @@ CREATE TABLE `fii_users` (
   `profile_data` text COLLATE utf8_bin NOT NULL COMMENT 'Modular array containing profile data.',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_clean` (`username_clean`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_warnings`;
@@ -199,4 +238,4 @@ CREATE TABLE `fii_warnings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
--- 2015-04-13 10:06:13
+-- 2015-04-19 12:58:09
