@@ -203,7 +203,7 @@ class Users {
             return [0, 'INVALID_MX'];
 
         // Set a few variables
-        $usernameClean  = Main::cleanString($username);
+        $usernameClean  = Main::cleanString($username, true);
         $password       = Hashing::create_hash($password);
         $requireActive  = Configuration::getConfig('require_activation');
         $userRank       = $requireActive ? [0] : [1];

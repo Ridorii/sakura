@@ -30,7 +30,7 @@
         </div>
         <div class="clear"></div>
     </div>
-    <script type="text/javascript" src="//{{ sakura.urls.content }}/js/ybabstat.js"></script>
+    <script type="text/javascript" src="{{ sakura.resources }}/js/ybabstat.js"></script>
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
         var disqus_shortname = 'flashii';

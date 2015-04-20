@@ -146,18 +146,185 @@ function donatePage(id) {
     return;
 }
 
-var RecaptchaOptions = {
-    theme : 'custom',
-    custom_theme_widget: 'recaptcha_widget'
-};
+function removeClass(className) {
+    var objectCont = document.getElementsByClassName(className);
 
-function switch_text(type) {
-    var responseField = document.getElementById('recaptcha_response_field');
+    while(objectCont.length > 0)
+        objectCont[0].parentNode.removeChild(objectCont[0]);
+}
 
-    if(type == "audio")
-        responseField.setAttribute('placeholder', 'Enter the words you hear');
-    else if(type == "image")
-        responseField.setAttribute('placeholder', 'Enter the words above');
+function removeId(id) {
+    var objectCont = document.getElementById(id);
+
+    if(typeof(objectCont) != "undefined" && objectCont !== null)
+        objectCont.parentNode.removeChild(objectCont);
+}
+
+function ajaxBusyView(show, message, type) {
+    var busyCont    = document.getElementById('ajaxBusy');
+    var busyStat    = document.getElementById('ajaxStatus');
+    var busyAnim    = document.getElementById('ajaxAnimate');
+    var pageContent = document.getElementById('contentwrapper');
+
+    switch(type) {
+
+        default:
+        case 'busy':
+            var busyAnimIco = 'fa fa-refresh fa-spin fa-4x';
+            break;
+        case 'ok':
+            var busyAnimIco = 'fa fa-check fa-4x';
+            break;
+        case 'fail':
+            var busyAnimIco = 'fa fa-remove fa-4x';
+            break;
+
+    }
+
+    if(show) {
+        if(busyCont == null) {
+            var createBusyCont = document.createElement('div');
+            createBusyCont.className = 'ajax-busy';
+            createBusyCont.setAttribute('id', 'ajaxBusy');
+
+            var createBusyInner = document.createElement('div');
+            createBusyInner.className = 'ajax-inner';
+            createBusyCont.appendChild(createBusyInner);
+
+            var createBusyMsg = document.createElement('h2');
+            createBusyMsg.setAttribute('id', 'ajaxStatus');
+            createBusyInner.appendChild(createBusyMsg);
+
+            var createBusySpin = document.createElement('div');
+            createBusySpin.setAttribute('id', 'ajaxAnimate');
+            createBusyInner.appendChild(createBusySpin);
+
+            pageContent.appendChild(createBusyCont);
+            
+            busyCont = document.getElementById('ajaxBusy');
+            busyStat = document.getElementById('ajaxStatus');
+            busyAnim = document.getElementById('ajaxAnimate');
+        }
+
+        busyAnim.className = busyAnimIco;
+
+        if(message == null)
+            busyStat.innerHTML = 'Please wait';
+        else
+            busyStat.innerHTML = message;
+    } else {
+        if(busyCont != null) {
+            var fadeOut = setInterval(function() {
+                if(busyCont.style.opacity == null || busyCont.style.opacity == "")
+                    busyCont.style.opacity = 1;
+
+                if(busyCont.style.opacity > 0) {
+                    busyCont.style.opacity = busyCont.style.opacity - .1;
+                } else {
+                    removeId('ajaxBusy');
+                    clearInterval(fadeOut);
+                }
+            }, 10);
+        }
+    }
+}
+
+function ajaxPost(url, data) {
+    var req = new XMLHttpRequest();
+    req.open("POST", url, false);
+    req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    var query = [];
+    for(var i in data)
+        query.push(encodeURIComponent(i) +"="+ encodeURIComponent(data[i]));
+
+    req.send(query.join("&"));
+
+    if(req.status === 200)
+        return req.responseText;
     else
-        responseField.setAttribute('placeholder', 'undefined rolls undefined and gets undefined');
+        return "";
+}
+
+// Quickly building a form for god knows what reason
+function generateForm(formId, formAttr, formData, appendTo) {
+
+    // Create form elements and assign ID
+    var form = document.createElement('form');
+    form.setAttribute('id', formId);
+
+    // Set additional attributes
+    if(formAttr != null) {
+        for(var i in formAttr)
+            form.setAttribute(i, formAttr[i]);
+    }
+
+    // Generate input elements
+    for(var i in formData) {
+        var disposableVar = document.createElement('input');
+        disposableVar.setAttribute('type', 'hidden');
+        disposableVar.setAttribute('name', i);
+        disposableVar.setAttribute('value', formData[i]);
+        form.appendChild(disposableVar);
+    }
+
+    // Append to another element if requested
+    if(appendTo != null)
+        document.getElementById(appendTo).appendChild(form);
+
+    // Return the completed form
+    return form;
+
+}
+
+// Submitting a form using an AJAX POST request
+function submitPost(formId, busyView, msg) {
+
+    // If requested display the busy thing
+    if(busyView)
+        ajaxBusyView(true, msg, 'busy');
+
+    // Get form data
+    var form = document.getElementById(formId);
+
+    // Make sure the form id was proper and if not report an error
+    if(form == null) {
+        if(busyView) {
+            ajaxBusyView(true, 'Invalid Form ID, contact the administrator.');
+            setTimeout(function(){ajaxBusyView(false);}, 2000);
+        }
+        return;
+    }
+
+    // Make an object for the request parts
+    var requestParts = new Object();
+
+    // Get all children with a name attribute
+    var children = form.querySelectorAll('[name]');
+
+    // Sort children and make them ready for submission
+    for(var i in children) {
+
+        if(typeof children[i] == 'object')
+            requestParts[children[i].name] = ((typeof children[i].type !== "undefined" && children[i].type.toLowerCase() == "checkbox") ? children[i].checked : children[i].value);
+
+    }
+
+    // Submit the AJAX request
+    var request = ajaxPost(form.action, requestParts).split('|');
+
+    // If using the busy view thing update the text displayed to the return of the request
+    if(busyView)
+        ajaxBusyView(true, request[1], (request[2] == '1' ? 'ok' : 'fail'));
+
+    setTimeout(function(){
+        if(busyView)
+            ajaxBusyView(false);
+
+        if(request[2] == '1')
+            window.location = request[3];
+    }, 2000); 
+
+    return;
+
 }

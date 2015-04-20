@@ -31,24 +31,27 @@ body {
 #contentwrapper {
     padding-bottom: 220px;
 }
-@media (max-width: 1033px) {
+@media (max-width: 642px) {
     #contentwrapper {
-        padding-bottom: 230px;
-    }
-}
-@media (max-width: 860px) {
-    #contentwrapper {
-        padding-bottom: 375px;
-    }
-}
-@media (max-width: 510px) {
-    #contentwrapper {
-        padding-bottom: 380px;
+        padding-bottom: 335px;
     }
 }
 @media (max-width: 426px) {
     #contentwrapper {
-        padding-bottom: 625px;
+        padding-bottom: 450px;
+    }
+}
+@media (max-width: 400px) {
+    #contentwrapper {
+        padding-bottom: 450px;
+    }
+}
+@media (max-width: 300px) {
+    .footer {
+        display: none;
+    }
+    #contentwrapper {
+        padding-bottom: 0;
     }
 }
 
@@ -205,9 +208,6 @@ a.gotop:active {
     color: #B06AC4;
     transition: color .2s, text-shadow .2s;
 }
-.header .logo:after {
-    content: "Flashii Dev";
-}
 .header .logo:hover {
     color: #C17BD5;
     text-shadow: 0 0 .1em #C17BD5;
@@ -217,15 +217,6 @@ a.gotop:active {
     text-shadow: 0 0 .1em #A059B3;
 }
 @media (max-width: 768px) {
-    /*.header .logo {
-        background: none;
-        height: auto;
-        width: auto;
-        display: inline-block;
-        text-decoration: none;
-        font: 50px/60px "Segoe UI Light", sans-serif;
-        color: #B06AC4;
-    }*/
     .header .logo {
         font: 100 50px/60px "Segoe UI", sans-serif;
     }
@@ -394,6 +385,33 @@ a.gotop:active {
 }
 .private-message {
     border-top: 1px solid #C2AEEE;
+}
+
+/* AJAX Busy thing */
+.ajax-busy {
+    background: rgba(0, 0, 0, .4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 5;
+    text-align: center;
+    opacity: 1;
+}
+.ajax-busy .ajax-inner {
+    line-height: 2em;
+    color: #FFF;
+    background: #222;
+    background: linear-gradient(0deg, rgba(0, 0, 0, .4) 20%, transparent) rgba(0, 0, 0, .8);
+    display: inline-block;
+    margin: 10% auto 0;
+    padding: 10px 20px 15px;
+    border-radius: 10px;
+    box-shadow: 0 5px 1em #111;
+}
+.ajax-busy .ajax-inner h2 {
+    padding-bottom: 5px;
 }
 
 /* Markdown Section */

@@ -19,7 +19,7 @@ RewriteRule ^credits?/?$ credits.php
 RewriteRule ^index?/?$ index.php
 RewriteRule ^login?/?$|logout?/?$|activate?/?$|register?/?$|forgotpassword?/?|authenticate?/?$ authenticate.php
 RewriteRule ^donate?/?$ donate.php
-RewriteRule ^contact?/?$ contact.php
+RewriteRule ^contact?/?$ infopage.php?r=contact
 
 ## Info pages
 RewriteRule ^r/([a-z]+)$ infopage.php?r=$1

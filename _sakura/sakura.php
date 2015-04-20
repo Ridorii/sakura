@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20150417');
+define('SAKURA_VERSION', '20150420');
 
 // Define Sakura Path
 define('ROOT', str_replace(basename(__DIR__), '', dirname(__FILE__)));
@@ -57,11 +57,17 @@ $renderData = array(
         'charset'           => Configuration::getConfig('charset'),
         'currentpage'       => '//'. $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'],
         'recaptcha_public'  => Configuration::getConfig('recaptcha_public'),
-        'resources'         => '//'. Configuration::getLocalConfig('urls')['content'] .'/data/'. strtolower(Templates::$_TPL)
+        'recaptcha_enable'  => Configuration::getConfig('recaptcha'),
+        'resources'         => '//'. Configuration::getLocalConfig('urls')['content'] .'/data/'. strtolower(Templates::$_TPL),
+        'disableregister'   => Configuration::getConfig('disable_registration'),
+        'requireregcodes'   => Configuration::getConfig('require_registration_code'),
+        'requireactiveate'  => Configuration::getConfig('require_activation'),
+        'sitename'          => Configuration::getConfig('sitename')
     ],
     'php' => [
         'sessionid' => \session_id(),
-        'time'      => \time()
+        'time'      => \time(),
+        'self'      => $_SERVER['PHP_SELF']
     ],
     'user' => [
         'checklogin'    => Users::checkLogin(),

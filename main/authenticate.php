@@ -10,9 +10,7 @@ namespace Sakura;
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sakura.php';
 
 // Page actions
-if(
-    isset($_REQUEST['mode'])
-) {
+if(isset($_REQUEST['mode'])) {
 
     // Continue
     $continue = true;
@@ -21,12 +19,13 @@ if(
     if(!isset($_REQUEST['mode']) || $_REQUEST['mode'] != 'activate') {
 
         // Compare time and session so we know the link isn't forged
-        if($_REQUEST['time'] < time() - 1000) {
+        if(!isset($_REQUEST['time']) || $_REQUEST['time'] < time() - 1000) {
 
             $renderData['page'] = [
                 'title'     => 'Action failed',
                 'redirect'  => '/authenticate',
-                'message'   => 'Timestamps differ too much, please try again.'
+                'message'   => 'Timestamps differ too much, please try again.',
+                'success'   => 0
             ];
 
             // Prevent
@@ -40,7 +39,8 @@ if(
             $renderData['page'] = [
                 'title'     => 'Action failed',
                 'redirect'  => '/authenticate',
-                'message'   => 'Session IDs do not match.'
+                'message'   => 'Session IDs do not match.',
+                'success'   => 0
             ];
 
             // Prevent
@@ -70,7 +70,8 @@ if(
                 $renderData['page'] = [
                     'title'     => 'Logout',
                     'redirect'  => ($logout ? $_REQUEST['redirect'] : '/authenticate'),
-                    'message'   => $logout ? 'You are now logged out.' : 'Logout failed.'
+                    'message'   => $logout ? 'You are now logged out.' : 'Logout failed.',
+                    'success'   => $logout ? 1 : 0
                 ];
 
                 break;
@@ -94,14 +95,26 @@ if(
                 $renderData['page'] = [
                     'title'     => 'Activate account',
                     'redirect'  => '/authenticate',
-                    'message'   => $messages[$activate[1]]
+                    'message'   => $messages[$activate[1]],
+                    'success'   => $activate[0]
                 ];
 
                 break;
 
             // Resending the activation e-mail
             case 'resendactivemail':
-                
+
+                // Attempt send
+                //Users::resendActivationMail($_REQUEST['username'], $_REQUEST['email']);
+
+                // Add page specific things
+                $renderData['page'] = [
+                    'title'     => 'Resend Activation',
+                    'redirect'  => '/authenticate',
+                    'message'   => $messages[$resend[1]],
+                    'success'   => $resend[0]
+                ];
+
                 break;
 
             // Login processing
@@ -124,7 +137,8 @@ if(
                 $renderData['page'] = [
                     'title'     => 'Login',
                     'redirect'  => ($login[0] ? $_REQUEST['redirect'] : '/authenticate'),
-                    'message'   => $messages[$login[1]]
+                    'message'   => $messages[$login[1]],
+                    'success'   => $login[0]
                 ];
 
                 break;
@@ -171,9 +185,10 @@ if(
 
                 // Add page specific things
                 $renderData['page'] = [
-                    'title'     => 'Register on Flashii',
+                    'title'     => 'Register',
                     'redirect'  => ($register[0] ? '/' : '/authenticate'),
-                    'message'   => $messages[$register[1]]
+                    'message'   => $messages[$register[1]],
+                    'success'   => $register[0]
                 ];
 
                 break;
@@ -185,7 +200,8 @@ if(
                 $renderData['page'] = [
                     'title'     => 'Forgot Password',
                     'redirect'  => $_SERVER['PHP_SELF'],
-                    'message'   => 'what'
+                    'message'   => 'what',
+                    'success'   => 0
                 ];
 
                 break;
@@ -197,9 +213,11 @@ if(
     print   isset($_REQUEST['ajax']) ?
             (
                 $renderData['page']['title']
-                . ':'
+                . '|'
                 . $renderData['page']['message']
-                . ':'
+                . '|'
+                . $renderData['page']['success']
+                . '|'
                 . $renderData['page']['redirect']
             ) :
             Templates::render('errors/information.tpl', $renderData);
@@ -218,7 +236,7 @@ $renderData['auth'] = [
         (
             isset($_SERVER['HTTP_REFERER']) ?
             $_SERVER['HTTP_REFERER'] :
-            Configuration::getLocalConfig('urls', 'main')
+            '/'
         )
     ),
     'blockRegister' => [

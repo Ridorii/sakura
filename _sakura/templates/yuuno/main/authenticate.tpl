@@ -4,9 +4,9 @@
         <div class="loginCont">
             <div class="loginForm">
                 <div class="head">
-                    Login to Flashii
+                    Login to {{ sakura.sitename }}
                 </div>
-                <form method="post" action="http://{{ sakura.urls.main }}/authenticate">
+                <form method="post" action="//{{ sakura.urls.main }}/authenticate" id="loginForm">
                     <input type="hidden" name="redirect" value="{{ auth.redirect }}" />
                     <input type="hidden" name="session" value="{{ php.sessionid }}" />
                     <input type="hidden" name="time" value="{{ php.time }}" />
@@ -35,7 +35,7 @@
                 <div class="head">
                     Lost Password
                 </div>
-                <form method="post" action="http://{{ sakura.urls.main }}/authenticate">
+                <form method="post" action="//{{ sakura.urls.main }}/authenticate" id="passwordForm">
                     <input type="hidden" name="mode" value="forgotpassword" />
                     <input type="hidden" name="session" value="{{ php.sessionid }}" />
                     <input type="hidden" name="time" value="{{ php.time }}" />
@@ -63,9 +63,10 @@
         <div class="registerCont">
             <div class="registerForm">
                 <div class="head">
-                    Register on Flashii
+                    Register on {{ sakura.sitename }}
                 </div>
-                <form id="registerForm" method="post" action="http://{{ sakura.urls.main }}/authenticate" style="display:{% if auth.blockRegister.do %}none{% else %}block{% endif %};">
+                {% if not sakura.disableregister %}
+                <form id="registerForm" method="post" action="//{{ sakura.urls.main }}/authenticate" style="display:{% if auth.blockRegister.do %}none{% else %}block{% endif %};">
                     <input type="hidden" name="mode" value="register" />
                     <input type="hidden" name="session" value="{{ php.sessionid }}" />
                     <input type="hidden" name="time" value="{{ php.time }}" />
@@ -93,6 +94,15 @@
                     <div class="centreAlign">
                         <input class="inputStyling" type="password" id="registerConfirmPassword" name="confirmpassword" placeholder="Just to make sure" />
                     </div>
+                    {% if sakura.requireregcodes %}
+                    <div class="leftAlign">
+                        <label for="registerCode">Registration Code:</label>
+                    </div>
+                    <div class="centreAlign">
+                        <input class="inputStyling" type="text" id="registerCode" name="registercode" placeholder="Ask another member for one" />
+                    </div>
+                    {% endif %}
+                    {% if sakura.recaptcha_enable %}
                     <div class="leftAlign">
                         <label for="recaptcha_response_field">Verification:</label>
                     </div>
@@ -112,6 +122,7 @@
                           </div>
                         </noscript>
                     </div>
+                    {% endif %}
                     <div class="subLinks centreAlign">
                         <input class="inputStyling" name="tos" type="checkbox" class="ignore-css" id="registerToS" /><label for="registerToS">I agree to the <a class="default" href="/r/terms" target="_blank">Terms of Service</a>.
                     </div>
@@ -133,12 +144,22 @@
                     </div>
                 </div>
                 {% endif %}
+                {% else %}
+                <div class="registerForm" id="registerWarn" style="display: block;">
+                    <div class="centreAlign">
+                        <div class="fa fa-remove fa-5x" style="display: block; margin: 10px 0 0;"></div>
+                        <h1>Registration is disabled.</h1>
+                        <p>Please try again later.</p>
+                    </div>
+                </div>
+                {% endif %}
             </div>
-            <div class="passwordForm">
+            {% if not sakura.requireactive %}
+            <div class="resendForm">
                 <div class="head">
                     Resend Activation E-mail
                 </div>
-                <form method="post" action="http://{{ sakura.urls.main }}/authenticate">
+                <form method="post" action="//{{ sakura.urls.main }}/authenticate" id="resendForm">
                     <input type="hidden" name="mode" value="resendactivemail" />
                     <input type="hidden" name="session" value="{{ php.sessionid }}" />
                     <input type="hidden" name="time" value="{{ php.time }}" />
@@ -162,6 +183,7 @@
                     </div>
                 </form>
             </div>
+            {% endif %}
         </div>
         <div class="clear"></div>
     </div>
