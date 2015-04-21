@@ -53,12 +53,13 @@ if(isset($_REQUEST['mode'])) {
     // Login check
     if(Users::checkLogin()) {
 
-        if($_REQUEST['mode'] != 'logout')
+        if($_REQUEST['mode'] != 'logout' || $_REQUEST['mode'] != 'legacypw')
             $continue = false;
 
     }
 
     if($continue) {
+
         switch($_REQUEST['mode']) {
 
             case 'logout':
@@ -72,6 +73,30 @@ if(isset($_REQUEST['mode'])) {
                     'redirect'  => ($logout ? $_REQUEST['redirect'] : '/authenticate'),
                     'message'   => $logout ? 'You are now logged out.' : 'Logout failed.',
                     'success'   => $logout ? 1 : 0
+                ];
+
+                break;
+
+            case 'legacypw':
+
+                // Add page specific things
+                $renderData['page'] = [
+                    'title'     => 'Changing Password',
+                    'redirect'  => $_SERVER['PHP_SELF'],
+                    'message'   => 'yet to be implemented',
+                    'success'   => 0
+                ];
+
+                break;
+
+            case 'changepassword':
+
+                // Add page specific things
+                $renderData['page'] = [
+                    'title'     => 'Forgot Password',
+                    'redirect'  => $_SERVER['PHP_SELF'],
+                    'message'   => 'Yet to be implemented',
+                    'success'   => 0
                 ];
 
                 break;
@@ -105,7 +130,14 @@ if(isset($_REQUEST['mode'])) {
             case 'resendactivemail':
 
                 // Attempt send
-                //Users::resendActivationMail($_REQUEST['username'], $_REQUEST['email']);
+                $resend = Users::resendActivationMail($_REQUEST['username'], $_REQUEST['email']);
+
+                // Array containing "human understandable" messages
+                $messages = [
+                    'USER_NOT_EXIST'        => 'The user you tried to activate does not exist.',
+                    'USER_ALREADY_ACTIVE'   => 'The user you tried to activate is already active.',
+                    'SUCCESS'               => 'The activation e-mail has been sent to the address associated with your account.'
+                ];
 
                 // Add page specific things
                 $renderData['page'] = [
@@ -200,13 +232,14 @@ if(isset($_REQUEST['mode'])) {
                 $renderData['page'] = [
                     'title'     => 'Forgot Password',
                     'redirect'  => $_SERVER['PHP_SELF'],
-                    'message'   => 'what',
+                    'message'   => 'yet to be implemented',
                     'success'   => 0
                 ];
 
                 break;
 
         }
+
     }
 
     // Print page contents or if the AJAX request is set only display the render data
@@ -227,7 +260,7 @@ if(isset($_REQUEST['mode'])) {
 
 // Add page specific things
 $renderData['page'] = [
-    'title' => 'Login to Flashii'
+    'title' => 'Authentication'
 ];
 $renderData['auth'] = [
     'redirect' => (
@@ -251,6 +284,20 @@ if(count($regUserIP = Users::getUsersByIP(Main::getRemoteIP()))) {
         'do'        => true,
         'username'  => $regUserIP[array_rand($regUserIP)]['username']
     ];
+
+}
+
+// If password forgot things are set display password forget thing
+if(isset($_REQUEST['pw']) && $_REQUEST['pw']) {
+
+    $renderData['page']['title']        = 'Changing Password';
+    $renderData['auth']['changingPass'] = true;
+
+    if(isset($_REQUEST['key']))
+        $renderData['auth']['forgotKey'] = $_REQUEST['key'];
+
+    print Templates::render('main/forgotpassword.tpl', $renderData);
+    exit;
 
 }
 

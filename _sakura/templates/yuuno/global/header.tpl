@@ -77,10 +77,14 @@
             {% if php.self == '/authenticate.php' %}
             // AJAX Form Submission            
             var forms = {
+                {% if not auth.changingPass %}
                 "loginForm": 'Logging in...',
                 {% if not sakura.disableregister %}"registerForm": 'Processing registration...',{% endif %}
                 {% if not sakura.requireactive %}"resendForm": 'Attempting to resend activation...',{% endif %}
                 "passwordForm": 'Sending password recovery mail...'
+                {% else %}
+                "passwordForm": 'Changing password...'
+                {% endif %}
             };
 
             for(var i in forms) {

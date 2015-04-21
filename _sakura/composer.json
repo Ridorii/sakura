@@ -5,7 +5,6 @@
         "ext-json": "*",
         "twig/twig": "~1.18",
         "phpmailer/phpmailer": "~5.2",
-        "flashwave/parsedown": "~1.5",
-        "paypal/rest-api-sdk-php": "0.5.*"
+        "flashwave/parsedown": "~1.5"
     }
 }

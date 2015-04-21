@@ -204,6 +204,7 @@ class Users {
 
         // Set a few variables
         $usernameClean  = Main::cleanString($username, true);
+        $emailClean     = Main::cleanString($email, true);
         $password       = Hashing::create_hash($password);
         $requireActive  = Configuration::getConfig('require_activation');
         $userRank       = $requireActive ? [0] : [1];
@@ -217,7 +218,7 @@ class Users {
             'password_salt'     => $password[2],
             'password_algo'     => $password[0],
             'password_iter'     => $password[1],
-            'email'             => $email,
+            'email'             => $emailClean,
             'rank_main'         => $userRank[0],
             'ranks'             => $userRankJson,
             'register_ip'       => Main::getRemoteIP(),
@@ -250,6 +251,35 @@ class Users {
 
         // Return true with a specific message if needed
         return [1, ($requireActive ? 'EMAILSENT' : 'SUCCESS')];
+
+    }
+
+    // Check if a user exists and then resend the activation e-mail
+    public static function resendActivationMail($username, $email) {
+
+        // Clean username string
+        $usernameClean  = Main::cleanString($username, true);
+        $emailClean     = Main::cleanString($email, true);
+
+        // Do database request
+        $user = Database::fetch('users', false, [
+            'username_clean'    => [$usernameClean, '='],
+            'email'             => [$emailClean,    '=']
+        ]);
+
+        // Check if user exists
+        if(count($user) < 2)
+            return [0, 'USER_NOT_EXIST'];
+
+        // Check if a user is activated
+        if($user['rank_main'])
+            return [0, 'USER_ALREADY_ACTIVE'];
+
+        // Send activation e-mail
+        self::sendActivationMail($user['id']);
+
+        // Return success
+        return [1, 'SUCCESS'];
 
     }
 
@@ -308,8 +338,8 @@ class Users {
             return [0, 'USER_ALREADY_ACTIVE'];
 
         // Set default values for activation
-        $rank = 1;
-        $ranks = json_encode([1]);
+        $rank   = 1;
+        $ranks  = json_encode([1]);
 
         // Check if a key is set (there's an option to not set one for user management reasons but you can't really get around this anyway)
         if($requireKey) {
