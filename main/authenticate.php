@@ -53,7 +53,7 @@ if(isset($_REQUEST['mode'])) {
     // Login check
     if(Users::checkLogin()) {
 
-        if($_REQUEST['mode'] != 'logout' || $_REQUEST['mode'] != 'legacypw')
+        if(!in_array($_REQUEST['mode'], ['logout', 'legacypw']))
             $continue = false;
 
     }
@@ -134,7 +134,7 @@ if(isset($_REQUEST['mode'])) {
 
                 // Array containing "human understandable" messages
                 $messages = [
-                    'USER_NOT_EXIST'        => 'The user you tried to activate does not exist.',
+                    'USER_NOT_EXIST'        => 'The user you tried to activate does not exist (confirm the username/email combination).',
                     'USER_ALREADY_ACTIVE'   => 'The user you tried to activate is already active.',
                     'SUCCESS'               => 'The activation e-mail has been sent to the address associated with your account.'
                 ];

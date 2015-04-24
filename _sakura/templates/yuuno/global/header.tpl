@@ -149,12 +149,20 @@
                         <input type="hidden" name="session" value="{{ php.sessionid }}" />
                         <input type="hidden" name="time" value="{{ php.time }}" />
                         <input type="hidden" name="mode" value="login" />
-                        <label for="headerLoginUserName">Username:</label>
-                        <input type="text" id="headerLoginUserName" name="username" class="inputStyling" placeholder="Username" />
-                        <label for="headerLoginPassword">Password:</label>
-                        <input type="password" id="headerLoginPassword" name="password" class="inputStyling" placeholder="Password" />
-                        <input type="checkbox" name="remember" id="headerLoginRemember" />
-                        <label for="headerLoginRemember">Remember me</label>
-                        <input type="button" onclick="submitPost(this.parentNode.id, true, 'Logging in...');" id="headerLoginButton" name="submit" class="inputStyling small" value="Login" />
+                        <div>
+                            <label for="headerLoginUserName">Username:</label>
+                            <input type="text" id="headerLoginUserName" name="username" class="inputStyling" placeholder="Username" />
+                        </div>
+                        <div>
+                            <label for="headerLoginPassword">Password:</label>
+                            <input type="password" id="headerLoginPassword" name="password" class="inputStyling" placeholder="Password" />
+                        </div>
+                        <div>
+                            <input type="checkbox" name="remember" id="headerLoginRemember" />
+                            <label for="headerLoginRemember">Remember me</label>
+                        </div>
+                        <div>
+                            <input type="button" onclick="submitPost('headerLoginForm', true, 'Logging in...');" id="headerLoginButton" name="submit" class="inputStyling small" value="Login" />
+                        </div>
                     </form>
                 {% endif %}

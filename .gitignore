@@ -41,11 +41,14 @@ local.properties
 #################
 
 errors.log
-config.php
+_sakura/config/config.php
 content/images/avatars/*
 !content/images/avatars/.htaccess
 content/images/backgrounds/*
 !content/images/backgrounds/.htaccess
+BingSiteAuth.xml
+google*.html
+logs/*
 
 
 #################

@@ -1252,6 +1252,16 @@ textarea.inputStyling {
     box-shadow: 0 0 5px #8364A1;
     text-align: center;
 }
+#headerLoginForm > div {
+    display: inline-block;
+}
+@media (max-width: 640px) {
+    #headerLoginForm > div {
+        display: block;
+        text-align: right;
+        padding-right: 2px;
+    }
+}
 #headerLoginForm label {
     font-family: "Segoe UI", sans-serif;
     font-weight: 100;

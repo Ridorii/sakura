@@ -464,4 +464,15 @@ class Main {
 
     }
 
+    // Calculate password entropy
+    public static function pwdEntropy($pw) {
+
+        // Decode utf-8 chars
+        $pw = utf8_decode($pw);
+
+        // Count the amount of unique characters in the password string and calculate the entropy
+        return count(count_chars($pw, 1)) * log(256, 2);
+
+    }
+
 }
