@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20150421');
+define('SAKURA_VERSION', '20150424');
 
 // Define Sakura Path
 define('ROOT', str_replace(basename(__DIR__), '', dirname(__FILE__)));
@@ -60,6 +60,7 @@ $renderData = array(
         'recaptcha_enable'  => Configuration::getConfig('recaptcha'),
         'resources'         => '//'. Configuration::getLocalConfig('urls')['content'] .'/data/'. strtolower(Templates::$_TPL),
         'disableregister'   => Configuration::getConfig('disable_registration'),
+        'lockauth'          => Configuration::getConfig('lock_authentication'),
         'requireregcodes'   => Configuration::getConfig('require_registration_code'),
         'requireactiveate'  => Configuration::getConfig('require_activation'),
         'sitename'          => Configuration::getConfig('sitename')

@@ -1,4 +1,7 @@
 {% include 'global/header.tpl' %}
+    {% if sakura.lockauth %}
+        <h1 class="stylised" style="line-height: 1.8em; text-align: center;">Authentication is currently disallowed, try again later.</h1>
+    {% else %}
     <div class="loginPage">
         {% if auth.redirect == sakura.urls.chat %}<h1 class="stylised" style="line-height: 1.8em; text-align: center;">You need to be logged in to use the chat.</h1>{% endif %}
         <div class="loginCont">
@@ -55,7 +58,7 @@
                         <input class="inputStyling" type="submit" name="submit" value="Request Password" />
                     </div>
                     <div class="subLinks centreAlign">
-                        If you lost access to your e-mail address please <a href="/contact" class="default" target="_blank">contact us</a>.
+                        If you lost access to the e-mail address you registered with then there's not much we can do, it's your own responsibility to keep track of it and attaching a working one to your account.
                     </div>
                 </form>
             </div>
@@ -179,7 +182,7 @@
                         <input class="inputStyling" type="submit" name="submit" value="Request Activation" />
                     </div>
                     <div class="subLinks centreAlign">
-                        If you lost access to your e-mail address please <a href="/contact" class="default" target="_blank">contact us</a>.
+                        Read the footnote on the Lost Password form.
                     </div>
                 </form>
             </div>
@@ -187,4 +190,5 @@
         </div>
         <div class="clear"></div>
     </div>
+    {% endif %}
 {% include 'global/footer.tpl' %}

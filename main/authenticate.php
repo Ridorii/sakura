@@ -134,6 +134,7 @@ if(isset($_REQUEST['mode'])) {
 
                 // Array containing "human understandable" messages
                 $messages = [
+                    'AUTH_LOCKED'           => 'Authentication is currently not allowed, try again later.',
                     'USER_NOT_EXIST'        => 'The user you tried to activate does not exist (confirm the username/email combination).',
                     'USER_ALREADY_ACTIVE'   => 'The user you tried to activate is already active.',
                     'SUCCESS'               => 'The activation e-mail has been sent to the address associated with your account.'
@@ -157,6 +158,7 @@ if(isset($_REQUEST['mode'])) {
 
                 // Array containing "human understandable" messages
                 $messages = [
+                    'AUTH_LOCKED'           => 'Authentication is currently not allowed, try again later.',
                     'USER_NOT_EXIST'        => 'The user you tried to log into does not exist.',
                     'INCORRECT_PASSWORD'    => 'The password you entered was invalid.',
                     'DEACTIVATED'           => 'Your account is deactivated.',
@@ -199,6 +201,7 @@ if(isset($_REQUEST['mode'])) {
 
                 // Array containing "human understandable" messages
                 $messages = [
+                    'AUTH_LOCKED'       => 'Authentication is currently not allowed, try again later.',
                     'DISABLED'          => 'Registration is currently disabled.',
                     'INVALID_REG_KEY'   => 'The given registration code was invalid.',
                     'TOS'               => 'You are required to agree to the Terms of Service.',
@@ -206,8 +209,7 @@ if(isset($_REQUEST['mode'])) {
                     'USER_EXISTS'       => 'A user with this username already exists, if you lost your password try using the Lost Password form.',
                     'NAME_TOO_SHORT'    => 'Your name must be at least 3 characters long.',
                     'NAME_TOO_LONG'     => 'Your name can\'t be longer than 16 characters.',
-                    'PASS_TOO_SHORT'    => 'Your password is too short, it must be at least 8 characters.',
-                    'PASS_TOO_LONG'     => 'A password longer than 256 characters? Seriously?',
+                    'PASS_TOO_SHIT'     => 'Your password is too weak, try adding some special characters.',
                     'PASS_NOT_MATCH'    => 'Passwords do not match.',
                     'INVALID_EMAIL'     => 'Your e-mail address is formatted incorrectly.',
                     'INVALID_MX'        => 'No valid MX-Record found on the e-mail address you supplied.',
@@ -297,6 +299,25 @@ if(isset($_REQUEST['pw']) && $_REQUEST['pw']) {
         $renderData['auth']['forgotKey'] = $_REQUEST['key'];
 
     print Templates::render('main/forgotpassword.tpl', $renderData);
+    exit;
+
+}
+
+// Check if the user is already logged in
+if(Users::checkLogin()) {
+
+    // Add page specific things
+    $renderData['page'] = [
+        'title'     => 'Authentication',
+        'redirect'  => (
+            isset($_SERVER['HTTP_REFERER']) ?
+            $_SERVER['HTTP_REFERER'] :
+            '/'
+        ),
+        'message'   => 'You are already logged in, log out to access this page.'
+    ];
+
+    print Templates::render('errors/information.tpl', $renderData);
     exit;
 
 }

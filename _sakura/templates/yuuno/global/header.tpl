@@ -17,7 +17,7 @@
         <!-- JS -->
         <script type="text/javascript" src="{{ sakura.resources }}/js/yuuno.js?s={{ php.time }}"></script>
         <script type="text/javascript">
-        {% if not user.checklogin %}
+        {% if not user.checklogin and not sakura.lockauth %}
 
             // Setting the shit so clicking the login link doesn't redirect to /login
             function initHeaderLoginForm() {
@@ -45,7 +45,7 @@
 
             }
 
-        {% else %}
+        {% elseif user.checklogin %}
 
             // Prepare header logout stuff
             function initHeaderLoginForm() {
@@ -74,7 +74,7 @@
             // Login form under header and ajax logout
             initHeaderLoginForm();
 
-            {% if php.self == '/authenticate.php' %}
+            {% if php.self == '/authenticate.php' and not sakura.lockauth %}
             // AJAX Form Submission            
             var forms = {
                 {% if not auth.changingPass %}
@@ -132,8 +132,12 @@
                             <a class="menu-item" href="//{{ sakura.urls.main }}/settings" title="Change your settings">Settings</a>
                             <a class="menu-item" href="//{{ sakura.urls.main }}/logout?mode=logout&time={{ php.time }}&session={{ php.sessionid }}&redirect={{ sakura.currentpage }}" title="End your login session" id="headerLogoutLink">Logout</a>
                         {% else %}
+                            {% if sakura.lockauth %}
+                            <div class="menu-item" style="padding-left: 10px; padding-right: 10px;">Authentication is locked</div>
+                            {% else %}
                             <a class="menu-item" id="headerLoginLink" href="//{{ sakura.urls.main }}/login" title="Login to Flashii">Login</a>
                             <a class="menu-item" href="//{{ sakura.urls.main }}/register" title="Create an account">Register</a>
+                            {% endif %}
                         {% endif %}
                     </div>
                     <div class="menu-mob">

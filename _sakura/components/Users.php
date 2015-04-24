@@ -77,6 +77,10 @@ class Users {
     // Log a user in
     public static function login($username, $password, $remember = false) {
 
+        // Check if authentication is disallowed
+        if(Configuration::getConfig('lock_authentication'))
+            return [0, 'AUTH_LOCKED'];
+
         // Check if the user that's trying to log in actually exists
         if(!$uid = self::userExists($username, false))
             return [0, 'USER_NOT_EXIST'];
@@ -145,6 +149,10 @@ class Users {
     // Register user
     public static function register($username, $password, $confirmpass, $email, $tos, $captcha = null, $regkey = null) {
 
+        // Check if authentication is disallowed
+        if(Configuration::getConfig('lock_authentication'))
+            return [0, 'AUTH_LOCKED'];
+
         // Check if registration is even enabled
         if(Configuration::getConfig('disable_registration'))
             return [0, 'DISABLED'];
@@ -182,18 +190,6 @@ class Users {
         if(strlen($username) > 16)
             return [0, 'NAME_TOO_LONG'];
 
-        // Password too short
-        if(strlen($password) < 8)
-            return [0, 'PASS_TOO_SHORT'];
-
-        // Password too long
-        if(strlen($password) > 256)
-            return [0, 'PASS_TOO_LONG'];
-
-        // Passwords do not match
-        if($password != $confirmpass)
-            return [0, 'PASS_NOT_MATCH'];
-
         // Check if the given email address is formatted properly
         if(!filter_var($email, FILTER_VALIDATE_EMAIL))
             return [0, 'INVALID_EMAIL'];
@@ -201,6 +197,14 @@ class Users {
         // Check the MX record of the email
         if(!Main::checkMXRecord($email))
             return [0, 'INVALID_MX'];
+
+        // Check password entropy
+        if(Main::pwdEntropy($password) < Configuration::getConfig('min_entropy'))
+            return [0, 'PASS_TOO_SHIT'];
+
+        // Passwords do not match
+        if($password != $confirmpass)
+            return [0, 'PASS_NOT_MATCH'];
 
         // Set a few variables
         $usernameClean  = Main::cleanString($username, true);
@@ -256,6 +260,10 @@ class Users {
 
     // Check if a user exists and then resend the activation e-mail
     public static function resendActivationMail($username, $email) {
+
+        // Check if authentication is disallowed
+        if(Configuration::getConfig('lock_authentication'))
+            return [0, 'AUTH_LOCKED'];
 
         // Clean username string
         $usernameClean  = Main::cleanString($username, true);

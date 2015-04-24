@@ -11,10 +11,15 @@
                 </ul>
                 <div class="clear"></div>
             {% else %}
+                {% if sakura.lockauth %}
+                <div class="head">Whoops!</div>
+                You caught the site at the wrong moment! Right now registration <i>and</i> logging in is disabled for unspecified reasons. Sorry for the inconvenience but please try again later!
+                {% else %}
                 <div class="head">Welcome!</div>
                 Welcome to Flashii! This is a site for a bunch of friends to hang out, nothing special. Anyone is pretty much welcome to register so why not have a go?
                 <a class="button registerbutton" href="/register">Register!</a>
                 <a class="button loginbutton" href="/login">Login</a>
+                {% endif %}
             {% endif %}
             <div class="head">Stats</div>
             We have <b>{{ stats.userCount }}</b>, 
