@@ -67,6 +67,7 @@ class Templates {
 
         // Break line breaks up into array values
         $data = str_replace("\r\n", "\n", $data);
+        $data = str_replace("\r",   "\n", $data);
         $data = explode("\n", $data);
 
         foreach($data as $var) {

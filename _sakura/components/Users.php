@@ -695,6 +695,9 @@ class Users {
         // Execute query
         $getUsers = Database::fetch('users', true);
 
+        // Define variable
+        $users = [];
+
         // Reorder shit
         foreach($getUsers as $user) {
 
@@ -716,6 +719,9 @@ class Users {
 
         // Execute query
         $getRanks = Database::fetch('ranks', true);
+
+        // Define variable
+        $ranks = [];
 
         // Reorder shit
         foreach($getRanks as $rank)
