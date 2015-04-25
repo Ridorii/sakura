@@ -110,7 +110,6 @@ if(isset($_REQUEST['mode'])) {
                     'success'   => $legacypass[0]
                 ];
 
-
                 break;
 
             case 'changepassword':
