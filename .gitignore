@@ -48,7 +48,8 @@ content/images/backgrounds/*
 !content/images/backgrounds/.htaccess
 BingSiteAuth.xml
 google*.html
-logs/*
+main/logs/*
+main/dev/*
 
 
 #################

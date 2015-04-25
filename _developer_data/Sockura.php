@@ -4,8 +4,11 @@
  * By Flashwave
  */
 
-// Settings
-$sockSakuraPath = ''; // Filesystem path to the _sakura folder WITHOUT an ending /
+// Filesystem path to the _sakura folder WITHOUT an ending /
+// This can also be set before an include of this file in case
+//  you're using git to keep in sync and don't want conflicts
+if(!isset($sockSakuraPath))
+    $sockSakuraPath = ''; 
 
 /* * * DON'T EDIT ANYTHING BELOW THIS LINE * * */
 
@@ -31,8 +34,8 @@ if(Auth::getPageType() == AUTH_FETCH) {
 } else {
 
     // Get arguments
-    $uid = $_GET['arg1'];
-    $sid = $_GET['arg2'];
+    $uid = $_REQUEST['arg1'];
+    $sid = $_REQUEST['arg2'];
 
     // Check if session is active else deny
     if(Session::checkSession($uid, $sid)) {
@@ -53,7 +56,7 @@ if(Auth::getPageType() == AUTH_FETCH) {
         Auth::SetUserData(
             $user['id'],
             $user['username'],
-            $rank['colour']
+            $user['name_colour'] == null ? $rank['colour'] : $user['name_colour']
         );
 
         switch($rank['id']) {

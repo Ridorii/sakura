@@ -5,6 +5,7 @@
             <input type="hidden" name="redirect" value="//iihsalf.net/" />
             <input type="hidden" name="session" value="{{ php.sessionid }}" />
             <input type="hidden" name="time" value="{{ php.time }}" />
+            <input type="hidden" name="uid" value="{{ auth.userId }}" />
             <input type="hidden" name="mode" value="changepassword" />
             <div class="profile-field">
                 <div><h2>Verification Key</h2></div>
@@ -12,7 +13,7 @@
             </div>
             <div class="profile-field">
                 <div><h2>New Password</h2></div>
-                <div style="text-align: center;"><input type="password" name="newpw" placeholder="Your new password, has to be at least 8 characters" class="inputStyling" /></div>
+                <div style="text-align: center;"><input type="password" name="newpw" placeholder="Your new password, using special characters is recommended" class="inputStyling" /></div>
             </div>
             <div class="profile-field">
                 <div><h2>Verify Password</h2></div>

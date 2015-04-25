@@ -219,9 +219,15 @@ class Main {
 
         // Get user data
         foreach($newsPosts as $newsId => $newsPost) {
+
             $newsPosts[$newsId]['parsed']   = self::mdParse($newsPost['content']);
             $newsPosts[$newsId]['udata']    = Users::getUser($newsPost['uid']);
             $newsPosts[$newsId]['rdata']    = Users::getRank($newsPosts[$newsId]['udata']['rank_main']);
+
+            // Check if a custom name colour is set and if so overwrite the rank colour
+            if($newsPosts[$newsId]['udata']['name_colour'] != null)
+                $newsPosts[$newsId]['rdata']['colour'] = $newsPosts[$newsId]['udata']['name_colour'];
+
         }
 
         // Return posts

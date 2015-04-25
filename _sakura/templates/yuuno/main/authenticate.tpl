@@ -89,7 +89,7 @@
                         <label for="registerPassword">Password:</label>
                     </div>
                     <div class="centreAlign">
-                        <input class="inputStyling" type="password" id="registerPassword" name="password" placeholder="Must be at least 8 characters." />
+                        <input class="inputStyling" type="password" id="registerPassword" name="password" placeholder="Using special characters is recommended" />
                     </div>
                     <div class="leftAlign">
                         <label for="registerConfirmPassword">Confirm Password:</label>

@@ -24,7 +24,7 @@ if(isset($_REQUEST['mode'])) {
             $renderData['page'] = [
                 'title'     => 'Action failed',
                 'redirect'  => '/authenticate',
-                'message'   => 'Timestamps differ too much, please try again.',
+                'message'   => 'Timestamps differ too much, refresh the page and try again.',
                 'success'   => 0
             ];
 
@@ -53,8 +53,17 @@ if(isset($_REQUEST['mode'])) {
     // Login check
     if(Users::checkLogin()) {
 
-        if(!in_array($_REQUEST['mode'], ['logout', 'legacypw']))
+        if(!in_array($_REQUEST['mode'], ['logout', 'legacypw'])) {
             $continue = false;
+
+            // Add page specific things
+            $renderData['page'] = [
+                'title'     => 'Authentication',
+                'redirect'  => '/',
+                'message'   => 'You are already authenticated. Redirecting...',
+                'success'   => 1
+            ];
+        }
 
     }
 
@@ -79,24 +88,53 @@ if(isset($_REQUEST['mode'])) {
 
             case 'legacypw':
 
+                // Attempt change
+                $legacypass = Users::changeLegacy($_REQUEST['oldpw'], $_REQUEST['newpw'], $_REQUEST['verpw']);
+
+                // Array containing "human understandable" messages
+                $messages = [
+                    'USER_NOT_LOGIN'        => 'What are you doing, you\'re not even logged in. GO AWAY!',
+                    'INCORRECT_PASSWORD'    => 'The password you entered was invalid.',
+                    'DEACTIVATED'           => 'Your account is deactivated.',
+                    'NO_LOGIN'              => 'Logging into this account is disabled.',
+                    'PASS_TOO_SHIT'         => 'Your password is too weak, try adding some special characters.',
+                    'PASS_NOT_MATCH'        => 'Passwords do not match.',
+                    'SUCCESS'               => 'Successfully changed your password, you may now continue.'
+                ];
+
                 // Add page specific things
                 $renderData['page'] = [
-                    'title'     => 'Changing Password',
-                    'redirect'  => $_SERVER['PHP_SELF'],
-                    'message'   => 'yet to be implemented',
-                    'success'   => 0
+                    'title'     => 'Change Password',
+                    'redirect'  => '/',
+                    'message'   => $messages[$legacypass[1]],
+                    'success'   => $legacypass[0]
                 ];
+
 
                 break;
 
             case 'changepassword':
 
+                // Attempt change
+                $passforget = Users::resetPassword($_REQUEST['verk'], $_REQUEST['uid'], $_REQUEST['newpw'], $_REQUEST['verpw']);
+
+                // Array containing "human understandable" messages
+                $messages = [
+                    'INVALID_VERK'      => 'The verification key supplied was invalid!',
+                    'INVALID_CODE'      => 'Invalid verification key, if you think this is an error contact the administrator.',
+                    'INVALID_USER'      => 'The used verification key is not designated for this user.',
+                    'VERK_TOO_SHIT'     => 'Your verification code is too weak, try adding some special characters.',
+                    'PASS_TOO_SHIT'     => 'Your password is too weak, try adding some special characters.',
+                    'PASS_NOT_MATCH'    => 'Passwords do not match.',
+                    'SUCCESS'           => 'Successfully changed your password, you may now log in.'
+                ];
+
                 // Add page specific things
                 $renderData['page'] = [
                     'title'     => 'Forgot Password',
-                    'redirect'  => $_SERVER['PHP_SELF'],
-                    'message'   => 'Yet to be implemented',
-                    'success'   => 0
+                    'redirect'  => ($passforget[0] ? '/' : $_SERVER['PHP_SELF'] .'?pw=true&uid='. $_REQUEST['uid'] .'&verk='. $_REQUEST['verk']),
+                    'message'   => $messages[$passforget[1]],
+                    'success'   => $passforget[0]
                 ];
 
                 break;
@@ -112,7 +150,7 @@ if(isset($_REQUEST['mode'])) {
                     'USER_NOT_EXIST'        => 'The user you tried to activate does not exist.',
                     'USER_ALREADY_ACTIVE'   => 'The user you tried to activate is already active.',
                     'INVALID_CODE'          => 'Invalid activation code, if you think this is an error contact the administrator.',
-                    'INVALID_USER'          => 'The used registration code is not designated for this user.',
+                    'INVALID_USER'          => 'The used activation code is not designated for this user.',
                     'SUCCESS'               => 'Successfully activated your account, you may now log in.'
                 ];
 
@@ -170,7 +208,7 @@ if(isset($_REQUEST['mode'])) {
                 // Add page specific things
                 $renderData['page'] = [
                     'title'     => 'Login',
-                    'redirect'  => ($login[0] ? $_REQUEST['redirect'] : '/authenticate'),
+                    'redirect'  => ($login[1] == 'LEGACY_SUCCESS' ? '/authenticate?legacy=true' : ($login[0] ? $_REQUEST['redirect'] : '/authenticate')),
                     'message'   => $messages[$login[1]],
                     'success'   => $login[0]
                 ];
@@ -230,12 +268,23 @@ if(isset($_REQUEST['mode'])) {
             // Unforgetting passwords
             case 'forgotpassword':
 
+                // Attempt send
+                $passforgot = Users::sendPasswordForgot($_REQUEST['username'], $_REQUEST['email']);
+
+                // Array containing "human understandable" messages
+                $messages = [
+                    'AUTH_LOCKED'           => 'Authentication is currently not allowed, try again later.',
+                    'USER_NOT_EXIST'        => 'The requested user does not exist (confirm the username/email combination).',
+                    'DEACTIVATED'           => 'Your account is deactivated.',
+                    'SUCCESS'               => 'The password reset e-mail has been sent to the address associated with your account.'
+                ];
+
                 // Add page specific things
                 $renderData['page'] = [
-                    'title'     => 'Forgot Password',
-                    'redirect'  => $_SERVER['PHP_SELF'],
-                    'message'   => 'yet to be implemented',
-                    'success'   => 0
+                    'title'     => 'Lost Password',
+                    'redirect'  => '/authenticate',
+                    'message'   => $messages[$passforgot[1]],
+                    'success'   => $passforgot[0]
                 ];
 
                 break;
@@ -279,6 +328,32 @@ $renderData['auth'] = [
     ]
 ];
 
+// Check if the user is already logged in
+if(Users::checkLogin()) {
+
+    // If password forgot things are set display password forget thing
+    if(isset($_REQUEST['legacy']) && $_REQUEST['legacy'] && Users::getUser(Session::$userId)['password_algo'] == 'legacy') {
+
+        $renderData['page']['title']        = 'Changing Password';
+        $renderData['auth']['changingPass'] = true;
+
+        print Templates::render('main/legacypasswordchange.tpl', $renderData);
+        exit;
+
+    }
+
+    // Add page specific things
+    $renderData['page'] = [
+        'title'     => 'Authentication',
+        'redirect'  => '/',
+        'message'   => 'You are already logged in, log out to access this page.'
+    ];
+
+    print Templates::render('errors/information.tpl', $renderData);
+    exit;
+
+}
+
 // Check if a user has already registered from the current IP address
 if(count($regUserIP = Users::getUsersByIP(Main::getRemoteIP()))) {
 
@@ -292,32 +367,14 @@ if(count($regUserIP = Users::getUsersByIP(Main::getRemoteIP()))) {
 // If password forgot things are set display password forget thing
 if(isset($_REQUEST['pw']) && $_REQUEST['pw']) {
 
-    $renderData['page']['title']        = 'Changing Password';
+    $renderData['page']['title']        = 'Resetting Password';
     $renderData['auth']['changingPass'] = true;
+    $renderData['auth']['userId']       = $_REQUEST['uid'];
 
     if(isset($_REQUEST['key']))
         $renderData['auth']['forgotKey'] = $_REQUEST['key'];
 
     print Templates::render('main/forgotpassword.tpl', $renderData);
-    exit;
-
-}
-
-// Check if the user is already logged in
-if(Users::checkLogin()) {
-
-    // Add page specific things
-    $renderData['page'] = [
-        'title'     => 'Authentication',
-        'redirect'  => (
-            isset($_SERVER['HTTP_REFERER']) ?
-            $_SERVER['HTTP_REFERER'] :
-            '/'
-        ),
-        'message'   => 'You are already logged in, log out to access this page.'
-    ];
-
-    print Templates::render('errors/information.tpl', $renderData);
     exit;
 
 }

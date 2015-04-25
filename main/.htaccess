@@ -18,7 +18,7 @@ RewriteRule ^feedback?/?$ http://forum.flash.moe/viewforum.php?f=22
 RewriteRule ^credits?/?$ credits.php
 RewriteRule ^index?/?$ index.php
 RewriteRule ^login?/?$|logout?/?$|activate?/?$|register?/?$|forgotpassword?/?|authenticate?/?$ authenticate.php
-RewriteRule ^donate?/?$ donate.php
+RewriteRule ^donate?/?$|support?/?$ support.php
 RewriteRule ^contact?/?$ infopage.php?r=contact
 
 ## Info pages
@@ -29,6 +29,11 @@ RewriteRule ^news?/?$ news.php
 RewriteRule ^news/([0-9]+)$ news.php?id=$1
 RewriteRule ^news.xml$ news.php?xml
 
+## Profiles
+RewriteRule ^u$|u/$ profile.php
+RewriteRule ^u/([A-Za-z0-9_-\s\.]+)?/?$ profile.php?u=$1
+RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/api?/?$ profile.php?data
+
 # Serving Images
-RewriteRule ^a/([0-9]+)$ imageserve.php?m=avatar&u=$1
-RewriteRule ^a/([0-9]+).png$ imageserve.php?m=avatar&u=$1
+RewriteRule ^a/([0-9]+)$|a/([0-9]+).png$ imageserve.php?m=avatar&u=$1
+RewriteRule ^bg/([0-9]+)$|bg/([0-9]+).png$ imageserve.php?m=background&u=$1

@@ -74,6 +74,7 @@ $renderData = array(
         'checklogin'    => Users::checkLogin(),
         'session'       => Session::$sessionId,
         'data'          => ($_init_udata = Users::getUser(Session::$userId)),
-        'rank'          => Users::getRank($_init_udata['rank_main'])
+        'rank'          => ($_init_rdata = Users::getRank($_init_udata['rank_main'])),
+        'colour'        => ($_init_udata['name_colour'] == null ? $_init_rdata['colour'] : $_init_udata['name_colour'])
     ]
 );

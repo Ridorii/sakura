@@ -1,5 +1,5 @@
 <?php
-// Flashii Configuration
+// Sakura Configuration
 $sakuraConf = array(); // Define configuration array
 
 // PDO Database Connection
@@ -8,10 +8,10 @@ $sakuraConf['db']['driver']     = 'mysql'; // SQL Driver contained in the compon
 $sakuraConf['db']['unixsocket'] = false; // Use internal UNIX system sockets (would not work on Windows)
 $sakuraConf['db']['host']       = 'localhost'; // SQL Hosts (or path to socket in the case that you're using them)
 $sakuraConf['db']['port']       = 3306; // SQL Port (does nothing when UNIX sockets are used)
-$sakuraConf['db']['username']   = 'flashii'; // Database authentication username
+$sakuraConf['db']['username']   = 'sakura'; // Database authentication username
 $sakuraConf['db']['password']   = 'password'; // Database authentication password
-$sakuraConf['db']['database']   = 'flashii'; // Database name
-$sakuraConf['db']['prefix']     = 'fii_'; // Table Prefix
+$sakuraConf['db']['database']   = 'sakura'; // Database name
+$sakuraConf['db']['prefix']     = 'sakura_'; // Table Prefix
 
 // URLs (for modularity)
 $sakuraConf['urls']['main']     = 'flashii.net'; // Main site url

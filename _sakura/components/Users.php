@@ -69,6 +69,10 @@ class Users {
 
         }
 
+        // Redirect people that need to change their password to the new format
+        if(self::getUser(Session::$userId)['password_algo'] == 'legacy' && $_SERVER['PHP_SELF'] != '/authenticate.php' && $_SERVER['PHP_SELF'] != '/imageserve.php')
+            header('Location: /authenticate.php?legacy=true');
+
         // If everything went through return true
         return true;
 
@@ -258,6 +262,157 @@ class Users {
 
     }
 
+    // Check if a user exists and then send the password forgot email
+    public static function sendPasswordForgot($username, $email) {
+
+        // Check if authentication is disallowed
+        if(Configuration::getConfig('lock_authentication'))
+            return [0, 'AUTH_LOCKED'];
+
+        // Clean username string
+        $usernameClean  = Main::cleanString($username, true);
+        $emailClean     = Main::cleanString($email, true);
+
+        // Do database request
+        $user = Database::fetch('users', false, [
+            'username_clean'    => [$usernameClean, '='],
+            'email'             => [$emailClean,    '=']
+        ]);
+
+        // Check if user exists
+        if(count($user) < 2)
+            return [0, 'USER_NOT_EXIST'];
+
+        // Check if the user is deactivated
+        if(in_array(0, json_decode($user['ranks'], true)))
+            return [0, 'DEACTIVATED'];
+
+        // Generate the verification key
+        $verk = Main::newActionCode('LOST_PASS', $user['id'], [
+            'meta' => [
+                'password_change' => 1
+            ]
+        ]);
+
+        // Build the e-mail
+        $message  = "Hello ". $user['username'] .",\r\n\r\n";
+        $message .= "You are receiving this notification because you have (or someone pretending to be you has) requested a password reset link to be sent for your account on \"". Configuration::getConfig('sitename') ."\". If you did not request this notification then please ignore it, if you keep receiving it please contact the site administrator.\r\n\r\n";
+        $message .= "To use this password reset key you need to go to a special page. To do this click the link provided below.\r\n\r\n";
+        $message .= "http://". Configuration::getLocalConfig('urls', 'main') ."/forgotpassword?pw=true&uid=". $user['id'] ."&key=". $verk ."\r\n\r\n";
+        $message .= "If successful you should be able to change your password here.\r\n\r\n";
+        $message .= "Alternatively if the above method fails for some reason you can go to http://". Configuration::getLocalConfig('urls', 'main') ."/forgotpassword?pw=true&uid=". $user['id'] ." and use the key listed below:\r\n\r\n";
+        $message .= "Verification key: ". $verk ."\r\n\r\n";
+        $message .= "You can of course change this password yourself via the profile page. If you have any difficulties please contact the site administrator.\r\n\r\n";
+        $message .= "--\r\n\r\nThanks\r\n\r\n". Configuration::getConfig('mail_signature');
+
+        // Send the message
+        Main::sendMail([$user['email'] => $user['username']], Configuration::getConfig('sitename') .' password restoration', $message);
+
+        // Return success
+        return [1, 'SUCCESS'];
+
+    }
+
+    // [Flashwave 2015-04-25] Prepare for 5 million password changing functions
+
+    // Change legacy passwords after logging in
+    public static function changeLegacy($oldpass, $newpass, $verpass) {
+
+        // Check if user is logged in because I just know someone is going to meme around it
+        if(!self::checkLogin())
+            return [0, 'USER_NOT_LOGIN'];
+
+        // Get user data
+        $user = Users::getUser(Session::$userId);
+
+        // Check if the user is deactivated
+        if(in_array(0, json_decode($user['ranks'], true)))
+            return [0, 'DEACTIVATED'];
+
+        // Check if the account is disabled
+        if('nologin' == $user['password_algo'])
+            return [0, 'NO_LOGIN'];
+
+        // Check if old pass is correct
+        if(Main::legacyPasswordHash($oldpass) != $user['password_hash'])
+            return [0, 'INCORRECT_PASSWORD'];
+
+        // Check password entropy
+        if(Main::pwdEntropy($newpass) < Configuration::getConfig('min_entropy'))
+            return [0, 'PASS_TOO_SHIT'];
+
+        // Passwords do not match
+        if($newpass != $verpass)
+            return [0, 'PASS_NOT_MATCH'];
+
+        // Hash the password
+        $password   = Hashing::create_hash($newpass);
+        $time       = time();
+
+        // Update the user
+        Database::update('users', [
+            [
+                'password_hash' => $password[3],
+                'password_salt' => $password[2],
+                'password_algo' => $password[0],
+                'password_iter' => $password[1],
+                'password_chan' => $time
+            ],
+            [
+                'id' => [Session::$userId, '=']
+            ]
+        ]);
+
+        // Return success
+        return [1, 'SUCCESS'];
+
+    }
+
+    // Reset password with key
+    public static function resetPassword($verk, $uid, $newpass, $verpass) {
+
+        // Check if authentication is disallowed
+        if(Configuration::getConfig('lock_authentication'))
+            return [0, 'AUTH_LOCKED'];
+
+        // Check password entropy
+        if(Main::pwdEntropy($newpass) < Configuration::getConfig('min_entropy'))
+            return [0, 'PASS_TOO_SHIT'];
+
+        // Passwords do not match
+        if($newpass != $verpass)
+            return [0, 'PASS_NOT_MATCH'];
+
+        // Check the verification key
+        $action = Main::useActionCode('LOST_PASS', $verk, $uid);
+
+        // Check if we got a negative return
+        if(!$action[0])
+            return [0, $action[1]];
+
+        // Hash the password
+        $password   = Hashing::create_hash($newpass);
+        $time       = time();
+
+        // Update the user
+        Database::update('users', [
+            [
+                'password_hash' => $password[3],
+                'password_salt' => $password[2],
+                'password_algo' => $password[0],
+                'password_iter' => $password[1],
+                'password_chan' => $time
+            ],
+            [
+                'id' => [$uid, '=']
+            ]
+        ]);
+
+        // Return success
+        return [1, 'SUCCESS'];
+
+    }
+
     // Check if a user exists and then resend the activation e-mail
     public static function resendActivationMail($username, $email) {
 
@@ -321,7 +476,7 @@ class Users {
         $message .= "Your password has been securely stored in our database and cannot be retrieved. ";
         $message .= "In the event that it is forgotten, you will be able to reset it using the email address associated with your account.\r\n\r\n";
         $message .= "Thank you for registering.\r\n\r\n";
-        $message .= "--\r\n\r\nSincerely\r\n\r\n". Configuration::getConfig('mail_signature');
+        $message .= "--\r\n\r\nThanks\r\n\r\n". Configuration::getConfig('mail_signature');
 
         // Send the message
         Main::sendMail([$user['email'] => $user['username']], Configuration::getConfig('sitename') .' Activation Mail', $message);

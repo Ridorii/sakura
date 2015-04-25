@@ -122,13 +122,13 @@
                         <a class="menu-item" href="//{{ sakura.urls.chat }}/" title="Chat with other Flashii members">Chat</a>
                         {% if user.checklogin %}
                             <a class="menu-item" href="//{{ sakura.urls.main }}/members" title="View a list with all the activated user accounts">Members</a>
-                            <a class="menu-item menu-donate" href="//{{ sakura.urls.main }}/donate" title="Give us money to keep the site (and other services) up and running">Donate</a>
+                            <a class="menu-item menu-donate" href="//{{ sakura.urls.main }}/support" title="Give us money to keep the site (and other services) up and running">Support</a>
                         {% endif %}
                     </div>
                     <div class="menu-ucp" id="navMenuUser">
                         <!-- User menu, displayed on right side of the bar. -->
                         {% if user.checklogin %}
-                            <a class="menu-item avatar" href="//{{ sakura.urls.main }}/u/{{ user.data.id }}" title="View and edit your own profile" style="background-image: url('//{{ sakura.urls.main }}/a/{{ user.data.id }}'); width: auto; color: {{ user.rank.colour }}; font-weight: 700;">{{ user.data.username }}</a>
+                            <a class="menu-item avatar" href="//{{ sakura.urls.main }}/u/{{ user.data.id }}" title="View and edit your own profile" style="background-image: url('//{{ sakura.urls.main }}/a/{{ user.data.id }}'); width: auto; color: {{ user.colour }}; font-weight: 700;">{{ user.data.username }}</a>
                             <a class="menu-item" href="//{{ sakura.urls.main }}/settings" title="Change your settings">Settings</a>
                             <a class="menu-item" href="//{{ sakura.urls.main }}/logout?mode=logout&time={{ php.time }}&session={{ php.sessionid }}&redirect={{ sakura.currentpage }}" title="End your login session" id="headerLogoutLink">Logout</a>
                         {% else %}
@@ -170,3 +170,9 @@
                         </div>
                     </form>
                 {% endif %}
+                <noscript>
+                    <div class="headerNotify">
+                        <h1>You have JavaScript disabled!</h1>
+                        <p>A lot of things on this site require JavaScript to be enabled (e.g. the chat), we try to keep both sides happy but it is highly recommended that you enable it (you'll also have to deal with this message being here if you don't enable it).</p>
+                    </div>
+                </noscript>
