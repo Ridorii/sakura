@@ -1,6 +1,6 @@
 {% include 'global/header.tpl' %}
     {% if sakura.lockauth %}
-        <h1 class="stylised" style="line-height: 1.8em; text-align: center;">Authentication is currently disallowed, try again later.</h1>
+    <h1 class="stylised" style="line-height: 1.8em; text-align: center;">Authentication is currently disallowed, try again later.</h1>
     {% else %}
     <div class="loginPage">
         {% if auth.redirect == sakura.urls.chat %}<h1 class="stylised" style="line-height: 1.8em; text-align: center;">You need to be logged in to use the chat.</h1>{% endif %}
