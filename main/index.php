@@ -12,7 +12,7 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sak
 // Add page specific things
 $renderData['newsPosts'] = Main::getNewsPosts(3);
 $renderData['page'] = [
-    'title'         => 'Flashii Dev',
+    'title'         => Configuration::getConfig('sitename'),
     'articleCount'  => count($renderData['newsPosts'])
 ];
 $renderData['stats'] = [
