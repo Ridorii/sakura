@@ -284,7 +284,7 @@ class Users {
             return [0, 'USER_NOT_EXIST'];
 
         // Check if the user is deactivated
-        if(in_array(1, json_decode($userData['ranks'], true)) || in_array(0, json_decode($userData['ranks'], true)) || $userData['rank_main'] < 2)
+        if(in_array(1, json_decode($user['ranks'], true)) || in_array(0, json_decode($user['ranks'], true)) || $user['rank_main'] < 2)
             return [0, 'DEACTIVATED'];
 
         // Generate the verification key
@@ -326,7 +326,7 @@ class Users {
         $user = Users::getUser(Session::$userId);
 
         // Check if the user is deactivated
-        if(in_array(1, json_decode($userData['ranks'], true)) || in_array(0, json_decode($userData['ranks'], true)) || $userData['rank_main'] < 2)
+        if(in_array(1, json_decode($user['ranks'], true)) || in_array(0, json_decode($user['ranks'], true)) || $user['rank_main'] < 2)
             return [0, 'DEACTIVATED'];
 
         // Check if the account is disabled
@@ -453,7 +453,7 @@ class Users {
         $user = Database::fetch('users', false, ['id' => [$uid, '=']]);
 
         // User is already activated or doesn't even exist
-        if(!count($user) > 1 || !in_array(1, json_decode($userData['ranks'], true)) || !in_array(0, json_decode($userData['ranks'], true)) || $userData['rank_main'] > 1)
+        if(!count($user) > 1 || !in_array(1, json_decode($user['ranks'], true)) || !in_array(0, json_decode($user['ranks'], true)) || $user['rank_main'] > 1)
             return false;
 
         // Generate activation key
@@ -497,7 +497,7 @@ class Users {
             return [0, 'USER_NOT_EXIST'];
 
         // Check if user is already activated
-        if(!in_array(1, json_decode($userData['ranks'], true)) || !in_array(0, json_decode($userData['ranks'], true)) || $userData['rank_main'] > 1)
+        if(!in_array(1, json_decode($user['ranks'], true)) || !in_array(0, json_decode($user['ranks'], true)) || $user['rank_main'] > 1)
             return [0, 'USER_ALREADY_ACTIVE'];
 
         // Set default values for activation
