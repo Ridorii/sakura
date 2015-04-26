@@ -3,6 +3,9 @@ AddType font/ttf .ttf
 AddType font/otf .otf
 AddType font/woff .woff
 
+# To fix old links
+Redirect 301 /img/ /images/
+
 <FilesMatch "\.(ttf|otf|eot|woff)$">
 	<IfModule mod_headers.c>
 		Header set Access-Control-Allow-Origin "*"
