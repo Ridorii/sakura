@@ -115,7 +115,7 @@ class Users {
         }
 
         // Check if the user is deactivated
-        if(in_array(0, json_decode($userData['ranks'], true)))
+        if(in_array(1, json_decode($userData['ranks'], true)) || in_array(0, json_decode($userData['ranks'], true)) || $userData['rank_main'] < 2)
             return [0, 'DEACTIVATED'];
 
         // Create a new session
@@ -215,7 +215,7 @@ class Users {
         $emailClean     = Main::cleanString($email, true);
         $password       = Hashing::create_hash($password);
         $requireActive  = Configuration::getConfig('require_activation');
-        $userRank       = $requireActive ? [0] : [1];
+        $userRank       = $requireActive ? [1] : [2];
         $userRankJson   = json_encode($userRank);
 
         // Insert the user into the database
@@ -284,7 +284,7 @@ class Users {
             return [0, 'USER_NOT_EXIST'];
 
         // Check if the user is deactivated
-        if(in_array(0, json_decode($user['ranks'], true)))
+        if(in_array(1, json_decode($userData['ranks'], true)) || in_array(0, json_decode($userData['ranks'], true)) || $userData['rank_main'] < 2)
             return [0, 'DEACTIVATED'];
 
         // Generate the verification key
@@ -326,7 +326,7 @@ class Users {
         $user = Users::getUser(Session::$userId);
 
         // Check if the user is deactivated
-        if(in_array(0, json_decode($user['ranks'], true)))
+        if(in_array(1, json_decode($userData['ranks'], true)) || in_array(0, json_decode($userData['ranks'], true)) || $userData['rank_main'] < 2)
             return [0, 'DEACTIVATED'];
 
         // Check if the account is disabled
@@ -453,7 +453,7 @@ class Users {
         $user = Database::fetch('users', false, ['id' => [$uid, '=']]);
 
         // User is already activated or doesn't even exist
-        if(!count($user) > 1 || $user['rank_main'])
+        if(!count($user) > 1 || !in_array(1, json_decode($userData['ranks'], true)) || !in_array(0, json_decode($userData['ranks'], true)) || $userData['rank_main'] > 1)
             return false;
 
         // Generate activation key
@@ -497,12 +497,12 @@ class Users {
             return [0, 'USER_NOT_EXIST'];
 
         // Check if user is already activated
-        if($user['rank_main'])
+        if(!in_array(1, json_decode($userData['ranks'], true)) || !in_array(0, json_decode($userData['ranks'], true)) || $userData['rank_main'] > 1)
             return [0, 'USER_ALREADY_ACTIVE'];
 
         // Set default values for activation
-        $rank   = 1;
-        $ranks  = json_encode([1]);
+        $rank   = 2;
+        $ranks  = json_encode([2]);
 
         // Check if a key is set (there's an option to not set one for user management reasons but you can't really get around this anyway)
         if($requireKey) {
@@ -554,8 +554,8 @@ class Users {
         // Deactivate the account
         Database::update('users', [
             [
-                'rank_main' => 0,
-                'ranks'     => json_encode([0])
+                'rank_main' => 1,
+                'ranks'     => json_encode([1])
             ],
             [
                 'id' => [$uid, '=']
@@ -702,7 +702,7 @@ class Users {
         foreach($getUsers as $user) {
 
             // Skip if inactive and not include deactivated users
-            if(!$includeInactive && $user['rank_main'] == 0)
+            if(!$includeInactive && $user['rank_main'] < 2)
                 continue;
 
             $users[$user['id']] = $user;
