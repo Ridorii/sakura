@@ -21,7 +21,7 @@
                     </ul>
                     <ul class="ftsection">
                         <li class="fthead">Contribution</li>
-                        <li><a href="#" title="All the changes made to Flashii are listed here">Changelog</a></li>
+                        <li><a href="//{{ sakura.urls.main }}/changelog" title="All the changes made to Sakura are listed here">Changelog</a></li>
                         <li><a href="//{{ sakura.urls.main }}/credits" title="Here everyone who's helped Flashii get to where it is now is listed">Credits</a></li>
                         <li><a href="//{{ sakura.urls.main }}/feedback" target="_blank" title="Give us feedback on what to do">Feedback &amp; Suggestions</a></li>
                         <li><a href="//github.com/flashii" target="_blank" title="Our Open Source repository thing">Github</a></li>

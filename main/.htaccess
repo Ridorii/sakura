@@ -20,6 +20,7 @@ RewriteRule ^index?/?$ index.php
 RewriteRule ^login?/?$|logout?/?$|activate?/?$|register?/?$|forgotpassword?/?|authenticate?/?$ authenticate.php
 RewriteRule ^donate?/?$|support?/?$ support.php
 RewriteRule ^contact?/?$ infopage.php?r=contact
+RewriteRule ^changelog?/?$ changelog.php
 
 ## Info pages
 RewriteRule ^r/([a-z]+)$ infopage.php?r=$1
