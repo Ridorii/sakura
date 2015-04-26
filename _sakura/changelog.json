@@ -1,0 +1,618 @@
+{
+
+    "versions": {
+
+        "Cyan": {
+            
+            "colour": "#4EC9B0",
+            
+            "builds": [
+
+                "20150221",
+                "20150222",
+                "20150308",
+                "20150321",
+                "20150322",
+                "20150329",
+                "20150330",
+                "20150401",
+                "20150402",
+                "20150405",
+                "20150406",
+                "20150407",
+                "20150408",
+                "20150412",
+                "20150413",
+                "20150414",
+                "20150417",
+                "20150418",
+                "20150419",
+                "20150420",
+                "20150421",
+                "20150424",
+                "20150425",
+                "20150426"
+
+            ]
+            
+        }
+
+    },
+
+    "changelog": {
+
+        "20150221": [
+
+            {
+                "type":     "ADD",
+                "change":   "Start work on new Flashii backend."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Display version in the footer."
+            }
+
+        ],
+
+        "20150222": [
+
+            {
+                "type":     "ADD",
+                "change":   "Upload assets."
+            }
+
+        ],
+
+        "20150308": [
+
+            {
+                "type":     "ADD",
+                "change":   "Dynamic SQL database library."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Add ROOT_DIRECTORY constant."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Slight changes to the templating system."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add Configuration class for better configuration management."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Replace broken template tags."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Replace broken template tags."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Upload remaining assets."
+            },
+            {
+                "type":     "REM",
+                "change":   "Remove per-file twig initialisation."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Start work on expanding the templates."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add 404 page."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add SQL to the repository."
+            }
+
+        ],
+
+        "20150321": [
+
+            {
+                "type":     "UPD",
+                "change":   "Change entire system to static classes."
+            },
+            {
+                "type":     "ADD",
+                "change":   "ReCAPTCHA verification function."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Add more features to SQL library."
+            }
+
+        ],
+
+        "20150322": [
+
+            {
+                "type":     "ADD",
+                "change":   "Add sessions class."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Change namespace to Sakura."
+            }
+
+        ],
+
+        "20150329": [
+
+            {
+                "type":     "ADD",
+                "change":   "Add files for sys.flashii.net."
+            },
+            {
+                "type":     "REM",
+                "change":   "Deprecate sys.flashii.net."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Update SQL library."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Begin work on user system."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Login forms not showing when user is logged out."
+            },
+            {
+                "type":     "FIX",
+                "change":   "More JavaScript fixes."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add login form below the header."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add common PHP function template tags."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add remember me checkbox."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add function to get a user's database row."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add news post template."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add function to get a group's database row."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add function to get a certain amount of news posts."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add avatar and background serving PHP script."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fix a define collision."
+            }
+
+        ],
+
+        "20150330": [
+
+            {
+                "type":     "ADD",
+                "change":   "Add chat directory."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Make getting news posts less heavy on the SQL server."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add descriptive files."
+            }
+
+        ],
+
+        "20150401": [
+
+            {
+                "type":     "ADD",
+                "change":   "Add more function descriptions."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add template configuration parsing function."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add template engine wrapper class."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add GZIP compression."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add .git* files and a license."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add error logging."
+            },
+            {
+                "type":     "REM",
+                "change":   "Remove GZIP compression (for now) relating to issues with the error handler."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Rename ROOT_DIRECTORY to ROOT."
+            },
+            {
+                "type":     "REM",
+                "change":   "Remove affiliates section from the footer."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add credits page."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add infopage system (/r/page)."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Update SQL structure file."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Make markdown parsing function public."
+            }
+
+        ],
+
+        "20150402": [
+
+            {
+                "type":     "ADD",
+                "change":   "Add hardcoded dummy group and user."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Make the markdown parsing function actually have access to the class."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add news page."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Make frontpage stats actually work."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add news XML feed."
+            }
+
+        ],
+
+        "20150405": [
+
+            {
+                "type":     "ADD",
+                "change":   "Add example config."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Improve news functions."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Update SQL structure."
+            }
+
+        ],
+
+        "20150406": [
+
+            {
+                "type":     "UPD",
+                "change":   "Open source'd and repository now hosted on GitHub."
+            },
+            {
+                "type":     "REM",
+                "change":   "Remove static locations."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Update SQL structure and mistake in .htaccess."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add session system."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Begin work on authentication."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Improve template engine wrapper."
+            }
+
+        ],
+
+        "20150407": [
+
+            {
+                "type":     "UPD",
+                "change":   "Replace tabs with 4 spaces."
+            }
+
+        ],
+
+        "20150408": [
+
+            {
+                "type":     "UPD",
+                "change":   "More work on the authentication pages."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add login function."
+            }
+
+        ],
+
+        "20150412": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fix massive mistake causing all hashes to break."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add a function to get users by the IP assigned to their user."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Reindex assets."
+            }
+
+        ],
+
+        "20150413": [
+
+            {
+                "type":     "UPD",
+                "change":   "Update SQL structure."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add logout function."
+            },
+            {
+                "type":     "REM",
+                "change":   "Remove static locations from CSS files."
+            }
+
+        ],
+
+        "20150414": [
+
+            {
+                "type":     "ADD",
+                "change":   "Add PayPal SDK."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add function if the e-mail address used has a valid MX-Record."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add some IP functions."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add checking if an IP originates from CloudFlare and then replace the IP with the proper one set in the header."
+            }
+
+        ],
+
+        "20150417": [
+
+            {
+                "type":     "UPD",
+                "change":   "Logging in works!"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add proper session management."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add delete function to SQL library."
+            }
+
+        ],
+
+        "20150418": [
+
+            {
+                "type":     "UPD",
+                "change":   "Logging out works."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add Sock Chat authentication file."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add e-mail function."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add function to get country code from CloudFlare header."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add whois class."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add HTML e-mail template."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Begin work on registration function."
+            }
+
+        ],
+
+        "20150419": [
+
+            {
+                "type":     "ADD",
+                "change":   "Add automatic user activation."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Completely user registration function."
+            }
+
+        ],
+
+        "20150420": [
+
+            {
+                "type":     "ADD",
+                "change":   "Add AJAX form submission."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fix bug in registration process causing username cleaning to fail."
+            }
+
+        ],
+
+        "20150421": [
+
+            {
+                "type":     "ADD",
+                "change":   "Add e-mail sanitising to registration process."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add automatic activation e-mail resend function."
+            },
+            {
+                "type":     "REM",
+                "change":   "Remove PayPal API since we don't need it for what we do."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add password forget template."
+            }
+
+        ],
+
+        "20150424": [
+
+            {
+                "type":     "UPD",
+                "change":   "Update .gitignore."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add password entropy function."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Update links in the footer."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Make header login form properly responsive."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Display PDO errors."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add authentication locking option."
+            },
+            {
+                "type":     "REM",
+                "change":   "Remove method of determining password strength based on length (aaaaaaaaaaaaaaaaaaaaaaaaaaaa ain't strong just because it's long)."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Make logged in users unable to view the authentication page."
+            }
+
+        ],
+
+        "20150425": [
+
+            {
+                "type":     "ADD",
+                "change":   "Add custom user colours."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Make users with the legacy algorhythm force-change their password."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add password resetting functions."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Tell users to enable JavaScript."
+            },
+            {
+                "type":     "REM",
+                "change":   "Remove development tools from the repository."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fix the backend not expecting an empty users table."
+            }
+
+        ],
+
+        "20150426": [
+
+            {
+                "type":     "ADD",
+                "change":   "Begin work on profile system."
+            },
+            {
+                "type":     "FIX",
+                "change":   "The system thinking 0 is the rank ID for deactivated while it's 1."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add some missing assets."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add changelog page."
+            }
+
+        ]
+
+    }
+
+}

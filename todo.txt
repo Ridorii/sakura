@@ -1,6 +1,0 @@
-===
-  todo list
-===
-
-> Fix footer resizing because of the removal of the Affiliates section
-> Use CloudFlare to get a user's country for their profile
