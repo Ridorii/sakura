@@ -14,6 +14,7 @@ $sakuraConf['db']['database']   = 'sakura'; // Database name
 $sakuraConf['db']['prefix']     = 'sakura_'; // Table Prefix
 
 // URLs (for modularity)
+$sakuraConf['urls']             = array();
 $sakuraConf['urls']['main']     = 'flashii.net'; // Main site url
 $sakuraConf['urls']['api']      = 'api.flashii.net'; // API url
 $sakuraConf['urls']['content']  = 'cdn.flashii.net'; // Content directory url
@@ -21,6 +22,12 @@ $sakuraConf['urls']['chat']     = 'chat.flashii.net'; // Chat url
 $sakuraConf['urls']['manage']   = 'manage.flashii.net'; // Moderator panel url
 
 // Errata
+$sakuraConf['etc']                  = array();
 $sakuraConf['etc']['cfhosts']       = ROOT .'_sakura/config/cloudflare.hosts'; // Cloudflare IP subnets file
 $sakuraConf['etc']['whoisservers']  = ROOT .'_sakura/config/whois.json'; // JSON with Whois servers
 $sakuraConf['etc']['iso3166']       = ROOT .'_sakura/config/iso3166.json'; // JSON with country codes
+
+// Sock Chat extensions
+$sakuraConf['sock']             = array();
+$sakuraConf['sock']['enable']   = true; // Ability to disable the extension in case you're using Sakura without Sock Chat, mind that this extension only works when using the same database
+$sakuraConf['sock']['sqlpref']  = 'sock_'; // Sock Chat table prefixes

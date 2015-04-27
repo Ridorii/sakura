@@ -23,6 +23,7 @@
                 <b>Last Seen on</b> {{ profile.user.lastdate|date("l Y-m-d H:i T") }}
                 {% if profile.data is not null %}
                 <hr class="default" />
+                {% if user.loggedin %}
                 <table style="width: 100%;">
                 {% for name,field in profile.data %}
                 <tr>
@@ -45,6 +46,9 @@
                 </tr>
                 {% endfor %}
                 </table>
+                {% else %}
+                <b>Log in to view the full profile!</b>
+                {% endif %}
                 {% endif %}
                 <hr class="default" />
                 <b>Account Standing</b>

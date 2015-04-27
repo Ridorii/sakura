@@ -33,7 +33,7 @@ class Users {
         'lastunamechange'   => 0,
         'birthday'          => '',
         'country'           => 'EU',
-        'profile_data'      => ''
+        'profile_data'      => '[]'
     ];
 
     // Empty rank template
@@ -127,7 +127,7 @@ class Users {
         }
 
         // Check if the user is deactivated
-        if(in_array(1, json_decode($userData['ranks'], true)) || in_array(0, json_decode($userData['ranks'], true)) || $userData['rank_main'] < 2)
+        if(self::checkIfUserHasRanks([0, 1], $user, true))
             return [0, 'DEACTIVATED'];
 
         // Create a new session
@@ -247,7 +247,7 @@ class Users {
             'lastdate'          => 0,
             'lastunamechange'   => time(),
             'country'           => Main::getCountryCode(),
-            'profile_data'      => ''
+            'profile_data'      => '[]'
         ]);
 
         // Get userid of the new user
@@ -296,7 +296,7 @@ class Users {
             return [0, 'USER_NOT_EXIST'];
 
         // Check if the user is deactivated
-        if(in_array(1, json_decode($user['ranks'], true)) || in_array(0, json_decode($user['ranks'], true)) || $user['rank_main'] < 2)
+        if(self::checkIfUserHasRanks([0, 1], $user, true))
             return [0, 'DEACTIVATED'];
 
         // Generate the verification key
@@ -338,7 +338,7 @@ class Users {
         $user = Users::getUser(Session::$userId);
 
         // Check if the user is deactivated
-        if(in_array(1, json_decode($user['ranks'], true)) || in_array(0, json_decode($user['ranks'], true)) || $user['rank_main'] < 2)
+        if(self::checkIfUserHasRanks([0, 1], $user, true))
             return [0, 'DEACTIVATED'];
 
         // Check if the account is disabled
@@ -447,7 +447,7 @@ class Users {
             return [0, 'USER_NOT_EXIST'];
 
         // Check if a user is activated
-        if(!in_array(1, json_decode($user['ranks'], true)) || !in_array(0, json_decode($user['ranks'], true)) || $user['rank_main'] > 1)
+        if(!self::checkIfUserHasRanks([0, 1], $user, true))
             return [0, 'USER_ALREADY_ACTIVE'];
 
         // Send activation e-mail
@@ -465,14 +465,14 @@ class Users {
         $user = Database::fetch('users', false, ['id' => [$uid, '=']]);
 
         // User is already activated or doesn't even exist
-        if(count($user) < 2 || (!in_array(1, json_decode($user['ranks'], true)) || !in_array(0, json_decode($user['ranks'], true))) || $user['rank_main'] > 1)
+        if(count($user) < 2 || !self::checkIfUserHasRanks([0, 1], $user, true))
             return false;
 
         // Generate activation key
         $activate = ($customKey ? $customKey : Main::newActionCode('ACTIVATE', $uid, [
             'user' => [
-                'rank_main' => 1,
-                'ranks'     => json_encode([1])
+                'rank_main' => 2,
+                'ranks'     => json_encode([2])
             ]
         ]));
 
@@ -509,7 +509,7 @@ class Users {
             return [0, 'USER_NOT_EXIST'];
 
         // Check if user is already activated
-        if(!in_array(1, json_decode($user['ranks'], true)) || !in_array(0, json_decode($user['ranks'], true)) || $user['rank_main'] > 1)
+        if(!self::checkIfUserHasRanks([0, 1], $user, true))
             return [0, 'USER_ALREADY_ACTIVE'];
 
         // Set default values for activation
@@ -560,14 +560,14 @@ class Users {
             return [0, 'USER_NOT_EXIST'];
 
         // Check if user is already deactivated
-        if(!$user['rank_main'])
+        if(self::checkIfUserHasRanks([0, 1], $user, true))
             return [0, 'USER_ALREADY_DEACTIVE'];
 
         // Deactivate the account
         Database::update('users', [
             [
-                'rank_main' => 1,
-                'ranks'     => json_encode([1])
+                'rank_main' => 2,
+                'ranks'     => json_encode([2])
             ],
             [
                 'id' => [$uid, '=']
@@ -637,6 +637,30 @@ class Users {
 
         // Return the code
         return $code;
+
+    }
+
+    // Check if a user has these ranks
+    public static function checkIfUserHasRanks($ranks, $userid, $userIdIsUserData = false) {
+
+        // Get the specified user
+        $user = $userIdIsUserData ? $userid : self::getUser($userid);
+
+        // Check if the main rank is the specified rank
+        if(in_array($user['rank_main'], $ranks))
+            return true;
+
+        // If not go over all ranks and check if the user has them
+        foreach($ranks as $rank) {
+
+            // We check if $rank is in $user['ranks'] and if yes return true
+            if(in_array($rank, $user['ranks']))
+                return true;
+
+        }
+
+        // If all fails return false
+        return false;
 
     }
 

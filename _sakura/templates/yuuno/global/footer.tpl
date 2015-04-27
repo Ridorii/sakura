@@ -2,7 +2,7 @@
             </div>
             <div class="footer">
                 <div class="ftsections">
-                    <div class="copycentre">Copyright &copy; 2013-2015 <a href="//flash.moe/" target="_blank">Flashwave</a>, <a href="//{{ sakura.urls.main }}/credits">et al</a></div>
+                    <div class="copycentre">Copyright &copy; 2013-2015 <a href="//flash.moe/" target="_blank">Flashwave</a>, <a href="//{{ sakura.urls.main }}/credits">et al</a>.</div>
                     <ul class="ftsection">
                         <li class="fthead">General</li>
                         <li><a href="//{{ sakura.urls.main }}/" title="Flashii Frontpage">Home</a></li>

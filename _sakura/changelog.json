@@ -8,7 +8,8 @@
 
             "builds": [
 
-                "20150427"
+                "20150427",
+                "20150427.1"
 
             ]
 
@@ -670,6 +671,35 @@
             {
                 "type":     "FIX",
                 "change":   "Fix chat redirect."
+            }
+
+        ],
+
+        "20150427.1": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fixed bug in registration process causing a PDO Exception."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed bug in rank checking (e.g. system saying that you're activated and deactivated at the same time)."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed the enter substitute not working on some forms."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed activation system assigning incorrect rank after clicking the link."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed off-site account links being displayed to guests."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed /u/[username] not working."
             }
 
         ]

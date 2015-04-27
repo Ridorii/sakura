@@ -91,11 +91,11 @@
                 var form    = document.getElementById(i);
                 var submit  = form.querySelector('[type="submit"]');
 
+                form.setAttribute('onkeydown', 'formEnterCatch(event, \''+ submit.id +'\');');
+
                 submit.setAttribute('href',     'javascript:void(0);');
                 submit.setAttribute('onclick',  'submitPost(\''+ i +'\', true, \''+ forms[i] +'\');');
                 submit.setAttribute('type',     'button');
-
-                form.setAttribute('onkeydown', 'formEnterCatch(event, \''+ submit.id +'\');');
 
                 var createInput = document.createElement('input');
                 createInput.setAttribute('name', 'ajax');

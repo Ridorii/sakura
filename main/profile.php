@@ -26,7 +26,7 @@ if(isset($_GET['u'])) {
 
     $renderData['profile'] = [
         'notset'    => false,
-        'user'      => ($_PROFILE_USER_DATA = Users::getUser($_GET['u'])),
+        'user'      => ($_PROFILE_USER_DATA = Users::getUser(($_USER_USERNAME_ID = Users::userExists($_GET['u'], false)) ? $_USER_USERNAME_ID : $_GET['u'])),
         'rank'      => ($_PROFILE_RANK_DATA = Users::getRank($_PROFILE_USER_DATA['rank_main'])),
         'colour'    => ($_PROFILE_USER_DATA['name_colour']  == null ? $_PROFILE_RANK_DATA['colour'] : $_PROFILE_USER_DATA['name_colour']),
         'ranktitle' => ($_PROFILE_USER_DATA['usertitle']    == null ? $_PROFILE_RANK_DATA['title']  : $_PROFILE_USER_DATA['usertitle']),

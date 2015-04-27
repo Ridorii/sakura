@@ -55,7 +55,7 @@
                         <input class="inputStyling" type="text" id="forgotEmail" name="email" />
                     </div>
                     <div class="centreAlign">
-                        <input class="inputStyling" type="submit" name="submit" value="Request Password" />
+                        <input class="inputStyling" type="submit" name="submit" value="Request Password" id="requestPassBtn" />
                     </div>
                     <div class="subLinks centreAlign">
                         If you lost access to the e-mail address you registered with then there's not much we can do, it's your own responsibility to keep track of it and attaching a working one to your account.
@@ -130,7 +130,7 @@
                         <input class="inputStyling" name="tos" type="checkbox" class="ignore-css" id="registerToS" /><label for="registerToS">I agree to the <a class="default" href="/r/terms" target="_blank">Terms of Service</a>.
                     </div>
                     <div class="centreAlign">
-                        <input class="inputStyling" type="submit" name="submit" value="Register" />
+                        <input class="inputStyling" type="submit" name="submit" value="Register" id="registerAccBtn" />
                     </div>
                 </form>
                 {% if auth.blockRegister.do %}
@@ -179,7 +179,7 @@
                         <input class="inputStyling" type="text" id="activeEmail" name="email" />
                     </div>
                     <div class="centreAlign">
-                        <input class="inputStyling" type="submit" name="submit" value="Request Activation" />
+                        <input class="inputStyling" type="submit" name="submit" value="Request Activation" id="requestActiveBtn" />
                     </div>
                     <div class="subLinks centreAlign">
                         Read the footnote on the Lost Password form.
