@@ -650,11 +650,14 @@ class Users {
         if(in_array($user['rank_main'], $ranks))
             return true;
 
+        // Decode the json for the user's ranks
+        $uRanks = json_decode($user['ranks'], true);
+
         // If not go over all ranks and check if the user has them
         foreach($ranks as $rank) {
 
             // We check if $rank is in $user['ranks'] and if yes return true
-            if(in_array($rank, $user['ranks']))
+            if(in_array($rank, $uRanks))
                 return true;
 
         }

@@ -10,7 +10,8 @@
 
                 "20150427",
                 "20150427.1",
-                "20150427.2"
+                "20150427.2",
+                "20150427.3"
 
             ]
 
@@ -710,6 +711,15 @@
             {
                 "type":     "FIX",
                 "change":   "Fixed bug caused by bug fix in login process (ironic)."
+            }
+
+        ],
+
+        "20150427.3": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fixed bug in rank checking function (didn't decode the json string)."
             }
 
         ]
