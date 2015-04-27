@@ -847,6 +847,30 @@ class Users {
 
     }
 
+    // Get users in rank
+    public static function getUsersInRank($rankId, $users = null) {
+
+        // Get all users (or use the supplied user list to keep server load down)
+        if(!$users)
+            $users = self::getAllUsers();
+
+        // Make output array
+        $rank = array();
+
+        // Go over all users and check if they have the rank id
+        foreach($users as $user) {
+
+            // If so store the user's row in the array
+            if(self::checkIfUserHasRanks([$rankId], $user, true))
+                $rank[] = $user;
+
+        }
+
+        // Then return the array with the user rows
+        return $rank;
+
+    }
+
     // Get all users
     public static function getAllUsers($includeInactive = true) {
 
@@ -860,7 +884,7 @@ class Users {
         foreach($getUsers as $user) {
 
             // Skip if inactive and not include deactivated users
-            if(!$includeInactive && $user['rank_main'] < 2)
+            if(!$includeInactive && self::checkIfUserHasRanks([0, 1], $user, true))
                 continue;
 
             $users[$user['id']] = $user;

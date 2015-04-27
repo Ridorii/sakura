@@ -14,7 +14,8 @@
                 "20150427.3",
                 "20150427.4",
                 "20150427.5",
-                "20150427.6"
+                "20150427.6",
+                "20150427.7"
 
             ]
 
@@ -770,6 +771,19 @@
             {
                 "type":     "REM",
                 "change":   "Remove origin check on CloudFlare country header."
+            }
+
+        ],
+
+        "20150427.7": [
+
+            {
+                "type":     "ADD",
+                "change":   "Add members page."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add members page pagination."
             }
 
         ]

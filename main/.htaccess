@@ -30,6 +30,16 @@ RewriteRule ^news?/?$ news.php
 RewriteRule ^news/([0-9]+)$ news.php?id=$1
 RewriteRule ^news.xml$ news.php?xml
 
+## Members
+RewriteRule ^members?/?$ members.php
+RewriteRule ^members/([a-z]+)?/?$ members.php?sort=$1
+RewriteRule ^members/([0-9]+)?/?$ members.php?rank=$1
+RewriteRule ^members/p([0-9]+)?/?$ members.php?page=$1
+RewriteRule ^members/([a-z]+)/([0-9]+)?/?$ members.php?sort=$1&rank=$2
+RewriteRule ^members/([0-9]+)/p([0-9]+)?/?$ members.php?rank=$1&page=$2
+RewriteRule ^members/([a-z]+)/p([0-9]+)?/?$ members.php?sort=$1&page=$2
+RewriteRule ^members/([a-z]+)/([0-9]+)/p([0-9]+)?/?$ members.php?sort=$1&rank=$2&page=$3
+
 ## Profiles
 RewriteRule ^u$|u/$ profile.php
 RewriteRule ^u/([A-Za-z0-9_-\s\.]+)?/?$ profile.php?u=$1
