@@ -37,7 +37,7 @@ if(isset($_GET['u'])) {
         'data'      => Users::getUserProfileData($_PROFILE_USER_DATA['id'])
     ];
 
-    $renderData['page']['title'] = ($renderData['profile']['user']['id'] < 1 ? 'User not found!' : 'Profile of '. $renderData['profile']['user']['username']);
+    $renderData['page']['title'] = ($_PROFILE_USER_DATA['id'] < 1 || $_PROFILE_USER_DATA['password_algo'] == 'nologin' ? 'User not found!' : 'Profile of '. $renderData['profile']['user']['username']);
 
 } else {
 

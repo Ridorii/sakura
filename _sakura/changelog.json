@@ -15,7 +15,8 @@
                 "20150427.4",
                 "20150427.5",
                 "20150427.6",
-                "20150427.7"
+                "20150427.7",
+                "20150427.8"
 
             ]
 
@@ -784,6 +785,23 @@
             {
                 "type":     "ADD",
                 "change":   "Add members page pagination."
+            }
+
+        ],
+
+        "20150427.8": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fix long usernames exceeding the rectangle view."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Abyss'd users showing up in the member list."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Abyss'd user's names still showing up in the title of the profile."
             }
 
         ]

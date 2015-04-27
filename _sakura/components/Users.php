@@ -861,7 +861,7 @@ class Users {
         foreach($users as $user) {
 
             // If so store the user's row in the array
-            if(self::checkIfUserHasRanks([$rankId], $user, true))
+            if(self::checkIfUserHasRanks([$rankId], $user, true) && $user['password_algo'] != 'nologin')
                 $rank[] = $user;
 
         }
@@ -872,7 +872,7 @@ class Users {
     }
 
     // Get all users
-    public static function getAllUsers($includeInactive = true) {
+    public static function getAllUsers($includeInactive = true, $includeAbyss = false) {
 
         // Execute query
         $getUsers = Database::fetch('users', true);
@@ -882,6 +882,10 @@ class Users {
 
         // Reorder shit
         foreach($getUsers as $user) {
+
+            // Skip abyss
+            if(!$includeAbyss && $user['password_algo'] == 'nologin')
+                continue;
 
             // Skip if inactive and not include deactivated users
             if(!$includeInactive && self::checkIfUserHasRanks([0, 1], $user, true))
