@@ -2,10 +2,22 @@
 
     "versions": {
 
+        "Heliotrope": {
+
+            "colour": "#DF73FF",
+
+            "builds": [
+
+                "20150427"
+
+            ]
+
+        },
+
         "Cyan": {
-            
+
             "colour": "#4EC9B0",
-            
+
             "builds": [
 
                 "20150221",
@@ -34,7 +46,7 @@
                 "20150426"
 
             ]
-            
+
         }
 
     },
@@ -595,10 +607,6 @@
         "20150426": [
 
             {
-                "type":     "ADD",
-                "change":   "Begin work on profile system."
-            },
-            {
                 "type":     "FIX",
                 "change":   "The system thinking 0 is the rank ID for deactivated while it's 1."
             },
@@ -609,6 +617,59 @@
             {
                 "type":     "ADD",
                 "change":   "Add changelog page."
+            }
+
+        ],
+
+        "20150427": [
+
+            {
+                "type":     "ADD",
+                "change":   "Begin work on profile system."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Created function to get profile data from a user."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Made profile data display properly."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fix rank title not displaying on profiles."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Show country name on profile."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Show tenshi tag on user's profile if they're tenshi."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Actually update last online date."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Activation broken methods in the activation process."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add glow around a user's avatar on their profile if they're online or offline (active in the last 5 minutes)."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Show all online users on the frontpage."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fix JavaScript forms not submitting on hitting enter."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fix chat redirect."
             }
 
         ]

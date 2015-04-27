@@ -32,7 +32,8 @@ class Users {
         'lastdate'          => 0,
         'lastunamechange'   => 0,
         'birthday'          => '',
-        'profile_data'      => '[]'
+        'country'           => 'EU',
+        'profile_data'      => ''
     ];
 
     // Empty rank template
@@ -41,7 +42,8 @@ class Users {
         'rankname'      => 'Non-existent Rank',
         'multi'         => 0,
         'colour'        => '#444',
-        'description'   => 'A hardcoded dummy rank for fallback.'
+        'description'   => 'A hardcoded dummy rank for fallback.',
+        'is_premium'    => 0
     ];
 
     // Check if a user is logged in
@@ -68,6 +70,16 @@ class Users {
             setcookie(Configuration::getConfig('cookie_prefix') .'session', Session::$sessionId,    time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
 
         }
+
+        // Update last online
+        Database::update('users', [
+            [
+                'lastdate' => time()
+            ],
+            [
+                'id' => [Session::$userId, '=']
+            ]
+        ]);
 
         // Redirect people that need to change their password to the new format
         if(self::getUser(Session::$userId)['password_algo'] == 'legacy' && $_SERVER['PHP_SELF'] != '/authenticate.php' && $_SERVER['PHP_SELF'] != '/imageserve.php')
@@ -235,7 +247,7 @@ class Users {
             'lastdate'          => 0,
             'lastunamechange'   => time(),
             'country'           => Main::getCountryCode(),
-            'profile_data'      => '[]'
+            'profile_data'      => ''
         ]);
 
         // Get userid of the new user
@@ -435,7 +447,7 @@ class Users {
             return [0, 'USER_NOT_EXIST'];
 
         // Check if a user is activated
-        if($user['rank_main'])
+        if(!in_array(1, json_decode($user['ranks'], true)) || !in_array(0, json_decode($user['ranks'], true)) || $user['rank_main'] > 1)
             return [0, 'USER_ALREADY_ACTIVE'];
 
         // Send activation e-mail
@@ -453,7 +465,7 @@ class Users {
         $user = Database::fetch('users', false, ['id' => [$uid, '=']]);
 
         // User is already activated or doesn't even exist
-        if(!count($user) > 1 || !in_array(1, json_decode($user['ranks'], true)) || !in_array(0, json_decode($user['ranks'], true)) || $user['rank_main'] > 1)
+        if(count($user) < 2 || (!in_array(1, json_decode($user['ranks'], true)) || !in_array(0, json_decode($user['ranks'], true))) || $user['rank_main'] > 1)
             return false;
 
         // Generate activation key
@@ -639,6 +651,125 @@ class Users {
 
         // Return count (which would return 0, aka false, if nothing was found)
         return count($user) ? $user[0]['id'] : false;
+
+    }
+
+    // Get user's profile fields
+    public static function getUserProfileData($id) {
+
+        // Get profile fields
+        $profileFields = Database::fetch('profilefields');
+
+        // If there's nothing just return null
+        if(!count($profileFields))
+            return null;
+
+        // Get the profile data JSON from the specified user's profile
+        $profileData = Database::fetch('users', false, ['id' => [$id, '=']]);
+
+        // Once again if nothing was returned just return null
+        if(count($profileData) < 2 || $profileData['profile_data'] == null || !count(json_decode($profileData['profile_data'], true)))
+            return null;
+
+        // Decode the profile_data json
+        $profileData = json_decode($profileData['profile_data'], true);
+
+        // Create output array
+        $profile = [];
+
+        // Check if profile fields aren't fake
+        foreach($profileFields as $field) {
+
+            // Completely strip all special characters from the field name
+            $fieldName = Main::cleanString($field['name'], true, true);
+
+            // Check if the user has the current field set otherwise continue
+            if(!array_key_exists($fieldName, $profileData))
+                continue;
+
+            // Assign field to output with value
+            $profile[$fieldName]            = array();
+            $profile[$fieldName]['name']    = $field['name'];
+            $profile[$fieldName]['value']   = $profileData[$fieldName];
+            $profile[$fieldName]['islink']  = $field['islink'];
+
+            // If the field is set to be a link add a value for that as well
+            if($field['islink'])
+                $profile[$fieldName]['link'] = str_replace('{{ VAL }}', $profileData[$fieldName], $field['linkformat']);
+
+            // Check if we have additional options as well
+            if($field['additional'] != null) {
+
+                // Decode the json of the additional stuff
+                $additional = json_decode($field['additional'], true);
+
+                // Go over all additional forms
+                foreach($additional as $subName => $subField) {
+
+                    // Check if the user has the current field set otherwise continue
+                    if(!array_key_exists($subName, $profileData))
+                        continue;
+
+                    // Assign field to output with value
+                    $profile[$fieldName][$subName] = $profileData[$subName];
+
+                }
+
+            }
+
+        }
+
+        // Return appropiate profile data
+        return $profile;
+
+    }
+
+    // Check if a user is online
+    public static function checkUserOnline($id) {
+
+        // Get user
+        $user = self::getUser($id);
+
+        // Return false if the user doesn't exist because a user that doesn't exist can't be online
+        if(empty($user))
+            return false;
+
+        // Return true if the user was online in the last 5 minutes
+        return ($user['lastdate'] > (time() - 500));
+
+    }
+
+    // Get all online users
+    public static function checkAllOnline() {
+
+        // Assign time - 500 to a variable
+        $time = time() - 500;
+
+        // Get all online users in the past 5 minutes
+        $getAll = Database::fetch('users', true, ['lastdate' => [$time, '>']]);
+
+        // Return all the online users
+        return $getAll;
+
+    }
+
+    // Check if user has Tenshi
+    public static function checkUserTenshi($id) {
+
+        // Get user's ranks
+        $ranks = json_decode(self::getUser($id)['ranks'], true);
+
+        // Check premium flag
+        foreach($ranks as $rank) {
+
+            // If premium rank was found return true
+            if(self::getRank($rank)['is_premium'])
+                return true;
+
+        }
+
+        // Else return false
+        return false;
 
     }
 

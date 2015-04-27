@@ -8,10 +8,10 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150426');
-define('SAKURA_VLABEL',     'Cyan');
+define('SAKURA_VERSION',    '20150427');
+define('SAKURA_VLABEL',     'Heliotrope');
 define('SAKURA_VTYPE',      'Development');
-define('SAKURA_COLOUR',     '#4EC9B0');
+define('SAKURA_COLOUR',     '#DF73FF');
 
 // Define Sakura Path
 define('ROOT', str_replace(basename(__DIR__), '', dirname(__FILE__)));

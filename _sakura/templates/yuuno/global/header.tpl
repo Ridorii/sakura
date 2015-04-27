@@ -11,11 +11,11 @@
             <meta http-equiv="refresh" content="3; URL={{ page.redirect }}" />
         {% endif %}
         <!-- CSS -->
-        <link rel="stylesheet" type="text/css" href="//{{ sakura.urls.content }}/global.css?s={{ php.time }}" />
-        <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/yuuno.css?s={{ php.time }}" />
+        <link rel="stylesheet" type="text/css" href="//{{ sakura.urls.content }}/global.css" />
+        <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/yuuno.css" />
         <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
         <!-- JS -->
-        <script type="text/javascript" src="{{ sakura.resources }}/js/yuuno.js?s={{ php.time }}"></script>
+        <script type="text/javascript" src="{{ sakura.resources }}/js/yuuno.js"></script>
         <script type="text/javascript">
         {% if not user.checklogin and not sakura.lockauth %}
 
@@ -91,12 +91,11 @@
                 var form    = document.getElementById(i);
                 var submit  = form.querySelector('[type="submit"]');
 
-                // TODO: Make hitting the enter key submit forms
-                //form.setAttribute('onkeypress', '');
-
                 submit.setAttribute('href',     'javascript:void(0);');
                 submit.setAttribute('onclick',  'submitPost(\''+ i +'\', true, \''+ forms[i] +'\');');
                 submit.setAttribute('type',     'button');
+
+                form.setAttribute('onkeydown', 'formEnterCatch(event, \''+ submit.id +'\');');
 
                 var createInput = document.createElement('input');
                 createInput.setAttribute('name', 'ajax');
@@ -148,7 +147,7 @@
             </div>
             <div id="contentwrapper">
                 {% if not user.checklogin %}
-                    <form method="post" action="/authenticate" class="hidden" id="headerLoginForm">
+                    <form method="post" action="/authenticate" class="hidden" id="headerLoginForm" onkeydown="formEnterCatch(event, 'headerLoginButton');">
                         <input type="hidden" name="redirect" value="{{ sakura.currentpage }}" />
                         <input type="hidden" name="session" value="{{ php.sessionid }}" />
                         <input type="hidden" name="time" value="{{ php.time }}" />

@@ -100,7 +100,7 @@ foreach($changelog as $build => $buildData) {
 }
 
 // Get special template file
-$tpl = file_get_contents(ROOT .'_sakura/templates/versionInfo.tpl');
+$tpl = file_get_contents(ROOT .'_sakura/templates/changeLog.tpl');
 
 // Parse tags
 $tpl = str_replace('{{ version }}',         SAKURA_VERSION, $tpl);

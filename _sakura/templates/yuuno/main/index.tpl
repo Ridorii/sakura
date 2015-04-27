@@ -26,6 +26,15 @@
             <b><a href="/u/{{ stats.newestUser.id }}" class="default">{{ stats.newestUser.username }}</a></b> is the newest user, 
             it has been <b>{{ stats.lastRegDate }}</b> since the last user registered and 
             there are <b>{{ stats.chatOnline }}</b> in chat right now.
+            <div class="head">Online Users</div>
+            {% if stats.onlineUsers %}
+                All active users in the past 5 minutes:<br />
+                {% for amount,onlineUser in stats.onlineUsers %}
+                    <a href="/u/{{ onlineUser.id }}" style="font-weight: bold;" class="default">{{ onlineUser.username }}</a>{% if amount != (stats.onlineUsers|length - 1) %}, {% endif %}
+                {% endfor %}
+            {% else %}
+                There were no online users in the past 5 minutes.
+            {% endif %}
         </div>
         <div class="content-left content-column">
             <div class="head">News <a href="/news.xml" class="fa fa-rss news-rss default"></a></div>

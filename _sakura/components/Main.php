@@ -199,14 +199,22 @@ class Main {
     }
 
     // Cleaning strings
-    public static function cleanString($string, $lower = false) {
+    public static function cleanString($string, $lower = false, $nospecial = false) {
 
+        // Run common sanitisation function over string
         $string = htmlentities($string, ENT_QUOTES | ENT_IGNORE, Configuration::getConfig('charset'));
         $string = stripslashes($string);
         $string = strip_tags($string);
+
+        // If set also make the string lowercase
         if($lower)
             $string = strtolower($string);
 
+        // If set remove all characters that aren't a-z or 0-9
+        if($nospecial)
+            $string = preg_replace('/[^a-z0-9]/', '', $string);
+
+        // Return clean string
         return $string;
 
     }
@@ -478,6 +486,20 @@ class Main {
 
         // Count the amount of unique characters in the password string and calculate the entropy
         return count(count_chars($pw, 1)) * log(256, 2);
+
+    }
+
+    // Get country name from ISO 3166 code
+    public static function getCountryName($code) {
+
+        // Parse JSON file
+        $iso3166 = json_decode(file_get_contents(Configuration::getLocalConfig('etc', 'iso3166')), true);
+
+        // Check if key exists
+        if(array_key_exists($code, $iso3166))
+            return $iso3166[$code]; // If entry found return the full name
+        else
+            return 'Unknown'; // Else return unknown
 
     }
 

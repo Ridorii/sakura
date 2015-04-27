@@ -23,3 +23,4 @@ $sakuraConf['urls']['manage']   = 'manage.flashii.net'; // Moderator panel url
 // Errata
 $sakuraConf['etc']['cfhosts']       = ROOT .'_sakura/config/cloudflare.hosts'; // Cloudflare IP subnets file
 $sakuraConf['etc']['whoisservers']  = ROOT .'_sakura/config/whois.json'; // JSON with Whois servers
+$sakuraConf['etc']['iso3166']       = ROOT .'_sakura/config/iso3166.json'; // JSON with country codes

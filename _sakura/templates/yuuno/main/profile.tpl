@@ -5,7 +5,7 @@
         There are a few possible reasons for this:
         <ul style="padding-left: 40px;">
             <li>They changed their username.</li>
-            <li>They may have been abyss'd.</li>
+            <li>They may have been <a href="/faq#abyss" class="default">abyss'd</a>.</li>
             <li>You made a typo.</li>
             <li>They never existed.</li>
         </ul>
@@ -14,12 +14,38 @@
 	<div class="content profile">
         <div class="{% if profile.profpage|length > 1 %}content-right {% endif %}content-column">
             <div style="text-align: center;">
-                <img src="/a/{{ profile.user.id }}" alt="{{ profile.user.username }}'s Avatar" class="default-avatar-setting" />
-                <br /><span style="font-size: .8em;">{{ profile.user.usertitle }}</span>
-                <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px #888; padding: 0 0 10px;">{{ profile.user.username }}</h1>
+                <img src="/a/{{ profile.user.id }}" alt="{{ profile.user.username }}'s Avatar" class="default-avatar-setting" style="box-shadow: 0 3px 7px #{% if profile.online %}484{% else %}844{% endif %};" />
+                <br /><span style="font-size: .8em;">{{ profile.ranktitle }}</span>
+                <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px #888; padding: 0 0 2px;">{{ profile.user.username }}</h1>
+                {% if profile.istenshi %}<img src="//{{ sakura.urls.content }}/images/tenshi.png" alt="Tenshi" /> {% endif %}<img src="//{{ sakura.urls.content }}/images/flags/{% if profile.user.country|lower == 'eu' %}europeanunion{% else %}{{ profile.user.country|lower }}{% endif %}.png" alt="{{ profile.user.country }}" /> <span style="font-size: .9em; line-height: 11px;">{{ profile.country }}</span>
                 <hr class="default" />
-                <b>Joined</b> {{ profile.user.regdate|date("l Y-m-d H:i") }}<br />
-                <b>Last Seen on</b> {{ profile.user.lastdate|date("l Y-m-d H:i") }}
+                <b>Joined</b> {{ profile.user.regdate|date("l Y-m-d H:i T") }}<br />
+                <b>Last Seen on</b> {{ profile.user.lastdate|date("l Y-m-d H:i T") }}
+                {% if profile.data is not null %}
+                <hr class="default" />
+                <table style="width: 100%;">
+                {% for name,field in profile.data %}
+                <tr>
+                    <td style="text-align: left; font-weight: bold;">
+                        {{ field.name }}
+                    </td>
+                    <td style="text-align: right;">
+                        {% if name == 'youtube' %}
+                            <a href="https://youtube.com/{% if field.youtubetype == 1 %}channel{% else %}user{% endif %}/{{ field.value }}" class="default">{{ field.value }}</a>
+                        {% else %}
+                            {% if field.islink %}
+                            <a href="{{ field.link }}" class="default">
+                            {% endif %}
+                            {{ field.value }}
+                            {% if field.islink %}
+                            </a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </table>
+                {% endif %}
                 <hr class="default" />
                 <b>Account Standing</b>
                 <h2 style="color: green; text-shadow: 0 0 7px #888; margin-top: 0;">Good</h2>

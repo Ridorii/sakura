@@ -277,6 +277,25 @@ function generateForm(formId, formAttr, formData, appendTo) {
 
 }
 
+// Enter substitute
+function formEnterCatch(key, id) {
+
+    // 13 == Enter
+    if(key.which == 13) {
+
+        // Submit the form
+        document.getElementById(id).click();
+
+        // Return true if yeah
+        return true;
+
+    }
+
+    // Return false if not
+    return false;
+
+}
+
 // Submitting a form using an AJAX POST request
 function submitPost(formId, busyView, msg) {
 

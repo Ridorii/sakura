@@ -315,7 +315,7 @@ $renderData['page'] = [
 $renderData['auth'] = [
     'redirect' => (
         isset($_REQUEST['chat']) ?
-        Configuration::getLocalConfig('urls', 'chat') :
+        '//'. Configuration::getLocalConfig('urls', 'chat') :
         (
             isset($_SERVER['HTTP_REFERER']) ?
             $_SERVER['HTTP_REFERER'] :
