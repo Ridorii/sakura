@@ -407,14 +407,9 @@ class Main {
     // Get country code from CloudFlare header (which just returns EU if not found)
     public static function getCountryCode() {
 
-        // Check if remote IP is a CloudFlare IP
-        if(self::checkCFIP($_SERVER['REMOTE_ADDR'])) {
-
-            // Check if the required header is set and return it
-            if(isset($_SERVER['HTTP_CF_IPCOUNTRY']))
-                return $_SERVER['HTTP_CF_IPCOUNTRY'];
-
-        }
+        // Check if the required header is set and return it
+        if(isset($_SERVER['HTTP_CF_IPCOUNTRY']))
+            return $_SERVER['HTTP_CF_IPCOUNTRY'];
 
         // Return EU as a fallback
         return 'EU';

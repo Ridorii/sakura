@@ -13,7 +13,8 @@
                 "20150427.2",
                 "20150427.3",
                 "20150427.4",
-                "20150427.5"
+                "20150427.5",
+                "20150427.6"
 
             ]
 
@@ -756,6 +757,19 @@
             {
                 "type":     "UPD",
                 "change":   "Redid avatar serving script."
+            }
+
+        ],
+
+        "20150427.6": [
+
+            {
+                "type":     "FIX",
+                "change":   "Hide abyss'd users."
+            },
+            {
+                "type":     "REM",
+                "change":   "Remove origin check on CloudFlare country header."
             }
 
         ]

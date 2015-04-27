@@ -1,5 +1,5 @@
 {% include 'global/header.tpl' %}
-    {% if profile.notset or profile.user.id == 0 %}
+    {% if profile.notset or profile.user.id == 0 or profile.user.password_algo == 'nologin' %}
     <div class="content standalone" style="padding: 20px;">
         <h1>The requested user does not exist!</h1>
         There are a few possible reasons for this:
