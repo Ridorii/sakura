@@ -23,7 +23,7 @@
                 <b>Last Seen on</b> {{ profile.user.lastdate|date("l Y-m-d H:i T") }}
                 {% if profile.data is not null %}
                 <hr class="default" />
-                {% if user.loggedin %}
+                {% if user.checklogin %}
                 <table style="width: 100%;">
                 {% for name,field in profile.data %}
                 <tr>

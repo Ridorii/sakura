@@ -11,7 +11,8 @@
                 "20150427",
                 "20150427.1",
                 "20150427.2",
-                "20150427.3"
+                "20150427.3",
+                "20150427.4"
 
             ]
 
@@ -720,6 +721,19 @@
             {
                 "type":     "FIX",
                 "change":   "Fixed bug in rank checking function (didn't decode the json string)."
+            }
+
+        ],
+
+        "20150427.4": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fixed Canada not existing."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed profiles not showing profile data to logged in users."
             }
 
         ]
