@@ -9,7 +9,8 @@
             "builds": [
 
                 "20150427",
-                "20150427.1"
+                "20150427.1",
+                "20150427.2"
 
             ]
 
@@ -700,6 +701,15 @@
             {
                 "type":     "FIX",
                 "change":   "Fixed /u/[username] not working."
+            }
+
+        ],
+
+        "20150427.2": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fixed bug caused by bug fix in login process (ironic)."
             }
 
         ]

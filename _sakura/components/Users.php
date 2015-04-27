@@ -102,25 +102,25 @@ class Users {
             return [0, 'USER_NOT_EXIST'];
 
         // Get account data
-        $userData = self::getUser($uid);
+        $user = self::getUser($uid);
 
         // Validate password
-        if($userData['password_algo'] == 'nologin') { // Disable logging in to an account
+        if($user['password_algo'] == 'nologin') { // Disable logging in to an account
 
             return [0, 'NO_LOGIN'];
 
-        } elseif($userData['password_algo'] == 'legacy') { // Shitty legacy method of sha512(strrev(sha512()))
+        } elseif($user['password_algo'] == 'legacy') { // Shitty legacy method of sha512(strrev(sha512()))
 
-            if(Main::legacyPasswordHash($password) != $userData['password_hash'])
+            if(Main::legacyPasswordHash($password) != $user['password_hash'])
                 return [0, 'INCORRECT_PASSWORD'];
 
         } else { // PBKDF2 hashing
 
             if(!Hashing::validate_password($password, [
-                $userData['password_algo'],
-                $userData['password_iter'],
-                $userData['password_salt'],
-                $userData['password_hash']
+                $user['password_algo'],
+                $user['password_iter'],
+                $user['password_salt'],
+                $user['password_hash']
             ]))
                 return [0, 'INCORRECT_PASSWORD'];
 
@@ -131,14 +131,14 @@ class Users {
             return [0, 'DEACTIVATED'];
 
         // Create a new session
-        $sessionKey = Session::newSession($userData['id'], $remember);
+        $sessionKey = Session::newSession($user['id'], $remember);
 
         // Set cookies
-        setcookie(Configuration::getConfig('cookie_prefix') .'id',      $userData['id'],    time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
-        setcookie(Configuration::getConfig('cookie_prefix') .'session', $sessionKey,        time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
+        setcookie(Configuration::getConfig('cookie_prefix') .'id',      $user['id'],    time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
+        setcookie(Configuration::getConfig('cookie_prefix') .'session', $sessionKey,    time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
 
         // Successful login! (also has a thing for the legacy password system)
-        return [1, ($userData['password_algo'] == 'legacy' ? 'LEGACY_SUCCESS' : 'LOGIN_SUCESS')];
+        return [1, ($user['password_algo'] == 'legacy' ? 'LEGACY_SUCCESS' : 'LOGIN_SUCESS')];
 
     }
 
