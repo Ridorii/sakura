@@ -12,7 +12,8 @@
                 "20150427.1",
                 "20150427.2",
                 "20150427.3",
-                "20150427.4"
+                "20150427.4",
+                "20150427.5"
 
             ]
 
@@ -734,6 +735,27 @@
             {
                 "type":     "FIX",
                 "change":   "Fixed profiles not showing profile data to logged in users."
+            }
+
+        ],
+
+        "20150427.5": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fixed Youtubetype 1 displaying the channel ID as the link title."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Hide most of the profile if a user is deactivated."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add avatar replacement for deactivated users."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Redid avatar serving script."
             }
 
         ]
