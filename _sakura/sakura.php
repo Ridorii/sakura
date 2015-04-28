@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150427.8');
+define('SAKURA_VERSION',    '20150428');
 define('SAKURA_VLABEL',     'Heliotrope');
 define('SAKURA_VTYPE',      'Development');
 define('SAKURA_COLOUR',     '#DF73FF');
@@ -36,6 +36,7 @@ require_once ROOT .'_sakura/components/Templates.php';
 require_once ROOT .'_sakura/components/Sessions.php';
 require_once ROOT .'_sakura/components/Users.php';
 require_once ROOT .'_sakura/components/Whois.php';
+require_once ROOT .'_sakura/components/SockChat.php';
 
 // Generate path to database driver
 $_DBNGNPATH = ROOT .'_sakura/components/database/'. $sakuraConf['db']['driver'] .'.php';

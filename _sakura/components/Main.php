@@ -7,9 +7,8 @@ namespace Sakura;
 
 class Main {
 
-    public static $_TPL;
-    public static $_MD;
-    public static $_IN_MANAGE = false;
+    public static $_MD;                 // Markdown class container
+    public static $_IN_MANAGE = false;  // Manage thing
 
     // Constructor
     public static function init($config) {

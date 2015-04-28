@@ -16,7 +16,8 @@
                 "20150427.5",
                 "20150427.6",
                 "20150427.7",
-                "20150427.8"
+                "20150427.8",
+                "20150428"
 
             ]
 
@@ -802,6 +803,23 @@
             {
                 "type":     "FIX",
                 "change":   "Abyss'd user's names still showing up in the title of the profile."
+            }
+
+        ],
+
+        "20150428": [
+
+            {
+                "type":     "ADD",
+                "change":   "Add base Sock Chat extensions."
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed remains of old templating system."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Move Sock Chat permissioning to database as opposed to a static file."
             }
 
         ]
