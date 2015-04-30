@@ -26,7 +26,7 @@ class SockChat {
 
         // Parse permission string
         foreach($perms as $id => $perm)
-            $perms[$id]['perms'] = self::parsePerms($perm['perms']);
+            $perms[$id]['perms'] = self::decodePerms($perm['perms']);
 
         // Return the permission data
         return $perms;
@@ -49,7 +49,7 @@ class SockChat {
         }
 
         // Parse permission string
-        $perms = self::parsePerms($perms['perms']);
+        $perms = self::decodePerms($perms['perms']);
 
         // Return the permission data
         return $perms;
@@ -74,15 +74,15 @@ class SockChat {
         }
 
         // Parse permission string
-        $perms = self::parsePerms($perms['perms']);
+        $perms = self::decodePerms($perms['perms']);
 
         // Return the permission data
         return $perms;
 
     }
 
-    // Parse permission string
-    public static function parsePerms($perms) {
+    // Decode permission string
+    public static function decodePerms($perms) {
 
         // Explode the commas
         $exploded = is_array($perms) ? $perms : explode(',', $perms);
@@ -100,6 +100,42 @@ class SockChat {
 
         // Return formatted permissions array
         return $perms;
+
+    }
+
+    // Encode permission string
+    public static function encodePerms($perms) {
+
+        // Create array
+        $encoded = array();
+
+        // Put the data in the correct order
+        $encoded[ self::$_PERMS_ACCESS_INDEX ]  = empty($perms['access'])   ? 0 : $perms['access'];
+        $encoded[ self::$_PERMS_RANK_INDEX ]    = empty($perms['rank'])     ? 0 : $perms['rank'];
+        $encoded[ self::$_PERMS_TYPE_INDEX ]    = empty($perms['type'])     ? 0 : $perms['type'];
+        $encoded[ self::$_PERMS_LOGS_INDEX ]    = empty($perms['logs'])     ? 0 : $perms['logs'];
+        $encoded[ self::$_PERMS_NICK_INDEX ]    = empty($perms['nick'])     ? 0 : $perms['nick'];
+        $encoded[ self::$_PERMS_CHANNEL_INDEX ] = empty($perms['channel'])  ? 0 : $perms['channel'];
+
+        // Implode the array
+        $perms = implode(',', $encoded);
+
+        // Return formatted permissions array
+        return $perms;
+
+    }
+
+    // Get online users
+    public static function getOnlineUsers() {
+
+        // If the sock chat extensions are disabled return an empty array
+        if(!Configuration::getLocalConfig('sock', 'enable'))
+            return [];
+
+        // Get contents of the table
+        $sockUsers = Database::fetch('online_users', true, null, null, null, null, false, '*', Configuration::getLocalConfig('sock', 'sqlpref'));
+
+        return $sockUsers;
 
     }
 

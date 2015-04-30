@@ -25,7 +25,7 @@
             We have <b>{{ stats.userCount }}</b>, 
             <b><a href="/u/{{ stats.newestUser.id }}" class="default">{{ stats.newestUser.username }}</a></b> is the newest user, 
             it has been <b>{{ stats.lastRegDate }}</b> since the last user registered and 
-            there are <b>{{ stats.chatOnline }}</b> in chat right now.
+            there's <b>{{ stats.chatOnline }}</b> in chat right now.
             <div class="head">Online Users</div>
             {% if stats.onlineUsers %}
                 All active users in the past 5 minutes:<br />

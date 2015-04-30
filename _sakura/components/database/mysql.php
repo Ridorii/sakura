@@ -82,10 +82,10 @@ class Database {
     }
 
     // Fetch array from database
-    public static function fetch($table, $fetchAll = true, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*') {
+    public static function fetch($table, $fetchAll = true, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*', $prefix = null) {
 
         // Begin preparation of the statement
-        $prepare = 'SELECT '. ($distinct ? 'DISTINCT ' : '') . ($column == '*' ? '' : '`') . $column . ($column == '*' ? '' : '`') .' FROM `' . Configuration::getLocalConfig('db', 'prefix') . $table . '`';
+        $prepare = 'SELECT '. ($distinct ? 'DISTINCT ' : '') . ($column == '*' ? '' : '`') . $column . ($column == '*' ? '' : '`') .' FROM `' . ($prefix ? $prefix : Configuration::getLocalConfig('db', 'prefix')) . $table . '`';
 
         // If $data is set and is an array continue
         if(is_array($data)) {
@@ -172,10 +172,10 @@ class Database {
     }
     
     // Insert data to database
-    public static function insert($table, $data) {
+    public static function insert($table, $data, $prefix = null) {
 
         // Begin preparation of the statement
-        $prepare = 'INSERT INTO `' . Configuration::getLocalConfig('db', 'prefix') . $table . '` ';
+        $prepare = 'INSERT INTO `' . ($prefix ? $prefix : Configuration::getLocalConfig('db', 'prefix')) . $table . '` ';
 
         // Run the foreach statement twice for (`stuff`) VALUES (:stuff)
         for($i = 0; $i < 2; $i++) {
@@ -214,10 +214,10 @@ class Database {
     }
 
     // Update data in the database
-    public static function update($table, $data) {
+    public static function update($table, $data, $prefix = null) {
 
         // Begin preparation of the statement
-        $prepare = 'UPDATE `' . Configuration::getLocalConfig('db', 'prefix') . $table . '`';
+        $prepare = 'UPDATE `' . ($prefix ? $prefix : Configuration::getLocalConfig('db', 'prefix')) . $table . '`';
 
         // Run a foreach on $data and complete the statement
         foreach($data as $key => $values) {
@@ -272,10 +272,10 @@ class Database {
     }
 
     // Delete data from the database
-    public static function delete($table, $data) {
+    public static function delete($table, $data, $prefix = null) {
 
         // Begin preparation of the statement
-        $prepare = 'DELETE FROM `' . Configuration::getLocalConfig('db', 'prefix') . $table . '`';
+        $prepare = 'DELETE FROM `' . ($prefix ? $prefix : Configuration::getLocalConfig('db', 'prefix')) . $table . '`';
 
         // If $data is set and is an array continue
         if(is_array($data)) {

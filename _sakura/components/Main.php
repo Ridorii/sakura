@@ -497,4 +497,15 @@ class Main {
 
     }
 
+    // Get FAQ data
+    public static function getFaqData() {
+
+        // Do database call
+        $faq = Database::fetch('faq', true, null, ['id']);
+
+        // Return FAQ data
+        return $faq;
+
+    }
+
 }

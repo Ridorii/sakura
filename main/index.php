@@ -19,7 +19,7 @@ $renderData['stats'] = [
     'userCount'     => ($userCount = count($users = Users::getAllUsers(false))) .' user'. ($userCount == 1 ? '' : 's'),
     'newestUser'    => max($users),
     'lastRegDate'   => ($lastRegDate = date_diff(date_create(date('Y-m-d', max($users)['regdate'])), date_create(date('Y-m-d')))->format('%a')) .' day'. ($lastRegDate == 1 ? '' : 's'),
-    'chatOnline'    => ($chatOnline = 0) .' user'. ($chatOnline == 1 ? '' : 's'),
+    'chatOnline'    => ($chatOnline = count(SockChat::getOnlineUsers())) .' user'. ($chatOnline == 1 ? '' : 's'),
     'onlineUsers'   => Users::checkAllOnline()
 ];
 

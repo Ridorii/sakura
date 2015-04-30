@@ -17,7 +17,9 @@
                 "20150427.6",
                 "20150427.7",
                 "20150427.8",
-                "20150428"
+                "20150428",
+                "20150429",
+                "20150430"
 
             ]
 
@@ -820,6 +822,28 @@
             {
                 "type":     "UPD",
                 "change":   "Move Sock Chat permissioning to database as opposed to a static file."
+            }
+
+        ],
+
+        "20150429": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fix chat online users counter on frontpage."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added FAQ page."
+            }
+
+        ],
+
+        "20150430": [
+
+            {
+                "type":     "ADD",
+                "change":   "Begin work on management panel."
             }
 
         ]
