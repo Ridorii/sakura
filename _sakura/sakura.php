@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150430');
+define('SAKURA_VERSION',    '20150501');
 define('SAKURA_VLABEL',     'Heliotrope');
 define('SAKURA_VTYPE',      'Development');
 define('SAKURA_COLOUR',     '#DF73FF');
@@ -35,6 +35,7 @@ require_once ROOT .'_sakura/components/Configuration.php';
 require_once ROOT .'_sakura/components/Templates.php';
 require_once ROOT .'_sakura/components/Sessions.php';
 require_once ROOT .'_sakura/components/Users.php';
+require_once ROOT .'_sakura/components/Manage.php';
 require_once ROOT .'_sakura/components/Whois.php';
 require_once ROOT .'_sakura/components/SockChat.php';
 
@@ -48,7 +49,7 @@ else
     die('<h1>Failed to load database driver.</h1>');
 
 // Set Error handler
-set_error_handler(array('Sakura\Main', 'ErrorHandler'));
+set_error_handler(array('Sakura\Main', 'errorHandler'));
 
 // Initialise Flashii Class
 Main::init($sakuraConf);
@@ -57,6 +58,9 @@ Main::init($sakuraConf);
 $renderData = array(
     'sakura' => [
         'version'           => SAKURA_VERSION,
+        'vlabel'            => SAKURA_VLABEL,
+        'vtype'             => SAKURA_VTYPE,
+        'vcolour'           => SAKURA_COLOUR,
         'urls'              => Configuration::getLocalConfig('urls'),
         'charset'           => Configuration::getConfig('charset'),
         'currentpage'       => '//'. $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'],

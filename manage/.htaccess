@@ -1,1 +1,18 @@
-# Empty .htaccess to make git realise this directory exists
+# Block access to every file starting with a dot
+<Files ".*">
+	Require all denied
+</Files>
+
+# Set Error documents
+ErrorDocument 404 /404.php
+ErrorDocument 403 /404.php
+ErrorDocument 401 /404.php
+
+# Rewrite Stuff
+RewriteEngine on
+RewriteBase /
+Options +FollowSymLinks -Indexes
+
+# Manage pages
+RewriteRule ^([a-z\-]+)?/?$ index.php?page=$1&sub=0
+RewriteRule ^([a-z\-]+)/([a-z\-]+)?/?$ index.php?page=$1&sub=$2

@@ -29,7 +29,7 @@ class Templates {
         self::$_CFG = self::parseCfg(file_get_contents($confPath));
 
         // Make sure we're not using a manage template for the main site or the other way around
-        if((self::$_CFG['MANAGE'] && !Main::$_IN_MANAGE) || (!self::$_CFG['MANAGE'] && Main::$_IN_MANAGE))
+        if((bool)self::$_CFG['MANAGE'] != (bool)Main::$_MANAGE_MODE)
             trigger_error('Incorrect template type', E_USER_ERROR);
 
         // Start Twig

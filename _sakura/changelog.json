@@ -19,7 +19,8 @@
                 "20150427.8",
                 "20150428",
                 "20150429",
-                "20150430"
+                "20150430",
+                "20150501"
 
             ]
 
@@ -844,6 +845,15 @@
             {
                 "type":     "ADD",
                 "change":   "Begin work on management panel."
+            }
+
+        ],
+
+        "20150501": [
+
+            {
+                "type":     "UPD",
+                "change":   "Improve error page."
             }
 
         ]

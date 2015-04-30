@@ -7,8 +7,8 @@ namespace Sakura;
 
 class Main {
 
-    public static $_MD;                 // Markdown class container
-    public static $_IN_MANAGE = false;  // Manage thing
+    public static $_MD; // Markdown class container
+    public static $_MANAGE_MODE = false; // Management mode
 
     // Constructor
     public static function init($config) {
@@ -29,8 +29,11 @@ class Main {
         // Create new session
         Session::init();
 
+        // Check if management mode was requested
+        self::$_MANAGE_MODE = defined('SAKURA_MANAGE');
+
         // Templating engine
-        Templates::init(Configuration::getConfig('site_style'));
+        Templates::init(self::$_MANAGE_MODE ? Configuration::getConfig('manage_style') : Configuration::getConfig('site_style'));
 
         // Assign servers file to whois class
         Whois::setServers(Configuration::getLocalConfig('etc', 'whoisservers'));
@@ -73,7 +76,7 @@ class Main {
     }
 
     // Error Handler
-    public static function ErrorHandler($errno, $errstr, $errfile, $errline) {
+    public static function errorHandler($errno, $errstr, $errfile, $errline) {
 
         // Set some variables to work with including A HUGE fallback hackjob for the templates folder
         $errstr     = str_replace(ROOT, '', $errstr);
