@@ -14,6 +14,17 @@
         <link rel="stylesheet" type="text/css" href="//{{ sakura.urls.content }}/global.css" />
         <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/yuuno.css" />
         <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+        {% if page.style %}
+        <style type="text/css">
+            {% for element,properties in page.style %}
+                {{ element|raw }} {
+                    {% for property,value in properties %}
+                        {{ property|raw }}: {{ value|raw }};
+                    {% endfor %}
+                }
+            {% endfor %}
+        </style>
+        {% endif %}
         <!-- JS -->
         <script type="text/javascript" src="{{ sakura.resources }}/js/yuuno.js"></script>
         <script type="text/javascript">
@@ -108,7 +119,7 @@
         };
         </script>
     </head>
-    <body>
+    <body{% if page.background %} style="background: url('{{ page.background }}') no-repeat fixed center center / cover inherit !important;"{% endif %}>
         <div id="container">
             <span id="top"></span>
             <div class="header" id="header">

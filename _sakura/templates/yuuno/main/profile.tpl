@@ -11,7 +11,7 @@
         </ul>
     </div>
     {% else %}
-	<div class="content profile">
+	<div class="content profile"{% if page.background %} style="background: rgba(211, 191, 255, .8) !important;"{% endif %}>
         <div class="{% if profile.profpage|length > 1 %}content-right {% endif %}content-column">
             <div style="text-align: center;">
                 <img src="/a/{{ profile.user.id }}" alt="{{ profile.user.username }}'s Avatar" class="default-avatar-setting" style="box-shadow: 0 3px 7px #{% if profile.online %}484{% else %}844{% endif %};" />

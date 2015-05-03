@@ -14,9 +14,11 @@ header('Content-Type: application/octet-stream');
 
 // Check if the m(ode) GET request is set
 if(isset($_GET['m'])) {
+
     switch($_GET['m']) {
+
         case 'avatar':
-            // Set path to no avatar picture
+            // Set paths
             $noAvatar       = ROOT .'content/images/no-av.png';
             $deactiveAvatar = ROOT .'content/images/deactivated-av.png';
             $bannedAvatar   = ROOT .'content/images/banned-av.png';
@@ -52,10 +54,11 @@ if(isset($_GET['m'])) {
             // Check if the avatar exist and assign it to a value
             $serveImage = $avatarDirPath . $user['avatar_url'];
             break;
-        
+
         case 'background':
-            // Set path to no avatar picture
-            $noBackground = ROOT .'content/pixel.png';
+            // Set paths
+            $noBackground   = ROOT .'content/pixel.png';
+            $bgDirPath      = ROOT .'content/images/backgrounds/';
 
             // If ?u= isn't set or if it isn't numeric
             if(!isset($_GET['u']) || !is_numeric($_GET['u'])) {
@@ -63,16 +66,32 @@ if(isset($_GET['m'])) {
                 break;
             }
 
+            // Get user data
+            $user = Users::getUser($_GET['u']);
+
+            // If user is deactivated don't display background
+            if(Users::checkIfUserHasRanks([0, 1], $user, true)) {
+                $serveImage = $noBackground;
+                break;
+            }
+
+            // Check if user has an avatar set
+            if(empty($user['background_url']) || !file_exists($bgDirPath . $user['background_url'])) {
+                $serveImage = $noAvatar;
+                break;
+            }
+
             // Check if the avatar exist and assign it to a value
-            $serveImage = empty(Users::getUser($_GET['u'])['profilebg']) ? $noBackground : Users::getUser($_GET['u'])['profilebg'];
+            $serveImage = $bgDirPath . $user['background_url'];
             break;
-        
+
         default:
             $serveImage = ROOT .'content/pixel.png';
+
     }
-} else {
+
+} else
     $serveImage = ROOT .'content/pixel.png';
-}
 
 $serveImage = file_get_contents($serveImage);
 

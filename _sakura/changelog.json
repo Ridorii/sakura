@@ -22,7 +22,8 @@
                 "20150430",
                 "20150501",
                 "20150502",
-                "20150503"
+                "20150503",
+                "20150503.1"
 
             ]
 
@@ -878,6 +879,15 @@
             {
                 "type":     "ADD",
                 "change":   "Begin work on forum script."
+            }
+
+        ],
+
+        "20150503.1": [
+
+            {
+                "type":     "ADD",
+                "change":   "Added profile backgrounds."
             }
 
         ]
