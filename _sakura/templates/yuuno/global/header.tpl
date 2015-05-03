@@ -121,7 +121,7 @@
                         <a class="menu-item" href="//{{ sakura.urls.chat }}/" title="Chat with other Flashii members">Chat</a>
                         {% if user.checklogin %}
                             <a class="menu-item" href="//{{ sakura.urls.main }}/members" title="View a list with all the activated user accounts">Members</a>
-                            <a class="menu-item menu-donate" href="//{{ sakura.urls.main }}/support" title="Give us money to keep the site (and other services) up and running">Support</a>
+                            <a class="menu-item menu-donate" href="//{{ sakura.urls.main }}/support" title="Give us money to keep the site (and other services) up and running">Support us</a>
                         {% endif %}
                     </div>
                     <div class="menu-ucp" id="navMenuUser">

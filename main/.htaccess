@@ -18,7 +18,7 @@ RewriteRule ^feedback?/?$ http://forum.flash.moe/viewforum.php?f=22
 RewriteRule ^credits?/?$ credits.php
 RewriteRule ^index?/?$ index.php
 RewriteRule ^login?/?$|logout?/?$|activate?/?$|register?/?$|forgotpassword?/?|authenticate?/?$ authenticate.php
-RewriteRule ^donate?/?$|support?/?$ support.php
+RewriteRule ^donate?/?$|support?/?$ donate.php
 RewriteRule ^contact?/?$ infopage.php?r=contact
 RewriteRule ^changelog?/?$ changelog.php
 RewriteRule ^faq?/?$ faq.php

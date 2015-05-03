@@ -19,21 +19,28 @@
         <div id="container">
             <span id="top"></span>
             <div class="header" id="header">
-                <a class="logo" href="/">
-                    Broom Closet{{ page.activepage }} {{ page.activesub }}
-                </a>
+                <div class="logo">
+                    <a href="/">Broom Closet</a> /
+                    <a href="/{{ page.activepage }}/">{{ page.pages[page.activepage].desc }}</a> /
+                    <a href="/{{ page.activepage }}/{{ page.activesub }}/">{{ page.pages[page.activepage].subs[page.activesub].desc }}</a>
+                </div>
                 <div class="nav">
-                    {% for short,mode in page.pages %}
-                        <div class="menu" id="{{ short }}Nav">
-                        <div>{{ mode.desc|raw }}</div>
-                        {% for short,page in mode.pages %}
-                            <a href="/{{ short }}/">{{ page.title }}</a>
+                    <div class="menu" id="siteNav">
+                        <div style="color: {{ user.colour }};">{{ user.data.username }}</div>
+                        <a href="//{{ sakura.urls.main }}/">Return to Site Index</a>
+                        <a href="//{{ sakura.urls.main }}/logout?mode=logout&time={{ php.time }}&session={{ php.sessionid }}&redirect=//{{ sakura.urls.main }}/">Logout</a>
+                    </div>
+                    <div class="menu" id="pageNav">
+                        <div>Navigation</div>
+                        {% for short,page in page.pages %}
+                            <a href="/{{ short }}/">{{ page.desc }}</a>
                         {% endfor %}
-                        </div>
-                    {% endfor %}
+                    </div>
                     <div class="menu" id="subNav">
-                        <div>Section title here</div>
-                        <a href="#">Front page</a>
+                        <div>{{ page.pages[page.activepage].desc }}</div>
+                        {% for short,sub in page.pages[page.activepage].subs %}
+                            <a href="/{{ page.activepage }}/{{ short }}/">{{ sub.desc }}</a>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

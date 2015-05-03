@@ -61,9 +61,12 @@ a:active {
     font-size: 3em;
     line-height: 1.7em;
     margin: 0 20px;
+    display: inline-block;
+}
+
+.header > .logo > a {
     color: inherit !important;
     text-decoration: none !important;
-    display: inline-block;
 }
 
 .header > .nav {
