@@ -69,12 +69,6 @@ if(isset($_GET['m'])) {
             // Get user data
             $user = Users::getUser($_GET['u']);
 
-            // If user is deactivated don't display background
-            if(Users::checkIfUserHasRanks([0, 1], $user, true)) {
-                $serveImage = $noBackground;
-                break;
-            }
-
             // Check if user has an avatar set
             if(empty($user['background_url']) || !file_exists($bgDirPath . $user['background_url'])) {
                 $serveImage = $noAvatar;

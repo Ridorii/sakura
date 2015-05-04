@@ -119,7 +119,7 @@
         };
         </script>
     </head>
-    <body{% if page.background %} style="background: url('{{ page.background }}') no-repeat fixed center center / cover inherit !important;"{% endif %}>
+    <body>
         <div id="container">
             <span id="top"></span>
             <div class="header" id="header">

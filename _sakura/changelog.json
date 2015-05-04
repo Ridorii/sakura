@@ -23,7 +23,9 @@
                 "20150501",
                 "20150502",
                 "20150503",
-                "20150503.1"
+                "20150503.1",
+                "20150504",
+                "20150504.1"
 
             ]
 
@@ -888,6 +890,28 @@
             {
                 "type":     "ADD",
                 "change":   "Added profile backgrounds."
+            }
+
+        ],
+
+        "20150504": [
+
+            {
+                "type":     "REM",
+                "change":   "Removed blank background for inactive users (will make the backend handle removal)."
+            }
+
+        ],
+
+        "20150504.1": [
+
+            {
+                "type":     "UPD",
+                "change":   "Changed profile background handling."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add beginning parts of the warning systems."
             }
 
         ]

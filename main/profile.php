@@ -34,13 +34,20 @@ if(isset($_GET['u'])) {
         'istenshi'  => Users::checkUserTenshi($_PROFILE_USER_DATA['id']),
         'online'    => Users::checkUserOnline($_PROFILE_USER_DATA['id']),
         'profpage'  => Main::mdParse(base64_decode($_PROFILE_USER_DATA['profile_md'])),
-        'data'      => Users::getUserProfileData($_PROFILE_USER_DATA['id'])
+        'data'      => Users::getUserProfileData($_PROFILE_USER_DATA['id']),
+        'warnings'  => Users::getWarnings($_PROFILE_USER_DATA['id'])
     ];
     $renderData['page'] = [
         'title'         => ($_PROFILE_USER_DATA['id'] < 1 || $_PROFILE_USER_DATA['password_algo'] == 'nologin' ? 'User not found!' : 'Profile of '. $_PROFILE_USER_DATA['username']),
         'style'         => ($_PROFILE_USER_DATA['background_url'] ? [
-            'body' => [
-                'background' => 'url("/bg/'. $_PROFILE_USER_DATA['id'] .'") no-repeat fixed center center / cover transparent !important'
+            '.userBackground' => [
+                'background' => 'url("/bg/'. $_PROFILE_USER_DATA['id'] .'") no-repeat fixed center center / cover transparent !important',
+                'position' => 'fixed',
+                'top' => '0',
+                'bottom' => '0',
+                'right' => '0',
+                'left' => '0',
+                'z-index' => '-1'
             ],
             '.profile' => [
                 'background' => 'rgba(211, 191, 255, .8) !important'

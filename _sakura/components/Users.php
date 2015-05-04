@@ -918,4 +918,17 @@ class Users {
 
     }
 
+    // Get all warnings issued to a user (or all warnings a user issued)
+    public static function getWarnings($uid, $iid = false) {
+
+        // Do the database query
+        $warnings = Database::fetch('warnings', true, [
+            ($iid ? 'iid' : 'uid') => [$uid, '=']
+        ]);
+
+        // Return all the warnings
+        return $warnings;
+
+    }
+
 }
