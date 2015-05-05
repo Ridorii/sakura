@@ -31,6 +31,9 @@ RewriteRule ^news?/?$ news.php
 RewriteRule ^news/([0-9]+)$ news.php?id=$1
 RewriteRule ^news.xml$ news.php?xml
 
+## Settings
+RewriteRule ^settings?/?$ settings.php
+
 ## Members
 RewriteRule ^members?/?$ members.php
 RewriteRule ^members/([a-z]+)?/?$ members.php?sort=$1

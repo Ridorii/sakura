@@ -25,7 +25,8 @@
                 "20150503",
                 "20150503.1",
                 "20150504",
-                "20150504.1"
+                "20150504.1",
+                "20150505"
 
             ]
 
@@ -912,6 +913,23 @@
             {
                 "type":     "ADD",
                 "change":   "Add beginning parts of the warning systems."
+            }
+
+        ],
+
+        "20150505": [
+
+            {
+                "type":     "UPD",
+                "change":   "getWarnings() can now return all warnings when the first parameter is false."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added parallax effect to profile backgrounds."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added comments to the Yuuno JavaScript."
             }
 
         ]

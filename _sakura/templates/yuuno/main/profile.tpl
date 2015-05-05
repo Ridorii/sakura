@@ -11,7 +11,7 @@
         </ul>
     </div>
     {% else %}
-    <div class="userBackground"></div>
+    <div id="userBackground"></div>
 	<div class="content profile">
         <div class="{% if profile.profpage|length > 1 %}content-right {% endif %}content-column">
             <div style="text-align: center;">
@@ -64,7 +64,7 @@
                 {% else %}
                     {% if profile.warnings %}
                     <h2 style="color: red; text-shadow: 0 0 7px #888; margin-top: 0;">Bad</h2>
-                    <span style="font-size: 10px; line-height: 10px;">This user has <b>{{ profile.warnings|length }} warning{% if profile.warnings|length != 1 %}s{% endif %}</b>.<br />After 5 to 10 more warnings (depending on what they are for) this user may be permanently banned.</span>
+                    <span style="font-size: 10px; line-height: 10px;">This user has <b>{{ profile.warnings|length }} warning{% if profile.warnings|length != 1 %}s{% endif %}</b>.<br />After 5 to 10 warnings (depending on what they are for) this user may be permanently banned.</span>
                     {% else %}
                     <h2 style="color: green; text-shadow: 0 0 7px #888; margin-top: 0;">Good</h2>
                     {% endif %}
@@ -76,5 +76,10 @@
         </div>
         <div class="clear"></div>
     </div>
+    {% if profile.user.background_url %}
+    <script type="text/javascript">
+        initialiseParallax('userBackground');
+    </script>
+    {% endif %}
     {% endif %}
 {% include 'global/footer.tpl' %}

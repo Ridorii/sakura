@@ -40,8 +40,8 @@ if(isset($_GET['u'])) {
     $renderData['page'] = [
         'title'         => ($_PROFILE_USER_DATA['id'] < 1 || $_PROFILE_USER_DATA['password_algo'] == 'nologin' ? 'User not found!' : 'Profile of '. $_PROFILE_USER_DATA['username']),
         'style'         => ($_PROFILE_USER_DATA['background_url'] ? [
-            '.userBackground' => [
-                'background' => 'url("/bg/'. $_PROFILE_USER_DATA['id'] .'") no-repeat fixed center center / cover transparent !important',
+            '#userBackground' => [
+                'background' => 'url("/bg/'. $_PROFILE_USER_DATA['id'] .'") no-repeat center center / cover transparent !important',
                 'position' => 'fixed',
                 'top' => '0',
                 'bottom' => '0',

@@ -919,12 +919,12 @@ class Users {
     }
 
     // Get all warnings issued to a user (or all warnings a user issued)
-    public static function getWarnings($uid, $iid = false) {
+    public static function getWarnings($uid = 0, $iid = false) {
 
         // Do the database query
-        $warnings = Database::fetch('warnings', true, [
+        $warnings = Database::fetch('warnings', true, ($uid ? [
             ($iid ? 'iid' : 'uid') => [$uid, '=']
-        ]);
+        ] : null));
 
         // Return all the warnings
         return $warnings;
