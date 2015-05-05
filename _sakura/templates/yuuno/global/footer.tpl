@@ -13,7 +13,8 @@
                         <li><a href="//{{ sakura.urls.main }}/faq" title="Questions that get Asked Frequently but not actually">Frequently Asked Questions</a></li>
                     </ul>
                     <ul class="ftsection">
-                        <li class="fthead">Status &amp; Social</li>
+                        <li class="fthead">Search, Status &amp; Social</li>
+                        <li><a href="//{{ sakura.urls.main }}/search" title="Do full-site search requests">Search</a></li>
                         <li><a href="//status.flashii.net" target="_blank" title="Check the status on the Flashii Server and related services">Server Status</a></li>
                         <li><a href="//twitter.com/_flashii" target="_blank" title="Follow us on Twitter for news messages that are too short for the news page">Twitter</a></li>
                         <li><a href="//youtube.com/user/flashiinet" target="_blank" title="Our YouTube page where stuff barely ever gets uploaded, mainly used to archive community creations">YouTube</a></li>

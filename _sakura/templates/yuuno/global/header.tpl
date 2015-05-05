@@ -139,6 +139,7 @@
                         <!-- User menu, displayed on right side of the bar. -->
                         {% if user.checklogin %}
                             <a class="menu-item avatar" href="//{{ sakura.urls.main }}/u/{{ user.data.id }}" title="View and edit your own profile" style="background-image: url('//{{ sakura.urls.main }}/a/{{ user.data.id }}'); width: auto; color: {{ user.colour }}; font-weight: 700;">{{ user.data.username }}</a>
+                            <a class="menu-item" href="//{{ sakura.urls.main }}/messages" title="Read your private message">Messages</a>
                             <a class="menu-item" href="//{{ sakura.urls.main }}/settings" title="Change your settings">Settings</a>
                             <a class="menu-item" href="//{{ sakura.urls.main }}/logout?mode=logout&time={{ php.time }}&session={{ php.sessionid }}&redirect={{ sakura.currentpage }}" title="End your login session" id="headerLogoutLink">Logout</a>
                         {% else %}

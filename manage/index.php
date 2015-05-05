@@ -5,7 +5,7 @@
 
 // Declare Namespace
 namespace Sakura;
-die('<h1>still broom closet</h1>');
+
 // Define that we are in Management mode
 define('SAKURA_MANAGE', true);
 

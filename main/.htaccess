@@ -22,6 +22,7 @@ RewriteRule ^donate?/?$|support?/?$ donate.php
 RewriteRule ^contact?/?$ infopage.php?r=contact
 RewriteRule ^changelog?/?$ changelog.php
 RewriteRule ^faq?/?$ faq.php
+RewriteRule ^search?/?$ search.php
 
 ## Info pages
 RewriteRule ^r/([a-z]+)$ infopage.php?r=$1
@@ -33,6 +34,9 @@ RewriteRule ^news.xml$ news.php?xml
 
 ## Settings
 RewriteRule ^settings?/?$ settings.php
+
+## Private Messages
+RewriteRule ^messages?/?$ messages.php
 
 ## Members
 RewriteRule ^members?/?$ members.php

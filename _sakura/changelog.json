@@ -26,7 +26,8 @@
                 "20150503.1",
                 "20150504",
                 "20150504.1",
-                "20150505"
+                "20150505",
+                "20150505.1"
 
             ]
 
@@ -930,6 +931,19 @@
             {
                 "type":     "ADD",
                 "change":   "Added comments to the Yuuno JavaScript."
+            }
+
+        ],
+
+        "20150505.1": [
+
+            {
+                "type":     "ADD",
+                "change":   "Added Google Custom Search page."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Export new SQL structure (and example data)."
             }
 
         ]

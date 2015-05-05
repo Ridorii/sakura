@@ -15,7 +15,7 @@ CREATE TABLE `fii_actioncodes` (
   `actkey` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The URL key for using this code.',
   `instruction` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Things the backend should do upon using this code',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_apikeys`;
@@ -46,6 +46,62 @@ DROP TABLE IF EXISTS `fii_config`;
 CREATE TABLE `fii_config` (
   `config_name` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Array key for configuration value',
   `config_value` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The value, obviously.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+TRUNCATE `fii_config`;
+INSERT INTO `fii_config` (`config_name`, `config_value`) VALUES
+('recaptcha_public',	''),
+('recaptcha_private',	''),
+('charset',	'utf-8'),
+('cookie_prefix',	'fii_'),
+('cookie_domain',	'iihsalf.net'),
+('cookie_path',	'/'),
+('site_style',	'yuuno'),
+('manage_style',	'broomcloset'),
+('allow_registration',	'0'),
+('smtp_server',	''),
+('smtp_auth',	''),
+('smtp_secure',	''),
+('smtp_port',	''),
+('smtp_username',	''),
+('smtp_password',	''),
+('smtp_replyto_mail',	''),
+('smtp_replyto_name',	''),
+('smtp_from_email',	''),
+('smtp_from_name',	''),
+('sitename',	'Development Palace'),
+('recaptcha',	'1'),
+('require_activation',	'1'),
+('require_registration_code',	'0'),
+('disable_registration',	'0'),
+('max_reg_keys',	'5'),
+('mail_signature',	'Team Flashii'),
+('lock_authentication',	'0'),
+('min_entropy',	'96');
+
+DROP TABLE IF EXISTS `fii_faq`;
+CREATE TABLE `fii_faq` (
+  `id` bigint(128) unsigned NOT NULL AUTO_INCREMENT COMMENT 'MySQL Generated ID used for sorting.',
+  `short` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Used for linking directly to a question.',
+  `question` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The question.',
+  `answer` text COLLATE utf8_bin NOT NULL COMMENT 'The answer.',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+DROP TABLE IF EXISTS `fii_forums`;
+CREATE TABLE `fii_forums` (
+  `forum_id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'MySQL Generated ID used for sorting.',
+  `forum_name` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Display name of the forum.',
+  `forum_desc` text COLLATE utf8_bin NOT NULL COMMENT 'Description of the forum.',
+  `forum_link` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'If set forum will display as a link.',
+  `forum_category` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of the category this forum falls under.',
+  `forum_type` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'Forum type, 0 for regular board, 1 for category and 2 for link.',
+  `forum_posts` bigint(128) unsigned NOT NULL DEFAULT '0' COMMENT 'Post count of the forum',
+  `forum_topics` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'Topic count of the forum.',
+  `forum_last_post_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of last post in forum.',
+  `forum_last_poster_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of last poster in forum.',
+  PRIMARY KEY (`forum_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -80,6 +136,25 @@ CREATE TABLE `fii_news` (
   `content` text COLLATE utf8_bin NOT NULL COMMENT 'Contents of the post',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+DROP TABLE IF EXISTS `fii_posts`;
+CREATE TABLE `fii_posts` (
+  `post_id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'MySQL Generated ID used for sorting.',
+  `topic_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of topic this post is a part of.',
+  `forum_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of forum this was posted in.',
+  `poster_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of poster of this post.',
+  `poster_ip` varchar(40) COLLATE utf8_bin NOT NULL COMMENT 'IP of poster.',
+  `post_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Time this post was made.',
+  `enable_markdown` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT 'Toggle if markdown should be enabled.',
+  `enable_sig` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT 'Toggle if signature should be shown.',
+  `post_subject` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Subject of the post.',
+  `post_text` text COLLATE utf8_bin NOT NULL COMMENT 'Contents of the post.',
+  `post_edit_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Time this post was last edited.',
+  `post_edit_reason` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Reason this was edited.',
+  `post_edit_user` int(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of user that edited.',
+  PRIMARY KEY (`post_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_profilefields`;
@@ -154,8 +229,28 @@ CREATE TABLE `fii_sessions` (
   `expire` int(64) unsigned NOT NULL COMMENT 'The timestamp for when this session should end, -1 for permanent. ',
   `remember` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'If set to 1 session will be extended each time a page is loaded.',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+
+DROP TABLE IF EXISTS `fii_sock_perms`;
+CREATE TABLE `fii_sock_perms` (
+  `rid` bigint(128) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of rank that this permission counts for (set to 0 if user).',
+  `uid` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of the user this permission counts for (set to 0 if rank).',
+  `perms` varchar(128) COLLATE utf8_bin NOT NULL DEFAULT '1,0,0,0,0,0' COMMENT 'Permission data (has access, in-chat rank, user type, log access, nick access, channel creation)'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+TRUNCATE `fii_sock_perms`;
+INSERT INTO `fii_sock_perms` (`rid`, `uid`, `perms`) VALUES
+(1,	0,	'0,0,0,0,0,0'),
+(2,	0,	'1,0,0,0,0,0'),
+(3,	0,	'1,3,1,1,1,1'),
+(4,	0,	'1,4,2,1,1,2'),
+(5,	0,	'1,2,1,1,1,1'),
+(6,	0,	'1,0,0,0,0,0'),
+(7,	0,	'1,2,1,1,1,1'),
+(8,	0,	'1,1,0,1,1,1'),
+(9,	0,	'1,1,0,1,1,1'),
+(0,	1,	'1,945,1,1,1,2');
 
 DROP TABLE IF EXISTS `fii_tenshi`;
 CREATE TABLE `fii_tenshi` (
@@ -164,6 +259,28 @@ CREATE TABLE `fii_tenshi` (
   `uid` bigint(255) unsigned NOT NULL COMMENT 'ID of the user that purchased Tenshi.',
   `expiredate` int(64) unsigned NOT NULL COMMENT 'Expiration timestamp.',
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+DROP TABLE IF EXISTS `fii_topics`;
+CREATE TABLE `fii_topics` (
+  `topic_id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'MySQL Generated ID used for sorting.',
+  `forum_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of forum this topic was created in.',
+  `topic_hidden` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Boolean to set the topic as hidden.',
+  `topic_title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title of the topic.',
+  `topic_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Timestamp when the topic was created.',
+  `topic_time_limit` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'After how long a topic should be locked.',
+  `topic_last_reply` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Last time a post was posted in this topic.',
+  `topic_views` bigint(64) unsigned NOT NULL DEFAULT '0' COMMENT 'Amount of times the topic has been viewed.',
+  `topic_replies` bigint(128) unsigned NOT NULL DEFAULT '0' COMMENT 'Amount of replies the topic has.',
+  `topic_status` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'Status of topic.',
+  `topic_status_change` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Date the topic status was changed (used for deletion cooldown as well).',
+  `topic_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'Type of the topic.',
+  `topic_first_post_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of first post made in this topic.',
+  `topic_first_poster_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'User ID of person who made the first post.',
+  `topic_last_post_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of last post made in this topic.',
+  `topic_last_poster_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'User ID of person who made the last post.',
+  PRIMARY KEY (`topic_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -196,19 +313,19 @@ CREATE TABLE `fii_users` (
   `profile_data` text COLLATE utf8_bin NOT NULL COMMENT 'Modular array containing profile data.',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_clean` (`username_clean`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_warnings`;
 CREATE TABLE `fii_warnings` (
   `id` bigint(128) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
   `uid` bigint(128) unsigned NOT NULL COMMENT 'ID of user that was warned.',
-  `mod` bigint(128) unsigned NOT NULL COMMENT 'ID of the moderator that issued the warning.',
+  `iid` bigint(128) unsigned NOT NULL COMMENT 'ID of the user that issued the warning.',
   `issued` int(64) unsigned NOT NULL COMMENT 'Timestamp of the date the warning was issued.',
-  `expire` int(64) unsigned NOT NULL COMMENT 'Timstamp when the warning should expire, -1 for a permanent warning.',
+  `expire` int(64) unsigned NOT NULL COMMENT 'Timstamp when the warning should expire, 0 for a permanent warning.',
   `reason` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Reason for the warning.',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
--- 2015-04-27 00:38:20
+-- 2015-05-05 06:18:36
