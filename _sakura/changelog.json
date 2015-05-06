@@ -27,7 +27,8 @@
                 "20150504",
                 "20150504.1",
                 "20150505",
-                "20150505.1"
+                "20150505.1",
+                "20150506"
 
             ]
 
@@ -944,6 +945,23 @@
             {
                 "type":     "UPD",
                 "change":   "Export new SQL structure (and example data)."
+            }
+
+        ],
+
+        "20150506": [
+
+            {
+                "type":     "UPD",
+                "change":   "Add some content retrieval functions for the forum."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added post count to the users table structure."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Moved panel on the right site of the index to its own template file."
             }
 
         ]

@@ -20,6 +20,7 @@ $sakuraConf['urls']['api']      = 'api.flashii.net'; // API url
 $sakuraConf['urls']['content']  = 'cdn.flashii.net'; // Content directory url
 $sakuraConf['urls']['chat']     = 'chat.flashii.net'; // Chat url
 $sakuraConf['urls']['manage']   = 'manage.flashii.net'; // Moderator panel url
+$sakuraConf['urls']['forum']    = 'forum.flashii.net'; // Forum url
 
 // Errata
 $sakuraConf['etc']                  = array();

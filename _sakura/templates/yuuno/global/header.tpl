@@ -123,7 +123,7 @@
         <div id="container">
             <span id="top"></span>
             <div class="header" id="header">
-                <a class="logo" href="/">{{ sakura.sitename }}</a>
+                <a class="logo" href="//{{ sakura.urls.main }}/">{{ sakura.sitename }}</a>
                 <div class="menu">
                     <div class="menu-nav" id="navMenuSite">
                         <!-- Navigation menu, displayed on left side of the bar. -->

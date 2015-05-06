@@ -26,7 +26,8 @@
                 <b>User hasn't logged in yet.</b>
                 {% else %}
                 <b>Last Seen on</b> {{ profile.user.lastdate|date("l Y-m-d H:i T") }}
-                {% endif %}
+                {% endif %}<br />
+                <b>User has {% if not profile.user.posts %}no{% else %}{{ profile.user.posts }}{% endif %} forum post{% if profile.user.posts != 1 %}s{% endif %}.</b>
                 {% if profile.data is not null %}
                 <hr class="default" />
                 {% if user.checklogin %}

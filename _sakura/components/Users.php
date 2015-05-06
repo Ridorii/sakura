@@ -32,6 +32,7 @@ class Users {
         'lastdate'          => 0,
         'lastunamechange'   => 0,
         'birthday'          => '',
+        'posts'             => 0,
         'country'           => 'EU',
         'profile_data'      => '[]'
     ];
