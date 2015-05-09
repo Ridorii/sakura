@@ -70,7 +70,7 @@ INSERT INTO `fii_config` (`config_name`, `config_value`) VALUES
 ('smtp_from_email',	''),
 ('smtp_from_name',	''),
 ('sitename',	'Sakura'),
-('recaptcha',	'1'),
+('recaptcha',	'0'),
 ('require_activation',	'1'),
 ('require_registration_code',	'0'),
 ('disable_registration',	'0'),
@@ -145,13 +145,14 @@ CREATE TABLE `fii_notifications` (
   `uid` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'User ID this notification is intended for.',
   `timestamp` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Timestamp when this notification was created.',
   `notif_read` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Toggle for unread and read.',
+  `notif_sound` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Toggle if a sound should be played upon receiving the notification.',
   `notif_title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title displayed on the notification.',
   `notif_text` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Text displayed.',
   `notif_link` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Link (empty for no link).',
   `notif_img` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Image path, prefix with font: to use a font class instead of an image.',
   `notif_timeout` int(16) unsigned NOT NULL DEFAULT '0' COMMENT 'How long the notification should stay on screen in milliseconds, 0 for forever.',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_posts`;
@@ -185,19 +186,6 @@ CREATE TABLE `fii_profilefields` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-TRUNCATE `fii_profilefields`;
-INSERT INTO `fii_profilefields` (`id`, `name`, `formtype`, `islink`, `linkformat`, `description`, `additional`) VALUES
-(1,	'Website',	'url',	1,	'{{ VAL }}',	'URL to your website',	''),
-(2,	'Twitter',	'text',	1,	'https://twitter.com/{{ VAL }}',	'Your @twitter Username',	''),
-(3,	'GitHub',	'text',	1,	'https://github.com/{{ VAL }}',	'Your GitHub Username',	''),
-(4,	'Skype',	'text',	1,	'skype:{{ VAL }}?userinfo',	'Your Skype Username',	''),
-(5,	'YouTube',	'text',	0,	'',	'ID or Username excluding http://youtube.com/*/',	'{\"youtubetype\": [\"checkbox\", \"I <b>don\'t</b> have a Channel Username (url looks like https://www.youtube.com/channel/UCXZcw5hw5C7Neto-T_nRXBQ).\"]}'),
-(6,	'SoundCloud',	'text',	1,	'https://soundcloud.com/{{ VAL }}',	'Your SoundCloud username',	''),
-(7,	'Steam',	'text',	1,	'https://steamcommunity.com/id/{{ VAL }}',	'Your Steam Community Username (may differ from login username)',	''),
-(8,	'osu!',	'text',	1,	'https://osu.ppy.sh/u/{{ VAL }}',	'Your osu! Username',	''),
-(9,	'Origin',	'text',	0,	'',	'Your Origin User ID',	''),
-(10,	'Xbox Live',	'text',	1,	'https://account.xbox.com/en-GB/Profile?Gamertag={{ VAL }}',	'Your Xbox User ID',	''),
-(11,	'PSN',	'text',	1,	'http://psnprofiles.com/{{ VAL }}',	'Your PSN User ID',	'');
 
 DROP TABLE IF EXISTS `fii_ranks`;
 CREATE TABLE `fii_ranks` (
@@ -211,6 +199,17 @@ CREATE TABLE `fii_ranks` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+TRUNCATE `fii_ranks`;
+INSERT INTO `fii_ranks` (`id`, `name`, `multi`, `colour`, `description`, `title`, `is_premium`) VALUES
+(1,	'Deactivated',	0,	'#555',	'Users that are yet to be activated or that deactivated their own account.',	'Deactivated',	0),
+(2,	'Regular user',	1,	'inherit',	'Regular users with regular permissions.',	'Regular user',	0),
+(3,	'Site moderator',	1,	'#0A0',	'Users with special permissions like being able to ban and modify users if needed.',	'Staff',	1),
+(4,	'Administrator',	1,	'#C00',	'Users that manage the server and everything around that.',	'Administrator',	1),
+(5,	'Developer',	1,	'#824CA0',	'Users that either create or test new features of the site.',	'Staff',	1),
+(6,	'Bot',	1,	'#9E8DA7',	'Reserved user accounts for services.',	'Bot',	0),
+(7,	'Chat moderator',	1,	'#09F',	'Moderators of the chat room.',	'Staff',	1),
+(8,	'Tenshi',	0,	'#EE9400',	'Users that donated $5.00 or more in order to keep the site and it\'s services alive!',	'Tenshi',	1),
+(9,	'Alumnii',	0,	'#FF69B4',	'People who have contributed to the community but have moved on or resigned.',	'Alumnii',	1);
 
 DROP TABLE IF EXISTS `fii_regcodes`;
 CREATE TABLE `fii_regcodes` (
@@ -234,7 +233,7 @@ CREATE TABLE `fii_sessions` (
   `expire` int(64) unsigned NOT NULL COMMENT 'The timestamp for when this session should end, -1 for permanent. ',
   `remember` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'If set to 1 session will be extended each time a page is loaded.',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_sock_perms`;
@@ -334,4 +333,4 @@ CREATE TABLE `fii_warnings` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
--- 2015-05-08 17:47:36
+-- 2015-05-09 00:57:52
