@@ -76,72 +76,208 @@ function epochTime() {
 
 }
 
-/*
-"Delayed" for now (not really any use for it atm)
-function notification(id, content, sound) {
-    $('.notifications').hide().append('<div id="notif'+id+'">'+content+'</div>').fadeIn('slow');
-    
-    if(sound) {
-        var sound = document.getElementById('notifsnd');
-        
-        sound.volume = 1.0;
-        sound.currentTime = 0;
-        sound.play();
+// Create a notification box
+function notifyUI(content) {
+
+    // Grab the container and create an ID
+    var container   = document.getElementById('notifications');
+    var identifier  = 'sakura-notification-' + Date.now();
+
+    // Create the notification element and children
+    var notif           = document.createElement('div');
+    var notifIcon       = document.createElement('div');
+    var notifContent    = document.createElement('div');
+    var notifTitle      = document.createElement('div');
+    var notifText       = document.createElement('div');
+    var notifClose      = document.createElement('div');
+    var notifClear      = document.createElement('div');
+
+    // Add ID and class on notification container
+    notif.className = 'notification-enter';
+    notif.setAttribute('id', identifier);
+
+    // Add icon
+    notifIcon   .className = 'notification-icon';
+    if(content.img.substring(0, 5) == "FONT:") {
+
+        var iconCont = document.createElement('div');
+        iconCont.className = 'font-icon fa ' + content.img.replace('FONT:', '') + ' fa-4x';
+
+    } else {
+
+        var iconCont = document.createElement('img');
+        iconCont.setAttribute('alt', identifier);
+        iconCont.setAttribute('src', content.img);
+
     }
-    
-    window.setTimeout(function() {
-        $('#notif'+id).fadeOut('slow',function() {
-            $('#notif'+id).remove();
-        });
-    }, 2500);
-    
-    return true;
+    notifIcon   .appendChild(iconCont);
+    notif       .appendChild(notifIcon);
+
+    // Add content
+    var notifTitleNode  = document.createTextNode(content.title);
+    var notifTextNode   = document.createTextNode(content.text);
+    notifContent    .className = 'notification-content';
+    notifTitle      .className = 'notification-title';
+    notifText       .className = 'notification-text';
+    notifTitle      .appendChild(notifTitleNode);
+    notifText       .appendChild(notifTextNode);
+    if(content.link) {
+
+        notif       .setAttribute('sakurahref', content.link);
+        notifContent.setAttribute('onclick',    'notifyOpen(this.parentNode.id);');
+
+    }
+    notifContent    .appendChild(notifTitle);
+    notifContent    .appendChild(notifText);
+    notif           .appendChild(notifContent);
+
+    // Add close button
+    notifClose  .className = 'notification-close';
+    notifClose  .setAttribute('onclick', 'notifyClose(this.parentNode.id);');
+    notif       .appendChild(notifClose);
+
+    // Add .clear
+    notifClear  .className = 'clear';
+    notif       .appendChild(notifClear);
+
+    // Append the notification to the document so it actually shows up to the user also add the link
+    container.appendChild(notif);
+
+    // Play sound if requested
+    if(content.sound > 0) {
+
+        // Create sound element and mp3 and ogg sources
+        var sound       = document.createElement('audio');
+        var soundMP3    = document.createElement('source');
+        var soundOGG    = document.createElement('source');
+
+        // Assign the proper attributes to the sources
+        soundMP3.setAttribute('src',    '//' + sakuraVars.urls.content + '/sounds/notify.mp3');
+        soundMP3.setAttribute('type',   'audio/mp3');
+        soundOGG.setAttribute('src',    '//' + sakuraVars.urls.content + '/sounds/notify.ogg');
+        soundOGG.setAttribute('type',   'audio/ogg');
+
+        // Append the children
+        sound.appendChild(soundMP3);
+        sound.appendChild(soundOGG);
+
+        // Play the sound
+        sound.play();
+
+    }
+
+    // If keepalive is 0 keep the notification open "forever" (until the user closes it or changes the page)
+    if(content.timeout > 0) {
+
+        // Set set a timeout and execute notifyClose() after amount of milliseconds specified
+        setTimeout(function() {
+
+            // Use the later defined notifyClose function
+            notifyClose(identifier);
+
+        }, content.timeout);
+
+    }
+
 }
 
-function notificationRequest() {
-    var notificationURL = 'http://sys.flashii.net/udata?notifications';
-    
-    if(window.XMLHttpRequest) {
-        request = new XMLHttpRequest();
-    } else if(window.ActiveXObject) {
-        try {
-            request = new ActiveXObject("Msxml2.XMLHTTP");
-        }
-        catch(e) {
-            try {
-                request = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-            catch(e) {}
-        }
-    }
-    
-    if(!request) {
-        return false;
-    }
-    
-    request.onreadystatechange = function() {
-        if(request.readyState === 4) {
-            if(request.status === 200) {
-                var notifGet = JSON.parse(request.responseText);
-                
-                notifGet[0].notifications.forEach(function(data) {
-                    if(data.time >= epochTime()+7 && !$('#notif'+epochTime()).length) {
-                        notification(data.id, data.content, true);
-                    }
-                });
-                
-                //if(epochTime() <= epochTime()+1 && !$('#notif'+epochTime()).length) {
-                //    notification(epochTime(), notifGet[0].notifications[0].notif1, true);
-                //}
+// Closing a notification box
+function notifyClose(id) {
+
+    // Get the element and assign it to a variable
+    var element = document.getElementById(id);
+
+    // Do the animation
+    element.className = 'notification-exit';
+
+    // Remove the element after 500 milliseconds (animation takes 400)
+    setTimeout(function() {
+
+        // Use the later defined removeId function
+        removeId(id);
+
+    }, 410);
+
+}
+
+// Opening a link to a notifcated thing (what even)
+function notifyOpen(id) {
+
+    var sakuraHref = document.getElementById(id).getAttribute('sakurahref');
+
+    if(typeof sakuraHref !== 'undefined')
+        window.location = sakuraHref;
+
+}
+
+// Request notifications
+function notifyRequest(session) {
+
+    // Create XMLHttpRequest and notifyURL
+    var notificationWatcher = new XMLHttpRequest();
+    var notifyURL           = '//' + sakuraVars.urls.main + '/settings.php?request-notifications=true&time=' + epochTime() + '&session=' + session;
+
+    // Wait for the ready state to change
+    notificationWatcher.onreadystatechange = function() {
+
+        // Wait for it to reach the "complete" stage
+        if(notificationWatcher.readyState === 4) {
+
+            // Continue if the HTTP return was 200
+            if(notificationWatcher.status === 200) {
+
+                // Assign the JSON parsed content to a variable
+                var notifyGet = JSON.parse(notificationWatcher.responseText);
+
+                // If nothing was set stop
+                if(typeof notifyGet == 'undefined') {
+
+                    // Tell the user something went wrong...
+                    notifyUI({
+                        "title":    "An error occurred!",
+                        "text":     "If this problem persists please report this to the administrator.",
+                        "img":      "FONT:fa-exclamation-triangle",
+                        "timeout":  60000,
+                        "sound":    false
+                    });
+
+                    // ...and log an error message to to console..
+                    console.log('[SAKURA NOTIFICATION DEBUG] Invalid return type.');
+
+                    // ...then prevent the function from contiuing
+                    return;
+
+                }
+
+                // Go over every return notification and pass the object to it
+                for(var notifyID in notifyGet)
+                    notifyUI(notifyGet[notifyID]);
+
             } else {
-                notification('ERROR'+epochTime(), 'Error: Was not able to get notification data.',false);
+
+                // ELse tell the user there was an internal server error...
+                notifyUI({
+                    "title":    "An internal server error occurred!",
+                    "text":     "If this problem persists please report this to the administrator.",
+                    "img":      "FONT:fa-chain-broken",
+                    "timeout":  60000,
+                    "sound":    false
+                });
+
+                // ...and log a thing to the JavaScript console
+                console.log('[SAKURA NOTIFICATION DEBUG] HTTP return wasn\'t 200.');
+
             }
+
         }
+
     }
-    request.open('GET', notificationURL);
-    request.send();
-    setTimeout(notificationRequest, 5000);
-}*/
+
+    // Make the request
+    notificationWatcher.open('GET', notifyURL, true);
+    notificationWatcher.send();
+
+}
 
 // Donate page specific features
 function donatePage(id) {

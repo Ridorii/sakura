@@ -2,6 +2,19 @@
 
     "versions": {
 
+        "Eminence": {
+
+            "colour": "#6C3082",
+
+            "builds": [
+
+                "20150508",
+                "20150509"
+
+            ]
+
+        },
+
         "Heliotrope": {
 
             "colour": "#DF73FF",
@@ -962,6 +975,32 @@
             {
                 "type":     "UPD",
                 "change":   "Moved panel on the right site of the index to its own template file."
+            }
+
+        ],
+
+        "20150508": [
+
+            {
+                "type":     "ADD",
+                "change":   "Added notification system."
+            }
+
+        ],
+
+        "20150509": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fixed missing newline in a template file."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added function to actually create notifications."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed avatar border being depositioned."
             }
 
         ]

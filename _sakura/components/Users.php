@@ -932,4 +932,76 @@ class Users {
 
     }
 
+    // Get a user's notifications
+    public static function getNotifications($uid = null, $timediff = 0, $excludeRead = true, $markRead = false) {
+
+        // Prepare conditions
+        $conditions = array();
+        $conditions['uid'] = [($uid ? $uid : Session::$userId), '='];
+        if($timediff)
+            $conditions['timestamp'] = [time() - $timediff, '>'];
+        if($excludeRead)
+            $conditions['notif_read'] = [0, '='];
+
+        // Get notifications for the database
+        $notifications = Database::fetch('notifications', true, $conditions);
+
+        // Mark the notifications as read
+        if($markRead) {
+
+            // Iterate over all entries
+            foreach($notifications as $notification) {
+
+                // If the notifcation is already read skip
+                if($notification['notif_read'])
+                    continue;
+
+                // Mark them as read
+                self::markNotificationRead($notification['id']);
+
+            }
+
+        }
+
+        // Return the notifications
+        return $notifications;
+
+    }
+
+    // Marking notifications as read
+    public static function markNotificationRead($id, $mode = true) {
+
+        // Execute an update statement
+        Database::update('notifications', [
+            [
+                'notif_read' => ($mode ? 1 : 0)
+            ],
+            [
+                'id' => [$id, '=']
+            ]
+        ]);
+
+    }
+
+    // Adding a new notification
+    public static function createNotification($user, $title, $text, $timeout = 60000, $img = 'FONT:fa-info-circle', $link = '', $sound = 0) {
+
+        // Get current timestamp
+        $time = time();
+
+        // Insert it into the database
+        Database::insert('notifications', [
+            'uid'           => Session::$userId,
+            'timestamp'     => $time,
+            'notif_read'    => 0,
+            'notif_sound'   => ($sound ? 1 : 0),
+            'notif_title'   => $title,
+            'notif_text'    => $text,
+            'notif_link'    => $link,
+            'notif_img'     => $img,
+            'notif_timeout' => $timeout
+        ]);
+
+    }
+
 }

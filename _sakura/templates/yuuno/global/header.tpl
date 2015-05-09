@@ -28,6 +28,32 @@
         <!-- JS -->
         <script type="text/javascript" src="{{ sakura.resources }}/js/yuuno.js"></script>
         <script type="text/javascript">
+
+            // Create an object so we can access certain settings from remote JavaScript files
+            var sakuraVars = {
+
+                "cookie": {
+
+                    "prefix":   "{{ sakura.cookieprefix }}",
+                    "domain":   "{{ sakura.cookiedomain }}",
+                    "path":     "{{ sakura.cookiepath }}"
+
+                },
+
+                "resources": "{{ sakura.resources }}",
+
+                "urls": {
+
+                    {% for name,url in sakura.urls %}
+                    "{{ name }}": "{{ url }}"{% if loop.index != sakura.urls|length %}, {% endif %}
+                    {% endfor %}
+
+                },
+
+                "checklogin": {% if user.checklogin %}true{% else %}false{% endif %}
+
+            };
+
         {% if not user.checklogin and not sakura.lockauth %}
 
             // Setting the shit so clicking the login link doesn't redirect to /login
@@ -67,10 +93,21 @@
                 headerLogoutLink.setAttribute('onclick', 'doHeaderLogout();');
 
             }
-            
+
             function doHeaderLogout() {
 
-                generateForm("headerLogoutForm", {"class":"hidden","method":"post","action":"//{{ sakura.urls.main }}/logout"},{"mode":"logout","ajax":"true","time":"{{ php.time }}","session":"{{ php.sessionid }}","redirect":"{{ sakura.currentpage }}"},"contentwrapper");
+                generateForm("headerLogoutForm", {
+                    "class":    "hidden",
+                    "method":   "post",
+                    "action":   "//{{ sakura.urls.main }}/logout"
+                },
+                {
+                    "mode":     "logout",
+                    "ajax":     "true",
+                    "time":     "{{ php.time }}",
+                    "session":  "{{ php.sessionid }}",
+                    "redirect": "{{ sakura.currentpage }}"
+                }, "contentwrapper");
 
                 setTimeout(function(){
                     submitPost("headerLogoutForm", true, "Logging out...")
@@ -84,6 +121,12 @@
 
             // Login form under header and ajax logout
             initHeaderLoginForm();
+
+            {% if user.checklogin %}
+            // Make notification requests (there's a seperate one to make it happen before the first 60 seconds)
+            notifyRequest('{{ php.sessionid }}');
+            setInterval(function(){notifyRequest('{{ php.sessionid }}');}, 60000);
+            {% endif %}
 
             {% if php.self == '/authenticate.php' and not sakura.lockauth %}
             // AJAX Form Submission            
@@ -158,6 +201,7 @@
                 </div>
             </div>
             <div id="contentwrapper">
+                <div id="notifications"></div>
                 {% if not user.checklogin %}
                     <form method="post" action="/authenticate" class="hidden" id="headerLoginForm" onkeydown="formEnterCatch(event, 'headerLoginButton');">
                         <input type="hidden" name="redirect" value="{{ sakura.currentpage }}" />

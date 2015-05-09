@@ -15,7 +15,7 @@ CREATE TABLE `fii_actioncodes` (
   `actkey` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The URL key for using this code.',
   `instruction` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Things the backend should do upon using this code',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_apikeys`;
@@ -53,14 +53,14 @@ INSERT INTO `fii_config` (`config_name`, `config_value`) VALUES
 ('recaptcha_public',	''),
 ('recaptcha_private',	''),
 ('charset',	'utf-8'),
-('cookie_prefix',	'fii_'),
-('cookie_domain',	'iihsalf.net'),
+('cookie_prefix',	'sakura_'),
+('cookie_domain',	'yourdomain.com'),
 ('cookie_path',	'/'),
 ('site_style',	'yuuno'),
 ('manage_style',	'broomcloset'),
 ('allow_registration',	'0'),
 ('smtp_server',	''),
-('smtp_auth',	''),
+('smtp_auth',	'1'),
 ('smtp_secure',	''),
 ('smtp_port',	''),
 ('smtp_username',	''),
@@ -69,7 +69,7 @@ INSERT INTO `fii_config` (`config_name`, `config_value`) VALUES
 ('smtp_replyto_name',	''),
 ('smtp_from_email',	''),
 ('smtp_from_name',	''),
-('sitename',	'Development Palace'),
+('sitename',	'Sakura'),
 ('recaptcha',	'1'),
 ('require_activation',	'1'),
 ('require_registration_code',	'0'),
@@ -101,8 +101,9 @@ CREATE TABLE `fii_forums` (
   `forum_topics` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'Topic count of the forum.',
   `forum_last_post_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of last post in forum.',
   `forum_last_poster_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of last poster in forum.',
+  `forum_icon` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Display icon for the forum.',
   PRIMARY KEY (`forum_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_infopages`;
@@ -136,6 +137,21 @@ CREATE TABLE `fii_news` (
   `content` text COLLATE utf8_bin NOT NULL COMMENT 'Contents of the post',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+DROP TABLE IF EXISTS `fii_notifications`;
+CREATE TABLE `fii_notifications` (
+  `id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
+  `uid` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'User ID this notification is intended for.',
+  `timestamp` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Timestamp when this notification was created.',
+  `notif_read` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Toggle for unread and read.',
+  `notif_title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title displayed on the notification.',
+  `notif_text` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Text displayed.',
+  `notif_link` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Link (empty for no link).',
+  `notif_img` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Image path, prefix with font: to use a font class instead of an image.',
+  `notif_timeout` int(16) unsigned NOT NULL DEFAULT '0' COMMENT 'How long the notification should stay on screen in milliseconds, 0 for forever.',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_posts`;
@@ -195,17 +211,6 @@ CREATE TABLE `fii_ranks` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-TRUNCATE `fii_ranks`;
-INSERT INTO `fii_ranks` (`id`, `name`, `multi`, `colour`, `description`, `title`, `is_premium`) VALUES
-(1,	'Deactivated',	0,	'#555',	'Users that are yet to be activated or that deactivated their own account.',	'Deactivated',	0),
-(2,	'Regular user',	1,	'inherit',	'Regular users with regular permissions.',	'Regular user',	0),
-(3,	'Site moderator',	1,	'#0A0',	'Users with special permissions like being able to ban and modify users if needed.',	'Staff',	1),
-(4,	'Administrator',	1,	'#C00',	'Users that manage the server and everything around that.',	'Administrator',	1),
-(5,	'Developer',	1,	'#824CA0',	'Users that either create or test new features of the site.',	'Staff',	1),
-(6,	'Bot',	1,	'#9E8DA7',	'Reserved user accounts for services.',	'Bot',	0),
-(7,	'Chat moderator',	1,	'#09F',	'Moderators of the chat room.',	'Staff',	1),
-(8,	'Tenshi',	0,	'#EE9400',	'Users that donated $5.00 or more in order to keep the site and it\'s services alive!',	'Tenshi',	1),
-(9,	'Alumnii',	0,	'#FF69B4',	'People who have contributed to the community but have moved on or resigned.',	'Alumnii',	1);
 
 DROP TABLE IF EXISTS `fii_regcodes`;
 CREATE TABLE `fii_regcodes` (
@@ -229,7 +234,7 @@ CREATE TABLE `fii_sessions` (
   `expire` int(64) unsigned NOT NULL COMMENT 'The timestamp for when this session should end, -1 for permanent. ',
   `remember` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'If set to 1 session will be extended each time a page is loaded.',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_sock_perms`;
@@ -296,8 +301,8 @@ CREATE TABLE `fii_users` (
   `password_chan` int(16) unsigned NOT NULL COMMENT 'Last time the user changed their password.',
   `password_new` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Field with array containing new password data beit that they requested a password change.',
   `email` varchar(32) COLLATE utf8_bin NOT NULL COMMENT 'E-mail of the user for password restoring etc.',
-  `rank_main` mediumint(4) unsigned NOT NULL COMMENT 'Main rank of the user.',
-  `ranks` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Array containing the ranks the user is part of.',
+  `rank_main` mediumint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'Main rank of the user.',
+  `ranks` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '[0]' COMMENT 'Array containing the ranks the user is part of.',
   `name_colour` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Additional name colour, when empty colour defaults to group colour.',
   `register_ip` varchar(16) COLLATE utf8_bin NOT NULL COMMENT 'IP used for the creation of this account.',
   `last_ip` varchar(16) COLLATE utf8_bin NOT NULL COMMENT 'Last IP that was used to log into this account.',
@@ -305,15 +310,16 @@ CREATE TABLE `fii_users` (
   `profile_md` text COLLATE utf8_bin COMMENT 'Markdown customise page thing on the profile of the user.',
   `avatar_url` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Full url to the user''s avatar.',
   `background_url` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Full url to the user''s profile background.',
-  `regdate` int(16) unsigned NOT NULL COMMENT 'Timestamp of account creation.',
-  `lastdate` int(16) unsigned NOT NULL COMMENT 'Last time anything was done on this account.',
-  `lastunamechange` int(16) unsigned NOT NULL COMMENT 'Last username change.',
+  `regdate` int(16) unsigned NOT NULL DEFAULT '0' COMMENT 'Timestamp of account creation.',
+  `lastdate` int(16) unsigned NOT NULL DEFAULT '0' COMMENT 'Last time anything was done on this account.',
+  `lastunamechange` int(16) unsigned NOT NULL DEFAULT '0' COMMENT 'Last username change.',
   `birthday` varchar(16) COLLATE utf8_bin DEFAULT NULL COMMENT 'Birthdate of the user.',
+  `posts` int(16) unsigned NOT NULL DEFAULT '0' COMMENT 'Amount of posts the user has made on the forum.',
   `country` varchar(4) COLLATE utf8_bin NOT NULL COMMENT 'Contains ISO 3166 country code of user''s registration location.',
   `profile_data` text COLLATE utf8_bin NOT NULL COMMENT 'Modular array containing profile data.',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_clean` (`username_clean`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `fii_warnings`;
@@ -328,4 +334,4 @@ CREATE TABLE `fii_warnings` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
--- 2015-05-05 06:18:36
+-- 2015-05-08 17:47:36

@@ -8,10 +8,10 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150506');
-define('SAKURA_VLABEL',     'Heliotrope');
+define('SAKURA_VERSION',    '20150508');
+define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_VTYPE',      'Development');
-define('SAKURA_COLOUR',     '#DF73FF');
+define('SAKURA_COLOUR',     '#6C3082');
 
 // Define Sakura Path
 define('ROOT', str_replace(basename(__DIR__), '', dirname(__FILE__)));
@@ -72,7 +72,10 @@ $renderData = array(
         'lockauth'          => Configuration::getConfig('lock_authentication'),
         'requireregcodes'   => Configuration::getConfig('require_registration_code'),
         'requireactiveate'  => Configuration::getConfig('require_activation'),
-        'sitename'          => Configuration::getConfig('sitename')
+        'sitename'          => Configuration::getConfig('sitename'),
+        'cookieprefix'      => Configuration::getConfig('cookie_prefix'),
+        'cookiedomain'      => Configuration::getConfig('cookie_domain'),
+        'cookiepath'        => Configuration::getConfig('cookie_path')
     ],
     'php' => [
         'sessionid' => \session_id(),
