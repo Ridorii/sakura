@@ -42,6 +42,7 @@ local.properties
 
 errors.log
 _sakura/config/config.php
+_sakura/config/config.ini
 content/images/avatars/*
 !content/images/avatars/.htaccess
 content/images/backgrounds/*
