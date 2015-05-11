@@ -19,17 +19,17 @@ class Templates {
         self::$_TPL = $template;
 
         // Assign config path to a variable so we don't have to type it out twice
-        $confPath = ROOT .'_sakura/templates/'. self::$_TPL .'/template.cfg';
+        $confPath = ROOT .'_sakura/templates/'. self::$_TPL .'/template.ini';
 
         // Check if the configuration file exists
         if(!file_exists($confPath))
             trigger_error('Template configuration does not exist', E_USER_ERROR);
 
         // Parse and store the configuration
-        self::$_CFG = self::parseCfg(file_get_contents($confPath));
+        self::$_CFG = parse_ini_file($confPath, true);
 
         // Make sure we're not using a manage template for the main site or the other way around
-        if((bool)self::$_CFG['MANAGE'] != (bool)Main::$_MANAGE_MODE)
+        if((bool)self::$_CFG['manage']['mode'] != (bool)Main::$_MANAGE_MODE)
             trigger_error('Incorrect template type', E_USER_ERROR);
 
         // Start Twig
@@ -52,43 +52,6 @@ class Templates {
 
         // Load String template loader
         self::$_ENG->addExtension(new \Twig_Extension_StringLoader());
-
-    }
-
-    // Parse .cfg files
-    public static function parseCfg($data) {
-
-        // Create storage variable
-        $out = array();
-
-        // Remove comments and empty lines
-        $data = preg_replace('/#.*?\r\n/im',    null, $data);
-        $data = preg_replace('/^\r\n/im',       null, $data);
-
-        // Break line breaks up into array values
-        $data = str_replace("\r\n", "\n", $data);
-        $data = str_replace("\r",   "\n", $data);
-        $data = explode("\n", $data);
-
-        foreach($data as $var) {
-
-            // Make sure no whitespaces escaped the check
-            if(empty($var))
-                continue;
-
-            // Remove whitespace between key, equals sign and value
-            $var = preg_replace('/[\s+]=[\s+]/i', '=', $var);
-
-            // Then break this up
-            $var = explode('=', $var);
-
-            // And assign the value with the key to the output variable
-            $out[$var[0]] = $var[1];
-
-        }
-
-        // Return the output variable
-        return $out;
 
     }
 

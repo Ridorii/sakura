@@ -56,7 +56,7 @@ class Configuration {
 			trigger_error('Unable to get local configuration value!', E_USER_ERROR);
 
 	}
-    
+
 	// Dynamically set local configuration values, does not update the configuration file
 	public static function setLocalConfig($key, $subkey, $value) {
 

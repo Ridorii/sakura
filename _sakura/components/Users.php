@@ -991,7 +991,7 @@ class Users {
 
         // Insert it into the database
         Database::insert('notifications', [
-            'uid'           => Session::$userId,
+            'uid'           => $user,
             'timestamp'     => $time,
             'notif_read'    => 0,
             'notif_sound'   => ($sound ? 1 : 0),
@@ -1001,6 +1001,36 @@ class Users {
             'notif_img'     => $img,
             'notif_timeout' => $timeout
         ]);
+
+    }
+
+    // Getting a user's PMs
+    public static function getPrivateMessages($from = false) {
+
+        // Get all messages from the database
+        $messages = Database::fetch('messages', true, [
+            ($from ? 'from_user' : 'to_user') => [Session::$userId, '=']
+        ]);
+
+        // Prepare a storage array
+        $store = array();
+
+        // Go over each message and check if they are for the current user
+        foreach($messages as $message) {
+
+            // Store the message
+            $store[$message['id']] = $message;
+
+            // Store user data as well
+            $store[$message['id']]['data']['from']['user']  = ($_MSG_USR = self::getUser($message['from_user']));
+            $store[$message['id']]['data']['from']['rank']  = self::getRank($_MSG_USR['rank_main']);
+            $store[$message['id']]['data']['to']['user']    = ($_MSG_USR = self::getUser($message['to_user']));
+            $store[$message['id']]['data']['to']['rank']    = self::getRank($_MSG_USR['rank_main']);
+
+        }
+
+        // Return store array
+        return $store;
 
     }
 

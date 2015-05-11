@@ -1,8 +1,8 @@
 {% include 'global/header.tpl' %}
     <div class="content">
         <div class="content-column news">
-            <div class="head">{% if page.articleCount == 1 %}{{ newsPosts[0].title }}{% elseif page.articleCount < 1 %}Post does not exist!{% else %}News <a href="/news.xml" class="fa fa-rss news-rss default"></a>{% endif %}</div>
-            {% if page.articleCount >= 1 %}
+            <div class="head">{% if newsPosts|length == 1 %}{{ newsPosts[0].title }}{% elseif newsPosts|length < 1 %}Post does not exist!{% else %}News <a href="/news.xml" class="fa fa-rss news-rss default"></a>{% endif %}</div>
+            {% if newsPosts|length >= 1 %}
                 {% for newsPost in newsPosts %}
                     {% include 'elements/newsPost.tpl' %}
                 {% endfor %}
@@ -17,7 +17,7 @@
                 </div>
             {% endif %}
         </div>
-    {% if page.articleCount > 1 %}
+    {% if newsPosts|length > 1 %}
         <script type="text/javascript">
             /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
             var disqus_shortname = 'flashii';
@@ -30,7 +30,7 @@
                 (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
             }());
         </script>
-    {% elseif page.articleCount == 1 %}
+    {% elseif newsPosts|length == 1 %}
         <div id="disqus_thread">
         </div>
         <script type="text/javascript">

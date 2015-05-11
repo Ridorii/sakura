@@ -34,9 +34,11 @@ RewriteRule ^news.xml$ news.php?xml
 
 ## Settings
 RewriteRule ^settings?/?$ settings.php
+RewriteRule ^settings/([a-z]+)?/?$ settings.php?mode=$1
 
 ## Private Messages
 RewriteRule ^messages?/?$ messages.php
+RewriteRule ^messages/([a-z]+)?/?$ messages.php?mode=$1
 
 ## Members
 RewriteRule ^members?/?$ members.php

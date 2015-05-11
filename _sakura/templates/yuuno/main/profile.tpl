@@ -20,6 +20,16 @@
                 <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px #888; padding: 0 0 2px;">{{ profile.user.username }}</h1>
                 {% if profile.user.rank_main > 1 %}
                 {% if profile.istenshi %}<img src="//{{ sakura.urls.content }}/images/tenshi.png" alt="Tenshi" /> {% endif %}<img src="//{{ sakura.urls.content }}/images/flags/{% if profile.user.country|lower == 'eu' %}europeanunion{% else %}{{ profile.user.country|lower }}{% endif %}.png" alt="{{ profile.user.country }}" /> <span style="font-size: .9em; line-height: 11px;">{{ profile.country }}</span>
+                {% if user.checklogin %}
+                <div class="user-actions">
+                {% if user.data.id == profile.user.id %}
+                <a class="fa fa-pencil-square" title="Edit your profile" href="//{{ sakura.urls.main }}/settings/profile"></a>
+                {% else %}
+                <a class="fa fa-user-plus" title="Add {{ profile.user.username }} as a friend" href="//{{ sakura.urls.main }}/friends?add={{ profile.user.id }}&session={{ php.sessionid }}&time={{ php.time }}&return={{ sakura.currentpage }}"></a>
+                <a class="fa fa-flag" title="Report {{ profile.user.username }}" href="//{{ sakura.urls.main }}/report/{{ profile.user.id }}"></a>
+                {% endif %}
+                </div>
+                {% endif %}
                 <hr class="default" />
                 <b>Joined</b> {{ profile.user.regdate|date("l Y-m-d H:i T") }}<br />
                 {% if profile.user.lastdate == 0 %}

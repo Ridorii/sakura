@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150509');
+define('SAKURA_VERSION',    '20150512');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_VTYPE',      'Development');
 define('SAKURA_COLOUR',     '#6C3082');
@@ -64,7 +64,7 @@ $renderData = array(
         'vcolour'           => SAKURA_COLOUR,
         'urls'              => Configuration::getLocalConfig('urls'),
         'charset'           => Configuration::getConfig('charset'),
-        'currentpage'       => '//'. $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'],
+        'currentpage'       => '//'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'],
         'recaptcha_public'  => Configuration::getConfig('recaptcha_public'),
         'recaptcha_enable'  => Configuration::getConfig('recaptcha'),
         'resources'         => '//'. Configuration::getLocalConfig('urls')['content'] .'/data/'. strtolower(Templates::$_TPL),

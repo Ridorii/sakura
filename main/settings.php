@@ -12,6 +12,9 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sak
 // Notifications
 if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications']) {
 
+    // Set CORS header
+    header('Access-Control-Allow-Origin: *');
+
     // Create the notification container array
     $notifications = array();
 
@@ -24,14 +27,16 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
         // Add the proper values to the array
         foreach($userNotifs as $notif) {
 
-            $notifications[$notif['timestamp']]             = array();
-            $notifications[$notif['timestamp']]['read']     = $notif['notif_read'];
-            $notifications[$notif['timestamp']]['title']    = $notif['notif_title'];
-            $notifications[$notif['timestamp']]['text']     = $notif['notif_text'];
-            $notifications[$notif['timestamp']]['link']     = $notif['notif_link'];
-            $notifications[$notif['timestamp']]['img']      = $notif['notif_img'];
-            $notifications[$notif['timestamp']]['timeout']  = $notif['notif_timeout'];
-            $notifications[$notif['timestamp']]['sound']    = $notif['notif_sound'];
+            // Add the notification to the display array
+            $notifications[$notif['timestamp']] = [
+                'read'      => $notif['notif_read'],
+                'title'     => $notif['notif_title'],
+                'text'      => $notif['notif_text'],
+                'link'      => $notif['notif_link'],
+                'img'       => $notif['notif_img'],
+                'timeout'   => $notif['notif_timeout'],
+                'sound'     => $notif['notif_sound']
+            ];
 
         }
 
@@ -43,5 +48,24 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
 }
 
+// Settings page list
+$pages = [
+    'home'          => ['General',          'Home'],
+    'profile'       => ['General',          'Edit Profile'],
+    'notifications' => ['Notifications',    'History'],
+    'avatar'        => ['Aesthetics',       'Avatar'],
+    'background'    => ['Aesthetics',       'Background'],
+    'page'          => ['Aesthetics',       'Profile Page'],
+    'email'         => ['Account',          'E-Mail Address'],
+    'username'      => ['Account',          'Username'],
+    'usertitle'     => ['Account',          'User Title'],
+    'password'      => ['Account',          'Password'],
+    'ranks'         => ['Account',          'Ranks'],
+    'sessions'      => ['Danger zone',      'Sessions'],
+    'regkeys'       => ['Danger zone',      'Registration Keys'],
+    'deactivate'    => ['Danger zone',      'Deactivate Account']
+];
+$currentPage = isset($_GET['mode']) && array_key_exists($_GET['mode'], $pages) ? $_GET['mode'] : key($pages);
+
 // Print page contents
-print Templates::render('ucp/index.tpl', $renderData);
+print Templates::render('settings/'. $currentPage .'.tpl', $renderData);

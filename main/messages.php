@@ -11,8 +11,9 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sak
 
 // Add page specific things
 $renderData['page'] = [
-    'title' => 'Private Messages'
+    'title' => 'Inbox'
 ];
+$renderData['messages'] = Users::getPrivateMessages();
 
 // Print page contents
 print Templates::render('main/messages.tpl', $renderData);
