@@ -173,6 +173,7 @@
                         <a class="menu-item" href="//{{ sakura.urls.main }}/" title="Return to the front page of Flashii">Home</a>
                         <a class="menu-item" href="//{{ sakura.urls.main }}/news" title="Here you can read updates on Flashii">News</a>
                         <a class="menu-item" href="//{{ sakura.urls.chat }}/" title="Chat with other Flashii members">Chat</a>
+                        <a class="menu-item" href="//{{ sakura.urls.main }}/forum" title="Discuss things with other members but static">Forums</a>
                         {% if user.checklogin %}
                             <a class="menu-item" href="//{{ sakura.urls.main }}/members" title="View a list with all the activated user accounts">Members</a>
                             <a class="menu-item menu-donate" href="//{{ sakura.urls.main }}/support" title="Give us money to keep the site (and other services) up and running">Support us</a>
@@ -183,6 +184,7 @@
                         {% if user.checklogin %}
                             <a class="menu-item avatar" href="//{{ sakura.urls.main }}/u/{{ user.data.id }}" title="View and edit your own profile" style="background-image: url('//{{ sakura.urls.main }}/a/{{ user.data.id }}'); width: auto; color: {{ user.colour }}; font-weight: 700;">{{ user.data.username }}</a>
                             <a class="menu-item" href="//{{ sakura.urls.main }}/messages" title="Read your private message">Messages</a>
+                            <a class="menu-item" href="//{{ sakura.urls.main }}/manage" title="Manage the site">Manage</a>
                             <a class="menu-item" href="//{{ sakura.urls.main }}/settings" title="Change your settings">Settings</a>
                             <a class="menu-item" href="//{{ sakura.urls.main }}/logout?mode=logout&time={{ php.time }}&session={{ php.sessionid }}&redirect={{ sakura.currentpage }}" title="End your login session" id="headerLogoutLink">Logout</a>
                         {% else %}

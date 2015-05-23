@@ -10,7 +10,7 @@
                 {% for category in page.boards %}
                     {% if category.forums|length %}
                     <tr class="forumCategory">
-                        <td class="forumCategoryTitleColumn" colspan="4"><a href="//{{ sakura.urls.forum }}/{{ category.data.forum_id }}/" class="clean">{{ category.data.forum_name }}</a></td>
+                        <td class="forumCategoryTitleColumn" colspan="4"><a href="//{{ sakura.urls.main }}/forum/{{ category.data.forum_id }}/" class="clean">{{ category.data.forum_name }}</a></td>
                     </tr>
                     {% for forum in category.forums %}
                     <tr class="forumForum">
@@ -18,7 +18,7 @@
                             <div class="forumIcon read fa fa-3x {% if forum.forum_icon %}{{ forum.forum_icon }}{% else %}{% if forum.forum_type %}fa-chevron-circle-right{% else %}fa-comments{% endif %}{% endif %}"></div>
                         </td>
                         <td class="forumTitleColumn"{% if forum.forum_type == 2 %} colspan="3"{% endif %}>
-                            <div class="name"><a href="{% if forum.forum_type == 2 %}{{ forum.forum_link }}" target="_blank"{% else %}//{{ sakura.urls.forum }}/{{ forum.forum_id }}/"{% endif %} class="default">{{ forum.forum_name }}</a></div>
+                            <div class="name"><a href="{% if forum.forum_type == 2 %}{{ forum.forum_link }}" target="_blank"{% else %}//{{ sakura.urls.main }}/forum/{{ forum.forum_id }}/"{% endif %} class="default">{{ forum.forum_name }}</a></div>
                             <div class="desc">{{ forum.forum_desc }}</div>
                         </td>
                         {% if forum.forum_type != 2 %}
@@ -29,7 +29,7 @@
                         <td class="forumLastColumn">
                             <div>
                                 {% if forum.forum_last_post_id %}
-                                    Last post in <a href="//{{ sakura.urls.forum }}/thread/{{ forum.forum_last_post_id }}" class="default">Thread with an obnoxiously long fucking title</a><br />12 years ago by <a href="//{{ sakura.urls.main }}/u/{{ forum.last_poster_data.id }}" class="default" style="color: {% if forum.last_poster_data.name_colour %}{{ forum.last_poster_data.name_colour }}{% else %}{{ forum.last_poster_rank.colour }}{% endif %};">{{ forum.last_poster_data.username }}</a>
+                                    Last post in <a href="//{{ sakura.urls.main }}/forum/thread/{{ forum.forum_last_post_id }}" class="default">Thread with an obnoxiously long fucking title</a><br />12 years ago by <a href="//{{ sakura.urls.main }}/u/{{ forum.last_poster_data.id }}" class="default" style="color: {% if forum.last_poster_data.name_colour %}{{ forum.last_poster_data.name_colour }}{% else %}{{ forum.last_poster_rank.colour }}{% endif %};">{{ forum.last_poster_data.username }}</a>
                                 {% else %}
                                     There are no posts in this forum.<br />&nbsp;
                                 {% endif %}

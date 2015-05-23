@@ -56,4 +56,31 @@ class Forum {
 
     }
 
+    // Creating a new post
+    public static function createPost($subject, $text, $enableMD, $enableSig, $forum, $topic = 0, $type = 0, $status = 0) {
+
+        // Check if this post is OP
+        if(!$topic) {
+
+            // If so create a new topic
+            Database::insert('topics', [
+                'forum_id'              => $forum,
+                'topic_hidden'          => 0,
+                'topic_title'           => $subject,
+                'topic_time'            => time(),
+                'topic_time_limit'      => 0,
+                'topic_last_reply'      => 0,
+                'topic_views'           => 0,
+                'topic_replies'         => 0,
+                'topic_status'          => $status,
+                'topic_status_change'   => 0,
+                'topic_type'            => $type,
+                'topic_first_post_id'   => 0,
+                'topic_first_poster_id' => Session::$userId
+            ]);
+
+        }
+
+    }
+
 }

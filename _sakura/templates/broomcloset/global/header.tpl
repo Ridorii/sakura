@@ -20,9 +20,9 @@
             <span id="top"></span>
             <div class="header" id="header">
                 <div class="logo">
-                    <a href="/">Broom Closet</a> /
-                    <a href="/{{ page.activepage }}/">{{ page.pages[page.activepage].desc }}</a> /
-                    <a href="/{{ page.activepage }}/{{ page.activesub }}/">{{ page.pages[page.activepage].subs[page.activesub].desc }}</a>
+                    <a href="//{{ sakura.urls.main }}/manage/">Broom Closet</a> /
+                    <a href="//{{ sakura.urls.main }}/manage/{{ page.activepage }}/">{{ page.pages[page.activepage].desc }}</a> /
+                    <a href="//{{ sakura.urls.main }}/manage/{{ page.activepage }}/{{ page.activesub }}/">{{ page.pages[page.activepage].subs[page.activesub].desc }}</a>
                 </div>
                 <div class="nav">
                     <div class="menu" id="siteNav">
@@ -33,13 +33,13 @@
                     <div class="menu" id="pageNav">
                         <div>Navigation</div>
                         {% for short,page in page.pages %}
-                            <a href="/{{ short }}/">{{ page.desc }}</a>
+                            <a href="//{{ sakura.urls.main }}/manage/{{ short }}/">{{ page.desc }}</a>
                         {% endfor %}
                     </div>
                     <div class="menu" id="subNav">
                         <div>{{ page.pages[page.activepage].desc }}</div>
                         {% for short,sub in page.pages[page.activepage].subs %}
-                            <a href="/{{ page.activepage }}/{{ short }}/">{{ sub.desc }}</a>
+                            <a href="//{{ sakura.urls.main }}/manage/{{ page.activepage }}/{{ short }}/">{{ sub.desc }}</a>
                         {% endfor %}
                     </div>
                 </div>

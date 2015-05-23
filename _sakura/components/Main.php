@@ -511,4 +511,48 @@ class Main {
 
     }
 
+    // Get log type string
+    public static function getLogStringFromType($type) {
+
+        // Query the database
+        $return = Database::fetch('logtypes', false, ['id' => [$type, '=']]);
+
+        // Check if type exists and else return a unformattable string
+        if(count($return) < 2)
+            return 'Unknown action.';
+
+        // Return the string
+        return $return['string'];
+
+    }
+
+    // Get formatted logs
+    public static function getUserLogs($uid = 0) {
+
+        // Check if a user is specified
+        $conditions = ($uid ? ['uid' => [$uid, '=']] : null);
+
+        // Get data from database
+        $logsDB = Database::fetch('logs', true, $conditions, ['id', true]);
+
+        // Storage array
+        $logs = array();
+
+        // Iterate over entries
+        foreach($logsDB as $log) {
+
+            // Store usable data
+            $logs[$log['id']] = [
+                'user'      => $_USER = Users::getUser($log['uid']),
+                'rank'      => Users::getRank($_USER['rank_main']),
+                'string'    => vsprintf(self::getLogStringFromType($log['action']), json_decode($log['attribs'], true))
+            ];
+
+        }
+
+        // Return new logs
+        return $logs;
+
+    }
+
 }

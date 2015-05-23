@@ -11,7 +11,8 @@
                 "20150508",
                 "20150509",
                 "20150509.1",
-                "20150512"
+                "20150512",
+                "20150523"
 
             ]
 
@@ -1037,6 +1038,27 @@
             {
                 "type":     "FIX",
                 "change":   "Fix {{ sakura.currentpage }} redirecting to the php file that's being used without the right attributes."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Rebuilt news XML to be more modular as opposed to a pile of prints."
+            }
+
+        ],
+
+        "20150523": [
+
+            {
+                "type":     "UPD",
+                "change":   "Move Manage and Forum to a subdirectory instead of a subdomain."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add links to forum and management pages."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed broken links because of the domainset changes."
             }
 
         ]
