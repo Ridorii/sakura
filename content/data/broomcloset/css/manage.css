@@ -102,4 +102,13 @@ a:active {
     padding-top: 1px;
     margin-top: 10px;
     box-shadow: 0 0 1em #222;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/* Page content */
+#contentwrapper {
+    padding-bottom: 50px;
 }

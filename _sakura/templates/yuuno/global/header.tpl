@@ -4,8 +4,8 @@
         <!-- META -->
         <meta charset="{{ sakura.charset }}" />
         <title>{{ page.title }}</title>
-        <meta name="description" content="Any community that gets its laughs by pretending to be idiots will eventually be flooded by actual idiots who mistakenly believe that they're in good company. Welcome to Flashii." />
-        <meta name="keywords" content="Flashii, Media, Flashwave, Circle, Zeniea, MalwareUp, Cybernetics, Saibateku, Community" />
+        <meta name="description" content="{{ sakura.sitedesc }}" />
+        <meta name="keywords" content="{{ sakura.sitetags }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         {% if page.redirect %}
             <meta http-equiv="refresh" content="3; URL={{ page.redirect }}" />
@@ -174,8 +174,8 @@
                         <a class="menu-item" href="//{{ sakura.urls.main }}/news" title="Here you can read updates on Flashii">News</a>
                         <a class="menu-item" href="//{{ sakura.urls.chat }}/" title="Chat with other Flashii members">Chat</a>
                         <a class="menu-item" href="//{{ sakura.urls.main }}/forum" title="Discuss things with other members but static">Forums</a>
+                        <a class="menu-item" href="//{{ sakura.urls.main }}/search" title="Search on Flashii">Search</a>
                         {% if user.checklogin %}
-                            <a class="menu-item" href="//{{ sakura.urls.main }}/members" title="View a list with all the activated user accounts">Members</a>
                             <a class="menu-item menu-donate" href="//{{ sakura.urls.main }}/support" title="Give us money to keep the site (and other services) up and running">Support us</a>
                         {% endif %}
                     </div>
@@ -183,6 +183,7 @@
                         <!-- User menu, displayed on right side of the bar. -->
                         {% if user.checklogin %}
                             <a class="menu-item avatar" href="//{{ sakura.urls.main }}/u/{{ user.data.id }}" title="View and edit your own profile" style="background-image: url('//{{ sakura.urls.main }}/a/{{ user.data.id }}'); width: auto; color: {{ user.colour }}; font-weight: 700;">{{ user.data.username }}</a>
+                            <a class="menu-item" href="//{{ sakura.urls.main }}/members" title="View a list with all the activated user accounts">Members</a>
                             <a class="menu-item" href="//{{ sakura.urls.main }}/messages" title="Read your private message">Messages</a>
                             <a class="menu-item" href="//{{ sakura.urls.main }}/manage" title="Manage the site">Manage</a>
                             <a class="menu-item" href="//{{ sakura.urls.main }}/settings" title="Change your settings">Settings</a>

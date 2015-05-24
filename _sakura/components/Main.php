@@ -555,4 +555,18 @@ class Main {
 
     }
 
+    // Convert a number to a hexadecimal value
+    public static function toHex($num) {
+
+        // Convert $num to an int if not yet
+        $num = intval($num);
+
+        // Check if it's within the proper range
+        if($num < 0 || $num > 255)
+            return 00;
+
+        
+
+    }
+
 }

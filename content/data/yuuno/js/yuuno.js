@@ -54,21 +54,6 @@ function mobileMenu(mode) {
 
 }
 
-// Event watcher for the scroll-to-top button
-window.onscroll = function() {
-
-    // Assign the gotop button to a variable
-    var gotop = document.getElementById('gotop');
-
-    // If the vertical offset of the page is below 112px (just below the header) keep the button hidden
-    if(this.pageYOffset < 112) {
-        if(gotop.getAttribute('class').indexOf('hidden') < 0)
-            gotop.setAttribute('class', gotop.getAttribute('class') + ' hidden');
-    } else if(this.pageYOffset > 112) // Else show it
-        gotop.setAttribute('class', gotop.getAttribute('class').replace(' hidden', ''));
-
-};
-
 // Get the current unix/epoch timestamp
 function epochTime() {
 
@@ -622,3 +607,57 @@ function convertParallaxPositionValue(pos, dir, neg) {
     return position;
 
 }
+
+// Smooth scrolling
+function scrollTop() {
+
+    // Get the current position
+    var windowY = window.pageYOffset;
+    alert(windowY);
+
+}
+
+// Event watcher for the scroll-to-top button
+window.onscroll = function() {
+
+    // Assign the gotop button to a variable
+    var gotop = document.getElementById('gotop');
+
+    // If the vertical offset of the page is below 112px (just below the header) keep the button hidden
+    if(this.pageYOffset < 112) {
+
+        // Check if the "exit" is in the classes and if it isn't continue
+        if(gotop.className.indexOf('exit') < 0) {
+
+            // Replace the enter with exit (for the animation)
+            gotop.className = gotop.className.replace('enter', '');
+            gotop.className = gotop.className + ' exit';
+
+            // Check if hidden is set and if not continue
+            if(gotop.className.indexOf('hidden') < 0) {
+
+                // Set a timeout to add the hidden class after 600ms
+                setTimeout(function() {
+                    gotop.className = gotop.className + ' hidden';
+                }, 600);
+
+            }
+
+        }
+
+    // Else show the button
+    } else if(this.pageYOffset > 112) {
+
+        // Check if enter is set
+        if(gotop.className.indexOf('enter') < 0) {
+
+            // Remove the hidden and exit classes and add the enter class
+            gotop.className = gotop.className.replace('hidden', '');
+            gotop.className = gotop.className.replace('exit', '');
+            gotop.className = gotop.className + ' enter';
+
+        }
+
+    }
+
+};

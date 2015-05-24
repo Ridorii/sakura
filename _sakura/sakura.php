@@ -1,6 +1,6 @@
 <?php
 /*
- * Sakura C/PMS
+ * Sakura Community Management System
  * (c)Flashwave/Flashii.net 2013-2015 <http://flash.moe>
  */
 
@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150523');
+define('SAKURA_VERSION',    '20150524');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_VTYPE',      'Development');
 define('SAKURA_COLOUR',     '#6C3082');
@@ -18,8 +18,6 @@ define('ROOT', str_replace(basename(__DIR__), '', dirname(__FILE__)));
 
 // Error Reporting: 0 for production and -1 for testing
 error_reporting(-1);
-ini_set('log_errors', 1);
-ini_set('error_log', ROOT .'errors.log');
 
 // Start output buffering
 ob_start();
@@ -73,6 +71,8 @@ $renderData = array(
         'requireregcodes'   => Configuration::getConfig('require_registration_code'),
         'requireactiveate'  => Configuration::getConfig('require_activation'),
         'sitename'          => Configuration::getConfig('sitename'),
+        'sitedesc'          => Configuration::getConfig('sitedesc'),
+        'sitetags'          => implode(", ", json_decode(Configuration::getConfig('sitetags'), true)),
         'cookieprefix'      => Configuration::getConfig('cookie_prefix'),
         'cookiedomain'      => Configuration::getConfig('cookie_domain'),
         'cookiepath'        => Configuration::getConfig('cookie_path')

@@ -121,7 +121,7 @@ a.default:active {
 }
 a.gotop {
     display: inline-block;
-    background: url('../images/arrow.png') #111;
+    background: #111;
     color: #FFF;
     width: 60px;
     height: 60px;
@@ -135,14 +135,26 @@ a.gotop {
     bottom: 0;
     right: 5px;
     z-index: 2;
+    line-height: 60px;
+    text-align: center;
+    font-size: 5em;
+    text-shadow: 0 0 5px #FFF;
 }
 a.gotop:hover {
     opacity: .8;
-    box-shadow: 0 0 1em #FFF inset;
+    box-shadow: 0 0 7px #FFF inset;
+    text-shadow: 0 0 7px #FFF;
 }
 a.gotop:active {
-    box-shadow: 0 0 1em #FFF inset;
+    box-shadow: 0 0 15px #FFF inset;
+    text-shadow: 0 0 10px #FFF;
     opacity: .9;
+}
+a.gotop.enter {
+    animation: slideInFromRight 1 .6s;
+}
+a.gotop.exit {
+    animation: slideOutToBottom 1 .6s;
 }
 
 /* Keyframe Elements */

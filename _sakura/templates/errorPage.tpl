@@ -68,7 +68,7 @@
                 <div class="error">
                     {{ error }}
                 </div>
-                <p>If you have an account on <a href="https://github.com/" target="_blank">GitHub</a> please go to the <a href="https://github.com/flashii/Sakura/issues" target="_blank">issues section</a> and report the error listed above (do a check to see if it hasn't been reported yet as well).</p>
+                <p>If you have an account on <a href="https://github.com/" target="_blank">GitHub</a> please go to the <a href="https://github.com/circlestorm/Sakura/issues" target="_blank">issues section</a> and report the error listed above (do a check to see if it hasn't been reported yet as well).</p>
             </div>
             <div class="contact">
                 Contact the System Operator at <a href="mailto:me@flash.moe">me@flash.moe</a> or check our <a href="http://status.flashii.net/" target="_blank">Status Page</a> and <a href="http://twitter.com/_flashii" target="_blank">Twitter Account</a> to see if anything is going on.

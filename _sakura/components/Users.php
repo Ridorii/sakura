@@ -48,27 +48,34 @@ class Users {
     ];
 
     // Check if a user is logged in
-    public static function checkLogin() {
+    public static function checkLogin($uid = null, $sid = null, $bypassCookies = false) {
 
-        // Check if the cookies are set
-        if(
-            !isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'id']) ||
-            !isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'session'])
-        )
-            return false;
+        // Set $uid and $sid if they're null
+        if($uid == null)
+            $uid = Session::$userId;
+
+        // ^
+        if($sid == null)
+            $sid = Session::$sessionId;
+
+        // Check if cookie bypass is false
+        if(!$bypassCookies) {
+
+            // Check if the cookies are set
+            if(!isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'id']) || !isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'session']))
+                return false;
+
+        }
 
         // Check if the session exists
-        if(!$session = Session::checkSession(
-            Session::$userId,
-            Session::$sessionId
-        ))
+        if(!$session = Session::checkSession($uid, $sid))
             return false;
 
         // Extend the cookie times if the remember flag is set
-        if($session == 2) {
+        if($session == 2 && !$bypassCookies) {
 
-            setcookie(Configuration::getConfig('cookie_prefix') .'id',      Session::$userId,       time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
-            setcookie(Configuration::getConfig('cookie_prefix') .'session', Session::$sessionId,    time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
+            setcookie(Configuration::getConfig('cookie_prefix') .'id',      $uid,   time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
+            setcookie(Configuration::getConfig('cookie_prefix') .'session', $sid,   time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
 
         }
 
@@ -78,12 +85,12 @@ class Users {
                 'lastdate' => time()
             ],
             [
-                'id' => [Session::$userId, '=']
+                'id' => [$uid, '=']
             ]
         ]);
 
         // Redirect people that need to change their password to the new format
-        if(self::getUser(Session::$userId)['password_algo'] == 'legacy' && $_SERVER['PHP_SELF'] != '/authenticate.php' && $_SERVER['PHP_SELF'] != '/imageserve.php')
+        if(self::getUser($uid)['password_algo'] == 'legacy' && $_SERVER['PHP_SELF'] != '/authenticate.php' && $_SERVER['PHP_SELF'] != '/imageserve.php')
             header('Location: /authenticate.php?legacy=true');
 
         // If everything went through return true
@@ -92,7 +99,7 @@ class Users {
     }
 
     // Log a user in
-    public static function login($username, $password, $remember = false) {
+    public static function login($username, $password, $remember = false, $cookies = true) {
 
         // Check if authentication is disallowed
         if(Configuration::getConfig('lock_authentication'))
@@ -135,8 +142,12 @@ class Users {
         $sessionKey = Session::newSession($user['id'], $remember);
 
         // Set cookies
-        setcookie(Configuration::getConfig('cookie_prefix') .'id',      $user['id'],    time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
-        setcookie(Configuration::getConfig('cookie_prefix') .'session', $sessionKey,    time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
+        if($cookies) {
+
+            setcookie(Configuration::getConfig('cookie_prefix') .'id',      $user['id'],    time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
+            setcookie(Configuration::getConfig('cookie_prefix') .'session', $sessionKey,    time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
+
+        }
 
         // Successful login! (also has a thing for the legacy password system)
         return [1, ($user['password_algo'] == 'legacy' ? 'LEGACY_SUCCESS' : 'LOGIN_SUCESS')];
@@ -1031,6 +1042,13 @@ class Users {
 
         // Return store array
         return $store;
+
+    }
+
+    // Checking bans
+    public static function checkBan($uid) {
+
+        
 
     }
 
