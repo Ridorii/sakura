@@ -1,0 +1,121 @@
+/*
+ * Markdown Styling
+ */
+@charset "utf-8";
+
+.markdown {
+    font: 12px/1.4 "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+    word-wrap: break-word;
+}
+
+.markdown a {
+    color: #00F;
+    text-decoration: none;
+}
+
+.markdown a:hover {
+    color: #00F;
+    text-decoration: underline;
+}
+
+.markdown a:active {
+    color: #F00;
+    text-decoration: underline;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+    border-bottom: 1px solid;
+    padding-bottom: 5px;
+    font-weight: 700;
+}
+
+.markdown p,
+.markdown blockquote,
+.markdown ul,
+.markdown ol,
+.markdown dl,
+.markdown table,
+.markdown pre {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.markdown hr {
+    border: 0;
+    height: 1px;
+    color: #000;
+    background: #000;
+    margin: 0;
+}
+
+.markdown table {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    word-break: keep-all;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.markdown table tr {
+    border-spacing: 0;
+    border: 1px solid #9475B2;
+}
+
+.markdown table th,
+.markdown table td {
+    padding: 6px 13px;
+    border: 1px solid #9475B2;
+}
+
+.markdown table tr:nth-child(even) {
+    background: #B19DDD;
+}
+
+.markdown hr {
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC') repeat-x scroll 0 0 transparent;
+    border: 0 none;
+    color: #CCC;
+    height: 4px;
+    padding: 0;
+    margin: 15px 0;
+}
+
+.markdown blockquote {
+    border-left: 4px solid #9475B2;
+    padding: 0 15px;
+    color: #555;
+}
+
+.markdown blockquote > blockquote {
+    margin-left: 0;
+}
+
+.markdown blockquote > :last-child {
+    margin-bottom: 0;
+}
+
+.markdown pre {
+    word-wrap: normal;
+}
+
+.markdown .highlight pre,
+.markdown pre {
+    background: #B19DDD;
+    border: 1px solid #9475B2;
+    font-size: 13px;
+    line-height: 19px;
+    overflow: auto;
+    padding: 6px 10px;
+    border-radius: 3px;
+}
+
+.markdown ul,
+.markdown ol {
+    margin-left: 40px;
+}

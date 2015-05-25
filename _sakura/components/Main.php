@@ -364,7 +364,7 @@ class Main {
     public static function checkCFIP($ip) {
 
         // Get CloudFlare Subnet list
-        $cfhosts = file_get_contents(Configuration::getLocalConfig('etc', 'cfhosts'));
+        $cfhosts = file_get_contents(Configuration::getLocalConfig('etc', 'cfipv'. (self::ipVersion($ip))));
 
         // Replace \r\n with \n
         $cfhosts = str_replace("\r\n", "\n", $cfhosts);

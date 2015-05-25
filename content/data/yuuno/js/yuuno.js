@@ -12,10 +12,10 @@ function cookieData(action, name, data) {
 
         case 'set':
             document.cookie = name + '=' + data;
-            return;
+            return null;
 
         default:
-            return;
+            return null;
 
     }
 
@@ -76,6 +76,7 @@ function notifyUI(content) {
     var notifText       = document.createElement('div');
     var notifClose      = document.createElement('div');
     var notifClear      = document.createElement('div');
+    var iconCont;
 
     // Add ID and class on notification container
     notif.className = 'notification-enter';
@@ -85,12 +86,12 @@ function notifyUI(content) {
     notifIcon   .className = 'notification-icon';
     if(content.img.substring(0, 5) == "FONT:") {
 
-        var iconCont = document.createElement('div');
+        iconCont = document.createElement('div');
         iconCont.className = 'font-icon fa ' + content.img.replace('FONT:', '') + ' fa-4x';
 
     } else {
 
-        var iconCont = document.createElement('img');
+        iconCont = document.createElement('img');
         iconCont.setAttribute('alt', identifier);
         iconCont.setAttribute('src', content.img);
 
@@ -190,8 +191,11 @@ function notifyOpen(id) {
 
     var sakuraHref = document.getElementById(id).getAttribute('sakurahref');
 
-    if(typeof sakuraHref !== 'undefined')
+    if(typeof sakuraHref !== 'undefined') {
+
         window.location = sakuraHref;
+
+    }
 
 }
 
@@ -235,8 +239,11 @@ function notifyRequest(session) {
                 }
 
                 // Go over every return notification and pass the object to it
-                for(var notifyID in notifyGet)
+                for(var notifyID in notifyGet) {
+
                     notifyUI(notifyGet[notifyID]);
+
+                }
 
             } else {
 
@@ -256,7 +263,7 @@ function notifyRequest(session) {
 
         }
 
-    }
+    };
 
     // Make the request
     notificationWatcher.open('GET', notifyURL, true);
@@ -274,8 +281,11 @@ function donatePage(id) {
     if(!id) {
 
         // Go over every element and add donateClosed to the end of the class
-        for(var i = 0; i < featureBoxDesc.length; i++)
+        for(var i = 0; i < featureBoxDesc.length; i++) {
+
             featureBoxDesc[i].className = featureBoxDesc[i].className + ' donateClosed';
+
+        }
 
         // Then stop the execution of the function
         return;
@@ -309,8 +319,11 @@ function removeClass(className) {
     var objectCont = document.getElementsByClassName(className);
 
     // Use a while loop instead of a for loop (Array keys change) to remove each element
-    while(objectCont.length > 0)
+    while(objectCont.length > 0) {
+
         objectCont[0].parentNode.removeChild(objectCont[0]);
+
+    }
 
 }
 
@@ -321,8 +334,11 @@ function removeId(id) {
     var objectCont = document.getElementById(id);
 
     // If the element exists use the parent node to remove it
-    if(typeof(objectCont) != "undefined" && objectCont !== null)
+    if(typeof(objectCont) != "undefined" && objectCont !== null) {
+
         objectCont.parentNode.removeChild(objectCont);
+
+    }
 
 }
 
@@ -334,19 +350,20 @@ function ajaxBusyView(show, message, type) {
     var busyStat    = document.getElementById('ajaxStatus');
     var busyAnim    = document.getElementById('ajaxAnimate');
     var pageContent = document.getElementById('contentwrapper');
+    var busyAnimIco;
 
     // Select the proper icon
     switch(type) {
 
-        default:
-        case 'busy':
-            var busyAnimIco = 'fa fa-refresh fa-spin fa-4x';
-            break;
         case 'ok':
-            var busyAnimIco = 'fa fa-check fa-4x';
+            busyAnimIco = 'fa fa-check fa-4x';
             break;
         case 'fail':
-            var busyAnimIco = 'fa fa-remove fa-4x';
+            busyAnimIco = 'fa fa-remove fa-4x';
+            break;
+        case 'busy':
+        default:
+            busyAnimIco = 'fa fa-refresh fa-spin fa-4x';
             break;
 
     }
@@ -355,7 +372,7 @@ function ajaxBusyView(show, message, type) {
     if(show) {
 
         // Make sure it doesn't exist already
-        if(busyCont == null) {
+        if(busyCont === null) {
 
             // Container
             var createBusyCont = document.createElement('div');
@@ -391,24 +408,27 @@ function ajaxBusyView(show, message, type) {
         busyAnim.className = busyAnimIco;
 
         // Change the message
-        busyStat.innerHTML = (message == null ? 'Unknown' : message)
+        busyStat.innerHTML = (message === null ? 'Unknown' : message);
 
     } else { // If show is false remove the element...
 
         // ...but just do nothing if the container doesn't exist
-        if(busyCont != null) {
+        if(busyCont !== null) {
 
             // Create the fadeout with a 10ms interval
             var fadeOut = setInterval(function() {
 
                 // Set an opacity if it doesn't exist yet
-                if(busyCont.style.opacity == null || busyCont.style.opacity == "")
+                if(busyCont.style.opacity === null || busyCont.style.opacity === "") {
+
                     busyCont.style.opacity = 1;
+
+                }
 
                 // If the value isn't 0 yet start subtract .1 from the opacity
                 if(busyCont.style.opacity > 0) {
 
-                    busyCont.style.opacity = busyCont.style.opacity - .1;
+                    busyCont.style.opacity = busyCont.style.opacity - 0.1;
 
                 } else { // When we've reached 0 remove the container element and clear the fadeout interval
 
@@ -439,17 +459,17 @@ function ajaxPost(url, data) {
 
     // Combine name and value with an = inbetween
     var query = [];
-    for(var i in data)
+    for(var i in data) {
+
         query.push(encodeURIComponent(i) +"="+ encodeURIComponent(data[i]));
+
+    }
 
     // Join the array and submit the request
     req.send(query.join("&"));
 
     // If the HTTP resonse was 200 return the page
-    if(req.status === 200)
-        return req.responseText;
-    else // Else return nothing
-        return "";
+    return (req.status === 200 ? req.responseText : null);
 
 }
 
@@ -457,27 +477,38 @@ function ajaxPost(url, data) {
 function generateForm(formId, formAttr, formData, appendTo) {
 
     // Create form elements and assign ID
+    var i;
     var form = document.createElement('form');
     form.setAttribute('id', formId);
 
     // Set additional attributes
-    if(formAttr != null) {
-        for(var i in formAttr)
+    if(formAttr !== null) {
+
+        for(i in formAttr) {
+
             form.setAttribute(i, formAttr[i]);
+
+        }
+
     }
 
     // Generate input elements
-    for(var i in formData) {
+    for(i in formData) {
+
         var disposableVar = document.createElement('input');
         disposableVar.setAttribute('type', 'hidden');
         disposableVar.setAttribute('name', i);
         disposableVar.setAttribute('value', formData[i]);
         form.appendChild(disposableVar);
+
     }
 
     // Append to another element if requested
-    if(appendTo != null)
+    if(appendTo !== null) {
+
         document.getElementById(appendTo).appendChild(form);
+
+    }
 
     // Return the completed form
     return form;
@@ -504,17 +535,20 @@ function formEnterCatch(key, id) {
 }
 
 // Submitting a form using an AJAX POST request
-function submitPost(formId, busyView, msg) {
+function submitPost(formId, busyView, msg, resetCaptchaOnFailure) {
 
     // If requested display the busy thing
-    if(busyView)
+    if(busyView) {
+
         ajaxBusyView(true, msg, 'busy');
+
+    }
 
     // Get form data
     var form = document.getElementById(formId);
 
     // Make sure the form id was proper and if not report an error
-    if(form == null) {
+    if(form === null) {
         if(busyView) {
             ajaxBusyView(true, 'Invalid Form ID, contact the administrator.');
             setTimeout(function(){ajaxBusyView(false);}, 2000);
@@ -531,8 +565,11 @@ function submitPost(formId, busyView, msg) {
     // Sort children and make them ready for submission
     for(var i in children) {
 
-        if(typeof children[i] == 'object')
+        if(typeof children[i] == 'object') {
+
             requestParts[children[i].name] = ((typeof children[i].type !== "undefined" && children[i].type.toLowerCase() == "checkbox") ? children[i].checked : children[i].value);
+
+        }
 
     }
 
@@ -540,18 +577,175 @@ function submitPost(formId, busyView, msg) {
     var request = ajaxPost(form.action, requestParts).split('|');
 
     // If using the busy view thing update the text displayed to the return of the request
-    if(busyView)
+    if(busyView) {
+
         ajaxBusyView(true, request[1], (request[2] == '1' ? 'ok' : 'fail'));
 
+    }
+
+    // If request reset the recaptcha on failure
+    if(resetCaptchaOnFailure && request[2] != '1') {
+
+        grecaptcha.reset();
+
+    }
+
     setTimeout(function(){
-        if(busyView)
+        if(busyView) {
+
             ajaxBusyView(false);
 
-        if(request[2] == '1')
+        }
+
+        if(request[2] == '1') {
+
             window.location = request[3];
+
+        }
     }, 2000); 
 
     return;
+
+}
+
+// Encode UTF-8
+function utf8_encode(str) {
+
+    return unescape(encodeURIComponent(str));
+
+}
+
+// Decode UTF-8
+function utf8_decode(str) {
+
+    return decodeURIComponent(escape(str));
+
+}
+
+// Calculate the amount of unique characters in a string
+function uniqueChars(str) {
+
+    // Create storage array and count var
+    var usedChars   = new Array();
+    var count       = 0;
+
+    // Count the amount of unique characters
+    for(var i = 0; i < str.length; i++) {
+
+        // Check if we already counted this character
+        if(usedChars.indexOf(str[i]) == -1) {
+
+            // Push the character into the used array
+            usedChars.push(str[i]);
+
+            // Up the count
+            count++;
+
+        }
+
+    }
+
+    // Return the count
+    return count;
+
+}
+
+// Alternative for Math.log2() since it's still experimental
+function log2(num) {
+
+    return Math.log(num) / Math.log(2);
+
+}
+
+// Calculate password entropy
+function pwdEntropy(pwd) {
+
+    // Decode utf-8 chars
+    pwd = utf8_decode(pwd);
+
+    // Count the amount of unique characters in the password and calculate the entropy
+    return uniqueChars(pwd) * log2(256);
+
+}
+
+// Check if password is within the minimum entropy value
+function checkPwdEntropy(pwd) {
+
+    return (pwdEntropy(pwd) >= sakuraVars.minPwdEntropy);
+
+}
+
+// Check the length of a string
+function checkStringLength(str, min, max) {
+
+    // Get length of string
+    var len = str.length;
+
+    // Check if it meets the minimum
+    if(len < min)
+        return false;
+
+    // Check if it meets the maximum
+    if(len > max)
+        return false;
+
+    // If it passes both return true
+    return true;
+
+}
+
+// Validate email address formats
+function validateEmail(email) {
+
+    // The regex
+    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+
+    // Test it (which returns true or false)
+    return re.test(email);
+
+}
+
+// Check registration variables
+function registerVarCheck(id, mode, option) {
+
+    // Get the element we're working with
+    var input = document.getElementById(id);
+    var check = null;
+
+    // Use the proper mode
+    switch(mode) {
+
+        case 'confirmpw':
+            option = document.getElementById(option);
+            check = input.value === option.value;
+            break;
+
+        case 'password':
+            check = checkPwdEntropy(input.value);
+            break;
+
+        case 'email':
+            check = validateEmail(input.value);
+            break;
+
+        case 'username':
+        default:
+            check = checkStringLength(input.value, sakuraVars.minUserLen, sakuraVars.maxUserLen);
+            break;
+
+    }
+
+    if(input.className.indexOf(check ? 'green' : 'red') < 0) {
+
+        input.className = input.className + ' ' + (check ? 'green' : 'red');
+
+    }
+
+    if(input.className.indexOf(check ? 'red' : 'green') > 0) {
+
+        input.className = input.className.replace(check ? 'red' : 'green', '');
+
+    }
 
 }
 
@@ -590,15 +784,21 @@ function convertParallaxPositionValue(pos, dir, neg) {
     var position = (pos / (dir ? body.clientHeight : body.clientWidth)) * 100;
 
     // If someone decided to fuck with the inputs reset it to 0%
-    if(position < 0 || position > 100)
+    if(position < 0 || position > 100) {
+
         position = 0;
+
+    }
 
     // Do the first maths
     position = (position / (dir ? 25 : 20)) - 2.5;
 
     // If the negative flag is set inverse the number
-    if(neg)
+    if(neg) {
+
         position = -position;
+
+    }
 
     // Subtract another 2.5 to make the element not go all over the place
     position = position - 2.5; 
@@ -609,11 +809,20 @@ function convertParallaxPositionValue(pos, dir, neg) {
 }
 
 // Smooth scrolling
-function scrollTop() {
+function scrollToTop() {
 
     // Get the current position
-    var windowY = window.pageYOffset;
-    alert(windowY);
+    var windowY = window.pageYOffset - 100;
+
+    // Move up
+    window.scrollTo(0, windowY);
+
+    // Keep executing this function till we're at the top
+    if(windowY + 1 > 0) {
+
+        setTimeout(function(){scrollToTop();}, 10);
+
+    }
 
 }
 

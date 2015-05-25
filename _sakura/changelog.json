@@ -13,7 +13,8 @@
                 "20150509.1",
                 "20150512",
                 "20150523",
-                "20150524"
+                "20150524",
+                "20150525"
 
             ]
 
@@ -1101,6 +1102,43 @@
             {
                 "type":     "UPD",
                 "change":   "Made the manage footer sticky to the bottom."
+            }
+
+        ],
+
+        "20150525": [
+
+            {
+                "type":     "FIX",
+                "change":   "Made the registration recaptcha refresh upon failure."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added a JavaScript port of the password entropy function."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Made maximum and minimum username length configurable."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Split Yuuno CSS up in multiple files."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Changed the icons displayed on the side of the index when logged out."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added JavaScript form checking to registration form."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added smooth scroll to top thing."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed subnet matching causing an error."
             }
 
         ]

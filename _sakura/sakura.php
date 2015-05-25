@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150524');
+define('SAKURA_VERSION',    '20150525');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_VTYPE',      'Development');
 define('SAKURA_COLOUR',     '#6C3082');
@@ -75,7 +75,10 @@ $renderData = array(
         'sitetags'          => implode(", ", json_decode(Configuration::getConfig('sitetags'), true)),
         'cookieprefix'      => Configuration::getConfig('cookie_prefix'),
         'cookiedomain'      => Configuration::getConfig('cookie_domain'),
-        'cookiepath'        => Configuration::getConfig('cookie_path')
+        'cookiepath'        => Configuration::getConfig('cookie_path'),
+        'minpwdentropy'     => Configuration::getConfig('min_entropy'),
+        'minusernamelength' => Configuration::getConfig('username_min_length'),
+        'maxusernamelength' => Configuration::getConfig('username_max_length')
     ],
     'php' => [
         'sessionid' => \session_id(),

@@ -24,7 +24,8 @@ $sakuraConf['urls']['forum']    = 'forum.flashii.net'; // Forum url
 
 // Errata
 $sakuraConf['etc']                  = array();
-$sakuraConf['etc']['cfhosts']       = ROOT .'_sakura/config/cloudflare.hosts'; // Cloudflare IP subnets file
+$sakuraConf['etc']['cfipv4']        = ROOT .'_sakura/config/cloudflare.ipv4'; // Cloudflare IPv4 subnets file
+$sakuraConf['etc']['cfipv6']        = ROOT .'_sakura/config/cloudflare.ipv6'; // Cloudflare IPv6 subnets file
 $sakuraConf['etc']['whoisservers']  = ROOT .'_sakura/config/whois.json'; // JSON with Whois servers
 $sakuraConf['etc']['iso3166']       = ROOT .'_sakura/config/iso3166.json'; // JSON with country codes
 

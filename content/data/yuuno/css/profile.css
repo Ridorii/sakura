@@ -1,0 +1,49 @@
+/*
+ * Profile page Styling
+ */
+@charset "utf-8";
+
+.profile .content-left {
+    max-height: 800px;
+    overflow: auto;
+}
+
+.profile .user-actions {
+    font-size: 3em;
+    line-height: 1.4em;
+}
+
+.profile .user-actions a {
+    color: #8364A1;
+    text-decoration: none;
+    text-shadow: 0 0 2px #9475B2;
+    transition: all .2s;
+}
+
+.profile .user-actions a:hover {
+    text-shadow: 0 0 6px #9475B2;
+}
+
+.profile .user-actions a:active {
+    color: #725390;
+    text-shadow: 0 0 8px #8364A1;
+}
+
+@media (max-width: 1024px) {
+
+    .content {
+        width: auto;
+    }
+
+    .content .content-right {
+        width: 100%;
+        min-height: 0;
+    }
+
+    .content .content-left {
+        width: 100%;
+        min-height: 0;
+        border-top: 1px solid #9475B2;
+    }
+
+}

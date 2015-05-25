@@ -11,11 +11,16 @@
     {% if sakura.lockauth %}
         <div class="head">Whoops!</div>
         You caught the site at the wrong moment! Right now registration <i>and</i> logging in is disabled for unspecified reasons. Sorry for the inconvenience but please try again later!
+        <div class="indexSidePanelLinks">
+            <a class="fa fa-lock" href="#" title="Authentication is locked"></a>
+        </div>
     {% else %}
         <div class="head">Welcome!</div>
         Welcome to Flashii! This is a site for a bunch of friends to hang out, nothing special. Anyone is pretty much welcome to register so why not have a go?
-        <a class="button registerbutton" href="//{{ sakura.urls.main }}/register">Register!</a>
-        <a class="button loginbutton" href="//{{ sakura.urls.main }}/login">Login</a>
+        <div class="indexSidePanelLinks">
+            <a class="fa fa-magic" href="//{{ sakura.urls.main }}/register" title="Register" id="indexSidePanelRegister"></a>
+            <a class="fa fa-sign-in" href="//{{ sakura.urls.main }}/login" title="Login" id="indexSidePanelLogin"></a>
+        </div>
     {% endif %}
 {% endif %}
 <div class="head">Stats</div>

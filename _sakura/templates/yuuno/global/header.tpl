@@ -13,7 +13,6 @@
         <!-- CSS -->
         <link rel="stylesheet" type="text/css" href="//{{ sakura.urls.content }}/global.css" />
         <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/yuuno.css" />
-        <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
         {% if page.style %}
         <style type="text/css">
             {% for element,properties in page.style %}
@@ -50,7 +49,10 @@
 
                 },
 
-                "checklogin": {% if user.checklogin %}true{% else %}false{% endif %}
+                "minUserLen":       {{ sakura.minusernamelength }},
+                "maxUserLen":       {{ sakura.maxusernamelength }},
+                "minPwdEntropy":    {{ sakura.minpwdentropy }},
+                "checklogin":       {% if user.checklogin %}true{% else %}false{% endif %}
 
             };
 
@@ -119,6 +121,11 @@
         // Space for things that need to happen onload
         window.onload = function() {
 
+            // Alter the go to top button
+            var gotop = document.getElementById('gotop');
+            gotop.setAttribute('href',      'javascript:void(0);');
+            gotop.setAttribute('onclick',   'scrollToTop();');
+
             // Login form under header and ajax logout
             initHeaderLoginForm();
 
@@ -148,7 +155,7 @@
                 form.setAttribute('onkeydown', 'formEnterCatch(event, \''+ submit.id +'\');');
 
                 submit.setAttribute('href',     'javascript:void(0);');
-                submit.setAttribute('onclick',  'submitPost(\''+ i +'\', true, \''+ forms[i] +'\');');
+                submit.setAttribute('onclick',  'submitPost(\''+ i +'\', true, \''+ forms[i] +'\', '+ (i == 'registerForm' ? 'true' : 'false') +');');
                 submit.setAttribute('type',     'button');
 
                 var createInput = document.createElement('input');

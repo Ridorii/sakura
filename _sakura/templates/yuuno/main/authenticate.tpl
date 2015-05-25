@@ -77,25 +77,25 @@
                         <label for="registerUserName">Username:</label>
                     </div>
                     <div class="centreAlign">
-                        <input class="inputStyling" type="text" id="registerUserName" name="username" placeholder="Any character" />
+                        <input class="inputStyling" type="text" id="registerUserName" name="username" onkeyup="registerVarCheck(this.id, 'username');" placeholder="Any character" />
                     </div>
                     <div class="leftAlign">
                         <label for="registerEmail">E-mail:</label>
                     </div>
                     <div class="centreAlign">
-                        <input class="inputStyling" type="text" id="registerEmail" name="email" placeholder="Used for e.g. password retrieval" />
+                        <input class="inputStyling" type="text" id="registerEmail" name="email" onkeyup="registerVarCheck(this.id, 'email');" placeholder="Used for e.g. password retrieval" />
                     </div>
                     <div class="leftAlign">
                         <label for="registerPassword">Password:</label>
                     </div>
                     <div class="centreAlign">
-                        <input class="inputStyling" type="password" id="registerPassword" name="password" placeholder="Using special characters is recommended" />
+                        <input class="inputStyling" type="password" id="registerPassword" name="password" onkeyup="registerVarCheck(this.id, 'password');" placeholder="Using special characters is recommended" />
                     </div>
                     <div class="leftAlign">
                         <label for="registerConfirmPassword">Confirm Password:</label>
                     </div>
                     <div class="centreAlign">
-                        <input class="inputStyling" type="password" id="registerConfirmPassword" name="confirmpassword" placeholder="Just to make sure" />
+                        <input class="inputStyling" type="password" id="registerConfirmPassword" name="confirmpassword" onkeyup="registerVarCheck(this.id, 'confirmpw', 'registerPassword');" placeholder="Just to make sure" />
                     </div>
                     {% if sakura.requireregcodes %}
                     <div class="leftAlign">
@@ -119,10 +119,10 @@
                                         <iframe src="https://www.google.com/recaptcha/api/fallback?k={{ sakura.recaptcha_public }}" frameborder="0" scrolling="no" style="width: 302px; height:352px; border-style: none;"></iframe>
                                     </div>
                                     <div style="width: 250px; height: 80px; position: absolute; border-style: none; bottom: 21px; left: 25px; margin: 0px; padding: 0px; right: 25px;">
-                                    <textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 80px; border: 1px solid #c1c1c1; margin: 0px; padding: 0px; resize: none;" value=""></textarea>
+                                        <textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 80px; border: 1px solid #c1c1c1; margin: 0px; padding: 0px; resize: none;" value=""></textarea>
+                                    </div>
                                 </div>
                             </div>
-                          </div>
                         </noscript>
                     </div>
                     {% endif %}

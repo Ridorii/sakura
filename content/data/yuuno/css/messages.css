@@ -1,0 +1,41 @@
+/*
+ * Private Messages Styling
+ */
+@charset "utf-8";
+
+.messages table {
+    width: 100%;
+    border-spacing: 0; 
+}
+
+.messages table > tbody > tr.unread {
+    background: #C2AFFE;
+    font-weight: 700;
+}
+
+.messages table > tbody > tr > td {
+    border-bottom: 1px solid #B19EED;
+    border-top: 1px solid #B19EED;
+}
+
+.messages table > * > tr > td {
+    padding: 0 4px;
+}
+
+.messages table > * > tr > td:first-child {
+    width: 150px;
+    text-align: center;
+}
+
+.messages table > tbody > tr > td:first-child {
+    border-left: 1px solid #B19EED;
+}
+
+.messages table > * > tr > td:last-child {
+    width: 220px;
+    text-align: center;
+}
+
+.messages table > tbody > tr > td:last-child {
+    border-right: 1px solid #B19EED;
+}

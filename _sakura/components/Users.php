@@ -211,11 +211,11 @@ class Users {
             return [0, 'USER_EXISTS'];
 
         // Username too short
-        if(strlen($username) < 3)
+        if(strlen($username) < Configuration::getConfig('username_min_length'))
             return [0, 'NAME_TOO_SHORT'];
 
         // Username too long
-        if(strlen($username) > 16)
+        if(strlen($username) > Configuration::getConfig('username_max_length'))
             return [0, 'NAME_TOO_LONG'];
 
         // Check if the given email address is formatted properly
