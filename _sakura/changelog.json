@@ -14,7 +14,8 @@
                 "20150512",
                 "20150523",
                 "20150524",
-                "20150525"
+                "20150525",
+                "20150526"
 
             ]
 
@@ -1139,6 +1140,19 @@
             {
                 "type":     "FIX",
                 "change":   "Fixed subnet matching causing an error."
+            }
+
+        ],
+
+        "20150526": [
+
+            {
+                "type":     "FIX",
+                "change":   "Redid the fonts."
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed ybabstat (for now)."
             }
 
         ]

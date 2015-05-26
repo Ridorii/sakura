@@ -11,7 +11,6 @@
             <meta http-equiv="refresh" content="3; URL={{ page.redirect }}" />
         {% endif %}
         <!-- CSS -->
-        <link rel="stylesheet" type="text/css" href="//{{ sakura.urls.content }}/global.css" />
         <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/yuuno.css" />
         {% if page.style %}
         <style type="text/css">

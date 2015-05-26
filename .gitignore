@@ -51,6 +51,8 @@ BingSiteAuth.xml
 google*.html
 main/logs/*
 main/dev/*
+content/data/misaki/*
+_sakura/templates/misaki/*
 
 
 #################

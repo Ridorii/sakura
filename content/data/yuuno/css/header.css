@@ -15,7 +15,7 @@
     width: auto;
     display: inline-block;
     text-decoration: none;
-    font: 100 70px/80px "Segoe UI", sans-serif;
+    font: 100 70px/80px "SegoeUI-Light", "Segoe UI", sans-serif;
     color: #B06AC4;
     transition: color .2s, text-shadow .2s;
 }
@@ -32,7 +32,7 @@
 
 @media (max-width: 768px) {
     .header .logo {
-        font: 100 50px/60px "Segoe UI", sans-serif;
+        font: 100 50px/60px "SegoeUI-Light", "Segoe UI", sans-serif;
     }
 }
 
