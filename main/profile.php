@@ -37,6 +37,7 @@ if(isset($_GET['u'])) {
         'data'      => Users::getUserProfileData($_PROFILE_USER_DATA['id']),
         'warnings'  => Users::getWarnings($_PROFILE_USER_DATA['id'])
     ];
+
     $renderData['page'] = [
         'title'         => ($_PROFILE_USER_DATA['id'] < 1 || $_PROFILE_USER_DATA['password_algo'] == 'nologin' ? 'User not found!' : 'Profile of '. $_PROFILE_USER_DATA['username']),
         'style'         => ($_PROFILE_USER_DATA['background_url'] ? [

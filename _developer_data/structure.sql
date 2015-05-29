@@ -285,7 +285,7 @@ INSERT INTO `sakura_sock_perms` (`rid`, `uid`, `perms`) VALUES
 (6, 0,  '1,0,0,0,0,0'),
 (7, 0,  '1,2,1,1,1,1'),
 (8, 0,  '1,1,0,1,1,1'),
-(9, 0,  '1,1,0,1,1,1'),
+(9, 0,  '1,1,0,1,1,1')
 
 
 DROP TABLE IF EXISTS `sakura_tenshi`;

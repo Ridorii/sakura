@@ -14,7 +14,7 @@ RewriteBase /
 Options +FollowSymLinks -Indexes
 
 # Rewrite Rules
-RewriteRule ^feedback/?$ http://forum.flash.moe/viewforum.php?f=22
+RewriteRule ^feedback/?$ https://github.com/circlestorm/Sakura/issues
 RewriteRule ^credits/?$ credits.php
 RewriteRule ^index/?$ index.php
 RewriteRule ^login/?$|logout?/?$|activate?/?$|register?/?$|forgotpassword?/?|authenticate?/?$ authenticate.php

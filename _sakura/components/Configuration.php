@@ -14,11 +14,18 @@ class Configuration {
 	// Initialise configuration, does not contain database initialisation because explained below
     public static function init($local) {
 
+        // Check if the configuration file exists
+        if(!file_exists($local))
+            trigger_error('Local configuration file does not exist', E_USER_ERROR);
+
+        // Attempt to load the configuration file
+        $local = parse_ini_file($local, true);
+
         // Check if $local is an array and then store it in $_LCNF
         if(is_array($local))
             self::$_LCNF = $local;
         else // Otherwise trigger an error
-            trigger_error('Failed to load local configuration!', E_USER_ERROR);
+            trigger_error('Failed to load local configuration file, check the structure of the file to see if you made mistake somewhere', E_USER_ERROR);
 
     }
 

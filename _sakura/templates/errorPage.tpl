@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>Flashii Internal Error</title>
+        <title>Sakura Internal Error</title>
         <style type="text/css">
             body {  
                 margin: 0;
@@ -11,25 +11,25 @@
                 color: #000;
                 font: 12px/20px Verdana, Arial, Helvetica, sans-serif;
             }
-            
+
             h1 {
                 font-weight: 100;
                 background: #CAA;
                 padding: 8px 5px 10px;
                 margin: 0;
             }
-            
+
             .container {
                 border: 1px solid #CAA;
                 margin: 10px;
                 background: #FFF;
                 box-shadow: 2px 2px 1em #888;
             }
-            
+
             .container .inner {
                 padding: 0px 10px;
             }
-            
+
             .container .inner .error {
                 background: #555;
                 color: #EEE;
@@ -38,22 +38,22 @@
                 text-shadow: 0px 1px 1px #888;
                 font-family: monospace;
             }
-            
+
             .container .contact {
                 border-top: 1px solid #CAA;
                 font-size: x-small;
                 padding: 0px 5px 1px;
             }
-            
+
             a {
                 color: #77E;
                 text-decoration: none;
             }
-            
+
             a:hover {
                 text-decoration: underline;
             }
-            
+
             a:active {
                 color: #E77;
             }

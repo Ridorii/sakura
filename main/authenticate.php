@@ -95,7 +95,7 @@ if(isset($_REQUEST['mode'])) {
                 $messages = [
                     'USER_NOT_LOGIN'        => 'What are you doing, you\'re not even logged in. GO AWAY!',
                     'INCORRECT_PASSWORD'    => 'The password you entered was invalid.',
-                    'DEACTIVATED'           => 'Your account is deactivated.',
+                    'NOT_ALLOWED'           => 'Your account does not have the required permissions to log in.',
                     'NO_LOGIN'              => 'Logging into this account is disabled.',
                     'PASS_TOO_SHIT'         => 'Your password is too weak, try adding some special characters.',
                     'PASS_NOT_MATCH'        => 'Passwords do not match.',

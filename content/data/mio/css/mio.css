@@ -23,7 +23,7 @@ img.logo {
 	height: 150px;
 	width: 450px;
 	border: 0px;
-	background: url('//cdn.flashii.net/img/logo.png') no-repeat scroll left top transparent;
+	background: url('../images/logo.png') no-repeat scroll left top transparent;
 	background-size: cover;
 }
 
@@ -424,7 +424,7 @@ div.ucp_avatar_cont {
 	height: 23px;
 	width: 23px;
 	border: 0px;
-	background: url('//cdn.flashii.net/img/window-sprite.png') no-repeat scroll 0px 0px transparent;
+	background: url('../images/window-sprite.png') no-repeat scroll 0px 0px transparent;
 }
 
 .maxbutton {
@@ -432,7 +432,7 @@ div.ucp_avatar_cont {
 	height: 23px;
 	width: 23px;
 	border: 0px;
-	background: url('//cdn.flashii.net/img/window-sprite.png') no-repeat scroll 0px -23px transparent;
+	background: url('../images/window-sprite.png') no-repeat scroll 0px -23px transparent;
 }
 
 .minbutton {
@@ -440,7 +440,7 @@ div.ucp_avatar_cont {
 	height: 23px;
 	width: 23px;
 	border: 0px;
-	background: url('//cdn.flashii.net/img/window-sprite.png') no-repeat scroll 0px -46px transparent;
+	background: url('../images/window-sprite.png') no-repeat scroll 0px -46px transparent;
 }
 
 .donate-btn {
@@ -448,7 +448,7 @@ div.ucp_avatar_cont {
 	height: 26px;
 	width: 90px;
 	border: 0px;
-	background: url('//cdn.flashii.net/img/donate-btn.png') no-repeat scroll 0px 0px transparent;
+	background: url('../images/donate-btn.png') no-repeat scroll 0px 0px transparent;
 }
 
 div.topLeftBar {

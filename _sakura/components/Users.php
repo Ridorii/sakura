@@ -10,21 +10,21 @@ class Users {
     // Empty user template
     public static $emptyUser = [
         'id'                => 0,
-        'username'          => 'Deleted User',
-        'username_clean'    => 'deleted user',
+        'username'          => 'Sakura User',
+        'username_clean'    => 'sakura user',
         'password_hash'     => '',
         'password_salt'     => '',
         'password_algo'     => 'nologin',
         'password_iter'     => 1000,
         'password_chan'     => 0,
         'password_new'      => '',
-        'email'             => 'deleted@flashii.net',
+        'email'             => 'sakura@localhost',
         'rank_main'         => 0,
         'ranks'             => '[0]',
         'name_colour'       => '',
         'register_ip'       => '127.0.0.1',
         'last_ip'           => '127.0.0.1',
-        'usertitle'         => 'Non-existent user account',
+        'usertitle'         => 'Internal fallback account',
         'profile_md'        => '',
         'avatar_url'        => '',
         'background_url'    => '',
@@ -40,7 +40,7 @@ class Users {
     // Empty rank template
     public static $emptyRank = [
         'id'            => 0,
-        'rankname'      => 'Non-existent Rank',
+        'rankname'      => 'Sakura Rank',
         'multi'         => 0,
         'colour'        => '#444',
         'description'   => 'A hardcoded dummy rank for fallback.',
@@ -134,9 +134,9 @@ class Users {
 
         }
 
-        // Check if the user is deactivated
+        // Check if the user has the required privs to log in
         if(self::checkIfUserHasRanks([0, 1], $user, true))
-            return [0, 'DEACTIVATED'];
+            return [0, 'NOT_ALLOWED'];
 
         // Create a new session
         $sessionKey = Session::newSession($user['id'], $remember);

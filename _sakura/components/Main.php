@@ -21,7 +21,7 @@ class Main {
         Configuration::init($config);
 
         // Database
-        Database::init();
+        Database::init(Configuration::getLocalConfig('database', 'driver'));
 
         // "Dynamic" Configuration
         Configuration::initDB();
@@ -36,7 +36,7 @@ class Main {
         Templates::init(self::$_MANAGE_MODE ? Configuration::getConfig('manage_style') : Configuration::getConfig('site_style'));
 
         // Assign servers file to whois class
-        Whois::setServers(Configuration::getLocalConfig('etc', 'whoisservers'));
+        Whois::setServers(ROOT .'_sakura/'. Configuration::getLocalConfig('data', 'whoisservers'));
 
         // Markdown Parser
         self::initMD();
@@ -113,6 +113,7 @@ class Main {
 
         // Truncate all previous outputs
         ob_clean();
+        ob_end_clean();
 
         // Die and display error message
         die($error);
@@ -364,7 +365,7 @@ class Main {
     public static function checkCFIP($ip) {
 
         // Get CloudFlare Subnet list
-        $cfhosts = file_get_contents(Configuration::getLocalConfig('etc', 'cfipv'. (self::ipVersion($ip))));
+        $cfhosts = file_get_contents(ROOT .'_sakura/'. Configuration::getLocalConfig('data', 'cfipv'. (self::ipVersion($ip))));
 
         // Replace \r\n with \n
         $cfhosts = str_replace("\r\n", "\n", $cfhosts);
@@ -490,7 +491,7 @@ class Main {
     public static function getCountryName($code) {
 
         // Parse JSON file
-        $iso3166 = json_decode(file_get_contents(Configuration::getLocalConfig('etc', 'iso3166')), true);
+        $iso3166 = json_decode(file_get_contents(ROOT .'_sakura/'. Configuration::getLocalConfig('data', 'iso3166')), true);
 
         // Check if key exists
         if(array_key_exists($code, $iso3166))

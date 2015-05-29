@@ -41,7 +41,6 @@ local.properties
 #################
 
 errors.log
-_sakura/config/config.php
 _sakura/config/config.ini
 content/images/avatars/*
 !content/images/avatars/.htaccess
@@ -50,9 +49,10 @@ content/images/backgrounds/*
 BingSiteAuth.xml
 google*.html
 main/logs/*
-main/dev/*
 content/data/misaki/*
 _sakura/templates/misaki/*
+_sakura/cache/*
+!_sakura/cache/.htaccess
 
 
 #################

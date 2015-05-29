@@ -9,47 +9,47 @@ use PDO;
 use PDOException;
 use PDOStatement;
 
-class Database {
+class MySQL {
 
     // Variable that will contain the SQL connection
     // Please refrain from referring to this, unless it's for your personal branch/purpose, despite it being public
     // it sort of defeats the "dynamic database system" I want to go for.
-    public static $sql;
+    public $sql;
 
     // Constructor
-    public static function init() {
+    function __construct() {
         
         if(!extension_loaded('PDO')) {
             // Return error and die
-            trigger_error('<b>SQL Driver</b>: PDO extension not loaded.', E_USER_ERROR);
+            trigger_error('PDO extension not loaded.', E_USER_ERROR);
         }
 
         // Initialise connection
-        self::initConnect(
+        $this->initConnect(
             (
-                Configuration::getLocalConfig('db', 'unixsocket') ?
-                self::prepareSock(
-                    Configuration::getLocalConfig('db', 'host'),
-                    Configuration::getLocalConfig('db', 'database')
+                Configuration::getLocalConfig('database', 'unixsocket') ?
+                $this->prepareSock(
+                    Configuration::getLocalConfig('database', 'host'),
+                    Configuration::getLocalConfig('database', 'database')
                 ) :
-                self::prepareHost(
-                    Configuration::getLocalConfig('db', 'host'),
-                    Configuration::getLocalConfig('db', 'database'),
+                $this->prepareHost(
+                    Configuration::getLocalConfig('database', 'host'),
+                    Configuration::getLocalConfig('database', 'database'),
                     (
-                        Configuration::getLocalConfig('db', 'port') !== null ?
-                        Configuration::getLocalConfig('db', 'port') :
+                        Configuration::getLocalConfig('database', 'port') !== null ?
+                        Configuration::getLocalConfig('database', 'port') :
                         3306
                     )
                 )
             ),
-            Configuration::getLocalConfig('db', 'username'),
-            Configuration::getLocalConfig('db', 'password')
+            Configuration::getLocalConfig('database', 'username'),
+            Configuration::getLocalConfig('database', 'password')
         );
-        
+
     }
 
     // Regular IP/Hostname connection method prepare function
-    private static function prepareHost($dbHost, $dbName, $dbPort = 3306) {
+    private function prepareHost($dbHost, $dbName, $dbPort = 3306) {
         
         $DSN = 'mysql:host=' . $dbHost . ';port=' . $dbPort . ';dbname=' . $dbName;
 
@@ -58,7 +58,7 @@ class Database {
     }
 
     // Unix Socket connection method prepare function
-    private static function prepareSock($dbHost, $dbName) {
+    private function prepareSock($dbHost, $dbName) {
         
         $DSN = 'mysql:unix_socket=' . $dbHost . ';dbname=' . $dbName;
 
@@ -67,11 +67,11 @@ class Database {
     }
 
     // Initialise connection using default PDO stuff
-    private static function initConnect($DSN, $dbUname, $dbPword) {
+    private function initConnect($DSN, $dbUname, $dbPword) {
         
         try {
             // Connect to SQL server using PDO
-            self::$sql = new PDO($DSN, $dbUname, $dbPword, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
+            $this->sql = new PDO($DSN, $dbUname, $dbPword, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
         } catch(PDOException $e) {
             // Catch connection errors
             trigger_error('SQL Driver: '. $e->getMessage(), E_USER_ERROR);
@@ -82,10 +82,10 @@ class Database {
     }
 
     // Fetch array from database
-    public static function fetch($table, $fetchAll = true, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*', $prefix = null) {
+    public function fetch($table, $fetchAll = true, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*', $prefix = null) {
 
         // Begin preparation of the statement
-        $prepare = 'SELECT '. ($distinct ? 'DISTINCT ' : '') . ($column == '*' ? '' : '`') . $column . ($column == '*' ? '' : '`') .' FROM `' . ($prefix ? $prefix : Configuration::getLocalConfig('db', 'prefix')) . $table . '`';
+        $prepare = 'SELECT '. ($distinct ? 'DISTINCT ' : '') . ($column == '*' ? '' : '`') . $column . ($column == '*' ? '' : '`') .' FROM `' . ($prefix ? $prefix : Configuration::getLocalConfig('database', 'prefix')) . $table . '`';
 
         // If $data is set and is an array continue
         if(is_array($data)) {
@@ -143,10 +143,11 @@ class Database {
         $prepare .= ';';
 
         // Actually prepare the preration
-        $query = self::$sql->prepare($prepare);
+        $query = $this->sql->prepare($prepare);
 
         // Bind those parameters if $data is an array that is
         if(is_array($data)) {
+
             foreach($data as $key => $value) {
                 $query->bindParam(':'. $key, $value[0]);
 
@@ -154,28 +155,22 @@ class Database {
                 unset($key);
                 unset($value);
             }
+
         }
 
         // Execute the prepared statements with parameters bound
         $query->execute();
 
-        // Do fetch or fetchAll
-        if($fetchAll)
-            $result = $query->fetchAll(PDO::FETCH_BOTH);
-        else
-            $result = $query->fetch(PDO::FETCH_BOTH);
-
-
-        // And return the output
-        return $result;
+        // Return the output
+        return $fetchAll ? $query->fetchAll(PDO::FETCH_BOTH) : $query->fetch(PDO::FETCH_BOTH);
 
     }
-    
+
     // Insert data to database
-    public static function insert($table, $data, $prefix = null) {
+    public function insert($table, $data, $prefix = null) {
 
         // Begin preparation of the statement
-        $prepare = 'INSERT INTO `' . ($prefix ? $prefix : Configuration::getLocalConfig('db', 'prefix')) . $table . '` ';
+        $prepare = 'INSERT INTO `' . ($prefix ? $prefix : Configuration::getLocalConfig('database', 'prefix')) . $table . '` ';
 
         // Run the foreach statement twice for (`stuff`) VALUES (:stuff)
         for($i = 0; $i < 2; $i++) {
@@ -193,7 +188,7 @@ class Database {
         }
 
         // Actually prepare the preration
-        $query = self::$sql->prepare($prepare);
+        $query = $this->sql->prepare($prepare);
 
         // Bind those parameters
         foreach($data as $key => $value) {
@@ -214,10 +209,10 @@ class Database {
     }
 
     // Update data in the database
-    public static function update($table, $data, $prefix = null) {
+    public function update($table, $data, $prefix = null) {
 
         // Begin preparation of the statement
-        $prepare = 'UPDATE `' . ($prefix ? $prefix : Configuration::getLocalConfig('db', 'prefix')) . $table . '`';
+        $prepare = 'UPDATE `' . ($prefix ? $prefix : Configuration::getLocalConfig('database', 'prefix')) . $table . '`';
 
         // Run a foreach on $data and complete the statement
         foreach($data as $key => $values) {
@@ -232,7 +227,7 @@ class Database {
         }
 
         // Actually prepare the preration
-        $query = self::$sql->prepare($prepare);
+        $query = $this->sql->prepare($prepare);
 
         // Seperate the foreaches for the SET and WHERE clauses because it's fucking it up for some odd reason
         // Bind Set Clauses
@@ -272,10 +267,10 @@ class Database {
     }
 
     // Delete data from the database
-    public static function delete($table, $data, $prefix = null) {
+    public function delete($table, $data, $prefix = null) {
 
         // Begin preparation of the statement
-        $prepare = 'DELETE FROM `' . ($prefix ? $prefix : Configuration::getLocalConfig('db', 'prefix')) . $table . '`';
+        $prepare = 'DELETE FROM `' . ($prefix ? $prefix : Configuration::getLocalConfig('database', 'prefix')) . $table . '`';
 
         // If $data is set and is an array continue
         if(is_array($data)) {
@@ -293,7 +288,7 @@ class Database {
         }
 
         // Actually prepare the preration
-        $query = self::$sql->prepare($prepare);
+        $query = $this->sql->prepare($prepare);
 
         // Bind those parameters
         foreach($data as $key => $value) {
