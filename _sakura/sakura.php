@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150529');
+define('SAKURA_VERSION',    '20150604');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_VTYPE',      'Development');
 define('SAKURA_COLOUR',     '#6C3082');
@@ -51,6 +51,7 @@ ob_start(Configuration::getConfig('use_gzip') ? 'ob_gzhandler' : null);
 $renderData = [
 
     'sakura' => [
+
         'version'           => SAKURA_VERSION,
         'vlabel'            => SAKURA_VLABEL,
         'vtype'             => SAKURA_VTYPE,
@@ -76,15 +77,26 @@ $renderData = [
         'minpwdentropy'     => Configuration::getConfig('min_entropy'),
         'minusernamelength' => Configuration::getConfig('username_min_length'),
         'maxusernamelength' => Configuration::getConfig('username_max_length')
+
+    ],
+
+    'perms' => [
+
+        'canUseChat'    => Permissions::check('SITE',    'USE_CHAT',     Session::$userId, 1),
+        'canUseForums'  => Permissions::check('FORUM',   'USE_FORUM',    Session::$userId, 1)
+
     ],
 
     'php' => [
+
         'sessionid' => \session_id(),
         'time'      => \time(),
         'self'      => $_SERVER['PHP_SELF']
+
     ],
 
     'user' => [
+
         'checklogin'    => Users::checkLogin(),
         'session'       => Session::$sessionId,
         'data'          => ($_init_udata = Users::getUser(Session::$userId)),

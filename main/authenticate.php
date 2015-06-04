@@ -95,7 +95,7 @@ if(isset($_REQUEST['mode'])) {
                 $messages = [
                     'USER_NOT_LOGIN'        => 'What are you doing, you\'re not even logged in. GO AWAY!',
                     'INCORRECT_PASSWORD'    => 'The password you entered was invalid.',
-                    'NOT_ALLOWED'           => 'Your account does not have the required permissions to log in.',
+                    'NOT_ALLOWED'           => 'Your account does not have the required permissions to change your password.',
                     'NO_LOGIN'              => 'Logging into this account is disabled.',
                     'PASS_TOO_SHIT'         => 'Your password is too weak, try adding some special characters.',
                     'PASS_NOT_MATCH'        => 'Passwords do not match.',
@@ -198,7 +198,7 @@ if(isset($_REQUEST['mode'])) {
                     'AUTH_LOCKED'           => 'Authentication is currently not allowed, try again later.',
                     'USER_NOT_EXIST'        => 'The user you tried to log into does not exist.',
                     'INCORRECT_PASSWORD'    => 'The password you entered was invalid.',
-                    'DEACTIVATED'           => 'Your account is deactivated.',
+                    'NOT_ALLOWED'           => 'Your account does not have the required permissions to log in.',
                     'NO_LOGIN'              => 'Logging into this account is disabled.',
                     'LEGACY_SUCCESS'        => 'Login successful! Taking you to the password changing page...',
                     'LOGIN_SUCESS'          => 'Login successful!'
@@ -274,7 +274,7 @@ if(isset($_REQUEST['mode'])) {
                 $messages = [
                     'AUTH_LOCKED'           => 'Authentication is currently not allowed, try again later.',
                     'USER_NOT_EXIST'        => 'The requested user does not exist (confirm the username/email combination).',
-                    'DEACTIVATED'           => 'Your account is deactivated.',
+                    'NOT_ALLOWED'           => 'Your account does not have the required permissions to change your password.',
                     'SUCCESS'               => 'The password reset e-mail has been sent to the address associated with your account.'
                 ];
 

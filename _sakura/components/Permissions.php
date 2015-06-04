@@ -7,6 +7,18 @@ namespace Sakura;
 
 class Permissions {
 
+    // Fallback permission data
+    private static $fallback = [
+
+        'rid'           => 0,
+        'uid'           => 0,
+        'siteperms'     => '000000000000000000000000001',
+        'manageperms'   => '0',
+        'forumperms'    => '0',
+        'rankinherit'   => '111'
+
+    ];
+
     // Global permissions table
     protected static $permissions = [
 
@@ -60,14 +72,20 @@ class Permissions {
     ];
 
     // Checking if a user has the permissions to do a thing
-    public static function check($layer, $action, $perm) {
+    public static function check($layer, $action, $operator, $mode = 0) {
 
         // Check if the permission layer and the permission itself exists
-        if(!array_key_exists($layer, self::$permissions) || !array_key_exists($action, self::$permission[$layer]))
+        if(!array_key_exists($layer, self::$permissions) || !array_key_exists($action, self::$permissions[$layer]))
             return false;
 
+        // Convert to the appropiate mode
+        if($mode === 2)
+            $operator = self::getRankPermissions($operator)[$layer];
+        elseif($mode === 1)
+            $operator = self::getUserPermissions($operator)[$layer];
+
         // Perform the bitwise AND
-        if((bindec($perm) & self::$permission[$layer][$action]) != 0)
+        if(bindec($operator) & self::$permissions[$layer][$action])
             return true;
 
         // Else just return false
@@ -85,6 +103,10 @@ class Permissions {
         // Get permission row for all ranks
         foreach($ranks as $rank)
             $getRanks[] = Database::fetch('permissions', false, ['rid' => [$rank, '='], 'uid' => [0 ,'=']]);
+
+        // Check if getRanks is empty or if the rank id is 0 return the fallback
+        if(empty($getRanks) || in_array(0, $ranks))
+            $getRanks = [self::$fallback];
 
         // Go over the permission data
         foreach($getRanks as $rank) {

@@ -178,7 +178,9 @@
                         <!-- Navigation menu, displayed on left side of the bar. -->
                         <a class="menu-item" href="//{{ sakura.urls.main }}/" title="Return to the front page of Flashii">Home</a>
                         <a class="menu-item" href="//{{ sakura.urls.main }}/news" title="Here you can read updates on Flashii">News</a>
+                        {% if perms.canUseChat %}
                         <a class="menu-item" href="//{{ sakura.urls.chat }}/" title="Chat with other Flashii members">Chat</a>
+                        {% endif %}
                         <a class="menu-item" href="//{{ sakura.urls.main }}/forum" title="Discuss things with other members but static">Forums</a>
                         <a class="menu-item" href="//{{ sakura.urls.main }}/search" title="Search on Flashii">Search</a>
                         {% if user.checklogin %}
@@ -240,3 +242,4 @@
                         <p>A lot of things on this site require JavaScript to be enabled (e.g. the chat), we try to keep both sides happy but it is highly recommended that you enable it (you'll also have to deal with this message being here if you don't enable it).</p>
                     </div>
                 </noscript>
+

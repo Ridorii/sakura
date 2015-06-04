@@ -25,16 +25,13 @@ class Users {
         'register_ip'       => '127.0.0.1',
         'last_ip'           => '127.0.0.1',
         'usertitle'         => 'Internal fallback account',
-        'profile_md'        => '',
-        'avatar_url'        => '',
-        'background_url'    => '',
         'regdate'           => 0,
         'lastdate'          => 0,
         'lastunamechange'   => 0,
         'birthday'          => '',
         'posts'             => 0,
         'country'           => 'EU',
-        'profile_data'      => '[]'
+        'userData'          => '[]'
     ];
 
     // Empty rank template
@@ -69,6 +66,10 @@ class Users {
 
         // Check if the session exists
         if(!$session = Session::checkSession($uid, $sid))
+            return false;
+
+        // Check if the user is activated
+        if(Permissions::check('SITE', 'DEACTIVATED', $uid, 1))
             return false;
 
         // Extend the cookie times if the remember flag is set
@@ -135,7 +136,7 @@ class Users {
         }
 
         // Check if the user has the required privs to log in
-        if(self::checkIfUserHasRanks([0, 1], $user, true))
+        if(Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
             return [0, 'NOT_ALLOWED'];
 
         // Create a new session
@@ -259,7 +260,7 @@ class Users {
             'lastdate'          => 0,
             'lastunamechange'   => time(),
             'country'           => Main::getCountryCode(),
-            'profile_data'      => '[]'
+            'userData'          => '[]'
         ]);
 
         // Get userid of the new user
@@ -307,9 +308,9 @@ class Users {
         if(count($user) < 2)
             return [0, 'USER_NOT_EXIST'];
 
-        // Check if the user is deactivated
-        if(self::checkIfUserHasRanks([0, 1], $user, true))
-            return [0, 'DEACTIVATED'];
+        // Check if the user has the required privs to log in
+        if(Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
+            return [0, 'NOT_ALLOWED'];
 
         // Generate the verification key
         $verk = Main::newActionCode('LOST_PASS', $user['id'], [
@@ -349,9 +350,9 @@ class Users {
         // Get user data
         $user = Users::getUser(Session::$userId);
 
-        // Check if the user is deactivated
-        if(self::checkIfUserHasRanks([0, 1], $user, true))
-            return [0, 'DEACTIVATED'];
+        // Check if the user has the required privs to log in
+        if(Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
+            return [0, 'NOT_ALLOWED'];
 
         // Check if the account is disabled
         if('nologin' == $user['password_algo'])
@@ -459,7 +460,7 @@ class Users {
             return [0, 'USER_NOT_EXIST'];
 
         // Check if a user is activated
-        if(!self::checkIfUserHasRanks([0, 1], $user, true))
+        if(!Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
             return [0, 'USER_ALREADY_ACTIVE'];
 
         // Send activation e-mail
@@ -477,7 +478,7 @@ class Users {
         $user = Database::fetch('users', false, ['id' => [$uid, '=']]);
 
         // User is already activated or doesn't even exist
-        if(count($user) < 2 || !self::checkIfUserHasRanks([0, 1], $user, true))
+        if(count($user) < 2 || !Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
             return false;
 
         // Generate activation key
@@ -521,7 +522,7 @@ class Users {
             return [0, 'USER_NOT_EXIST'];
 
         // Check if user is already activated
-        if(!self::checkIfUserHasRanks([0, 1], $user, true))
+        if(!Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
             return [0, 'USER_ALREADY_ACTIVE'];
 
         // Set default values for activation
@@ -572,7 +573,7 @@ class Users {
             return [0, 'USER_NOT_EXIST'];
 
         // Check if user is already deactivated
-        if(self::checkIfUserHasRanks([0, 1], $user, true))
+        if(Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
             return [0, 'USER_ALREADY_DEACTIVE'];
 
         // Deactivate the account
@@ -693,8 +694,22 @@ class Users {
 
     }
 
+    // Getting the profile data array of a user
+    public static function getUserProfileData($id, $inputIsUser = false) {
+
+        // Get user data
+        $user = ($inputIsUser ? $id : self::getUser($id));
+
+        // Decode the userData json
+        $data = json_decode($user['userData'], true);
+
+        // Return the profile data
+        return $data;
+
+    }
+
     // Get user's profile fields
-    public static function getUserProfileData($id) {
+    public static function getUserProfileFields($id, $inputIsData = false) {
 
         // Get profile fields
         $profileFields = Database::fetch('profilefields');
@@ -703,15 +718,15 @@ class Users {
         if(!count($profileFields))
             return null;
 
-        // Get the profile data JSON from the specified user's profile
-        $profileData = Database::fetch('users', false, ['id' => [$id, '=']]);
+        // Assign the profileData variable
+        $profileData = ($inputIsData ? $id : self::getUserProfileData($id));
 
         // Once again if nothing was returned just return null
-        if(count($profileData) < 2 || $profileData['profile_data'] == null || !count(json_decode($profileData['profile_data'], true)))
+        if(count($profileData) < 1 || $profileData == null || empty($profileData['profileFields']))
             return null;
 
-        // Decode the profile_data json
-        $profileData = json_decode($profileData['profile_data'], true);
+        // Redeclare profileData
+        $profileData = $profileData['profileFields'];
 
         // Create output array
         $profile = [];
@@ -760,6 +775,39 @@ class Users {
 
         // Return appropiate profile data
         return $profile;
+
+    }
+
+    // Getting the profile page of a user
+    public static function getProfilePage($id, $inputIsData = false) {
+
+        // Check if the input is the data
+        if($inputIsData) {
+
+            // Reassign data
+            $data = $id;
+
+        } else {
+
+            // Get user data
+            $user = self::getUser($id);
+
+            // Decode the userData json
+            $data = json_decode($user['userData'], true);
+
+        }
+
+        // Check if the profilePage key exists
+        if(!array_key_exists('profilePage', $data))
+            return false;
+
+        // TODO: implement BBcodes
+
+        // Parse the markdown
+        $profilePage = Main::mdParse(base64_decode($data['profilePage'][0]));
+
+        // Return the parsed profile page
+        return $profilePage;
 
     }
 
@@ -860,7 +908,7 @@ class Users {
     }
 
     // Get users in rank
-    public static function getUsersInRank($rankId, $users = null) {
+    public static function getUsersInRank($rankId, $users = null, $excludeAbyss = true) {
 
         // Get all users (or use the supplied user list to keep server load down)
         if(!$users)
@@ -873,7 +921,7 @@ class Users {
         foreach($users as $user) {
 
             // If so store the user's row in the array
-            if(self::checkIfUserHasRanks([$rankId], $user, true) && $user['password_algo'] != 'nologin')
+            if(self::checkIfUserHasRanks([$rankId], $user, true) && ($excludeAbyss ? $user['password_algo'] != 'nologin' : true))
                 $rank[] = $user;
 
         }
@@ -900,7 +948,7 @@ class Users {
                 continue;
 
             // Skip if inactive and not include deactivated users
-            if(!$includeInactive && self::checkIfUserHasRanks([0, 1], $user, true))
+            if(!$includeInactive && Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
                 continue;
 
             $users[$user['id']] = $user;

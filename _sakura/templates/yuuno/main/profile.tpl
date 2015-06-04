@@ -13,7 +13,7 @@
     {% else %}
     <div id="userBackground"></div>
 	<div class="content profile">
-        <div class="{% if profile.profpage|length > 1 %}content-right {% endif %}content-column">
+        <div class="{% if profile.profilePage|length > 1 %}content-right {% endif %}content-column">
             <div style="text-align: center;">
                 <img src="/a/{{ profile.user.id }}" alt="{{ profile.user.username }}'s Avatar" class="default-avatar-setting" style="box-shadow: 0 3px 7px #{% if profile.online %}484{% else %}844{% endif %};" />
                 <br /><span style="font-size: .8em;">{{ profile.ranktitle }}</span>
@@ -38,11 +38,11 @@
                 <b>Last Seen on</b> {{ profile.user.lastdate|date("l Y-m-d H:i T") }}
                 {% endif %}<br />
                 <b>User has {% if not profile.user.posts %}no{% else %}{{ profile.user.posts }}{% endif %} forum post{% if profile.user.posts != 1 %}s{% endif %}.</b>
-                {% if profile.data is not null %}
+                {% if profile.fields is not null %}
                 <hr class="default" />
                 {% if user.checklogin %}
                 <table style="width: 100%;">
-                {% for name,field in profile.data %}
+                {% for name,field in profile.fields %}
                 <tr>
                     <td style="text-align: left; font-weight: bold;">
                         {{ field.name }}
@@ -82,12 +82,12 @@
                 {% endif %}
             </div>
         </div>
-        <div class="content-left content-column markdown{% if profile.profpage|length < 1 %} hidden{% endif %}">
-            {{ profile.profpage|raw }}
+        <div class="content-left content-column markdown{% if profile.profilePage|length < 1 %} hidden{% endif %}">
+            {{ profile.profilePage|raw }}
         </div>
         <div class="clear"></div>
     </div>
-    {% if profile.user.background_url %}
+    {% if profile.data.profileBackground %}
     <script type="text/javascript">
         initialiseParallax('userBackground');
     </script>

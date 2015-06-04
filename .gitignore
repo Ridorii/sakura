@@ -42,10 +42,8 @@ local.properties
 
 errors.log
 _sakura/config/config.ini
-content/images/avatars/*
-!content/images/avatars/.htaccess
-content/images/backgrounds/*
-!content/images/backgrounds/.htaccess
+content/images/user/*
+!content/images/user/.htaccess
 BingSiteAuth.xml
 google*.html
 main/logs/*

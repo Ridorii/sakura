@@ -5,6 +5,10 @@
 
 namespace Sakura;
 
+use Twig_Loader_Filesystem;
+use Twig_Environment;
+use Twig_Extension_StringLoader;
+
 class Templates {
 
     // Engine container, template folder name and options
@@ -41,17 +45,20 @@ class Templates {
     private static function twigLoader() {
 
         // Initialise Twig Filesystem Loader
-        $twigLoader = new \Twig_Loader_Filesystem(ROOT .'_sakura/templates/'. self::$_TPL);
+        $twigLoader = new Twig_Loader_Filesystem(ROOT .'_sakura/templates/'. self::$_TPL);
+
+        // Environment variable
+        $twigEnv = [];
+
+        // Enable caching
+        if(Configuration::getConfig('enable_tpl_cache'))
+            $twigEnv['cache'] = ROOT .'_sakura/cache';
 
         // And now actually initialise the templating engine
-        self::$_ENG = new \Twig_Environment($twigLoader, array(
-
-           // 'cache' => SATOKO_ROOT_DIRECTORY. self::getConfig('path', 'cache') // Set cache directory
-
-        ));
+        self::$_ENG = new Twig_Environment($twigLoader, $twigEnv);
 
         // Load String template loader
-        self::$_ENG->addExtension(new \Twig_Extension_StringLoader());
+        self::$_ENG->addExtension(new Twig_Extension_StringLoader());
 
     }
 

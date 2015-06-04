@@ -5,6 +5,9 @@
  
 namespace Sakura;
 
+use Parsedown;
+use PHPMailer;
+
 class Main {
 
     public static $_MD; // Markdown class container
@@ -46,7 +49,7 @@ class Main {
     // Initialise Parsedown
     private static function initMD() {
 
-        self::$_MD = new \Parsedown();
+        self::$_MD = new Parsedown();
 
     }
 
@@ -65,7 +68,7 @@ class Main {
 
         // In the highly unlikely case that it failed to get anything forge a false
         if(!$resp)
-            return array('success' => false, 'error-codes' => array('Could not connect to the ReCAPTCHA server.'));
+            return false;
 
         // Decode the response JSON from the servers
         $resp = json_decode($resp, true);
@@ -124,7 +127,7 @@ class Main {
     public static function sendMail($to, $subject, $body) {
 
         // Initialise PHPMailer
-        $mail = new \PHPMailer();
+        $mail = new PHPMailer();
 
         // Set to SMTP
         $mail->IsSMTP();
@@ -556,17 +559,94 @@ class Main {
 
     }
 
-    // Convert a number to a hexadecimal value
-    public static function toHex($num) {
+    // Indent JSON
+    public static function jsonIndent($json) {
 
-        // Convert $num to an int if not yet
-        $num = intval($num);
+        // Defines
+        $tab = '    ';
+        $out = '';
+        $lvl = 0;
+        $str = false;
+        $obj = json_decode($json);
 
-        // Check if it's within the proper range
-        if($num < 0 || $num > 255)
-            return 00;
+        // Validate the object
+        if($obj === false)
+            return false;
 
-        
+        // Re-encode the json and get the length
+        $json = json_encode($obj);
+        $len = strlen($json);
+
+        // Go over the entries
+        for($c = 0; $c < $len; $c++) {
+
+            // Get the current character
+            $char = $json[$c];
+
+            switch($char) {
+
+                case '[':
+                case '{':
+                    if($str) {
+
+                        $out .= $char;
+
+                    } else {
+
+                        $out .= $char ."\r\n". str_repeat($tab, $lvl + 1);
+                        $lvl++;
+
+                    }
+                    break;
+
+                case ']':
+                case '}':
+                    if($str) {
+
+                        $out .= $char;
+
+                    } else {
+
+                        $lvl--;
+                        $out .= "\r\n". str_repeat($tab, $lvl) . $char;
+
+                    }
+                    break;
+
+                case ',':
+                    if($str) {
+
+                        $out .= $char;
+
+                    } else {
+
+                        $out .= ",\r\n". str_repeat($tab, $lvl);
+
+                    }
+                    break;
+
+                case ':':
+                    if($str) {
+
+                        $out .= $char;
+
+                    } else {
+
+                        $out .= ": ";
+
+                    }
+                    break;
+
+                default:
+                    $out .= $char;
+                    break;
+
+            }
+
+        }
+
+        // Return the indented JSON
+        return $out;
 
     }
 
