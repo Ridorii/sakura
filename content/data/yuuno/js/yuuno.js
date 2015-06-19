@@ -698,7 +698,8 @@ function checkStringLength(str, min, max) {
 function validateEmail(email) {
 
     // The regex
-    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+    var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,48})+$/;
+    // is of fix
 
     // Test it (which returns true or false)
     return re.test(email);
