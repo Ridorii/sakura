@@ -46,6 +46,37 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
     print json_encode($notifications);
     exit;
 
+// Friends
+} elseif(isset($_REQUEST['friend-action']) && $_REQUEST['friend-action']) {
+
+    if(!isset($_REQUEST['session']) || $_REQUEST['session'] !== session_id()) {
+        print Templates::render('errors/information.tpl', array_merge($renderData, ['page' => ['redirect' => $_SERVER['PHP_SELF'], 'message' => 'Invalid session ID, please try again.', 'title' => 'Information']]));
+        exit;
+    }
+
+    if((!isset($_REQUEST['add']) && !isset($_REQUEST['remove'])) || !isset($_REQUEST['time'])) {
+        print Templates::render('errors/information.tpl', array_merge($renderData, ['page' => ['redirect' => $_SERVER['PHP_SELF'], 'message' => 'One or more required parameter is not set.', 'title' => 'Information']]));
+        exit;
+    }
+
+    if((isset($_REQUEST['add']) && $_REQUEST['add'] == Session::$userId) || (isset($_REQUEST['remove']) && $_REQUEST['remove'] == Session::$userId)) {
+        print Templates::render('errors/information.tpl', array_merge($renderData, ['page' => ['redirect' => $_SERVER['PHP_SELF'], 'message' => 'Can\'t add yourself as a friend.', 'title' => 'Information']]));
+        exit;
+    }
+    
+    $add = Users::addFriend($_REQUEST['add']);
+print $add[1];
+    if($add[0]) {
+        $user = Users::getUser(Session::$userId);
+        Users::createNotification($_REQUEST['add'], $user['username'] .' added you as a friend!', 'If you aren\'t mutual friends yet click here to add them as well.', 60000, '//'. Configuration::getLocalConfig('urls', 'main') .'/a/'. $user['id'], '//'. Configuration::getLocalConfig('urls', 'main') .'/u/'. $user['id'], '1');
+        print Templates::render('errors/information.tpl', array_merge($renderData, ['page' => ['redirect' => $_SERVER['PHP_SELF'], 'message' => 'You are now friends!', 'title' => 'Information']]));
+        exit;
+    } else {
+        print Templates::render('errors/information.tpl', array_merge($renderData, ['page' => ['redirect' => $_SERVER['PHP_SELF'], 'message' => 'Something went wrong.', 'title' => 'Information']]));
+        exit;
+    }
+    exit;
+
 }
 
 // Settings page list

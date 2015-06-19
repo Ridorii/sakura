@@ -1093,6 +1093,101 @@ class Users {
 
     }
 
+    // Get friends
+    public static function getFriends($uid = null, $timestamps = false) {
+
+        // Assign $uid
+        if(!$uid)
+            $uid = Session::$userId;
+
+        // Get all friends
+        $getFriends = Database::fetch('friends', true, [
+            'uid' => [$uid, '=']
+        ]);
+
+        // Create the friends array
+        $friends = [];
+
+        // Iterate over the raw database return
+        foreach($getFriends as $friend) {
+
+            // Add friend to array
+            $friends[($timestamps ? $friend['fid'] : false)] = $friend[($timestamps ? 'timestamp' : 'fid')];
+
+        }
+
+        // Return formatted array
+        return $friends;
+
+    }
+
+    // Check if a friend is mutual
+    public static function checkMutualFriend($fid, $uid = null) {
+
+        // Assign $uid
+        if(!$uid)
+            $uid = Session::$userId;
+
+        // Get the user's friends
+        $self = self::getFriends($uid);
+
+        // Check if the friend is actually in the user's array
+        if(!in_array($fid, $self))
+            return false;
+
+        // Get the friend's friends
+        $friend = self::getFriends($fid);
+
+        // Check if the friend is actually in the user's array
+        if(!in_array($uid, $friend))
+            return false;
+
+        // Return true if all went through
+        return true;
+
+    }
+
+    // Adding a friend
+    public static function addFriend($uid) {
+
+        // Validate that the user exists
+        if(!self::getUser($uid))
+            return [0, 'USER_NOT_EXIST'];
+
+        // Check if the user already has this user a friend
+        if(Database::fetch('friends', false, ['fid' => [$uid, '='], 'uid' => [Session::$userId, '=']]))
+            return [0, 'ALREADY_FRIENDS'];
+
+        // Add friend
+        Database::insert('friends', [
+            'uid'       => Session::$userId,
+            'fid'       => $uid,
+            'timestamp' => time()
+        ]);
+
+        // Return true because yay
+        return [1, Users::checkMutualFriend($uid) ? 'FRIENDS' : 'NOT_MUTUAL'];
+
+    }
+
+    // Removing a friend
+    public static function removeFriend($uid) {
+
+        // Check if the user has this user a friend
+        if(!Database::fetch('friends', false, ['fid' => [$uid, '='], 'uid' => [Session::$userId, '=']]))
+            return [0, 'ALREADY_REMOVED'];
+
+        // Remove friend
+        Database::delete('friends', [
+            'uid'       => Session::$userId,
+            'fid'       => $uid
+        ]);
+
+        // Return true because yay
+        return [1, 'REMOVED'];
+
+    }
+
     // Checking bans
     public static function checkBan($uid) {
 

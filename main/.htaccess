@@ -14,62 +14,63 @@ RewriteBase /
 Options +FollowSymLinks -Indexes
 
 # Rewrite Rules
-RewriteRule ^feedback/?$ https://github.com/circlestorm/Sakura/issues
-RewriteRule ^credits/?$ credits.php
-RewriteRule ^index/?$ index.php
-RewriteRule ^login/?$|^logout/?$|^activate/?$|^register/?$|^forgotpassword/?|^authenticate/?$ authenticate.php
-RewriteRule ^donate/?$|^support/?$ donate.php
-RewriteRule ^contact/?$ infopage.php?r=contact
-RewriteRule ^changelog/?$ changelog.php
-RewriteRule ^faq/?$ faq.php
-RewriteRule ^search/?$ search.php
+RewriteRule ^feedback/?$ https://github.com/circlestorm/Sakura/issues [L,QSA]
+RewriteRule ^credits/?$ credits.php [L,QSA]
+RewriteRule ^index/?$ index.php [L,QSA]
+RewriteRule ^login/?$|^logout/?$|^activate/?$|^register/?$|^forgotpassword/?|^authenticate/?$ authenticate.php [L,QSA]
+RewriteRule ^donate/?$|^support/?$ donate.php [L,QSA]
+RewriteRule ^contact/?$ infopage.php?r=contact [L,QSA]
+RewriteRule ^changelog/?$ changelog.php [L,QSA]
+RewriteRule ^faq/?$ faq.php [L,QSA]
+RewriteRule ^search/?$ search.php [L,QSA]
 
 ## Info pages
-RewriteRule ^r/([a-z]+)$ infopage.php?r=$1
+RewriteRule ^r/([a-z]+)$ infopage.php?r=$1 [L,QSA]
 
 ## News
-RewriteRule ^news/?$ news.php
-RewriteRule ^news/([0-9]+)$ news.php?id=$1
-RewriteRule ^news.xml$ news.php?xml
+RewriteRule ^news/?$ news.php [L,QSA]
+RewriteRule ^news/([0-9]+)$ news.php?id=$1 [L,QSA]
+RewriteRule ^news.xml$ news.php?xml [L,QSA]
 
 ## Settings
-RewriteRule ^settings/?$ settings.php
-RewriteRule ^settings/([a-z]+)/?$ settings.php?mode=$1
+RewriteRule ^settings/?$ settings.php [L,QSA]
+RewriteRule ^settings/([a-z]+)/?$ settings.php?mode=$1 [L,QSA]
+RewriteRule ^friends/?$ settings.php?friend-action=true [L,QSA]
 
 ## Private Messages
-RewriteRule ^messages/?$ messages.php
-RewriteRule ^messages/([a-z]+)/?$ messages.php?mode=$1
+RewriteRule ^messages/?$ messages.php [L,QSA]
+RewriteRule ^messages/([a-z]+)/?$ messages.php?mode=$1 [L,QSA]
 
 ## Members
-RewriteRule ^members/?$ members.php
-RewriteRule ^members/([a-z]+)/?$ members.php?sort=$1
-RewriteRule ^members/([0-9]+)/?$ members.php?rank=$1
-RewriteRule ^members/p([0-9]+)/?$ members.php?page=$1
-RewriteRule ^members/([a-z]+)/([0-9]+)/?$ members.php?sort=$1&rank=$2
-RewriteRule ^members/([0-9]+)/p([0-9]+)/?$ members.php?rank=$1&page=$2
-RewriteRule ^members/([a-z]+)/p([0-9]+)/?$ members.php?sort=$1&page=$2
-RewriteRule ^members/([a-z]+)/([0-9]+)/p([0-9]+)/?$ members.php?sort=$1&rank=$2&page=$3
+RewriteRule ^members/?$ members.php [L,QSA]
+RewriteRule ^members/([a-z]+)/?$ members.php?sort=$1 [L,QSA]
+RewriteRule ^members/([0-9]+)/?$ members.php?rank=$1 [L,QSA]
+RewriteRule ^members/p([0-9]+)/?$ members.php?page=$1 [L,QSA]
+RewriteRule ^members/([a-z]+)/([0-9]+)/?$ members.php?sort=$1&rank=$2 [L,QSA]
+RewriteRule ^members/([0-9]+)/p([0-9]+)/?$ members.php?rank=$1&page=$2 [L,QSA]
+RewriteRule ^members/([a-z]+)/p([0-9]+)/?$ members.php?sort=$1&page=$2 [L,QSA]
+RewriteRule ^members/([a-z]+)/([0-9]+)/p([0-9]+)/?$ members.php?sort=$1&rank=$2&page=$3 [L,QSA]
 
 ## Profiles
-RewriteRule ^u/?$ profile.php
-RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/?$ profile.php?u=$1
-RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/api/?$ profile.php?data
-RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/header/?$ imageserve.php?m=header&u=$1
-RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/groups/?$ profile.php?u=$1&view=groups
-RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/friends/?$ profile.php?u=$1$view=friends
-RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/threads/?$ profile.php?u=$1$view=threads
-RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/posts/?$ profile.php?u=$1$view=posts
+RewriteRule ^u/?$ profile.php [L,QSA]
+RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/?$ profile.php?u=$1 [L,QSA]
+RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/api/?$ profile.php?data [L,QSA]
+RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/header/?$ imageserve.php?m=header&u=$1 [L,QSA]
+RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/groups/?$ profile.php?u=$1&view=groups [L,QSA]
+RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/friends/?$ profile.php?u=$1$view=friends [L,QSA]
+RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/threads/?$ profile.php?u=$1$view=threads [L,QSA]
+RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/posts/?$ profile.php?u=$1$view=posts [L,QSA]
 
 # Serving Images
-RewriteRule ^a/([0-9]+)$|a/([0-9]+).png$ imageserve.php?m=avatar&u=$1
-RewriteRule ^bg/([0-9]+)$|bg/([0-9]+).png$ imageserve.php?m=background&u=$1
+RewriteRule ^a/([0-9]+)$|a/([0-9]+).png$ imageserve.php?m=avatar&u=$1 [L,QSA]
+RewriteRule ^bg/([0-9]+)$|bg/([0-9]+).png$ imageserve.php?m=background&u=$1 [L,QSA]
 
 # Forum
-RewriteRule ^forum/?$ forum/index.php
-RewriteRule ^forum/([0-9]+)/?$ forum/viewforum.php?id=$2
-RewriteRule ^forum/(thread|topic)/([0-9]+)/?$ forum/viewtopic.php?id=$2
+RewriteRule ^forum/?$ forum/index.php [L,QSA]
+RewriteRule ^forum/([0-9]+)/?$ forum/viewforum.php?id=$2 [L,QSA]
+RewriteRule ^forum/(thread|topic)/([0-9]+)/?$ forum/viewtopic.php?id=$2 [L,QSA]
 
 # Management
-RewriteRule ^manage/?$ manage.php
-RewriteRule ^manage/([a-z\-]+)/?$ manage.php?page=$1&sub=0
-RewriteRule ^manage/([a-z\-]+)/([a-z\-]+)/?$ manage.php?page=$1&sub=$2
+RewriteRule ^manage/?$ manage.php [L,QSA]
+RewriteRule ^manage/([a-z\-]+)/?$ manage.php?page=$1&sub=0 [L,QSA]
+RewriteRule ^manage/([a-z\-]+)/([a-z\-]+)/?$ manage.php?page=$1&sub=$2 [L,QSA]
