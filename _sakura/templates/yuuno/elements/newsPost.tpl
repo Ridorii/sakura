@@ -1,4 +1,4 @@
-{% if newsPosts|length > 1 %}<a href="/news/{{ newsPost.id }}" class="news-head" id="{{ newsPost.id }}">{{ newsPost.title }}</a>{% endif %}
+{% if newsPosts|length > 1 %}<a href="/news/{{ newsPost.id }}" class="news-head" id="n{{ newsPost.id }}">{{ newsPost.title }}</a>{% endif %}
 <div class="news-body">
     <a class="no-underline" href="/u/{{ newsPost.uid }}">
         <div class="news-poster">

@@ -56,16 +56,34 @@ $pages = [
     'avatar'        => ['Aesthetics',       'Avatar'],
     'background'    => ['Aesthetics',       'Background'],
     'page'          => ['Aesthetics',       'Profile Page'],
-    'email'         => ['Account',          'E-Mail Address'],
+    'email'         => ['Account',          'E-mail Address'],
     'username'      => ['Account',          'Username'],
     'usertitle'     => ['Account',          'User Title'],
     'password'      => ['Account',          'Password'],
     'ranks'         => ['Account',          'Ranks'],
     'sessions'      => ['Danger zone',      'Sessions'],
     'regkeys'       => ['Danger zone',      'Registration Keys'],
-    'deactivate'    => ['Danger zone',      'Deactivate Account']
+    'deactivate'    => ['Danger zone',      'Deactivate Account'],
+    'notfound'      => ['Settings',         '404']
 ];
-$currentPage = isset($_GET['mode']) && array_key_exists($_GET['mode'], $pages) ? $_GET['mode'] : key($pages);
+
+// Current settings page
+$currentPage = isset($_GET['mode']) ? (array_key_exists($_GET['mode'], $pages) ? $_GET['mode'] : 'notfound') : 'home';
+
+// Render data
+$renderData['page'] = [
+    'title' => $pages[$currentPage][0] .' / '. $pages[$currentPage][1]
+];
+
+// Section specific
+switch($currentPage) {
+
+    // Notification history
+    case 'notifications':
+        $renderData['notifs'] = array_reverse(Users::getNotifications(null, 0, false, true));
+        break;
+
+}
 
 // Print page contents
 print Templates::render('settings/'. $currentPage .'.tpl', $renderData);

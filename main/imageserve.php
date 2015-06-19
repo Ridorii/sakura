@@ -27,7 +27,7 @@ if(isset($_GET['m'])) {
             $bannedAvatar   = ROOT .'content/images/banned-av.png';
 
             // If ?u= isn't set or if it isn't numeric
-            if(!isset($_GET['u']) || !is_numeric($_GET['u'])) {
+            if(!isset($_GET['u']) || !is_numeric($_GET['u']) || $_GET['u'] == 0) {
                 $serveImage = $noAvatar;
                 break;
             }

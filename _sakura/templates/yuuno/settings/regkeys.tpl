@@ -8,10 +8,9 @@
                 {{ page.title }}
             </div>
             <div class="settings-explanation">
-                Welcome to the Settings Panel. From here you can monitor, view and update your profile and preferences.
+                Sometimes we activate the registration key system which means that users can only register using your "referer" keys, this means we can keep unwanted people from registering. Each user can generate 5 of these keys, bans and deactivates render these keys useless.
             </div>
-            <h1 class="stylised" style="line-height: 1.8em; text-align: center;">Select an option from the menu on the right!</h1>
-            <h3 style="text-align: center;">Some parts may require you to click a confirmation code sent to you in an e-mail, this is to ensure the security of your identity on the site.</h3>
+            
         </div>
         <div class="clear"></div>
     </div>

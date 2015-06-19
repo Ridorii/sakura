@@ -61,25 +61,16 @@
             function initHeaderLoginForm() {
 
                 var headerLoginForm = document.getElementById('headerLoginForm');
-                var headerLoginLink = document.getElementById('headerLoginLink');
                 var createInput     = document.createElement('input');
+                var submit          = headerLoginForm.querySelector('[type="submit"]');
 
                 createInput.setAttribute('name', 'ajax');
                 createInput.setAttribute('value', 'true');
                 createInput.setAttribute('type', 'hidden');
                 headerLoginForm.appendChild(createInput);
-
-                headerLoginLink.setAttribute('href', 'javascript:void(0);');
-                headerLoginLink.setAttribute('onclick', 'toggleLoginForm();');
-
-            }
-
-            // Toggling the dynamic login form
-            function toggleLoginForm() {
-
-                var headerLoginForm = document.getElementById('headerLoginForm');
-
-                headerLoginForm.className = (headerLoginForm.className == 'hidden' ? '' : 'hidden');
+                
+                submit.setAttribute('type', 'button');
+                submit.setAttribute('onclick', 'submitPost(\'headerLoginForm\', true, \'Logging in...\');');
 
             }
 
@@ -200,8 +191,7 @@
                             {% if sakura.lockauth %}
                             <div class="menu-item" style="padding-left: 10px; padding-right: 10px;">Authentication is locked</div>
                             {% else %}
-                            <a class="menu-item" id="headerLoginLink" href="//{{ sakura.urls.main }}/login" title="Login to Flashii">Login</a>
-                            <a class="menu-item" href="//{{ sakura.urls.main }}/register" title="Create an account">Register</a>
+                            <a class="menu-item" href="//{{ sakura.urls.main }}/authenticate" title="Login to Flashii">Login or Register</a>
                             {% endif %}
                         {% endif %}
                     </div>
@@ -213,8 +203,8 @@
             </div>
             <div id="contentwrapper">
                 <div id="notifications"></div>
-                {% if not user.checklogin %}
-                    <form method="post" action="/authenticate" class="hidden" id="headerLoginForm" onkeydown="formEnterCatch(event, 'headerLoginButton');">
+                {% if not user.checklogin and php.self != '/authenticate.php' %}
+                    <form method="post" action="/authenticate" id="headerLoginForm" onkeydown="formEnterCatch(event, 'headerLoginButton');">
                         <input type="hidden" name="redirect" value="{{ sakura.currentpage }}" />
                         <input type="hidden" name="session" value="{{ php.sessionid }}" />
                         <input type="hidden" name="time" value="{{ php.time }}" />
@@ -232,7 +222,7 @@
                             <label for="headerLoginRemember">Remember me</label>
                         </div>
                         <div>
-                            <input type="button" onclick="submitPost('headerLoginForm', true, 'Logging in...');" id="headerLoginButton" name="submit" class="inputStyling small" value="Login" />
+                            <input type="submit" id="headerLoginButton" name="submit" class="inputStyling small" value="Login" />
                         </div>
                     </form>
                 {% endif %}

@@ -17,8 +17,8 @@ Options +FollowSymLinks -Indexes
 RewriteRule ^feedback/?$ https://github.com/circlestorm/Sakura/issues
 RewriteRule ^credits/?$ credits.php
 RewriteRule ^index/?$ index.php
-RewriteRule ^login/?$|logout?/?$|activate?/?$|register?/?$|forgotpassword?/?|authenticate?/?$ authenticate.php
-RewriteRule ^donate/?$|support?/?$ donate.php
+RewriteRule ^login/?$|^logout/?$|^activate/?$|^register/?$|^forgotpassword/?|^authenticate/?$ authenticate.php
+RewriteRule ^donate/?$|^support/?$ donate.php
 RewriteRule ^contact/?$ infopage.php?r=contact
 RewriteRule ^changelog/?$ changelog.php
 RewriteRule ^faq/?$ faq.php

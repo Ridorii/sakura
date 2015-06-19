@@ -8,10 +8,9 @@
                 {{ page.title }}
             </div>
             <div class="settings-explanation">
-                Welcome to the Settings Panel. From here you can monitor, view and update your profile and preferences.
+                This is an error.
             </div>
-            <h1 class="stylised" style="line-height: 1.8em; text-align: center;">Select an option from the menu on the right!</h1>
-            <h3 style="text-align: center;">Some parts may require you to click a confirmation code sent to you in an e-mail, this is to ensure the security of your identity on the site.</h3>
+            <h1 class="stylised" style="margin: 2em auto; text-align: center;">Could not find what you were looking for.</h1>
         </div>
         <div class="clear"></div>
     </div>

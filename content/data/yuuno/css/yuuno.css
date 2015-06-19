@@ -10,6 +10,7 @@
 @import url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
 
 /* Import Segoe UI */
+@import url('/fonts/segoeui/font.css');
 @import url('/fonts/segoeui-light/font.css');
 
 /* Import markdown specific style */
@@ -182,7 +183,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: "SegoeUI-Light", "Segoe UI", sans-serif;
+    font-family: "SegoeUI-Light", "SegoeUI", "Segoe UI", sans-serif;
     font-weight: 100;
     margin: 5px 0;
 }
@@ -407,7 +408,7 @@ a.gotop.exit {
     min-width: 200px;
     border: 2px solid #9475B2;
     float: left;
-    font-family: "Segoe UI", sans-serif;
+    font-family: "SegoeUI", "Segoe UI", sans-serif;
     text-align: left;
     margin: 0 2px;
     transition: background .5s;
@@ -452,28 +453,42 @@ a.gotop.exit {
 }
 
 #headerLoginForm {
-    background: #9475B2;
-    border-bottom: 2px solid #9475B2;
-    box-shadow: 0 0 5px #8364A1;
+    background: rgba(211, 191, 255, .8);
+    border: 1px solid #9475B2;
+    box-shadow: 0 0 3px #8364A1;
     text-align: center;
+    max-width: 1024px;
+    margin: 10px auto 0;
+    padding: 6px 3px;
+    border-radius: 3px;
 }
 
 #headerLoginForm > div {
     display: inline-block;
 }
 
+#headerLoginForm input[type="submit"],
+#headerLoginForm input[type="button"] {
+    display: inline-block;
+    border-radius: 3px;
+}
+
 @media (max-width: 640px) {
 
     #headerLoginForm > div {
         display: block;
+    }
+
+    #headerLoginForm label {
         text-align: right;
-        padding-right: 2px;
+        min-width: 80px;
+        display: inline-block;
     }
 
 }
 
 #headerLoginForm label {
-    font-family: "Segoe UI", sans-serif;
+    font-family: "SegoeUI", "Segoe UI", sans-serif;
     font-weight: 100;
     font-size: 15px;
 }
@@ -515,7 +530,7 @@ a.gotop.exit {
     width: auto;
     display: inline-block;
     text-decoration: none;
-    font: 100 70px/80px "SegoeUI-Light", "Segoe UI", sans-serif;
+    font: 100 70px/80px "SegoeUI-Light", "SegoeUI", "Segoe UI", sans-serif;
     color: #B06AC4;
     transition: color .2s, text-shadow .2s;
 }
@@ -532,7 +547,7 @@ a.gotop.exit {
 
 @media (max-width: 768px) {
     .header .logo {
-        font: 100 50px/60px "SegoeUI-Light", "Segoe UI", sans-serif;
+        font: 100 50px/60px "SegoeUI-Light", "SegoeUI", "Segoe UI", sans-serif;
     }
 }
 
@@ -673,7 +688,7 @@ a.gotop.exit {
 
 .headerNotify {
     margin: 10px auto;
-    padding: 10px;
+    padding: 2px 3px;
     width: auto;
     max-width: 1024px;
     border: 1px solid #9475B2;
@@ -922,7 +937,7 @@ a.gotop.exit {
     bottom: 5px;
     right: 5px;
     z-index: 3;
-    font-family: "Segoe UI", sans-serif;
+    font-family: "SegoeUI", "Segoe UI", sans-serif;
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 510px;
@@ -1265,6 +1280,48 @@ a.gotop.exit {
 
 .settings form {
     overflow: auto;
+}
+
+.settings .notification-history > div {
+    border: 1px solid #507;
+    margin: 5px;
+    background: rgba(113, 74, 150, .3);
+}
+
+.settings .notification-history > div > .notif-hist-icon {
+    float: left;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    background: rgba(0, 0, 0, .5);
+    display: block;
+    color: #FFF;
+}
+
+.settings .notification-history > div > .notif-hist-icon > .font-icon {
+    margin: .34em 0;
+}
+
+.settings .notification-history > div > .notif-hist-content > .notif-hist-time {
+   font-style: italic;
+   text-align: right;
+   float: right;
+   margin-right: 6px;
+   font-size: .8em;
+}
+
+.settings .notification-history > div > .notif-hist-content > .notif-hist-inside {
+    float: left;
+    margin-left: 2px;
+    padding-left: 8px;
+}
+
+.settings .notification-history > div > .notif-hist-content > .notif-hist-inside > .notif-hist-title {
+    font-family: "SegoeUI", "Segoe UI", sans-serif;
+    font-weight: 300;
+    font-size: 1.7em;
+    margin-top: 1em;
 }
 
 /*

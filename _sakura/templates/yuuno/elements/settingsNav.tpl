@@ -16,7 +16,7 @@
     <a href="/settings/background">Background</a>
     <a href="/settings/page">Profile Page</a>
     <div>Account</div>
-    <a href="/settings/email">E-Mail Address</a>
+    <a href="/settings/email">E-mail Address</a>
     <a href="/settings/username">Username</a>
     <a href="/settings/usertitle">User Title</a>
     <a href="/settings/password">Password</a>

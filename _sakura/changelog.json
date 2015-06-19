@@ -19,7 +19,8 @@
                 "20150529",
                 "20150530",
                 "20150602",
-                "20150604"
+                "20150604",
+                "20150619"
 
             ]
 
@@ -1249,6 +1250,15 @@
             {
                 "type":     "ADD",
                 "change":   "Add /header to profile for spooky things."
+            }
+
+        ],
+
+        "20150619": [
+
+            {
+                "type":     "ADD",
+                "change":   "Added notification history section contents to settings panel."
             }
 
         ]
