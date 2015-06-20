@@ -36,7 +36,8 @@ if(isset($_GET['u'])) {
         'online'        => Users::checkUserOnline($_PROFILE_USER_DATA['id']),
         'profilePage'   => Users::getProfilePage($_PROFILE_PROFILE_DATA, true),
         'fields'        => Users::getUserProfileFields($_PROFILE_PROFILE_DATA, true),
-        'warnings'      => Users::getWarnings($_PROFILE_USER_DATA['id'])
+        'warnings'      => Users::getWarnings($_PROFILE_USER_DATA['id']),
+        'friend'        => Users::checkFriend($_PROFILE_USER_DATA['id'])
     ];
 
     $renderData['page'] = [

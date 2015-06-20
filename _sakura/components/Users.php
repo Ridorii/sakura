@@ -1122,7 +1122,7 @@ class Users {
     }
 
     // Check if a friend is mutual
-    public static function checkMutualFriend($fid, $uid = null) {
+    public static function checkFriend($fid, $uid = null) {
 
         // Assign $uid
         if(!$uid)
@@ -1133,17 +1133,17 @@ class Users {
 
         // Check if the friend is actually in the user's array
         if(!in_array($fid, $self))
-            return false;
+            return 0;
 
         // Get the friend's friends
         $friend = self::getFriends($fid);
 
         // Check if the friend is actually in the user's array
-        if(!in_array($uid, $friend))
-            return false;
+        if(in_array($uid, $friend))
+            return 2;
 
         // Return true if all went through
-        return true;
+        return 1;
 
     }
 
@@ -1166,7 +1166,7 @@ class Users {
         ]);
 
         // Return true because yay
-        return [1, Users::checkMutualFriend($uid) ? 'FRIENDS' : 'NOT_MUTUAL'];
+        return [1, Users::checkFriend($uid) == 2 ? 'FRIENDS' : 'NOT_MUTUAL'];
 
     }
 
@@ -1179,8 +1179,8 @@ class Users {
 
         // Remove friend
         Database::delete('friends', [
-            'uid'       => Session::$userId,
-            'fid'       => $uid
+            'uid' => [Session::$userId, '='],
+            'fid' => [$uid, '=']
         ]);
 
         // Return true because yay

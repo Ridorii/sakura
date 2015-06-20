@@ -20,7 +20,8 @@
                 "20150530",
                 "20150602",
                 "20150604",
-                "20150619"
+                "20150619",
+                "20150620"
 
             ]
 
@@ -1259,6 +1260,15 @@
             {
                 "type":     "ADD",
                 "change":   "Added notification history section contents to settings panel."
+            }
+
+        ],
+
+        "20150620": [
+
+            {
+                "type":     "ADD",
+                "change":   "Added friends system."
             }
 
         ]

@@ -49,32 +49,135 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 // Friends
 } elseif(isset($_REQUEST['friend-action']) && $_REQUEST['friend-action']) {
 
-    if(!isset($_REQUEST['session']) || $_REQUEST['session'] !== session_id()) {
-        print Templates::render('errors/information.tpl', array_merge($renderData, ['page' => ['redirect' => $_SERVER['PHP_SELF'], 'message' => 'Invalid session ID, please try again.', 'title' => 'Information']]));
-        exit;
+    // Continue
+    $continue = true;
+
+    // Referrer
+    $redirect = isset($_REQUEST['redirect']) ? $_REQUEST['redirect'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/');
+
+    // Compare time and session so we know the link isn't forged
+    if(!isset($_REQUEST['add']) && !isset($_REQUEST['remove'])) {
+
+        $renderData['page'] = [
+            'title'     => 'Action failed',
+            'redirect'  => $redirect,
+            'message'   => 'One of the required operators isn\'t set.',
+            'success'   => 0
+        ];
+
+        // Prevent
+        $continue = false;
+
     }
 
-    if((!isset($_REQUEST['add']) && !isset($_REQUEST['remove'])) || !isset($_REQUEST['time'])) {
-        print Templates::render('errors/information.tpl', array_merge($renderData, ['page' => ['redirect' => $_SERVER['PHP_SELF'], 'message' => 'One or more required parameter is not set.', 'title' => 'Information']]));
-        exit;
+    // Compare time and session so we know the link isn't forged
+    if($_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')] == Session::$userId) {
+
+        $renderData['page'] = [
+            'title'     => 'Action failed',
+            'redirect'  => $redirect,
+            'message'   => 'You can\'t be friends with yourself, stop trying to bend reality.',
+            'success'   => 0
+        ];
+
+        // Prevent
+        $continue = false;
+
     }
 
-    if((isset($_REQUEST['add']) && $_REQUEST['add'] == Session::$userId) || (isset($_REQUEST['remove']) && $_REQUEST['remove'] == Session::$userId)) {
-        print Templates::render('errors/information.tpl', array_merge($renderData, ['page' => ['redirect' => $_SERVER['PHP_SELF'], 'message' => 'Can\'t add yourself as a friend.', 'title' => 'Information']]));
-        exit;
+    // Compare time and session so we know the link isn't forged
+    if(!isset($_REQUEST['time']) || $_REQUEST['time'] < time() - 1000) {
+
+        $renderData['page'] = [
+            'title'     => 'Action failed',
+            'redirect'  => $redirect,
+            'message'   => 'Timestamps differ too much, refresh the page and try again.',
+            'success'   => 0
+        ];
+
+        // Prevent
+        $continue = false;
+
     }
-    
-    $add = Users::addFriend($_REQUEST['add']);
-print $add[1];
-    if($add[0]) {
-        $user = Users::getUser(Session::$userId);
-        Users::createNotification($_REQUEST['add'], $user['username'] .' added you as a friend!', 'If you aren\'t mutual friends yet click here to add them as well.', 60000, '//'. Configuration::getLocalConfig('urls', 'main') .'/a/'. $user['id'], '//'. Configuration::getLocalConfig('urls', 'main') .'/u/'. $user['id'], '1');
-        print Templates::render('errors/information.tpl', array_merge($renderData, ['page' => ['redirect' => $_SERVER['PHP_SELF'], 'message' => 'You are now friends!', 'title' => 'Information']]));
-        exit;
-    } else {
-        print Templates::render('errors/information.tpl', array_merge($renderData, ['page' => ['redirect' => $_SERVER['PHP_SELF'], 'message' => 'Something went wrong.', 'title' => 'Information']]));
-        exit;
+
+    // Match session ids for the same reason
+    if(!isset($_REQUEST['session']) || $_REQUEST['session'] != session_id()) {
+
+        $renderData['page'] = [
+            'title'     => 'Action failed',
+            'redirect'  => $redirect,
+            'message'   => 'Invalid session, please try again.',
+            'success'   => 0
+        ];
+
+        // Prevent
+        $continue = false;
+
     }
+
+    // Continue if nothing fucked up
+    if($continue) {
+
+        // Execute the action
+        $action = (isset($_REQUEST['add']) ?  Users::addFriend($_REQUEST['add']) : Users::removeFriend($_REQUEST['remove']));
+
+        // Set the messages
+        $messages = [
+            'USER_NOT_EXIST'    => 'The user you tried to add doesn\'t exist.',
+            'ALREADY_FRIENDS'   => 'You are already friends with this person!',
+            'FRIENDS'           => 'You are now mutual friends!',
+            'NOT_MUTUAL'        => 'A friend request has been sent to this person.',
+            'ALREADY_REMOVED'   => 'You aren\'t friends with this person.',
+            'REMOVED'           => 'Removed this person from your friends list.'
+        ];
+
+        // Notification strings
+        $notifStrings = [
+            'FRIENDS'       => ['%s accepted your friend request!',     'You can now do mutual friend things!'],
+            'NOT_MUTUAL'    => ['%s added you as a friend!',            'Click here to add them as well.'],
+            'REMOVED'       => ['%s removed you from their friends.',   'You can no longer do friend things now ;_;']
+        ];
+
+        // Add page specific things
+        $renderData['page'] = [
+            'title'     => 'Managing Friends',
+            'redirect'  => $redirect,
+            'message'   => $messages[$action[1]],
+            'success'   => $action[0]
+        ];
+
+        // Create a notification
+        if(array_key_exists($action[1], $notifStrings)) {
+
+            // Get the current user's profile data
+            $user = Users::getUser(Session::$userId);
+
+            Users::createNotification(
+                $_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')],
+                sprintf($notifStrings[$action[1]][0], $user['username']),
+                $notifStrings[$action[1]][1],
+                60000,
+                '//'. Configuration::getLocalConfig('urls', 'main') .'/a/'. $user['id'],
+                '//'. Configuration::getLocalConfig('urls', 'main') .'/u/'. $user['id'],
+                '1'
+            );
+
+        }
+
+    }
+
+    // Print page contents or if the AJAX request is set only display the render data
+    print   isset($_REQUEST['ajax']) ?
+            (
+                $renderData['page']['title']
+                . '|'
+                . $renderData['page']['message']
+                . '|'
+                . $renderData['page']['success']
+                . '|'
+                . $renderData['page']['redirect']
+            ) :
+            Templates::render('errors/information.tpl', $renderData);
     exit;
 
 }

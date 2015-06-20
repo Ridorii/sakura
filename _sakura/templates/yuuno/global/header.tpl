@@ -108,6 +108,42 @@
             }
 
         {% endif %}
+
+        {% if php.self == '/profile.php' and user.checklogin and user.data.id != profile.user.id %}
+
+            // Prepare friend toggle
+            function initFriendToggle() {
+
+                var profileFriendToggle = document.getElementById('profileFriendToggle');
+
+                profileFriendToggle.setAttribute('href', 'javascript:void(0);');
+                profileFriendToggle.setAttribute('onclick', 'doFriendToggle();');
+
+            }
+
+            function doFriendToggle() {
+
+                generateForm("doFriendToggle", {
+                    "class":    "hidden",
+                    "method":   "post",
+                    "action":   "//{{ sakura.urls.main }}/friends"
+                },
+                {
+                    "{% if profile.friend == 0 %}add{% else %}remove{% endif %}": "{{ profile.user.id }}",
+                    "ajax":     "true",
+                    "time":     "{{ php.time }}",
+                    "session":  "{{ php.sessionid }}",
+                    "redirect": "{{ sakura.currentpage }}"
+                }, "contentwrapper");
+
+                setTimeout(function(){
+                    submitPost("doFriendToggle", true, "{% if profile.friend == 0 %}Adding{% else %}Removing{% endif %} friend...")
+                }, 10);
+
+            }
+
+        {% endif %}
+
         // Space for things that need to happen onload
         window.onload = function() {
 
@@ -123,6 +159,10 @@
             // Make notification requests (there's a seperate one to make it happen before the first 60 seconds)
             notifyRequest('{{ php.sessionid }}');
             setInterval(function(){notifyRequest('{{ php.sessionid }}');}, 60000);
+            {% endif %}
+
+            {% if php.self == '/profile.php' and user.checklogin and user.data.id != profile.user.id %}
+            initFriendToggle();
             {% endif %}
 
             {% if php.self == '/authenticate.php' and not sakura.lockauth %}

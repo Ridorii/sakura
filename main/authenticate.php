@@ -39,7 +39,7 @@ if(isset($_REQUEST['mode'])) {
             $renderData['page'] = [
                 'title'     => 'Action failed',
                 'redirect'  => '/authenticate',
-                'message'   => 'Session IDs do not match.',
+                'message'   => 'Invalid session, please try again.',
                 'success'   => 0
             ];
 
