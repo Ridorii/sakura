@@ -71,7 +71,7 @@ class MySQL {
         
         try {
             // Connect to SQL server using PDO
-            $this->sql = new PDO($DSN, $dbUname, $dbPword, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
+            $this->sql = new PDO($DSN, $dbUname, $dbPword, array(PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
         } catch(PDOException $e) {
             // Catch connection errors
             trigger_error('SQL Driver: '. $e->getMessage(), E_USER_ERROR);
