@@ -226,7 +226,7 @@
                             <a class="menu-item" href="//{{ sakura.urls.main }}/messages" title="Read your private message">Messages</a>
                             <a class="menu-item" href="//{{ sakura.urls.main }}/manage" title="Manage the site">Manage</a>
                             <a class="menu-item" href="//{{ sakura.urls.main }}/settings" title="Change your settings">Settings</a>
-                            <a class="menu-item" href="//{{ sakura.urls.main }}/logout?mode=logout&time={{ php.time }}&session={{ php.sessionid }}&redirect={{ sakura.currentpage }}" title="End your login session" id="headerLogoutLink">Logout</a>
+                            <a class="menu-item" href="//{{ sakura.urls.main }}/logout?mode=logout&amp;time={{ php.time }}&amp;session={{ php.sessionid }}&amp;redirect={{ sakura.currentpage }}" title="End your login session" id="headerLogoutLink">Logout</a>
                         {% else %}
                             {% if sakura.lockauth %}
                             <div class="menu-item" style="padding-left: 10px; padding-right: 10px;">Authentication is locked</div>

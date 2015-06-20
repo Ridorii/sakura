@@ -1,10 +1,9 @@
 {% if user.checklogin %}
     <div class="head">Hi, {{ user.data.username }}!</div>
-    <img src="//{{ sakura.urls.main }}/a/{{ user.data.id }}" class="default-avatar-setting homepage-menu-avatar" />
-    <ul>
-        <li><a href="//{{ sakura.urls.main }}/settings/profile" class="underline">Edit profile</a></li>
-        <li><a href="//{{ sakura.urls.main }}/settings/avatar" class="underline">Change avatar</a></li>
-        <li><a href="//{{ sakura.urls.main }}/settings/sessions" class="underline">View active sessions</a></li>
+    <a href="//{{ sakura.urls.main }}/settings/avatar"><img src="//{{ sakura.urls.main }}/a/{{ user.data.id }}" class="default-avatar-setting homepage-menu-avatar" /></a>
+    <ul class="panel-quick-links">
+        <li><a href="//{{ sakura.urls.main }}/friends" title="View friends list"><span class="fa fa-users"></span><span class="count">0</span></a></li>
+        <li><a href="//{{ sakura.urls.main }}/messages" title="View private messages"><span class="fa fa-envelope"></span><span class="count">0</span></a></li>
     </ul>
     <div class="clear"></div>
 {% else %}

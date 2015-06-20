@@ -54,12 +54,15 @@ RewriteRule ^members/([a-z]+)/([0-9]+)/p([0-9]+)/?$ members.php?sort=$1&rank=$2&
 ## Profiles
 RewriteRule ^u/?$ profile.php [L,QSA]
 RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/?$ profile.php?u=$1 [L,QSA]
-RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/api/?$ profile.php?data [L,QSA]
 RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/header/?$ imageserve.php?m=header&u=$1 [L,QSA]
 RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/groups/?$ profile.php?u=$1&view=groups [L,QSA]
 RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/friends/?$ profile.php?u=$1$view=friends [L,QSA]
 RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/threads/?$ profile.php?u=$1$view=threads [L,QSA]
 RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/posts/?$ profile.php?u=$1$view=posts [L,QSA]
+
+## Groups
+RewriteRule ^g/?$ group.php [L,QSA]
+RewriteRule ^g/([0-9]+)/?$ group.php?g=$1 [L,QSA]
 
 # Serving Images
 RewriteRule ^a/([0-9]+)$|a/([0-9]+).png$ imageserve.php?m=avatar&u=$1 [L,QSA]

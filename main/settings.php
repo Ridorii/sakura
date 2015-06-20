@@ -47,7 +47,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
     exit;
 
 // Friends
-} elseif(isset($_REQUEST['friend-action']) && $_REQUEST['friend-action']) {
+} elseif(isset($_REQUEST['friend-action']) && $_REQUEST['friend-action'] && Users::checkLogin()) {
 
     // Continue
     $continue = true;
@@ -57,6 +57,13 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
     // Compare time and session so we know the link isn't forged
     if(!isset($_REQUEST['add']) && !isset($_REQUEST['remove'])) {
+
+        if(!isset($_REQUEST['ajax'])) {
+
+            header('Location: /settings/friends');
+            exit;
+
+        }
 
         $renderData['page'] = [
             'title'     => 'Action failed',
@@ -71,7 +78,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
     }
 
     // Compare time and session so we know the link isn't forged
-    if($_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')] == Session::$userId) {
+    if($continue && $_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')] == Session::$userId) {
 
         $renderData['page'] = [
             'title'     => 'Action failed',
@@ -182,42 +189,52 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
 }
 
-// Settings page list
-$pages = [
-    'home'          => ['General',          'Home'],
-    'profile'       => ['General',          'Edit Profile'],
-    'notifications' => ['Notifications',    'History'],
-    'avatar'        => ['Aesthetics',       'Avatar'],
-    'background'    => ['Aesthetics',       'Background'],
-    'page'          => ['Aesthetics',       'Profile Page'],
-    'email'         => ['Account',          'E-mail Address'],
-    'username'      => ['Account',          'Username'],
-    'usertitle'     => ['Account',          'User Title'],
-    'password'      => ['Account',          'Password'],
-    'ranks'         => ['Account',          'Ranks'],
-    'sessions'      => ['Danger zone',      'Sessions'],
-    'regkeys'       => ['Danger zone',      'Registration Keys'],
-    'deactivate'    => ['Danger zone',      'Deactivate Account'],
-    'notfound'      => ['Settings',         '404']
-];
+if(Users::checkLogin()) {
 
-// Current settings page
-$currentPage = isset($_GET['mode']) ? (array_key_exists($_GET['mode'], $pages) ? $_GET['mode'] : 'notfound') : 'home';
+    // Settings page list
+    $pages = [
+        'home'          => ['General',          'Home'],
+        'profile'       => ['General',          'Edit Profile'],
+        'notifications' => ['Notifications',    'History'],
+        'avatar'        => ['Aesthetics',       'Avatar'],
+        'background'    => ['Aesthetics',       'Background'],
+        'page'          => ['Aesthetics',       'Profile Page'],
+        'email'         => ['Account',          'E-mail Address'],
+        'username'      => ['Account',          'Username'],
+        'usertitle'     => ['Account',          'User Title'],
+        'password'      => ['Account',          'Password'],
+        'ranks'         => ['Account',          'Ranks'],
+        'sessions'      => ['Danger zone',      'Sessions'],
+        'regkeys'       => ['Danger zone',      'Registration Keys'],
+        'deactivate'    => ['Danger zone',      'Deactivate Account'],
+        'notfound'      => ['Settings',         '404']
+    ];
 
-// Render data
-$renderData['page'] = [
-    'title' => $pages[$currentPage][0] .' / '. $pages[$currentPage][1]
-];
+    // Current settings page
+    $currentPage = isset($_GET['mode']) ? (array_key_exists($_GET['mode'], $pages) ? $_GET['mode'] : 'notfound') : 'home';
 
-// Section specific
-switch($currentPage) {
+    // Render data
+    $renderData['page'] = [
+        'title' => $pages[$currentPage][0] .' / '. $pages[$currentPage][1]
+    ];
 
-    // Notification history
-    case 'notifications':
-        $renderData['notifs'] = array_reverse(Users::getNotifications(null, 0, false, true));
-        break;
+    // Section specific
+    switch($currentPage) {
+
+        // Notification history
+        case 'notifications':
+            $renderData['notifs'] = array_reverse(Users::getNotifications(null, 0, false, true));
+            break;
+
+    }
+
+    // Print page contents
+    print Templates::render('settings/'. $currentPage .'.tpl', $renderData);
+
+} else {
+
+    print Templates::render('global/header.tpl', $renderData);
+    print Templates::render('elements/restricted.tpl', $renderData);
+    print Templates::render('global/footer.tpl', $renderData);
 
 }
-
-// Print page contents
-print Templates::render('settings/'. $currentPage .'.tpl', $renderData);

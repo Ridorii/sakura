@@ -143,10 +143,6 @@
                 "change":   "Replace broken template tags."
             },
             {
-                "type":     "FIX",
-                "change":   "Replace broken template tags."
-            },
-            {
                 "type":     "ADD",
                 "change":   "Upload remaining assets."
             },
@@ -1269,6 +1265,18 @@
             {
                 "type":     "ADD",
                 "change":   "Added friends system."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Changed &amp; to &amp;amp; in some URLs."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed settings page being usable when logged out."
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed remaining code for the old profile API."
             }
 
         ]

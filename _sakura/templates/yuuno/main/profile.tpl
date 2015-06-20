@@ -19,16 +19,16 @@
                 <br /><span style="font-size: .8em;">{{ profile.ranktitle }}</span>
                 <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px #888; padding: 0 0 2px;">{{ profile.user.username }}</h1>
                 {% if profile.user.rank_main > 1 %}
-                {% if profile.istenshi %}<img src="//{{ sakura.urls.content }}/images/tenshi.png" alt="Tenshi" /> {% endif %}<img src="//{{ sakura.urls.content }}/images/flags/{% if profile.user.country|lower == 'eu' %}europeanunion{% else %}{{ profile.user.country|lower }}{% endif %}.png" alt="{{ profile.user.country }}" /> <span style="font-size: .9em; line-height: 11px;">{{ profile.country }}</span>
+                    {% if profile.istenshi %}<img src="//{{ sakura.urls.content }}/images/tenshi.png" alt="Tenshi" /> {% endif %}<img src="//{{ sakura.urls.content }}/images/flags/{% if profile.user.country|lower == 'eu' %}europeanunion{% else %}{{ profile.user.country|lower }}{% endif %}.png" alt="{{ profile.user.country }}" /> <span style="font-size: .9em; line-height: 11px;">{{ profile.country }}</span>
                 {% if user.checklogin %}
                 <div class="user-actions">
-                {% if user.data.id == profile.user.id %}
-                <a class="fa fa-pencil-square" title="Edit your profile" href="//{{ sakura.urls.main }}/settings/profile"></a>
-                {% else %}
-                {% if profile.friend != 0 %}<a class="fa fa-{% if profile.friend == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
-                <a class="fa fa-user-{% if profile.friend == 0 %}plus{% else %}times{% endif %}" title="{% if profile.friend == 0 %}Add {{ profile.user.username }} as a friend{% else %}Remove friend{% endif %}" href="//{{ sakura.urls.main }}/friends?{% if profile.friend == 0 %}add{% else %}remove{% endif %}={{ profile.user.id }}&session={{ php.sessionid }}&time={{ php.time }}&redirect={{ sakura.currentpage }}" id="profileFriendToggle"></a>
-                <a class="fa fa-flag" title="Report {{ profile.user.username }}" href="//{{ sakura.urls.main }}/report/{{ profile.user.id }}"></a>
-                {% endif %}
+                    {% if user.data.id == profile.user.id %}
+                    <a class="fa fa-pencil-square" title="Edit your profile" href="//{{ sakura.urls.main }}/settings/profile"></a>
+                    {% else %}
+                    {% if profile.friend != 0 %}<a class="fa fa-{% if profile.friend == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
+                    <a class="fa fa-user-{% if profile.friend == 0 %}plus{% else %}times{% endif %}" title="{% if profile.friend == 0 %}Add {{ profile.user.username }} as a friend{% else %}Remove friend{% endif %}" href="//{{ sakura.urls.main }}/friends?{% if profile.friend == 0 %}add{% else %}remove{% endif %}={{ profile.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect={{ sakura.currentpage }}" id="profileFriendToggle"></a>
+                    <a class="fa fa-flag" title="Report {{ profile.user.username }}" href="//{{ sakura.urls.main }}/report/{{ profile.user.id }}"></a>
+                    {% endif %}
                 </div>
                 {% endif %}
                 <hr class="default" />

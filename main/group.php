@@ -1,6 +1,6 @@
 <?php
 /*
- * Sakura User Profiles
+ * Sakura User Groups
  */
 
 // Declare Namespace
@@ -8,9 +8,9 @@ namespace Sakura;
 
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sakura.php';
-
-// Get user data
-if(isset($_GET['u'])) {
+/*
+// Get group data
+if(isset($_GET['g'])) {
 
     $renderData['profile'] = [
         'notset'        => false,
@@ -52,3 +52,4 @@ if(isset($_GET['u'])) {
 
 // Print page contents
 print Templates::render('main/profile.tpl', $renderData);
+*/
