@@ -59,6 +59,7 @@ RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/groups/?$ profile.php?u=$1&view=groups [L,QS
 RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/friends/?$ profile.php?u=$1$view=friends [L,QSA]
 RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/threads/?$ profile.php?u=$1$view=threads [L,QSA]
 RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/posts/?$ profile.php?u=$1$view=posts [L,QSA]
+RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/report/?$ report.php?mode=user&id=$1 [L,QSA]
 
 ## Groups
 RewriteRule ^g/?$ group.php [L,QSA]

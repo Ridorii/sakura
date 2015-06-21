@@ -27,7 +27,7 @@
                     {% else %}
                     {% if profile.friend != 0 %}<a class="fa fa-{% if profile.friend == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
                     <a class="fa fa-user-{% if profile.friend == 0 %}plus{% else %}times{% endif %}" title="{% if profile.friend == 0 %}Add {{ profile.user.username }} as a friend{% else %}Remove friend{% endif %}" href="//{{ sakura.urls.main }}/friends?{% if profile.friend == 0 %}add{% else %}remove{% endif %}={{ profile.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect={{ sakura.currentpage }}" id="profileFriendToggle"></a>
-                    <a class="fa fa-flag" title="Report {{ profile.user.username }}" href="//{{ sakura.urls.main }}/report/{{ profile.user.id }}"></a>
+                    <a class="fa fa-flag" title="Report {{ profile.user.username }}" href="//{{ sakura.urls.main }}/u/{{ profile.user.id }}/report"></a>
                     {% endif %}
                 </div>
                 {% endif %}

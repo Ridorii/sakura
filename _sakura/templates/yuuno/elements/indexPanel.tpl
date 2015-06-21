@@ -1,8 +1,8 @@
 {% if user.checklogin %}
     <div class="head">Hi, {{ user.data.username }}!</div>
     <a href="//{{ sakura.urls.main }}/settings/avatar"><img src="//{{ sakura.urls.main }}/a/{{ user.data.id }}" class="default-avatar-setting homepage-menu-avatar" /></a>
-    <ul class="panel-quick-links">
-        <li><a href="//{{ sakura.urls.main }}/friends" title="View friends list"><span class="fa fa-users"></span><span class="count">0</span></a></li>
+    <ul class="panelQuickLinks">
+        <li><a href="//{{ sakura.urls.main }}/friends" title="Pending friend requests"><span class="fa fa-user-plus"></span><span class="count">0</span></a></li>
         <li><a href="//{{ sakura.urls.main }}/messages" title="View private messages"><span class="fa fa-envelope"></span><span class="count">0</span></a></li>
     </ul>
     <div class="clear"></div>

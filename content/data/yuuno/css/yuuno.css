@@ -499,18 +499,39 @@ a.gotop.exit {
     line-height: 1.3em;
 }
 
-.indexSidePanelLinks > a {
+.panelQuickLinks {
+    font-size: 2.5em;
+    list-style: none;
+    line-height: 2.2em;
+    margin: 0 !important;
+    padding: 6px 0 0 8px
+}
+
+.panelQuickLinks > li {
+    float: left;
+    margin: 0 10px;
+}
+
+.panelQuickLinks > li > a > .count {
+    font: 100 1em "SegoeUI", "Segoe UI", sans-serif;
+    margin-left: 6px;
+}
+
+.indexSidePanelLinks > a,
+.panelQuickLinks a {
     color: #8364A1;
     text-decoration: none;
     text-shadow: 0 0 2px #9475B2;
     transition: all .2s;
 }
 
-.indexSidePanelLinks > a:hover {
+.indexSidePanelLinks > a:hover,
+.panelQuickLinks a:hover {
     text-shadow: 0 0 6px #9475B2;
 }
 
-.indexSidePanelLinks > a:active {
+.indexSidePanelLinks > a:active,
+.panelQuickLinks a:active {
     color: #725390;
     text-shadow: 0 0 8px #8364A1;
 }

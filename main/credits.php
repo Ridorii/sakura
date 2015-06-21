@@ -16,15 +16,17 @@ $renderData['page'] = [
 $renderData['contributors'] = [
     'Flashwave'     => ['Main developer.', 'http://flash.moe'],
     'Kurasha244'    => ['Writing the base for the old backend.', 'http://saibateku.net'],
-    'nookls'        => ['Code guidance and debug help.', 'http://nookls.org'],
-    'MallocNull'    => ['Sock Chat and debug help.', 'http://aroltd.com']
+    'nookls'        => ['Being nookls.', 'http://nookls.org'],
+    'MallocNull'    => ['Sock Chat and debug help.', 'http://aroltd.com'],
+    'kamil'         => ['Pointing out mistakes and fixing them.', 'http://krakow.pw']
 ];
 $renderData['thirdParty'] = [
     'ReCAPTCHA'     => ['Providing the Captcha system we use.', 'http://recaptcha.net'],
     'Twig'          => ['The templating engine used by Sakura.', 'http://twig.sensiolabs.org/'],
     'Parsedown'     => ['A PHP markdown parser.', 'http://parsedown.org/'],
     'Defuse'        => ['Making the PBKDF2 implementation for PHP', 'http://defuse.ca/'],
-    'PHPMailer'     => ['Writing PHPMailer and making e-mail sending a not pain in the ass', 'https://github.com/PHPMailer/PHPMailer']
+    'PHPMailer'     => ['Writing PHPMailer and making e-mail sending a not pain in the ass', 'https://github.com/PHPMailer/PHPMailer'],
+    'PayPal'        => ['Making a PayPal API', 'https://paypal.com']
 ];
 
 // Print page contents
