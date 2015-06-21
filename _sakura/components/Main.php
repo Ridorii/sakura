@@ -60,6 +60,30 @@ class Main {
 
     }
 
+    // Parse bbcodes
+    public static function bbParse($text) {
+
+        // Get bbcode regex from the database
+        $bbcodes = Database::fetch('bbcodes');
+
+        // Split the regex
+        $regex = array_map(function($arr) {
+            return $arr['regex'];
+        }, $bbcodes);
+
+        // Split the replacement
+        $replace = array_map(function($arr) {
+            return $arr['replace'];
+        }, $bbcodes);
+
+        // Do the replacement
+        $text = preg_replace($regex, $replace, $text);
+
+        // Return the parsed text
+        return $text;
+
+    }
+
     // Verify ReCAPTCHA
     public static function verifyCaptcha($response) {
 

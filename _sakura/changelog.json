@@ -21,7 +21,8 @@
                 "20150602",
                 "20150604",
                 "20150619",
-                "20150620"
+                "20150620",
+                "20150621"
 
             ]
 
@@ -1277,6 +1278,19 @@
             {
                 "type":     "REM",
                 "change":   "Removed remaining code for the old profile API."
+            }
+
+        ],
+
+        "20150621": [
+
+            {
+                "type":     "UPD",
+                "change":   "Changed the options next to the avatar on the index panel."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added a bbcode parser."
             }
 
         ]
