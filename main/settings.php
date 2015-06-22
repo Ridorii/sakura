@@ -195,6 +195,8 @@ if(Users::checkLogin()) {
     $pages = [
         'home'          => ['General',          'Home'],
         'profile'       => ['General',          'Edit Profile'],
+        'friends'       => ['General',          'Friends'],
+        'groups'        => ['General',          'Groups'],
         'notifications' => ['Notifications',    'History'],
         'avatar'        => ['Aesthetics',       'Avatar'],
         'background'    => ['Aesthetics',       'Background'],
@@ -220,6 +222,11 @@ if(Users::checkLogin()) {
 
     // Section specific
     switch($currentPage) {
+
+        // Notification history
+        case 'friends':
+            $renderData['friends'] = Users::getFriends();
+            break;
 
         // Notification history
         case 'notifications':
