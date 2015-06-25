@@ -3,11 +3,12 @@
  * Sakura MySQL Database Engine
  */
 
-namespace Sakura;
+namespace Sakura\DBWrapper;
 
 use PDO;
 use PDOException;
 use PDOStatement;
+use \Sakura\Configuration;
 
 class MySQL {
 

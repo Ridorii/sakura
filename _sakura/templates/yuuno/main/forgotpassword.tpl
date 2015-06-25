@@ -7,9 +7,9 @@
             <input type="hidden" name="time" value="{{ php.time }}" />
             <input type="hidden" name="uid" value="{{ auth.userId }}" />
             <input type="hidden" name="mode" value="changepassword" />
-            <div class="profile-field">
+            <div class="profile-field{% if auth.forgotKey %} hidden{% endif %}">
                 <div><h2>Verification Key</h2></div>
-                <div style="text-align: center;"><input type="text" name="verk" placeholder="The key that was sent to you in the e-mail" class="inputStyling"{% if auth.forgotKey is not null %} value="{{ auth.forgotKey }}" disabled="disabled"{% endif %} /></div>
+                <div style="text-align: center;"><input type="text" name="verk" placeholder="The key that was sent to you in the e-mail" class="inputStyling"{% if auth.forgotKey %} value="{{ auth.forgotKey }}"{% endif %} /></div>
             </div>
             <div class="profile-field">
                 <div><h2>New Password</h2></div>

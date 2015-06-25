@@ -14,7 +14,7 @@ class Database {
     public static function init($engine) {
 
         // Make the engine class name lowercase
-        $engine = __NAMESPACE__ .'\\'. strtolower($engine);
+        $engine = __NAMESPACE__ .'\DBWrapper\\'. strtolower($engine);
 
         // Check if the class exists
         if(!class_exists($engine))
