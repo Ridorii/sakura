@@ -15,17 +15,26 @@ class Configuration {
     public static function init($local) {
 
         // Check if the configuration file exists
-        if(!file_exists($local))
+        if(!file_exists($local)) {
+
             trigger_error('Local configuration file does not exist', E_USER_ERROR);
+
+        }
 
         // Attempt to load the configuration file
         $local = parse_ini_file($local, true);
 
         // Check if $local is an array and then store it in $_LCNF
-        if(is_array($local))
+        if(is_array($local)) {
+
             self::$_LCNF = $local;
-        else // Otherwise trigger an error
+
+        } else {
+
+            // Otherwise trigger an error
             trigger_error('Failed to load local configuration file, check the structure of the file to see if you made mistake somewhere', E_USER_ERROR);
+
+        }
 
     }
 
@@ -42,8 +51,12 @@ class Configuration {
         // Create variable to temporarily store values in
         $_DBCN = array();
 
-        foreach($_DATA as $_CONF) // Properly sort the values
+        // Properly sort the values
+        foreach($_DATA as $_CONF) {
+
             $_DBCN[$_CONF[0]] = $_CONF[1];
+
+        }
 
         // Assign the temporary array to the static one
         self::$_DCNF = $_DBCN;
@@ -55,12 +68,24 @@ class Configuration {
 
         // Check if the key that we're looking for exists
 		if(array_key_exists($key, self::$_LCNF)) {
-			if($subkey) // If we also have a subkey return the proper shit
+
+			if($subkey) {
+
+                // If we also have a subkey return the proper data
 				return self::$_LCNF[$key][$subkey];
-			else // else we just return the default value
+
+			} else {
+
+                // else we just return the default value
 				return self::$_LCNF[$key];
-		} else // If it doesn't exist trigger an error to avoid explosions
+
+            }
+
+		} else {// If it doesn't exist trigger an error to avoid explosions
+
 			trigger_error('Unable to get local configuration value!', E_USER_ERROR);
+
+        }
 
 	}
 
@@ -71,14 +96,21 @@ class Configuration {
 		if($subkey) {
 
             // If we do we make sure that the parent key is an array
-			if(!isset(self::$_LCNF[$key]))
+			if(!isset(self::$_LCNF[$key])) {
+
 				self::$_LCNF[$key] = array();
+
+            }
 
             // And then assign the value
 			self::$_LCNF[$key][$subkey] = $value;
 
-		} else // Otherwise we just straight up assign it
+		} else {
+
+            // Otherwise we just straight up assign it
 			self::$_LCNF[$key] = $value;
+
+        }
 
 	}
 
@@ -86,10 +118,17 @@ class Configuration {
 	public static function getConfig($key) {
 
         // Check if the key that we're looking for exists
-		if(array_key_exists($key, self::$_DCNF))
-            return self::$_DCNF[$key]; // Then return the value
-		else // If it doesn't exist trigger an error to avoid explosions
-			trigger_error('Unable to get configuration value!', E_USER_ERROR);
+		if(array_key_exists($key, self::$_DCNF)) {
+
+            // Then return the value
+            return self::$_DCNF[$key];
+
+        } else {
+
+            // Then return the value
+			trigger_error('Unable to get configuration value', E_USER_ERROR);
+
+        }
 
 	}
 

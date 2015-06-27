@@ -18,7 +18,7 @@ class Main {
 
         // Stop the execution if the PHP Version is older than 5.4.0
         if(version_compare(phpversion(), '5.4.0', '<'))
-            die('<h3>Upgrade your PHP Version to at least PHP 5.4!</h3>');
+            trigger_error('Sakura requires at least PHP 5.4.0, please upgrade to a newer PHP version.');
 
         // Configuration Management and local configuration
         Configuration::init($config);

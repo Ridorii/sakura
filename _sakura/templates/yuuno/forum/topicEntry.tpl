@@ -1,0 +1,19 @@
+<tr>
+    <td class="topicIcon">
+        <div class="fa fa-2x fa-{% if topic.topic_status == 1 %}lock{% elseif topic.topic_type == 2 %}exclamation{% elseif topic.topic_type == 1 %}thumb-tack{% else %}navicon{% endif %}"></div>
+    </td>
+    <td class="topicTitle">
+        <a href="/forum/thread/{{ topic.topic_id }}" class="default">{{ topic.topic_title }}</a>
+    </td>
+    <td class="topicAuthor">
+        <a href="/u/{{ topic.first_poster.user.id }}" class="default" style="color: {% if topic.first_poster.user.name_colour %}{{ topic.first_poster.user.name_colour }}{% else %}{{ topic.first_poster.rank.colour }}{% endif %};">{{ topic.first_poster.user.username }}</a>
+    </td>
+    <td class="topicCounts">
+        <div class="replies" title="Amount of replies to this topic.">{{ topic.topic_replies }}</div>
+        <div class="views" title="Amount of times this topic has been viewed.">{{ topic.topic_views }}</div>
+    </td>
+    <td class="topicLast">
+        <a href="/u/{{ topic.last_poster.user.id }}" class="default" style="color: {% if topic.last_poster.user.name_colour %}{{ topic.last_poster.user.name_colour }}{% else %}{{ topic.last_poster.rank.colour }}{% endif %};">{{ topic.last_poster.user.username }}</a> <a href="#" class="default fa fa-tag"></a><br />
+        2000 years ago
+    </td>
+</tr>

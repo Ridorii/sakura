@@ -1301,6 +1301,26 @@
             {
                 "type":     "UPD",
                 "change":   "Put the Forum Listing and Front Page in the same PHP file as they both request nearly identical info (only difference is probably news post/forum posts)."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Changed the die() in the version checker to a trigger_error()."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed an error in the password reset process."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Made some of the functions in the Configuration class more readable."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added support for infinite subforums."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added very basic topic list support."
             }
 
         ]

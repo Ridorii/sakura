@@ -331,6 +331,8 @@ a.gotop.exit {
 .content-left .head,
 .news .head,
 .donate .head,
+.viewforum .head,
+.viewtopic .head,
 .loginPage > .loginCont .head,
 .messages .head {
     margin: -1px -2px;
@@ -1557,4 +1559,51 @@ textarea.inputStyling {
 .forum .forumList .forumForum .forumLastColumn div,
 .forum .forumList .forumForum .forumTitleColumn div {
     padding-left: 5px;
+}
+
+.forum .topicList {
+    width: 100%;
+    border-spacing: 0;
+    margin-top: 2px;
+}
+
+.forum .topicList thead,
+.forum .topicList tfoot {
+    background: #C2AFFE;
+    font-weight: 700;
+}
+
+.forum .topicList tbody td {
+    height: 40px;
+}
+
+.forum .topicList tbody .topicIcon {
+    width: 40px;
+    text-align: center;
+}
+
+.forum .topicList tbody .topicAuthor {
+    width: 150px;
+    text-align: center;
+}
+
+.forum .topicList tbody .topicCounts {
+    text-align: center;
+}
+
+.forum .topicList tbody .topicCounts .replies {
+    font-size: 1.3em;
+    color: #111;
+    line-height: 1.3em;
+}
+
+.forum .topicList tbody .topicCounts .views {
+    font-size: .8em;
+    color: #555;
+    line-height: 1em;
+}
+
+.forum .topicList tbody .topicLast {
+    width: 250px;
+    text-align: center;
 }
