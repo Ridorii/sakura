@@ -22,7 +22,8 @@
                 "20150604",
                 "20150619",
                 "20150620",
-                "20150621"
+                "20150621",
+                "20150627"
 
             ]
 
@@ -1291,6 +1292,15 @@
             {
                 "type":     "ADD",
                 "change":   "Added a bbcode parser."
+            }
+
+        ],
+
+        "20150627": [
+
+            {
+                "type":     "UPD",
+                "change":   "Put the Forum Listing and Front Page in the same PHP file as they both request nearly identical info (only difference is probably news post/forum posts)."
             }
 
         ]

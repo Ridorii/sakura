@@ -708,6 +708,32 @@ class Users {
 
     }
 
+    // Get the available profile fields
+    public static function getProfileFields() {
+
+        // Get profile fields
+        $profileFields = Database::fetch('profilefields');
+
+        // If there's nothing just return null
+        if(!count($profileFields))
+            return null;
+
+        // Create output array
+        $fields = [];
+
+        // Iterate over the fields and clean them up
+        foreach($profileFields as $field) {
+
+            $fields[$field['id']]           = $field;
+            $fields[$field['id']]['ident']  = Main::cleanString($field['name'], true, true);
+
+        }
+
+        // Return the yeahs
+        return $fields;
+
+    }
+
     // Get user's profile fields
     public static function getUserProfileFields($id, $inputIsData = false) {
 

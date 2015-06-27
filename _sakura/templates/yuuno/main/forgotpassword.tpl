@@ -2,7 +2,6 @@
     <div class="content news settings">
         <div class="head">Forgot Password</div>
         <form method="post" action="/authenticate" id="passwordForm">
-            <input type="hidden" name="redirect" value="//iihsalf.net/" />
             <input type="hidden" name="session" value="{{ php.sessionid }}" />
             <input type="hidden" name="time" value="{{ php.time }}" />
             <input type="hidden" name="uid" value="{{ auth.userId }}" />

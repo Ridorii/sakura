@@ -9,10 +9,15 @@ namespace Sakura;
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sakura.php';
 //print Permissions::check('SITE', 'USE_CHAT', Session::$userId, 1);
+
+// Are we in forum mode?
+$forumMode = isset($_GET['forums']) ? ($_GET['forums'] == true) : false;
+
 // Add page specific things
-$renderData['newsPosts'] = Main::getNewsPosts(3);
+$renderData['newsPosts'] = ($forumMode ? null : Main::getNewsPosts(3));
 $renderData['page'] = [
-    'title'         => Configuration::getConfig('sitename')
+    'title'     => ($forumMode ? 'Forum Listing'        : Configuration::getConfig('sitename')),
+    'boards'    => ($forumMode ? Forum::getBoardList()  : null)
 ];
 $renderData['stats'] = [
     'userCount'     => ($_INDEX_USER_COUNT = count($_INDEX_USERS = Users::getAllUsers(false))) .' user'. ($_INDEX_USER_COUNT == 1 ? '' : 's'),
@@ -25,4 +30,4 @@ $renderData['stats'] = [
 ];
 
 // Print page contents
-print Templates::render('main/index.tpl', $renderData);
+print Templates::render(($forumMode ? 'forum' : 'main') .'/index.tpl', $renderData);

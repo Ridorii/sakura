@@ -223,7 +223,15 @@ if(Users::checkLogin()) {
     // Section specific
     switch($currentPage) {
 
-        // Notification history
+        // Profile
+        case 'profile':
+            $renderData['profile'] = [
+                'user' => Users::getUserProfileData(Session::$userId),
+                'fields' => Database::fetch('profilefields')
+            ];
+            break;
+
+        // Friends
         case 'friends':
             $renderData['friends'] = Users::getFriends();
             break;
