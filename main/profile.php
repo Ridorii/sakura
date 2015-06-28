@@ -18,19 +18,18 @@ if(isset($_GET['u'])) {
         'rank'          => ($_PROFILE_RANK_DATA = Users::getRank($_PROFILE_USER_DATA['rank_main'])),
         'colour'        => ($_PROFILE_USER_DATA['name_colour']  == null ? $_PROFILE_RANK_DATA['colour'] : $_PROFILE_USER_DATA['name_colour']),
         'ranktitle'     => ($_PROFILE_USER_DATA['usertitle']    == null ? $_PROFILE_RANK_DATA['title']  : $_PROFILE_USER_DATA['usertitle']),
-        'data'          => ($_PROFILE_PROFILE_DATA = Users::getUserProfileData($_PROFILE_USER_DATA, true)),
         'country'       => Main::getCountryName($_PROFILE_USER_DATA['country']),
         'istenshi'      => Users::checkUserTenshi($_PROFILE_USER_DATA['id']),
         'online'        => Users::checkUserOnline($_PROFILE_USER_DATA['id']),
-        'profilePage'   => Users::getProfilePage($_PROFILE_PROFILE_DATA, true),
-        'fields'        => Users::getUserProfileFields($_PROFILE_PROFILE_DATA, true),
+        'profilePage'   => Users::getProfilePage($_PROFILE_USER_DATA['userData'], true),
+        'fields'        => Users::getUserProfileFields($_PROFILE_USER_DATA['userData'], true),
         'warnings'      => Users::getWarnings($_PROFILE_USER_DATA['id']),
         'friend'        => Users::checkFriend($_PROFILE_USER_DATA['id'])
     ];
 
     $renderData['page'] = [
         'title'         => ($_PROFILE_USER_DATA['id'] < 1 || $_PROFILE_USER_DATA['password_algo'] == 'nologin' ? 'User not found!' : 'Profile of '. $_PROFILE_USER_DATA['username']),
-        'style'         => (!empty($_PROFILE_PROFILE_DATA['profileBackground']) ? [
+        'style'         => (!empty($_PROFILE_USER_DATA['userData']['profileBackground']) ? [
             '#userBackground' => [
                 'background' => 'url("/bg/'. $_PROFILE_USER_DATA['id'] .'") no-repeat center center / cover transparent !important',
                 'position' => 'fixed',

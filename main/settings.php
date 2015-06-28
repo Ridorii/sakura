@@ -226,7 +226,7 @@ if(Users::checkLogin()) {
         // Profile
         case 'profile':
             $renderData['profile'] = [
-                'user' => Users::getUserProfileData(Session::$userId),
+                'user' => Users::getUser(Session::$userId),
                 'fields' => Database::fetch('profilefields')
             ];
             break;

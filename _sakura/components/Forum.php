@@ -140,6 +140,7 @@ class Forum {
     // Getting all topics from a forum
     public static function getTopics($id) {
 
+        // Get the topics from the database
         $topics = Database::fetch('topics', true, [
             'forum_id' => [$id, '=']
         ]);
@@ -160,6 +161,105 @@ class Forum {
         }
 
         return $topics;
+
+    }
+
+    // Get posts of a thread
+    public static function getTopic($id) {
+
+        // Get the topic data from the database
+        $topicInfo = Database::fetch('topics', false, [
+            'topic_id' => [$id, '=']
+        ]);
+
+        // Check if there actually is anything
+        if(empty($topicInfo))
+            return false;
+
+        // Get the posts from the database
+        $rawPosts = Database::fetch('posts', true, [
+            'topic_id' => [$id, '=']
+        ]);
+
+        // Create storage array
+        $topic = [];
+
+        // Add forum data
+        $topic['forum'] = self::getForum($topicInfo['forum_id']);
+
+        // Store the topic info
+        $topic['topic'] = $topicInfo;
+
+        // Get the data of the first poster
+        $topic['topic']['first_poster'] = [
+            'user' => ($_FIRST_POSTER = Users::getUser($topic['topic']['topic_first_poster_id'])),
+            'rank' => Users::getRank($_FIRST_POSTER['rank_main'])
+        ];
+
+        // Get the data of the last poster
+        $topic['topic']['last_poster'] = [
+            'user' => ($_LAST_POSTER = Users::getUser($topic['topic']['topic_last_poster_id'])),
+            'rank' => Users::getRank($_LAST_POSTER['rank_main'])
+        ];
+
+        // Create space for posts
+        $topic['posts'] = [];
+
+        // Parse the data of every post
+        foreach($rawPosts as $post) {
+
+            // Add post and metadata to the global storage array
+            $topic['posts'][$post['post_id']] = array_merge($post, [
+                'is_op'         => ($post['poster_id'] == $topic['topic']['topic_first_poster_id'] ? '1' : '0'),
+                'user'          => ($_POSTER = Users::getUser($post['poster_id'])),
+                'rank'          => Users::getRank($_POSTER['rank_main']),
+                'country'       => Main::getCountryName($_POSTER['country']),
+                'is_tenshi'     => Users::checkUserTenshi($_POSTER['id']),
+                'is_online'     => Users::checkUserOnline($_POSTER['id']),
+                'is_friend'     => Users::checkFriend($_POSTER['id']),
+                'parsed_post'   => self::parseMarkUp($post['post_text'], $post['parse_mode'])
+            ]);
+
+            // Just in case
+            unset($_POSTER);
+
+        }
+
+        // Return the compiled topic data
+        return $topic;
+
+    }
+
+    // Get a topic ID from a post ID
+    public static function getTopicIdFromPostId($id) {
+
+        // Get the post
+        $post = Database::fetch('posts', false, [
+            'post_id' => [$id, '=']
+        ]);
+
+        // Return false if nothing was returned
+        if(empty($post))
+            return false;
+
+        // Return the topic id
+        return $post['topic_id'];
+
+    }
+
+    // Parse different markup flavours
+    public static function parseMarkUp($text, $mode) {
+
+        // Switch between modes
+        switch($mode) {
+            case 1:
+                return Main::bbParse($text);
+            case 2:
+                return Main::mdParse($text);
+            case 0:
+            default:
+                return $text;
+        }
 
     }
 

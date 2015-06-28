@@ -24,24 +24,24 @@ RewriteRule ^changelog/?$ changelog.php [L,QSA]
 RewriteRule ^faq/?$ faq.php [L,QSA]
 RewriteRule ^search/?$ search.php [L,QSA]
 
-## Info pages
+# Info pages
 RewriteRule ^r/([a-z]+)$ infopage.php?r=$1 [L,QSA]
 
-## News
+# News
 RewriteRule ^news/?$ news.php [L,QSA]
 RewriteRule ^news/([0-9]+)$ news.php?id=$1 [L,QSA]
 RewriteRule ^news.xml$ news.php?xml [L,QSA]
 
-## Settings
+# Settings
 RewriteRule ^settings/?$ settings.php [L,QSA]
 RewriteRule ^settings/([a-z]+)/?$ settings.php?mode=$1 [L,QSA]
 RewriteRule ^friends/?$ settings.php?friend-action=true [L,QSA]
 
-## Private Messages
+# Private Messages
 RewriteRule ^messages/?$ messages.php [L,QSA]
 RewriteRule ^messages/([a-z]+)/?$ messages.php?mode=$1 [L,QSA]
 
-## Members
+# Members
 RewriteRule ^members/?$ members.php [L,QSA]
 RewriteRule ^members/([a-z]+)/?$ members.php?sort=$1 [L,QSA]
 RewriteRule ^members/([0-9]+)/?$ members.php?rank=$1 [L,QSA]
@@ -51,7 +51,7 @@ RewriteRule ^members/([0-9]+)/p([0-9]+)/?$ members.php?rank=$1&page=$2 [L,QSA]
 RewriteRule ^members/([a-z]+)/p([0-9]+)/?$ members.php?sort=$1&page=$2 [L,QSA]
 RewriteRule ^members/([a-z]+)/([0-9]+)/p([0-9]+)/?$ members.php?sort=$1&rank=$2&page=$3 [L,QSA]
 
-## Profiles
+# Profiles
 RewriteRule ^u/?$ profile.php [L,QSA]
 RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/?$ profile.php?u=$1 [L,QSA]
 RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/header/?$ imageserve.php?m=header&u=$1 [L,QSA]
@@ -61,7 +61,7 @@ RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/threads/?$ profile.php?u=$1$view=threads [L,
 RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/posts/?$ profile.php?u=$1$view=posts [L,QSA]
 RewriteRule ^u/([A-Za-z0-9_-\s\.]+)/report/?$ report.php?mode=user&id=$1 [L,QSA]
 
-## Groups
+# Groups
 RewriteRule ^g/?$ group.php [L,QSA]
 RewriteRule ^g/([0-9]+)/?$ group.php?g=$1 [L,QSA]
 
@@ -71,9 +71,12 @@ RewriteRule ^bg/([0-9]+)$|bg/([0-9]+).png$ imageserve.php?m=background&u=$1 [L,Q
 
 # Forum
 RewriteRule ^forum/?$ index.php?forums=true [L,QSA]
-RewriteRule ^forum/([0-9]+)/?$ viewforum.php?id=$1 [L,QSA]
-RewriteRule ^forum/(thread|topic|[0-9+])/([0-9]+)/?$ viewtopic.php?id=$2 [L,QSA]
-RewriteRule ^forum/post/([0-9]+)/?$ viewtopic.php?pid=$1 [L,QSA]
+RewriteRule ^forum/([0-9]+)/?$ viewforum.php?f=$1 [L,QSA]
+RewriteRule ^forum/([0-9]+)/new/?$ posting.php?f=$1 [L,QSA]
+RewriteRule ^forum/(thread|topic|[0-9+])/([0-9]+)/?$ viewtopic.php?t=$2 [L,QSA]
+RewriteRule ^forum/(thread|topic|[0-9+])/([0-9]+)/reply/?$ posting.php?t=$2 [L,QSA]
+RewriteRule ^forum/post/([0-9]+)/?$ viewtopic.php?p=$1 [L,QSA]
+RewriteRule ^forum/post/([0-9]+)/(quote|reply)/?$ posting.php?p=$1&quote=$1 [L,QSA]
 
 # Management
 RewriteRule ^manage/?$ manage.php [L,QSA]

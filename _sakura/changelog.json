@@ -23,7 +23,8 @@
                 "20150619",
                 "20150620",
                 "20150621",
-                "20150627"
+                "20150627",
+                "20150628"
 
             ]
 
@@ -1320,7 +1321,32 @@
             },
             {
                 "type":     "ADD",
-                "change":   "Added very basic topic list support."
+                "change":   "Added basic topic list support."
+            }
+
+        ],
+
+        "20150628": [
+
+            {
+                "type":     "REM",
+                "change":   "Removed getUserProfileData() which decodes the json in the userData column and do it in the getUser() function."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed all (found) bugs related to the previously listed change."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed bug in the friends system where getFriends() only returns one friend."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added basic topic viewing support."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Changed Edit icon on profiles."
             }
 
         ]

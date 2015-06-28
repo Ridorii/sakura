@@ -23,7 +23,7 @@
                 {% if user.checklogin %}
                 <div class="user-actions">
                     {% if user.data.id == profile.user.id %}
-                    <a class="fa fa-pencil-square" title="Edit your profile" href="//{{ sakura.urls.main }}/settings/profile"></a>
+                    <a class="fa fa-pencil-square-o" title="Edit your profile" href="//{{ sakura.urls.main }}/settings/profile"></a>
                     {% else %}
                     {% if profile.friend != 0 %}<a class="fa fa-{% if profile.friend == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
                     <a class="fa fa-user-{% if profile.friend == 0 %}plus{% else %}times{% endif %}" title="{% if profile.friend == 0 %}Add {{ profile.user.username }} as a friend{% else %}Remove friend{% endif %}" href="//{{ sakura.urls.main }}/friends?{% if profile.friend == 0 %}add{% else %}remove{% endif %}={{ profile.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect={{ sakura.currentpage }}" id="profileFriendToggle"></a>
@@ -88,7 +88,7 @@
         </div>
         <div class="clear"></div>
     </div>
-    {% if profile.data.profileBackground %}
+    {% if profile.user.userData.profileBackground %}
     <script type="text/javascript">
         initialiseParallax('userBackground');
     </script>

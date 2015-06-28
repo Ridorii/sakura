@@ -10,7 +10,7 @@ namespace Sakura;
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sakura.php';
 
 // Get the forum's data
-$forum = Forum::getForum(isset($_GET['id']) ? $_GET['id'] : 0);
+$forum = Forum::getForum(isset($_GET['f']) ? $_GET['f'] : 0);
 
 // Check if the forum exists
 if(!$forum) {
@@ -52,11 +52,9 @@ $renderData['board'] = [
         $forum
     ],
     'topics' => Forum::getTopics($forum['forum']['forum_id']),
-    'viewforum' => true
+    'viewforum' => true,
+    'viewtopic' => false
 ];
-
-//header('Content-Type: text/plain');
-//print_r($renderData['board']['topics']);exit;
 
 // Print page contents
 print Templates::render('forum/viewforum.tpl', $renderData);

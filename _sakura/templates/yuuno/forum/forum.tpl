@@ -6,30 +6,36 @@
         {% endfor %}
     </tbody>
 </table>
-{% if board.viewforum %}
-<table class="topicList">
-    <thead>
-        <tr>
-            <th></th>
-            <th>Topic</th>
-            <th>Author</th>
-            <th></th>
-            <th>Last post</th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th></th>
-            <th>Topic</th>
-            <th>Author</th>
-            <th></th>
-            <th>Last post</th>
-        </tr>
-    </tfoot>
-    <tbody>
-        {% for topic in board.topics %}
-            {% include 'forum/topicEntry.tpl' %}
-        {% endfor %}
-    </tbody>
-</table>
+{% if board.viewforum and not board.forums[0].forum.forum_type %}
+    <a href="/forum/{{ board.forums[0].forum.forum_id }}/new" class="forumbtn"><span class="fa fa-pencil-square-o"></span> New Thread</a>
+    {% if board.topics|length %}
+        <table class="topicList">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Topic</th>
+                    <th>Author</th>
+                    <th></th>
+                    <th>Last post</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th></th>
+                    <th>Topic</th>
+                    <th>Author</th>
+                    <th></th>
+                    <th>Last post</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                {% for topic in board.topics %}
+                    {% include 'forum/topicEntry.tpl' %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h1 class="stylised" style="margin: 2em auto; text-align: center;">There are no posts in this forum!</h1>
+    {% endif %}
+    <a href="/forum/{{ board.forums[0].forum.forum_id }}/new" class="forumbtn"><span class="fa fa-pencil-square-o"></span> New Thread</a>
 {% endif %}

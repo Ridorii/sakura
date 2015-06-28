@@ -12,7 +12,7 @@
                 <div class="desc">
                     {{ forum.forum_desc }}
                     {% if board.forums[forum.forum_id]|length %}
-                        <div class="subforums" style="margin-top: 3px; margin-left: -5px;">
+                        <div class="subforums" style="margin-top: 3px; margin-left: -5px; font-weight: bold;">
                             Subforums:
                             {% for forum in board.forums[forum.forum_id].forums %}
                                 <a href="{% if forum.forum_type == 2 %}{{ forum.forum_link }}" target="_blank"{% else %}//{{ sakura.urls.main }}/forum/{{ forum.forum_id }}/"{% endif %}" class="default">{{ forum.forum_name }}</a>
@@ -29,7 +29,7 @@
             <td class="forumLastColumn">
                 <div>
                     {% if forum.forum_last_post_id %}
-                        Last post in <a href="//{{ sakura.urls.main }}/forum/thread/{{ forum.forum_last_post_id }}" class="default">Thread with an obnoxiously long fucking title</a><br />12 years ago by <a href="//{{ sakura.urls.main }}/u/{{ forum.last_poster.user.id }}" class="default" style="color: {% if forum.last_poster.user.name_colour %}{{ forum.last_poster.user.name_colour }}{% else %}{{ forum.last_poster.rank.colour }}{% endif %};">{{ forum.last_poster.user.username }}</a> <a href="/forum/post/{{ forum.forum_last_post_id }}" class="default fa fa-tag"></a>
+                        Last post in <a href="//{{ sakura.urls.main }}/forum/thread/{{ forum.forum_last_post_id }}" class="default">Thread with an obnoxiously long fucking title</a><br />12 years ago by {% if forum.last_poster.user.id %}<a href="//{{ sakura.urls.main }}/u/{{ forum.last_poster.user.id }}" class="default" style="color: {% if forum.last_poster.user.name_colour %}{{ forum.last_poster.user.name_colour }}{% else %}{{ forum.last_poster.rank.colour }}{% endif %};">{{ forum.last_poster.user.username }}</a>{% else %}[deleted user]{% endif %} <a href="/forum/post/{{ forum.forum_last_post_id }}" class="default fa fa-tag"></a>
                     {% else %}
                         There are no posts in this forum.<br />&nbsp;
                     {% endif %}

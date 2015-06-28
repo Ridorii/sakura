@@ -1582,6 +1582,16 @@ textarea.inputStyling {
     text-align: center;
 }
 
+.forum .topicList tbody .topicIcon.read {
+    color: #444;
+    text-shadow: 0 0 5px #444;
+}
+
+.forum .topicList tbody .topicIcon.unread {
+    color: #6C5D7B;
+    text-shadow: 0 0 5px #9475B2;
+}
+
 .forum .topicList tbody .topicAuthor {
     width: 150px;
     text-align: center;
@@ -1606,4 +1616,117 @@ textarea.inputStyling {
 .forum .topicList tbody .topicLast {
     width: 250px;
     text-align: center;
+}
+
+.forum .forumbtn {
+    background: linear-gradient(0deg, #9475B2 10%, #C2AFFE 90%);
+    color: #306;
+    padding: 4px 8px;
+    text-decoration: none;
+    border-radius: 2px;
+    margin: 4px 2px;
+    display: inline-block;
+    font-size: 1.3em;
+    border: 1px solid #9475B2;
+}
+
+.forum .forumbtn:hover {
+    background: linear-gradient(0deg, #9475B2 30%, #C2AFFE 70%);
+}
+
+.forum .forumbtn:active {
+    background: linear-gradient(180deg, #9475B2 30%, #C2AFFE 70%);
+}
+
+.forum.viewtopic .posts {
+    width: 100%;
+    border-spacing: 0;
+}
+
+.forum.viewtopic .posts td {
+    vertical-align: top;
+}
+
+.forum.viewtopic .posts tr:not(:last-child) td {
+    border-bottom: 1px solid #9475B2;
+}
+
+.forum.viewtopic .posts .userpanel {
+    width: 200px;
+    text-align: center;
+    background: linear-gradient(270deg, transparent, #C2AFFE);
+    padding-bottom: 6px;
+}
+
+.forum.viewtopic .posts .userpanel .username {
+    font: 1.5em/1.7em "SegoeUI", "Segoe UI", sans-serif;
+    text-shadow: 0 0 7px #888; padding: 0 0 2px;
+    display: block;
+}
+
+.forum.viewtopic .posts .userpanel .avatar {
+    max-width: 150px;
+    max-height: 150px;
+    border: 3px solid #EEE;
+    background: #EEE;
+    box-shadow: 0 3px 7px #888;
+    border-radius: 3px;
+    margin: 5px;
+}
+
+.forum.viewtopic .posts .userpanel .usertitle {
+    font-size: .8em;
+    line-height: 1.5em;
+}
+
+.forum.viewtopic .posts .userpanel .actions {
+    font-size: 2em;
+    line-height: 1.4em;
+}
+
+.forum.viewtopic .posts .userpanel .actions a {
+    color: #8364A1;
+    text-decoration: none;
+    text-shadow: 0 0 2px #9475B2;
+    transition: all .2s;
+}
+
+.forum.viewtopic .posts .userpanel .actions a:hover {
+    text-shadow: 0 0 6px #9475B2;
+}
+
+.forum.viewtopic .posts .userpanel .actions a:active {
+    color: #725390;
+    text-shadow: 0 0 8px #8364A1;
+}
+
+.forum.viewtopic .posts .post-content {
+    font-size: .9em;
+}
+
+.forum.viewtopic .posts .post-content .details {
+    border-bottom: 1px solid #B19EED;
+    color: #222;
+}
+
+.forum.viewtopic .posts .post-content .details .subject {
+    float: left;
+}
+
+.forum.viewtopic .posts .post-content .details .date {
+    float: right;
+}
+
+.forum.viewtopic .posts .post-content img {
+    max-width: 850px;
+}
+
+.forum.viewtopic .posts .post-content .signature {
+    border-top: 1px solid #B19EED;
+    margin-top: 16px;
+    padding-top: 4px;
+    display: block;
+    min-width: 300px;
+    max-height: 180px;
+    overflow: auto;
 }

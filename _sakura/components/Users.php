@@ -694,20 +694,6 @@ class Users {
 
     }
 
-    // Getting the profile data array of a user
-    public static function getUserProfileData($id, $inputIsUser = false) {
-
-        // Get user data
-        $user = ($inputIsUser ? $id : self::getUser($id));
-
-        // Decode the userData json
-        $data = json_decode($user['userData'], true);
-
-        // Return the profile data
-        return $data;
-
-    }
-
     // Get the available profile fields
     public static function getProfileFields() {
 
@@ -745,7 +731,7 @@ class Users {
             return null;
 
         // Assign the profileData variable
-        $profileData = ($inputIsData ? $id : self::getUserProfileData($id));
+        $profileData = ($inputIsData ? $id : self::getUser($id)['userData']);
 
         // Once again if nothing was returned just return null
         if(count($profileData) < 1 || $profileData == null || empty($profileData['profileFields']))
@@ -894,7 +880,10 @@ class Users {
 
         // Return false if no user was found
         if(empty($user))
-            return self::$emptyUser;
+            $user = self::$emptyUser;
+
+        // Parse the json in the additional section
+        $user['userData'] = json_decode($user['userData'], true);
 
         // If user was found return user data
         return $user;
@@ -1135,10 +1124,10 @@ class Users {
         $friends = [];
 
         // Iterate over the raw database return
-        foreach($getFriends as $friend) {
+        foreach($getFriends as $key => $friend) {
 
             // Add friend to array
-            $friends[($timestamps ? $friend['fid'] : false)] = $friend[($timestamps ? 'timestamp' : 'fid')];
+            $friends[($timestamps ? $friend['fid'] : $key)] = $friend[($timestamps ? 'timestamp' : 'fid')];
 
         }
 

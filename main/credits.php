@@ -18,7 +18,8 @@ $renderData['contributors'] = [
     'Kurasha244'    => ['Writing the base for the old backend.', 'http://saibateku.net'],
     'nookls'        => ['Being nookls.', 'http://nookls.org'],
     'MallocNull'    => ['Sock Chat and debug help.', 'http://aroltd.com'],
-    'kamil'         => ['Pointing out mistakes and fixing them.', 'http://krakow.pw']
+    'kamil'         => ['Pointing out mistakes and fixing them.', 'http://krakow.pw'],
+    'RandomGuy'     => ['Coming up with cool things to add and security stuff.', 'http://flashii.net/u/12']
 ];
 $renderData['thirdParty'] = [
     'ReCAPTCHA'     => ['Providing the Captcha system we use.', 'http://recaptcha.net'],

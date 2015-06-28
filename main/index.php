@@ -22,7 +22,8 @@ $renderData['page'] = [
 
 $renderData['board'] = [
     'forums'        => ($forumMode ? Forum::getForumList() : null),
-    'viewforum'     => false
+    'viewforum'     => false,
+    'viewtopic'     => false
 ];
 
 $renderData['stats'] = [
