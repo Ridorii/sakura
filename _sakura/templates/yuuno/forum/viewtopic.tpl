@@ -41,10 +41,10 @@
                             <div class="post-text markdown">
                                 {{ post.parsed_post|raw }}
                             </div>
-                            {% if post.enable_sig %}
+                            {% if post.enable_sig and post.signature %}
                             <div class="clear"></div>
                             <div class="signature">
-                                <img src="http://i.flash.moe/vip.gif" />
+                                {{ post.signature|raw }}
                             </div>
                             {% endif %}
                         </td>

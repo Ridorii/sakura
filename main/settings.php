@@ -248,6 +248,8 @@ if(Users::checkLogin()) {
 
 } else {
 
+    $renderData['page']['title'] = 'Restricted!';
+
     print Templates::render('global/header.tpl', $renderData);
     print Templates::render('elements/restricted.tpl', $renderData);
     print Templates::render('global/footer.tpl', $renderData);

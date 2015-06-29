@@ -32,6 +32,7 @@ require_once ROOT .'_sakura/components/Users.php';
 require_once ROOT .'_sakura/components/Forum.php';
 require_once ROOT .'_sakura/components/Manage.php';
 require_once ROOT .'_sakura/components/Whois.php';
+require_once ROOT .'_sakura/components/Payments.php';
 require_once ROOT .'_sakura/components/SockChat.php';
 
 // Include database extensions

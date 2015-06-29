@@ -232,7 +232,7 @@ class Main {
     public static function cleanString($string, $lower = false, $nospecial = false) {
 
         // Run common sanitisation function over string
-        $string = htmlentities($string, ENT_QUOTES | ENT_IGNORE, Configuration::getConfig('charset'));
+        $string = htmlentities($string, ENT_NOQUOTES | ENT_HTML401, Configuration::getConfig('charset'));
         $string = stripslashes($string);
         $string = strip_tags($string);
 

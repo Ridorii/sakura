@@ -217,7 +217,8 @@ class Forum {
                 'is_tenshi'     => Users::checkUserTenshi($_POSTER['id']),
                 'is_online'     => Users::checkUserOnline($_POSTER['id']),
                 'is_friend'     => Users::checkFriend($_POSTER['id']),
-                'parsed_post'   => self::parseMarkUp($post['post_text'], $post['parse_mode'])
+                'parsed_post'   => self::parseMarkUp($post['post_text'], $post['parse_mode']),
+                'signature'     => empty($_POSTER['userData']['signature']) ? '' : self::parseMarkUp($_POSTER['userData']['signature']['text'], $_POSTER['userData']['signature']['mode'])
             ]);
 
             // Just in case
@@ -250,21 +251,28 @@ class Forum {
     // Parse different markup flavours
     public static function parseMarkUp($text, $mode) {
 
+        // Clean string
+        $text = Main::cleanString($text);
+
         // Switch between modes
         switch($mode) {
+
             case 1:
                 return Main::bbParse($text);
+ 
             case 2:
                 return Main::mdParse($text);
+
             case 0:
             default:
                 return $text;
+
         }
 
     }
 
     // Creating a new post
-    public static function createPost($subject, $text, $enableMD, $enableSig, $forum, $type = 0, $status = 0) {
+    public static function createPost($subject, $text, $enableMD, $enableSig, $forum, $type = 0, $status = 0, $topic = 0) {
 
         // Check if this post is OP
         if(!$topic) {

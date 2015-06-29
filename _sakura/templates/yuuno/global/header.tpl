@@ -210,9 +210,7 @@
                         <a class="menu-item" href="//{{ sakura.urls.main }}/" title="Return to the front page of Flashii">Home</a>
                         <a class="menu-item" href="//{{ sakura.urls.main }}/news" title="Here you can read updates on Flashii">News</a>
                         <a class="menu-item" href="//{{ sakura.urls.chat }}/" title="Chat with other Flashii members">Chat</a>
-                        {% if perms.canUseForums %}
                         <a class="menu-item" href="//{{ sakura.urls.main }}/forum" title="Discuss things with other members but static">Forums</a>
-                        {% endif %}
                         <a class="menu-item" href="//{{ sakura.urls.main }}/search" title="Search on Flashii">Search</a>
                         {% if user.checklogin %}
                             <a class="menu-item menu-donate" href="//{{ sakura.urls.main }}/support" title="Give us money to keep the site (and other services) up and running">Support us</a>
