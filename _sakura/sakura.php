@@ -8,16 +8,16 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150628');
+define('SAKURA_VERSION',    '20150629');
 define('SAKURA_VLABEL',     'Eminence');
-define('SAKURA_VTYPE',      'Development');
+define('SAKURA_STABLE',     false);
 define('SAKURA_COLOUR',     '#6C3082');
 
 // Define Sakura Path
 define('ROOT', str_replace(basename(__DIR__), '', dirname(__FILE__)));
 
 // Error Reporting: 0 for production and -1 for testing
-error_reporting(-1);
+error_reporting(SAKURA_STABLE ? 0 : -1);
 
 // Include libraries
 require_once ROOT .'_sakura/vendor/autoload.php';
@@ -54,8 +54,8 @@ $renderData = [
 
         'version'           => SAKURA_VERSION,
         'vlabel'            => SAKURA_VLABEL,
-        'vtype'             => SAKURA_VTYPE,
         'vcolour'           => SAKURA_COLOUR,
+        'stable'            => SAKURA_STABLE,
         'urls'              => Configuration::getLocalConfig('urls'),
         'charset'           => Configuration::getConfig('charset'),
         'currentpage'       => '//'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'],
@@ -82,8 +82,8 @@ $renderData = [
 
     'perms' => [
 
-        'canUseChat'    => Permissions::check('SITE',    'USE_CHAT',     Session::$userId, 1),
-        'canUseForums'  => Permissions::check('FORUM',   'USE_FORUM',    Session::$userId, 1)
+        'canViewOnline' => Permissions::check('SITE',   'USE_CHAT',     Session::$userId, 1),
+        'canUseForums'  => Permissions::check('FORUM',  'USE_FORUM',    Session::$userId, 1)
 
     ],
 

@@ -103,11 +103,11 @@ foreach($changelog as $build => $buildData) {
 $tpl = file_get_contents(ROOT .'_sakura/templates/changeLog.tpl');
 
 // Parse tags
-$tpl = str_replace('{{ version }}',         SAKURA_VERSION, $tpl);
-$tpl = str_replace('{{ version_label }}',   SAKURA_VLABEL,  $tpl);
-$tpl = str_replace('{{ version_type }}',    SAKURA_VTYPE,   $tpl);
-$tpl = str_replace('{{ colour }}',          SAKURA_COLOUR,  $tpl);
-$tpl = str_replace('{{ changeloghtml }}',   $changelogHTML, $tpl);
+$tpl = str_replace('{{ version }}',         SAKURA_VERSION,                             $tpl);
+$tpl = str_replace('{{ version_label }}',   SAKURA_VLABEL,                              $tpl);
+$tpl = str_replace('{{ version_type }}',    SAKURA_STABLE ? 'Stable' : 'Development',   $tpl);
+$tpl = str_replace('{{ colour }}',          SAKURA_COLOUR,                              $tpl);
+$tpl = str_replace('{{ changeloghtml }}',   $changelogHTML,                             $tpl);
 
 // Print template
 print $tpl;

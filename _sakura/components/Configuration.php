@@ -11,7 +11,7 @@ class Configuration {
     public static $_LCNF;
     public static $_DCNF;
 
-	// Initialise configuration, does not contain database initialisation because explained below
+    // Initialise configuration, does not contain database initialisation because explained below
     public static function init($local) {
 
         // Check if the configuration file exists
@@ -63,62 +63,62 @@ class Configuration {
 
     }
 
-	// Get values from the configuration on the file system
-	public static function getLocalConfig($key, $subkey = null) {
+    // Get values from the configuration on the file system
+    public static function getLocalConfig($key, $subkey = null) {
 
         // Check if the key that we're looking for exists
-		if(array_key_exists($key, self::$_LCNF)) {
+        if(array_key_exists($key, self::$_LCNF)) {
 
-			if($subkey) {
+            if($subkey) {
 
                 // If we also have a subkey return the proper data
-				return self::$_LCNF[$key][$subkey];
+                return self::$_LCNF[$key][$subkey];
 
-			} else {
+            } else {
 
                 // else we just return the default value
-				return self::$_LCNF[$key];
+                return self::$_LCNF[$key];
 
             }
 
-		} else {// If it doesn't exist trigger an error to avoid explosions
+        } else {// If it doesn't exist trigger an error to avoid explosions
 
-			trigger_error('Unable to get local configuration value!', E_USER_ERROR);
+            trigger_error('Unable to get local configuration value!', E_USER_ERROR);
 
         }
 
-	}
+    }
 
-	// Dynamically set local configuration values, does not update the configuration file
-	public static function setLocalConfig($key, $subkey, $value) {
+    // Dynamically set local configuration values, does not update the configuration file
+    public static function setLocalConfig($key, $subkey, $value) {
 
         // Check if we also do a subkey
-		if($subkey) {
+        if($subkey) {
 
             // If we do we make sure that the parent key is an array
-			if(!isset(self::$_LCNF[$key])) {
+            if(!isset(self::$_LCNF[$key])) {
 
-				self::$_LCNF[$key] = array();
+                self::$_LCNF[$key] = array();
 
             }
 
             // And then assign the value
-			self::$_LCNF[$key][$subkey] = $value;
+            self::$_LCNF[$key][$subkey] = $value;
 
-		} else {
+        } else {
 
             // Otherwise we just straight up assign it
-			self::$_LCNF[$key] = $value;
+            self::$_LCNF[$key] = $value;
 
         }
 
-	}
+    }
 
-	// Get values from the configuration in the database
-	public static function getConfig($key) {
+    // Get values from the configuration in the database
+    public static function getConfig($key) {
 
         // Check if the key that we're looking for exists
-		if(array_key_exists($key, self::$_DCNF)) {
+        if(array_key_exists($key, self::$_DCNF)) {
 
             // Then return the value
             return self::$_DCNF[$key];
@@ -126,10 +126,10 @@ class Configuration {
         } else {
 
             // Then return the value
-			trigger_error('Unable to get configuration value', E_USER_ERROR);
+            trigger_error('Unable to get configuration value', E_USER_ERROR);
 
         }
 
-	}
+    }
 
 }

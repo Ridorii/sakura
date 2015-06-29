@@ -8,7 +8,7 @@ namespace Sakura;
 class Database {
 
     // Database container
-    public static $_DATABASE;
+    private static $_DATABASE;
 
     // Initialisation function
     public static function init($engine) {

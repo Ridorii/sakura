@@ -8,7 +8,8 @@ namespace Sakura;
 
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sakura.php';
-//print Permissions::check('SITE', 'USE_CHAT', Session::$userId, 1);
+
+print Permissions::check('SITE', 'USE_CHAT', Session::$userId, 1);
 
 // Are we in forum mode?
 $forumMode = isset($_GET['forums']) ? ($_GET['forums'] == true) : false;
@@ -21,9 +22,9 @@ $renderData['page'] = [
 ];
 
 $renderData['board'] = [
-    'forums'        => ($forumMode ? Forum::getForumList() : null),
-    'viewforum'     => false,
-    'viewtopic'     => false
+    'forums'    => ($forumMode ? Forum::getForumList() : null),
+    'viewforum' => false,
+    'viewtopic' => false
 ];
 
 $renderData['stats'] = [
@@ -32,8 +33,8 @@ $renderData['stats'] = [
     'lastRegDate'   => ($_INDEX_LAST_REGDATE    = date_diff(date_create(date('Y-m-d', $_INDEX_NEWEST_USER['regdate'])), date_create(date('Y-m-d')))->format('%a')) .' day'. ($_INDEX_LAST_REGDATE == 1 ? '' : 's'),
     'chatOnline'    => ($_INDEX_CHAT_ONLINE     = count(SockChat::getOnlineUsers())) .' user'. ($_INDEX_CHAT_ONLINE == 1 ? '' : 's'),
     'onlineUsers'   => Users::checkAllOnline(),
-    'topicCount'    => '0 topics',
-    'postCount'     => '0 posts'
+    'topicCount'    => ($_TOPICS = count(Database::fetch('topics'))) .' topic'. ($_TOPICS != 1 ? 's' : ''),
+    'postCount'     => ($_POSTS = count(Database::fetch('posts'))) .' post'. ($_POSTS != 1 ? 's' : '')
 ];
 
 // Print page contents

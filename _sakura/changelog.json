@@ -24,7 +24,8 @@
                 "20150620",
                 "20150621",
                 "20150627",
-                "20150628"
+                "20150628",
+                "20150629"
 
             ]
 
@@ -1347,6 +1348,19 @@
             {
                 "type":     "UPD",
                 "change":   "Changed Edit icon on profiles."
+            }
+
+        ],
+
+        "20150629": [
+
+            {
+                "type":     "ADD",
+                "change":   "Added topic and post counters to the frontpage."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Changed SAKURA_VTYPE to a SAKURA_STABLE boolean that can be used for only showing things on stable or development builds."
             }
 
         ]
