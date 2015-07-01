@@ -15,11 +15,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
     // Initialise Payments class
     if(!Payments::init()) {
 
-        $renderData['page'] = [
-            'title'     => 'Action failed',
-            'redirect'  => '/support',
-            'message'   => 'Failed to initialise the Payment handling components, contact a staff member as soon as possible.'
-        ];
+        header('Location: /support?fail=true');
 
     } else {
 
@@ -31,12 +27,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
                 // Compare time and session so we know the link isn't forged
                 if(!isset($_REQUEST['time']) || $_REQUEST['time'] < time() - 1000) {
 
-                    $renderData['page'] = [
-                        'title'     => 'Action failed',
-                        'redirect'  => '/support',
-                        'message'   => 'Timestamps differ too much, refresh the page and try again.'
-                    ];
-
+                    header('Location: /support?fail=true');
                     break;
 
                 }
@@ -44,12 +35,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
                 // Match session ids for the same reason
                 if(!isset($_REQUEST['session']) || $_REQUEST['session'] != session_id()) {
 
-                    $renderData['page'] = [
-                        'title'     => 'Action failed',
-                        'redirect'  => '/support',
-                        'message'   => 'Invalid session, please try again.'
-                    ];
-
+                    header('Location: /support?fail=true');
                     break;
 
                 }
@@ -79,12 +65,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
 
                     } else {
 
-                        // Add page specific things
-                        $renderData['page'] = [
-                            'title'     => 'Information',
-                            'redirect'  => '/support',
-                            'message'   => 'An error has occurred while trying to create the transaction, try again later.'
-                        ];
+                        header('Location: /support?fail=true');
 
                     }
 
@@ -99,12 +80,19 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
                 if(isset($_GET['success']) && isset($_GET['paymentId']) && isset($_GET['PayerID']) && isset($_SESSION['premiumMonths'])) {
 
                     // Attempt to complete the transaction
-                    if(Payments::completeTransaction($_GET['paymentId'], $_GET['PayerID'])) {
+                    try{
+                        $finalise = Payments::completeTransaction($_GET['paymentId'], $_GET['PayerID']);
+                    } catch(Exception $e) {}
 
-                        // execution of tenshification here
+                    // Attempt to complete the transaction
+                    if($finalise) {
+
+                        // Make the user premium
+                        $expiration = Users::addUserPremium(Session::$userId, (2628000 * $_SESSION['premiumMonths']));
+                        Users::updatePremiumMeta(Session::$userId);
 
                         // Redirect to the complete
-                        header('Location: ?mode=complete');
+                        header('Location: ?mode=complete&expire='. $expiration);
                         exit;
 
                     }
@@ -115,7 +103,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
                 break;
 
             case 'complete':
-                print Templates::render('errors/premiumComplete.tpl', array_merge(['page' => ['title' => 'Premium purchase complete!']], $renderData));
+                print Templates::render('errors/premiumComplete.tpl', array_merge(['page' => ['title' => 'Premium purchase complete!', 'expiration' => isset($_GET['expire']) ? $_GET['expire'] : 0]], $renderData));
                 break;
 
             default:
@@ -189,4 +177,4 @@ $renderData['page'] = [
 ];
 
 // Print page contents
-print Templates::render('main/donate.tpl', $renderData);
+print Templates::render('main/support.tpl', $renderData);

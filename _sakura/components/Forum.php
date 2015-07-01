@@ -214,7 +214,7 @@ class Forum {
                 'user'          => ($_POSTER = Users::getUser($post['poster_id'])),
                 'rank'          => Users::getRank($_POSTER['rank_main']),
                 'country'       => Main::getCountryName($_POSTER['country']),
-                'is_tenshi'     => Users::checkUserTenshi($_POSTER['id']),
+                'is_premium'    => Users::checkUserPremium($_POSTER['id'])[0],
                 'is_online'     => Users::checkUserOnline($_POSTER['id']),
                 'is_friend'     => Users::checkFriend($_POSTER['id']),
                 'parsed_post'   => self::parseMarkUp($post['post_text'], $post['parse_mode']),

@@ -89,6 +89,9 @@ class Users {
             ]
         ]);
 
+        // Update the premium meta
+        Users::updatePremiumMeta($uid);
+
         // Redirect people that need to change their password to the new format
         if(self::getUser($uid)['password_algo'] == 'legacy' && $_SERVER['PHP_SELF'] != '/authenticate.php' && $_SERVER['PHP_SELF'] != '/imageserve.php')
             header('Location: /authenticate.php?legacy=true');
@@ -130,7 +133,7 @@ class Users {
                 $user['password_salt'],
                 $user['password_hash']
             ]))
-                return [0, 'INCORRECT_PASSWORD'];
+                return [0, 'INCORRECT_PASSWORD', $user['password_chan']];
 
         }
 
@@ -652,6 +655,106 @@ class Users {
 
     }
 
+    // Set the default rank of a user
+    public static function setDefaultRank($uid, $rid, $userIdIsUserData = false) {
+
+        // Get the specified user
+        $user = $userIdIsUserData ? $uid : self::getUser($uid);
+
+        // Decode the json
+        $ranks = json_decode($user['ranks'], true);
+
+        // Check if the rank we're trying to set is actually there
+        if(!in_array($rid, $ranks))
+            return false;
+
+        // Update the row
+        Database::update('users', [
+            [
+                'rank_main' => $rid
+            ],
+            [
+                'id' => [$uid, '=']
+            ]
+        ]);
+
+        // Return true if everything was successful
+        return true;
+
+    }
+
+    // Add a rank to a user
+    public static function addRanksToUser($ranks, $uid, $userIdIsUserData = false) {
+
+        // Get the specified user
+        $user = $userIdIsUserData ? $uid : self::getUser($uid);
+
+        // Decode the array
+        $current = json_decode($user['ranks'], true);
+
+        // Go over all the new ranks
+        foreach($ranks as $rank) {
+
+            // Check if the user already has this rank and set it if not
+            if(!in_array($rank, $current))
+                $current[] = (int)$rank;
+
+        }
+
+        // Encode the array
+        $current = json_encode($current);
+
+        // Update the row
+        Database::update('users', [
+            [
+                'ranks' => $current
+            ],
+            [
+                'id' => [$uid, '=']
+            ]
+        ]);
+
+        // Return true because
+        return true;
+
+    }
+
+    // Removing ranks from a user
+    public static function removeRanksFromUser($ranks, $uid, $userIdIsUserData = false) {
+
+        // Get the specified user
+        $user = $userIdIsUserData ? $uid : self::getUser($uid);
+
+        // Get the ranks
+        $current = json_decode($user['ranks'], true);
+
+        // Check the current ranks for ranks in the set array
+        foreach($current as $key => $rank) {
+
+            // Unset the rank
+            if(in_array($rank, $ranks))
+                unset($current[$key]);
+
+        }
+
+        // Encode the array
+        $current = json_encode($current);
+
+        // Update the row
+        Database::update('users', [
+            [
+                'ranks' => $current
+            ],
+            [
+                'id' => [$uid, '=']
+            ]
+        ]);
+
+        // Return true
+        return true;
+
+    }
+
     // Check if a user has these ranks
     public static function checkIfUserHasRanks($ranks, $userid, $userIdIsUserData = false) {
 
@@ -851,12 +954,105 @@ class Users {
 
     }
 
-    // Add premium to 
+    // Add premium to a user
+    public static function addUserPremium($id, $seconds) {
 
-    // Check if user has Premium [ REWRITE THIS ]
+        // Check if there's already a record of premium for this user in the database
+        $getUser = Database::fetch('premium', false, [
+            'uid' => [$id, '=']
+        ]);
+
+        // Calculate the (new) start and expiration timestamp
+        $start  = isset($getUser['startdate'])  ? $getUser['startdate']             : time();
+        $expire = isset($getUser['expiredate']) ? $getUser['expiredate'] + $seconds : time() + $seconds;
+
+        // If the user already exists do an update call, otherwise an insert call
+        if(empty($getUser)) {
+
+            Database::insert('premium', [
+                'uid'           => $id,
+                'startdate'     => $start,
+                'expiredate'    => $expire
+            ]);
+
+        } else {
+
+            Database::update('premium', [
+                [
+                    'expiredate'    => $expire
+                ],
+                [
+                    'uid' => [$id, '=']
+                ]
+            ]);
+
+        }
+
+        // Return the expiration timestamp
+        return $expire;
+
+    }
+
+    // Remove the premium status of a user
+    public static function removeUserPremium($id) {
+
+        Database::delete('premium', [
+            'uid' => [$id, '=']
+        ]);
+
+    }
+
+    // Check if user has Premium
     public static function checkUserPremium($id) {
 
-        return false;
+        // Attempt to retrieve the premium record from the database
+        $getRecord = Database::fetch('premium', false, [
+            'uid' => [$id, '=']
+        ]);
+
+        // If nothing was returned just return false
+        if(empty($getRecord))
+            return [0];
+
+        // Check if the Tenshi hasn't expired
+        if($getRecord['expiredate'] < time()) {
+
+            self::removeUserPremium($id);
+            self::updatePremiumMeta($id);
+            return [0, $getRecord['startdate'], $getRecord['expiredate']];
+
+        }
+
+        // Else return the start and expiration date
+        return [1, $getRecord['startdate'], $getRecord['expiredate']];
+
+    }
+
+    // Update the premium data
+    public static function updatePremiumMeta($id) {
+
+        // Get the ID for the premium user rank from the database
+        $premiumRank = Configuration::getConfig('premium_rank_id');
+
+        // Run the check
+        $check = self::checkUserPremium($id);
+
+        // Check if the user has premium
+        if($check[0] == 1) {
+
+            // If so add the rank to them
+            self::addRanksToUser([$premiumRank], $id);
+
+            // Check if the user's default rank is standard user and update it to premium
+            if(self::getUser($id)['rank_main'] == 2)
+                self::setDefaultRank($id, $premiumRank);
+
+        } elseif($check[0] == 0 && count($check) > 1) {
+
+            // Else remove the rank from them
+            self::removeRanksFromUser([$premiumRank], $id);
+
+        }
 
     }
 

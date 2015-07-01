@@ -11,7 +11,7 @@
                             <img src="/a/{{ post.user.id }}" alt="{{ post.user.username }}" class="avatar" style="box-shadow: 0 3px 7px #{% if post.is_online %}484{% else %}844{% endif %};" />
                             <div class="userdata">
                                 <div class="usertitle">{% if not post.user.usertitle %}{{ post.rank.title }}{% else %}{{ post.user.usertitle }}{% endif %}</div>
-                                <img src="//{{ sakura.urls.content }}/images/tenshi.png" alt="Tenshi"{% if not post.is_tenshi %} style="opacity: 0;"{% endif %} /> <img src="//{{ sakura.urls.content }}/images/flags/{% if post.user.country|lower == 'eu' %}europeanunion{% else %}{{ post.user.country|lower }}{% endif %}.png" alt="{{ post.country }}" />
+                                <img src="//{{ sakura.urls.content }}/images/tenshi.png" alt="Tenshi"{% if not post.is_premium %} style="opacity: 0;"{% endif %} /> <img src="//{{ sakura.urls.content }}/images/flags/{% if post.user.country|lower == 'eu' %}europeanunion{% else %}{{ post.user.country|lower }}{% endif %}.png" alt="{{ post.country }}" />
                                 <div class="actions">
                                     {% if user.data.id == post.user.id %}
                                     <a class="fa fa-pencil-square-o" title="Edit this post" href="#"></a>

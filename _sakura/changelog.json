@@ -1385,6 +1385,10 @@
             {
                 "type":     "FIX",
                 "change":   "Fixed a multitude of fuckups."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added automatic rank management for premium."
             }
 
         ]
