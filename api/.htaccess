@@ -1,1 +1,5 @@
-# Empty .htaccess to make git realise this directory exists
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteRule ^(.*)$ api.php [QSA,L]

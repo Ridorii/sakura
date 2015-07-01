@@ -41,7 +41,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
                 }
 
                 // Half if shit isn't gucci
-                if(!isset($_POST['months']) || !is_numeric($_POST['months']) || (int)$_POST['months'] < 1 || (int)$_POST['months'] > 24) {
+                if(!isset($_POST['months']) || !is_numeric($_POST['months']) || (int)$_POST['months'] < 1 || (int)$_POST['months'] > Configuration::getConfig('premium_amount_max')) {
 
                     header('Location: /support?fail=true');
 
@@ -125,10 +125,11 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
 
 // Set default variables
 $renderData['page'] = [
-    'title'     => 'Support Flashii',
-    'fail'      => isset($_GET['fail']),
-    'price'     => Configuration::getConfig('premium_price_per_month'),
-    'current'   => Users::checkUserPremium(Session::$userId)
+    'title'         => 'Support Flashii',
+    'fail'          => isset($_GET['fail']),
+    'price'         => Configuration::getConfig('premium_price_per_month'),
+    'current'       => Users::checkUserPremium(Session::$userId),
+    'amount_max'    => Configuration::getConfig('premium_amount_max')
 ];
 
 // Print page contents

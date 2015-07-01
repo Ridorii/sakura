@@ -15,8 +15,8 @@
             Your current Tenshi tag
         </div>
         <div style="margin-bottom: 10px;">
-            <h3>Your Tenshi tag is valid till {{ page.current[2]|date("l \\t\\h\\e jS \\o\\f F o") }}.</h3>
-            <progress value="{{ page.current[1] / page.current[2] * 100 }}" max="100" style="width: 100%"></progress>
+            <h3>{% if page.current[0] == 2 %}Your rank has persistent Tenshi.{% else %}Your Tenshi tag is valid till {{ page.current[2]|date("l \\t\\h\\e jS \\o\\f F o") }}.{% endif %}</h3>
+            <progress value="{{ page.current[0] == 2 ? 100 : page.current[1] / page.current[2] * 100 }}" max="100" style="width: 100%"></progress>
         </div>
         {% endif %}
         <div class="sectionHeader">
@@ -86,7 +86,7 @@
         </div>
         {% if user.checklogin and perms.canGetPremium %}
             <div class="slider">
-                <input class="inputStyling" type="range" min="1" max="24" value="1" onchange="document.getElementById('monthsNo').value = this.value; document.getElementById('monthNoBtn').innerHTML = this.value; document.getElementById('monthsTrailingS').innerHTML = (this.value == 1 ? '' : 's'); document.getElementById('totalAmount').innerHTML = (this.value * {{ page.price }}).formatMoney(2);" />
+                <input class="inputStyling" type="range" min="1" max="{{ page.amount_max }}" value="1" onchange="document.getElementById('monthsNo').value = this.value; document.getElementById('monthNoBtn').innerHTML = this.value; document.getElementById('monthsTrailingS').innerHTML = (this.value == 1 ? '' : 's'); document.getElementById('totalAmount').innerHTML = (this.value * {{ page.price }}).formatMoney(2);" />
             </div>
             <div class="checkout" style="line-height: 28px;">
                 <div style="float: left;">

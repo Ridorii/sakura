@@ -1397,6 +1397,14 @@
             {
                 "type":     "FIX",
                 "change":   "Moved expire variable for the complete page out of the url and take the data straight from the database."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Made the maximum amount of month you get buy premium for changable."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added basic API handler."
             }
 
         ]

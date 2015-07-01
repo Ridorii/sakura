@@ -1007,7 +1007,7 @@ class Users {
 
         // Check if the user has static premium
         if(Permissions::check('SITE', 'STATIC_PREMIUM', $id, 1))
-            return [1, 0, time() + 1];
+            return [2, 0, time() + 1];
 
         // Attempt to retrieve the premium record from the database
         $getRecord = Database::fetch('premium', false, [
