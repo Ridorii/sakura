@@ -19,7 +19,7 @@ if(isset($_GET['u'])) {
         'colour'        => ($_PROFILE_USER_DATA['name_colour']  == null ? $_PROFILE_RANK_DATA['colour'] : $_PROFILE_USER_DATA['name_colour']),
         'ranktitle'     => ($_PROFILE_USER_DATA['usertitle']    == null ? $_PROFILE_RANK_DATA['title']  : $_PROFILE_USER_DATA['usertitle']),
         'country'       => Main::getCountryName($_PROFILE_USER_DATA['country']),
-        'istenshi'      => Users::checkUserTenshi($_PROFILE_USER_DATA['id']),
+        'istenshi'      => Users::checkUserPremium($_PROFILE_USER_DATA['id']),
         'online'        => Users::checkUserOnline($_PROFILE_USER_DATA['id']),
         'profilePage'   => Users::getProfilePage($_PROFILE_USER_DATA['userData'], true),
         'fields'        => Users::getUserProfileFields($_PROFILE_USER_DATA['userData'], true),

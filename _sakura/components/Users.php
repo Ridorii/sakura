@@ -851,8 +851,10 @@ class Users {
 
     }
 
-    // Check if user has Tenshi [ REWRITE THIS ]
-    public static function checkUserTenshi($id) {
+    // Add premium to 
+
+    // Check if user has Premium [ REWRITE THIS ]
+    public static function checkUserPremium($id) {
 
         return false;
 
