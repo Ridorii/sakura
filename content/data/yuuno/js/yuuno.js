@@ -271,47 +271,6 @@ function notifyRequest(session) {
 
 }
 
-// Donate page specific features
-function donatePage(id) {
-
-    // Get the featureBoxDesc elements
-    var featureBoxDesc = document.getElementsByClassName('featureBoxDesc');
-
-    // If an id wasn't set assume that we're doing initialisation
-    if(!id) {
-
-        // Go over every element and add donateClosed to the end of the class
-        for(var i = 0; i < featureBoxDesc.length; i++) {
-
-            featureBoxDesc[i].className = featureBoxDesc[i].className + ' donateClosed';
-
-        }
-
-        // Then stop the execution of the function
-        return;
-
-    }
-
-    // Get the second child of the featureBox (which is the description)
-    var featureBox = document.getElementById(id).children[1];
-
-    // Search for donateOpened in the class and if found...
-    if(featureBox.className.search('donateOpened') > 0) {
-
-        // replace it with nothing and add donateClosed to the class
-        featureBox.className = featureBox.className.replace(' donateOpened', '');
-        featureBox.className = featureBox.className + ' donateClosed';
-
-    } else {
-
-        // Else do the opposite of what was described above
-        featureBox.className = featureBox.className.replace(' donateClosed', '');
-        featureBox.className = featureBox.className + ' donateOpened';
-
-    }
-
-}
-
 // Removing all elements with a certain class
 function removeClass(className) {
 
@@ -826,6 +785,18 @@ function scrollToTop() {
     }
 
 }
+
+// Formatting money
+Number.prototype.formatMoney = function(c, d, t) {
+var n = this, 
+    c = isNaN(c = Math.abs(c)) ? 2 : c, 
+    d = d == undefined ? "." : d, 
+    t = t == undefined ? "," : t, 
+    s = n < 0 ? "-" : "", 
+    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+    j = (j = i.length) > 3 ? j % 3 : 0;
+   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+ };
 
 // Event watcher for the scroll-to-top button
 window.onscroll = function() {

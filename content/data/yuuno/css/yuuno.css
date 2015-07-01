@@ -330,7 +330,7 @@ a.gotop.exit {
 
 .content-left .head,
 .news .head,
-.donate .head,
+.support .head,
 .viewforum .head,
 .viewtopic .head,
 .loginPage > .loginCont .head,
@@ -1348,9 +1348,9 @@ a.gotop.exit {
 }
 
 /*
- * Donation page Styling
+ * Support page Styling
  */
-.donate .sectionHeader {
+.support .sectionHeader {
     margin: -1px -2px;
     background: linear-gradient(270deg, rgba(148, 117, 178, .7), rgba(148, 117, 178, 0), rgba(148, 117, 178, .7)) #C2AFFE;
     padding: 2px;
@@ -1359,56 +1359,68 @@ a.gotop.exit {
     color: #306;
 }
 
-.donate .featureParent {
+.support .featureParent {
     width: 100%;
     padding: 10px 0;
     overflow: hidden;
     text-align: center;
 }
 
-.donate .featureBox {
+.support .featureBox {
     background: linear-gradient(180deg, #C2AFFE, #B19EED) no-repeat scroll left top / cover #C2AFFE;
     margin: 7px;
     border-radius: 5px;
     text-align: center;
     box-shadow: 0 0 .5em #000;
+    text-shadow: 0 0 .5em #9475B2;
     display: inline-block;
     vertical-align: top;
-    transition: box-shadow .2s;
-    width: 320px;
-    padding: 5px 0;
+    transition: .2s;
+    width: 400px;
+    height: 50px;
+    cursor: default;
+    color: #503170;
 }
 
-.donate .featureBox:hover {
-    box-shadow: 0 0 1em #000;
-    cursor: pointer;
+.support .featureBox.final {
+    width: 818px;
 }
 
-.donate .featureBox:active {
+.support .featureBox.final .featureBoxDesc {
+    font-size: 1.3em;
+}
+
+.support .featureBox:hover {
     box-shadow: 0 0 1.5em #609;
+    text-shadow: 0 0 .7em #9475B2;
 }
 
-.donate .featureBoxHeader {
-    font-weight: 700;
-    font-size: 15px;
-}
-
-.donate .featureBoxDesc {
-    padding: 1px 2px;
-}
-
-.donate .featureBoxDesc.donateClosed {
-    display: none;
-}
-
-.donate .featureBoxDesc.donateOpened {
-    display: block;
-}
-
-.donate .paypal-donate-form {
-    margin: 10px auto;
-    display: block;
+.support .featureBoxIcon {
+    float: left;
+    line-height: 50px;
+    width: 60px;
     text-align: center;
+    font-size: 2.8em;
+}
+
+.support .featureBoxIcon.right {
+    float: right;
+}
+
+.support .featureBoxDesc {
+    display: block;
+    line-height: 50px;
+}
+
+.support .paymentOptions {
+    float: right;
+    font-size: 2em;
+    margin-left: 6px;
+}
+
+.support .paymentOptions div {
+    float: left;
+    margin: 0 1px;
 }
 
 /*
@@ -1416,7 +1428,8 @@ a.gotop.exit {
  */
 input[type="submit"].inputStyling,
 input[type="button"].inputStyling,
-input[type="reset"].inputStyling {
+input[type="reset"].inputStyling,
+button.inputStyling {
     padding: 3px 10px;
     cursor: pointer;
     border: 0;
@@ -1443,21 +1456,23 @@ input[type="reset"].inputStyling.small {
 
 input[type="submit"].inputStyling:hover,
 input[type="button"].inputStyling:hover,
-input[type="reset"].inputStyling:hover {
+input[type="reset"].inputStyling:hover,
+button.inputStyling:hover {
     box-shadow: inset #222 0 0 3px;
     text-shadow: #F1F1F1 0 0 5px;
 }
 
 input[type="submit"].inputStyling:active,
 input[type="button"].inputStyling:active,
-input[type="reset"].inputStyling:active {
+input[type="reset"].inputStyling:active,
+button.inputStyling:active {
     box-shadow: inset #222 0 0 5px;
     text-shadow: #F1F1F1 0 0 3px;
     transition: text-shadow .2s, box-shadow .2s;
 }
 
 input[type="text"].inputStyling,
-input[type="password"].inputStyling ,
+input[type="password"].inputStyling,
 input[type="date"].inputStyling {
     padding: 3px 4px;
     border: 1px solid #CCC;
@@ -1475,6 +1490,13 @@ input[type="text"].inputStyling.green,
 input[type="password"].inputStyling.green,
 input[type="date"].inputStyling.green {
     box-shadow: inset 0px 0px 7px #A9EC8B;
+}
+
+input[type="range"].inputStyling {
+    border: 0;
+    width: 100%;
+    font-size: 1.5em;
+    margin: 5px 0;
 }
 
 textarea.inputStyling {

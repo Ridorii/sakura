@@ -1005,6 +1005,10 @@ class Users {
     // Check if user has Premium
     public static function checkUserPremium($id) {
 
+        // Check if the user has static premium
+        if(Permissions::check('SITE', 'STATIC_PREMIUM', $id, 1))
+            return [1, 0, time() + 1];
+
         // Attempt to retrieve the premium record from the database
         $getRecord = Database::fetch('premium', false, [
             'uid' => [$id, '=']

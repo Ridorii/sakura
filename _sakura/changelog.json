@@ -1389,6 +1389,14 @@
             {
                 "type":     "ADD",
                 "change":   "Added automatic rank management for premium."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Redid the supporter page."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Moved expire variable for the complete page out of the url and take the data straight from the database."
             }
 
         ]

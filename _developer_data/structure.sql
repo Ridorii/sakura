@@ -209,15 +209,17 @@ CREATE TABLE `sakura_posts` (
 
 DROP TABLE IF EXISTS `sakura_premium`;
 CREATE TABLE `sakura_premium` (
-  `id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
   `uid` bigint(255) unsigned NOT NULL COMMENT 'ID of the user that purchased Tenshi.',
   `startdate` int(11) unsigned NOT NULL COMMENT 'Timestamp of first purchase.',
   `expiredate` int(11) unsigned NOT NULL COMMENT 'Expiration timestamp.',
-  PRIMARY KEY (`id`),
   UNIQUE KEY `uid` (`uid`),
   CONSTRAINT `sakura_premium_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+INSERT INTO `sakura_premium` (`uid`, `startdate`, `expiredate`) VALUES
+(2, 1435756632, 1441012632),
+(18,  1435760007, 1443644007)
+ON DUPLICATE KEY UPDATE `uid` = VALUES(`uid`), `startdate` = VALUES(`startdate`), `expiredate` = VALUES(`expiredate`);
 
 DROP TABLE IF EXISTS `sakura_profilefields`;
 CREATE TABLE `sakura_profilefields` (
@@ -412,4 +414,4 @@ CREATE TABLE `sock_online_users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
--- 2015-07-01 14:27:30
+-- 2015-07-01 14:42:04
