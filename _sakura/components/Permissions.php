@@ -26,7 +26,7 @@ class Permissions {
         'SITE' => [
 
             'DEACTIVATED'           => 1,           // Is a user in this group deactivated
-            'VIEW_ONLINE'           => 2,           // Can view the extended online list
+            'STATIC_PREMIUM'        => 2,           // Is always premium
             'ALTER_PROFILE'         => 4,           // Can alter their profile data
             'CHANGE_AVATAR'         => 8,           // Can change their avatar
             'CREATE_BACKGROUND'     => 16,          // Can create a background (different from changing)

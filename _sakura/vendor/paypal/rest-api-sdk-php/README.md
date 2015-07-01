@@ -2,7 +2,8 @@
 
 ![Home Image](https://raw.githubusercontent.com/wiki/paypal/PayPal-PHP-SDK/images/homepage.jpg)
 
-[![Build Status](https://travis-ci.org/paypal/PayPal-PHP-SDK.png?branch=master)](https://travis-ci.org/paypal/PayPal-PHP-SDK) [![Coverage Status](https://img.shields.io/coveralls/paypal/PayPal-PHP-SDK.svg)](https://coveralls.io/r/paypal/PayPal-PHP-SDK?branch=master)
+[![Build Status](https://travis-ci.org/paypal/PayPal-PHP-SDK.png?branch=master)](https://travis-ci.org/paypal/PayPal-PHP-SDK) 
+[![Coverage Status](https://coveralls.io/repos/paypal/PayPal-PHP-SDK/badge.svg?branch=master)](https://coveralls.io/r/paypal/PayPal-PHP-SDK?branch=master)
 
 __Welcome to PayPal PHP SDK__. This repository contains PayPal's PHP SDK and samples for REST API.
 
@@ -21,8 +22,7 @@ __Welcome to PayPal PHP SDK__. This repository contains PayPal's PHP SDK and sam
 
 ## Latest Updates
 
-> **Seeing this error: `'Method PayPal\Api\Sale::getTransactionFee() does not exist' in paypal/vendor/paypal/rest-api-sdk-php/lib/PayPal/Common/PPReflectionUtil.php:73`, Please upgrade the SDK to latest version [v1.3.0](https://github.com/paypal/PayPal-PHP-SDK/releases/tag/v1.3.0).**
-
+- Vault APIs now have List Credit Card with Filters, new Fields to help you find the object easily. Checkout the latest release.
 - Checkout the latest 1.0.0 release. Here are all the [ breaking Changes in v1.0.0 ](https://github.com/paypal/PayPal-PHP-SDK/wiki/Breaking-Changes---1.0.0) if you are migrating from older versions.
 - Now we have a [Github Page](http://paypal.github.io/PayPal-PHP-SDK/), that helps you find all helpful resources building applications using PayPal-PHP-SDK.
 - Introduced `DEBUG` level to logging. Deprecated `FINE`. Ability to restrict `DEBUG` level on `live` mode. [Read More](https://github.com/paypal/PayPal-PHP-SDK/wiki/Logging).

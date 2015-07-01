@@ -25,7 +25,8 @@
                 "20150621",
                 "20150627",
                 "20150628",
-                "20150629"
+                "20150629",
+                "20150630"
 
             ]
 
@@ -1361,6 +1362,28 @@
             {
                 "type":     "UPD",
                 "change":   "Changed SAKURA_VTYPE to a SAKURA_STABLE boolean that can be used for only showing things on stable or development builds."
+            }
+
+        ],
+
+        "20150630": [
+
+            {
+                "type":     "ADD",
+                "change":   "Added Payments class (and some transaction function with help from <a href=\"http://github.com/kamilrakowski\" target=\"_blank\">kamilrakowski</a>)."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added automatic premium after payment."
+            }
+
+        ],
+
+        "20150701": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fixed a multitude of fuckups."
             }
 
         ]

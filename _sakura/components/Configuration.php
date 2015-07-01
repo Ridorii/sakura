@@ -8,8 +8,8 @@ namespace Sakura;
 class Configuration {
 
     // Configuration data
-    public static $_LCNF;
-    public static $_DCNF;
+    private static $_LCNF;
+    private static $_DCNF;
 
     // Initialise configuration, does not contain database initialisation because explained below
     public static function init($local) {

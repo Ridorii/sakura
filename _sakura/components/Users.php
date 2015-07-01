@@ -40,8 +40,7 @@ class Users {
         'rankname'      => 'Sakura Rank',
         'multi'         => 0,
         'colour'        => '#444',
-        'description'   => 'A hardcoded dummy rank for fallback.',
-        'is_premium'    => 0
+        'description'   => 'A hardcoded dummy rank for fallback.'
     ];
 
     // Check if a user is logged in
@@ -852,22 +851,9 @@ class Users {
 
     }
 
-    // Check if user has Tenshi
+    // Check if user has Tenshi [ REWRITE THIS ]
     public static function checkUserTenshi($id) {
 
-        // Get user's ranks
-        $ranks = json_decode(self::getUser($id)['ranks'], true);
-
-        // Check premium flag
-        foreach($ranks as $rank) {
-
-            // If premium rank was found return true
-            if(self::getRank($rank)['is_premium'])
-                return true;
-
-        }
-
-        // Else return false
         return false;
 
     }

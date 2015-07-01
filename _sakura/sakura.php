@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150629');
+define('SAKURA_VERSION',    '20150701');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_STABLE',     false);
 define('SAKURA_COLOUR',     '#6C3082');
@@ -83,8 +83,8 @@ $renderData = [
 
     'perms' => [
 
-        'canViewOnline' => Permissions::check('SITE',   'USE_CHAT',     Session::$userId, 1),
-        'canUseForums'  => Permissions::check('FORUM',  'USE_FORUM',    Session::$userId, 1)
+        'canGetPremium' => Permissions::check('SITE',   'OBTAIN_PREMIUM',   Session::$userId, 1),
+        'canUseForums'  => Permissions::check('FORUM',  'USE_FORUM',        Session::$userId, 1)
 
     ],
 
@@ -103,6 +103,7 @@ $renderData = [
         'data'          => ($_init_udata = Users::getUser(Session::$userId)),
         'rank'          => ($_init_rdata = Users::getRank($_init_udata['rank_main'])),
         'colour'        => ($_init_udata['name_colour'] == null ? $_init_rdata['colour'] : $_init_udata['name_colour'])
+
     ]
 
 ];

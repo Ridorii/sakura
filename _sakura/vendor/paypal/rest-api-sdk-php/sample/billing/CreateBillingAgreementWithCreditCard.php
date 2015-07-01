@@ -56,7 +56,7 @@ $agreement = new Agreement();
 
 $agreement->setName('DPRP')
     ->setDescription('Payment with credit Card')
-    ->setStartDate('2015-06-17T9:45:04Z');
+    ->setStartDate('2019-06-17T9:45:04Z');
 
 // Add Plan ID
 // Please note that the plan Id should be only set in this case.
@@ -101,10 +101,12 @@ try {
     $agreement = $agreement->create($apiContext);
 
 } catch (Exception $ex) {
+    // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
     ResultPrinter::printError("Created Billing Agreement.", "Agreement", $agreement->getId(), $request, $ex);
     exit(1);
 }
 
-ResultPrinter::printResult("Created Billing Agreement.", "Agreement", $agreement->getId(), $request, $agreement);
+ // NOTE: PLEASE DO NOT USE RESULTPRINTER CLASS IN YOUR ORIGINAL CODE. FOR SAMPLE ONLY
+ ResultPrinter::printResult("Created Billing Agreement.", "Agreement", $agreement->getId(), $request, $agreement);
 
 return $agreement;

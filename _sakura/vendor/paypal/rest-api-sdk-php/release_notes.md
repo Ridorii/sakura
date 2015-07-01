@@ -1,5 +1,17 @@
 PayPal PHP SDK release notes
 ============================
+v1.5.0
+----
+* Enabled Vault List API
+* Added More Fields to Vault Credit Card Object
+* Minor Fixes
+
+v1.4.0
+----
+* Ability to validate Webhook
+* Fixes to Logging Manager to skip if mode is not set
+* SDK updates and fixes
+
 v1.3.2
 ----
 * Minor Fix for Agreement Details
