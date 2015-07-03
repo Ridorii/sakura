@@ -6,7 +6,7 @@
     </div>
     {% endif %}
     <div class="content support">
-        <div class="head">Support Flashii</div>
+        <div class="head">Support {{ sakura.sitename }}</div>
         <div style="font-size: .9em; margin-bottom: 10px;">
             <p>In order to keep the site, its services and improvements on it going I need money but I'm not that big of a fan of asking for money without giving anything special in return thus Tenshi exists. Tenshi is the name for our supporter rank which gives you access to an extra set of features (which are listed further down on this page). With your help we can keep adding new stuff, get new hardware and keep the site awesome!</p>
         </div>

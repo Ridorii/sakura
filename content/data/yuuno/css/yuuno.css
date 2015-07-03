@@ -1382,12 +1382,28 @@ a.gotop.exit {
     color: #503170;
 }
 
-.support .featureBox.final {
-    width: 818px;
+@media (min-width: 840px) {
+
+    .support .featureBox.final {
+        width: 818px;
+    }
+
+    .support .featureBox.final .featureBoxDesc {
+        font-size: 1.3em;
+    }
+
 }
 
-.support .featureBox.final .featureBoxDesc {
-    font-size: 1.3em;
+@media (max-width: 840px) {
+
+    .support .featureBox.final .featureBoxDesc {
+        line-height: 25px;
+    }
+
+}
+
+.support .featureBoxIcon.right {
+    float: right;
 }
 
 .support .featureBox:hover {
@@ -1401,10 +1417,6 @@ a.gotop.exit {
     width: 60px;
     text-align: center;
     font-size: 2.8em;
-}
-
-.support .featureBoxIcon.right {
-    float: right;
 }
 
 .support .featureBoxDesc {

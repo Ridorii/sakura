@@ -27,7 +27,9 @@
                 "20150628",
                 "20150629",
                 "20150630",
-                "20150701"
+                "20150701",
+                "20150702",
+                "20150703"
 
             ]
 
@@ -1405,6 +1407,28 @@
             {
                 "type":     "ADD",
                 "change":   "Added basic API handler."
+            }
+
+        ],
+
+        "20150702": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fixed a mistake in the stylesheet causing the support page to deform when resized."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Made the sitename config variable shown on the title of the suport page instead of just Flashii"
+            }
+
+        ],
+
+        "20150703": [
+
+            {
+                "type":     "ADD",
+                "change":   "Add basic example of the version 1 API framework."
             }
 
         ]

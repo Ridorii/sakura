@@ -125,7 +125,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
 
 // Set default variables
 $renderData['page'] = [
-    'title'         => 'Support Flashii',
+    'title'         => 'Support '. Configuration::getConfig('sitename'),
     'fail'          => isset($_GET['fail']),
     'price'         => Configuration::getConfig('premium_price_per_month'),
     'current'       => Users::checkUserPremium(Session::$userId),

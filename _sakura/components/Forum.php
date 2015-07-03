@@ -16,9 +16,7 @@ class Forum {
         'forum_category'        => 0,
         'forum_type'            => 1,
         'forum_posts'           => 0,
-        'forum_topics'          => 0,
-        'forum_last_post_id'    => 0,
-        'forum_last_poster_id'  => 0
+        'forum_topics'          => 0
     ];
 
     // Getting the forum list
@@ -48,9 +46,14 @@ class Forum {
                 // For link and reg. forum add it to the category
                 $return[$forum['forum_category']]['forums'][$forum['forum_id']] = $forum;
 
+                // Get last post in forum
+                $lastPost = Database::fetch('posts', false, [
+                    'forum_id' => [$forum['forum_id'], '=']
+                ], ['post_id', true]);
+
                 // Add last poster data and the details about the post as well
                 $return[$forum['forum_category']]['forums'][$forum['forum_id']]['last_poster'] = [
-                    'user' => ($_LAST_POSTER = Users::getUser($forum['forum_last_poster_id'])),
+                    'user' => ($_LAST_POSTER = Users::getUser($lastPost['poster_id'])),
                     'rank' => Users::getRank($_LAST_POSTER['rank_main'])
                 ];
 
@@ -105,8 +108,13 @@ class Forum {
         // Get the userdata related to last posts
         foreach($forum['forums'] as $key => $sub) {
 
+            // Get last post in forum
+            $lastPost = Database::fetch('posts', false, [
+                'forum_id' => [$sub['forum_id'], '=']
+            ], ['post_id', true]);
+
             $forum['forums'][$key]['last_poster'] = [
-                'user' => ($_LAST_POSTER = Users::getUser($sub['forum_last_poster_id'])),
+                'user' => ($_LAST_POSTER = Users::getUser($lastPost['poster_id'])),
                 'rank' => Users::getRank($_LAST_POSTER['rank_main'])
             ];
 
@@ -120,8 +128,13 @@ class Forum {
         // Get the userdata related to first and last posts
         foreach($forum['topics'] as $key => $topic) {
 
+            // Get last post in forum
+            $firstPost = Database::fetch('posts', false, [
+                'topic_id' => [$topic['topic_id'], '=']
+            ]);
+
             $forum['topics'][$key]['first_poster'] = [
-                'user' => ($_FIRST_POSTER = Users::getUser($topic['topic_first_poster_id'])),
+                'user' => ($_FIRST_POSTER = Users::getUser($firstPost['topic_first_poster_id'])),
                 'rank' => Users::getRank($_FIRST_POSTER['rank_main'])
             ];
 

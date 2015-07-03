@@ -584,7 +584,7 @@ class Main {
     }
 
     // Indent JSON
-    public static function jsonIndent($json) {
+    public static function jsonPretty($json) {
 
         // Defines
         $tab = '    ';
