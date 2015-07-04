@@ -47,8 +47,6 @@ content/images/user/*
 BingSiteAuth.xml
 google*.html
 main/logs/*
-content/data/misaki/*
-_sakura/templates/misaki/*
 _sakura/cache/*
 !_sakura/cache/.htaccess
 

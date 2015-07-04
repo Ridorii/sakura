@@ -1439,6 +1439,10 @@
             {
                 "type":     "FIX",
                 "change":   "Fixed profile rewrite rule causing errors in some environments (e.g. Win32)."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Removed ignore lines for Misaki files."
             }
 
         ]
