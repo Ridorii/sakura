@@ -29,7 +29,8 @@
                 "20150630",
                 "20150701",
                 "20150702",
-                "20150703"
+                "20150703",
+                "20150704"
 
             ]
 
@@ -1429,6 +1430,15 @@
             {
                 "type":     "ADD",
                 "change":   "Add basic example of the version 1 API framework."
+            }
+
+        ],
+
+        "20150704": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fixed profile rewrite rule causing errors in some environments (e.g. Win32)."
             }
 
         ]
