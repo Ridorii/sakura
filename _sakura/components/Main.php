@@ -518,7 +518,7 @@ class Main {
     public static function getCountryName($code) {
 
         // Parse JSON file
-        $iso3166 = json_decode(file_get_contents(ROOT .'_sakura/'. Configuration::getLocalConfig('data', 'iso3166')), true);
+        $iso3166 = json_decode(utf8_encode(file_get_contents(ROOT .'_sakura/'. Configuration::getLocalConfig('data', 'iso3166'))), true);
 
         // Check if key exists
         if(array_key_exists($code, $iso3166))
@@ -671,6 +671,45 @@ class Main {
 
         // Return the indented JSON
         return $out;
+
+    }
+
+    // Time elapsed
+    public static function timeElapsed($timestamp) {
+
+        // Subtract the entered timestamp from the current timestamp
+        $time = time() - $timestamp;
+
+        // If the new timestamp is below 1 return a standard string
+        if($time < 1)
+            return 'Just now';
+
+        // Array containing time "types"
+        $times = [
+            365 * 24 * 60 * 60 => 'year',
+             30 * 24 * 60 * 60 => 'month',
+                  24 * 60 * 60 => 'day',
+                       60 * 60 => 'hour',
+                            60 => 'minute',
+                             1 => 'second'
+        ];
+
+        foreach($times as $secs => $str) {
+
+            // Do a devision to check if the given timestamp fits in the current "type"
+            $calc = $time / $secs;
+
+            if($calc >= 1) {
+
+                // Round the number
+                $round = round($calc);
+
+                // Return the string
+                return $round .' '. $times[$secs] . ($round == 1 ? '' : 's') .' ago';
+
+            } 
+
+        }
 
     }
 

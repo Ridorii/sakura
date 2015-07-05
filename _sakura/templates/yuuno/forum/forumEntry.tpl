@@ -23,13 +23,13 @@
             </td>
             {% if forum.forum_type != 2 %}
             <td class="forumCountColumn">
-                <div class="topics" title="Amount of topics in this forum.">{{ forum.forum_topics }}</div>
-                <div class="posts" title="Amount of posts in this forum.">{{ forum.forum_posts }}</div>
+                <div class="topics" title="Amount of topics in this forum.">{{ forum.topic_count }}</div>
+                <div class="posts" title="Amount of posts in this forum.">{{ forum.post_count }}</div>
             </td>
             <td class="forumLastColumn">
                 <div>
-                    {% if forum.forum_last_post_id %}
-                        Last post in <a href="//{{ sakura.urls.main }}/forum/thread/{{ forum.forum_last_post_id }}" class="default">Thread with an obnoxiously long fucking title</a><br />12 years ago by {% if forum.last_poster.user.id %}<a href="//{{ sakura.urls.main }}/u/{{ forum.last_poster.user.id }}" class="default" style="color: {% if forum.last_poster.user.name_colour %}{{ forum.last_poster.user.name_colour }}{% else %}{{ forum.last_poster.rank.colour }}{% endif %};">{{ forum.last_poster.user.username }}</a>{% else %}[deleted user]{% endif %} <a href="/forum/post/{{ forum.forum_last_post_id }}" class="default fa fa-tag"></a>
+                    {% if forum.last_poster.user.id %}
+                        <a href="//{{ sakura.urls.main }}/forum/thread/{{ forum.last_poster.post.topic_id }}" class="default">{{ forum.last_poster.post.post_subject }}</a><br />{{ forum.last_poster.elap }} by {% if forum.last_poster.user.id %}<a href="//{{ sakura.urls.main }}/u/{{ forum.last_poster.user.id }}" class="default" style="color: {% if forum.last_poster.user.name_colour %}{{ forum.last_poster.user.name_colour }}{% else %}{{ forum.last_poster.rank.colour }}{% endif %};">{{ forum.last_poster.user.username }}</a>{% else %}[deleted user]{% endif %} <a href="/forum/post/{{ forum.last_poster.post.post_id }}#p{{ forum.last_poster.post.post_id }}" class="default fa fa-tag"></a>
                     {% else %}
                         There are no posts in this forum.<br />&nbsp;
                     {% endif %}

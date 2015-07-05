@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150704');
+define('SAKURA_VERSION',    '20150705');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_STABLE',     false);
 define('SAKURA_COLOUR',     '#6C3082');
@@ -18,6 +18,9 @@ define('ROOT', str_replace(basename(__DIR__), '', dirname(__FILE__)));
 
 // Error Reporting: 0 for production and -1 for testing
 error_reporting(SAKURA_STABLE ? 0 : -1);
+
+// Set internal encoding method
+mb_internal_encoding('utf-8');
 
 // Include libraries
 require_once ROOT .'_sakura/vendor/autoload.php';

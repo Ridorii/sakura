@@ -46,6 +46,16 @@ class Forum {
                 // For link and reg. forum add it to the category
                 $return[$forum['forum_category']]['forums'][$forum['forum_id']] = $forum;
 
+                // Get the topic count
+                $return[$forum['forum_category']]['forums'][$forum['forum_id']]['topic_count'] = Database::count('topics', [
+                    'forum_id' => [$forum['forum_id'], '=']
+                ])[0];
+
+                // Get the post count
+                $return[$forum['forum_category']]['forums'][$forum['forum_id']]['post_count'] = Database::count('posts', [
+                    'forum_id' => [$forum['forum_id'], '=']
+                ])[0];
+
                 // Get last post in forum
                 $lastPost = Database::fetch('posts', false, [
                     'forum_id' => [$forum['forum_id'], '=']
@@ -53,8 +63,10 @@ class Forum {
 
                 // Add last poster data and the details about the post as well
                 $return[$forum['forum_category']]['forums'][$forum['forum_id']]['last_poster'] = [
+                    'post' => $lastPost,
                     'user' => ($_LAST_POSTER = Users::getUser($lastPost['poster_id'])),
-                    'rank' => Users::getRank($_LAST_POSTER['rank_main'])
+                    'rank' => Users::getRank($_LAST_POSTER['rank_main']),
+                    'elap' => Main::timeElapsed($lastPost['post_time'])
                 ];
 
             }
@@ -114,6 +126,7 @@ class Forum {
             ], ['post_id', true]);
 
             $forum['forums'][$key]['last_poster'] = [
+                'post' => $lastPost,
                 'user' => ($_LAST_POSTER = Users::getUser($lastPost['poster_id'])),
                 'rank' => Users::getRank($_LAST_POSTER['rank_main'])
             ];
@@ -121,29 +134,7 @@ class Forum {
         }
 
         // Lastly grab the topics for this forum
-        $forum['topics'] = Database::fetch('topics', true, [
-            'forum_id' => [$id, '=']
-        ]);
-
-        // Get the userdata related to first and last posts
-        foreach($forum['topics'] as $key => $topic) {
-
-            // Get last post in forum
-            $firstPost = Database::fetch('posts', false, [
-                'topic_id' => [$topic['topic_id'], '=']
-            ]);
-
-            $forum['topics'][$key]['first_poster'] = [
-                'user' => ($_FIRST_POSTER = Users::getUser($firstPost['topic_first_poster_id'])),
-                'rank' => Users::getRank($_FIRST_POSTER['rank_main'])
-            ];
-
-            $forum['topics'][$key]['last_poster'] = [
-                'user' => ($_LAST_POSTER = Users::getUser($topic['topic_last_poster_id'])),
-                'rank' => Users::getRank($_LAST_POSTER['rank_main'])
-            ];
-
-        }
+        $forum['topics'] = self::getTopics($forum['forum']['forum_id']);
 
         // Return the forum/category
         return $forum;
@@ -161,14 +152,33 @@ class Forum {
         // Get the userdata related to last posts
         foreach($topics as $key => $topic) {
 
+            // Get the reply count
+            $topics[$key]['reply_count'] = Database::count('posts', [
+                'topic_id' => [$topic['topic_id'], '=']
+            ])[0];
+
+            // Get first post in topics
+            $firstPost = Database::fetch('posts', false, [
+                'topic_id' => [$topic['topic_id'], '=']
+            ]);
+
             $topics[$key]['first_poster'] = [
-                'user' => ($_FIRST_POSTER = Users::getUser($topic['topic_first_poster_id'])),
-                'rank' => Users::getRank($_FIRST_POSTER['rank_main'])
+                'post' => $firstPost,
+                'user' => ($_FIRST_POSTER = Users::getUser($firstPost['poster_id'])),
+                'rank' => Users::getRank($_FIRST_POSTER['rank_main']),
+                'elap' => Main::timeElapsed($firstPost['post_time'])
             ];
 
+            // Get last post in topics
+            $lastPost = Database::fetch('posts', false, [
+                'topic_id' => [$topic['topic_id'], '=']
+            ], ['post_id', true]);
+
             $topics[$key]['last_poster'] = [
-                'user' => ($_LAST_POSTER = Users::getUser($topic['topic_last_poster_id'])),
-                'rank' => Users::getRank($_LAST_POSTER['rank_main'])
+                'post' => $lastPost,
+                'user' => ($_LAST_POSTER = Users::getUser($lastPost['poster_id'])),
+                'rank' => Users::getRank($_LAST_POSTER['rank_main']),
+                'elap' => Main::timeElapsed($lastPost['post_time'])
             ];
 
         }
@@ -203,15 +213,27 @@ class Forum {
         // Store the topic info
         $topic['topic'] = $topicInfo;
 
+        // Get first post in topics
+        $firstPost = Database::fetch('posts', false, [
+            'topic_id' => [$topic['topic']['topic_id'], '=']
+        ]);
+
         // Get the data of the first poster
         $topic['topic']['first_poster'] = [
-            'user' => ($_FIRST_POSTER = Users::getUser($topic['topic']['topic_first_poster_id'])),
+            'post' => $firstPost,
+            'user' => ($_FIRST_POSTER = Users::getUser($firstPost['poster_id'])),
             'rank' => Users::getRank($_FIRST_POSTER['rank_main'])
         ];
 
+        // Get last post in topics
+        $lastPost = Database::fetch('posts', false, [
+            'topic_id' => [$topic['topic']['topic_id'], '=']
+        ], ['post_id', true]);
+
         // Get the data of the last poster
         $topic['topic']['last_poster'] = [
-            'user' => ($_LAST_POSTER = Users::getUser($topic['topic']['topic_last_poster_id'])),
+            'post' => $lastPost,
+            'user' => ($_LAST_POSTER = Users::getUser($lastPost['poster_id'])),
             'rank' => Users::getRank($_LAST_POSTER['rank_main'])
         ];
 
@@ -223,7 +245,7 @@ class Forum {
 
             // Add post and metadata to the global storage array
             $topic['posts'][$post['post_id']] = array_merge($post, [
-                'is_op'         => ($post['poster_id'] == $topic['topic']['topic_first_poster_id'] ? '1' : '0'),
+                'is_op'         => ($post['poster_id'] == $firstPost['poster_id'] ? '1' : '0'),
                 'user'          => ($_POSTER = Users::getUser($post['poster_id'])),
                 'rank'          => Users::getRank($_POSTER['rank_main']),
                 'country'       => Main::getCountryName($_POSTER['country']),

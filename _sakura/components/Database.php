@@ -1,6 +1,6 @@
 <?php
 /*
- * Database engine container
+ * Database wrapper container
  */
  
 namespace Sakura;
@@ -11,17 +11,17 @@ class Database {
     private static $_DATABASE;
 
     // Initialisation function
-    public static function init($engine) {
+    public static function init($wrapper) {
 
-        // Make the engine class name lowercase
-        $engine = __NAMESPACE__ .'\DBWrapper\\'. strtolower($engine);
+        // Make the wrapper class name lowercase
+        $wrapper = __NAMESPACE__ .'\DBWrapper\\'. strtolower($wrapper);
 
         // Check if the class exists
-        if(!class_exists($engine))
-            trigger_error('Failed to load database driver', E_USER_ERROR);
+        if(!class_exists($wrapper))
+            trigger_error('Failed to load database wrapper', E_USER_ERROR);
 
-        // Initialise SQL engine
-        self::$_DATABASE = new $engine;
+        // Initialise SQL wrapper
+        self::$_DATABASE = new $wrapper;
 
     }
 
@@ -50,6 +50,13 @@ class Database {
     public static function delete($table, $data, $prefix = null) {
 
         return self::$_DATABASE->delete($table, $data, $prefix);
+
+    }
+
+    // Count from database
+    public static function count($table, $data, $prefix = null) {
+
+        return self::$_DATABASE->count($table, $data, $prefix);
 
     }
 

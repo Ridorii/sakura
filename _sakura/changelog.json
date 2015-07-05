@@ -30,7 +30,8 @@
                 "20150701",
                 "20150702",
                 "20150703",
-                "20150704"
+                "20150704",
+                "20150705"
 
             ]
 
@@ -1443,6 +1444,35 @@
             {
                 "type":     "ADD",
                 "change":   "Removed ignore lines for Misaki files."
+            }
+
+        ],
+
+        "20150705": [
+
+            {
+                "type":     "ADD",
+                "change":   "Added count functionality to database wrapper."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Make forum index page fully functional."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Add user data and post linking to viewforum."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add 'x time ago' generator function."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fix bug while decoding the country name JSON with systems that don't default to UTF-8."
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed some columns and replaced them with live stats."
             }
 
         ]

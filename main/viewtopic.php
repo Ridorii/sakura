@@ -36,8 +36,5 @@ $renderData = array_merge($renderData, $topic, [
     ]
 ]);
 
-//header('Content-Type: text/plain');
-//print_r($renderData);exit;
-
 // Print page contents
 print Templates::render('forum/viewtopic.tpl', $renderData);

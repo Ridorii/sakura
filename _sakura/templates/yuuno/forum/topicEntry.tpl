@@ -13,7 +13,7 @@
         {% endif %}
     </td>
     <td class="topicCounts">
-        <div class="replies" title="Amount of replies to this topic.">{{ topic.topic_replies }}</div>
+        <div class="replies" title="Amount of replies to this topic.">{{ topic.reply_count }}</div>
         <div class="views" title="Amount of times this topic has been viewed.">{{ topic.topic_views }}</div>
     </td>
     <td class="topicLast">
@@ -21,7 +21,7 @@
             <a href="/u/{{ topic.last_poster.user.id }}" class="default" style="color: {% if topic.last_poster.user.name_colour %}{{ topic.last_poster.user.name_colour }}{% else %}{{ topic.last_poster.rank.colour }}{% endif %};">{{ topic.last_poster.user.username }}</a>
         {% else %}
             [deleted user]
-        {% endif %} <a href="#" class="default fa fa-tag"></a><br />
-        2000 years ago
+        {% endif %} <a href="/forum/post/{{ topic.last_poster.post.post_id }}#p{{ topic.last_poster.post.post_id }}" class="default fa fa-tag"></a><br />
+        {{ topic.last_poster.elap }}
     </td>
 </tr>

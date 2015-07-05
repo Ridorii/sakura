@@ -76,6 +76,7 @@ RewriteRule ^forum/([0-9]+)/new/?$ posting.php?f=$1 [L,QSA]
 RewriteRule ^forum/(thread|topic|[0-9+])/([0-9]+)/?$ viewtopic.php?t=$2 [L,QSA]
 RewriteRule ^forum/(thread|topic|[0-9+])/([0-9]+)/reply/?$ posting.php?t=$2 [L,QSA]
 RewriteRule ^forum/post/([0-9]+)/?$ viewtopic.php?p=$1 [L,QSA]
+RewriteRule ^forum/post/([0-9]+)/edit/?$ posting.php?p=$1&edit=$1 [L,QSA]
 RewriteRule ^forum/post/([0-9]+)/(quote|reply)/?$ posting.php?p=$1&quote=$1 [L,QSA]
 
 # Management
