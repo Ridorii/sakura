@@ -1,11 +1,10 @@
--- Adminer 4.2.0 MySQL dump
+-- Adminer 4.2.1 MySQL dump
 
-SET NAMES utf8mb4;
+SET NAMES utf8;
 SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-CREATE DATABASE `sakura-development` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
 USE `sakura-development`;
 
 DROP TABLE IF EXISTS `sakura_actioncodes`;
@@ -80,10 +79,6 @@ CREATE TABLE `sakura_forums` (
   `forum_link` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'If set forum will display as a link.',
   `forum_category` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of the category this forum falls under.',
   `forum_type` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'Forum type, 0 for regular board, 1 for category and 2 for link.',
-  `forum_posts` bigint(128) unsigned NOT NULL DEFAULT '0' COMMENT 'Post count of the forum',
-  `forum_topics` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'Topic count of the forum.',
-  `forum_last_post_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of last post in forum.',
-  `forum_last_poster_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of last poster in forum.',
   `forum_icon` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Display icon for the forum.',
   PRIMARY KEY (`forum_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -96,8 +91,8 @@ CREATE TABLE `sakura_friends` (
   `timestamp` int(11) unsigned NOT NULL COMMENT 'Timestamp of action.',
   KEY `uid` (`uid`),
   KEY `fid` (`fid`),
-  CONSTRAINT `sakura_friends_ibfk_2` FOREIGN KEY (`fid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sakura_friends_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sakura_friends_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sakura_friends_ibfk_2` FOREIGN KEY (`fid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -201,9 +196,9 @@ CREATE TABLE `sakura_posts` (
   KEY `topic_id` (`topic_id`),
   KEY `forum_id` (`forum_id`),
   KEY `poster_id` (`poster_id`),
-  CONSTRAINT `sakura_posts_ibfk_3` FOREIGN KEY (`poster_id`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `sakura_posts_ibfk_1` FOREIGN KEY (`topic_id`) REFERENCES `sakura_topics` (`topic_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sakura_posts_ibfk_2` FOREIGN KEY (`forum_id`) REFERENCES `sakura_forums` (`forum_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sakura_posts_ibfk_2` FOREIGN KEY (`forum_id`) REFERENCES `sakura_forums` (`forum_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sakura_posts_ibfk_3` FOREIGN KEY (`poster_id`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -216,10 +211,6 @@ CREATE TABLE `sakura_premium` (
   CONSTRAINT `sakura_premium_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO `sakura_premium` (`uid`, `startdate`, `expiredate`) VALUES
-(2, 1435756632, 1441012632),
-(18,  1435760007, 1443644007)
-ON DUPLICATE KEY UPDATE `uid` = VALUES(`uid`), `startdate` = VALUES(`startdate`), `expiredate` = VALUES(`expiredate`);
 
 DROP TABLE IF EXISTS `sakura_profilefields`;
 CREATE TABLE `sakura_profilefields` (
@@ -305,19 +296,12 @@ CREATE TABLE `sakura_topics` (
   `topic_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Timestamp when the topic was created.',
   `topic_time_limit` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'After how long a topic should be locked.',
   `topic_last_reply` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Last time a post was posted in this topic.',
-  `topic_views` bigint(64) unsigned NOT NULL DEFAULT '0' COMMENT 'Amount of times the topic has been viewed.',
-  `topic_replies` bigint(128) unsigned NOT NULL DEFAULT '0' COMMENT 'Amount of replies the topic has.',
+  `topic_views` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'Amount of times the topic has been viewed.',
   `topic_status` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'Status of topic.',
   `topic_status_change` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Date the topic status was changed (used for deletion cooldown as well).',
   `topic_type` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'Type of the topic.',
-  `topic_first_post_id` bigint(255) unsigned DEFAULT NULL COMMENT 'ID of first post made in this topic.',
-  `topic_first_poster_id` bigint(255) unsigned DEFAULT NULL COMMENT 'User ID of person who made the first post.',
-  `topic_last_post_id` bigint(255) unsigned DEFAULT NULL COMMENT 'ID of last post made in this topic.',
-  `topic_last_poster_id` bigint(255) unsigned DEFAULT NULL COMMENT 'User ID of person who made the last post.',
   PRIMARY KEY (`topic_id`),
   KEY `forum_id` (`forum_id`),
-  KEY `topic_first_poster_id` (`topic_first_poster_id`),
-  KEY `topic_last_poster_id` (`topic_last_poster_id`),
   CONSTRAINT `sakura_topics_ibfk_1` FOREIGN KEY (`forum_id`) REFERENCES `sakura_forums` (`forum_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -362,8 +346,8 @@ CREATE TABLE `sakura_warnings` (
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `iid` (`iid`),
-  CONSTRAINT `sakura_warnings_ibfk_2` FOREIGN KEY (`iid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sakura_warnings_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sakura_warnings_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sakura_warnings_ibfk_2` FOREIGN KEY (`iid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -414,4 +398,4 @@ CREATE TABLE `sock_online_users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
--- 2015-07-01 14:42:04
+-- 2015-07-05 00:03:48
