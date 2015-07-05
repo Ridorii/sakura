@@ -1473,6 +1473,14 @@
             {
                 "type":     "REM",
                 "change":   "Removed some columns and replaced them with live stats."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Redid some of the emotes."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add code for topic view counter."
             }
 
         ]

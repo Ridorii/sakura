@@ -29,8 +29,10 @@ if(!$topic) {
 
 // Set additional render data
 $renderData = array_merge($renderData, $topic, [
-    'viewforum' => false,
-    'viewtopic' => true,
+    'board' => [
+        'viewforum' => false,
+        'viewtopic' => true,
+    ],
     'page' => [
         'title' => $topic['topic']['topic_title']
     ]

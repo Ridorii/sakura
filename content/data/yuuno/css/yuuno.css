@@ -223,6 +223,10 @@ img.homepage-menu-avatar {
     margin-right: 0;
 }
 
+img.emoticon {
+    vertical-align: middle;
+}
+
 @media (max-width: 400px) {
 
     img.homepage-menu-avatar {
@@ -1695,7 +1699,7 @@ textarea.inputStyling {
 .forum.viewtopic .posts .userpanel .username {
     font: 1.5em/1.7em "SegoeUI", "Segoe UI", sans-serif;
     text-shadow: 0 0 7px #888; padding: 0 0 2px;
-    display: block;
+    display: inline-block;
 }
 
 .forum.viewtopic .posts .userpanel .avatar {
@@ -1763,4 +1767,12 @@ textarea.inputStyling {
     min-width: 300px;
     max-height: 180px;
     overflow: auto;
+}
+
+.forum .buttonRow .leftSide {
+    float: left;
+}
+
+.forum .buttonRow .rightSide {
+    float: right;
 }

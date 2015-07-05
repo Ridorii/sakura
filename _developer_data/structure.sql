@@ -53,6 +53,16 @@ CREATE TABLE `sakura_bbcodes` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+INSERT INTO `sakura_bbcodes` (`id`, `regex`, `replace`, `description`) VALUES
+(1, '/\\[b\\](.*?)\\[\\/b\\]/is', '<b>$1</b>',  'Make text bold. Usage: [b]text[/b].'),
+(2, '/\\[i\\](.*?)\\[\\/i\\]/is', '<i>$1</i>',  'Make text italic. Usage: [i]text[/i].'),
+(3, '/\\[u\\](.*?)\\[\\/u\\]/is', '<u>$1</u>',  'Make text underlined. Usage: [u]text[/b].'),
+(4, '/\\[s\\](.*?)\\[\\/s\\]/is', '<del>$1</del>',  'Put a line through text. Usage: [s]text[/s].'),
+(5, '/\\[img\\]([a-zA-Z0-9\\.\\$\\-\\_\\.\\+\\*\\!\\\'\\(\\)\\/\\:\\#]+)\\[\\/img\\]/is', '<img src=\"$1\" alt=\"Image\" />', 'Embed an image. Usage: [img]url[/img]'),
+(6, '/\\[url=([a-zA-Z0-9\\.\\$\\-\\_\\.\\+\\*\\!\\\'\\(\\)\\/\\:\\#]+)\\](.*?)\\[\\/url\\]/is', '<a href=\"$1\" target=\"_blank\">$2</a>',  'Embed a URL. Usage: [url=http://google.com]Link to google![/url]'),
+(7, '/\\[url\\]([a-zA-Z0-9\\.\\$\\-\\_\\.\\+\\*\\!\\\'\\(\\)\\/\\:\\#]+)\\[\\/url\\]/is', '<a href=\"$1\" target=\"_blank\">$1</a>',  'Make a link clickable (if the automatic algorithm doesn\'t do it already). Usage: [url]http://google.com[/url]'),
+(8, '/\\[quote\\=\\\"(.+)\\\"\\](.+)\\[\\/quote]/is', '<div class=\"quote\"><div class=\"quotee\">$1 wrote:</div><div class=\"text\">$2</div></div>', 'Quote a user\'s post. Usage: [quote=Flashwave]nookls is pretty[/quote]'),
+(9, '/\\[quote\\](.+)\\[\\/quote]/is',  '<div class=\"quote\"><div class=\"quotee\">Quote:</div><div class=\"text\">$1</div></div>',  'Quote a user\'s post. Usage: [quote]nookls is pretty[/quote]');
 
 DROP TABLE IF EXISTS `sakura_config`;
 CREATE TABLE `sakura_config` (
@@ -60,6 +70,92 @@ CREATE TABLE `sakura_config` (
   `config_value` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The value, obviously.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+INSERT INTO `sakura_config` (`config_name`, `config_value`) VALUES
+('recaptcha_public',  ''),
+('recaptcha_private', ''),
+('charset', 'utf-8'),
+('cookie_prefix', 'fii_'),
+('cookie_domain', 'flashii.test'),
+('cookie_path', '/'),
+('site_style',  'yuuno'),
+('manage_style',  'broomcloset'),
+('allow_registration',  '0'),
+('smtp_server', ''),
+('smtp_auth', ''),
+('smtp_secure', ''),
+('smtp_port', ''),
+('smtp_username', ''),
+('smtp_password', ''),
+('smtp_replyto_mail', ''),
+('smtp_replyto_name', ''),
+('smtp_from_email', ''),
+('smtp_from_name',  'Flashii Noreply'),
+('sitename',  'Test Palace'),
+('recaptcha', '1'),
+('require_activation',  '0'),
+('require_registration_code', '0'),
+('disable_registration',  '0'),
+('max_reg_keys',  '5'),
+('mail_signature',  'Team Flashii'),
+('lock_authentication', '0'),
+('min_entropy', '1'),
+('sitedesc',  'Live development environment for the script that powers Flashii.net called Sakura.'),
+('sitetags',  '[\"Flashii\",\"Media\",\"Flashwave\",\"Circle\",\"Zeniea\",\"MalwareUp\",\"Cybernetics\",\"Saibateku\",\"Community\",\"osu!\",\"osu\"]'),
+('username_min_length', '3'),
+('username_max_length', '16'),
+('lock_site', '1'),
+('lock_site_reason',  'meow'),
+('use_gzip',  '1'),
+('enable_tpl_cache',  '0'),
+('paypal_client_id',  ''),
+('paypal_secret', ''),
+('premium_price_per_month', '1.49'),
+('premium_rank_id', '8'),
+('premium_amount_max',  '24');
+
+DROP TABLE IF EXISTS `sakura_emoticons`;
+CREATE TABLE `sakura_emoticons` (
+  `emote_string` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'String to catch and replace',
+  `emote_path` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Path to the image file relative to the content domain.'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+INSERT INTO `sakura_emoticons` (`emote_string`, `emote_path`) VALUES
+(':amu:', 'images/emoticons/amu.png'),
+(':angrier:', 'images/emoticons/angrier.png'),
+(':angriest:',  'images/emoticons/angriest.png'),
+(':angry:', 'images/emoticons/angry.gif'),
+(':blank:', 'images/emoticons/blank.png'),
+(':childish:',  'images/emoticons/childish.png'),
+(':congrats:',  'images/emoticons/congrats.png'),
+(':crying:',  'images/emoticons/crying.gif'),
+(':dizzy:', 'images/emoticons/dizzy.gif'),
+(':eat:', 'images/emoticons/eat.gif'),
+(':evil:',  'images/emoticons/evil.png'),
+(':extreme:', 'images/emoticons/extreme.png'),
+(':glare:', 'images/emoticons/glare.gif'),
+(':happy:', 'images/emoticons/happy.gif'),
+(':horror:',  'images/emoticons/horror.gif'),
+(':idea:',  'images/emoticons/idea.png'),
+(':jew:', 'images/emoticons/jew.png'),
+(':kiss:',  'images/emoticons/kiss.gif'),
+(':lmao:',  'images/emoticons/lmao.gif'),
+(':lol:', 'images/emoticons/lol.gif'),
+(':love:',  'images/emoticons/love.png'),
+(':meow:',  'images/emoticons/meow.png'),
+(':omg:', 'images/emoticons/omg.gif'),
+(':ouch:',  'images/emoticons/ouch.gif'),
+(':puke:',  'images/emoticons/puke.gif'),
+(':ruse:',  'images/emoticons/ruse.png'),
+(':sad:', 'images/emoticons/sad.png'),
+(':sigh:',  'images/emoticons/sigh.gif'),
+(':suspicious:',  'images/emoticons/suspicious.gif'),
+(':sweat:', 'images/emoticons/sweat.gif'),
+(':tired:', 'images/emoticons/tired.gif'),
+(':yay:', 'images/emoticons/vhappy.gif'),
+(':winxp:', 'images/emoticons/winxp.png'),
+(':wtf:', 'images/emoticons/wtf.gif'),
+(':sleep:', 'images/emoticons/zzz.gif'),
+(':what:',  'images/emoticons/what.png');
 
 DROP TABLE IF EXISTS `sakura_faq`;
 CREATE TABLE `sakura_faq` (
@@ -176,6 +272,16 @@ CREATE TABLE `sakura_permissions` (
   `rankinherit` varchar(4) COLLATE utf8_bin NOT NULL DEFAULT '000' COMMENT 'Rank inheritance, only used when user specific.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+INSERT INTO `sakura_permissions` (`rid`, `uid`, `siteperms`, `manageperms`, `forumperms`, `rankinherit`) VALUES
+(1, 0,  '000000000000000000000000001',  '0',  '1',  '000'),
+(2, 0,  '000111111111100111101101100',  '0',  '1',  '000'),
+(3, 0,  '001111111111111111111111100',  '0',  '1',  '000'),
+(4, 0,  '111111111111111111111111100',  '0',  '1',  '000'),
+(5, 0,  '001111111111111111111111100',  '0',  '1',  '000'),
+(6, 0,  '000111111111100111101101100',  '0',  '0',  '000'),
+(7, 0,  '001111111111111111111111100',  '0',  '1',  '000'),
+(8, 0,  '001111111111111111111111100',  '0',  '1',  '000'),
+(9, 0,  '001111111111111111111111100',  '0',  '1',  '000');
 
 DROP TABLE IF EXISTS `sakura_posts`;
 CREATE TABLE `sakura_posts` (
@@ -187,6 +293,7 @@ CREATE TABLE `sakura_posts` (
   `post_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Time this post was made.',
   `parse_mode` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'Switch the type of parser that''s used.',
   `enable_sig` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT 'Toggle if signature should be shown.',
+  `enable_emotes` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT 'Toggle if emoticons should be parsed.',
   `post_subject` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Subject of the post.',
   `post_text` text COLLATE utf8_bin NOT NULL COMMENT 'Contents of the post.',
   `post_edit_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Time this post was last edited.',
@@ -224,6 +331,18 @@ CREATE TABLE `sakura_profilefields` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+INSERT INTO `sakura_profilefields` (`id`, `name`, `formtype`, `islink`, `linkformat`, `description`, `additional`) VALUES
+(1, 'Website',  'url',  1,  '{{ VAL }}',  'URL to your website',  ''),
+(2, 'Twitter',  'text', 1,  'https://twitter.com/{{ VAL }}',  'Your @twitter Username', ''),
+(3, 'GitHub', 'text', 1,  'https://github.com/{{ VAL }}', 'Your GitHub Username', ''),
+(4, 'Skype',  'text', 1,  'skype:{{ VAL }}?userinfo', 'Your Skype Username',  ''),
+(5, 'YouTube',  'text', 0,  '', 'ID or Username excluding http://youtube.com/*/', '{\"youtubetype\": [\"checkbox\", \"I <b>do not</b> have a Channel Username (url looks like https://www.youtube.com/channel/UCXZcw5hw5C7Neto-T_nRXBQ).\"]}'),
+(6, 'SoundCloud', 'text', 1,  'https://soundcloud.com/{{ VAL }}', 'Your SoundCloud username', ''),
+(7, 'Steam',  'text', 1,  'https://steamcommunity.com/id/{{ VAL }}',  'Your Steam Community Username (may differ from login username)', ''),
+(8, 'osu!', 'text', 1,  'https://osu.ppy.sh/u/{{ VAL }}', 'Your osu! Username', ''),
+(9, 'Origin', 'text', 0,  '', 'Your Origin User ID',  ''),
+(10,  'Xbox Live',  'text', 1,  'https://account.xbox.com/en-GB/Profile?Gamertag={{ VAL }}',  'Your Xbox User ID',  ''),
+(11,  'PSN',  'text', 1,  'http://psnprofiles.com/{{ VAL }}', 'Your PSN User ID', '');
 
 DROP TABLE IF EXISTS `sakura_ranks`;
 CREATE TABLE `sakura_ranks` (
@@ -236,6 +355,16 @@ CREATE TABLE `sakura_ranks` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+INSERT INTO `sakura_ranks` (`id`, `name`, `multi`, `colour`, `description`, `title`) VALUES
+(1, 'Deactivated',  0,  '#555', 'Users that are yet to be activated or that deactivated their own account.',  'Deactivated'),
+(2, 'Regular user', 1,  'inherit',  'Regular users with regular permissions.',  'Regular user'),
+(3, 'Site moderator', 1,  '#0A0', 'Users with special permissions like being able to ban and modify users if needed.',  'Staff'),
+(4, 'Administrator',  1,  '#C00', 'Users that manage the server and everything around that.', 'Administrator'),
+(5, 'Developer',  1,  '#824CA0',  'Users that either create or test new features of the site.', 'Staff'),
+(6, 'Bot',  1,  '#9E8DA7',  'Reserved user accounts for services.', 'Bot'),
+(7, 'Chat moderator', 1,  '#09F', 'Moderators of the chat room.', 'Staff'),
+(8, 'Tenshi', 0,  '#EE9400',  'Users that donated $5.00 or more in order to keep the site and it\'s services alive!', 'Tenshi'),
+(9, 'Alumnii',  0,  '#FF69B4',  'People who have contributed to the community but have moved on or resigned.',  'Alumnii');
 
 DROP TABLE IF EXISTS `sakura_regcodes`;
 CREATE TABLE `sakura_regcodes` (
@@ -286,6 +415,16 @@ CREATE TABLE `sakura_sock_perms` (
   `perms` varchar(128) COLLATE utf8_bin NOT NULL DEFAULT '1,0,0,0,0,0' COMMENT 'Permission data (has access, in-chat rank, user type, log access, nick access, channel creation)'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+INSERT INTO `sakura_sock_perms` (`rid`, `uid`, `perms`) VALUES
+(1, 0,  '0,0,0,0,0,0'),
+(2, 0,  '1,0,0,0,0,0'),
+(3, 0,  '1,3,1,1,1,1'),
+(4, 0,  '1,4,2,1,1,2'),
+(5, 0,  '1,2,1,1,1,1'),
+(6, 0,  '1,0,0,0,0,0'),
+(7, 0,  '1,2,1,1,1,1'),
+(8, 0,  '1,1,0,1,1,1'),
+(9, 0,  '1,1,0,1,1,1');
 
 DROP TABLE IF EXISTS `sakura_topics`;
 CREATE TABLE `sakura_topics` (
@@ -351,51 +490,4 @@ CREATE TABLE `sakura_warnings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
-DROP TABLE IF EXISTS `sock_banned_users`;
-CREATE TABLE `sock_banned_users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ip` varchar(50) DEFAULT NULL,
-  `uid` int(11) DEFAULT NULL,
-  `username` varchar(256) DEFAULT NULL,
-  `expiration` bigint(20) NOT NULL DEFAULT '-1',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-DROP TABLE IF EXISTS `sock_channels`;
-CREATE TABLE `sock_channels` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `chname` varchar(256) NOT NULL,
-  `pwd` varchar(512) DEFAULT NULL,
-  `priv` int(11) DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`chname`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-DROP TABLE IF EXISTS `sock_logs`;
-CREATE TABLE `sock_logs` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `epoch` int(11) DEFAULT NULL,
-  `userid` int(11) NOT NULL,
-  `username` varchar(256) NOT NULL,
-  `color` varchar(24) NOT NULL,
-  `channel` varchar(1024) NOT NULL,
-  `chrank` int(11) NOT NULL,
-  `message` longtext NOT NULL,
-  `flags` varchar(10) NOT NULL DEFAULT '10010',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-DROP TABLE IF EXISTS `sock_online_users`;
-CREATE TABLE `sock_online_users` (
-  `userid` int(11) NOT NULL,
-  `username` varchar(256) NOT NULL,
-  `color` varchar(16) NOT NULL,
-  `perms` varchar(512) NOT NULL,
-  UNIQUE KEY `userid` (`userid`,`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
--- 2015-07-05 00:03:48
+-- 2015-07-05 15:02:41

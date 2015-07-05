@@ -188,7 +188,7 @@ class Forum {
     }
 
     // Get posts of a thread
-    public static function getTopic($id) {
+    public static function getTopic($id, $ignoreView = false) {
 
         // Get the topic data from the database
         $topicInfo = Database::fetch('topics', false, [
@@ -198,6 +198,24 @@ class Forum {
         // Check if there actually is anything
         if(empty($topicInfo))
             return false;
+
+        // Up the view count
+        if(!$ignoreView) {
+
+            // Get the new count
+            $topicInfo['topic_views'] = $topicInfo['topic_views'] + 1;
+
+            // Update the count
+            Database::update('topics', [
+                [
+                    'topic_views' => $topicInfo['topic_views']
+                ],
+                [
+                    'topic_id' => [$id, '=']
+                ]
+            ]);
+
+        }
 
         // Get the posts from the database
         $rawPosts = Database::fetch('posts', true, [
@@ -222,7 +240,8 @@ class Forum {
         $topic['topic']['first_poster'] = [
             'post' => $firstPost,
             'user' => ($_FIRST_POSTER = Users::getUser($firstPost['poster_id'])),
-            'rank' => Users::getRank($_FIRST_POSTER['rank_main'])
+            'rank' => Users::getRank($_FIRST_POSTER['rank_main']),
+            'elap' => Main::timeElapsed($firstPost['post_time'])
         ];
 
         // Get last post in topics
@@ -234,7 +253,8 @@ class Forum {
         $topic['topic']['last_poster'] = [
             'post' => $lastPost,
             'user' => ($_LAST_POSTER = Users::getUser($lastPost['poster_id'])),
-            'rank' => Users::getRank($_LAST_POSTER['rank_main'])
+            'rank' => Users::getRank($_LAST_POSTER['rank_main']),
+            'elap' => Main::timeElapsed($lastPost['post_time'])
         ];
 
         // Create space for posts
@@ -248,11 +268,12 @@ class Forum {
                 'is_op'         => ($post['poster_id'] == $firstPost['poster_id'] ? '1' : '0'),
                 'user'          => ($_POSTER = Users::getUser($post['poster_id'])),
                 'rank'          => Users::getRank($_POSTER['rank_main']),
+                'time_elapsed'  => Main::timeElapsed($post['post_time']),
                 'country'       => Main::getCountryName($_POSTER['country']),
                 'is_premium'    => Users::checkUserPremium($_POSTER['id'])[0],
                 'is_online'     => Users::checkUserOnline($_POSTER['id']),
                 'is_friend'     => Users::checkFriend($_POSTER['id']),
-                'parsed_post'   => self::parseMarkUp($post['post_text'], $post['parse_mode']),
+                'parsed_post'   => self::parseMarkUp($post['post_text'], $post['parse_mode'], $post['enable_emotes']),
                 'signature'     => empty($_POSTER['userData']['signature']) ? '' : self::parseMarkUp($_POSTER['userData']['signature']['text'], $_POSTER['userData']['signature']['mode'])
             ]);
 
@@ -284,10 +305,14 @@ class Forum {
     }
 
     // Parse different markup flavours
-    public static function parseMarkUp($text, $mode) {
+    public static function parseMarkUp($text, $mode, $emotes = 1) {
 
         // Clean string
         $text = Main::cleanString($text);
+
+        // Parse emotes
+        if($emotes)
+            $text = Main::parseEmotes($text);
 
         // Switch between modes
         switch($mode) {

@@ -7,7 +7,7 @@
     </tbody>
 </table>
 {% if board.viewforum and not board.forums[0].forum.forum_type %}
-    <a href="/forum/{{ board.forums[0].forum.forum_id }}/new" class="forumbtn"><span class="fa fa-pencil-square-o"></span> New Thread</a>
+    {% include 'forum/forumBtns.tpl' %}
     {% if board.topics|length %}
         <table class="topicList">
             <thead>
@@ -37,5 +37,5 @@
     {% else %}
         <h1 class="stylised" style="margin: 2em auto; text-align: center;">There are no posts in this forum!</h1>
     {% endif %}
-    <a href="/forum/{{ board.forums[0].forum.forum_id }}/new" class="forumbtn"><span class="fa fa-pencil-square-o"></span> New Thread</a>
+    {% include 'forum/forumBtns.tpl' %}
 {% endif %}

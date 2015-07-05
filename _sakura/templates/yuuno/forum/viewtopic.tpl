@@ -2,7 +2,7 @@
     <div class="content homepage forum viewtopic">
         <div class="content-column">
             <div class="head">{{ forum.forum.forum_name }} / {{ topic.topic_title }}</div>
-            <a href="/forum/thread/{{ topic.topic_id }}/reply" class="forumbtn"><span class="fa fa-reply-all"></span> Reply</a>
+            {% include 'forum/forumBtns.tpl' %}
             <table class="posts">
                 {% for post in posts %}
                     <tr class="post" id="p{{ post.post_id }}">
@@ -17,7 +17,7 @@
                                     <a class="fa fa-pencil-square-o" title="Edit this post" href="/forum/post/{{ post.post_id }}/edit"></a>
                                     {% else %}
                                     {% if post.is_friend != 0 %}<a class="fa fa-{% if post.is_friend == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
-                                    <a class="fa fa-user-{% if post.is_friend == 0 %}plus{% else %}times{% endif %}" title="{% if post.is_friend == 0 %}Add {{ post.user.username }} as a friend{% else %}Remove friend{% endif %}" href="//{{ sakura.urls.main }}/friends?{% if post.is_friend == 0 %}add{% else %}remove{% endif %}={{ post.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect={{ sakura.currentpage }}"></a>
+                                    <a class="fa fa-user-{% if post.is_friend == 0 %}plus{% else %}times{% endif %}" title="{% if post.is_friend == 0 %}Add {{ post.user.username }} as a friend{% else %}Remove friend{% endif %}" href="//{{ sakura.urls.main }}/friends?{% if post.is_friend == 0 %}add{% else %}remove{% endif %}={{ post.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect=/forum/post/{{ post.post_id }}#p{{ post.post_id }}"></a>
                                     <a class="fa fa-flag" title="Report {{ post.user.username }}" href="//{{ sakura.urls.main }}/u/{{ post.user.id }}/report"></a>
                                     {% endif %}
                                     {% else %}
@@ -34,7 +34,7 @@
                                     <a href="#p{{ post.post_id }}" class="clean">{{ post.post_subject }}</a>
                                 </div>
                                 <div class="date">
-                                    <a href="/forum/post/{{ post.post_id }}#p{{ post.post_id }}" class="clean">{{ post.post_time|date("r") }}</a>
+                                    <a href="/forum/post/{{ post.post_id }}#p{{ post.post_id }}" class="clean" title="{{ post.post_time|date("r") }}">{{ post.time_elapsed }}</a>
                                 </div>
                                 <div class="clear"></div>
                             </div>
@@ -51,7 +51,7 @@
                     </tr>
                 {% endfor %}
             </table>
-            <a href="/forum/thread/{{ topic.topic_id }}/reply" class="forumbtn"><span class="fa fa-reply-all"></span> Reply</a>
+            {% include 'forum/forumBtns.tpl' %}
         </div>
     </div>
 {% include 'global/footer.tpl' %}

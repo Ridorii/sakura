@@ -39,7 +39,7 @@ class Whois {
 
         // Check if the file exists and if it does get contents.
         if(file_exists($serversFile))
-            $servers = file_get_contents($serversFile);
+            $servers = utf8_encode(file_get_contents($serversFile));
         else
             trigger_error('Failed to load whois servers file', E_USER_ERROR);
 
