@@ -31,7 +31,9 @@
                 "20150702",
                 "20150703",
                 "20150704",
-                "20150705"
+                "20150705",
+                "20150706",
+                "20150707"
 
             ]
 
@@ -1481,6 +1483,28 @@
             {
                 "type":     "ADD",
                 "change":   "Add code for topic view counter."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed avatars with shit resolutions jumping to the side of the username."
+            }
+
+        ],
+
+        "20150706": [
+
+            {
+                "type":     "ADD",
+                "change":   "Added pending friend requests counter to the frontpage."
+            }
+
+        ],
+
+        "20150707": [
+
+            {
+                "type":     "ADD",
+                "change":   "Added post and topic count variable to the profile."
             }
 
         ]

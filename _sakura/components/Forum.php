@@ -331,6 +331,17 @@ class Forum {
 
     }
 
+    // Get forum statistics of a user
+    public static function getUserStats($uid) {
+
+        // Collect the stats
+        return [
+            'posts'     => Database::count('posts', ['poster_id' => [$uid, '=']])[0],
+            'topics'    => count(Database::fetch('posts', true, ['poster_id' => [$uid, '=']], ['post_time'], null, ['topic_id']))
+        ];
+
+    }
+
     // Creating a new post
     public static function createPost($subject, $text, $enableMD, $enableSig, $forum, $type = 0, $status = 0, $topic = 0) {
 

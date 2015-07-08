@@ -1324,6 +1324,35 @@ class Users {
 
     }
 
+    // Get non-mutual friends
+    public static function getPendingFriends($uid = null) {
+
+        // Assign $of automatically if it's not set
+        if(!$uid)
+            $uid = Session::$userId;
+
+        // Get all friend entries from other people involved the current user
+        $friends = Database::fetch('friends', true, [
+            'fid' => [$uid, '=']
+        ]);
+
+        // Create pending array
+        $pending = [];
+
+        // Check if the friends are mutual
+        foreach($friends as $friend) {
+
+            // Check if the friend is mutual
+            if(!self::checkFriend($friend, $uid))
+                $pending[] = $friend;
+
+        }
+
+        // Return the pending friends
+        return $pending;
+
+    }
+
     // Check if a friend is mutual
     public static function checkFriend($fid, $uid = null) {
 
@@ -1388,13 +1417,6 @@ class Users {
 
         // Return true because yay
         return [1, 'REMOVED'];
-
-    }
-
-    // Checking bans
-    public static function checkBan($uid) {
-
-        
 
     }
 

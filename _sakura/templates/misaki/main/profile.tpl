@@ -113,8 +113,8 @@ user not found, don't forget to make this sexy
                     <div class="inner">
                         <div class="forumStatTitle">Forum stats</div>
                         <div class="forumStatCount">
-                            <a class="posts" href="/u/{{ profile.user.id }}/posts">{% if profile.data.forum.posts %}{{ profile.data.forum.posts }}{% else %}0{% endif %} post{% if profile.data.forum.posts != 1 %}s{% endif %}</a>
-                            <a class="threads" href="/u/{{ profile.user.id }}/threads">{% if profile.data.forum.threads %}{{ profile.data.forum.threads }}{% else %}0{% endif %} thread{% if profile.data.forum.threads != 1 %}s{% endif %}</a>
+                            <a class="posts" href="/u/{{ profile.user.id }}/posts">{{ profile.forum_stats.posts }} post{% if profile.forum_stats.posts != 1 %}s{% endif %}</a>
+                            <a class="threads" href="/u/{{ profile.user.id }}/threads">{% if profile.forum_stats.topics %}{{ profile.forum_stats.topics }}{% else %}0{% endif %} thread{% if profile.forum_stats.topics != 1 %}s{% endif %}</a>
                         </div>
                         <div class="clear"></div>
                     </div>

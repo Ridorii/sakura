@@ -24,12 +24,13 @@ if(isset($_GET['u'])) {
         'profilePage'   => Users::getProfilePage($_PROFILE_USER_DATA['userData'], true),
         'fields'        => Users::getUserProfileFields($_PROFILE_USER_DATA['userData'], true),
         'warnings'      => Users::getWarnings($_PROFILE_USER_DATA['id']),
-        'friend'        => Users::checkFriend($_PROFILE_USER_DATA['id'])
+        'friend'        => Users::checkFriend($_PROFILE_USER_DATA['id']),
+        'forum_stats'   => Forum::getUserStats($_PROFILE_USER_DATA['id'])
     ];
 
     $renderData['page'] = [
-        'title'         => ($_PROFILE_USER_DATA['id'] < 1 || $_PROFILE_USER_DATA['password_algo'] == 'nologin' ? 'User not found!' : 'Profile of '. $_PROFILE_USER_DATA['username']),
-        'style'         => (!empty($_PROFILE_USER_DATA['userData']['profileBackground']) ? [
+        'title' => ($_PROFILE_USER_DATA['id'] < 1 || $_PROFILE_USER_DATA['password_algo'] == 'nologin' ? 'User not found!' : 'Profile of '. $_PROFILE_USER_DATA['username']),
+        'style' => (!empty($_PROFILE_USER_DATA['userData']['profileBackground']) ? [
             '#userBackground' => [
                 'background' => 'url("/bg/'. $_PROFILE_USER_DATA['id'] .'") no-repeat center center / cover transparent !important',
                 'position' => 'fixed',

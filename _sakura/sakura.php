@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150705');
+define('SAKURA_VERSION',    '20150707');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_STABLE',     false);
 define('SAKURA_COLOUR',     '#6C3082');

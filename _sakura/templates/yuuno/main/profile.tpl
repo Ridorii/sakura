@@ -34,11 +34,11 @@
                 <hr class="default" />
                 <b>Joined</b> {{ profile.user.regdate|date("l Y-m-d H:i T") }}<br />
                 {% if profile.user.lastdate == 0 %}
-                <b>User hasn't logged in yet.</b>
+                <b>{{ profile.user.username }} hasn't logged in yet.</b>
                 {% else %}
                 <b>Last Seen on</b> {{ profile.user.lastdate|date("l Y-m-d H:i T") }}
                 {% endif %}<br />
-                <b>User has {% if not profile.user.posts %}no{% else %}{{ profile.user.posts }}{% endif %} forum post{% if profile.user.posts != 1 %}s{% endif %}.</b>
+                <b>{{ profile.user.username }} has {% if not profile.forum_stats.posts %}no{% else %}{{ profile.forum_stats.posts }}{% endif %} forum post{% if profile.forum_stats.posts != 1 %}s{% endif %}.</b>
                 {% if profile.fields is not null %}
                 <hr class="default" />
                 {% if user.checklogin %}

@@ -103,13 +103,6 @@ class MySQL {
 
         }
 
-        // If $order is set and is an array continue
-        if(is_array($order)) {
-
-            $prepare .= ' ORDER BY `'. $order[0] .'`'. (!empty($order[1]) && $order[1] ? ' DESC' : '');
-
-        }
-
         // If $group is set and is an array continue
         if(is_array($group)) {
 
@@ -122,6 +115,13 @@ class MySQL {
                 unset($key);
                 unset($value);
             }
+
+        }
+
+        // If $order is set and is an array continue
+        if(is_array($order)) {
+
+            $prepare .= ' ORDER BY `'. $order[0] .'`'. (!empty($order[1]) && $order[1] ? ' DESC' : '');
 
         }
         

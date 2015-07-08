@@ -16,7 +16,8 @@ $forumMode = isset($_GET['forums']) ? ($_GET['forums'] == true) : false;
 $renderData['newsPosts'] = ($forumMode ? null : Main::getNewsPosts(3));
 
 $renderData['page'] = [
-    'title'     => ($forumMode ? 'Forum Listing' : Configuration::getConfig('sitename'))
+    'title'         => ($forumMode ? 'Forum Listing' : Configuration::getConfig('sitename')),
+    'friend_req'    => Users::getPendingFriends()
 ];
 
 $renderData['board'] = [
