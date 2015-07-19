@@ -12,10 +12,23 @@ use DOMDocument;
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sakura.php';
 
+// Get user data
+$disqus_user = Users::getUser(Session::$userId);
+
+// Set disqus data
+$disqus_data = [
+    $disqus_user['id'],
+    $disqus_user['username'],
+    $disqus_user['email'],
+    'http://'. Configuration::getLocalConfig('urls', 'main') .'/a/'. $disqus_user['id'],
+    'http://'. Configuration::getLocalConfig('urls', 'main') .'/u/'. $disqus_user['id']
+];
+
 // Add page specific things
 $renderData['newsPosts'] = Main::getNewsPosts((isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])) ? $_GET['id'] : null, (isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])));
 $renderData['page'] = [
     'title'         => (isset($_GET['id']) ? (count($renderData['newsPosts']) ? $renderData['newsPosts'][0]['title'] : 'Post does not exist!') : 'Flashii News'),
+    'disqus_sso'    => ($disqus_user['password_algo'] == 'nologin' ? '{}' : (($disqus_message = base64_encode(json_encode($disqus_data))) .' '. Main::dsqHmacSha1($disqus_message .' '. time(), Configuration::getConfig('disqus_api_secret')) .' '. time()))
 ];
 
 // News XML feed

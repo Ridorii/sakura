@@ -80,7 +80,9 @@ $renderData = [
         'cookiepath'        => Configuration::getConfig('cookie_path'),
         'minpwdentropy'     => Configuration::getConfig('min_entropy'),
         'minusernamelength' => Configuration::getConfig('username_min_length'),
-        'maxusernamelength' => Configuration::getConfig('username_max_length')
+        'maxusernamelength' => Configuration::getConfig('username_max_length'),
+        'disqus_shortname'  => Configuration::getConfig('disqus_shortname'),
+        'disqus_api_key'    => Configuration::getConfig('disqus_api_key')
 
     ],
 

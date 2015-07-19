@@ -288,6 +288,34 @@ class Main {
 
     }
 
+    // Generate disqus hmac (https://github.com/disqus/DISQUS-API-Recipes/blob/master/sso/php/sso.php)
+    public static function dsqHmacSha1($data, $key) {
+
+        $blocksize = 64;
+
+        if(strlen($key) > $blocksize) {
+
+            $key = pack('H*', sha1($key));
+
+        }
+
+        $key    = str_pad($key, $blocksize, chr(0x00));
+        $ipad   = str_repeat(chr(0x36), $blocksize);
+        $opad   = str_repeat(chr(0x5c), $blocksize);
+        $hmac   = pack(
+            'H*', sha1(
+                ($key ^ $opad) . pack(
+                    'H*', sha1(
+                        ($key ^ $ipad) . $data
+                    )
+                )
+            )
+        );
+
+        return bin2hex($hmac);
+
+    }
+
     // Loading info pages
     public static function loadInfoPage($id) {
 
