@@ -28,7 +28,7 @@ $disqus_data = [
 $renderData['newsPosts'] = Main::getNewsPosts((isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])) ? $_GET['id'] : null, (isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])));
 $renderData['page'] = [
     'title'         => (isset($_GET['id']) ? (count($renderData['newsPosts']) ? $renderData['newsPosts'][0]['title'] : 'Post does not exist!') : 'Flashii News'),
-    'disqus_sso'    => ($disqus_user['password_algo'] == 'nologin' ? '{}' : (($disqus_message = base64_encode(json_encode($disqus_data))) .' '. Main::dsqHmacSha1($disqus_message .' '. time(), Configuration::getConfig('disqus_api_secret')) .' '. time()))
+    'disqus_sso'    => (($disqus_message = base64_encode(json_encode($disqus_data))) .' '. Main::dsqHmacSha1($disqus_message .' '. time(), Configuration::getConfig('disqus_api_secret')) .' '. time())
 ];
 
 // News XML feed
