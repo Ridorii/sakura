@@ -33,7 +33,8 @@
                 "20150704",
                 "20150705",
                 "20150706",
-                "20150707"
+                "20150707",
+                "20150725"
 
             ]
 
@@ -1505,6 +1506,19 @@
             {
                 "type":     "ADD",
                 "change":   "Added post and topic count variable to the profile."
+            }
+
+        ],
+
+        "20150725": [
+
+            {
+                "type":     "ADD",
+                "change":   "Added stuff for Disqus SSO."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Make the error in getConfig return the value that can't be found."
             }
 
         ]

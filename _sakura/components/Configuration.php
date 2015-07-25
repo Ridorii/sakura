@@ -83,7 +83,7 @@ class Configuration {
 
         } else {// If it doesn't exist trigger an error to avoid explosions
 
-            trigger_error('Unable to get local configuration value!', E_USER_ERROR);
+            trigger_error('Unable to get local configuration value "'. $key .'"', E_USER_ERROR);
 
         }
 
@@ -126,7 +126,7 @@ class Configuration {
         } else {
 
             // Then return the value
-            trigger_error('Unable to get configuration value', E_USER_ERROR);
+            trigger_error('Unable to get configuration value "'. $key .'"', E_USER_ERROR);
 
         }
 
