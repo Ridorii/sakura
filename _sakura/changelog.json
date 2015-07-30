@@ -35,7 +35,8 @@
                 "20150706",
                 "20150707",
                 "20150725",
-                "20150728"
+                "20150728",
+                "20150730"
 
             ]
 
@@ -1533,6 +1534,35 @@
             {
                 "type":     "REM",
                 "change":   "(Temporarily) removed chat online user count."
+            }
+
+        ],
+
+        "20150730": [
+
+            {
+                "type":     "FIX",
+                "change":   "Use the same date() formatting everywhere."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added user banning backend."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Replaced money_format function with number_format due to incompatibility with certain platforms."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed calculation of remaining premium tag."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed &amp;expire=&lt;timestamp&gt; still being in the url when purchasing premium."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed background colours on the search page looking slightly mentally challenged."
             }
 
         ]

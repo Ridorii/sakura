@@ -54,10 +54,10 @@
                             <a href="/u/{{ user.id }}" class="default" style="font-weight: bold; color: {{ page.ranks[user.rank_main].colour }};">{{ user.username }}</a>
                         </td>
                         <td>
-                            {{ user.regdate|date("l Y-m-d H:i T") }}
+                            {{ user.regdate|date(sakura.date_format) }}
                         </td>
                         <td>
-                            {% if user.lastdate == 0 %}<i>Never logged in.</i>{% else %}{{ user.lastdate|date("l Y-m-d H:i T") }}{% endif %}
+                            {% if user.lastdate == 0 %}<i>Never logged in.</i>{% else %}{{ user.lastdate|date(sakura.date_format) }}{% endif %}
                         </td>
                         <td>
                             {% if not user.usertitle %}<i>{{ page.ranks[user.rank_main].title }}</i>{% else %}{{ user.usertitle }}{% endif %}

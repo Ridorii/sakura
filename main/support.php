@@ -49,7 +49,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
 
                     // Calculate the total
                     $total = (float)Configuration::getConfig('premium_price_per_month') * (int)$_POST['months'];
-                    $total = money_format('%!i', $total);
+                    $total = number_format($total, 2, '.', '');
 
                     // Generate item name
                     $itemName = 'Flashii Tenshi - '. (string)$_POST['months'] .' month'. ((int)$_POST['months'] == 1 ? '' : 's');
@@ -92,7 +92,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
                         Users::updatePremiumMeta(Session::$userId);
 
                         // Redirect to the complete
-                        header('Location: ?mode=complete&expire='. $expiration);
+                        header('Location: ?mode=complete');
                         exit;
 
                     }
@@ -128,7 +128,7 @@ $renderData['page'] = [
     'title'         => 'Support '. Configuration::getConfig('sitename'),
     'fail'          => isset($_GET['fail']),
     'price'         => Configuration::getConfig('premium_price_per_month'),
-    'current'       => Users::checkUserPremium(Session::$userId),
+    'current'       => ($currentPremium = Users::checkUserPremium(Session::$userId)),
     'amount_max'    => Configuration::getConfig('premium_amount_max')
 ];
 

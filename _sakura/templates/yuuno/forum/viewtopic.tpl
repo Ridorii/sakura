@@ -35,7 +35,7 @@
                                     <a href="#p{{ post.post_id }}" class="clean">{{ post.post_subject }}</a>
                                 </div>
                                 <div class="date">
-                                    <a href="/forum/post/{{ post.post_id }}#p{{ post.post_id }}" class="clean" title="{{ post.post_time|date("r") }}">{{ post.time_elapsed }}</a>
+                                    <a href="/forum/post/{{ post.post_id }}#p{{ post.post_id }}" class="clean" title="{{ post.post_time|date(sakura.date_format) }}">{{ post.time_elapsed }}</a>
                                 </div>
                                 <div class="clear"></div>
                             </div>

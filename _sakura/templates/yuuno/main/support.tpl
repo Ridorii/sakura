@@ -15,8 +15,8 @@
             Your current Tenshi tag
         </div>
         <div style="margin-bottom: 10px;">
-            <h3>{% if page.current[0] == 2 %}Your rank has persistent Tenshi.{% else %}Your Tenshi tag is valid till {{ page.current[2]|date("l \\t\\h\\e jS \\o\\f F o") }}.{% endif %}</h3>
-            <progress value="{{ page.current[0] == 2 ? 100 : page.current[1] / page.current[2] * 100 }}" max="100" style="width: 100%"></progress>
+            <h3>{% if page.current[0] == 2 %}Your rank has persistent Tenshi.{% else %}Your Tenshi tag is valid till {{ page.current[2]|date(sakura.date_format) }}.{% endif %}</h3>
+            <progress value="{{ page.current[0] == 2 ? 100 : (100 - (((php.time - page.current[1]) / (page.current[2] - page.current[1])) * 100)) }}" max="100" style="width: 100%"></progress>
         </div>
         {% endif %}
         <div class="sectionHeader">

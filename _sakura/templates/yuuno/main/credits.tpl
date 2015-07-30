@@ -1,7 +1,7 @@
 {% include 'global/header.tpl' %}
     <div class="content standalone markdown">
         <h1>Credits</h1>
-        <p>This is the Flashii Sakura contributor list.</p>
+        <p>This is the Sakura contributor list.</p>
         <h3>People</h3>
         <table>
             <thead>

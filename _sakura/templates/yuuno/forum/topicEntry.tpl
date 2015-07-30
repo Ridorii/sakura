@@ -22,6 +22,6 @@
         {% else %}
             [deleted user]
         {% endif %} <a href="/forum/post/{{ topic.last_poster.post.post_id }}#p{{ topic.last_poster.post.post_id }}" class="default fa fa-tag"></a><br />
-        <span title="{{ topic.last_poster.post.post_time|date("r") }}">{{ topic.last_poster.elap }}</span>
+        <span title="{{ topic.last_poster.post.post_time|date(sakura.date_format) }}">{{ topic.last_poster.elap }}</span>
     </td>
 </tr>

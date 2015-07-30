@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150728');
+define('SAKURA_VERSION',    '20150730');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_STABLE',     false);
 define('SAKURA_COLOUR',     '#6C3082');
@@ -136,7 +136,7 @@ if(!defined('SAKURA_NO_TPL')) {
             ]
         ]);
 
-        //Users::logout();
+        Users::logout();
         print Templates::render('errors/banned.tpl', $renderData);
         exit;
 

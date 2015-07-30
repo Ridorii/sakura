@@ -1,5 +1,5 @@
 {% include 'global/header.tpl' %}
-<div class="content">
+<div class="content" style="background: #FFF;">
     <div class="content-column news">
         <div class="head">Search</div>
         <script>
