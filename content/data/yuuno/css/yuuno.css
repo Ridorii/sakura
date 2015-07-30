@@ -337,6 +337,7 @@ a.gotop.exit {
 .support .head,
 .viewforum .head,
 .viewtopic .head,
+.posting .head,
 .loginPage > .loginCont .head,
 .messages .head {
     margin: -1px -2px;
@@ -1462,7 +1463,8 @@ button.inputStyling {
 
 input[type="submit"].inputStyling.small,
 input[type="button"].inputStyling.small,
-input[type="reset"].inputStyling.small {
+input[type="reset"].inputStyling.small,
+button.inputStyling.small {
     padding: 0 4px 1px;
     margin: -2px 0 0;
     font-size: 16px;
@@ -1768,6 +1770,53 @@ textarea.inputStyling {
     min-width: 300px;
     max-height: 180px;
     overflow: auto;
+}
+
+.forum.posting .posting-subject {
+    padding: 3px 0 2px;
+}
+
+.forum.posting .posting-subject input {
+    width: calc(100% - 10px);
+}
+
+.forum.posting .posting-bbcodes {
+    padding: 4px 0 2px;
+}
+
+.forum.posting .posting-bbcode-description {
+    font: .9em/1.2em "SegoeUI", "Segoe UI", sans-serif;
+    padding: 2px 0 3px;
+}
+
+.forum.posting .posting-text {
+    padding: 2px 0 0;
+    margin: 0 0 -1px;
+}
+
+.forum.posting .posting-emotes {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.forum.posting .posting-emotes img {
+    vertical-align: middle;
+    cursor: pointer;
+    margin: 0 3px;
+}
+
+.forum.posting .posting-text textarea {
+    width: calc(100% - 10px);
+    min-height: 300px;
+}
+
+.forum.posting .posting-options > div {
+    float: left;
+    padding: 10px 10px 0;
+}
+
+.forum.posting .posting-buttons {
+    text-align: center;
 }
 
 .forum .buttonRow .leftSide {

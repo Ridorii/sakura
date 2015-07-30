@@ -64,6 +64,13 @@ class Main {
 
     }
 
+    // Get bbcodes
+    public static function getBBcodes() {
+
+        return Database::fetch('bbcodes');
+
+    }
+
     // Parse bbcodes
     public static function bbParse($text) {
 
@@ -85,6 +92,13 @@ class Main {
 
         // Return the parsed text
         return $text;
+
+    }
+
+    // Get emoticons
+    public static function getEmotes() {
+
+        return Database::fetch('emoticons');
 
     }
 

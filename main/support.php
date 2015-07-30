@@ -128,7 +128,7 @@ $renderData['page'] = [
     'title'         => 'Support '. Configuration::getConfig('sitename'),
     'fail'          => isset($_GET['fail']),
     'price'         => Configuration::getConfig('premium_price_per_month'),
-    'current'       => ($currentPremium = Users::checkUserPremium(Session::$userId)),
+    'current'       => Users::checkUserPremium(Session::$userId),
     'amount_max'    => Configuration::getConfig('premium_amount_max')
 ];
 

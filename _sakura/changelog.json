@@ -1563,6 +1563,10 @@
             {
                 "type":     "FIX",
                 "change":   "Fixed background colours on the search page looking slightly mentally challenged."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added draft for posting page."
             }
 
         ]
