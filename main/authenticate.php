@@ -80,7 +80,7 @@ if(isset($_REQUEST['mode'])) {
                 $renderData['page'] = [
                     'title'     => 'Logout',
                     'redirect'  => ($logout ? $_REQUEST['redirect'] : '/authenticate'),
-                    'message'   => $logout ? 'You are now logged out.' : 'Logout failed.',
+                    'message'   => $logout ? 'You are now logged out.' : 'An unknown error occurred.',
                     'success'   => $logout ? 1 : 0
                 ];
 

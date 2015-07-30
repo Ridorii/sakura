@@ -6,6 +6,13 @@
 // Declare Namespace
 namespace Sakura;
 
+// If this we're requesting notifications this page won't require templating
+if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications']) {
+
+    define('SAKURA_NO_TPL', true);
+
+}
+
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sakura.php';
 

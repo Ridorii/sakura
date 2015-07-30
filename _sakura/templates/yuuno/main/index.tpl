@@ -13,10 +13,8 @@
     </div>
     <script type="text/javascript" src="{{ sakura.resources }}/js/ybabstat.js"></script>
     <script type="text/javascript">
-        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
         var disqus_shortname = 'flashii';
 
-        /* * * DO NOT EDIT BELOW THIS LINE * * */
         (function () {
             var s = document.createElement('script');
             s.async = true;

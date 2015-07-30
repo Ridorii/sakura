@@ -25,8 +25,7 @@
 <div class="head">Stats</div>
 We have <b>{{ stats.userCount }}</b>, 
 <b><a href="//{{ sakura.urls.main }}/u/{{ stats.newestUser.id }}" class="default">{{ stats.newestUser.username }}</a></b> is the newest user, 
-it has been <b>{{ stats.lastRegDate }}</b> since the last user registered, 
-there's <b>{{ stats.chatOnline }}</b> in chat right now and the forum has <b>{{ stats.topicCount }}</b> and <b>{{ stats.postCount }}</b>.
+it has been <b>{{ stats.lastRegDate }}</b> since the last user registered and the forum has <b>{{ stats.topicCount }}</b> and <b>{{ stats.postCount }}</b>.
 <div class="head">Online Users</div>
 {% if stats.onlineUsers %}
     All active users in the past 5 minutes:<br />

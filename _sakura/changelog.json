@@ -34,7 +34,8 @@
                 "20150705",
                 "20150706",
                 "20150707",
-                "20150725"
+                "20150725",
+                "20150728"
 
             ]
 
@@ -1519,6 +1520,19 @@
             {
                 "type":     "FIX",
                 "change":   "Make the error in getConfig return the value that can't be found."
+            }
+
+        ],
+
+        "20150728": [
+
+            {
+                "type":     "UPD",
+                "change":   "Made the amount of news posts loaded on the frontpage configurable."
+            },
+            {
+                "type":     "REM",
+                "change":   "(Temporarily) removed chat online user count."
             }
 
         ]

@@ -36,7 +36,11 @@ class Main {
         self::$_MANAGE_MODE = defined('SAKURA_MANAGE');
 
         // Templating engine
-        Templates::init(self::$_MANAGE_MODE ? Configuration::getConfig('manage_style') : Configuration::getConfig('site_style'));
+        if(!defined('SAKURA_NO_TPL')) {
+
+            Templates::init(self::$_MANAGE_MODE ? Configuration::getConfig('manage_style') : Configuration::getConfig('site_style'));
+
+        }
 
         // Assign servers file to whois class
         Whois::setServers(ROOT .'_sakura/'. Configuration::getLocalConfig('data', 'whoisservers'));

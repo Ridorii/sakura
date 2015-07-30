@@ -7,7 +7,7 @@
 @charset "utf-8";
 
 /* Import Font Awesome */
-@import url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
+@import url('//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
 
 /* Import Segoe UI */
 @import url('/fonts/segoeui/font.css');
@@ -1776,4 +1776,17 @@ textarea.inputStyling {
 
 .forum .buttonRow .rightSide {
     float: right;
+}
+
+/*
+ * Ban page styling
+ */
+.banned p {
+    background: #B19DDD;
+    border: 1px solid #9475B2;
+    font-size: 13px;
+    line-height: 19px;
+    overflow: auto;
+    padding: 6px 10px;
+    border-radius: 3px;
 }

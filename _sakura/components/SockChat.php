@@ -125,18 +125,4 @@ class SockChat {
 
     }
 
-    // Get online users
-    public static function getOnlineUsers() {
-
-        // If the sock chat extensions are disabled return an empty array
-        if(!Configuration::getLocalConfig('sockchat', 'enabled'))
-            return [];
-
-        // Get contents of the table
-        $sockUsers = Database::fetch('online_users', true, null, null, null, null, false, '*', Configuration::getLocalConfig('sockchat', 'prefix'));
-
-        return $sockUsers;
-
-    }
-
 }
