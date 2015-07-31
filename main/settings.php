@@ -133,7 +133,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
     if($continue) {
 
         // Execute the action
-        $action = (isset($_REQUEST['add']) ?  Users::addFriend($_REQUEST['add']) : Users::removeFriend($_REQUEST['remove']));
+        $action = (isset($_REQUEST['add']) ?  Users::addFriend($_REQUEST['add']) : Users::removeFriend($_REQUEST['remove'], true));
 
         // Set the messages
         $messages = [
@@ -180,6 +180,13 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
     }
 
+    if(isset($_REQUEST['direct']) && $_REQUEST['direct'] && !isset($_REQUEST['ajax'])) {
+
+        header('Location: '. $renderData['page']['redirect']);
+        exit;
+
+    }
+
     // Print page contents or if the AJAX request is set only display the render data
     print   isset($_REQUEST['ajax']) ?
             (
@@ -200,23 +207,24 @@ if(Users::checkLogin()) {
 
     // Settings page list
     $pages = [
-        'home'          => ['General',          'Home'],
-        'profile'       => ['General',          'Edit Profile'],
-        'friends'       => ['General',          'Friends'],
-        'groups'        => ['General',          'Groups'],
-        'notifications' => ['Notifications',    'History'],
-        'avatar'        => ['Aesthetics',       'Avatar'],
-        'background'    => ['Aesthetics',       'Background'],
-        'page'          => ['Aesthetics',       'Profile Page'],
-        'email'         => ['Account',          'E-mail Address'],
-        'username'      => ['Account',          'Username'],
-        'usertitle'     => ['Account',          'User Title'],
-        'password'      => ['Account',          'Password'],
-        'ranks'         => ['Account',          'Ranks'],
-        'sessions'      => ['Danger zone',      'Sessions'],
-        'regkeys'       => ['Danger zone',      'Registration Keys'],
-        'deactivate'    => ['Danger zone',      'Deactivate Account'],
-        'notfound'      => ['Settings',         '404']
+        'home'              => ['General',          'Home'],
+        'profile'           => ['General',          'Edit Profile'],
+        'groups'            => ['General',          'Groups'],
+        'friends'           => ['Friends',          'List'],
+        'friendrequests'    => ['Friends',          'Requests'],
+        'notifications'     => ['Notifications',    'History'],
+        'avatar'            => ['Aesthetics',       'Avatar'],
+        'background'        => ['Aesthetics',       'Background'],
+        'page'              => ['Aesthetics',       'Profile Page'],
+        'email'             => ['Account',          'E-mail Address'],
+        'username'          => ['Account',          'Username'],
+        'usertitle'         => ['Account',          'User Title'],
+        'password'          => ['Account',          'Password'],
+        'ranks'             => ['Account',          'Ranks'],
+        'sessions'          => ['Danger zone',      'Sessions'],
+        'regkeys'           => ['Danger zone',      'Registration Keys'],
+        'deactivate'        => ['Danger zone',      'Deactivate Account'],
+        'notfound'          => ['Settings',         '404']
     ];
 
     // Current settings page
@@ -224,7 +232,8 @@ if(Users::checkLogin()) {
 
     // Render data
     $renderData['page'] = [
-        'title' => $pages[$currentPage][0] .' / '. $pages[$currentPage][1]
+        'title'         => $pages[$currentPage][0] .' / '. $pages[$currentPage][1],
+        'currentPage'   => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0
     ];
 
     // Section specific
@@ -240,12 +249,17 @@ if(Users::checkLogin()) {
 
         // Friends
         case 'friends':
-            $renderData['friends'] = Users::getFriends();
+            $renderData['friends'] = array_chunk(array_reverse(Users::getFriends(null, true, true)), 12, true);
+            break;
+
+        // Pending Friend Requests
+        case 'friendrequests':
+            $renderData['friends'] = array_chunk(array_reverse(Users::getPendingFriends(null, true)), 12, true);
             break;
 
         // Notification history
         case 'notifications':
-            $renderData['notifs'] = array_reverse(Users::getNotifications(null, 0, false, true));
+            $renderData['notifs'] = array_chunk(array_reverse(Users::getNotifications(null, 0, false, true)), 10, true);
             break;
 
     }

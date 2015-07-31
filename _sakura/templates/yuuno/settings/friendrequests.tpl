@@ -8,7 +8,7 @@
                 {{ page.title }}
             </div>
             <div class="settings-explanation">
-                <div>Manage your friends.</div>
+                <div>Handle friend requests.</div>
             </div>
             {% if friends|length %}
                 <div class="friends-list">
@@ -19,7 +19,8 @@
                                 <div class="friends-list-name" style="color: {% if friend.user.name_colour %}{{ friend.user.name_colour }}{% else %}{{ friend.rank.colour }}{% endif %};">{{ friend.user.username }}</div>
                             </a>
                             <div class="friends-list-actions">
-                                <a class="remove fill fa fa-remove" title="Remove friend" href="//{{ sakura.urls.main }}/friends?remove={{ friend.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect=//{{ sakura.urls.main }}/settings/friends&amp;direct=true"></a>
+                                <a class="add fa fa-check" title="Add friend" href="//{{ sakura.urls.main }}/friends?add={{ friend.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect=//{{ sakura.urls.main }}/settings/friendrequests&amp;direct=true"></a>
+                                <a class="remove fa fa-remove" title="Remove friend" href="//{{ sakura.urls.main }}/friends?remove={{ friend.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect=//{{ sakura.urls.main }}/settings/friendrequests&amp;direct=true"></a>
                                 <div class="clear"></div>
                             </div>
                         </div>
@@ -43,7 +44,7 @@
                     </div>
                 {% endif %}
             {% else %}
-                <h1 class="stylised" style="margin: 2em auto; text-align: center;">You don't have any friends yet!</h1>
+                <h1 class="stylised" style="margin: 2em auto; text-align: center;">You don't have any pending requests!</h1>
             {% endif %}
         </div>
         <div class="clear"></div>

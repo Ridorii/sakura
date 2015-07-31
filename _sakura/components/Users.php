@@ -1297,7 +1297,7 @@ class Users {
     }
 
     // Get friends
-    public static function getFriends($uid = null, $timestamps = false) {
+    public static function getFriends($uid = null, $timestamps = false, $getData = false) {
 
         // Assign $uid
         if(!$uid)
@@ -1315,7 +1315,12 @@ class Users {
         foreach($getFriends as $key => $friend) {
 
             // Add friend to array
-            $friends[($timestamps ? $friend['fid'] : $key)] = $friend[($timestamps ? 'timestamp' : 'fid')];
+            $friends[($timestamps ? $friend['fid'] : $key)] = $getData ? ([
+
+                'user' => ($_UDATA = self::getUser($friend['fid'])),
+                'rank' => self::getRank($_UDATA['rank_main'])
+
+            ]) : $friend[($timestamps ? 'timestamp' : 'fid')];
 
         }
 
@@ -1325,7 +1330,7 @@ class Users {
     }
 
     // Get non-mutual friends
-    public static function getPendingFriends($uid = null) {
+    public static function getPendingFriends($uid = null, $getData = false) {
 
         // Assign $of automatically if it's not set
         if(!$uid)
@@ -1343,8 +1348,16 @@ class Users {
         foreach($friends as $friend) {
 
             // Check if the friend is mutual
-            if(!self::checkFriend($friend, $uid))
-                $pending[] = $friend;
+            if(!self::checkFriend($friend['uid'], $uid)) {
+
+                $pending[] = $getData ? ([
+
+                    'user' => ($_UDATA = self::getUser($friend['uid'])),
+                    'rank' => self::getRank($_UDATA['rank_main'])
+
+                ]) : $friend;
+
+            }
 
         }
 
@@ -1403,7 +1416,7 @@ class Users {
     }
 
     // Removing a friend
-    public static function removeFriend($uid) {
+    public static function removeFriend($uid, $deleteRequest = false) {
 
         // Check if the user has this user a friend
         if(!Database::fetch('friends', false, ['fid' => [$uid, '='], 'uid' => [Session::$userId, '=']]))
@@ -1414,6 +1427,16 @@ class Users {
             'uid' => [Session::$userId, '='],
             'fid' => [$uid, '=']
         ]);
+
+        // Attempt to remove the request
+        if($deleteRequest) {
+
+            Database::delete('friends', [
+                'fid' => [Session::$userId, '='],
+                'uid' => [$uid, '=']
+            ]);
+
+        }
 
         // Return true because yay
         return [1, 'REMOVED'];

@@ -18,7 +18,7 @@
                                     <a class="fa fa-trash" title="Delete this post" href="/forum/post/{{ post.post_id }}/delete"></a>
                                     {% else %}
                                     {% if post.is_friend != 0 %}<a class="fa fa-{% if post.is_friend == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
-                                    <a class="fa fa-user-{% if post.is_friend == 0 %}plus{% else %}times{% endif %}" title="{% if post.is_friend == 0 %}Add {{ post.user.username }} as a friend{% else %}Remove friend{% endif %}" href="//{{ sakura.urls.main }}/friends?{% if post.is_friend == 0 %}add{% else %}remove{% endif %}={{ post.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect=/forum/post/{{ post.post_id }}%23p{{ post.post_id }}"></a>
+                                    <a class="fa fa-user-{% if post.is_friend == 0 %}plus{% else %}times{% endif %}" title="{% if post.is_friend == 0 %}Add {{ post.user.username }} as a friend{% else %}Remove friend{% endif %}" href="//{{ sakura.urls.main }}/friends?{% if post.is_friend == 0 %}add{% else %}remove{% endif %}={{ post.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect=/forum/post/{{ post.post_id }}%23p{{ post.post_id }}&amp;direct=true"></a>
                                     <a class="fa fa-flag" title="Report {{ post.user.username }}" href="//{{ sakura.urls.main }}/u/{{ post.user.id }}/report"></a>
                                     {% endif %}
                                     {% else %}

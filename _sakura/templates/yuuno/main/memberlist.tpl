@@ -84,11 +84,17 @@
         </div>
         {% endif %}
         {% if page.users|length > 1 %}
-        <h2 style="cursor: default;">[
+        <div class="pagination">
+        {% if page.page > 0 %}
+            <a href="/members/{% if page.sort != page.sorts[0] %}{{ page.sort }}/{% endif %}{% if page.active %}{{ page.active }}/{% endif %}p{{ page.page }}"><span class="fa fa-step-backward"></span></a>
+        {% endif %}
         {% for count,navpage in page.users %}
-        <a href="/members/{% if page.sort != page.sorts[0] %}{{ page.sort }}/{% endif %}{% if page.active %}{{ page.active }}/{% endif %}p{{ count + 1 }}" class="default">{{ count + 1 }}</a>
+            <a href="/members/{% if page.sort != page.sorts[0] %}{{ page.sort }}/{% endif %}{% if page.active %}{{ page.active }}/{% endif %}p{{ count + 1 }}"{% if count == page.page %} class="current"{% endif %}>{{ count + 1 }}</a>
         {% endfor %}
-        ]</h2>
+        {% if page.page + 1 < page.users|length %}
+            <a href="/members/{% if page.sort != page.sorts[0] %}{{ page.sort }}/{% endif %}{% if page.active %}{{ page.active }}/{% endif %}p{{ page.page + 2 }}"><span class="fa fa-step-forward"></span></a>
+        {% endif %}
+        </div>
         {% endif %}
     </div>
     {% else %}

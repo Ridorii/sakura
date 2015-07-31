@@ -36,7 +36,8 @@
                 "20150707",
                 "20150725",
                 "20150728",
-                "20150730"
+                "20150730",
+                "20150731"
 
             ]
 
@@ -1567,6 +1568,55 @@
             {
                 "type":     "ADD",
                 "change":   "Added draft for posting page."
+            }
+
+        ],
+
+        "20150731": [
+
+            {
+                "type":     "UPD",
+                "change":   "Redid footer links and styling."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed an issue with linking to people's websites on the credits page."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added pagination to news page."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Put pagination in own class."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Implemented global pagination style on member list page."
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed mention of Flashii in news page title."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed positioning bug on the notification history page."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added pagination to notification history page."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added friend management page."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed removing a friend not removing the request."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed pending friend requests function returning mutual friends instead of requests."
             }
 
         ]

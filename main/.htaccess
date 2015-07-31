@@ -29,12 +29,14 @@ RewriteRule ^r/([a-z]+)$ infopage.php?r=$1 [L,QSA]
 
 # News
 RewriteRule ^news/?$ news.php [L,QSA]
+RewriteRule ^news/p([0-9]+)$ news.php?page=$1 [L,QSA]
 RewriteRule ^news/([0-9]+)$ news.php?id=$1 [L,QSA]
 RewriteRule ^news.xml$ news.php?xml [L,QSA]
 
 # Settings
 RewriteRule ^settings/?$ settings.php [L,QSA]
 RewriteRule ^settings/([a-z]+)/?$ settings.php?mode=$1 [L,QSA]
+RewriteRule ^settings/([a-z]+)/p([0-9]+)/?$ settings.php?mode=$1&page=$2 [L,QSA]
 RewriteRule ^friends/?$ settings.php?friend-action=true [L,QSA]
 
 # Private Messages

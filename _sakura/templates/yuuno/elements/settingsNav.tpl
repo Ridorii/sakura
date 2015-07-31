@@ -5,8 +5,10 @@
     <div>General</div>
     <a href="/settings/">Home</a>
     <a href="/settings/profile">Edit Profile</a>
-    <a href="/settings/friends">Friends</a>
     <a href="/settings/groups">Groups</a>
+    <div>Friends</div>
+    <a href="/settings/friends">List</a>
+    <a href="/settings/friendrequests">Requests</a>
     <div>Messages</div>
     <a href="/messages/inbox">Inbox</a>
     <a href="/messages/sent">Sent</a>

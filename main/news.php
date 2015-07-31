@@ -27,8 +27,10 @@ $disqus_data = [
 // Add page specific things
 $renderData['newsPosts'] = Main::getNewsPosts((isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])) ? $_GET['id'] : null, (isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])));
 $renderData['page'] = [
-    'title'         => (isset($_GET['id']) ? (count($renderData['newsPosts']) ? $renderData['newsPosts'][0]['title'] : 'Post does not exist!') : 'Flashii News'),
-    'disqus_sso'    => (($disqus_message = base64_encode(json_encode($disqus_data))) .' '. Main::dsqHmacSha1($disqus_message .' '. time(), Configuration::getConfig('disqus_api_secret')) .' '. time())
+    'title'         => (isset($_GET['id']) ? (count($renderData['newsPosts']) ? $renderData['newsPosts'][0]['title'] : 'Post does not exist!') : 'News'),
+    'disqus_sso'    => (($disqus_message = base64_encode(json_encode($disqus_data))) .' '. Main::dsqHmacSha1($disqus_message .' '. time(), Configuration::getConfig('disqus_api_secret')) .' '. time()),
+    'view_post'     => isset($_GET['id']) && count($renderData['newsPosts']),
+    'currentPage'   => 0
 ];
 
 // News XML feed
@@ -130,6 +132,15 @@ if(isset($_GET['xml'])) {
     // Return the feed
     print $feed->saveXML();
     exit;
+
+}
+
+// If we're not using the XML feed and we're not viewing a single post create pages
+if(!isset($_GET['id'])) {
+
+    // Create the current page
+    $renderData['newsPosts']            = array_chunk($renderData['newsPosts'], Configuration::getConfig('news_posts_per_page'), true);
+    $renderData['page']['currentPage']  = isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0;
 
 }
 

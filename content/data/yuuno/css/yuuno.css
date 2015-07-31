@@ -120,30 +120,8 @@ body {
     padding-bottom: 220px;
 }
 
-@media (max-width: 642px) {
-
-    #contentwrapper {
-        padding-bottom: 335px;
-    }
-
-}
-
-@media (max-width: 426px) {
-
-    #contentwrapper {
-        padding-bottom: 450px;
-    }
-
-}
-@media (max-width: 400px) {
-
-    #contentwrapper {
-        padding-bottom: 450px;
-    }
-
-}
-
-@media (max-width: 300px) {
+/* Can't be bothered to figure this out since it'll spazz out anyway */
+@media (max-width: 650px) {
 
     .footer {
         display: none;
@@ -762,21 +740,24 @@ a.gotop.exit {
     text-align: left;
     display: inline-block;
     width: 200px;
-    list-style-type: none;
+    list-style: square;
 }
 
 .footer .ftsections .ftsection li {
-    margin: 2px;
+    margin: 2px 2px 2px 16px;
 }
 
 .footer .ftsections .ftsection li.fthead {
-    margin-bottom: 5px;
+    margin: 2px 2px 5px;
     font-weight: 700;
+    list-style: none;
 }
 
-.footer .sections .copycentre {
+.footer .ftsections .copycentre {
     text-align: center;
     width: 100%;
+    font-size: .9em;
+    line-height: 1.8em;
 }
 
 /*
@@ -973,7 +954,7 @@ a.gotop.exit {
     text-align: right;
 }
 
-#notifications  > div {
+#notifications > div {
     cursor: pointer;
     text-align: left;
     display: inline-block;
@@ -1310,13 +1291,14 @@ a.gotop.exit {
     overflow: auto;
 }
 
-.settings .notification-history > div {
+.settings .notification-history > a {
     border: 1px solid #507;
     margin: 5px;
     background: rgba(113, 74, 150, .3);
+    display: block;
 }
 
-.settings .notification-history > div > .notif-hist-icon {
+.settings .notification-history > a > .notif-hist-icon {
     float: left;
     width: 80px;
     height: 80px;
@@ -1327,11 +1309,11 @@ a.gotop.exit {
     color: #FFF;
 }
 
-.settings .notification-history > div > .notif-hist-icon > .font-icon {
+.settings .notification-history > a > .notif-hist-icon > .font-icon {
     margin: .34em 0;
 }
 
-.settings .notification-history > div > .notif-hist-content > .notif-hist-time {
+.settings .notification-history > a > .notif-hist-content > .notif-hist-time {
    font-style: italic;
    text-align: right;
    float: right;
@@ -1339,17 +1321,85 @@ a.gotop.exit {
    font-size: .8em;
 }
 
-.settings .notification-history > div > .notif-hist-content > .notif-hist-inside {
+.settings .notification-history > a > .notif-hist-content > .notif-hist-inside {
     float: left;
     margin-left: 2px;
     padding-left: 8px;
 }
 
-.settings .notification-history > div > .notif-hist-content > .notif-hist-inside > .notif-hist-title {
+.settings .notification-history > a > .notif-hist-content > .notif-hist-inside > .notif-hist-title {
     font-family: "SegoeUI", "Segoe UI", sans-serif;
     font-weight: 300;
     font-size: 1.7em;
     margin-top: 1em;
+}
+
+.settings .friends-list > div:not(:last-child) {
+    display: block;
+    border: 1px solid #9475B2;
+    text-align: center;
+    width: 220px;
+    margin: 0 2px 40px;
+    float: left;
+    border-radius: 3px;
+}
+
+.settings .friends-list > div:not(:last-child):hover {
+    margin-bottom: 6px;
+    background: #C2AFFE;
+}
+
+.settings .friends-list > div > .friends-list-data {
+    display: block;
+}
+
+.settings .friends-list > div > .friends-list-data > .friends-list-name {
+    font-size: 1.2em;
+    line-height: 1.5em;
+    padding-bottom: 4px;
+}
+
+.settings .friends-list > div > .friends-list-actions {
+    display: none;
+    background: linear-gradient(0deg, #9475B2, #C2AFFE) #9475B2;
+}
+
+.settings .friends-list > div > .friends-list-actions > a {
+    color: #222;
+    font-size: 2em;
+    line-height: 1em;
+    text-decoration: none;
+    transition: .2s;
+    padding: 5px 0;
+    float: left;
+}
+
+.settings .friends-list > div:hover > .friends-list-actions {
+    display: block;
+}
+
+.settings .friends-list > div > .friends-list-actions > .remove:hover {
+    color: #D00;
+}
+
+.settings .friends-list > div > .friends-list-actions > .remove:active {
+    color: #A00;
+}
+
+.settings .friends-list > div > .friends-list-actions > .add:hover {
+    color: #0D0;
+}
+
+.settings .friends-list > div > .friends-list-actions > .add:active {
+    color: #0A0;
+}
+
+.settings .friends-list > div > .friends-list-actions > a {
+    width: 50%;
+}
+
+.settings .friends-list > div > .friends-list-actions > .fill {
+    width: 100%;
 }
 
 /*
@@ -1658,26 +1708,6 @@ textarea.inputStyling {
     text-align: center;
 }
 
-.forum .forumbtn {
-    background: linear-gradient(0deg, #9475B2 10%, #C2AFFE 90%);
-    color: #306;
-    padding: 4px 8px;
-    text-decoration: none;
-    border-radius: 2px;
-    margin: 4px 2px;
-    display: inline-block;
-    font-size: 1.3em;
-    border: 1px solid #9475B2;
-}
-
-.forum .forumbtn:hover {
-    background: linear-gradient(0deg, #9475B2 30%, #C2AFFE 70%);
-}
-
-.forum .forumbtn:active {
-    background: linear-gradient(180deg, #9475B2 30%, #C2AFFE 70%);
-}
-
 .forum.viewtopic .posts {
     width: 100%;
     border-spacing: 0;
@@ -1825,6 +1855,33 @@ textarea.inputStyling {
 
 .forum .buttonRow .rightSide {
     float: right;
+}
+
+/*
+ * Pagination
+ */
+.pagination a {
+    background: linear-gradient(0deg, #9475B2 10%, #C2AFFE 90%);
+    color: #306;
+    padding: 4px 8px;
+    text-decoration: none;
+    border-radius: 2px;
+    margin: 4px 2px;
+    display: inline-block;
+    font-size: 1.3em;
+    border: 1px solid #9475B2;
+}
+
+.pagination a.current {
+    background: linear-gradient(0deg, #A586C3, #D3BFFF);
+}
+
+.pagination a:hover {
+    background: linear-gradient(0deg, #9475B2 30%, #C2AFFE 70%);
+}
+
+.pagination a:active {
+    background: linear-gradient(180deg, #9475B2 30%, #C2AFFE 70%);
 }
 
 /*

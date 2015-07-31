@@ -1,4 +1,4 @@
-<div class="buttonRow">
+<div class="buttonRow pagination">
     <div class="leftSide">
         <a href="/forum/{% if board.viewtopic %}{{ topic.forum_id }}/{% endif %}" class="forumbtn"><span class="fa fa-backward"></span> Back</a>
         {% if board.viewtopic %}

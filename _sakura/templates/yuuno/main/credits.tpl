@@ -13,7 +13,7 @@
             <tbody>
                 {% for contribname, contributor in contributors %}
                 <tr>
-                    <td><a href="{{ contributors[1] }}" target="_blank">{{ contribname }}</a></td>
+                    <td><a href="{{ contributor[1] }}" target="_blank">{{ contribname }}</a></td>
                     <td>{{ contributor[0] }}</td>
                 </tr>
                 {% endfor %}
