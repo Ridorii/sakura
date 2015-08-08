@@ -1342,11 +1342,14 @@ a.gotop.exit {
     margin: 0 2px 40px;
     float: left;
     border-radius: 3px;
+    box-shadow: inset 0 0 1px #9475B2;
+    background: #E4CFFF;
 }
 
 .settings .friends-list > div:not(:last-child):hover {
     margin-bottom: 6px;
     background: #C2AFFE;
+    box-shadow: inset 0 0 2px #9475B2;
 }
 
 .settings .friends-list > div > .friends-list-data {
@@ -1541,7 +1544,8 @@ button.inputStyling:active {
 
 input[type="text"].inputStyling,
 input[type="password"].inputStyling,
-input[type="date"].inputStyling {
+input[type="date"].inputStyling,
+input[type="url"].inputStyling {
     padding: 3px 4px;
     border: 1px solid #CCC;
     box-shadow: inset #DDD 0 0 5px;
@@ -1550,13 +1554,15 @@ input[type="date"].inputStyling {
 
 input[type="text"].inputStyling.red,
 input[type="password"].inputStyling.red,
-input[type="date"].inputStyling.red {
+input[type="date"].inputStyling.red,
+input[type="url"].inputStyling.red {
     box-shadow: inset 0px 0px 7px #EB5959;
 }
 
 input[type="text"].inputStyling.green,
 input[type="password"].inputStyling.green,
-input[type="date"].inputStyling.green {
+input[type="date"].inputStyling.green,
+input[type="url"].inputStyling.green {
     box-shadow: inset 0px 0px 7px #A9EC8B;
 }
 

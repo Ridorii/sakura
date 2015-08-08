@@ -201,6 +201,134 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
             Templates::render('errors/information.tpl', $renderData);
     exit;
 
+} elseif(isset($_POST['submit']) && isset($_POST['submit'])) {
+
+    // Continue
+    $continue = true;
+
+    // Check if the user is logged in
+    if(!Users::checkLogin() || !$continue) {
+
+        $renderData['page'] = [
+            'title'     => 'Settings',
+            'redirect'  => '/authenticate',
+            'message'   => 'You must be logged in to edit your settings.',
+            'success'   => 0
+        ];
+
+        // Break
+        $continue = false;
+
+    }
+
+    // Check session variables
+   if(!isset($_REQUEST['timestamp']) || $_REQUEST['timestamp'] < time() - 1000 || !isset($_REQUEST['sessid']) || $_REQUEST['sessid'] != session_id() || !$continue) {
+
+        $renderData['page'] = [
+            'title'     => 'Session expired',
+            'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+            'message'   => 'Your session has expired, please refresh the page and try again.',
+            'success'   => 0
+        ];
+
+        // Break
+        $continue = false;
+
+    }
+
+    // Change settings
+    if($continue) {
+
+        // Switch to the correct mode
+        switch($_POST['mode']) {
+
+            // Profile
+            case 'profile':
+
+                // Get profile fields and create storage var
+                $fields = Users::getProfileFields();
+                $store  = [];
+
+                // Go over each field
+                foreach($fields as $field) {
+
+                    // Add to the store array
+                    if(isset($_POST['profile_'. $field['ident']]) && !empty($_POST['profile_'. $field['ident']])) {
+
+                        $store[$field['ident']] = $_POST['profile_'. $field['ident']];
+
+                    }
+
+                    // Check if there's additional values we should keep in mind
+                    if(isset($field['additional']) && !empty($field['additional'])) {
+
+                        // Decode the json
+                        $field['additional'] = json_decode($field['additional'], true);
+
+                        // Go over each additional value
+                        foreach($field['additional'] as $addKey => $addVal) {
+
+                            // Skip if the value is empty
+                            if(!isset($_POST['profile_additional_'. $addKey]) || empty($_POST['profile_additional_'. $addKey]))
+                                continue;
+
+                            // Add to the array
+                            $store[$addKey] = $_POST['profile_additional_'. $addKey];
+
+                        }
+
+                    }
+
+                }
+
+                // Update database
+                Users::updateUserProfileFields(Session::$userId, $store);
+
+                // Set render data
+                $renderData['page'] = [
+
+                    'title'     => 'Profile update',
+                    'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                    'message'   => 'Your profile has been updated!',
+                    'success'   => 1
+
+                ];
+
+                break;
+
+            // Fallback
+            default:
+
+                // Set render data
+                $renderData['page'] = [
+
+                    'title'     => 'Unknown action',
+                    'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                    'message'   => 'The requested method does not exist.',
+                    'success'   => 0
+
+                ];
+
+                break;
+
+        }
+
+    }
+
+    // Print page contents or if the AJAX request is set only display the render data
+    print   isset($_REQUEST['ajax']) ?
+            (
+                $renderData['page']['title']
+                . '|'
+                . $renderData['page']['message']
+                . '|'
+                . $renderData['page']['success']
+                . '|'
+                . $renderData['page']['redirect']
+            ) :
+            Templates::render('errors/information.tpl', $renderData);
+    exit;
+
 }
 
 if(Users::checkLogin()) {
@@ -242,8 +370,8 @@ if(Users::checkLogin()) {
         // Profile
         case 'profile':
             $renderData['profile'] = [
-                'user' => Users::getUser(Session::$userId),
-                'fields' => Database::fetch('profilefields')
+                'user'      => Users::getUserProfileFields(Session::$userId),
+                'fields'    => Users::getProfileFields()
             ];
             break;
 

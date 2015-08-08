@@ -814,6 +814,7 @@ class Users {
 
             $fields[$field['id']]           = $field;
             $fields[$field['id']]['ident']  = Main::cleanString($field['name'], true, true);
+            $fields[$field['id']]['addit']  = json_decode($field['additional'], true);
 
         }
 
@@ -889,6 +890,30 @@ class Users {
 
         // Return appropiate profile data
         return $profile;
+
+    }
+
+    // Updating the profile data of a user
+    public static function updateUserProfileFields($id, $data) {
+
+        // We retrieve the current content from the database
+        $current = self::getUser($id)['userData'];
+
+        // Merge the arrays
+        $data = array_merge($current, ['profileFields' => $data]);
+
+        // Encode the json
+        $data = json_encode($data);
+
+        // Store it in the database
+        Database::update('users', [
+            [
+                'userData' => $data
+            ],
+            [
+                'id' => [$id, '=']
+            ]
+        ]);
 
     }
 
