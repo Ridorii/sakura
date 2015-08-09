@@ -243,7 +243,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
             case 'avatar':
 
                 // Set path variables
-                $filepath = ROOT .'content/images/user/';
+                $filepath = ROOT . Configuration::getConfig('user_uploads') .'/';
                 $filename = $filepath .'avatar_'. Session::$userId;
                 $currfile = !empty($_AVA = Users::getUser(Session::$userId)['userData']['userAvatar']) ? $_AVA : null;
 

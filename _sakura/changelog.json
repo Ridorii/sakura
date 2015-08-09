@@ -1665,6 +1665,10 @@
             {
                 "type":     "FIX",
                 "change":   "Fixed old avatars not getting deleted."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Redid filestructure."
             }
 
         ]
