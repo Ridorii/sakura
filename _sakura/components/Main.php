@@ -109,8 +109,11 @@ class Main {
         $emotes = Database::fetch('emoticons');
 
         // Do the replacements
-        foreach($emotes as $emote)
-            $text = str_replace($emote['emote_string'], '<img src="//'. Configuration::getLocalConfig('urls', 'content') .'/'. $emote['emote_path'] .'" class="emoticon" alt="'. $emote['emote_string'] .'" />', $text);
+        foreach($emotes as $emote) {
+
+            $text = str_replace($emote['emote_string'], '<img src="'. $emote['emote_path'] .'" class="emoticon" alt="'. $emote['emote_string'] .'" />', $text);
+
+        }
 
         // Return the parsed text
         return $text;
@@ -124,8 +127,11 @@ class Main {
         $resp = @file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='. Configuration::getConfig('recaptcha_private') .'&response='. $response);
 
         // In the highly unlikely case that it failed to get anything forge a false
-        if(!$resp)
+        if(!$resp) {
+
             return false;
+
+        }
 
         // Decode the response JSON from the servers
         $resp = json_decode($resp, true);
@@ -229,9 +235,9 @@ class Main {
         $htmlMail = file_get_contents(ROOT .'_sakura/templates/htmlEmail.tpl');
 
         // Replace template tags
-        $htmlMail = str_replace('{{ sitename }}',   Configuration::getConfig('sitename'),                   $htmlMail);
-        $htmlMail = str_replace('{{ siteurl }}',    '//'. Configuration::getLocalConfig('urls', 'main'),    $htmlMail);
-        $htmlMail = str_replace('{{ contents }}',   self::mdParse($body),                                   $htmlMail);
+        $htmlMail = str_replace('{{ sitename }}',   Configuration::getConfig('sitename'),       $htmlMail);
+        $htmlMail = str_replace('{{ siteurl }}',    '//'. Configuration::getConfig('url_main'), $htmlMail);
+        $htmlMail = str_replace('{{ contents }}',   self::mdParse($body),                       $htmlMail);
 
         // Set HTML body
         $mail->Body = $htmlMail;

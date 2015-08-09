@@ -1669,6 +1669,10 @@
             {
                 "type":     "UPD",
                 "change":   "Redid filestructure."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed references to old urls variable."
             }
 
         ]

@@ -325,9 +325,9 @@ class Users {
         $message  = "Hello ". $user['username'] .",\r\n\r\n";
         $message .= "You are receiving this notification because you have (or someone pretending to be you has) requested a password reset link to be sent for your account on \"". Configuration::getConfig('sitename') ."\". If you did not request this notification then please ignore it, if you keep receiving it please contact the site administrator.\r\n\r\n";
         $message .= "To use this password reset key you need to go to a special page. To do this click the link provided below.\r\n\r\n";
-        $message .= "http://". Configuration::getLocalConfig('urls', 'main') ."/forgotpassword?pw=true&uid=". $user['id'] ."&key=". $verk ."\r\n\r\n";
+        $message .= "http://". Configuration::getConfig('url_main') ."/forgotpassword?pw=true&uid=". $user['id'] ."&key=". $verk ."\r\n\r\n";
         $message .= "If successful you should be able to change your password here.\r\n\r\n";
-        $message .= "Alternatively if the above method fails for some reason you can go to http://". Configuration::getLocalConfig('urls', 'main') ."/forgotpassword?pw=true&uid=". $user['id'] ." and use the key listed below:\r\n\r\n";
+        $message .= "Alternatively if the above method fails for some reason you can go to http://". Configuration::getConfig('url_main') ."/forgotpassword?pw=true&uid=". $user['id'] ." and use the key listed below:\r\n\r\n";
         $message .= "Verification key: ". $verk ."\r\n\r\n";
         $message .= "You can of course change this password yourself via the profile page. If you have any difficulties please contact the site administrator.\r\n\r\n";
         $message .= "--\r\n\r\nThanks\r\n\r\n". Configuration::getConfig('mail_signature');
@@ -496,10 +496,10 @@ class Users {
         $message .= "Please keep this e-mail for your records. Your account intormation is as follows:\r\n\r\n";
         $message .= "----------------------------\r\n\r\n";
         $message .= "Username: ". $user['username'] ."\r\n\r\n";
-        $message .= "Your profile: http://". Configuration::getLocalConfig('urls', 'main') ."/u/". $user['id'] ."\r\n\r\n";
+        $message .= "Your profile: http://". Configuration::getConfig('url_main') ."/u/". $user['id'] ."\r\n\r\n";
         $message .= "----------------------------\r\n\r\n";
         $message .= "Please visit the following link in order to activate your account:\r\n\r\n";
-        $message .= "http://". Configuration::getLocalConfig('urls', 'main') ."/activate?mode=activate&u=". $user['id'] ."&k=". $activate ."\r\n\r\n";
+        $message .= "http://". Configuration::getConfig('url_main') ."/activate?mode=activate&u=". $user['id'] ."&k=". $activate ."\r\n\r\n";
         $message .= "Your password has been securely stored in our database and cannot be retrieved. ";
         $message .= "In the event that it is forgotten, you will be able to reset it using the email address associated with your account.\r\n\r\n";
         $message .= "Thank you for registering.\r\n\r\n";
