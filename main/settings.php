@@ -203,7 +203,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
 } elseif(isset($_POST['submit']) && isset($_POST['submit'])) {
 
-    // Continue
     $continue = true;
 
     // Check if the user is logged in
@@ -216,8 +215,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
             'success'   => 0
         ];
 
-        // Break
-        $continue = false;
+        break;
 
     }
 
@@ -231,8 +229,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
             'success'   => 0
         ];
 
-        // Break
-        $continue = false;
+        break;
 
     }
 
@@ -241,6 +238,193 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
         // Switch to the correct mode
         switch($_POST['mode']) {
+
+            // Avatar
+            case 'avatar':
+
+                // Set path variables
+                $filepath = ROOT .'content/images/user/';
+                $filename = $filepath .'avatar_'. Session::$userId;
+
+                // Check if $_FILES is set
+                if(!isset($_FILES['avatar']) && empty($_FILES['avatar'])) {
+
+                    // Set render data
+                    $renderData['page'] = [
+
+                        'title'     => 'Avatar',
+                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                        'message'   => 'No file was uploaded.',
+                        'success'   => 0
+
+                    ];
+
+                    break;
+                    
+                }
+
+                // Check if the upload went properly
+                if($_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
+
+                    // Get the error in text
+                    switch($_FILES['avatar']['error']) {
+
+                        case UPLOAD_ERR_INI_SIZE:
+                        case UPLOAD_ERR_FORM_SIZE:
+                            $msg = 'The uploaded file exceeds the maximum filesize!';
+                            break;
+
+                        case UPLOAD_ERR_PARTIAL:
+                        case UPLOAD_ERR_NO_FILE:
+                            $msg = 'The upload was interrupted!';
+                            break;
+
+                        case UPLOAD_ERR_NO_TMP_DIR:
+                        case UPLOAD_ERR_CANT_WRITE:
+                            $msg = 'Unable to save file to temporary location, contact the administrator!';
+                            break;
+
+                        case UPLOAD_ERR_EXTENSION:
+                        default:
+                            $msg = 'An unknown exception occurred!';
+                            break;
+
+                    }
+
+                    // Set render data
+                    $renderData['page'] = [
+
+                        'title'     => 'Avatar',
+                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                        'message'   => $msg,
+                        'success'   => 0
+
+                    ];
+
+                    break;
+
+                }
+
+                // Get the meta data
+                $metadata = getimagesize($_FILES['avatar']['tmp_name']);
+
+                // Check if the image is actually an image
+                if($metadata == false) {
+
+                    // Set render data
+                    $renderData['page'] = [
+
+                        'title'     => 'Avatar',
+                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                        'message'   => 'Uploaded file is not an image.',
+                        'success'   => 0
+
+                    ];
+
+                    break;
+
+                }
+
+                // Check if the image is an allowed filetype
+                if((($metadata[2] !== IMAGETYPE_GIF) && ($metadata[2] !== IMAGETYPE_JPEG) && ($metadata[2] !== IMAGETYPE_PNG))) {
+
+                    // Set render data
+                    $renderData['page'] = [
+
+                        'title'     => 'Avatar',
+                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                        'message'   => 'This filetype is not allowed.',
+                        'success'   => 0
+
+                    ];
+
+                    break;
+
+                }
+
+                // Check if the image is too large
+                if(($metadata[0] > Configuration::getConfig('avatar_max_width') || $metadata[1] > Configuration::getConfig('avatar_max_height'))) {
+
+                    // Set render data
+                    $renderData['page'] = [
+
+                        'title'     => 'Avatar',
+                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                        'message'   => 'The resolution of this picture is too big.',
+                        'success'   => 0
+
+                    ];
+
+                    break;
+
+                }
+
+                // Check if the image is too small
+                if(($metadata[0] < Configuration::getConfig('avatar_min_width') || $metadata[1] < Configuration::getConfig('avatar_min_height'))) {
+
+                    // Set render data
+                    $renderData['page'] = [
+
+                        'title'     => 'Avatar',
+                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                        'message'   => 'The resolution of this picture is too small.',
+                        'success'   => 0
+
+                    ];
+
+                    break;
+
+                }
+
+                // Check if the file is too large
+                if((filesize($_FILES['avatar']['tmp_name']) > Configuration::getConfig('avatar_max_fsize'))) {
+
+                    // Set render data
+                    $renderData['page'] = [
+
+                        'title'     => 'Avatar',
+                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                        'message'   => 'The filesize of this picture is too large.',
+                        'success'   => 0
+
+                    ];
+
+                    break;
+
+                }
+
+                // Append extension to filename
+                $filename .= image_type_to_extension($metadata[2]);
+
+                if(!move_uploaded_file($_FILES['avatar']['tmp_name'], $filename)) {
+
+
+                    // Set render data
+                    $renderData['page'] = [
+
+                        'title'     => 'Avatar',
+                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                        'message'   => 'Something went wrong, please try again.',
+                        'success'   => 0
+
+                    ];
+
+                }
+
+                // Update database
+                Users::updateUserDataField(Session::$userId, ['userAvatar' => basename($filename)]);
+
+                // Set render data
+                $renderData['page'] = [
+
+                    'title'     => 'Avatar',
+                    'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                    'message'   => 'Updated your avatar!',
+                    'success'   => 1
+
+                ];
+
+                break;
 
             // Profile
             case 'profile':
@@ -282,7 +466,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 }
 
                 // Update database
-                Users::updateUserProfileFields(Session::$userId, $store);
+                Users::updateUserDataField(Session::$userId, ['profileFields' => $store]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -338,12 +522,12 @@ if(Users::checkLogin()) {
         'home'              => ['General',          'Home'],
         'profile'           => ['General',          'Edit Profile'],
         'groups'            => ['General',          'Groups'],
-        'friends'           => ['Friends',          'List'],
+        'friendlisting'     => ['Friends',          'List'],
         'friendrequests'    => ['Friends',          'Requests'],
         'notifications'     => ['Notifications',    'History'],
         'avatar'            => ['Aesthetics',       'Avatar'],
         'background'        => ['Aesthetics',       'Background'],
-        'page'              => ['Aesthetics',       'Profile Page'],
+        'userpage'          => ['Aesthetics',       'Userpage'],
         'email'             => ['Account',          'E-mail Address'],
         'username'          => ['Account',          'Username'],
         'usertitle'         => ['Account',          'User Title'],
@@ -367,6 +551,26 @@ if(Users::checkLogin()) {
     // Section specific
     switch($currentPage) {
 
+        // Homepage
+        case 'home':
+            $renderData['settings'] = [
+                'friends'       => Users::getFriends(null, true, true, true),
+                'forum_stats'   => Forum::getUserStats(Session::$userId)
+            ];
+            break;
+
+        // Avatar sizes
+        case 'avatar':
+            $renderData['avatar'] = [
+                'max_width'     => Configuration::getConfig('avatar_max_width'),
+                'max_height'    => Configuration::getConfig('avatar_max_height'),
+                'min_width'     => Configuration::getConfig('avatar_min_width'),
+                'min_height'    => Configuration::getConfig('avatar_min_height'),
+                'max_size'      => Configuration::getConfig('avatar_max_fsize'),
+                'max_size_view' => Main::getByteSymbol(Configuration::getConfig('avatar_max_fsize'))
+            ];
+            break;
+
         // Profile
         case 'profile':
             $renderData['profile'] = [
@@ -376,7 +580,7 @@ if(Users::checkLogin()) {
             break;
 
         // Friends
-        case 'friends':
+        case 'friendlisting':
             $renderData['friends'] = array_chunk(array_reverse(Users::getFriends(null, true, true)), 12, true);
             break;
 

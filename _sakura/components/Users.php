@@ -894,13 +894,13 @@ class Users {
     }
 
     // Updating the profile data of a user
-    public static function updateUserProfileFields($id, $data) {
+    public static function updateUserDataField($id, $data) {
 
         // We retrieve the current content from the database
         $current = self::getUser($id)['userData'];
 
         // Merge the arrays
-        $data = array_merge($current, ['profileFields' => $data]);
+        $data = array_merge($current, $data);
 
         // Encode the json
         $data = json_encode($data);
@@ -1322,7 +1322,7 @@ class Users {
     }
 
     // Get friends
-    public static function getFriends($uid = null, $timestamps = false, $getData = false) {
+    public static function getFriends($uid = null, $timestamps = false, $getData = false, $checkOnline = false) {
 
         // Assign $uid
         if(!$uid)
@@ -1346,6 +1346,18 @@ class Users {
                 'rank' => self::getRank($_UDATA['rank_main'])
 
             ]) : $friend[($timestamps ? 'timestamp' : 'fid')];
+
+        }
+
+        // Check who is online and who isn't
+        if($checkOnline) {
+
+            // Check each user
+            foreach($friends as $key => $friend) {
+
+                $friends[self::checkUserOnline($getData ? $friend['user']['id'] : $friend) ? 'online' : 'offline'][] = $friend;
+
+            }
 
         }
 

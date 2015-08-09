@@ -38,7 +38,8 @@
                 "20150728",
                 "20150730",
                 "20150731",
-                "20150807"
+                "20150807",
+                "20150809"
 
             ]
 
@@ -1631,6 +1632,35 @@
             {
                 "type":     "ADD",
                 "change":   "Added profile changing backend."
+            }
+
+        ],
+
+        "20150809": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fixed homepage friends link going to the wrong location."
+            },
+            {
+                "type":     "UPD",
+                "change":   "Redid settings frontpage."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added :smug: emote (thanks malloc)."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed links to GitHub links to link to their Bitbucket alternative."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added responsive view for notification for smaller screens."
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added avatar uploading (background uploads soon)."
             }
 
         ]

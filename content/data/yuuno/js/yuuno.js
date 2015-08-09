@@ -230,9 +230,6 @@ function notifyRequest(session) {
                         "sound":    false
                     });
 
-                    // ...and log an error message to to console..
-                    console.log('[SAKURA NOTIFICATION DEBUG] Invalid return type.');
-
                     // ...then prevent the function from contiuing
                     return;
 
@@ -255,9 +252,6 @@ function notifyRequest(session) {
                     "timeout":  60000,
                     "sound":    false
                 });
-
-                // ...and log a thing to the JavaScript console
-                console.log('[SAKURA NOTIFICATION DEBUG] HTTP return wasn\'t 200.');
 
             }
 

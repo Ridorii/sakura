@@ -15,10 +15,10 @@
 	<div class="content profile">
         <div class="{% if profile.profilePage|length > 1 %}content-right {% endif %}content-column">
             <div style="text-align: center;">
-                <img src="/a/{{ profile.user.id }}" alt="{{ profile.user.username }}'s Avatar" class="default-avatar-setting" style="box-shadow: 0 3px 7px #{% if profile.online %}484{% else %}844{% endif %};" />
-                <br /><span style="font-size: .8em;">{{ profile.ranktitle }}</span>
+                <img src="/a/{{ profile.user.id }}" alt="{{ profile.user.username }}'s Avatar" class="default-avatar-setting" style="box-shadow: 0 3px 7px #{% if profile.online %}484{% else %}844{% endif %};" /><br />
+                {% if profile.user.rank_main > 1 and profile.ban_check|length < 1 %}
+                <span style="font-size: .8em;">{{ profile.ranktitle }}</span>
                 <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px #888; padding: 0 0 2px;">{{ profile.user.username }}</h1>
-                {% if profile.user.rank_main > 1 %}
                     {% if profile.is_premium %}<img src="//{{ sakura.urls.content }}/images/tenshi.png" alt="Tenshi" /> {% endif %}<img src="//{{ sakura.urls.content }}/images/flags/{% if profile.user.country|lower == 'eu' %}europeanunion{% else %}{{ profile.user.country|lower }}{% endif %}.png" alt="{{ profile.user.country }}" /> <span style="font-size: .9em; line-height: 11px;">{{ profile.country }}</span>
                 {% if user.checklogin %}
                 <div class="user-actions">
@@ -68,17 +68,21 @@
                 <b>Log in to view the full profile!</b>
                 {% endif %}
                 {% endif %}
+                {% else %}
+                <h1 style="color: #222; text-shadow: 0 0 7px #888; padding: 0 0 2px;">{{ profile.user.username }}</h1>
                 {% endif %}
                 <hr class="default" />
                 <b>Account Standing</b>
                 {% if profile.user.rank_main < 2 %}
                 <h2 style="color: #888; text-shadow: 0 0 7px #888; margin-top: 0;">Deactivated</h2>
+                {% elseif profile.ban_check %}
+                <h2 style="color: #222; text-shadow: 0 0 7px #222; margin-top: 0;">Banned</h2>
                 {% else %}
                     {% if profile.warnings %}
-                    <h2 style="color: red; text-shadow: 0 0 7px #888; margin-top: 0;">Bad</h2>
-                    <span style="font-size: 10px; line-height: 10px;">This user has <b>{{ profile.warnings|length }} warning{% if profile.warnings|length != 1 %}s{% endif %}</b>.<br />After 5 to 10 warnings (depending on what they are for) this user may be permanently banned.</span>
+                        <h2 style="color: red; text-shadow: 0 0 7px #888; margin-top: 0;">Bad</h2>
+                        <span style="font-size: 10px; line-height: 10px;">This user has <b>{{ profile.warnings|length }} warning{% if profile.warnings|length != 1 %}s{% endif %}</b>.<br />After 5 to 10 warnings (depending on what they are for) this user may be permanently banned.</span>
                     {% else %}
-                    <h2 style="color: green; text-shadow: 0 0 7px #888; margin-top: 0;">Good</h2>
+                        <h2 style="color: green; text-shadow: 0 0 7px #888; margin-top: 0;">Good</h2>
                     {% endif %}
                 {% endif %}
             </div>

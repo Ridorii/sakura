@@ -25,7 +25,8 @@ if(isset($_GET['u'])) {
         'fields'        => Users::getUserProfileFields($_PROFILE_USER_DATA['userData'], true),
         'warnings'      => Users::getWarnings($_PROFILE_USER_DATA['id']),
         'friend'        => Users::checkFriend($_PROFILE_USER_DATA['id']),
-        'forum_stats'   => Forum::getUserStats($_PROFILE_USER_DATA['id'])
+        'forum_stats'   => Forum::getUserStats($_PROFILE_USER_DATA['id']),
+        'ban_check'     => Bans::checkBan($_PROFILE_USER_DATA['id'])
     ];
 
     $renderData['page'] = [

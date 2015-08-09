@@ -7,7 +7,7 @@
     <a href="/settings/profile">Edit Profile</a>
     <a href="/settings/groups">Groups</a>
     <div>Friends</div>
-    <a href="/settings/friends">List</a>
+    <a href="/settings/friendlisting">List</a>
     <a href="/settings/friendrequests">Requests</a>
     <div>Messages</div>
     <a href="/messages/inbox">Inbox</a>
@@ -18,7 +18,7 @@
     <div>Aesthetics</div>
     <a href="/settings/avatar">Avatar</a>
     <a href="/settings/background">Background</a>
-    <a href="/settings/page">Profile Page</a>
+    <a href="/settings/userpage">Profile Page</a>
     <div>Account</div>
     <a href="/settings/email">E-mail Address</a>
     <a href="/settings/username">Username</a>

@@ -774,4 +774,25 @@ class Main {
 
     }
 
+    // Get the byte symbol from a value
+    public static function getByteSymbol($bytes) {
+
+        // Return nothing if the input was 0
+        if(!$bytes)
+            return;
+
+        // Array with byte symbols
+        $symbols = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+
+        // Calculate byte entity
+        $exp = floor(log($bytes) / log(1024));
+
+        // Format the things
+        $bytes = sprintf("%.2f ". $symbols[$exp], ($bytes / pow(1024, floor($exp))));
+
+        // Return the formatted string
+        return $bytes;
+
+    }
+
 }

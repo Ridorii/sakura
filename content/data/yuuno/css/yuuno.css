@@ -949,9 +949,10 @@ a.gotop.exit {
     font-family: "SegoeUI", "Segoe UI", sans-serif;
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: 510px;
+    max-height: 100%;
     max-width: 600px;
     text-align: right;
+    pointer-events: none;
 }
 
 #notifications > div {
@@ -967,6 +968,7 @@ a.gotop.exit {
     margin: 5px;
     position: relative;
     box-shadow: 0 0 4px rgba(0, 0, 0, .9);
+    pointer-events: auto;
 }
 
 #notifications > .notification-enter {
@@ -1034,6 +1036,80 @@ a.gotop.exit {
 
 #notifications > div:hover > .notification-close {
     display: block;
+}
+
+@media (max-width: 600px) {
+
+    #notifications {
+        top: 0px;
+        right: 0px;
+        left: 0px;
+        bottom: none;
+        max-width: 100%;
+        height: auto;
+        width: auto;
+    }
+
+    #notifications > div {
+        height: 40px;
+        width: 100%;
+        background: rgba(113, 74, 150, 1);
+        border: 0;
+        margin: 0 !important;
+        box-shadow: 0 0 0;
+        float: left;
+    }
+
+    #notifications > div > .notification-icon {
+        width: 40px;
+        height: 40px;
+        text-align: center;
+    }
+
+    #notifications > div > .notification-icon > img {
+        max-height: 40px;
+        max-width: 40px;
+    }
+
+    #notifications > div > .notification-icon > .font-icon {
+        margin: .34em 0;
+        font-size: 2em;
+    }
+
+    #notifications > div > .notification-content {
+        max-width: 100%;
+        min-width: 0;
+        width: auto;
+        border-left: 0;
+        height: 40px;
+        margin: 0;
+        padding-left: 4px;
+        display: inline-block;
+    }
+
+    #notifications > div > .notification-content > .notification-title {
+        font-weight: 700;
+        font-size: 1em;
+        margin: 0;
+    }
+
+    #notifications > div > .notification-close {
+        height: 40px;
+        width: 40px;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        line-height: 1.5em;
+        text-align: center;
+        margin-right: 4px;
+        display: block;
+    }
+
+    #notifications > div > .notification-close:after {
+        clear: both !important;
+        float: none;
+    }
+
 }
 
 /*
@@ -1204,6 +1280,10 @@ a.gotop.exit {
 /*
  * Settings page styling
  */
+.settings ul > li {
+    margin-left: 2em;
+    list-style: square;
+}
 .settings .right-menu-nav > div {
     background: #C2AFFE;
     padding: 4px;

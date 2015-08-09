@@ -45,7 +45,7 @@ if(isset($_GET['m'])) {
             }
 
             // Check if user is banned
-            if(false) { // [Flashwave 2015-04-27] Banning isn't implemented yet
+            if(Bans::checkBan($_GET['u'])) {
                 $serveImage = $bannedAvatar;
                 break;
             }
@@ -80,7 +80,7 @@ if(isset($_GET['m'])) {
             }
 
             // Check if user is banned
-            if(false) { // [Flashwave 2015-04-27] Banning isn't implemented yet
+            if(Bans::checkBan($_GET['u'])) {
                 $serveImage = $noBackground;
                 break;
             }
@@ -115,7 +115,7 @@ if(isset($_GET['m'])) {
             }
 
             // Check if user is banned
-            if(false) { // [Flashwave 2015-04-27] Banning isn't implemented yet
+            if(Bans::checkBan($_GET['u'])) {
                 $serveImage = $noHeader;
                 break;
             }
