@@ -1661,6 +1661,10 @@
             {
                 "type":     "ADD",
                 "change":   "Added avatar uploading (background uploads soon)."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed old avatars not getting deleted."
             }
 
         ]
