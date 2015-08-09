@@ -16,7 +16,7 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sak
 header('Content-Type: application/octet-stream');
 
 // Path to user uploads
-$userDirPath = ROOT .'content/images/user/';
+$userDirPath = ROOT . Configuration::getConfig('user_uploads') . '/';
 
 // Check if the m(ode) GET request is set
 if(isset($_GET['m'])) {
@@ -25,9 +25,9 @@ if(isset($_GET['m'])) {
 
         case 'avatar':
             // Set paths
-            $noAvatar       = ROOT .'content/images/no-av.png';
-            $deactiveAvatar = ROOT .'content/images/deactivated-av.png';
-            $bannedAvatar   = ROOT .'content/images/banned-av.png';
+            $noAvatar       = ROOT . Configuration::getConfig('no_avatar_img');
+            $deactiveAvatar = ROOT . Configuration::getConfig('deactivated_avatar_img');
+            $bannedAvatar   = ROOT . Configuration::getConfig('banned_avatar_img');
 
             // If ?u= isn't set or if it isn't numeric
             if(!isset($_GET['u']) || !is_numeric($_GET['u']) || $_GET['u'] == 0) {
@@ -62,7 +62,7 @@ if(isset($_GET['m'])) {
 
         case 'background':
             // Set paths
-            $noBackground = ROOT .'content/pixel.png';
+            $noBackground = ROOT . Configuration::getConfig('no_background_img');
 
             // If ?u= isn't set or if it isn't numeric
             if(!isset($_GET['u']) || !is_numeric($_GET['u'])) {
@@ -97,7 +97,7 @@ if(isset($_GET['m'])) {
 
         case 'header':
             // Set paths
-            $noHeader = ROOT .'content/images/triangles.png';
+            $noHeader = ROOT . Configuration::getConfig('no_header_img');
 
             // If ?u= isn't set or if it isn't numeric
             if(!isset($_GET['u']) || !is_numeric($_GET['u'])) {
@@ -131,12 +131,12 @@ if(isset($_GET['m'])) {
             break;
 
         default:
-            $serveImage = ROOT .'content/pixel.png';
+            $serveImage = ROOT . Configuration::getConfig('pixel_img');
 
     }
 
 } else
-    $serveImage = ROOT .'content/pixel.png';
+    $serveImage = ROOT . Configuration::getConfig('pixel_img');
 
 $serveImage = file_get_contents($serveImage);
 

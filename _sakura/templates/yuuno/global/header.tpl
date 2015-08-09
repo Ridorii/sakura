@@ -38,15 +38,9 @@
 
                 },
 
-                "resources": "{{ sakura.resources }}",
-
-                "urls": {
-
-                    {% for name,url in sakura.urls %}
-                    "{{ name }}": "{{ url }}"{% if loop.index != sakura.urls|length %}, {% endif %}
-                    {% endfor %}
-
-                },
+                "url_main":     "{{ sakura.url_main }}",
+                "content":      "{{ sakura.content_path }}",
+                "resources":    "{{ sakura.resources }}",
 
                 "minUserLen":       {{ sakura.minusernamelength }},
                 "maxUserLen":       {{ sakura.maxusernamelength }},
@@ -91,7 +85,7 @@
                 generateForm("headerLogoutForm", {
                     "class":    "hidden",
                     "method":   "post",
-                    "action":   "//{{ sakura.urls.main }}/logout"
+                    "action":   "//{{ sakura.url_main }}/logout"
                 },
                 {
                     "mode":     "logout",
@@ -126,7 +120,7 @@
                 generateForm("doFriendToggle", {
                     "class":    "hidden",
                     "method":   "post",
-                    "action":   "//{{ sakura.urls.main }}/friends"
+                    "action":   "//{{ sakura.url_main }}/friends"
                 },
                 {
                     "{% if profile.friend == 0 %}add{% else %}remove{% endif %}": "{{ profile.user.id }}",
@@ -203,33 +197,33 @@
         <div id="container">
             <span id="top"></span>
             <div class="header" id="header">
-                <a class="logo" href="//{{ sakura.urls.main }}/">{{ sakura.sitename }}</a>
+                <a class="logo" href="//{{ sakura.url_main }}/">{{ sakura.sitename }}</a>
                 <div class="menu">
                     <div class="menu-nav" id="navMenuSite">
                         <!-- Navigation menu, displayed on left side of the bar. -->
-                        <a class="menu-item" href="//{{ sakura.urls.main }}/" title="Return to the front page of Flashii">Home</a>
-                        <a class="menu-item" href="//{{ sakura.urls.main }}/news" title="Here you can read updates on Flashii">News</a>
-                        <a class="menu-item" href="//{{ sakura.urls.chat }}/" title="Chat with other Flashii members">Chat</a>
-                        <a class="menu-item" href="//{{ sakura.urls.main }}/forum" title="Discuss things with other members but static">Forums</a>
-                        <a class="menu-item" href="//{{ sakura.urls.main }}/search" title="Search on Flashii">Search</a>
+                        <a class="menu-item" href="/" title="Return to the front page of Flashii">Home</a>
+                        <a class="menu-item" href="/news" title="Here you can read updates on Flashii">News</a>
+                        <a class="menu-item" href="//chat.{{ sakura.url_main }}/" title="Chat with other Flashii members">Chat</a>
+                        <a class="menu-item" href="/forum" title="Discuss things with other members but static">Forums</a>
+                        <a class="menu-item" href="/search" title="Search on Flashii">Search</a>
                         {% if user.checklogin %}
-                            <a class="menu-item" href="//{{ sakura.urls.main }}/members" title="View a list with all the activated user accounts">Members</a>
-                            <a class="menu-item menu-donate" href="//{{ sakura.urls.main }}/support" title="Give us money to keep the site (and other services) up and running">Support us</a>
+                            <a class="menu-item" href="/members" title="View a list with all the activated user accounts">Members</a>
+                            <a class="menu-item menu-donate" href="/support" title="Give us money to keep the site (and other services) up and running">Support us</a>
                         {% endif %}
                     </div>
                     <div class="menu-ucp" id="navMenuUser">
                         <!-- User menu, displayed on right side of the bar. -->
                         {% if user.checklogin %}
-                            <a class="menu-item avatar" href="//{{ sakura.urls.main }}/u/{{ user.data.id }}" title="View and edit your own profile" style="background-image: url('//{{ sakura.urls.main }}/a/{{ user.data.id }}'); width: auto; color: {{ user.colour }}; font-weight: 700;">{{ user.data.username }}</a>
-                            <a class="menu-item" href="//{{ sakura.urls.main }}/messages" title="Read your private message">Messages</a>
-                            <a class="menu-item" href="//{{ sakura.urls.main }}/manage" title="Manage the site">Manage</a>
-                            <a class="menu-item" href="//{{ sakura.urls.main }}/settings" title="Change your settings">Settings</a>
-                            <a class="menu-item" href="//{{ sakura.urls.main }}/logout?mode=logout&amp;time={{ php.time }}&amp;session={{ php.sessionid }}&amp;redirect={{ sakura.currentpage }}" title="End your login session" id="headerLogoutLink">Logout</a>
+                            <a class="menu-item avatar" href="/u/{{ user.data.id }}" title="View and edit your own profile" style="background-image: url('/a/{{ user.data.id }}'); width: auto; color: {{ user.colour }}; font-weight: 700;">{{ user.data.username }}</a>
+                            <a class="menu-item" href="/messages" title="Read your private message">Messages</a>
+                            <a class="menu-item" href="/manage" title="Manage the site">Manage</a>
+                            <a class="menu-item" href="/settings" title="Change your settings">Settings</a>
+                            <a class="menu-item" href="/logout?mode=logout&amp;time={{ php.time }}&amp;session={{ php.sessionid }}&amp;redirect={{ sakura.currentpage }}" title="End your login session" id="headerLogoutLink">Logout</a>
                         {% else %}
                             {% if sakura.lockauth %}
                             <div class="menu-item" style="padding-left: 10px; padding-right: 10px;">Authentication is locked</div>
                             {% else %}
-                            <a class="menu-item" href="//{{ sakura.urls.main }}/authenticate" title="Login to Flashii">Login or Register</a>
+                            <a class="menu-item" href="/authenticate" title="Login to Flashii">Login or Register</a>
                             {% endif %}
                         {% endif %}
                     </div>

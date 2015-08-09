@@ -20,8 +20,8 @@ $disqus_data = [
     $disqus_user['id'],
     $disqus_user['username'],
     $disqus_user['email'],
-    'http://'. Configuration::getLocalConfig('urls', 'main') .'/a/'. $disqus_user['id'],
-    'http://'. Configuration::getLocalConfig('urls', 'main') .'/u/'. $disqus_user['id']
+    'http://'. Configuration::getLocalConfig('url_main') .'/a/'. $disqus_user['id'],
+    'http://'. Configuration::getLocalConfig('url_main') .'/u/'. $disqus_user['id']
 ];
 
 // Add page specific things
@@ -39,7 +39,7 @@ if(isset($_GET['xml'])) {
     // Meta data attributes
     $metaData = [
         'title'         => ($_FEED_TITLE = Configuration::getConfig('sitename')) .' News',
-        'link'          => ($_FEED_URL = 'http://'. Configuration::getLocalConfig('urls', 'main')),
+        'link'          => ($_FEED_URL = 'http://'. Configuration::getLocalConfig('url_main')),
         'description'   => 'News about '. $_FEED_TITLE,
         'language'      => 'en-gb',
         'webMaster'     => Users::getUser(1)['email'] .' ('. $_FEED_TITLE .' Webmaster)',

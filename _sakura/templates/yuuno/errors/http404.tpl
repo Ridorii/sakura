@@ -7,8 +7,8 @@
 	</head>
 	<body>
 		<audio autoplay="">
-			<source src="//{{ sakura.urls.content }}/sounds/notfound.ogg" type="audio/ogg" />
-			<source src="//{{ sakura.urls.content }}/sounds/notfound.mp3" type="audio/mp3" />
+			<source src="{{ sakura.content_path }}/sounds/notfound.ogg" type="audio/ogg" />
+			<source src="{{ sakura.content_path }}/sounds/notfound.mp3" type="audio/mp3" />
 		</audio>
 		<div id="wrap">
 			<h1>

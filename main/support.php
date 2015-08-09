@@ -55,7 +55,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
                     $itemName = 'Flashii Tenshi - '. (string)$_POST['months'] .' month'. ((int)$_POST['months'] == 1 ? '' : 's');
 
                     // Attempt to create a transaction
-                    if($transaction = Payments::createTransaction($total, $itemName, 'Flashii Tenshi Purchase', 'http://'. Configuration::getLocalConfig('urls', 'main') .'/support')) {
+                    if($transaction = Payments::createTransaction($total, $itemName, 'Flashii Tenshi Purchase', 'http://'. Configuration::getLocalConfig('url_main') .'/support')) {
 
                         // Store the amount of months in the global session array
                         $_SESSION['premiumMonths'] = (int)$_POST['months'];

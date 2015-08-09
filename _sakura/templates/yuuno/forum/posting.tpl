@@ -25,7 +25,7 @@
             <hr class="default" />
             <div class="posting-emotes">
                 {% for emoticon in posting.emoticons %}
-                    <img src="//{{ sakura.urls.content }}/{{ emoticon.emote_path }}" alt="{{ emoticon.emote_string }}" title="{{ emoticon.emote_string }}" />
+                    <img src="{{ emoticon.emote_path }}" alt="{{ emoticon.emote_string }}" title="{{ emoticon.emote_string }}" />
                 {% endfor %}
             </div>
             <hr class="default" />

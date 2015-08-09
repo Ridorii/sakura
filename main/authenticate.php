@@ -313,18 +313,14 @@ $renderData['page'] = [
     'title' => 'Authentication'
 ];
 $renderData['auth'] = [
-    'redirect' => (
-        isset($_REQUEST['chat']) ?
-        '//'. Configuration::getLocalConfig('urls', 'chat') :
-        (
-            isset($_SERVER['HTTP_REFERER']) ?
-            $_SERVER['HTTP_REFERER'] :
-            '/'
-        )
-    ),
+
+    'redirect' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/',
     'blockRegister' => [
+
         'do' => false
+        
     ]
+
 ];
 
 // Check if the user is already logged in

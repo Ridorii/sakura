@@ -66,12 +66,14 @@ if(!defined('SAKURA_NO_TPL')) {
             'vlabel'            => SAKURA_VLABEL,
             'vcolour'           => SAKURA_COLOUR,
             'stable'            => SAKURA_STABLE,
-            'urls'              => Configuration::getLocalConfig('urls'),
+            'url_main'          => Configuration::getConfig('url_main'),
+            'url_api'           => Configuration::getConfig('url_api'),
+            'content_path'      => Configuration::getConfig('content_path'),
+            'resources'         => Configuration::getConfig('content_path') .'/data/'. strtolower(Templates::$_TPL),
             'charset'           => Configuration::getConfig('charset'),
             'currentpage'       => '//'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'],
             'recaptcha_public'  => Configuration::getConfig('recaptcha_public'),
             'recaptcha_enable'  => Configuration::getConfig('recaptcha'),
-            'resources'         => '//'. Configuration::getLocalConfig('urls')['content'] .'/data/'. strtolower(Templates::$_TPL),
             'disableregister'   => Configuration::getConfig('disable_registration'),
             'locksite'          => Configuration::getConfig('lock_site'),
             'locksitereason'    => Configuration::getConfig('lock_site_reason'),
@@ -89,7 +91,7 @@ if(!defined('SAKURA_NO_TPL')) {
             'maxusernamelength' => Configuration::getConfig('username_max_length'),
             'disqus_shortname'  => Configuration::getConfig('disqus_shortname'),
             'disqus_api_key'    => Configuration::getConfig('disqus_api_key'),
-            'date_format'       => Configuration::getConfig('date_format')       
+            'date_format'       => Configuration::getConfig('date_format')
 
         ],
 

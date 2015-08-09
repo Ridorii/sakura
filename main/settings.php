@@ -171,8 +171,8 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 sprintf($notifStrings[$action[1]][0], $user['username']),
                 $notifStrings[$action[1]][1],
                 60000,
-                '//'. Configuration::getLocalConfig('urls', 'main') .'/a/'. $user['id'],
-                '//'. Configuration::getLocalConfig('urls', 'main') .'/u/'. $user['id'],
+                '//'. Configuration::getLocalConfig('url_main') .'/a/'. $user['id'],
+                '//'. Configuration::getLocalConfig('url_main') .'/u/'. $user['id'],
                 '1'
             );
 

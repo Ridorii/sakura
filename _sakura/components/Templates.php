@@ -52,7 +52,7 @@ class Templates {
 
         // Enable caching
         if(Configuration::getConfig('enable_tpl_cache'))
-            $twigEnv['cache'] = ROOT .'_sakura/cache';
+            $twigEnv['cache'] = ROOT .'cache';
 
         // And now actually initialise the templating engine
         self::$_ENG = new Twig_Environment($twigLoader, $twigEnv);

@@ -3,13 +3,12 @@
     <h1 class="stylised" style="line-height: 1.8em; text-align: center;">Authentication is currently disallowed, try again later.</h1>
     {% else %}
     <div class="loginPage">
-        {% if auth.redirect == sakura.urls.chat %}<h1 class="stylised" style="line-height: 1.8em; text-align: center;">You need to be logged in to use the chat.</h1>{% endif %}
         <div class="loginCont">
             <div class="loginForm">
                 <div class="head">
                     Login to {{ sakura.sitename }}
                 </div>
-                <form method="post" action="//{{ sakura.urls.main }}/authenticate" id="loginForm">
+                <form method="post" action="/authenticate" id="loginForm">
                     <input type="hidden" name="redirect" value="{{ auth.redirect }}" />
                     <input type="hidden" name="session" value="{{ php.sessionid }}" />
                     <input type="hidden" name="time" value="{{ php.time }}" />
@@ -38,7 +37,7 @@
                 <div class="head">
                     Lost Password
                 </div>
-                <form method="post" action="//{{ sakura.urls.main }}/authenticate" id="passwordForm">
+                <form method="post" action="/authenticate" id="passwordForm">
                     <input type="hidden" name="mode" value="forgotpassword" />
                     <input type="hidden" name="session" value="{{ php.sessionid }}" />
                     <input type="hidden" name="time" value="{{ php.time }}" />
@@ -69,7 +68,7 @@
                     Register on {{ sakura.sitename }}
                 </div>
                 {% if not sakura.disableregister %}
-                <form id="registerForm" method="post" action="//{{ sakura.urls.main }}/authenticate" style="display:{% if auth.blockRegister.do %}none{% else %}block{% endif %};">
+                <form id="registerForm" method="post" action="/authenticate" style="display:{% if auth.blockRegister.do %}none{% else %}block{% endif %};">
                     <input type="hidden" name="mode" value="register" />
                     <input type="hidden" name="session" value="{{ php.sessionid }}" />
                     <input type="hidden" name="time" value="{{ php.time }}" />
@@ -162,7 +161,7 @@
                 <div class="head">
                     Resend Activation E-mail
                 </div>
-                <form method="post" action="//{{ sakura.urls.main }}/authenticate" id="resendForm">
+                <form method="post" action="/authenticate" id="resendForm">
                     <input type="hidden" name="mode" value="resendactivemail" />
                     <input type="hidden" name="session" value="{{ php.sessionid }}" />
                     <input type="hidden" name="time" value="{{ php.time }}" />

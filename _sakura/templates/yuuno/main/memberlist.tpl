@@ -63,7 +63,7 @@
                             {% if not user.usertitle %}<i>{{ page.ranks[user.rank_main].title }}</i>{% else %}{{ user.usertitle }}{% endif %}
                         </td>
                         <td>
-                            <img src="//{{ sakura.urls.content }}/images/flags/{% if user.country|lower == 'eu' %}europeanunion{% else %}{{ user.country|lower }}{% endif %}.png" alt="{% if user.country|lower == 'eu' %}?{% else %}{{ user.country }}{% endif %}" />
+                            <img src="{{ sakura.content_path }}/images/flags/{% if user.country|lower == 'eu' %}europeanunion{% else %}{{ user.country|lower }}{% endif %}.png" alt="{% if user.country|lower == 'eu' %}?{% else %}{{ user.country }}{% endif %}" />
                         </td>
                     </tr>
                 </tbody>
@@ -73,7 +73,7 @@
                 {% for user in page.users[page.page] %}
                     <a href="/u/{{ user.id }}">{# These comment tags are here to prevent the link extending too far
                         #}<div class="userBox" id="u{{ user.id }}">{#
-                            #}<img src="//{{ sakura.urls.content }}/pixel.png" alt="{{ user.username }}"  style="background: url('/a/{{ user.id }}') no-repeat center / contain;" />{#
+                            #}<img src="{{ sakura.content_path }}/pixel.png" alt="{{ user.username }}"  style="background: url('/a/{{ user.id }}') no-repeat center / contain;" />{#
                             #}<span class="userBoxUserName"{% if page.sort == page.sorts[1] %} style="color: {{ page.ranks[user.rank_main].colour }};"{% endif %}>{#
                                 #}{{ user.username }}{#
                             #}</span>{#

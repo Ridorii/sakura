@@ -138,9 +138,9 @@ function notifyUI(content) {
         var soundOGG    = document.createElement('source');
 
         // Assign the proper attributes to the sources
-        soundMP3.setAttribute('src',    '//' + sakuraVars.urls.content + '/sounds/notify.mp3');
+        soundMP3.setAttribute('src',    '//' + sakuraVars.content_path + '/sounds/notify.mp3');
         soundMP3.setAttribute('type',   'audio/mp3');
-        soundOGG.setAttribute('src',    '//' + sakuraVars.urls.content + '/sounds/notify.ogg');
+        soundOGG.setAttribute('src',    '//' + sakuraVars.content_path + '/sounds/notify.ogg');
         soundOGG.setAttribute('type',   'audio/ogg');
 
         // Append the children
@@ -204,7 +204,7 @@ function notifyRequest(session) {
 
     // Create XMLHttpRequest and notifyURL
     var notificationWatcher = new XMLHttpRequest();
-    var notifyURL           = '//' + sakuraVars.urls.main + '/settings.php?request-notifications=true&time=' + epochTime() + '&session=' + session;
+    var notifyURL           = '//' + sakuraVars.url_main + '/settings.php?request-notifications=true&time=' + epochTime() + '&session=' + session;
 
     // Wait for the ready state to change
     notificationWatcher.onreadystatechange = function() {

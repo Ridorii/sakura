@@ -47,7 +47,7 @@
             var disqus_shortname = '{{ sakura.disqus_shortname }}';
             var disqus_identifier = 'news_{{ newsPosts[0].id }}';
             var disqus_title = '{{ newsPosts[0].title }}';
-            var disqus_url = 'http://{{ sakura.urls.main }}/news/{{ newsPosts[0].id }}';
+            var disqus_url = 'http://{{ sakura.url_main }}/news/{{ newsPosts[0].id }}';
 
             (function() {
                 var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
