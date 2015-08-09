@@ -42,13 +42,12 @@ local.properties
 
 errors.log
 _sakura/config/config.ini
-content/images/user/*
-!content/images/user/.htaccess
 BingSiteAuth.xml
 google*.html
-main/logs/*
-_sakura/cache/*
-!_sakura/cache/.htaccess
+cache/*
+!cache/.htaccess
+uploads/*
+!uploads/.htaccess
 
 
 #################
