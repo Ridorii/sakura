@@ -116,24 +116,24 @@ class Users {
         $user = self::getUser($uid);
 
         // Validate password
-        if($user['password_algo'] == 'nologin') { // Disable logging in to an account
+        switch($user['password_algo']) {
 
-            return [0, 'NO_LOGIN'];
+            // Abyssing
+            case 'nologin':
+                return [0, 'NO_LOGIN'];
 
-        } elseif($user['password_algo'] == 'legacy') { // Shitty legacy method of sha512(strrev(sha512()))
+            // Default hashing method
+            default:
+                if(!Hashing::validate_password($password, [
+                    $user['password_algo'],
+                    $user['password_iter'],
+                    $user['password_salt'],
+                    $user['password_hash']
+                ])) {
 
-            if(Main::legacyPasswordHash($password) != $user['password_hash'])
-                return [0, 'INCORRECT_PASSWORD'];
+                    return [0, 'INCORRECT_PASSWORD', $user['password_chan']];
 
-        } else { // PBKDF2 hashing
-
-            if(!Hashing::validate_password($password, [
-                $user['password_algo'],
-                $user['password_iter'],
-                $user['password_salt'],
-                $user['password_hash']
-            ]))
-                return [0, 'INCORRECT_PASSWORD', $user['password_chan']];
+                }
 
         }
 

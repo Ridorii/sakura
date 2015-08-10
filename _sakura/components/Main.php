@@ -260,13 +260,6 @@ class Main {
 
     }
 
-    // Legacy password hashing to be able to validate passwords from users on the old backend.
-    public static function legacyPasswordHash($data) {
-
-        return hash('sha512', strrev(hash('sha512', $data)));
-
-    }
-
     // Cleaning strings
     public static function cleanString($string, $lower = false, $nospecial = false) {
 

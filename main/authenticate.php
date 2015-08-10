@@ -53,7 +53,7 @@ if(isset($_REQUEST['mode'])) {
     // Login check
     if(Users::checkLogin()) {
 
-        if(!in_array($_REQUEST['mode'], ['logout', 'legacypw'])) {
+        if(!in_array($_REQUEST['mode'], ['logout'])) {
             $continue = false;
 
             // Add page specific things
@@ -82,32 +82,6 @@ if(isset($_REQUEST['mode'])) {
                     'redirect'  => ($logout ? $_REQUEST['redirect'] : '/authenticate'),
                     'message'   => $logout ? 'You are now logged out.' : 'An unknown error occurred.',
                     'success'   => $logout ? 1 : 0
-                ];
-
-                break;
-
-            case 'legacypw':
-
-                // Attempt change
-                $legacypass = Users::changeLegacy($_REQUEST['oldpw'], $_REQUEST['newpw'], $_REQUEST['verpw']);
-
-                // Array containing "human understandable" messages
-                $messages = [
-                    'USER_NOT_LOGIN'        => 'What are you doing, you\'re not even logged in. GO AWAY!',
-                    'INCORRECT_PASSWORD'    => 'The password you entered was invalid.',
-                    'NOT_ALLOWED'           => 'Your account does not have the required permissions to change your password.',
-                    'NO_LOGIN'              => 'Logging into this account is disabled.',
-                    'PASS_TOO_SHIT'         => 'Your password is too weak, try adding some special characters.',
-                    'PASS_NOT_MATCH'        => 'Passwords do not match.',
-                    'SUCCESS'               => 'Successfully changed your password, you may now continue.'
-                ];
-
-                // Add page specific things
-                $renderData['page'] = [
-                    'title'     => 'Change Password',
-                    'redirect'  => '/',
-                    'message'   => $messages[$legacypass[1]],
-                    'success'   => $legacypass[0]
                 ];
 
                 break;
@@ -200,14 +174,13 @@ if(isset($_REQUEST['mode'])) {
                     'INCORRECT_PASSWORD'    => 'The password you entered was invalid.',
                     'NOT_ALLOWED'           => 'Your account does not have the required permissions to log in.',
                     'NO_LOGIN'              => 'Logging into this account is disabled.',
-                    'LEGACY_SUCCESS'        => 'Login successful! Taking you to the password changing page...',
                     'LOGIN_SUCESS'          => 'Login successful!'
                 ];
 
                 // Add page specific things
                 $renderData['page'] = [
                     'title'     => 'Login',
-                    'redirect'  => ($login[1] == 'LEGACY_SUCCESS' ? '/authenticate?legacy=true' : ($login[0] ? $_REQUEST['redirect'] : '/authenticate')),
+                    'redirect'  => $login[0] ? $_REQUEST['redirect'] : '/authenticate',
                     'message'   => $messages[$login[1]],
                     'success'   => $login[0]
                 ];
@@ -325,17 +298,6 @@ $renderData['auth'] = [
 
 // Check if the user is already logged in
 if(Users::checkLogin()) {
-
-    // If password forgot things are set display password forget thing
-    if(isset($_REQUEST['legacy']) && $_REQUEST['legacy'] && Users::getUser(Session::$userId)['password_algo'] == 'legacy') {
-
-        $renderData['page']['title']        = 'Changing Password';
-        $renderData['auth']['changingPass'] = true;
-
-        print Templates::render('main/legacypasswordchange.tpl', $renderData);
-        exit;
-
-    }
 
     // Add page specific things
     $renderData['page'] = [

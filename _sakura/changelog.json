@@ -1683,6 +1683,10 @@
             {
                 "type":     "FIX",
                 "change":   "Attempt to fix error while trying to get the old avatar name."
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed legacy password hash support, if your account still uses this method request a password reset email."
             }
 
         ]
