@@ -39,7 +39,8 @@
                 "20150730",
                 "20150731",
                 "20150807",
-                "20150809"
+                "20150809",
+                "20150810"
 
             ]
 
@@ -1673,6 +1674,15 @@
             {
                 "type":     "FIX",
                 "change":   "Fixed references to old urls variable."
+            }
+
+        ],
+
+        "20150810": [
+
+            {
+                "type":     "FIX",
+                "change":   "Attempt to fix error while trying to get the old avatar name."
             }
 
         ]

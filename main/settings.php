@@ -245,7 +245,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 // Set path variables
                 $filepath = ROOT . Configuration::getConfig('user_uploads') .'/';
                 $filename = $filepath .'avatar_'. Session::$userId;
-                $currfile = !empty($_AVA = Users::getUser(Session::$userId)['userData']['userAvatar']) ? $_AVA : null;
+                $currfile = isset(Users::getUser(Session::$userId)['userData']['userAvatar']) && !empty($_AVA = Users::getUser(Session::$userId)['userData']['userAvatar']) ? $_AVA : null;
 
                 // Check if $_FILES is set
                 if(!isset($_FILES['avatar']) && empty($_FILES['avatar'])) {
