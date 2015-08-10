@@ -340,61 +340,6 @@ class Users {
 
     }
 
-    // [Flashwave 2015-04-25] Prepare for 5 million password changing functions
-
-    // Change legacy passwords after logging in
-    public static function changeLegacy($oldpass, $newpass, $verpass) {
-
-        // Check if user is logged in because I just know someone is going to meme around it
-        if(!self::checkLogin())
-            return [0, 'USER_NOT_LOGIN'];
-
-        // Get user data
-        $user = Users::getUser(Session::$userId);
-
-        // Check if the user has the required privs to log in
-        if(Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
-            return [0, 'NOT_ALLOWED'];
-
-        // Check if the account is disabled
-        if('nologin' == $user['password_algo'])
-            return [0, 'NO_LOGIN'];
-
-        // Check if old pass is correct
-        if(Main::legacyPasswordHash($oldpass) != $user['password_hash'])
-            return [0, 'INCORRECT_PASSWORD'];
-
-        // Check password entropy
-        if(Main::pwdEntropy($newpass) < Configuration::getConfig('min_entropy'))
-            return [0, 'PASS_TOO_SHIT'];
-
-        // Passwords do not match
-        if($newpass != $verpass)
-            return [0, 'PASS_NOT_MATCH'];
-
-        // Hash the password
-        $password   = Hashing::create_hash($newpass);
-        $time       = time();
-
-        // Update the user
-        Database::update('users', [
-            [
-                'password_hash' => $password[3],
-                'password_salt' => $password[2],
-                'password_algo' => $password[0],
-                'password_iter' => $password[1],
-                'password_chan' => $time
-            ],
-            [
-                'id' => [Session::$userId, '=']
-            ]
-        ]);
-
-        // Return success
-        return [1, 'SUCCESS'];
-
-    }
-
     // Reset password with key
     public static function resetPassword($verk, $uid, $newpass, $verpass) {
 
@@ -914,39 +859,6 @@ class Users {
                 'id' => [$id, '=']
             ]
         ]);
-
-    }
-
-    // Getting the profile page of a user
-    public static function getProfilePage($id, $inputIsData = false) {
-
-        // Check if the input is the data
-        if($inputIsData) {
-
-            // Reassign data
-            $data = $id;
-
-        } else {
-
-            // Get user data
-            $user = self::getUser($id);
-
-            // Decode the userData json
-            $data = json_decode($user['userData'], true);
-
-        }
-
-        // Check if the profilePage key exists
-        if(!array_key_exists('profilePage', $data))
-            return false;
-
-        // TODO: implement BBcodes
-
-        // Parse the markdown
-        $profilePage = Main::mdParse(base64_decode($data['profilePage'][0]));
-
-        // Return the parsed profile page
-        return $profilePage;
 
     }
 

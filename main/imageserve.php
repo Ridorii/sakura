@@ -140,6 +140,6 @@ if(isset($_GET['m'])) {
 
 $serveImage = file_get_contents($serveImage);
 
-header('Content-Type: ' .getimagesizefromstring($serveImage)['mime']);
+header('Content-Type: '. getimagesizefromstring($serveImage)['mime']);
 
 print $serveImage;

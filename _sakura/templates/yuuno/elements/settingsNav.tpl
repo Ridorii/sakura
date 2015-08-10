@@ -18,7 +18,7 @@
     <div>Aesthetics</div>
     <a href="/settings/avatar">Avatar</a>
     <a href="/settings/background">Background</a>
-    <a href="/settings/userpage">Profile Page</a>
+    <a href="/settings/userpage">Userpage</a>
     <div>Account</div>
     <a href="/settings/email">E-mail Address</a>
     <a href="/settings/username">Username</a>

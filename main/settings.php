@@ -239,21 +239,40 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
         // Switch to the correct mode
         switch($_POST['mode']) {
 
-            // Avatar
+            // Avatar & Background
             case 'avatar':
+            case 'background':
+
+                // Assign $_POST['mode'] to a $mode variable because I ain't typin that more than once
+                $mode = $_POST['mode'];
+
+                // Assign the correct userData key to a variable and correct title
+                switch($mode) {
+
+                    case 'background':
+                        $userDataKey    = 'profileBackground';
+                        $msgTitle       = 'Background';
+                        break;
+
+                    case 'avatar':
+                    default:
+                        $userDataKey    = 'userAvatar';
+                        $msgTitle       = 'Avatar';
+
+                }
 
                 // Set path variables
                 $filepath = ROOT . Configuration::getConfig('user_uploads') .'/';
-                $filename = $filepath .'avatar_'. Session::$userId;
-                $currfile = isset(Users::getUser(Session::$userId)['userData']['userAvatar']) && !empty($_AVA = Users::getUser(Session::$userId)['userData']['userAvatar']) ? $_AVA : null;
+                $filename = $filepath . $mode .'_'. Session::$userId;
+                $currfile = isset(Users::getUser(Session::$userId)['userData'][$userDataKey]) && !empty($_OLDFILE = Users::getUser(Session::$userId)['userData'][$userDataKey]) ? $_OLDFILE : null;
 
                 // Check if $_FILES is set
-                if(!isset($_FILES['avatar']) && empty($_FILES['avatar'])) {
+                if(!isset($_FILES[$mode]) && empty($_FILES[$mode])) {
 
                     // Set render data
                     $renderData['page'] = [
 
-                        'title'     => 'Avatar',
+                        'title'     => $msgTitle,
                         'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
                         'message'   => 'No file was uploaded.',
                         'success'   => 0
@@ -265,10 +284,10 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 }
 
                 // Check if the upload went properly
-                if($_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
+                if($_FILES[$mode]['error'] !== UPLOAD_ERR_OK) {
 
                     // Get the error in text
-                    switch($_FILES['avatar']['error']) {
+                    switch($_FILES[$mode]['error']) {
 
                         case UPLOAD_ERR_INI_SIZE:
                         case UPLOAD_ERR_FORM_SIZE:
@@ -295,7 +314,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                     // Set render data
                     $renderData['page'] = [
 
-                        'title'     => 'Avatar',
+                        'title'     => $msgTitle,
                         'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
                         'message'   => $msg,
                         'success'   => 0
@@ -307,7 +326,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 }
 
                 // Get the meta data
-                $metadata = getimagesize($_FILES['avatar']['tmp_name']);
+                $metadata = getimagesize($_FILES[$mode]['tmp_name']);
 
                 // Check if the image is actually an image
                 if($metadata == false) {
@@ -315,7 +334,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                     // Set render data
                     $renderData['page'] = [
 
-                        'title'     => 'Avatar',
+                        'title'     => $msgTitle,
                         'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
                         'message'   => 'Uploaded file is not an image.',
                         'success'   => 0
@@ -332,7 +351,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                     // Set render data
                     $renderData['page'] = [
 
-                        'title'     => 'Avatar',
+                        'title'     => $msgTitle,
                         'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
                         'message'   => 'This filetype is not allowed.',
                         'success'   => 0
@@ -344,12 +363,12 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 }
 
                 // Check if the image is too large
-                if(($metadata[0] > Configuration::getConfig('avatar_max_width') || $metadata[1] > Configuration::getConfig('avatar_max_height'))) {
+                if(($metadata[0] > Configuration::getConfig($mode .'_max_width') || $metadata[1] > Configuration::getConfig($mode .'_max_height'))) {
 
                     // Set render data
                     $renderData['page'] = [
 
-                        'title'     => 'Avatar',
+                        'title'     => $msgTitle,
                         'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
                         'message'   => 'The resolution of this picture is too big.',
                         'success'   => 0
@@ -361,12 +380,12 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 }
 
                 // Check if the image is too small
-                if(($metadata[0] < Configuration::getConfig('avatar_min_width') || $metadata[1] < Configuration::getConfig('avatar_min_height'))) {
+                if(($metadata[0] < Configuration::getConfig($mode .'_min_width') || $metadata[1] < Configuration::getConfig($mode .'_min_height'))) {
 
                     // Set render data
                     $renderData['page'] = [
 
-                        'title'     => 'Avatar',
+                        'title'     => $msgTitle,
                         'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
                         'message'   => 'The resolution of this picture is too small.',
                         'success'   => 0
@@ -378,14 +397,14 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 }
 
                 // Check if the file is too large
-                if((filesize($_FILES['avatar']['tmp_name']) > Configuration::getConfig('avatar_max_fsize'))) {
+                if((filesize($_FILES[$mode]['tmp_name']) > Configuration::getConfig($mode .'_max_fsize'))) {
 
                     // Set render data
                     $renderData['page'] = [
 
-                        'title'     => 'Avatar',
+                        'title'     => $msgTitle,
                         'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
-                        'message'   => 'The filesize of this picture is too large.',
+                        'message'   => 'The filesize of this file is too large.',
                         'success'   => 0
 
                     ];
@@ -404,13 +423,13 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 // Append extension to filename
                 $filename .= image_type_to_extension($metadata[2]);
 
-                if(!move_uploaded_file($_FILES['avatar']['tmp_name'], $filename)) {
+                if(!move_uploaded_file($_FILES[$mode]['tmp_name'], $filename)) {
 
 
                     // Set render data
                     $renderData['page'] = [
 
-                        'title'     => 'Avatar',
+                        'title'     => $msgTitle,
                         'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
                         'message'   => 'Something went wrong, please try again.',
                         'success'   => 0
@@ -420,14 +439,14 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 }
 
                 // Update database
-                Users::updateUserDataField(Session::$userId, ['userAvatar' => basename($filename)]);
+                Users::updateUserDataField(Session::$userId, [$userDataKey => basename($filename)]);
 
                 // Set render data
                 $renderData['page'] = [
 
-                    'title'     => 'Avatar',
+                    'title'     => $msgTitle,
                     'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
-                    'message'   => 'Updated your avatar!',
+                    'message'   => 'Updated your '. strtolower($msgTitle) .'!',
                     'success'   => 1
 
                 ];
@@ -482,6 +501,27 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                     'title'     => 'Profile update',
                     'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
                     'message'   => 'Your profile has been updated!',
+                    'success'   => 1
+
+                ];
+
+                break;
+
+            // Userpage
+            case 'userpage':
+
+                // Base64 encode the userpage
+                $userPage = base64_encode($_POST['userpage']);
+
+                // Update database
+                Users::updateUserDataField(Session::$userId, ['userPage' => [$userPage, 0]]);
+
+                // Set render data
+                $renderData['page'] = [
+
+                    'title'     => 'Userpage',
+                    'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                    'message'   => 'Your userpage has been updated!',
                     'success'   => 1
 
                 ];
@@ -567,16 +607,22 @@ if(Users::checkLogin()) {
             ];
             break;
 
-        // Avatar sizes
+        // Avatar and background sizes
         case 'avatar':
-            $renderData['avatar'] = [
-                'max_width'     => Configuration::getConfig('avatar_max_width'),
-                'max_height'    => Configuration::getConfig('avatar_max_height'),
-                'min_width'     => Configuration::getConfig('avatar_min_width'),
-                'min_height'    => Configuration::getConfig('avatar_min_height'),
-                'max_size'      => Configuration::getConfig('avatar_max_fsize'),
-                'max_size_view' => Main::getByteSymbol(Configuration::getConfig('avatar_max_fsize'))
+        case 'background':
+            $renderData[$currentPage] = [
+                'max_width'     => Configuration::getConfig($currentPage .'_max_width'),
+                'max_height'    => Configuration::getConfig($currentPage .'_max_height'),
+                'min_width'     => Configuration::getConfig($currentPage .'_min_width'),
+                'min_height'    => Configuration::getConfig($currentPage .'_min_height'),
+                'max_size'      => Configuration::getConfig($currentPage .'_max_fsize'),
+                'max_size_view' => Main::getByteSymbol(Configuration::getConfig($currentPage .'_max_fsize'))
             ];
+            break;
+
+        // Profile
+        case 'userpage':
+            
             break;
 
         // Profile

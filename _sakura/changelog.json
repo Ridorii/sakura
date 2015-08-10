@@ -1941,6 +1941,21 @@
                 "type":     "FIX",
                 "change":   "Fixed user actions showing up for deleted users.",
                 "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added background uploading.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed the function for changing password using a legacy pass.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed old userpages code.",
+                "user":     "Flashwave"
             }
 
         ]

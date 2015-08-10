@@ -13,7 +13,7 @@
     {% else %}
     <div id="userBackground"></div>
 	<div class="content profile">
-        <div class="{% if profile.profilePage|length > 1 %}content-right {% endif %}content-column">
+        <div class="{% if profile.userPage|length > 1 %}content-right {% endif %}content-column">
             <div style="text-align: center;">
                 <img src="/a/{{ profile.user.id }}" alt="{{ profile.user.username }}'s Avatar" class="default-avatar-setting" style="box-shadow: 0 3px 7px #{% if profile.online %}484{% else %}844{% endif %};" /><br />
                 {% if profile.user.rank_main > 1 and profile.ban_check|length < 1 %}
@@ -87,8 +87,8 @@
                 {% endif %}
             </div>
         </div>
-        <div class="content-left content-column markdown{% if profile.profilePage|length < 1 %} hidden{% endif %}">
-            {{ profile.profilePage|raw }}
+        <div class="content-left content-column markdown{% if profile.userPage|length < 1 %} hidden{% endif %}">
+            {{ profile.userPage|raw }}
         </div>
         <div class="clear"></div>
     </div>

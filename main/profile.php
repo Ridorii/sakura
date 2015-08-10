@@ -21,7 +21,7 @@ if(isset($_GET['u'])) {
         'country'       => Main::getCountryName($_PROFILE_USER_DATA['country']),
         'is_premium'    => Users::checkUserPremium($_PROFILE_USER_DATA['id'])[0],
         'is_online'     => Users::checkUserOnline($_PROFILE_USER_DATA['id']),
-        'profilePage'   => Users::getProfilePage($_PROFILE_USER_DATA['userData'], true),
+        'userPage'      => null,
         'fields'        => Users::getUserProfileFields($_PROFILE_USER_DATA['userData'], true),
         'warnings'      => Users::getWarnings($_PROFILE_USER_DATA['id']),
         'friend'        => Users::checkFriend($_PROFILE_USER_DATA['id']),
