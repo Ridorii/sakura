@@ -6,7 +6,7 @@
 
             "colour": "#6C3082",
 
-            "builds": [
+            "revisions": [
 
                 "20150508",
                 "20150509",
@@ -50,7 +50,7 @@
 
             "colour": "#DF73FF",
 
-            "builds": [
+            "revisions": [
 
                 "20150427",
                 "20150427.1",
@@ -82,7 +82,7 @@
 
             "colour": "#4EC9B0",
 
-            "builds": [
+            "revisions": [
 
                 "20150221",
                 "20150222",
@@ -1687,6 +1687,10 @@
             {
                 "type":     "REM",
                 "change":   "Removed legacy password hash support, if your account still uses this method request a password reset email."
+            },
+            {
+                "type":     "FIX",
+                "change":   "Use \"Revision\" instead of \"Build\" on the changelog."
             }
 
         ]

@@ -20,13 +20,13 @@ $changelog      = array();
 foreach($changelogFile['versions'] as $name => $data) {
     
     // Reverse the array
-    $data['builds'] = array_reverse($data['builds'], true);
+    $data['revisions'] = array_reverse($data['revisions'], true);
 
-    foreach($data['builds'] as $build) {
+    foreach($data['revisions'] as $rev) {
 
-        $changelog[$build]['name']      = $name;
-        $changelog[$build]['colour']    = $data['colour'];
-        $changelog[$build]['changes']   = array();
+        $changelog[$rev]['name']      = $name;
+        $changelog[$rev]['colour']    = $data['colour'];
+        $changelog[$rev]['changes']   = array();
 
     }
 
@@ -57,15 +57,15 @@ if(isset($_REQUEST['getjson'])) {
 $changelogHTML = null;
 
 // Format HTML
-foreach($changelog as $build => $buildData) {
+foreach($changelog as $revisionId => $revisionData) {
 
-    $changelogHTML .= '<div class="release" id="b'. $build .'">';
+    $changelogHTML .= '<div class="release" id="r'. $revisionId .'">';
 
-    $changelogHTML .= '<a href="#b'. $build .'" class="title" style="color: '. $buildData['colour'] .';">Build '. $build .' ('. $buildData['name'] .')</a>';
+    $changelogHTML .= '<a href="#r'. $revisionId .'" class="title" style="color: '. $revisionData['colour'] .';">Revision '. $revisionId .' ('. $revisionData['name'] .')</a>';
 
-    foreach($buildData['changes'] as $id => $changeData) {
+    foreach($revisionData['changes'] as $id => $changeData) {
 
-        $changelogHTML .= '<div id="b'. $build .'c'. $id .'">';
+        $changelogHTML .= '<div id="r'. $revisionId .'c'. $id .'">';
 
         switch($changeData['type']) {
 
