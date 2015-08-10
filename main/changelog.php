@@ -94,6 +94,10 @@ foreach($changelog as $revisionId => $revisionData) {
         $changelogHTML .= $changeData['change'];
         $changelogHTML .= '</span>';
 
+        $changelogHTML .= '<a class="changeuser" target="_blank" href="http://bitbucket.org/'. strtolower($changeData['user']) .'">';
+        $changelogHTML .= $changeData['user'];
+        $changelogHTML .= '</a>';
+
         $changelogHTML .= '</div>';
 
     }

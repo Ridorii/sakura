@@ -76,6 +76,11 @@
                 padding: 0 5px;
             }
 
+            .release > div > a.changeuser {
+                float: right;
+                margin-right: 10px;
+            }
+
             .release > div {
                 border-bottom: 1px #222 solid;
             }
