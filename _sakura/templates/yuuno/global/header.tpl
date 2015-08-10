@@ -49,118 +49,57 @@
 
             };
 
-        {% if not user.checklogin and not sakura.lockauth %}
-
-            // Setting the shit so clicking the login link doesn't redirect to /login
-            function initHeaderLoginForm() {
-
-                var headerLoginForm = document.getElementById('headerLoginForm');
-                var createInput     = document.createElement('input');
-                var submit          = headerLoginForm.querySelector('[type="submit"]');
-
-                createInput.setAttribute('name', 'ajax');
-                createInput.setAttribute('value', 'true');
-                createInput.setAttribute('type', 'hidden');
-                headerLoginForm.appendChild(createInput);
-                
-                submit.setAttribute('type', 'button');
-                submit.setAttribute('onclick', 'submitPost(\'headerLoginForm\', true, \'Logging in...\');');
-
-            }
-
-        {% elseif user.checklogin %}
-
-            // Prepare header logout stuff
-            function initHeaderLoginForm() {
-
-                var headerLogoutLink = document.getElementById('headerLogoutLink');
-
-                headerLogoutLink.setAttribute('href', 'javascript:void(0);');
-                headerLogoutLink.setAttribute('onclick', 'doHeaderLogout();');
-
-            }
-
-            function doHeaderLogout() {
-
-                generateForm("headerLogoutForm", {
-                    "class":    "hidden",
-                    "method":   "post",
-                    "action":   "//{{ sakura.url_main }}/logout"
-                },
-                {
-                    "mode":     "logout",
-                    "ajax":     "true",
-                    "time":     "{{ php.time }}",
-                    "session":  "{{ php.sessionid }}",
-                    "redirect": "{{ sakura.currentpage }}"
-                }, "contentwrapper");
-
-                setTimeout(function(){
-                    submitPost("headerLogoutForm", true, "Logging out...")
-                }, 10);
-
-            }
-
-        {% endif %}
-
-        {% if php.self == '/profile.php' and user.checklogin and user.data.id != profile.user.id %}
-
-            // Prepare friend toggle
-            function initFriendToggle() {
-
-                var profileFriendToggle = document.getElementById('profileFriendToggle');
-
-                profileFriendToggle.setAttribute('href', 'javascript:void(0);');
-                profileFriendToggle.setAttribute('onclick', 'doFriendToggle();');
-
-            }
-
-            function doFriendToggle() {
-
-                generateForm("doFriendToggle", {
-                    "class":    "hidden",
-                    "method":   "post",
-                    "action":   "//{{ sakura.url_main }}/friends"
-                },
-                {
-                    "{% if profile.friend == 0 %}add{% else %}remove{% endif %}": "{{ profile.user.id }}",
-                    "ajax":     "true",
-                    "time":     "{{ php.time }}",
-                    "session":  "{{ php.sessionid }}",
-                    "redirect": "{{ sakura.currentpage }}"
-                }, "contentwrapper");
-
-                setTimeout(function(){
-                    submitPost("doFriendToggle", true, "{% if profile.friend == 0 %}Adding{% else %}Removing{% endif %} friend...")
-                }, 10);
-
-            }
-
-        {% endif %}
-
         // Space for things that need to happen onload
-        window.onload = function() {
+        window.addEventListener("load", function() {
 
             // Alter the go to top button
             var gotop = document.getElementById('gotop');
             gotop.setAttribute('href',      'javascript:void(0);');
             gotop.setAttribute('onclick',   'scrollToTop();');
 
-            // Login form under header and ajax logout
-            initHeaderLoginForm();
+            {% if user.checklogin %}
+            // Convert href to object in logout link
+            prepareAjaxLink('headerLogoutLink', 'submitPost', ', true, "Logging out..."');
+            {% elseif not sakura.lockauth and php.self != '/authenticate.php' %}
+            // Make the header login form dynamic
+            var headerLoginForm = document.getElementById('headerLoginForm');
+            var createInput     = document.createElement('input');
+            var submit          = headerLoginForm.querySelector('[type="submit"]');
+
+            createInput.setAttribute('name', 'ajax');
+            createInput.setAttribute('value', 'true');
+            createInput.setAttribute('type', 'hidden');
+            headerLoginForm.appendChild(createInput);
+            
+            submit.setAttribute('type', 'button');
+            submit.setAttribute('onclick', 'submitPost(\''+ headerLoginForm.action +'\', formToObject(\'headerLoginForm\'), true, \'Logging in...\');');
+            {% endif %}
 
             {% if user.checklogin %}
             // Make notification requests (there's a seperate one to make it happen before the first 60 seconds)
             notifyRequest('{{ php.sessionid }}');
-            setInterval(function(){notifyRequest('{{ php.sessionid }}');}, 60000);
+
+            // Create interval
+            setInterval(function() {
+                notifyRequest('{{ php.sessionid }}');
+            }, 60000);
             {% endif %}
 
             {% if php.self == '/profile.php' and user.checklogin and user.data.id != profile.user.id %}
-            initFriendToggle();
+            // Make friend button dynamic
+            prepareAjaxLink('profileFriendToggle', 'submitPost', ', true, "{% if profile.friend == 0 %}Adding{% else %}Removing{% endif %} friend..."');
+            {% endif %}
+
+            {% if php.self == '/viewtopic.php' and user.checklogin %}
+                var forumFriendToggles = document.querySelectorAll('.forum-friend-toggle');
+
+                for(var i in forumFriendToggles) {
+                    prepareAjaxLink(forumFriendToggles[i], 'submitPost', ', true, "Please wait..."');
+                }
             {% endif %}
 
             {% if php.self == '/authenticate.php' and not sakura.lockauth %}
-            // AJAX Form Submission            
+            // AJAX Form Submission
             var forms = {
                 {% if not auth.changingPass %}
                 "loginForm": 'Logging in...',
@@ -179,7 +118,7 @@
                 form.setAttribute('onkeydown', 'formEnterCatch(event, \''+ submit.id +'\');');
 
                 submit.setAttribute('href',     'javascript:void(0);');
-                submit.setAttribute('onclick',  'submitPost(\''+ i +'\', true, \''+ forms[i] +'\', '+ (i == 'registerForm' ? 'true' : 'false') +');');
+                submit.setAttribute('onclick',  'submitPost(\''+ form.action +'\', formToObject(\''+ i+ '\'), true, \''+ forms[i] +'\', '+ (i == 'registerForm' ? 'true' : 'false') +');');
                 submit.setAttribute('type',     'button');
 
                 var createInput = document.createElement('input');
@@ -190,7 +129,7 @@
             }
             {% endif %}
 
-        };
+        });
         </script>
     </head>
     <body>

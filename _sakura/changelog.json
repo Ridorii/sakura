@@ -1921,6 +1921,26 @@
                 "type":     "ADD",
                 "change":   "Show person that made the change in the changelog.",
                 "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Make AJAX object generator more convenient.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed user actions showing up when logged out on viewtopic.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added AJAX friend actions on viewtopic.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed user actions showing up for deleted users.",
+                "user":     "Flashwave"
             }
 
         ]

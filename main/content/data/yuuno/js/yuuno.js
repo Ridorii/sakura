@@ -426,6 +426,79 @@ function ajaxPost(url, data) {
 
 }
 
+// Convert href attribute to an object
+function prepareAjaxLink(linkId, callback, attrs) {
+
+    // Get the elements
+    var link = typeof linkId === 'object' ? linkId : document.getElementById(linkId);
+
+    // Catch null
+    if(link == null) {
+
+        return;
+
+    }
+
+    // Get the href value
+    var hrefRaw = link.attributes.href.value;
+
+    // Get the action path
+    var action = hrefRaw.split('?')[0];
+
+    // Split the request variables
+    var variablesNotSplit = hrefRaw.split('?')[1].split('&');
+
+    // Create variables object
+    var variables = {};
+
+    // Split the name and values of the variables
+    for(var key in variablesNotSplit) {
+
+        // Split name and value
+        var newVar = variablesNotSplit[key].split('=');
+
+        // Push it into the object
+        variables[newVar[0]] = newVar[1];
+
+    }
+
+    // Add ajax=true
+    variables['ajax'] = true;
+
+    // Update link attributes
+    link.setAttribute('href',       'javascript:void(0);');
+    link.setAttribute('onclick',    callback +'(\''+ action +'\', JSON.parse(\''+ JSON.stringify(variables) +'\')'+ (typeof attrs != 'undefined' ? attrs : '') +');');
+
+}
+
+// Convert form to an object
+function formToObject(formId) {
+
+    // Get form data
+    var form = document.getElementById(formId);
+
+    // Make an object for the request parts
+    var requestParts = new Object();
+
+    // Get all children with a name attribute
+    var children = form.querySelectorAll('[name]');
+
+    // Sort children and make them ready for submission
+    for(var i in children) {
+
+        if(typeof children[i] == 'object') {
+
+            requestParts[children[i].name] = ((typeof children[i].type !== "undefined" && children[i].type.toLowerCase() == "checkbox") ? children[i].checked : children[i].value);
+
+        }
+
+    }
+
+    // Return the object
+    return requestParts;
+
+}
+
 // Quickly building a form for god knows what reason
 function generateForm(formId, formAttr, formData, appendTo) {
 
@@ -488,7 +561,7 @@ function formEnterCatch(key, id) {
 }
 
 // Submitting a form using an AJAX POST request
-function submitPost(formId, busyView, msg, resetCaptchaOnFailure) {
+function submitPost(action, requestParts, busyView, msg, resetCaptchaOnFailure) {
 
     // If requested display the busy thing
     if(busyView) {
@@ -497,37 +570,8 @@ function submitPost(formId, busyView, msg, resetCaptchaOnFailure) {
 
     }
 
-    // Get form data
-    var form = document.getElementById(formId);
-
-    // Make sure the form id was proper and if not report an error
-    if(form === null) {
-        if(busyView) {
-            ajaxBusyView(true, 'Invalid Form ID, contact the administrator.');
-            setTimeout(function(){ajaxBusyView(false);}, 2000);
-        }
-        return;
-    }
-
-    // Make an object for the request parts
-    var requestParts = new Object();
-
-    // Get all children with a name attribute
-    var children = form.querySelectorAll('[name]');
-
-    // Sort children and make them ready for submission
-    for(var i in children) {
-
-        if(typeof children[i] == 'object') {
-
-            requestParts[children[i].name] = ((typeof children[i].type !== "undefined" && children[i].type.toLowerCase() == "checkbox") ? children[i].checked : children[i].value);
-
-        }
-
-    }
-
     // Submit the AJAX request
-    var request = ajaxPost(form.action, requestParts).split('|');
+    var request = ajaxPost(action, requestParts).split('|');
 
     // If using the busy view thing update the text displayed to the return of the request
     if(busyView) {
