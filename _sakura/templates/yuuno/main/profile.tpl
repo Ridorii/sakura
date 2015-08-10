@@ -15,7 +15,7 @@
 	<div class="content profile">
         <div class="{% if profile.userPage|length > 1 %}content-right {% endif %}content-column">
             <div style="text-align: center;">
-                <img src="/a/{{ profile.user.id }}" alt="{{ profile.user.username }}'s Avatar" class="default-avatar-setting" style="box-shadow: 0 3px 7px #{% if profile.online %}484{% else %}844{% endif %};" /><br />
+                <img src="/a/{{ profile.user.id }}" alt="{{ profile.user.username }}'s Avatar" class="default-avatar-setting" style="box-shadow: 0 3px 7px #{% if profile.is_online %}484{% else %}844{% endif %};" /><br />
                 {% if profile.user.rank_main > 1 and profile.ban_check|length < 1 %}
                 <span style="font-size: .8em;">{{ profile.ranktitle }}</span>
                 <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px #888; padding: 0 0 2px;">{{ profile.user.username }}</h1>

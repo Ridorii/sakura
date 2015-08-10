@@ -1956,6 +1956,16 @@
                 "type":     "REM",
                 "change":   "Removed old userpages code.",
                 "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed usage of wrong variable to check if user is online on the profiles.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Clean settings templates up.",
+                "user":     "Flashwave"
             }
 
         ]

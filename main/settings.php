@@ -567,33 +567,35 @@ if(Users::checkLogin()) {
 
     // Settings page list
     $pages = [
-        'home'              => ['General',          'Home'],
-        'profile'           => ['General',          'Edit Profile'],
-        'groups'            => ['General',          'Groups'],
-        'friendlisting'     => ['Friends',          'List'],
-        'friendrequests'    => ['Friends',          'Requests'],
-        'notifications'     => ['Notifications',    'History'],
-        'avatar'            => ['Aesthetics',       'Avatar'],
-        'background'        => ['Aesthetics',       'Background'],
-        'userpage'          => ['Aesthetics',       'Userpage'],
-        'email'             => ['Account',          'E-mail Address'],
-        'username'          => ['Account',          'Username'],
-        'usertitle'         => ['Account',          'User Title'],
-        'password'          => ['Account',          'Password'],
-        'ranks'             => ['Account',          'Ranks'],
-        'sessions'          => ['Danger zone',      'Sessions'],
-        'regkeys'           => ['Danger zone',      'Registration Keys'],
-        'deactivate'        => ['Danger zone',      'Deactivate Account'],
-        'notfound'          => ['Settings',         '404']
+        'home'              => ['General',          'Home',                 ['Welcome to the Settings Panel. From here you can monitor, view and update your profile and preferences.']],
+        'profile'           => ['General',          'Edit Profile',         ['These are the external account links etc. on your profile, shouldn\'t need any additional explanation for this one.']],
+        'groups'            => ['General',          'Groups',               []],
+        'friendlisting'     => ['Friends',          'List',                 ['Manage your friends.']],
+        'friendrequests'    => ['Friends',          'Requests',             ['Handle friend requests.']],
+        'notifications'     => ['Notifications',    'History',              ['This is the history of notifications that have been sent to you.']],
+        'avatar'            => ['Aesthetics',       'Avatar',               ['Your avatar which is displayed all over the site and on your profile.', 'Maximum image size is {{ avatar.max_width }}x{{ avatar.max_height }}, minimum image size is {{ avatar.min_width }}x{{ avatar.min_height }}, maximum file size is {{ avatar.max_size_view }}.']],
+        'background'        => ['Aesthetics',       'Background',           ['The background that is displayed on your profile.', 'Maximum image size is {{ background.max_width }}x{{ background.max_height }}, minimum image size is {{ background.min_width }}x{{ background.min_height }}, maximum file size is {{ background.max_size_view }}.']],
+        'userpage'          => ['Aesthetics',       'Userpage',             ['The custom text that is displayed on your profile.', '<a href="/r/markdown" class="default">Click here if you don\'t know how to markdown!</a>']],
+        'email'             => ['Account',          'E-mail Address',       ['You e-mail address is used for password recovery and stuff like that, we won\'t spam you ;).']],
+        'username'          => ['Account',          'Username',             ['Probably the biggest part of your identity on a site.', '<b>You can only change this once every 30 days so choose wisely.</b>']],
+        'usertitle'         => ['Account',          'User Title',           ['That little piece of text displayed under your username on your profile.']],
+        'password'          => ['Account',          'Password',             ['Used to authenticate with the site and certain related services.']],
+        'ranks'             => ['Account',          'Ranks',                ['Manage what ranks you\'re in and what is set as your main rank. Your main rank is highlighted. You get the permissions of all of the ranks you\'re in combined.']],
+        'sessions'          => ['Danger zone',      'Sessions',             ['Session keys are a way of identifying yourself with the system without keeping your password in memory.', 'If someone finds one of your session keys they could possibly compromise your account, if you see any sessions here that shouldn\'t be here hit the Kill button to kill the selected session.', 'If you get logged out after clicking one you\'ve most likely killed your current session, to make it easier to avoid this from happening your current session is highlighted.']],
+        'regkeys'           => ['Danger zone',      'Registration Keys',    ['Sometimes we activate the registration key system which means that users can only register using your "referer" keys, this means we can keep unwanted people from registering.', 'Each user can generate 5 of these keys, bans and deactivates render these keys useless.']],
+        'deactivate'        => ['Danger zone',      'Deactivate Account',   ['You can deactivate your account here if you want to leave :(.']],
+        'notfound'          => ['Settings',         '404',                  ['This is an error.']]
     ];
 
     // Current settings page
     $currentPage = isset($_GET['mode']) ? (array_key_exists($_GET['mode'], $pages) ? $_GET['mode'] : 'notfound') : 'home';
 
     // Render data
+    $renderData['current'] = $currentPage;
     $renderData['page'] = [
         'title'         => $pages[$currentPage][0] .' / '. $pages[$currentPage][1],
-        'currentPage'   => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0
+        'currentPage'   => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
+        'description'   => $pages[$currentPage][2]
     ];
 
     // Section specific
@@ -651,7 +653,7 @@ if(Users::checkLogin()) {
     }
 
     // Print page contents
-    print Templates::render('settings/'. $currentPage .'.tpl', $renderData);
+    print Templates::render('main/settings.tpl', $renderData);
 
 } else {
 
