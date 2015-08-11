@@ -1982,6 +1982,11 @@
                 "type":     "FIX",
                 "change":   "Fixed error caused by users table being empty on front page.",
                 "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added dynamicness(?) to the profile editing section.",
+                "user":     "Flashwave"
             }
 
         ]
