@@ -1,4 +1,4 @@
-                <a id="gotop" class="gotop fa fa-angle-double-up hidden" href="#top"></a>
+                <a id="gotop" class="fa fa-angle-double-up hidden" href="#top"></a>
             </div>
             <div class="footer">
                 <div class="ftsections">

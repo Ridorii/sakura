@@ -569,7 +569,7 @@ if(Users::checkLogin()) {
     $pages = [
         'home'              => ['General',          'Home',                 ['Welcome to the Settings Panel. From here you can monitor, view and update your profile and preferences.']],
         'profile'           => ['General',          'Edit Profile',         ['These are the external account links etc. on your profile, shouldn\'t need any additional explanation for this one.']],
-        'groups'            => ['General',          'Groups',               []],
+        'groups'            => ['General',          'Groups',               ['{{ user.colour }}']],
         'friendlisting'     => ['Friends',          'List',                 ['Manage your friends.']],
         'friendrequests'    => ['Friends',          'Requests',             ['Handle friend requests.']],
         'notifications'     => ['Notifications',    'History',              ['This is the history of notifications that have been sent to you.']],

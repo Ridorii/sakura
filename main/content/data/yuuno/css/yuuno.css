@@ -243,7 +243,8 @@ a.default:active {
     text-decoration: underline;
 }
 
-a.gotop {
+a#gotop,
+a#changePageWidth {
     display: inline-block;
     background: #111;
     color: #FFF;
@@ -265,23 +266,25 @@ a.gotop {
     text-shadow: 0 0 5px #FFF;
 }
 
-a.gotop:hover {
+a#gotop:hover,
+a#changePageWidth:hover {
     opacity: .8;
     box-shadow: 0 0 7px #FFF inset;
     text-shadow: 0 0 7px #FFF;
 }
 
-a.gotop:active {
+a#gotop:active,
+a#changePageWidth:active {
     box-shadow: 0 0 15px #FFF inset;
     text-shadow: 0 0 10px #FFF;
     opacity: .9;
 }
 
-a.gotop.enter {
+a#gotop.enter {
     animation: slideInFromRight 1 .6s;
 }
 
-a.gotop.exit {
+a#gotop.exit {
     animation: slideOutToBottom 1 .6s;
 }
 

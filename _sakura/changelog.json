@@ -39,7 +39,8 @@
                 "20150731",
                 "20150807",
                 "20150809",
-                "20150810"
+                "20150810",
+                "20150811"
 
             ]
 
@@ -1965,6 +1966,21 @@
             {
                 "type":     "UPD",
                 "change":   "Clean settings templates up.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150811": [
+
+            {
+                "type":     "REM",
+                "change":   "Remove unneeded rules from .htaccess in the content folder.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed error caused by users table being empty on front page.",
                 "user":     "Flashwave"
             }
 
