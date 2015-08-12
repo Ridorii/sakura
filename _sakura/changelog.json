@@ -40,7 +40,8 @@
                 "20150807",
                 "20150809",
                 "20150810",
-                "20150811"
+                "20150811",
+                "20150812"
 
             ]
 
@@ -1986,6 +1987,16 @@
             {
                 "type":     "ADD",
                 "change":   "Added dynamicness(?) to the profile editing section.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150812": [
+
+            {
+                "type":     "ADD",
+                "change":   "Added device icons to Yuuno.",
                 "user":     "Flashwave"
             }
 
