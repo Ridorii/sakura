@@ -41,7 +41,9 @@
                 "20150809",
                 "20150810",
                 "20150811",
-                "20150812"
+                "20150812",
+                "20150813",
+                "20150814"
 
             ]
 
@@ -1999,6 +2001,27 @@
                 "change":   "Added device icons to Yuuno.",
                 "user":     "Flashwave"
             }
+
+        ],
+
+        "20150813": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fixed some broken links on manage.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add permission check when trying to enter manage.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150814": [
+
+
 
         ]
 

@@ -9,7 +9,6 @@
             <meta http-equiv="refresh" content="3; URL={{ page.redirect }}" />
         {% endif %}
         <!-- CSS -->
-        <link rel="stylesheet" type="text/css" href="//{{ sakura.content_path }}/global.css" />
         <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/manage.css" />
         <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
         <!-- JS -->
@@ -20,9 +19,9 @@
             <span id="top"></span>
             <div class="header" id="header">
                 <div class="logo">
-                    <a href="//{{ sakura.urls.main }}/manage/">Broom Closet</a> /
-                    <a href="//{{ sakura.urls.main }}/manage/{{ page.activepage }}/">{{ page.pages[page.activepage].desc }}</a> /
-                    <a href="//{{ sakura.urls.main }}/manage/{{ page.activepage }}/{{ page.activesub }}/">{{ page.pages[page.activepage].subs[page.activesub].desc }}</a>
+                    <a href="/manage/">Broom Closet</a> /
+                    <a href="/manage/{{ page.activepage }}/">{{ page.pages[page.activepage].desc }}</a> /
+                    <a href="/manage/{{ page.activepage }}/{{ page.activesub }}/">{{ page.pages[page.activepage].subs[page.activesub].desc }}</a>
                 </div>
                 <div class="nav">
                     <div class="menu" id="siteNav">
