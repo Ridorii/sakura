@@ -41,7 +41,8 @@
                 "20150809",
                 "20150810",
                 "20150811",
-                "20150812"
+                "20150812",
+                "20150818"
 
             ]
 
@@ -1997,6 +1998,16 @@
             {
                 "type":     "ADD",
                 "change":   "Added device icons to Yuuno.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150818": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fixed urls in Misaki.",
                 "user":     "Flashwave"
             }
 
