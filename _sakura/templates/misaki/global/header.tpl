@@ -54,31 +54,31 @@
                 <div id="content">
                     <div id="navigation">
                         <ul class="nav-left floatLeft">
-                            <li><a href="//{{ sakura.urls.main }}/">Home</a></li>
-                            <li><a href="//{{ sakura.urls.main }}/news">News</a></li>
-                            <li><a href="//{{ sakura.urls.chat }}/">Chat</a></li>
-                            <li><a href="//{{ sakura.urls.main }}/forum">Forum</a></li>
-                            <li><a href="//{{ sakura.urls.main }}/members">Members</a></li>
-                            <li><a href="//{{ sakura.urls.main }}/search">Search</a></li>
-                            <li><a href="//{{ sakura.urls.main }}/donate">Donate</a></li>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/news">News</a></li>
+                            <li><a href="//chat.{{ sakura.url_main }}/">Chat</a></li>
+                            <li><a href="/forum">Forum</a></li>
+                            <li><a href="/members">Members</a></li>
+                            <li><a href="/search">Search</a></li>
+                            <li><a href="/donate">Donate</a></li>
                         </ul>
                         <ul class="nav-right floatRight">
                             <li class="nav-usermenu">
                                 <a href="#"{% if user.checklogin %} style="color: {{ user.colour }};"{% endif %}>{% if user.checklogin %}{{ user.data.username }}{% else %}Guest{% endif %}</a>
                                 <ul>
                                 {% if user.checklogin %}
-                                    <li><a href="//{{ sakura.urls.main }}/u/{{ user.data.id }}">My Profile</a></li>
-                                    <li><a href="//{{ sakura.urls.main }}/messages">View Messages</a></li>
-                                    <li><a href="//{{ sakura.urls.main }}/settings">User Settings</a></li>
-                                    <li><a href="//{{ sakura.urls.main }}/manage">Site Management</a></li>
-                                    <li><a href="//{{ sakura.urls.main }}/logout?mode=logout&time={{ php.time }}&session={{ php.sessionid }}&redirect={{ sakura.currentpage }}">Logout</a></li>
+                                    <li><a href="/u/{{ user.data.id }}">My Profile</a></li>
+                                    <li><a href="/messages">View Messages</a></li>
+                                    <li><a href="/settings">User Settings</a></li>
+                                    <li><a href="/manage">Site Management</a></li>
+                                    <li><a href="/logout?mode=logout&amp;time={{ php.time }}&amp;session={{ php.sessionid }}&amp;redirect={{ sakura.currentpage }}">Logout</a></li>
                                 {% else %}
-                                    <li><a href="//{{ sakura.urls.main }}/login">Login</a></li>
-                                    <li><a href="//{{ sakura.urls.main }}/register">Register</a></li>
+                                    <li><a href="/login">Login</a></li>
+                                    <li><a href="/register">Register</a></li>
                                 {% endif %}
                                 </ul>
                             </li>
-                            <li><a href="#" class="ignore"><img src="//{{ sakura.urls.content }}/pixel.png" alt="{{ user.data.username }}" style="background-image: url('//{{ sakura.urls.main }}/a/{{ user.data.id }}');" class="nav-avatar" /></a></li>
+                            <li><a href="#" class="ignore"><img src="{{ sakura.content_path }}/pixel.png" alt="{{ user.data.username }}" style="background-image: url('/a/{{ user.data.id }}');" class="nav-avatar" /></a></li>
                         </ul>
                         <div class="clear"></div>
                     </div>
