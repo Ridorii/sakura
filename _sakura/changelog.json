@@ -2025,6 +2025,11 @@
                 "type":     "FIX",
                 "change":   "Fixed urls in Misaki.",
                 "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add username shadow based on the user's username colour.",
+                "user":     "Flashwave"
             }
 
         ]

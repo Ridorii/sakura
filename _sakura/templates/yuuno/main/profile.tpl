@@ -18,7 +18,7 @@
                 <img src="/a/{{ profile.user.id }}" alt="{{ profile.user.username }}'s Avatar" class="default-avatar-setting" style="box-shadow: 0 3px 7px #{% if profile.is_online %}484{% else %}844{% endif %};" /><br />
                 {% if profile.user.rank_main > 1 and profile.ban_check|length < 1 %}
                 <span style="font-size: .8em;">{{ profile.ranktitle }}</span>
-                <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px #888; padding: 0 0 2px;">{{ profile.user.username }}</h1>
+                <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px {% if profile.colour != 'inherit' %}{{ profile.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;">{{ profile.user.username }}</h1>
                     {% if profile.is_premium %}<img src="{{ sakura.content_path }}/images/tenshi.png" alt="Tenshi" /> {% endif %}<img src="{{ sakura.content_path }}/images/flags/{% if profile.user.country|lower == 'eu' %}europeanunion{% else %}{{ profile.user.country|lower }}{% endif %}.png" alt="{{ profile.user.country }}" /> <span style="font-size: .9em; line-height: 11px;">{{ profile.country }}</span>
                 {% if user.checklogin %}
                 <div class="user-actions">

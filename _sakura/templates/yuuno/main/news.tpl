@@ -78,5 +78,4 @@
         </script>
     {% endif %}
     </div>
-    
 {% include 'global/footer.tpl' %}

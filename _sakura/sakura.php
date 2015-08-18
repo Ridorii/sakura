@@ -31,6 +31,7 @@ require_once ROOT .'_sakura/components/Database.php';
 require_once ROOT .'_sakura/components/Templates.php';
 require_once ROOT .'_sakura/components/Permissions.php';
 require_once ROOT .'_sakura/components/Sessions.php';
+require_once ROOT .'_sakura/components/User.php';
 require_once ROOT .'_sakura/components/Users.php';
 require_once ROOT .'_sakura/components/Forum.php';
 require_once ROOT .'_sakura/components/Manage.php';
