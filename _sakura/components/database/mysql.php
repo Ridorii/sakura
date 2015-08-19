@@ -19,7 +19,7 @@ class MySQL {
 
     // Constructor
     function __construct() {
-        
+
         if(!extension_loaded('PDO')) {
             // Return error and die
             trigger_error('PDO extension not loaded.', E_USER_ERROR);
@@ -51,25 +51,25 @@ class MySQL {
 
     // Regular IP/Hostname connection method prepare function
     private function prepareHost($dbHost, $dbName, $dbPort = 3306) {
-        
+
         $DSN = 'mysql:host=' . $dbHost . ';port=' . $dbPort . ';dbname=' . $dbName;
 
         return $DSN;
-        
+
     }
 
     // Unix Socket connection method prepare function
     private function prepareSock($dbHost, $dbName) {
-        
+
         $DSN = 'mysql:unix_socket=' . $dbHost . ';dbname=' . $dbName;
 
         return $DSN;
-        
+
     }
 
     // Initialise connection using default PDO stuff
     private function initConnect($DSN, $dbUname, $dbPword) {
-        
+
         try {
             // Connect to SQL server using PDO
             $this->sql = new PDO($DSN, $dbUname, $dbPword, array(PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
@@ -77,9 +77,9 @@ class MySQL {
             // Catch connection errors
             trigger_error('SQL Driver: '. $e->getMessage(), E_USER_ERROR);
         }
-        
+
         return true;
-        
+
     }
 
     // Fetch array from database
@@ -124,7 +124,7 @@ class MySQL {
             $prepare .= ' ORDER BY `'. $order[0] .'`'. (!empty($order[1]) && $order[1] ? ' DESC' : '');
 
         }
-        
+
         // If $limit is set and is an array continue
         if(is_array($limit)) {
 
@@ -163,7 +163,7 @@ class MySQL {
         $query->execute();
 
         // Return the output
-        return $fetchAll ? $query->fetchAll(PDO::FETCH_BOTH) : $query->fetch(PDO::FETCH_BOTH);
+        return $fetchAll ? $query->fetchAll(PDO::FETCH_ASSOC) : $query->fetch(PDO::FETCH_ASSOC);
 
     }
 

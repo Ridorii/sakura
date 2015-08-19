@@ -48,7 +48,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            #{{ count + 1 }}
+                            #{{ count }}
                         </td>
                         <td>
                             <a href="/u/{{ user.id }}" class="default" style="font-weight: bold; color: {{ page.ranks[user.rank_main].colour }};">{{ user.username }}</a>

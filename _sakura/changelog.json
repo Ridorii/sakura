@@ -43,7 +43,8 @@
                 "20150811",
                 "20150812",
                 "20150813",
-                "20150818"
+                "20150818",
+                "20150819"
 
             ]
 
@@ -2029,6 +2030,36 @@
             {
                 "type":     "ADD",
                 "change":   "Add username shadow based on the user's username colour.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150819": [
+
+            {
+                "type":     "UPD",
+                "change":   "Only make the SQL library fetch an associative array since the numbered one is not used anywhere.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed the lie in the previous change changing the __only__ use of it to associative.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Begin work on a User class (different from the Users class) to easily get a user's data in a usable state.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed incorrect counting on the List view in the memberlist (how did I miss this for 4 months?).",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Converted most of profile.php to the new user API.",
                 "user":     "Flashwave"
             }
 

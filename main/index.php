@@ -9,10 +9,6 @@ namespace Sakura;
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sakura.php';
 
-$meow = new User(2);
-
-print_r($meow->user);
-
 // Are we in forum mode?
 $forumMode = isset($_GET['forums']) ? ($_GET['forums'] == true) : false;
 

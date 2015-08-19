@@ -54,7 +54,7 @@ class Configuration {
         // Properly sort the values
         foreach($_DATA as $_CONF) {
 
-            $_DBCN[$_CONF[0]] = $_CONF[1];
+            $_DBCN[$_CONF['config_name']] = $_CONF['config_value'];
 
         }
 
