@@ -2059,7 +2059,7 @@
             },
             {
                 "type":     "UPD",
-                "change":   "Converted most of profile.php to the new user API.",
+                "change":   "Converted profile.php to the new user API.",
                 "user":     "Flashwave"
             }
 

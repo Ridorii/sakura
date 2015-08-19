@@ -79,6 +79,34 @@ class User {
 
     }
 
+    // Check if a user is online
+    public function checkOnline() {
+
+        return $this->data['lastdate'] > (time() - Configuration::getConfig('max_online_time'));
+
+    }
+
+    // Get user's forum statistics
+    public function forumStats() {
+
+        return Forum::getUserStats($this->data['id']);
+
+    }
+
+    // Check if the user is friends with the currently authenticated
+    public function checkFriends($with) {
+
+        return Users::checkFriend($this->data['id'], $with);
+
+    }
+
+    // Check if the user is banned
+    public function checkBan() {
+
+        return Bans::checkBan($this->data['id']);
+
+    }
+
     // Get the user's profile fields
     public function profileFields() {
 
@@ -155,6 +183,57 @@ class User {
 
         // Return appropiate profile data
         return $profile;
+
+    }
+
+    // Check if user has Premium
+    public function checkPremium() {
+
+        // Check if the user has static premium
+        if(Permissions::check('SITE', 'STATIC_PREMIUM', $this->data['id'], 1)) {
+
+            return [2, 0, time() + 1];
+
+        }
+
+        // Attempt to retrieve the premium record from the database
+        $getRecord = Database::fetch('premium', false, [
+
+            'uid' => [$this->data['id'], '=']
+
+        ]);
+
+        // If nothing was returned just return false
+        if(empty($getRecord)) {
+
+            return [0];
+
+        }
+
+        // Check if the Tenshi hasn't expired
+        if($getRecord['expiredate'] < time()) {
+
+            Users::removeUserPremium($this->data['id']);
+            Users::updatePremiumMeta($this->data['id']);
+            return [0, $getRecord['startdate'], $getRecord['expiredate']];
+
+        }
+
+        // Else return the start and expiration date
+        return [1, $getRecord['startdate'], $getRecord['expiredate']];
+
+    }
+
+    // Get all warnings issued to the user
+    public function getWarnings() {
+
+        // Do the database query
+        $warnings = Database::fetch('warnings', true, [
+            'uid' => [$this->data['id'], '=']
+        ]);
+
+        // Return all the warnings
+        return $warnings;
 
     }
 

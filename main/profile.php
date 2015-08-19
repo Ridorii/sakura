@@ -15,23 +15,17 @@ if(isset($_GET['u'])) {
     // Get the user's context
     $profile = new User($_GET['u']);
 
-    $renderData['legacyprofile'] = [
-        'notset'        => false,
-        'is_premium'    => Users::checkUserPremium($profile->data['id'])[0],
-        'is_online'     => Users::checkUserOnline($profile->data['id']),
-        'warnings'      => Users::getWarnings($profile->data['id']),
-        'friend'        => Users::checkFriend($profile->data['id']),
-        'forum_stats'   => Forum::getUserStats($profile->data['id']),
-        'ban_check'     => Bans::checkBan($profile->data['id'])
-    ];
-
-
+    // Assign the object to a renderData variable
     $renderData['profile'] = $profile;
 
     $renderData['page'] = [
-        'title' => ($profile->data['id'] < 1 || $profile->data['password_algo'] == 'nologin' ? 'User not found!' : 'Profile of '. $profile->data['username']),
-        'style' => (!empty($profile->data['userData']['profileBackground']) ? [
+
+        'notfound'  => false,
+        'title'     => ($profile->data['id'] < 1 || $profile->data['password_algo'] == 'nologin' ? 'User not found!' : 'Profile of '. $profile->data['username']),
+        'style'     => (!empty($profile->data['userData']['profileBackground']) ? [
+
             '#userBackground' => [
+
                 'background'    => 'url("/bg/'. $profile->data['id'] .'") no-repeat center center / cover transparent !important',
                 'position'      => 'fixed',
                 'top'           => '0',
@@ -39,14 +33,21 @@ if(isset($_GET['u'])) {
                 'right'         => '0',
                 'left'          => '0',
                 'z-index'       => '-1'
+
             ]
+
         ] : null)
+
     ];
 
 } else {
 
-    $renderData['legacyprofile']['notset']  = true;
-    $renderData['page']['title']            = 'User not found!';
+    $renderData['page'] = [
+
+        'notfound'  => true,
+        'title'     => 'User not found!'
+
+    ];
 
 }
 
