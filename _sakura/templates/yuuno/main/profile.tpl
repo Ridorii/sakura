@@ -1,5 +1,5 @@
 {% include 'global/header.tpl' %}
-    {% if page.notfound or profile.data.id < 1 or profile.data.password_algo == 'nologin' %}
+    {% if profile.data.id < 1 or profile.data.password_algo == 'nologin' %}
     <div class="content standalone" style="padding: 20px;">
         <h1>The requested user does not exist!</h1>
         There are a few possible reasons for this:
@@ -11,7 +11,6 @@
         </ul>
     </div>
     {% else %}
-        <div id="userBackground"></div>
     	<div class="content profile">
             <div class="{% if profile.userPage|length > 1 %}content-right {% endif %}content-column">
                 <div style="text-align: center;">
@@ -20,7 +19,7 @@
                         <span style="font-size: .8em;">{{ profile.userTitle }}</span>
                         <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px {% if profile.colour != 'inherit' %}{{ profile.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;">{{ profile.data.username }}</h1>
                             {% if profile.checkPremium[0] %}<img src="{{ sakura.content_path }}/images/tenshi.png" alt="Tenshi" /> {% endif %}<img src="{{ sakura.content_path }}/images/flags/{% if profile.country.short|lower == 'eu' %}europeanunion{% else %}{{ profile.country.short|lower }}{% endif %}.png" alt="{{ profile.country.short }}" /> <span style="font-size: .9em; line-height: 11px;">{{ profile.country.long }}</span>
-                        {% if user.checklogin %}
+                        {% if session.checkLogin %}
                         <div class="user-actions">
                             {% if user.data.id == profile.data.id %}
                                 <a class="fa fa-pencil-square-o" title="Edit your profile" href="/settings/profile"></a>
@@ -43,7 +42,7 @@
                         <b>{{ profile.data.username }} has {% if not profile.forumStats.posts %}no{% else %}{{ profile.forumStats.posts }}{% endif %} forum post{% if profile.forumStats.posts != 1 %}s{% endif %}.</b>
                         {% if profile.profileFields %}
                             <hr class="default" />
-                            {% if user.checklogin %}
+                            {% if session.checkLogin %}
                                 <table style="width: 100%;">
                                 {% for name,field in profile.profileFields %}
                                 <tr>
@@ -94,10 +93,5 @@
             </div>
             <div class="clear"></div>
         </div>
-        {% if profile.data.userData.profileBackground is defined %}
-            <script type="text/javascript">
-                initialiseParallax('userBackground');
-            </script>
-        {% endif %}
     {% endif %}
 {% include 'global/footer.tpl' %}

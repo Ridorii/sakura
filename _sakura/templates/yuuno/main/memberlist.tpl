@@ -1,5 +1,5 @@
 {% include 'global/header.tpl' %}
-    {% if user.checklogin %}
+    {% if session.checkLogin %}
     <div class="membersPage" style="min-height: 500px;">
         <h1 style="text-shadow: 0px 0px 5px #555;{% if page.active %} color: {{ page.ranks[page.active].colour }};{% endif %}">{% if not page.active %}All members{% else %}{{ page.ranks[page.active].name }}{% if page.ranks[page.active].multi %}s{% endif %}{% endif %}</h1>
         <h3 style="padding: 0px 0px 10px;">{% if not page.active %}The entire user list.{% else %}{{ page.ranks[page.active].description }}{% endif %}</h3>

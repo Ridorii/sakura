@@ -326,7 +326,7 @@ a#gotop.exit {
     font-weight: 700;
     font-size: 20px;
     color: #306;
-    background: linear-gradient(90deg, rgba(148,117,178,.7), rgba(148,117,178,0)) #C2AFFE;
+    background: linear-gradient(90deg, rgba(148, 117, 178, .7), rgba(148, 117, 178, 0)) #C2AFFE;
     border-radius: 2px;
 }
 
@@ -337,7 +337,7 @@ a#gotop.exit {
     font-weight: 700;
     font-size: 20px;
     color: #306;
-    background: linear-gradient(270deg, rgba(148,117,178,.7), rgba(148,117,178,0)) #C2AFFE;
+    background: linear-gradient(270deg, rgba(148, 117, 178, .7), rgba(148, 117, 178, 0)) #C2AFFE;
     border-radius: 2px;
 }
 
@@ -1120,7 +1120,7 @@ a#gotop.exit {
  */
 .messages table {
     width: 100%;
-    border-spacing: 0; 
+    border-spacing: 0;
 }
 
 .messages table > tbody > tr.unread {
@@ -1278,6 +1278,19 @@ a#gotop.exit {
         border-top: 1px solid #9475B2;
     }
 
+}
+
+/*
+ * User Background
+ */
+#userBackground {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    background: no-repeat center center / cover transparent;
 }
 
 /*

@@ -9,6 +9,9 @@
         </div>
         <div>
             <input type="file" name="avatar" />
+            <div style="font-size: .8em;">
+                (Leave upload box empty to remove avatar)
+            </div>
         </div>
         <div>
             <input type="submit" value="Submit" name="submit" class="inputStyling" />

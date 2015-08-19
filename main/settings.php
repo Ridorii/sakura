@@ -280,7 +280,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                     ];
 
                     break;
-                    
+
                 }
 
                 // Check if the upload went properly
@@ -438,8 +438,18 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
                 }
 
+                // Create new array
+                $updated = [$userDataKey => basename($filename)];
+
+                // Check for the site wide name
+                if($mode == 'background') {
+
+                    $updated['profileBackgroundSiteWide'] = isset($_REQUEST['sitewide']);
+
+                }
+
                 // Update database
-                Users::updateUserDataField(Session::$userId, [$userDataKey => basename($filename)]);
+                Users::updateUserDataField(Session::$userId, $updated);
 
                 // Set render data
                 $renderData['page'] = [
@@ -624,7 +634,7 @@ if(Users::checkLogin()) {
 
         // Profile
         case 'userpage':
-            
+
             break;
 
         // Profile

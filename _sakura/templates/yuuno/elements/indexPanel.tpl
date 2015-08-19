@@ -1,4 +1,4 @@
-{% if user.checklogin %}
+{% if session.checkLogin %}
     <div class="head">Hi, {{ user.data.username }}!</div>
     <a href="/settings/avatar"><img src="/a/{{ user.data.id }}" class="default-avatar-setting homepage-menu-avatar" /></a>
     <ul class="panelQuickLinks">
@@ -23,8 +23,8 @@
     {% endif %}
 {% endif %}
 <div class="head">Stats</div>
-We have <b>{{ stats.userCount }}</b>, 
-<b><a href="/u/{{ stats.newestUser.id }}" class="default">{{ stats.newestUser.username }}</a></b> is the newest user, 
+We have <b>{{ stats.userCount }}</b>,
+<b><a href="/u/{{ stats.newestUser.id }}" class="default">{{ stats.newestUser.username }}</a></b> is the newest user,
 it has been <b>{{ stats.lastRegDate }}</b> since the last user registered and the forum has <b>{{ stats.topicCount }}</b> and <b>{{ stats.postCount }}</b>.
 <div class="head">Online Users</div>
 {% if stats.onlineUsers %}

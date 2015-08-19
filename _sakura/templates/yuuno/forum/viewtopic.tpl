@@ -15,7 +15,7 @@
                             <div class="userdata">
                                 <div class="usertitle">{% if not post.user.usertitle %}{{ post.rank.title }}{% else %}{{ post.user.usertitle }}{% endif %}</div>
                                 <img src="{{ sakura.content_path }}/images/tenshi.png" alt="Tenshi"{% if not post.is_premium %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.content_path }}/images/flags/{% if post.user.country|lower == 'eu' %}europeanunion{% else %}{{ post.user.country|lower }}{% endif %}.png" alt="{{ post.country }}" />
-                                {% if user.checklogin %}
+                                {% if session.checkLogin %}
                                 <div class="actions">
                                     {% if user.data.id == post.user.id %}
                                     <a class="fa fa-pencil-square-o" title="Edit this post" href="/forum/post/{{ post.post_id }}/edit"></a>

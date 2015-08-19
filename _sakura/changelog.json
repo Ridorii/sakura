@@ -2061,6 +2061,31 @@
                 "type":     "UPD",
                 "change":   "Converted profile.php to the new user API.",
                 "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added OR statement capabilities to the database library.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Make it possible to initialise a User object with the username_clean of that user.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Switched currently logged in user data to the new API and fixed some references to checkLogin.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added expirimental site wide profile background feature.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Clean up unneeded things from profile.php.",
+                "user":     "Flashwave"
             }
 
         ]

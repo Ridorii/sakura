@@ -9,7 +9,15 @@
         </div>
         <div>
             <input type="file" name="background" />
+            <div style="font-size: .8em;">
+                (Leave upload box empty to remove background)
+            </div>
         </div>
+        {% if user.checkPremium[0] %}
+            <div style="padding: 10px;">
+                <input type="checkbox" name="sitewide" id="swbgbtn" /><label for="swbgbtn"> Display background sidewide when logged in</label>
+            </div>
+        {% endif %}
         <div>
             <input type="submit" value="Submit" name="submit" class="inputStyling" />
         </div>

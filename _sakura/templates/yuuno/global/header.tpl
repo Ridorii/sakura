@@ -62,7 +62,7 @@
                 "minUserLen":       {{ sakura.minusernamelength }},
                 "maxUserLen":       {{ sakura.maxusernamelength }},
                 "minPwdEntropy":    {{ sakura.minpwdentropy }},
-                "checklogin":       {% if user.checklogin %}true{% else %}false{% endif %}
+                "checklogin":       {% if session.checkLogin %}true{% else %}false{% endif %}
 
             };
 
@@ -74,7 +74,7 @@
             gotop.setAttribute('href',      'javascript:void(0);');
             gotop.setAttribute('onclick',   'scrollToTop();');
 
-            {% if user.checklogin %}
+            {% if session.checkLogin %}
             // Convert href to object in logout link
             prepareAjaxLink('headerLogoutLink', 'submitPost', ', true, "Logging out..."');
             {% elseif not sakura.lockauth and php.self != '/authenticate.php' %}
@@ -87,12 +87,12 @@
             createInput.setAttribute('value', 'true');
             createInput.setAttribute('type', 'hidden');
             headerLoginForm.appendChild(createInput);
-            
+
             submit.setAttribute('type', 'button');
             submit.setAttribute('onclick', 'submitPost(\''+ headerLoginForm.action +'\', formToObject(\'headerLoginForm\'), true, \'Logging in...\');');
             {% endif %}
 
-            {% if user.checklogin %}
+            {% if session.checkLogin %}
             // Make notification requests (there's a seperate one to make it happen before the first 60 seconds)
             notifyRequest('{{ php.sessionid }}');
 
@@ -102,12 +102,12 @@
             }, 60000);
             {% endif %}
 
-            {% if php.self == '/profile.php' and user.checklogin and user.data.id != profile.user.id %}
+            {% if php.self == '/profile.php' and session.checkLogin and user.data.id != profile.user.id %}
             // Make friend button dynamic
             prepareAjaxLink('profileFriendToggle', 'submitPost', ', true, "{% if profile.friend == 0 %}Adding{% else %}Removing{% endif %} friend..."');
             {% endif %}
 
-            {% if php.self == '/viewtopic.php' and user.checklogin %}
+            {% if php.self == '/viewtopic.php' and session.checkLogin %}
                 var forumFriendToggles = document.querySelectorAll('.forum-friend-toggle');
 
                 for(var i in forumFriendToggles) {
@@ -146,6 +146,10 @@
             }
             {% endif %}
 
+            {% if php.self == '/profile.php' ? profile.data.userData.profileBackground is defined : (user.checkPremium[0] and user.data.userData.profileBackgroundSiteWide and user.data.userData.profileBackground is defined) %}
+                initialiseParallax('userBackground');
+            {% endif %}
+
         });
         </script>
     </head>
@@ -162,14 +166,14 @@
                         <a class="menu-item" href="//chat.{{ sakura.url_main }}/" title="Chat with other Flashii members">Chat</a>
                         <a class="menu-item" href="/forum" title="Discuss things with other members but static">Forums</a>
                         <a class="menu-item" href="/search" title="Search on Flashii">Search</a>
-                        {% if user.checklogin %}
+                        {% if session.checkLogin %}
                             <a class="menu-item" href="/members" title="View a list with all the activated user accounts">Members</a>
                             <a class="menu-item menu-donate" href="/support" title="Give us money to keep the site (and other services) up and running">Support us</a>
                         {% endif %}
                     </div>
                     <div class="menu-ucp" id="navMenuUser">
                         <!-- User menu, displayed on right side of the bar. -->
-                        {% if user.checklogin %}
+                        {% if session.checkLogin %}
                             <a class="menu-item avatar" href="/u/{{ user.data.id }}" title="View and edit your own profile" style="background-image: url('/a/{{ user.data.id }}'); width: auto; color: {{ user.colour }}; font-weight: 700;">{{ user.data.username }}</a>
                             <a class="menu-item" href="/messages" title="Read your private message">Messages</a>
                             <a class="menu-item" href="/manage" title="Manage the site">Manage</a>
@@ -191,7 +195,10 @@
             </div>
             <div id="contentwrapper">
                 <div id="notifications"></div>
-                {% if not user.checklogin and php.self != '/authenticate.php' %}
+                {% if php.self == '/profile.php' ? profile.data.userData.profileBackground is defined : (user.checkPremium[0] and user.data.userData.profileBackgroundSiteWide and user.data.userData.profileBackground is defined) %}
+                    <div id="userBackground" style="background-image: url('/bg/{{ (php.self == '/profile.php' ? profile : user).data.id }}');"></div>
+                {% endif %}
+                {% if not session.checkLogin and php.self != '/authenticate.php' %}
                     <form method="post" action="/authenticate" id="headerLoginForm" onkeydown="formEnterCatch(event, 'headerLoginButton');">
                         <input type="hidden" name="redirect" value="{{ sakura.currentpage }}" />
                         <input type="hidden" name="session" value="{{ php.sessionid }}" />

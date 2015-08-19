@@ -16,7 +16,7 @@ class User {
     function __construct($id) {
 
         // Get the user database row
-        $this->data = Database::fetch('users', false, ['id' => [$id, '=']]);
+        $this->data = Database::fetch('users', false, ['id' => [$id, '=', true], 'username_clean' => [$id, '=']]);
 
         // Check if the user actually exists
         if(empty($this->data)) {

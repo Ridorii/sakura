@@ -94,7 +94,7 @@ class MySQL {
             $prepare .= ' WHERE';
 
             foreach($data as $key => $value) {
-                $prepare .= ' `'. $key .'` '. $value[1] .' :'. $key . ($key == key(array_slice($data, -1, 1, true)) ? '' : ' AND');
+                $prepare .= ' `'. $key .'` '. $value[1] .' :'. $key . ($key == key(array_slice($data, -1, 1, true)) ? '' : ' '. (isset($value[2]) && $value[2] ? 'OR' : 'AND'));
 
                 // Unset variables to be safe
                 unset($key);
@@ -223,7 +223,7 @@ class MySQL {
 
             // Do this complicated shit, I barely know what's going on anymore but it works
             foreach($values as $column => $column_data)
-                $prepare .= ' `'. $column .'` '. ($key ? $column_data[1] : '=') .' :'. ($key ? 'w' : 's') .'_'. $column . ($column == key(array_slice($values, -1, 1, true)) ? ($key ? ';' : '') : ($key ? ' AND' : ','));
+                $prepare .= ' `'. $column .'` '. ($key ? $column_data[1] : '=') .' :'. ($key ? 'w' : 's') .'_'. $column . ($column == key(array_slice($values, -1, 1, true)) ? ($key ? ';' : '') : ($key ? ' '. (isset($value[2]) && $value[2] ? 'OR' : 'AND') : ','));
 
         }
 
@@ -279,7 +279,7 @@ class MySQL {
             $prepare .= ' WHERE';
 
             foreach($data as $key => $value) {
-                $prepare .= ' `'. $key .'` '. $value[1] .' :'. $key . ($key == key(array_slice($data, -1, 1, true)) ? '' : ' AND');
+                $prepare .= ' `'. $key .'` '. $value[1] .' :'. $key . ($key == key(array_slice($data, -1, 1, true)) ? '' : ' '. (isset($value[2]) && $value[2] ? 'OR' : 'AND'));
 
                 // Unset variables to be safe
                 unset($key);
@@ -320,7 +320,7 @@ class MySQL {
             $prepare .= ' WHERE';
 
             foreach($data as $key => $value) {
-                $prepare .= ' `'. $key .'` '. $value[1] .' :'. $key . ($key == key(array_slice($data, -1, 1, true)) ? '' : ' AND');
+                $prepare .= ' `'. $key .'` '. $value[1] .' :'. $key . ($key == key(array_slice($data, -1, 1, true)) ? '' : ' '. (isset($value[2]) && $value[2] ? 'OR' : 'AND'));
 
                 // Unset variables to be safe
                 unset($key);

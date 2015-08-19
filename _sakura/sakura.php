@@ -111,15 +111,15 @@ if(!defined('SAKURA_NO_TPL')) {
 
         ],
 
-        'user' => [
+        'session' => [
 
-            'checklogin'    => Users::checkLogin(),
-            'session'       => Session::$sessionId,
-            'data'          => ($_init_udata = Users::getUser(Session::$userId)),
-            'rank'          => ($_init_rdata = Users::getRank($_init_udata['rank_main'])),
-            'colour'        => ($_init_udata['name_colour'] == null ? $_init_rdata['colour'] : $_init_udata['name_colour'])
+            'checkLogin'    => Users::checkLogin(),
+            'sessionId'     => Session::$sessionId,
+            'userId'        => Session::$userId
 
-        ]
+        ],
+
+        'user' => new User(Session::$userId)
 
     ];
 

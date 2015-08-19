@@ -73,7 +73,7 @@
         <div class="sectionHeader">
             Payment Options
             <div style="float: right; font-size: 10px; text-align: right;">
-                Our transactions are handled through PayPal. 
+                Our transactions are handled through PayPal.
                 <div class="paymentOptions fa">
                     <div class="fa-cc-paypal"></div>
                     <div class="fa-cc-visa"></div>
@@ -84,7 +84,7 @@
                 </div>
             </div>
         </div>
-        {% if user.checklogin and perms.canGetPremium %}
+        {% if session.checkLogin and perms.canGetPremium %}
             <div class="slider">
                 <input class="inputStyling" type="range" min="1" max="{{ page.amount_max }}" value="1" onchange="document.getElementById('monthsNo').value = this.value; document.getElementById('monthNoBtn').innerHTML = this.value; document.getElementById('monthsTrailingS').innerHTML = (this.value == 1 ? '' : 's'); document.getElementById('totalAmount').innerHTML = (this.value * {{ page.price }}).formatMoney(2);" />
             </div>
@@ -97,13 +97,13 @@
                 </div>
                 <div class="clear"></div>
             </div>
-        {% elseif user.checklogin %}
+        {% elseif session.checkLogin %}
             <h1 style="text-align: center; margin: 1em auto;" class="stylised">You can't get Tenshi at the current moment!</h1>
         {% else %}
             <h1 style="text-align: center; margin: 1em auto;" class="stylised">You need to be logged in to get Tenshi!</h1>
         {% endif %}
     </div>
-    {% if user.checklogin and perms.canGetPremium %}
+    {% if session.checkLogin and perms.canGetPremium %}
         <form action="/support" method="post" id="purchaseForm" class="hidden">
             <input type="hidden" name="mode" value="purchase" />
             <input type="hidden" name="time" value="{{ php.time }}" />
