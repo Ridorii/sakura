@@ -14,7 +14,7 @@
                             {% endif %}
                             <div class="userdata">
                                 <div class="usertitle">{% if not post.user.usertitle %}{{ post.rank.title }}{% else %}{{ post.user.usertitle }}{% endif %}</div>
-                                <img src="{{ sakura.content_path }}/images/tenshi.png" alt="Tenshi"{% if not post.is_premium %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.content_path }}/images/flags/{% if post.user.country|lower == 'eu' %}europeanunion{% else %}{{ post.user.country|lower }}{% endif %}.png" alt="{{ post.country }}" />
+                                <img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi"{% if not post.is_premium %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.contentPath }}/images/flags/{% if post.user.country|lower == 'eu' %}europeanunion{% else %}{{ post.user.country|lower }}{% endif %}.png" alt="{{ post.country }}" />
                                 {% if session.checkLogin %}
                                 <div class="actions">
                                     {% if user.data.id == post.user.id %}
@@ -36,7 +36,7 @@
                                     <a href="#p{{ post.post_id }}" class="clean">{{ post.post_subject }}</a>
                                 </div>
                                 <div class="date">
-                                    <a href="/forum/post/{{ post.post_id }}#p{{ post.post_id }}" class="clean" title="{{ post.post_time|date(sakura.date_format) }}">{{ post.time_elapsed }}</a>
+                                    <a href="/forum/post/{{ post.post_id }}#p{{ post.post_id }}" class="clean" title="{{ post.post_time|date(sakura.dateFormat) }}">{{ post.time_elapsed }}</a>
                                 </div>
                                 <div class="clear"></div>
                             </div>

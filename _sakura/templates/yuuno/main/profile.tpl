@@ -18,25 +18,25 @@
                     {% if profile.data.rank_main > 1 and profile.checkBan|length < 1 %}
                         <span style="font-size: .8em;">{{ profile.userTitle }}</span>
                         <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px {% if profile.colour != 'inherit' %}{{ profile.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;">{{ profile.data.username }}</h1>
-                            {% if profile.checkPremium[0] %}<img src="{{ sakura.content_path }}/images/tenshi.png" alt="Tenshi" /> {% endif %}<img src="{{ sakura.content_path }}/images/flags/{% if profile.country.short|lower == 'eu' %}europeanunion{% else %}{{ profile.country.short|lower }}{% endif %}.png" alt="{{ profile.country.short }}" /> <span style="font-size: .9em; line-height: 11px;">{{ profile.country.long }}</span>
+                            {% if profile.checkPremium[0] %}<img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi" /> {% endif %}<img src="{{ sakura.contentPath }}/images/flags/{% if profile.country.short|lower == 'eu' %}europeanunion{% else %}{{ profile.country.short|lower }}{% endif %}.png" alt="{{ profile.country.short }}" /> <span style="font-size: .9em; line-height: 11px;">{{ profile.country.long }}</span>
                         {% if session.checkLogin %}
                         <div class="user-actions">
                             {% if user.data.id == profile.data.id %}
                                 <a class="fa fa-pencil-square-o" title="Edit your profile" href="/settings/profile"></a>
                             {% else %}
                                 {% if profile.checkFriends(user.data.id) != 0 %}<a class="fa fa-{% if profile.checkFriends(user.data.id) == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
-                                <a class="fa fa-user-{% if profile.checkFriends(user.data.id) == 0 %}plus{% else %}times{% endif %}" title="{% if profile.checkFriends(user.data.id) == 0 %}Add {{ legacyprofile.data.username }} as a friend{% else %}Remove friend{% endif %}" href="/friends?{% if profile.checkFriends(user.data.id) == 0 %}add{% else %}remove{% endif %}={{ profile.data.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect={{ sakura.currentpage }}" id="profileFriendToggle"></a>
+                                <a class="fa fa-user-{% if profile.checkFriends(user.data.id) == 0 %}plus{% else %}times{% endif %}" title="{% if profile.checkFriends(user.data.id) == 0 %}Add {{ legacyprofile.data.username }} as a friend{% else %}Remove friend{% endif %}" href="/friends?{% if profile.checkFriends(user.data.id) == 0 %}add{% else %}remove{% endif %}={{ profile.data.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect={{ sakura.currentPage }}" id="profileFriendToggle"></a>
                                 <a class="fa fa-flag" title="Report {{ profile.data.username }}" href="/u/{{ profile.data.id }}/report"></a>
                             {% endif %}
                         </div>
                         {% endif %}
                         <hr class="default" />
-                        <b>Joined</b> {{ profile.data.regdate|date(sakura.date_format) }}
+                        <b>Joined</b> {{ profile.data.regdate|date(sakura.dateFormat) }}
                         <br />
                         {% if profile.data.lastdate < 1 %}
                             <b>{{ profile.data.username }} hasn't logged in yet.</b>
                         {% else %}
-                            <b>Last Seen on</b> {{ profile.data.lastdate|date(sakura.date_format) }}
+                            <b>Last Seen on</b> {{ profile.data.lastdate|date(sakura.dateFormat) }}
                         {% endif %}
                         <br />
                         <b>{{ profile.data.username }} has {% if not profile.forumStats.posts %}no{% else %}{{ profile.forumStats.posts }}{% endif %} forum post{% if profile.forumStats.posts != 1 %}s{% endif %}.</b>

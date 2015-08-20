@@ -1,12 +1,12 @@
 {% include 'global/header.tpl' %}
-    {% if sakura.lockauth %}
+    {% if sakura.lockAuth %}
     <h1 class="stylised" style="line-height: 1.8em; text-align: center;">Authentication is currently disallowed, try again later.</h1>
     {% else %}
     <div class="loginPage">
         <div class="loginCont">
             <div class="loginForm">
                 <div class="head">
-                    Login to {{ sakura.sitename }}
+                    Login to {{ sakura.siteName }}
                 </div>
                 <form method="post" action="/authenticate" id="loginForm">
                     <input type="hidden" name="redirect" value="{{ auth.redirect }}" />
@@ -65,9 +65,9 @@
         <div class="registerCont">
             <div class="registerForm">
                 <div class="head">
-                    Register on {{ sakura.sitename }}
+                    Register on {{ sakura.siteName }}
                 </div>
-                {% if not sakura.disableregister %}
+                {% if not sakura.disableRegistration %}
                 <form id="registerForm" method="post" action="/authenticate" style="display:{% if auth.blockRegister.do %}none{% else %}block{% endif %};">
                     <input type="hidden" name="mode" value="register" />
                     <input type="hidden" name="session" value="{{ php.sessionid }}" />
@@ -96,7 +96,7 @@
                     <div class="centreAlign">
                         <input class="inputStyling" type="password" id="registerConfirmPassword" name="confirmpassword" onkeyup="registerVarCheck(this.id, 'confirmpw', 'registerPassword');" placeholder="Just to make sure" />
                     </div>
-                    {% if sakura.requireregcodes %}
+                    {% if sakura.requireRegCodes %}
                     <div class="leftAlign">
                         <label for="registerCode">Registration Code:</label>
                     </div>
@@ -104,18 +104,18 @@
                         <input class="inputStyling" type="text" id="registerCode" name="registercode" placeholder="Ask another member for one" />
                     </div>
                     {% endif %}
-                    {% if sakura.recaptcha_enable %}
+                    {% if sakura.recaptchaEnable %}
                     <div class="leftAlign">
                         <label for="recaptcha_response_field">Verification:</label>
                     </div>
                     <div class="centreAlign">
                         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-                        <div class="g-recaptcha" data-sitekey="{{ sakura.recaptcha_public }}" style="margin: auto; display: inline-block;"></div>
+                        <div class="g-recaptcha" data-sitekey="{{ sakura.recaptchaPublic }}" style="margin: auto; display: inline-block;"></div>
                         <noscript>
                             <div style="width: 302px; height: 352px; margin: auto; display: inline-block;">
                                 <div style="width: 302px; height: 352px; position: relative;">
                                     <div style="width: 302px; height: 352px; position: absolute;">
-                                        <iframe src="https://www.google.com/recaptcha/api/fallback?k={{ sakura.recaptcha_public }}" frameborder="0" scrolling="no" style="width: 302px; height:352px; border-style: none;"></iframe>
+                                        <iframe src="https://www.google.com/recaptcha/api/fallback?k={{ sakura.recaptchaPublic }}" frameborder="0" scrolling="no" style="width: 302px; height:352px; border-style: none;"></iframe>
                                     </div>
                                     <div style="width: 250px; height: 80px; position: absolute; border-style: none; bottom: 21px; left: 25px; margin: 0px; padding: 0px; right: 25px;">
                                         <textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 80px; border: 1px solid #c1c1c1; margin: 0px; padding: 0px; resize: none;" value=""></textarea>
@@ -156,7 +156,7 @@
                 </div>
                 {% endif %}
             </div>
-            {% if not sakura.requireactive %}
+            {% if not sakura.requireActivation %}
             <div class="resendForm">
                 <div class="head">
                     Resend Activation E-mail

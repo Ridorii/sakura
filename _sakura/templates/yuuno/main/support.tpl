@@ -6,7 +6,7 @@
     </div>
     {% endif %}
     <div class="content support">
-        <div class="head">Support {{ sakura.sitename }}</div>
+        <div class="head">Support {{ sakura.siteName }}</div>
         <div style="font-size: .9em; margin-bottom: 10px;">
             <p>In order to keep the site, its services and improvements on it going I need money but I'm not that big of a fan of asking for money without giving anything special in return thus Tenshi exists. Tenshi is the name for our supporter rank which gives you access to an extra set of features (which are listed further down on this page). With your help we can keep adding new stuff, get new hardware and keep the site awesome!</p>
         </div>
@@ -15,7 +15,7 @@
             Your current Tenshi tag
         </div>
         <div style="margin-bottom: 10px;">
-            <h3>{% if page.current[0] == 2 %}Your rank has persistent Tenshi.{% else %}Your Tenshi tag is valid till {{ page.current[2]|date(sakura.date_format) }}.{% endif %}</h3>
+            <h3>{% if page.current[0] == 2 %}Your rank has persistent Tenshi.{% else %}Your Tenshi tag is valid till {{ page.current[2]|date(sakura.dateFormat) }}.{% endif %}</h3>
             <progress value="{{ page.current[0] == 2 ? 100 : (100 - (((php.time - page.current[1]) / (page.current[2] - page.current[1])) * 100)) }}" max="100" style="width: 100%"></progress>
         </div>
         {% endif %}

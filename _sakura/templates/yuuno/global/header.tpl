@@ -4,8 +4,8 @@
         <!-- META -->
         <meta charset="{{ sakura.charset }}" />
         <title>{{ page.title }}</title>
-        <meta name="description" content="{{ sakura.sitedesc }}" />
-        <meta name="keywords" content="{{ sakura.sitetags }}" />
+        <meta name="description" content="{{ sakura.siteDesc }}" />
+        <meta name="keywords" content="{{ sakura.siteTags }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="msapplication-TileColor" content="#fbeeff" />
         <meta name="msapplication-TileImage" content="/content/images/icons/ms-icon-144x144.png" />
@@ -49,20 +49,21 @@
 
                 "cookie": {
 
-                    "prefix":   "{{ sakura.cookieprefix }}",
-                    "domain":   "{{ sakura.cookiedomain }}",
-                    "path":     "{{ sakura.cookiepath }}"
+                    "prefix":   "{{ sakura.cookie.prefix }}",
+                    "domain":   "{{ sakura.cookie.domain }}",
+                    "path":     "{{ sakura.cookie.path }}"
 
                 },
 
-                "url_main":     "{{ sakura.url_main }}",
-                "content":      "{{ sakura.content_path }}",
-                "resources":    "{{ sakura.resources }}",
+                "urlMain":          "{{ sakura.urlMain }}",
+                "content":          "{{ sakura.contentPath }}",
+                "resources":        "{{ sakura.resources }}",
+                "recaptchaEnabled": "{{ sakura.recaptchaEnabled }}",
 
-                "minUserLen":       {{ sakura.minusernamelength }},
-                "maxUserLen":       {{ sakura.maxusernamelength }},
-                "minPwdEntropy":    {{ sakura.minpwdentropy }},
-                "checklogin":       {% if session.checkLogin %}true{% else %}false{% endif %}
+                "minUserLen":       {{ sakura.minUsernameLength }},
+                "maxUserLen":       {{ sakura.maxUsernameLength }},
+                "minPwdEntropy":    {{ sakura.minPwdEntropy }},
+                "checkLogin":       {% if session.checkLogin %}true{% else %}false{% endif %}
 
             };
 
@@ -77,7 +78,7 @@
             {% if session.checkLogin %}
             // Convert href to object in logout link
             prepareAjaxLink('headerLogoutLink', 'submitPost', ', true, "Logging out..."');
-            {% elseif not sakura.lockauth and php.self != '/authenticate.php' %}
+            {% elseif not sakura.lockAuth and php.self != '/authenticate.php' %}
             // Make the header login form dynamic
             var headerLoginForm = document.getElementById('headerLoginForm');
             var createInput     = document.createElement('input');
@@ -115,13 +116,13 @@
                 }
             {% endif %}
 
-            {% if php.self == '/authenticate.php' and not sakura.lockauth %}
+            {% if php.self == '/authenticate.php' and not sakura.lockAuth %}
             // AJAX Form Submission
             var forms = {
                 {% if not auth.changingPass %}
                 "loginForm": 'Logging in...',
-                {% if not sakura.disableregister %}"registerForm": 'Processing registration...',{% endif %}
-                {% if not sakura.requireactive %}"resendForm": 'Attempting to resend activation...',{% endif %}
+                {% if not sakura.disableRegistration %}"registerForm": 'Processing registration...',{% endif %}
+                {% if not sakura.requireActivation %}"resendForm": 'Attempting to resend activation...',{% endif %}
                 "passwordForm": 'Sending password recovery mail...'
                 {% else %}
                 "passwordForm": 'Changing password...'
@@ -157,13 +158,13 @@
         <div id="container">
             <span id="top"></span>
             <div class="header" id="header">
-                <a class="logo" href="//{{ sakura.url_main }}/">{{ sakura.sitename }}</a>
+                <a class="logo" href="//{{ sakura.urlMain }}/">{{ sakura.siteName }}</a>
                 <div class="menu">
                     <div class="menu-nav" id="navMenuSite">
                         <!-- Navigation menu, displayed on left side of the bar. -->
                         <a class="menu-item" href="/" title="Return to the front page of Flashii">Home</a>
                         <a class="menu-item" href="/news" title="Here you can read updates on Flashii">News</a>
-                        <a class="menu-item" href="//chat.{{ sakura.url_main }}/" title="Chat with other Flashii members">Chat</a>
+                        <a class="menu-item" href="//chat.{{ sakura.urlMain }}/" title="Chat with other Flashii members">Chat</a>
                         <a class="menu-item" href="/forum" title="Discuss things with other members but static">Forums</a>
                         <a class="menu-item" href="/search" title="Search on Flashii">Search</a>
                         {% if session.checkLogin %}
@@ -180,7 +181,7 @@
                             <a class="menu-item" href="/settings" title="Change your settings">Settings</a>
                             <a class="menu-item" href="/logout?mode=logout&amp;time={{ php.time }}&amp;session={{ php.sessionid }}&amp;redirect={{ sakura.currentpage }}" title="End your login session" id="headerLogoutLink">Logout</a>
                         {% else %}
-                            {% if sakura.lockauth %}
+                            {% if sakura.lockAuth %}
                             <div class="menu-item" style="padding-left: 10px; padding-right: 10px;">Authentication is locked</div>
                             {% else %}
                             <a class="menu-item" href="/authenticate" title="Login to Flashii">Login or Register</a>
@@ -200,7 +201,7 @@
                 {% endif %}
                 {% if not session.checkLogin and php.self != '/authenticate.php' %}
                     <form method="post" action="/authenticate" id="headerLoginForm" onkeydown="formEnterCatch(event, 'headerLoginButton');">
-                        <input type="hidden" name="redirect" value="{{ sakura.currentpage }}" />
+                        <input type="hidden" name="redirect" value="{{ sakura.currentPage }}" />
                         <input type="hidden" name="session" value="{{ php.sessionid }}" />
                         <input type="hidden" name="time" value="{{ php.time }}" />
                         <input type="hidden" name="mode" value="login" />
@@ -222,8 +223,8 @@
                     </form>
                 {% endif %}
                 <noscript>
-                    <div class="headerNotify">
+                    <div class="headerNotify" style="padding-top: 10px; padding-bottom: 10px;">
                         <h1>You have JavaScript disabled!</h1>
-                        <p>A lot of things on this site require JavaScript to be enabled (e.g. the chat), we try to keep both sides happy but it is highly recommended that you enable it (you'll also have to deal with this message being here if you don't enable it).</p>
+                        <p style="padding: 0 10px;">A lot of things on this site require JavaScript to be enabled (e.g. the chat), we try to keep both sides happy but it is highly recommended that you enable it (you'll also have to deal with this message being here if you don't enable it).</p>
                     </div>
                 </noscript>

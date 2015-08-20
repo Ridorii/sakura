@@ -1,7 +1,7 @@
 {% include 'global/header.tpl' %}
 <div class="content">
     <div class="content-column forum posting">
-        <form method="post" action="{{ sakura.currentpage }}">
+        <form method="post" action="{{ sakura.currentPage }}">
             <div class="head">Forum / Posting</div>
             <div class="posting-subject">
                 <input type="text" class="inputStyling" name="subject" placeholder="Subject" />

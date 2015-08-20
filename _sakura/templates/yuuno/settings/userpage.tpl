@@ -5,7 +5,7 @@
     </div>
     <hr class="default" />
 {% endif %}
-<form enctype="multipart/form-data" method="post" action="{{ sakura.currentpage }}">
+<form enctype="multipart/form-data" method="post" action="{{ sakura.currentPage }}">
     <input type="hidden" name="sessid" value="{{ php.sessionid }}" />
     <input type="hidden" name="timestamp" value="{{ php.time }}" />
     <input type="hidden" name="mode" value="userpage" />

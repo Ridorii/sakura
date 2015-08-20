@@ -21,7 +21,7 @@
                     <tr>
                         <td><a href="/u/{{ message.data.from.user.id }}" class="default" style="font-weight: 700; color: {% if message.data.from.user.name_colour == null %}{{ message.data.from.rank.colour }}{% else %}{{ message.data.from.user.name_colour }}{% endif %};">{{ message.data.from.user.username }}</a></td>
                         <td><a href="/messages/read/{{ message.id }}" class="default">{{ message.subject }}</a></td>
-                        <td>{{ message.time|date(sakura.date_format) }}</td>
+                        <td>{{ message.time|date(sakura.dateFormat) }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

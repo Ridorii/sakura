@@ -44,7 +44,8 @@
                 "20150812",
                 "20150813",
                 "20150818",
-                "20150819"
+                "20150819",
+                "20150820"
 
             ]
 
@@ -2085,6 +2086,26 @@
             {
                 "type":     "FIX",
                 "change":   "Clean up unneeded things from profile.php.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150820": [
+
+            {
+                "type":     "UPD",
+                "change":   "Cleaned up the sakura template variable.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed font on changelog not displaying correctly.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed the \"Enable JavaScript\" message look a bit less mentally challenged.",
                 "user":     "Flashwave"
             }
 

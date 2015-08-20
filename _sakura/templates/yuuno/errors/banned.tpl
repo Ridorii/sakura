@@ -14,8 +14,8 @@
                 <br />
                 <h2>Additional information</h2>
                 <ul style="margin-left: 30px;">
-                    <li>You were banned on {{ ban.issued|date(sakura.date_format) }}.</li>
-                    <li>{% if ban.expires %}This ban expires on {{ ban.expires|date(sakura.date_format) }}.{% else %}<b>You are permanently banned.</b>{% endif %}</li>
+                    <li>You were banned on {{ ban.issued|date(sakura.dateFormat) }}.</li>
+                    <li>{% if ban.expires %}This ban expires on {{ ban.expires|date(sakura.dateFormat) }}.{% else %}<b>You are permanently banned.</b>{% endif %}</li>
                     {% if ban.expires %}
                     <li>You were banned by <a href="/u/{{ ban.issuer.id }}" class="default">{{ ban.issuer.username }}</a>.</li>
                     {% endif %}

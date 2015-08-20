@@ -7,7 +7,7 @@
     </ul>
     <div class="clear"></div>
 {% else %}
-    {% if sakura.lockauth %}
+    {% if sakura.lockAuth %}
         <div class="head">Whoops!</div>
         You caught the site at the wrong moment! Right now registration <i>and</i> logging in is disabled for unspecified reasons. Sorry for the inconvenience but please try again later!
         <div class="indexSidePanelLinks">

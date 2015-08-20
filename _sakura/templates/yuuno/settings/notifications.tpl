@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="notif-hist-time">
-                {{ notif.timestamp|date(sakura.date_format) }}
+                {{ notif.timestamp|date(sakura.dateFormat) }}
             </div>
         </div>
         <div class="clear"></div>

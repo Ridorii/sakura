@@ -4,10 +4,12 @@
         <meta charset="utf-8" />
         <title>Sakura Changelog</title>
         <style type="text/css">
+            @import url('/content/fonts/segoeui-light/font.css');
+
             body {
                 background: #000;
                 color: #FFF;
-                font: 300 12px/20px "Segoe UI", sans-serif;
+                font: 300 12px/20px "SegoeUI-Light", sans-serif;
                 margin: 45px 30px;
                 padding: 0;
             }

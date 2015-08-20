@@ -1,4 +1,4 @@
-<form enctype="multipart/form-data" method="post" action="{{ sakura.currentpage }}" id="editProfileForm">
+<form enctype="multipart/form-data" method="post" action="{{ sakura.currentPage }}" id="editProfileForm">
     <input type="hidden" name="sessid" value="{{ php.sessionid }}" />
     <input type="hidden" name="timestamp" value="{{ php.time }}" />
     <input type="hidden" name="mode" value="profile" />
@@ -35,7 +35,7 @@ window.addEventListener("load", function() {
     createInput.setAttribute('value', 'true');
     createInput.setAttribute('type', 'hidden');
     editProfileForm.appendChild(createInput);
-    
+
     submit.setAttribute('type', 'button');
     submit.setAttribute('onclick', 'submitPost(\''+ editProfileForm.action +'\', formToObject(\'editProfileForm\'), true, \'Updating Profile...\');');
 });

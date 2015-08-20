@@ -12,5 +12,5 @@
 </div>
 <div class="clear"></div>
 <div class="news-post-time">
-    Posted on {{ newsPost.date|date(sakura.date_format) }}{% if not page.view_post %} <a class="default" href="/news/{{ newsPost.id }}#disqus_thread">View comments</a>{% endif %}
+    Posted on {{ newsPost.date|date(sakura.dateFormat) }}{% if not page.view_post %} <a class="default" href="/news/{{ newsPost.id }}#disqus_thread">View comments</a>{% endif %}
 </div>

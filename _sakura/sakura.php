@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150819');
+define('SAKURA_VERSION',    '20150820');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_COLOUR',     '#6C3082');
 define('SAKURA_STABLE',     false);
@@ -63,36 +63,51 @@ if(!defined('SAKURA_NO_TPL')) {
 
         'sakura' => [
 
-            'version'           => SAKURA_VERSION,
-            'vlabel'            => SAKURA_VLABEL,
-            'vcolour'           => SAKURA_COLOUR,
-            'stable'            => SAKURA_STABLE,
-            'url_main'          => Configuration::getConfig('url_main'),
-            'url_api'           => Configuration::getConfig('url_api'),
-            'content_path'      => Configuration::getConfig('content_path'),
-            'resources'         => Configuration::getConfig('content_path') .'/data/'. strtolower(Templates::$_TPL),
-            'charset'           => Configuration::getConfig('charset'),
-            'currentpage'       => '//'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'],
-            'recaptcha_public'  => Configuration::getConfig('recaptcha_public'),
-            'recaptcha_enable'  => Configuration::getConfig('recaptcha'),
-            'disableregister'   => Configuration::getConfig('disable_registration'),
-            'locksite'          => Configuration::getConfig('lock_site'),
-            'locksitereason'    => Configuration::getConfig('lock_site_reason'),
-            'lockauth'          => Configuration::getConfig('lock_authentication'),
-            'requireregcodes'   => Configuration::getConfig('require_registration_code'),
-            'requireactiveate'  => Configuration::getConfig('require_activation'),
-            'sitename'          => Configuration::getConfig('sitename'),
-            'sitedesc'          => Configuration::getConfig('sitedesc'),
-            'sitetags'          => implode(", ", json_decode(Configuration::getConfig('sitetags'), true)),
-            'cookieprefix'      => Configuration::getConfig('cookie_prefix'),
-            'cookiedomain'      => Configuration::getConfig('cookie_domain'),
-            'cookiepath'        => Configuration::getConfig('cookie_path'),
-            'minpwdentropy'     => Configuration::getConfig('min_entropy'),
-            'minusernamelength' => Configuration::getConfig('username_min_length'),
-            'maxusernamelength' => Configuration::getConfig('username_max_length'),
+            'versionInfo' => [
+
+                'version'   => SAKURA_VERSION,
+                'label'     => SAKURA_VLABEL,
+                'colour'    => SAKURA_COLOUR,
+                'stable'    => SAKURA_STABLE
+
+            ],
+
+            'cookie' => [
+
+                'prefix'    => Configuration::getConfig('cookie_prefix'),
+                'domain'    => Configuration::getConfig('cookie_domain'),
+                'path'      => Configuration::getConfig('cookie_path'),
+
+            ],
+
+            'urlMain'   => Configuration::getConfig('url_main'),
+            'urlApi'    => Configuration::getConfig('url_api'),
+
+            'contentPath'   => Configuration::getConfig('content_path'),
+            'resources'     => Configuration::getConfig('content_path') .'/data/'. strtolower(Templates::$_TPL),
+
+            'charset'       => Configuration::getConfig('charset'),
+            'siteName'      => Configuration::getConfig('sitename'),
+            'siteDesc'      => Configuration::getConfig('sitedesc'),
+            'siteTags'      => implode(", ", json_decode(Configuration::getConfig('sitetags'), true)),
+            'dateFormat'    => Configuration::getConfig('date_format'),
+            'currentPage'   => '//'. $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'],
+
+            'recaptchaPublic'   => Configuration::getConfig('recaptcha_public'),
+            'recaptchaEnabled'  => Configuration::getConfig('recaptcha'),
+
+            'disableRegistration'   => Configuration::getConfig('disable_registration'),
+            'lockSite'              => Configuration::getConfig('lock_site'),
+            'lockSiteReason'        => Configuration::getConfig('lock_site_reason'),
+            'lockAuth'              => Configuration::getConfig('lock_authentication'),
+            'requireRegCodes'       => Configuration::getConfig('require_registration_code'),
+            'requireActivation'     => Configuration::getConfig('require_activation'),
+            'minPwdEntropy'         => Configuration::getConfig('min_entropy'),
+            'minUsernameLength'     => Configuration::getConfig('username_min_length'),
+            'maxUsernameLength'     => Configuration::getConfig('username_max_length'),
+
             'disqus_shortname'  => Configuration::getConfig('disqus_shortname'),
-            'disqus_api_key'    => Configuration::getConfig('disqus_api_key'),
-            'date_format'       => Configuration::getConfig('date_format')
+            'disqus_api_key'    => Configuration::getConfig('disqus_api_key')
 
         ],
 

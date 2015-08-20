@@ -204,7 +204,7 @@ function notifyRequest(session) {
 
     // Create XMLHttpRequest and notifyURL
     var notificationWatcher = new XMLHttpRequest();
-    var notifyURL           = '//' + sakuraVars.url_main + '/settings.php?request-notifications=true&time=' + epochTime() + '&session=' + session;
+    var notifyURL           = '//' + sakuraVars.urlMain + '/settings.php?request-notifications=true&time=' + epochTime() + '&session=' + session;
 
     // Wait for the ready state to change
     notificationWatcher.onreadystatechange = function() {
@@ -581,7 +581,7 @@ function submitPost(action, requestParts, busyView, msg, resetCaptchaOnFailure) 
     }
 
     // If request reset the recaptcha on failure
-    if(resetCaptchaOnFailure && request[2] != '1') {
+    if(resetCaptchaOnFailure && request[2] != '1' && sakuraVars.recpatchaEnabled) {
 
         grecaptcha.reset();
 
@@ -599,7 +599,7 @@ function submitPost(action, requestParts, busyView, msg, resetCaptchaOnFailure) 
             window.location = request[3];
 
         }
-    }, 2000); 
+    }, 2000);
 
     return;
 
@@ -799,7 +799,7 @@ function convertParallaxPositionValue(pos, dir, neg) {
     }
 
     // Subtract another 2.5 to make the element not go all over the place
-    position = position - 2.5; 
+    position = position - 2.5;
 
     // Return the proper position value
     return position;
@@ -826,12 +826,12 @@ function scrollToTop() {
 
 // Formatting money
 Number.prototype.formatMoney = function(c, d, t) {
-var n = this, 
-    c = isNaN(c = Math.abs(c)) ? 2 : c, 
-    d = d == undefined ? "." : d, 
-    t = t == undefined ? "," : t, 
-    s = n < 0 ? "-" : "", 
-    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+var n = this,
+    c = isNaN(c = Math.abs(c)) ? 2 : c,
+    d = d == undefined ? "." : d,
+    t = t == undefined ? "," : t,
+    s = n < 0 ? "-" : "",
+    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
     j = (j = i.length) > 3 ? j % 3 : 0;
    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
  };
