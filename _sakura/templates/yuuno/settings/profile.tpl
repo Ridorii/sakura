@@ -8,12 +8,12 @@
                 <h2>{{ field.name }}</h2>
             </div>
             <div>
-                <input type="{{ field.formtype }}" name="profile_{{ field.ident }}" class="inputStyling" placeholder="{{ field.description }}"{% if profile.user[field.ident].value %} value="{{ profile.user[field.ident].value }}"{% endif %} />
+                <input type="{{ field.formtype }}" name="profile_{{ field.ident }}" class="inputStyling" placeholder="{{ field.description }}"{% if profile.user[field.ident].value %}{% if field.formtype == 'checkbox' and profile.user[field.ident].value == 'true' %} checked="checked"{% else %} value="{{ profile.user[field.ident].value }}"{% endif %}{% endif %} />
             </div>
             {% if field.addit %}
                 {% for id,addit in field.addit %}
                     <div>
-                        <input type="{{ addit[0] }}" id="{{ id }}" name="profile_additional_{{ id }}" />
+                        <input type="{{ addit[0] }}" id="{{ id }}" name="profile_additional_{{ id }}"{% if profile.user[field.ident][id] %}{% if addit[0] == 'checkbox' and profile.user[field.ident][id] == 'true' %} checked="checked"{% else %} value="{{ profile.user[field.ident][id] }}"{% endif %}{% endif %} />
                         <label for="{{ id }}" style="font-size: 10px;">{{ addit[1]|raw }}</label>
                     </div>
                 {% endfor %}

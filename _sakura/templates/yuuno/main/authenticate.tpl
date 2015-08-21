@@ -126,7 +126,7 @@
                     </div>
                     {% endif %}
                     <div class="subLinks centreAlign">
-                        <input class="inputStyling" name="tos" type="checkbox" class="ignore-css" id="registerToS" /><label for="registerToS">I agree to the <a class="default" href="/r/terms" target="_blank">Terms of Service</a>.
+                        <input class="inputStyling" name="tos" type="checkbox" class="ignore-css" id="registerToS" /><label for="registerToS">I agree to the <a class="default" href="/p/terms" target="_blank">Terms of Service</a>.
                     </div>
                     <div class="centreAlign">
                         <input class="inputStyling" type="submit" name="submit" value="Register" id="registerAccBtn" />

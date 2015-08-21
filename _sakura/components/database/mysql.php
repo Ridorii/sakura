@@ -82,8 +82,7 @@ class MySQL {
 
     }
 
-    // Fetch array from database
-    public function fetch($table, $fetchAll = true, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*', $prefix = null) {
+    public function select($table, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*', $prefix = null) {
 
         // Begin preparation of the statement
         $prepare = 'SELECT '. ($distinct ? 'DISTINCT ' : '') . ($column == '*' ? '' : '`') . $column . ($column == '*' ? '' : '`') .' FROM `' . ($prefix ? $prefix : Configuration::getLocalConfig('database', 'prefix')) . $table . '`';
@@ -94,11 +93,30 @@ class MySQL {
             $prepare .= ' WHERE';
 
             foreach($data as $key => $value) {
-                $prepare .= ' `'. $key .'` '. $value[1] .' :'. $key . ($key == key(array_slice($data, -1, 1, true)) ? '' : ' '. (isset($value[2]) && $value[2] ? 'OR' : 'AND'));
+
+                // Check if there's multiple statements
+                if(!is_array($value[0])) {
+
+                    $temp = $value;
+                    unset($value);
+                    $value[0] = $temp;
+
+                }
+
+                // Go over each data thing
+                foreach($value as $sub => $val) {
+
+                    $prepare .= ' `'. $key .'` '. $val[1] .' :'. $key .'_'. $sub . ($key == key(array_slice($data, -1, 1, true)) && $sub == key(array_slice($value, -1, 1, true)) ? '' : ' '. (isset($val[2]) && $val[2] ? 'OR' : 'AND'));
+
+                    unset($sub);
+                    unset($val);
+
+                }
 
                 // Unset variables to be safe
                 unset($key);
                 unset($value);
+
             }
 
         }
@@ -150,17 +168,47 @@ class MySQL {
         if(is_array($data)) {
 
             foreach($data as $key => $value) {
-                $query->bindParam(':'. $key, $value[0]);
+
+                // Check if there's multiple statements
+                if(!is_array($value[0])) {
+
+                    $temp = $value;
+                    unset($value);
+                    $value[0] = $temp;
+
+                }
+
+                // Go over each data thing
+                foreach($value as $sub => $val) {
+
+                    $query->bindParam(':'. $key .'_'. $sub, $val[0]);
+
+                    unset($sub);
+                    unset($val);
+
+                }
 
                 // Unset variables to be safe
                 unset($key);
                 unset($value);
+
             }
 
         }
 
         // Execute the prepared statements with parameters bound
         $query->execute();
+
+        // Return the query
+        return $query;
+
+    }
+
+    // Fetch array from database
+    public function fetch($table, $fetchAll = true, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*', $prefix = null) {
+
+        // Run a select statement
+        $query = $this->select($table, $data, $order, $limit , $group, $distinct, $column, $prefix);
 
         // Return the output
         return $fetchAll ? $query->fetchAll(PDO::FETCH_ASSOC) : $query->fetch(PDO::FETCH_ASSOC);

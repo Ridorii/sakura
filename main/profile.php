@@ -18,9 +18,11 @@ $renderData['profile'] = $profile;
 
 // Set proper page title
 $renderData['page']['title'] = (
+
     $profile->data['id'] < 1 || $profile->data['password_algo'] == 'nologin'
     ? 'User not found!'
     : 'Profile of '. $profile->data['username']
+
 );
 
 // Print page contents

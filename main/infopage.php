@@ -16,12 +16,14 @@ $renderData['page'] = [
 ];
 
 // Get info page data from the database
-if($ipData = Main::loadInfoPage(isset($_GET['r']) ? strtolower($_GET['r']) : '')) {
+if($ipData = Main::loadInfoPage(isset($_GET['p']) ? strtolower($_GET['p']) : '')) {
 
     // Assign new proper variable
     $renderData['page'] = [
+
         'title'     => $ipData['pagetitle'],
         'content'   => Main::mdParse($ipData['content'])
+
     ];
 
 }

@@ -17,8 +17,10 @@ if(!$forum) {
 
     // Set render data
     $renderData['page'] = [
+
         'title'     => 'Information',
         'message'   => 'The subforum you tried to access does not exist.'
+
     ];
 
     // Print template
@@ -32,9 +34,11 @@ if($forum['forum']['forum_type'] === 2) {
 
     // Set render data
     $renderData['page'] = [
+
         'title'     => 'Information',
         'message'   => 'The forum you tried to access is a link. You\'re being redirected.',
         'redirect'  => $forum['forum']['forum_link']
+
     ];
 
     // Print template
@@ -44,16 +48,22 @@ if($forum['forum']['forum_type'] === 2) {
 }
 
 $renderData['page'] = [
+
     'title' => 'Forums / '. $forum['forum']['forum_name']
+
 ];
 
 $renderData['board'] = [
+
     'forums' => [
+
         $forum
+
     ],
     'topics' => Forum::getTopics($forum['forum']['forum_id']),
     'viewforum' => true,
     'viewtopic' => false
+
 ];
 
 // Print page contents

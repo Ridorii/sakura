@@ -45,7 +45,8 @@
                 "20150813",
                 "20150818",
                 "20150819",
-                "20150820"
+                "20150820",
+                "20150821"
 
             ]
 
@@ -2105,7 +2106,77 @@
             },
             {
                 "type":     "FIX",
-                "change":   "Fixed the \"Enable JavaScript\" message look a bit less mentally challenged.",
+                "change":   "Made the \"Enable JavaScript\" message look a bit less mentally challenged.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150821": [
+
+            {
+                "type":     "UPD",
+                "change":   "Moved image serving file to the new user api.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Changed /r/ urls to /p/ to not have it be confused with subreddit.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added new options menu (replaces site wide background checkbox).",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed user uploads removal.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed an ancient issue where the avatar in the header leaves its containers.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Split the SQL fetch function up into select and fetch functions for possible future use.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed values of additional profile values not showing up properly.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added banner to footer on unstable revisions.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added a fallback to the User class that checks using a LIKE statement.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Implemented permission checking for all the settings in the Aesthetics category.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed youtubetype being ignored on the profile.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Switched to a less disgusting purple for the selection of user boxes.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed sitewide background making text on Members page unreadable.",
                 "user":     "Flashwave"
             }
 

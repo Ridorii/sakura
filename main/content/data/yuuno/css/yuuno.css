@@ -594,6 +594,7 @@ a#gotop.exit {
     width: auto;
     padding-left: 36px;
     background: url('/pixel.png') no-repeat scroll left center / contain transparent;
+    background-size: auto 30px;
 }
 
 .header .menu .menu-item:hover {
@@ -875,7 +876,7 @@ a#gotop.exit {
 }
 
 .membersPage .userBox:active {
-    box-shadow: 0 0 1.5em #609;
+    box-shadow: 0 0 1.5em #9475B2;
 }
 
 .membersPage .userBox img {

@@ -1,14 +1,18 @@
 {% include 'global/header.tpl' %}
     {% if session.checkLogin %}
-    <div class="membersPage" style="min-height: 500px;">
+    <div class="headerNotify" style="padding: 10px 0; margin-bottom: 1px;">
         <h1 style="text-shadow: 0px 0px 5px #555;{% if page.active %} color: {{ page.ranks[page.active].colour }};{% endif %}">{% if not page.active %}All members{% else %}{{ page.ranks[page.active].name }}{% if page.ranks[page.active].multi %}s{% endif %}{% endif %}</h1>
-        <h3 style="padding: 0px 0px 10px;">{% if not page.active %}The entire user list.{% else %}{{ page.ranks[page.active].description }}{% endif %}</h3>
+        <h3>{% if not page.active %}The entire user list.{% else %}{{ page.ranks[page.active].description }}{% endif %}</h3>
+    </div>
+    <div class="membersPage" style="min-height: 500px;">
         <div class="dropDown" style="margin: 0px auto; font-size: 1.5em; line-height: 1.5em; height: 30px;">
             <div class="dropDownInner" style="float: left; color: #FFF;">
                 <a class="dropDownDesc">Rank:</a>
                 <a href="/members/"{% if not page.active %} class="dropDownSelected"{% endif %}>All members</a>
                 {% for rank in page.ranks %}
-                <a href="/members/{% if page.sort != page.sorts[0] %}{{ page.sort }}/{% endif %}{{ rank.id }}/" style="color: {{ rank.colour }};"{% if page.active == rank.id %} class="dropDownSelected"{% endif %}>{{ rank.name }}{% if rank.multi %}s{% endif %}</a>
+                    {% if not rank.hidden or (rank.hidden and page.active == rank.id) %}
+                        <a href="/members/{% if page.sort != page.sorts[0] %}{{ page.sort }}/{% endif %}{{ rank.id }}/" style="color: {{ rank.colour }};"{% if page.active == rank.id %} class="dropDownSelected"{% endif %}>{{ rank.name }}{% if rank.multi %}s{% endif %}</a>
+                    {% endif %}
                 {% endfor %}
             </div>
             <div class="dropDownInner" style="float: left;">

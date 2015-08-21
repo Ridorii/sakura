@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150820');
+define('SAKURA_VERSION',    '20150821');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_COLOUR',     '#6C3082');
 define('SAKURA_STABLE',     false);
@@ -55,6 +55,9 @@ Main::init(ROOT .'_sakura/config/config.ini');
 
 // Start output buffering
 ob_start(Configuration::getConfig('use_gzip') ? 'ob_gzhandler' : null);
+
+// Create a user object for the current logged in user
+$currentUser = new User(Session::$userId);
 
 if(!defined('SAKURA_NO_TPL')) {
 
@@ -111,13 +114,6 @@ if(!defined('SAKURA_NO_TPL')) {
 
         ],
 
-        'perms' => [
-
-            'canGetPremium' => Permissions::check('SITE',   'OBTAIN_PREMIUM',   Session::$userId, 1),
-            'canUseForums'  => Permissions::check('FORUM',  'USE_FORUM',        Session::$userId, 1)
-
-        ],
-
         'php' => [
 
             'sessionid' => \session_id(),
@@ -134,7 +130,7 @@ if(!defined('SAKURA_NO_TPL')) {
 
         ],
 
-        'user' => new User(Session::$userId)
+        'user' => $currentUser
 
     ];
 

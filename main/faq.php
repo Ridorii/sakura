@@ -11,8 +11,10 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sak
 
 // Add page specific things
 $renderData['page'] = [
+
     'title'     => 'Frequently Asked Questions',
     'questions' => Main::getFaqData()
+
 ];
 
 // Print page contents

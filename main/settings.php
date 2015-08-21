@@ -36,6 +36,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
             // Add the notification to the display array
             $notifications[$notif['timestamp']] = [
+
                 'read'      => $notif['notif_read'],
                 'title'     => $notif['notif_title'],
                 'text'      => $notif['notif_text'],
@@ -43,6 +44,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 'img'       => $notif['notif_img'],
                 'timeout'   => $notif['notif_timeout'],
                 'sound'     => $notif['notif_sound']
+
             ];
 
         }
@@ -73,10 +75,12 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
         }
 
         $renderData['page'] = [
+
             'title'     => 'Action failed',
             'redirect'  => $redirect,
             'message'   => 'One of the required operators isn\'t set.',
             'success'   => 0
+
         ];
 
         // Prevent
@@ -88,10 +92,12 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
     if($continue && $_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')] == Session::$userId) {
 
         $renderData['page'] = [
+
             'title'     => 'Action failed',
             'redirect'  => $redirect,
             'message'   => 'You can\'t be friends with yourself, stop trying to bend reality.',
             'success'   => 0
+
         ];
 
         // Prevent
@@ -103,10 +109,12 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
     if(!isset($_REQUEST['time']) || $_REQUEST['time'] < time() - 1000) {
 
         $renderData['page'] = [
+
             'title'     => 'Action failed',
             'redirect'  => $redirect,
             'message'   => 'Timestamps differ too much, refresh the page and try again.',
             'success'   => 0
+
         ];
 
         // Prevent
@@ -118,10 +126,12 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
     if(!isset($_REQUEST['session']) || $_REQUEST['session'] != session_id()) {
 
         $renderData['page'] = [
+
             'title'     => 'Action failed',
             'redirect'  => $redirect,
             'message'   => 'Invalid session, please try again.',
             'success'   => 0
+
         ];
 
         // Prevent
@@ -137,42 +147,48 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
         // Set the messages
         $messages = [
+
             'USER_NOT_EXIST'    => 'The user you tried to add doesn\'t exist.',
             'ALREADY_FRIENDS'   => 'You are already friends with this person!',
             'FRIENDS'           => 'You are now mutual friends!',
             'NOT_MUTUAL'        => 'A friend request has been sent to this person.',
             'ALREADY_REMOVED'   => 'You aren\'t friends with this person.',
             'REMOVED'           => 'Removed this person from your friends list.'
+
         ];
 
         // Notification strings
         $notifStrings = [
+
             'FRIENDS'       => ['%s accepted your friend request!',     'You can now do mutual friend things!'],
             'NOT_MUTUAL'    => ['%s added you as a friend!',            'Click here to add them as well.'],
             'REMOVED'       => ['%s removed you from their friends.',   'You can no longer do friend things now ;_;']
+
         ];
 
         // Add page specific things
         $renderData['page'] = [
+
             'title'     => 'Managing Friends',
             'redirect'  => $redirect,
             'message'   => $messages[$action[1]],
             'success'   => $action[0]
+
         ];
 
         // Create a notification
         if(array_key_exists($action[1], $notifStrings)) {
 
             // Get the current user's profile data
-            $user = Users::getUser(Session::$userId);
+            $user = new User(Session::$userId);
 
             Users::createNotification(
                 $_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')],
-                sprintf($notifStrings[$action[1]][0], $user['username']),
+                sprintf($notifStrings[$action[1]][0], $user->data['username']),
                 $notifStrings[$action[1]][1],
                 60000,
-                '//'. Configuration::getConfig('url_main') .'/a/'. $user['id'],
-                '//'. Configuration::getConfig('url_main') .'/u/'. $user['id'],
+                '//'. Configuration::getConfig('url_main') .'/a/'. $user->data['id'],
+                '//'. Configuration::getConfig('url_main') .'/u/'. $user->data['id'],
                 '1'
             );
 
@@ -209,10 +225,12 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
     if(!Users::checkLogin() || !$continue) {
 
         $renderData['page'] = [
+
             'title'     => 'Settings',
             'redirect'  => '/authenticate',
             'message'   => 'You must be logged in to edit your settings.',
             'success'   => 0
+
         ];
 
         break;
@@ -223,10 +241,12 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
    if(!isset($_REQUEST['timestamp']) || $_REQUEST['timestamp'] < time() - 1000 || !isset($_REQUEST['sessid']) || $_REQUEST['sessid'] != session_id() || !$continue) {
 
         $renderData['page'] = [
+
             'title'     => 'Session expired',
             'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
             'message'   => 'Your session has expired, please refresh the page and try again.',
             'success'   => 0
+
         ];
 
         break;
@@ -252,19 +272,38 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                     case 'background':
                         $userDataKey    = 'profileBackground';
                         $msgTitle       = 'Background';
+                        $permission     = (!empty($currentUser->data['userData'][$userDataKey]) && $currentUser->checkPermission('SITE', 'CHANGE_BACKGROUND')) || $currentUser->checkPermission('SITE', 'CREATE_BACKGROUND');
                         break;
 
                     case 'avatar':
                     default:
                         $userDataKey    = 'userAvatar';
                         $msgTitle       = 'Avatar';
+                        $permission     = $currentUser->checkPermission('SITE', 'CHANGE_AVATAR');
+
+                }
+
+                // Check if the user has the permissions to go ahead
+                if(!$permission) {
+
+                    // Set render data
+                    $renderData['page'] = [
+
+                        'title'     => $msgTitle,
+                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                        'message'   => 'You are not allowed to alter your '. strtolower($msgTitle) .'.',
+                        'success'   => 0
+
+                    ];
+
+                    break;
 
                 }
 
                 // Set path variables
                 $filepath = ROOT . Configuration::getConfig('user_uploads') .'/';
                 $filename = $filepath . $mode .'_'. Session::$userId;
-                $currfile = isset(Users::getUser(Session::$userId)['userData'][$userDataKey]) && !empty($_OLDFILE = Users::getUser(Session::$userId)['userData'][$userDataKey]) ? $_OLDFILE : null;
+                $currfile = isset($currentUser->data['userData'][$userDataKey]) && !empty($_OLDFILE = $currentUser->data['userData'][$userDataKey]) ? $_OLDFILE : null;
 
                 // Check if $_FILES is set
                 if(!isset($_FILES[$mode]) && empty($_FILES[$mode])) {
@@ -283,8 +322,11 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
                 }
 
+                if(empty($_FILES[$mode]))
+                    die('yes');
+
                 // Check if the upload went properly
-                if($_FILES[$mode]['error'] !== UPLOAD_ERR_OK) {
+                if($_FILES[$mode]['error'] !== UPLOAD_ERR_OK && $_FILES[$mode]['error'] !== UPLOAD_ERR_NO_FILE) {
 
                     // Get the error in text
                     switch($_FILES[$mode]['error']) {
@@ -295,7 +337,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                             break;
 
                         case UPLOAD_ERR_PARTIAL:
-                        case UPLOAD_ERR_NO_FILE:
                             $msg = 'The upload was interrupted!';
                             break;
 
@@ -325,91 +366,96 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
                 }
 
-                // Get the meta data
-                $metadata = getimagesize($_FILES[$mode]['tmp_name']);
+                // Check if we're not in removal mode
+                if($_FILES[$mode]['error'] != UPLOAD_ERR_NO_FILE) {
 
-                // Check if the image is actually an image
-                if($metadata == false) {
+                    // Get the meta data
+                    $metadata = getimagesize($_FILES[$mode]['tmp_name']);
 
-                    // Set render data
-                    $renderData['page'] = [
+                    // Check if the image is actually an image
+                    if($metadata == false) {
 
-                        'title'     => $msgTitle,
-                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
-                        'message'   => 'Uploaded file is not an image.',
-                        'success'   => 0
+                        // Set render data
+                        $renderData['page'] = [
 
-                    ];
+                            'title'     => $msgTitle,
+                            'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                            'message'   => 'Uploaded file is not an image.',
+                            'success'   => 0
 
-                    break;
+                        ];
 
-                }
+                        break;
 
-                // Check if the image is an allowed filetype
-                if((($metadata[2] !== IMAGETYPE_GIF) && ($metadata[2] !== IMAGETYPE_JPEG) && ($metadata[2] !== IMAGETYPE_PNG))) {
+                    }
 
-                    // Set render data
-                    $renderData['page'] = [
+                    // Check if the image is an allowed filetype
+                    if((($metadata[2] !== IMAGETYPE_GIF) && ($metadata[2] !== IMAGETYPE_JPEG) && ($metadata[2] !== IMAGETYPE_PNG))) {
 
-                        'title'     => $msgTitle,
-                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
-                        'message'   => 'This filetype is not allowed.',
-                        'success'   => 0
+                        // Set render data
+                        $renderData['page'] = [
 
-                    ];
+                            'title'     => $msgTitle,
+                            'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                            'message'   => 'This filetype is not allowed.',
+                            'success'   => 0
 
-                    break;
+                        ];
 
-                }
+                        break;
 
-                // Check if the image is too large
-                if(($metadata[0] > Configuration::getConfig($mode .'_max_width') || $metadata[1] > Configuration::getConfig($mode .'_max_height'))) {
+                    }
 
-                    // Set render data
-                    $renderData['page'] = [
+                    // Check if the image is too large
+                    if(($metadata[0] > Configuration::getConfig($mode .'_max_width') || $metadata[1] > Configuration::getConfig($mode .'_max_height'))) {
 
-                        'title'     => $msgTitle,
-                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
-                        'message'   => 'The resolution of this picture is too big.',
-                        'success'   => 0
+                        // Set render data
+                        $renderData['page'] = [
 
-                    ];
+                            'title'     => $msgTitle,
+                            'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                            'message'   => 'The resolution of this picture is too big.',
+                            'success'   => 0
 
-                    break;
+                        ];
 
-                }
+                        break;
 
-                // Check if the image is too small
-                if(($metadata[0] < Configuration::getConfig($mode .'_min_width') || $metadata[1] < Configuration::getConfig($mode .'_min_height'))) {
+                    }
 
-                    // Set render data
-                    $renderData['page'] = [
+                    // Check if the image is too small
+                    if(($metadata[0] < Configuration::getConfig($mode .'_min_width') || $metadata[1] < Configuration::getConfig($mode .'_min_height'))) {
 
-                        'title'     => $msgTitle,
-                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
-                        'message'   => 'The resolution of this picture is too small.',
-                        'success'   => 0
+                        // Set render data
+                        $renderData['page'] = [
 
-                    ];
+                            'title'     => $msgTitle,
+                            'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                            'message'   => 'The resolution of this picture is too small.',
+                            'success'   => 0
 
-                    break;
+                        ];
 
-                }
+                        break;
 
-                // Check if the file is too large
-                if((filesize($_FILES[$mode]['tmp_name']) > Configuration::getConfig($mode .'_max_fsize'))) {
+                    }
 
-                    // Set render data
-                    $renderData['page'] = [
+                    // Check if the file is too large
+                    if((filesize($_FILES[$mode]['tmp_name']) > Configuration::getConfig($mode .'_max_fsize'))) {
 
-                        'title'     => $msgTitle,
-                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
-                        'message'   => 'The filesize of this file is too large.',
-                        'success'   => 0
+                        // Set render data
+                        $renderData['page'] = [
 
-                    ];
+                            'title'     => $msgTitle,
+                            'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                            'message'   => 'The filesize of this file is too large.',
+                            'success'   => 0
 
-                    break;
+                        ];
+
+                        break;
+
+                    }
 
                 }
 
@@ -420,31 +466,32 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
                 }
 
-                // Append extension to filename
-                $filename .= image_type_to_extension($metadata[2]);
+                if($_FILES[$mode]['error'] != UPLOAD_ERR_NO_FILE) {
 
-                if(!move_uploaded_file($_FILES[$mode]['tmp_name'], $filename)) {
+                    // Append extension to filename
+                    $filename .= image_type_to_extension($metadata[2]);
 
+                    if(!move_uploaded_file($_FILES[$mode]['tmp_name'], $filename)) {
 
-                    // Set render data
-                    $renderData['page'] = [
+                        // Set render data
+                        $renderData['page'] = [
 
-                        'title'     => $msgTitle,
-                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
-                        'message'   => 'Something went wrong, please try again.',
-                        'success'   => 0
+                            'title'     => $msgTitle,
+                            'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                            'message'   => 'Something went wrong, please try again.',
+                            'success'   => 0
 
-                    ];
+                        ];
 
-                }
+                    }
 
-                // Create new array
-                $updated = [$userDataKey => basename($filename)];
+                    // Create new array
+                    $updated = [$userDataKey => basename($filename)];
 
-                // Check for the site wide name
-                if($mode == 'background') {
+                } else {
 
-                    $updated['profileBackgroundSiteWide'] = isset($_REQUEST['sitewide']);
+                    // Remove entry
+                    $updated = [$userDataKey => null];
 
                 }
 
@@ -517,6 +564,47 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
                 break;
 
+            // Profile
+            case 'options':
+
+                // Get profile fields and create storage var
+                $fields = Users::getOptionFields();
+                $store  = [];
+
+                // Go over each field
+                foreach($fields as $field) {
+
+                    // Add to the store array
+                    if(isset($_POST['option_'. $field['id']]) && !empty($_POST['option_'. $field['id']])) {
+
+                        // Make sure the user has sufficient permissions to complete this action
+                        if(!$currentUser->checkPermission('SITE', $field['require_perm'])) {
+
+                            continue;
+
+                        }
+
+                        $store[$field['id']] = $_POST['option_'. $field['id']];
+
+                    }
+
+                }
+
+                // Update database
+                Users::updateUserDataField(Session::$userId, ['userOptions' => $store]);
+
+                // Set render data
+                $renderData['page'] = [
+
+                    'title'     => 'Options change',
+                    'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                    'message'   => 'Changed your options!',
+                    'success'   => 1
+
+                ];
+
+                break;
+
             // Userpage
             case 'userpage':
 
@@ -577,15 +665,17 @@ if(Users::checkLogin()) {
 
     // Settings page list
     $pages = [
+
         'home'              => ['General',          'Home',                 ['Welcome to the Settings Panel. From here you can monitor, view and update your profile and preferences.']],
         'profile'           => ['General',          'Edit Profile',         ['These are the external account links etc. on your profile, shouldn\'t need any additional explanation for this one.']],
+        'options'           => ['General',          'Site Options',         ['These are a few personalisation options for the site while you\'re logged in.']],
         'groups'            => ['General',          'Groups',               ['{{ user.colour }}']],
         'friendlisting'     => ['Friends',          'List',                 ['Manage your friends.']],
         'friendrequests'    => ['Friends',          'Requests',             ['Handle friend requests.']],
         'notifications'     => ['Notifications',    'History',              ['This is the history of notifications that have been sent to you.']],
         'avatar'            => ['Aesthetics',       'Avatar',               ['Your avatar which is displayed all over the site and on your profile.', 'Maximum image size is {{ avatar.max_width }}x{{ avatar.max_height }}, minimum image size is {{ avatar.min_width }}x{{ avatar.min_height }}, maximum file size is {{ avatar.max_size_view }}.']],
         'background'        => ['Aesthetics',       'Background',           ['The background that is displayed on your profile.', 'Maximum image size is {{ background.max_width }}x{{ background.max_height }}, minimum image size is {{ background.min_width }}x{{ background.min_height }}, maximum file size is {{ background.max_size_view }}.']],
-        'userpage'          => ['Aesthetics',       'Userpage',             ['The custom text that is displayed on your profile.', '<a href="/r/markdown" class="default">Click here if you don\'t know how to markdown!</a>']],
+        'userpage'          => ['Aesthetics',       'Userpage',             ['The custom text that is displayed on your profile.', '<a href="/p/markdown" class="default">Click here if you don\'t know how to markdown!</a>']],
         'email'             => ['Account',          'E-mail Address',       ['You e-mail address is used for password recovery and stuff like that, we won\'t spam you ;).']],
         'username'          => ['Account',          'Username',             ['Probably the biggest part of your identity on a site.', '<b>You can only change this once every 30 days so choose wisely.</b>']],
         'usertitle'         => ['Account',          'User Title',           ['That little piece of text displayed under your username on your profile.']],
@@ -595,6 +685,7 @@ if(Users::checkLogin()) {
         'regkeys'           => ['Danger zone',      'Registration Keys',    ['Sometimes we activate the registration key system which means that users can only register using your "referer" keys, this means we can keep unwanted people from registering.', 'Each user can generate 5 of these keys, bans and deactivates render these keys useless.']],
         'deactivate'        => ['Danger zone',      'Deactivate Account',   ['You can deactivate your account here if you want to leave :(.']],
         'notfound'          => ['Settings',         '404',                  ['This is an error.']]
+
     ];
 
     // Current settings page
@@ -603,9 +694,11 @@ if(Users::checkLogin()) {
     // Render data
     $renderData['current'] = $currentPage;
     $renderData['page'] = [
+
         'title'         => $pages[$currentPage][0] .' / '. $pages[$currentPage][1],
         'currentPage'   => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
         'description'   => $pages[$currentPage][2]
+
     ];
 
     // Section specific
@@ -623,12 +716,14 @@ if(Users::checkLogin()) {
         case 'avatar':
         case 'background':
             $renderData[$currentPage] = [
+
                 'max_width'     => Configuration::getConfig($currentPage .'_max_width'),
                 'max_height'    => Configuration::getConfig($currentPage .'_max_height'),
                 'min_width'     => Configuration::getConfig($currentPage .'_min_width'),
                 'min_height'    => Configuration::getConfig($currentPage .'_min_height'),
                 'max_size'      => Configuration::getConfig($currentPage .'_max_fsize'),
                 'max_size_view' => Main::getByteSymbol(Configuration::getConfig($currentPage .'_max_fsize'))
+
             ];
             break;
 
@@ -640,8 +735,20 @@ if(Users::checkLogin()) {
         // Profile
         case 'profile':
             $renderData['profile'] = [
-                'user'      => Users::getUserProfileFields(Session::$userId),
+
+                'user'      => $currentUser->profileFields(),
                 'fields'    => Users::getProfileFields()
+
+            ];
+            break;
+
+        // Options
+        case 'options':
+            $renderData['options'] = [
+
+                'user'      => $currentUser->optionFields(),
+                'fields'    => Users::getOptionFields()
+
             ];
             break;
 

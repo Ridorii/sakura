@@ -768,6 +768,40 @@ class Users {
 
     }
 
+    // Get the available option fields
+    public static function getOptionFields() {
+
+        // Get option fields
+        $optionFields = Database::fetch('optionfields');
+
+        // If there's nothing just return null
+        if(!count($optionFields)) {
+
+            return null;
+
+        }
+
+        // Create output array
+        $fields = [];
+
+        // Iterate over the fields and clean them up
+        foreach($optionFields as $field) {
+
+            if(!Permissions::check('SITE', $field['require_perm'], Session::$userId, 1)) {
+
+                continue;
+
+            }
+
+            $fields[$field['id']] = $field;
+
+        }
+
+        // Return the yeahs
+        return $fields;
+
+    }
+
     // Get user's profile fields
     public static function getUserProfileFields($id, $inputIsData = false) {
 

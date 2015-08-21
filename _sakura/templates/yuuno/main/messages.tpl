@@ -4,7 +4,7 @@
             {% include 'elements/settingsNav.tpl' %}
         </div>
         <div class="content-left content-column">
-            <div class="head">
+            {#<div class="head">
                 Messages / Inbox
             </div>
             {% if messages|length %}
@@ -29,7 +29,8 @@
             {% else %}
             <h1 class="stylised"style="line-height: 1.8em; text-align: center;">Nothing to view!</h1>
             {% endif %}
-            <h3 style="text-align: center;">Click Compose in the menu on the right side to write a new message!</h3>
+            <h3 style="text-align: center;">Click Compose in the menu on the right side to write a new message!</h3>#}
+            <h1 class="stylised" style="margin: 2em auto; text-align: center;">The PM system is currently unavailable.</h1>
         </div>
         <div class="clear"></div>
     </div>

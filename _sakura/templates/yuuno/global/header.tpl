@@ -147,7 +147,7 @@
             }
             {% endif %}
 
-            {% if php.self == '/profile.php' ? profile.data.userData.profileBackground is defined : (user.checkPremium[0] and user.data.userData.profileBackgroundSiteWide and user.data.userData.profileBackground is defined) %}
+            {% if php.self == '/profile.php' ? profile.data.userData.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.userData.userOptions.profileBackgroundSiteWide == 'true' and user.data.userData.profileBackground) %}
                 initialiseParallax('userBackground');
             {% endif %}
 
@@ -196,7 +196,7 @@
             </div>
             <div id="contentwrapper">
                 <div id="notifications"></div>
-                {% if php.self == '/profile.php' ? profile.data.userData.profileBackground is defined : (user.checkPremium[0] and user.data.userData.profileBackgroundSiteWide and user.data.userData.profileBackground is defined) %}
+            {% if php.self == '/profile.php' ? profile.data.userData.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.userData.userOptions.profileBackgroundSiteWide == 'true' and user.data.userData.profileBackground) %}
                     <div id="userBackground" style="background-image: url('/bg/{{ (php.self == '/profile.php' ? profile : user).data.id }}');"></div>
                 {% endif %}
                 {% if not session.checkLogin and php.self != '/authenticate.php' %}
@@ -221,6 +221,12 @@
                             <input type="submit" id="headerLoginButton" name="submit" class="inputStyling small" value="Login" />
                         </div>
                     </form>
+                {% endif %}
+                {% if user.checkPermission('SITE', 'RESTRICTED') %}
+                    <div class="headerNotify" style="padding-top: 10px; padding-bottom: 10px; background: repeating-linear-gradient(-45deg, #B33, #B33 10px, #B00 10px, #B00 20px); text-align: center; color: #FFF; border: 1px solid #C00; box-shadow: 0px 0px 3px #C00;">
+                        <h1>Your account is current in <span style="font-width: 700 !important;">restricted mode</span>!</h1>
+                        <div>A staff member has set your account to restricted mode most likely due to violation of the rules. You will <i>temporarily</i> not be able to use public features of the site. If you think this is a mistake please <a href="/contact" style="color: inherit;">get in touch with one of our staff members</a>.</div>
+                    </div>
                 {% endif %}
                 <noscript>
                     <div class="headerNotify" style="padding-top: 10px; padding-bottom: 10px;">

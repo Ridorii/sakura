@@ -21,7 +21,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
 
         switch($_REQUEST['mode']) {
 
-            // Create the purchase 
+            // Create the purchase
             case 'purchase':
 
                 // Compare time and session so we know the link isn't forged
@@ -125,11 +125,13 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
 
 // Set default variables
 $renderData['page'] = [
+
     'title'         => 'Support '. Configuration::getConfig('sitename'),
     'fail'          => isset($_GET['fail']),
     'price'         => Configuration::getConfig('premium_price_per_month'),
-    'current'       => Users::checkUserPremium(Session::$userId),
+    'current'       => $currentUser->checkPremium(),
     'amount_max'    => Configuration::getConfig('premium_amount_max')
+
 ];
 
 // Print page contents

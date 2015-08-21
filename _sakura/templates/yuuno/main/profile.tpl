@@ -51,7 +51,7 @@
                                     </td>
                                     <td style="text-align: right;">
                                         {% if name == 'youtube' %}
-                                            <a href="https://youtube.com/{% if field.youtubetype == 1 %}channel{% else %}user{% endif %}/{{ field.value }}" class="default">{% if field.youtubetype == 1 %}{{ profile.data.username }}'s Channel{% else %}{{ field.value }}{% endif %}</a>
+                                            <a href="https://youtube.com/{% if field.youtubetype == 'true' %}channel{% else %}user{% endif %}/{{ field.value }}" class="default">{% if field.youtubetype == 'true' %}{{ profile.data.username }}'s Channel{% else %}{{ field.value }}{% endif %}</a>
                                         {% else %}
                                             {% if field.islink %}
                                                 <a href="{{ field.link }}" class="default">

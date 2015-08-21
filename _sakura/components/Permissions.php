@@ -12,10 +12,10 @@ class Permissions {
 
         'rid'           => 0,
         'uid'           => 0,
-        'siteperms'     => '000000000000000000000000001',
-        'manageperms'   => '0',
-        'forumperms'    => '0',
-        'rankinherit'   => '111'
+        'siteperms'     => 1,
+        'manageperms'   => 0,
+        'forumperms'    => 0,
+        'rankinherit'   => 111
 
     ];
 
@@ -25,8 +25,8 @@ class Permissions {
         // Site permissions
         'SITE' => [
 
-            'DEACTIVATED'           => 1,           // Is a user in this group deactivated
-            'STATIC_PREMIUM'        => 2,           // Is always premium
+            'DEACTIVATED'           => 1,           // Is a user deactivated
+            'RESTRICTED'            => 2,           // Is a user restricted
             'ALTER_PROFILE'         => 4,           // Can alter their profile data
             'CHANGE_AVATAR'         => 8,           // Can change their avatar
             'CREATE_BACKGROUND'     => 16,          // Can create a background (different from changing)
@@ -51,7 +51,8 @@ class Permissions {
             'JOIN_GROUPS'           => 8388608,     // Can join groups
             'CREATE_GROUP'          => 16777216,    // Can create a group
             'MULTIPLE_GROUPS'       => 33554432,    // Can create multiple groups (requires single group perm)
-            'CHANGE_NAMECOLOUR'     => 67108864     // Can change their username colour
+            'CHANGE_NAMECOLOUR'     => 67108864,     // Can change their username colour
+            'STATIC_PREMIUM'        => 134217728     // Can change their username colour
 
         ],
 

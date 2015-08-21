@@ -13,36 +13,39 @@ use DOMDocument;
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sakura.php';
 
 // Get user data
-$disqus_user = Users::getUser(Session::$userId);
+$disqus_user = new User(Session::$userId);
 
 // Set disqus data
 $disqus_data = [
-    $disqus_user['id'],
-    $disqus_user['username'],
-    $disqus_user['email'],
-    'http://'. Configuration::getConfig('url_main') .'/a/'. $disqus_user['id'],
-    'http://'. Configuration::getConfig('url_main') .'/u/'. $disqus_user['id']
+    $disqus_user->data['id'],
+    $disqus_user->data['username'],
+    $disqus_user->data['email'],
+    'http://'. Configuration::getConfig('url_main') .'/a/'. $disqus_user->data['id'],
+    'http://'. Configuration::getConfig('url_main') .'/u/'. $disqus_user->data['id']
 ];
 
 // Add page specific things
 $renderData['newsPosts'] = Main::getNewsPosts((isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])) ? $_GET['id'] : null, (isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])));
+
 $renderData['page'] = [
+
     'title'         => (isset($_GET['id']) ? (count($renderData['newsPosts']) ? $renderData['newsPosts'][0]['title'] : 'Post does not exist!') : 'News'),
     'disqus_sso'    => (($disqus_message = base64_encode(json_encode($disqus_data))) .' '. Main::dsqHmacSha1($disqus_message .' '. time(), Configuration::getConfig('disqus_api_secret')) .' '. time()),
     'view_post'     => isset($_GET['id']) && count($renderData['newsPosts']),
     'currentPage'   => 0
+
 ];
 
 // News XML feed
 if(isset($_GET['xml'])) {
-    
+
     // Meta data attributes
     $metaData = [
         'title'         => ($_FEED_TITLE = Configuration::getConfig('sitename')) .' News',
         'link'          => ($_FEED_URL = 'http://'. Configuration::getConfig('url_main')),
         'description'   => 'News about '. $_FEED_TITLE,
         'language'      => 'en-gb',
-        'webMaster'     => Users::getUser(1)['email'] .' ('. $_FEED_TITLE .' Webmaster)',
+        'webMaster'     => (new User(1))->data['email'] .' ('. $_FEED_TITLE .' Webmaster)',
         'pubDate'       => ($_FEED_DATE = date('r', $renderData['newsPosts'][0]['date'])),
         'lastBuildDate' => $_FEED_DATE,
     ];

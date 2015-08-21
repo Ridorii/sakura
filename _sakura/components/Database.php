@@ -2,7 +2,7 @@
 /*
  * Database wrapper container
  */
- 
+
 namespace Sakura;
 
 class Database {
@@ -22,6 +22,13 @@ class Database {
 
         // Initialise SQL wrapper
         self::$_DATABASE = new $wrapper;
+
+    }
+
+    // Select from database
+    public static function select($table, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*', $prefix = null) {
+
+        return self::$_DATABASE->select($table, $data, $order, $limit, $group, $distinct, $column, $prefix);
 
     }
 

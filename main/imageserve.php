@@ -13,7 +13,7 @@ define('SAKURA_NO_TPL', true);
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sakura.php';
 
 // Set Content type
-header('Content-Type: application/octet-stream');
+//header('Content-Type: application/octet-stream');
 
 // Path to user uploads
 $userDirPath = ROOT . Configuration::getConfig('user_uploads') . '/';
@@ -36,28 +36,34 @@ if(isset($_GET['m'])) {
             }
 
             // Get user data
-            $user = Users::getUser($_GET['u']);
+            $user = new User($_GET['u']);
 
             // If user is deactivated use deactive avatar
-            if(Users::checkIfUserHasRanks([0, 1], $user, true)) {
+            if($user->checkIfUserHasRanks([0, 1])) {
+
                 $serveImage = $deactiveAvatar;
                 break;
+
             }
 
             // Check if user is banned
-            if(Bans::checkBan($_GET['u'])) {
+            if($user->checkBan()) {
+
                 $serveImage = $bannedAvatar;
                 break;
+
             }
 
             // Check if user has an avatar set
-            if(empty($user['userData']['userAvatar']) || !file_exists($userDirPath . $user['userData']['userAvatar'])) {
+            if(empty($user->data['userData']['userAvatar']) || !file_exists($userDirPath . $user->data['userData']['userAvatar'])) {
+
                 $serveImage = $noAvatar;
                 break;
+
             }
 
             // Check if the avatar exist and assign it to a value
-            $serveImage = $userDirPath . $user['userData']['userAvatar'];
+            $serveImage = $userDirPath . $user->data['userData']['userAvatar'];
             break;
 
         case 'background':
@@ -66,33 +72,41 @@ if(isset($_GET['m'])) {
 
             // If ?u= isn't set or if it isn't numeric
             if(!isset($_GET['u']) || !is_numeric($_GET['u'])) {
+
                 $serveImage = $noBackground;
                 break;
+
             }
 
             // Get user data
-            $user = Users::getUser($_GET['u']);
+            $user = new User($_GET['u']);
 
             // If user is deactivated use deactive avatar
-            if(Users::checkIfUserHasRanks([0, 1], $user, true)) {
+            if($user->checkIfUserHasRanks([0, 1])) {
+
                 $serveImage = $noBackground;
                 break;
+
             }
 
             // Check if user is banned
             if(Bans::checkBan($_GET['u'])) {
+
                 $serveImage = $noBackground;
                 break;
+
             }
 
             // Check if user has a background set
-            if(empty($user['userData']['profileBackground']) || !file_exists($userDirPath . $user['userData']['profileBackground'])) {
+            if(empty($user->data['userData']['profileBackground']) || !file_exists($userDirPath . $user->data['userData']['profileBackground'])) {
+
                 $serveImage = $noBackground;
                 break;
+
             }
 
             // Check if the avatar exist and assign it to a value
-            $serveImage = $userDirPath . $user['userData']['profileBackground'];
+            $serveImage = $userDirPath . $user->data['userData']['profileBackground'];
             break;
 
         case 'header':
@@ -106,28 +120,34 @@ if(isset($_GET['m'])) {
             }
 
             // Get user data
-            $user = Users::getUser($_GET['u']);
+            $user = new User($_GET['u']);
 
             // If user is deactivated use deactive avatar
-            if(Users::checkIfUserHasRanks([0, 1], $user, true)) {
+            if($user->checkIfUserHasRanks([0, 1])) {
+
                 $serveImage = $noHeader;
                 break;
+
             }
 
             // Check if user is banned
             if(Bans::checkBan($_GET['u'])) {
+
                 $serveImage = $noHeader;
                 break;
+
             }
 
             // Check if user has a background set
-            if(empty($user['userData']['profileHeader']) || !file_exists($userDirPath . $user['userData']['profileHeader'])) {
+            if(empty($user->data['userData']['profileHeader']) || !file_exists($userDirPath . $user->data['userData']['profileHeader'])) {
+
                 $serveImage = $noHeader;
                 break;
+
             }
 
             // Check if the avatar exist and assign it to a value
-            $serveImage = $userDirPath . $user['userData']['profileHeader'];
+            $serveImage = $userDirPath . $user->data['userData']['profileHeader'];
             break;
 
         default:
@@ -135,8 +155,11 @@ if(isset($_GET['m'])) {
 
     }
 
-} else
+} else {
+
     $serveImage = ROOT . Configuration::getConfig('pixel_img');
+
+}
 
 $serveImage = file_get_contents($serveImage);
 

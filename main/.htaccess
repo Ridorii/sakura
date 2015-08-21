@@ -19,13 +19,13 @@ RewriteRule ^credits/?$ credits.php [L,QSA]
 RewriteRule ^index/?$ index.php [L,QSA]
 RewriteRule ^login/?$|^logout/?$|^activate/?$|^register/?$|^forgotpassword/?|^authenticate/?$ authenticate.php [L,QSA]
 RewriteRule ^donate/?$|^support/?$ support.php [L,QSA]
-RewriteRule ^contact/?$ infopage.php?r=contact [L,QSA]
+RewriteRule ^contact/?$ infopage.php?p=contact [L,QSA]
 RewriteRule ^changelog/?$ changelog.php [L,QSA]
 RewriteRule ^faq/?$ faq.php [L,QSA]
 RewriteRule ^search/?$ search.php [L,QSA]
 
 # Info pages
-RewriteRule ^r/([a-z]+)$ infopage.php?r=$1 [L,QSA]
+RewriteRule ^p/([a-z]+)$ infopage.php?p=$1 [L,QSA]
 
 # News
 RewriteRule ^news/?$ news.php [L,QSA]

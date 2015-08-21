@@ -17,8 +17,10 @@ if(!$topic) {
 
     // Set render data
     $renderData['page'] = [
+
         'title'     => 'Information',
         'message'   => 'The topic you tried to access does not exist.'
+
     ];
 
     // Print template
@@ -29,13 +31,19 @@ if(!$topic) {
 
 // Set additional render data
 $renderData = array_merge($renderData, $topic, [
+
     'board' => [
+
         'viewforum' => false,
         'viewtopic' => true,
+
     ],
     'page' => [
+
         'title' => $topic['topic']['topic_title']
+
     ]
+
 ]);
 
 // Print page contents

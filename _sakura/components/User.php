@@ -16,7 +16,14 @@ class User {
     function __construct($id) {
 
         // Get the user database row
-        $this->data = Database::fetch('users', false, ['id' => [$id, '=', true], 'username_clean' => [$id, '=']]);
+        $this->data = Database::fetch('users', false, ['id' => [$id, '=', true], 'username_clean' => [Main::cleanString($id, true), '=', true]]);
+
+        // Check if anything like the username exists
+        if(empty($this->data)) {
+
+            $this->data = Database::fetch('users', false, ['username_clean' => ['%'. Main::cleanString($id, true) .'%', 'LIKE']]);
+
+        }
 
         // Check if the user actually exists
         if(empty($this->data)) {
@@ -50,6 +57,33 @@ class User {
 
         // Assign the user's main rank to a special variable since we'll use it a lot
         $this->mainRank = $this->ranks[array_key_exists($this->data['rank_main'], $this->ranks) ? $this->data['rank_main'] : array_keys($this->ranks)[0]];
+
+    }
+
+    // Check if the user has the specified ranks
+    public function checkIfUserHasRanks($ranks) {
+
+        // Check if the main rank is the specified rank
+        if(in_array($this->mainRank['id'], $ranks)) {
+
+            return true;
+
+        }
+
+        // If not go over all ranks and check if the user has them
+        foreach($ranks as $rank) {
+
+            // We check if $rank is in $this->ranks and if yes return true
+            if(array_key_exists($rank, $this->ranks)) {
+
+                return true;
+
+            }
+
+        }
+
+        // If all fails return false
+        return false;
 
     }
 
@@ -104,6 +138,13 @@ class User {
     public function checkBan() {
 
         return Bans::checkBan($this->data['id']);
+
+    }
+
+    // Check if the user has the proper permissions
+    public function checkPermission($layer, $action) {
+
+        return Permissions::check($layer, $action, $this->data['id'], 1);
 
     }
 
@@ -183,6 +224,56 @@ class User {
 
         // Return appropiate profile data
         return $profile;
+
+    }
+
+    // Get the user's option fields
+    public function optionFields() {
+
+        // Get option fields
+        $optionFields = Database::fetch('optionfields');
+
+        // If there's nothing just return null
+        if(!count($optionFields)) {
+
+            return;
+
+        }
+
+        // Once again if nothing was returned just return null
+        if(empty($this->data['userData']['userOptions'])) {
+
+            return;
+
+        }
+
+        // Create output array
+        $options = [];
+
+        // Check if profile fields aren't fake
+        foreach($optionFields as $field) {
+
+            // Check if the user has the current field set otherwise continue
+            if(!array_key_exists($field['id'], $this->data['userData']['userOptions'])) {
+
+                continue;
+
+            }
+
+            // Make sure the user has the proper permissions to use this option
+            if(!$this->checkPermission('SITE', $field['require_perm'])) {
+
+                continue;
+
+            }
+
+            // Assign field to output with value
+            $options[$field['id']] = $this->data['userData']['userOptions'][$field['id']];
+
+        }
+
+        // Return appropiate profile data
+        return $options;
 
     }
 
