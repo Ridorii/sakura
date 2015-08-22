@@ -46,7 +46,8 @@
                 "20150818",
                 "20150819",
                 "20150820",
-                "20150821"
+                "20150821",
+                "20150822"
 
             ]
 
@@ -2177,6 +2178,16 @@
             {
                 "type":     "FIX",
                 "change":   "Fixed sitewide background making text on Members page unreadable.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150822": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fixed premium purchasing being broken somehow.",
                 "user":     "Flashwave"
             }
 

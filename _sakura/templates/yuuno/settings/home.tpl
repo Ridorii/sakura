@@ -21,7 +21,7 @@
 <h1 class="stylised">Personal Statistics</h1>
 <ul>
     <li>You joined on <b>{{ user.data.regdate|date(sakura.dateFormat) }}</b>.</li>
-    <li>You have made <b>{{ settings.forum_stats.posts }} forum post{% if settings.forum_stats.posts != 1 %}s{% endif %}</b> and started <b>{{ settings.forum_stats.topics }} forum thread{% if settings.forum_stats.topics != 1 %}s{% endif %}</b>.</li>
+    <li>You have made <b>{{ user.forumStats.posts }} forum post{% if user.forumStats.posts != 1 %}s{% endif %}</b> and started <b>{{ user.forumStats.topics }} forum thread{% if user.forumStats.topics != 1 %}s{% endif %}</b>.</li>
     <li>You have <b>x</b> warnings.</li>
     <li>You have <b>{{ settings.friends|length - (settings.friends.online ? 1 : 0) - (settings.friends.offline ? 1 : 0) }} friend{% if settings.friends|length - (settings.friends.online ? 1 : 0) - (settings.friends.offline ? 1 : 0) != 1 %}s{% endif %}</b>.</li>
 </ul>

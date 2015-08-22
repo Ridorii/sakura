@@ -707,8 +707,7 @@ if(Users::checkLogin()) {
         // Homepage
         case 'home':
             $renderData['settings'] = [
-                'friends'       => Users::getFriends(null, true, true, true),
-                'forum_stats'   => Forum::getUserStats(Session::$userId)
+                'friends'       => Users::getFriends(null, true, true, true)
             ];
             break;
 
