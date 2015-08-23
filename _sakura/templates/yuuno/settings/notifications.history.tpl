@@ -30,13 +30,13 @@
         <div>
             <div class="pagination" style="float: right;">
                 {% if page.currentPage > 0 %}
-                    <a href="/settings/notifications/p{{ page.currentPage }}"><span class="fa fa-step-backward"></span></a>
+                    <a href="/settings/notifications/history/p{{ page.currentPage }}"><span class="fa fa-step-backward"></span></a>
                 {% endif %}
                 {% for id,npage in notifs %}
-                    <a href="/settings/notifications/p{{ id + 1 }}"{% if id == page.currentPage %} class="current"{% endif %}>{{ id + 1 }}</a>
+                    <a href="/settings/notifications/history/p{{ id + 1 }}"{% if id == page.currentPage %} class="current"{% endif %}>{{ id + 1 }}</a>
                 {% endfor %}
                 {% if page.currentPage + 1 < notifs|length %}
-                    <a href="/settings/notifications/p{{ page.currentPage + 2 }}"><span class="fa fa-step-forward"></span></a>
+                    <a href="/settings/notifications/history/p{{ page.currentPage + 2 }}"><span class="fa fa-step-forward"></span></a>
                 {% endif %}
             </div>
             <div class="clear"></div>

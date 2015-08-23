@@ -134,6 +134,13 @@ class User {
 
     }
 
+    // Get all the friend of this user
+    public function getFriends() {
+
+        return Users::getFriends($this->data['id']);
+
+    }
+
     // Check if the user is banned
     public function checkBan() {
 

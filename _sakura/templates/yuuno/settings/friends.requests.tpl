@@ -8,7 +8,7 @@
                 </a>
                 <div class="friends-list-actions">
                     <a class="add fa fa-check" title="Add friend" href="/friends?add={{ friend.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect=/settings/friendrequests&amp;direct=true"></a>
-                    <a class="remove fa fa-remove" title="Remove friend" href="/friends?remove={{ friend.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect=/settings/friendrequests&amp;direct=true"></a>
+                    <a class="remove fa fa-remove" title="Remove friend" href="/friends?remove={{ friend.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect=/settings/friends/requests&amp;direct=true"></a>
                     <div class="clear"></div>
                 </div>
             </div>
@@ -19,13 +19,13 @@
         <div>
             <div class="pagination" style="float: right;">
                 {% if page.currentPage > 0 %}
-                    <a href="/settings/friends/p{{ page.currentPage }}"><span class="fa fa-step-backward"></span></a>
+                    <a href="/settings/friends/requests/p{{ page.currentPage }}"><span class="fa fa-step-backward"></span></a>
                 {% endif %}
                 {% for id,npage in friends %}
-                    <a href="/settings/friends/p{{ id + 1 }}"{% if id == page.currentPage %} class="current"{% endif %}>{{ id + 1 }}</a>
+                    <a href="/settings/friends/requests/p{{ id + 1 }}"{% if id == page.currentPage %} class="current"{% endif %}>{{ id + 1 }}</a>
                 {% endfor %}
                 {% if page.currentPage + 1 < friends|length %}
-                    <a href="/settings/friends/p{{ page.currentPage + 2 }}"><span class="fa fa-step-forward"></span></a>
+                    <a href="/settings/friends/requests/p{{ page.currentPage + 2 }}"><span class="fa fa-step-forward"></span></a>
                 {% endif %}
             </div>
             <div class="clear"></div>

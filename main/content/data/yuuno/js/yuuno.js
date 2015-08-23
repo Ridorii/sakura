@@ -488,7 +488,7 @@ function formToObject(formId) {
 
         if(typeof children[i] == 'object') {
 
-            requestParts[children[i].name] = ((typeof children[i].type !== "undefined" && children[i].type.toLowerCase() == "checkbox") ? children[i].checked : children[i].value);
+            requestParts[children[i].name] = ((typeof children[i].type !== "undefined" && children[i].type.toLowerCase() == "checkbox") ? (children[i].checked ? 1 : 0) : children[i].value);
 
         }
 

@@ -1,5 +1,5 @@
 {% include 'global/header.tpl' %}
-    {% if profile.data.id < 1 or profile.data.password_algo == 'nologin' %}
+    {% if profile.checkPermission('SITE', 'DEACTIVATED') or profile.data.password_algo == 'nologin' or (profile.checkPermission('SITE', 'RESTRICTED') and (user.data.id != profile.data.id and not user.checkPermission('MANAGE', 'USE_MANAGE'))) %}
     <div class="content standalone" style="padding: 20px;">
         <h1>The requested user does not exist!</h1>
         There are a few possible reasons for this:
@@ -74,16 +74,18 @@
                     {% endif %}
                     <hr class="default" />
                     <b>Account Standing</b>
-                    {% if profile.data.rank_main < 2 %}
-                    <h2 style="color: #888; text-shadow: 0 0 7px #888; margin-top: 0;">Deactivated</h2>
+                    {% if profile.checkPermission('SITE', 'DEACTIVATED') %}
+                        <h2 style="color: #888; text-shadow: 0 0 7px #888; margin-top: 0;">Deactivated</h2>
                     {% elseif profile.checkBan %}
-                    <h2 style="color: #222; text-shadow: 0 0 7px #222; margin-top: 0;">Banned</h2>
+                        <h2 style="color: #222; text-shadow: 0 0 7px #222; margin-top: 0;">Banned</h2>
+                    {% elseif profile.checkPermission('SITE', 'RESTRICTED') %}
+                        <h2 style="color: #800; text-shadow: 0 0 7px #800; margin-top: 0;">Restricted</h2>
                     {% else %}
                         {% if profile.getWarnings %}
-                            <h2 style="color: red; text-shadow: 0 0 7px #888; margin-top: 0;">Bad</h2>
+                            <h2 style="color: #A00; text-shadow: 0 0 7px #A00; margin-top: 0;">Bad</h2>
                             <span style="font-size: 10px; line-height: 10px;">This user has <b>{{ profile.getWarnings|length }} warning{% if profile.getWarnings|length != 1 %}s{% endif %}</b>.<br />After 5 to 10 warnings (depending on what they are for) this user may be permanently banned.</span>
                         {% else %}
-                            <h2 style="color: green; text-shadow: 0 0 7px #888; margin-top: 0;">Good</h2>
+                            <h2 style="color: #0A0; text-shadow: 0 0 7px #0A0; margin-top: 0;">Good</h2>
                         {% endif %}
                     {% endif %}
                 </div>

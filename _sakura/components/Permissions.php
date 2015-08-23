@@ -40,7 +40,7 @@ class Permissions {
             'CHANGE_USERNAME'       => 4096,        // Can change their username
             'CHANGE_USERTITLE'      => 8192,        // Can change their usertitle
             'CHANGE_PASSWORD'       => 16384,       // Can change their password
-            'CHANGE_DEFAULT_RANK'   => 32768,       // Can change their default rank
+            'ALTER_RANKS'           => 32768,       // Can change their ranks
             'MANAGE_SESSIONS'       => 65536,       // Can manage their sessions
             'CREATE_REGKEYS'        => 131072,      // Can create registration keys
             'DEACTIVATE_ACCOUNT'    => 262144,      // Can deactivate their account
@@ -51,8 +51,8 @@ class Permissions {
             'JOIN_GROUPS'           => 8388608,     // Can join groups
             'CREATE_GROUP'          => 16777216,    // Can create a group
             'MULTIPLE_GROUPS'       => 33554432,    // Can create multiple groups (requires single group perm)
-            'CHANGE_NAMECOLOUR'     => 67108864,     // Can change their username colour
-            'STATIC_PREMIUM'        => 134217728     // Can change their username colour
+            'CHANGE_NAMECOLOUR'     => 67108864,    // Can change their username colour
+            'STATIC_PREMIUM'        => 134217728    // User has static premium status
 
         ],
 

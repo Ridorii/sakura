@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div style="padding: 8px 0;">
-                    <input type="{{ field.formtype }}" name="option_{{ field.id }}" class="inputStyling"{% if options.user[field.id] %}{% if field.formtype == 'checkbox' and options.user[field.id] == 'true' %} checked="checked"{% else %} value="{{ options.user[field.id] }}"{% endif %}{% endif %} />
+                    <input type="{{ field.formtype }}" name="option_{{ field.id }}" class="inputStyling"{% if options.user[field.id] %}{% if field.formtype == 'checkbox' and options.user[field.id] %} checked="checked" value="option_{{ field.id }}"{% else %} value="{{ options.user[field.id] }}"{% endif %}{% endif %} />
                 </div>
             </div>
         {% endfor %}
@@ -21,21 +21,6 @@
             <input type="reset" value="Reset" name="reset" class="inputStyling" />
         </div>
     </form>
-    <script type="text/javascript">
-    window.addEventListener("load", function() {
-        var optionsForm = document.getElementById('optionsForm');
-        var createInput = document.createElement('input');
-        var submit      = optionsForm.querySelector('[type="submit"]');
-
-        createInput.setAttribute('name', 'ajax');
-        createInput.setAttribute('value', 'true');
-        createInput.setAttribute('type', 'hidden');
-        optionsForm.appendChild(createInput);
-
-        submit.setAttribute('type', 'button');
-        submit.setAttribute('onclick', 'submitPost(\''+ optionsForm.action +'\', formToObject(\'optionsForm\'), true, \'Changing Options...\');');
-    });
-    </script>
 {% else %}
     <h1 class="stylised" style="margin: 2em auto; text-align: center;">There are currently no changeable options.</h1>
 {% endif %}

@@ -2,7 +2,7 @@
 /*
  * Main Class
  */
- 
+
 namespace Sakura;
 
 use Parsedown;
@@ -10,15 +10,8 @@ use PHPMailer;
 
 class Main {
 
-    public static $_MD; // Markdown class container
-    public static $_MANAGE_MODE = false; // Management mode
-
     // Constructor
     public static function init($config) {
-
-        // Stop the execution if the PHP Version is older than 5.4.0
-        if(version_compare(phpversion(), '5.4.0', '<'))
-            trigger_error('Sakura requires at least PHP 5.4.0, please upgrade to a newer PHP version.');
 
         // Configuration Management and local configuration
         Configuration::init($config);
@@ -32,35 +25,12 @@ class Main {
         // Create new session
         Session::init();
 
-        // Check if management mode was requested
-        self::$_MANAGE_MODE = defined('SAKURA_MANAGE');
-
-        // Templating engine
-        if(!defined('SAKURA_NO_TPL')) {
-
-            Templates::init(self::$_MANAGE_MODE ? Configuration::getConfig('manage_style') : Configuration::getConfig('site_style'));
-
-        }
-
-        // Assign servers file to whois class
-        Whois::setServers(ROOT .'_sakura/'. Configuration::getLocalConfig('data', 'whoisservers'));
-
-        // Markdown Parser
-        self::initMD();
-
-    }
-
-    // Initialise Parsedown
-    private static function initMD() {
-
-        self::$_MD = new Parsedown();
-
     }
 
     // Parse markdown
     public static function mdParse($text) {
 
-        return self::$_MD->text($text);
+        return (new Parsedown())->text($text);
 
     }
 
@@ -767,7 +737,7 @@ class Main {
                 // Return the string
                 return $round .' '. $times[$secs] . ($round == 1 ? '' : 's') .' ago';
 
-            } 
+            }
 
         }
 

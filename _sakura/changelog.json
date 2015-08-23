@@ -47,7 +47,8 @@
                 "20150819",
                 "20150820",
                 "20150821",
-                "20150822"
+                "20150822",
+                "20150823"
 
             ]
 
@@ -2188,6 +2189,66 @@
             {
                 "type":     "FIX",
                 "change":   "Fixed premium purchasing being broken somehow.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150823": [
+
+            {
+                "type":     "REM",
+                "change":   "Removed a reference to the legacy password hashing method in Users::checkLogin().",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added repeated linear gradient to the JavaScript message because I could.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed broken reference to current page variable in the logout link.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Rewrite settings page handling.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Merge messages.php and settings.php.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add special cases for restricted users.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Restructured the startup process.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed checkboxes not working properly in the AJAX submission function.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add user controlled ability to switch to Misaki.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fix profiles on Misaki.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Quickly backport the required templates to switch back to the Yuuno template.",
                 "user":     "Flashwave"
             }
 

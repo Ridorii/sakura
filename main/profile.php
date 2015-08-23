@@ -19,7 +19,7 @@ $renderData['profile'] = $profile;
 // Set proper page title
 $renderData['page']['title'] = (
 
-    $profile->data['id'] < 1 || $profile->data['password_algo'] == 'nologin'
+    $profile->checkPermission('SITE', 'DEACTIVATED') || $profile->data['password_algo'] == 'nologin' || ($profile->checkPermission('SITE', 'RESTRICTED') && ($profile->data['id'] != $currentUser->data['id'] && !$currentUser->checkPermission('MANAGE', 'USE_MANAGE')))
     ? 'User not found!'
     : 'Profile of '. $profile->data['username']
 

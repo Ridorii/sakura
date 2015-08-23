@@ -322,9 +322,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
                 }
 
-                if(empty($_FILES[$mode]))
-                    die('yes');
-
                 // Check if the upload went properly
                 if($_FILES[$mode]['error'] !== UPLOAD_ERR_OK && $_FILES[$mode]['error'] !== UPLOAD_ERR_NO_FILE) {
 
@@ -537,8 +534,11 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                         foreach($field['additional'] as $addKey => $addVal) {
 
                             // Skip if the value is empty
-                            if(!isset($_POST['profile_additional_'. $addKey]) || empty($_POST['profile_additional_'. $addKey]))
+                            if(!isset($_POST['profile_additional_'. $addKey]) || empty($_POST['profile_additional_'. $addKey])) {
+
                                 continue;
+
+                            }
 
                             // Add to the array
                             $store[$addKey] = $_POST['profile_additional_'. $addKey];
@@ -574,19 +574,15 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 // Go over each field
                 foreach($fields as $field) {
 
-                    // Add to the store array
-                    if(isset($_POST['option_'. $field['id']]) && !empty($_POST['option_'. $field['id']])) {
+                    // Make sure the user has sufficient permissions to complete this action
+                    if(!$currentUser->checkPermission('SITE', $field['require_perm'])) {
 
-                        // Make sure the user has sufficient permissions to complete this action
-                        if(!$currentUser->checkPermission('SITE', $field['require_perm'])) {
-
-                            continue;
-
-                        }
-
-                        $store[$field['id']] = $_POST['option_'. $field['id']];
+                        $store[$field['id']] = false;
+                        continue;
 
                     }
+
+                    $store[$field['id']] = isset($_POST['option_'. $field['id']]) && !empty($_POST['option_'. $field['id']]) ? $_POST['option_'. $field['id']] : null;
 
                 }
 
@@ -666,73 +662,358 @@ if(Users::checkLogin()) {
     // Settings page list
     $pages = [
 
-        'home'              => ['General',          'Home',                 ['Welcome to the Settings Panel. From here you can monitor, view and update your profile and preferences.']],
-        'profile'           => ['General',          'Edit Profile',         ['These are the external account links etc. on your profile, shouldn\'t need any additional explanation for this one.']],
-        'options'           => ['General',          'Site Options',         ['These are a few personalisation options for the site while you\'re logged in.']],
-        'groups'            => ['General',          'Groups',               ['{{ user.colour }}']],
-        'friendlisting'     => ['Friends',          'List',                 ['Manage your friends.']],
-        'friendrequests'    => ['Friends',          'Requests',             ['Handle friend requests.']],
-        'notifications'     => ['Notifications',    'History',              ['This is the history of notifications that have been sent to you.']],
-        'avatar'            => ['Aesthetics',       'Avatar',               ['Your avatar which is displayed all over the site and on your profile.', 'Maximum image size is {{ avatar.max_width }}x{{ avatar.max_height }}, minimum image size is {{ avatar.min_width }}x{{ avatar.min_height }}, maximum file size is {{ avatar.max_size_view }}.']],
-        'background'        => ['Aesthetics',       'Background',           ['The background that is displayed on your profile.', 'Maximum image size is {{ background.max_width }}x{{ background.max_height }}, minimum image size is {{ background.min_width }}x{{ background.min_height }}, maximum file size is {{ background.max_size_view }}.']],
-        'userpage'          => ['Aesthetics',       'Userpage',             ['The custom text that is displayed on your profile.', '<a href="/p/markdown" class="default">Click here if you don\'t know how to markdown!</a>']],
-        'email'             => ['Account',          'E-mail Address',       ['You e-mail address is used for password recovery and stuff like that, we won\'t spam you ;).']],
-        'username'          => ['Account',          'Username',             ['Probably the biggest part of your identity on a site.', '<b>You can only change this once every 30 days so choose wisely.</b>']],
-        'usertitle'         => ['Account',          'User Title',           ['That little piece of text displayed under your username on your profile.']],
-        'password'          => ['Account',          'Password',             ['Used to authenticate with the site and certain related services.']],
-        'ranks'             => ['Account',          'Ranks',                ['Manage what ranks you\'re in and what is set as your main rank. Your main rank is highlighted. You get the permissions of all of the ranks you\'re in combined.']],
-        'sessions'          => ['Danger zone',      'Sessions',             ['Session keys are a way of identifying yourself with the system without keeping your password in memory.', 'If someone finds one of your session keys they could possibly compromise your account, if you see any sessions here that shouldn\'t be here hit the Kill button to kill the selected session.', 'If you get logged out after clicking one you\'ve most likely killed your current session, to make it easier to avoid this from happening your current session is highlighted.']],
-        'regkeys'           => ['Danger zone',      'Registration Keys',    ['Sometimes we activate the registration key system which means that users can only register using your "referer" keys, this means we can keep unwanted people from registering.', 'Each user can generate 5 of these keys, bans and deactivates render these keys useless.']],
-        'deactivate'        => ['Danger zone',      'Deactivate Account',   ['You can deactivate your account here if you want to leave :(.']],
-        'notfound'          => ['Settings',         '404',                  ['This is an error.']]
+        'general' => [
+
+            'title' => 'General',
+
+            'modes' => [
+
+                'home' => [
+
+                    'title' => 'Home',
+                    'description' => [
+
+                        'Welcome to the Settings Panel. From here you can monitor, view and update your profile and preferences.'
+
+                    ],
+                    'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED')
+
+                ],
+                'profile' => [
+
+                    'title' => 'Edit Profile',
+                    'description' => [
+
+                        'These are the external account links etc. on your profile, shouldn\'t need any additional explanation for this one.'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'ALTER_PROFILE')
+
+                ],
+                'options' => [
+
+                    'title' => 'Site Options',
+                    'description' => [
+
+                        'These are a few personalisation options for the site while you\'re logged in.'
+
+                    ],
+                    'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED')
+
+                ],
+                'groups' => [
+
+                    'title' => 'Groups',
+                    'description' => [
+
+                        '{{ user.colour }}'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'JOIN_GROUPS')
+
+                ]
+
+            ]
+
+        ],
+        'friends' => [
+
+            'title' => 'Friends',
+
+            'modes' => [
+
+                'listing' => [
+
+                    'title' => 'Listing',
+                    'description' => [
+
+                        'Manage your friends.'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'MANAGE_FRIENDS')
+
+                ],
+                'requests' => [
+
+                    'title' => 'Requests',
+                    'description' => [
+
+                        'Handle friend requests.'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'MANAGE_FRIENDS')
+
+                ]
+
+            ]
+
+        ],
+        'messages' => [
+
+            'title' => 'Messages',
+
+            'modes' => [
+
+                'inbox' => [
+
+                    'title' => 'Inbox',
+                    'description' => [
+
+                        'The list of messages you\'ve received.'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'USE_MESSAGES')
+
+                ],
+                'sent' => [
+
+                    'title' => 'Sent',
+                    'description' => [
+
+                        'The list of messages you\'ve sent to other users.'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'USE_MESSAGES')
+
+                ],
+                'compose' => [
+
+                    'title' => 'Compose',
+                    'description' => [
+
+                        'Write a new message.'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'SEND_MESSAGES')
+
+                ]
+
+            ]
+
+        ],
+        'notifications' => [
+
+            'title' => 'Notifications',
+
+            'modes' => [
+
+                'history' => [
+
+                    'title' => 'History',
+                    'description' => [
+
+                        'The history of notifications that have been sent to you.'
+
+                    ],
+                    'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED')
+
+                ]
+
+            ]
+
+        ],
+        'appearance' => [
+
+            'title' => 'Appearance',
+
+            'modes' => [
+
+                'avatar' => [
+
+                    'title' => 'Avatar',
+                    'description' => [
+
+                        'Your avatar which is displayed all over the site and on your profile.',
+                        'Maximum image size is {{ avatar.max_width }}x{{ avatar.max_height }}, minimum image size is {{ avatar.min_width }}x{{ avatar.min_height }}, maximum file size is {{ avatar.max_size_view }}.'
+
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_AVATAR')
+
+                ],
+                'background' => [
+
+                    'title' => 'Background',
+                    'description' => [
+
+                        'The background that is displayed on your profile.',
+                        'Maximum image size is {{ background.max_width }}x{{ background.max_height }}, minimum image size is {{ background.min_width }}x{{ background.min_height }}, maximum file size is {{ background.max_size_view }}.'
+
+                    ],
+                    'access' => (isset($currentUser->data['userData']['profileBackground']) && $currentUser->checkPermission('SITE', 'CHANGE_BACKGROUND')) || $currentUser->checkPermission('SITE', 'CREATE_BACKGROUND')
+
+                ],
+                'userpage' => [
+
+                    'title' => 'Userpage',
+                    'description' => [
+
+                        'The custom text that is displayed on your profile.'
+
+                    ],
+                    'access' => (isset($currentUser->data['userData']['userPage']) && $currentUser->checkPermission('SITE', 'CHANGE_USERPAGE')) || $currentUser->checkPermission('SITE', 'CREATE_USERPAGE')
+
+                ]
+
+            ]
+
+        ],
+        'account' => [
+
+            'title' => 'Account',
+
+            'modes' => [
+
+                'email' => [
+
+                    'title' => 'E-mail Address',
+                    'description' => [
+
+                        'You e-mail address is used for password recovery and stuff like that, we won\'t spam you ;).'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_EMAIL')
+
+                ],
+                'username' => [
+
+                    'title' => 'Username',
+                    'description' => [
+
+                        'Probably the biggest part of your identity on a site.',
+                        '<b>You can only change this once every 30 days so choose wisely.</b>'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_USERNAME')
+
+                ],
+                'usertitle' => [
+
+                    'title' => 'Username',
+                    'description' => [
+
+                        'That little piece of text displayed under your username on your profile.'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_USERTITLE')
+
+                ],
+                'password' => [
+
+                    'title' => 'Password',
+                    'description' => [
+
+                        'Used to authenticate with the site and certain related services.'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_PASSWORD')
+
+                ],
+                'ranks' => [
+
+                    'title' => 'Ranks',
+                    'description' => [
+
+                        'Manage what ranks you\'re in and what is set as your main rank. Your main rank is highlighted. You get the permissions of all of the ranks you\'re in combined.'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'ALTER_RANKS')
+
+                ]
+
+            ]
+
+        ],
+        'advanced' => [
+
+            'title' => 'Advanced',
+
+            'modes' => [
+
+                'sessions' => [
+
+                    'title' => 'Sessions',
+                    'description' => [
+
+                        'Session keys are a way of identifying yourself with the system without keeping your password in memory.',
+                        'If someone finds one of your session keys they could possibly compromise your account, if you see any sessions here that shouldn\'t be here hit the Kill button to kill the selected session.',
+                        'If you get logged out after clicking one you\'ve most likely killed your current session, to make it easier to avoid this from happening your current session is highlighted.'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'MANAGE_SESSIONS')
+
+                ],
+                'registrationkeys' => [
+
+                    'title' => 'Registration Keys',
+                    'description' => [
+
+                        'Sometimes we activate the registration key system which means that users can only register using your "referer" keys, this means we can keep unwanted people from registering.',
+                        'Each user can generate 5 of these keys, bans and deactivates render these keys useless.'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'CREATE_REGKEYS')
+
+                ],
+                'deactivate' => [
+
+                    'title' => 'Deactivate Account',
+                    'description' => [
+
+                        'You can deactivate your account here if you want to leave :(.'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'DEACTIVATE_ACCOUNT')
+
+                ]
+
+            ]
+
+        ]
 
     ];
 
     // Current settings page
-    $currentPage = isset($_GET['mode']) ? (array_key_exists($_GET['mode'], $pages) ? $_GET['mode'] : 'notfound') : 'home';
+    $category   = isset($_GET['cat'])               ? (array_key_exists($_GET['cat'],   $pages)                     ? $_GET['cat']  : false) : array_keys($pages)[0];
+    $mode       = isset($_GET['mode']) && $category ? (array_key_exists($_GET['mode'],  $pages[$category]['modes']) ? $_GET['mode'] : false) : array_keys($pages[array_keys($pages)[0]]['modes'])[0];
+
+    // Not found
+    if(!$category || empty($category) || !$mode || empty($mode) || !$pages[$category]['modes'][$mode]['access']) {
+
+        header('HTTP/1.0 404 Not Found');
+        print Templates::render('errors/http404.tpl', $renderData);
+        exit;
+
+    }
 
     // Render data
-    $renderData['current'] = $currentPage;
+    $renderData['current'] = $category .'.'. $mode;
+
+    // Settings pages
+    $renderData['pages'] = $pages;
+
+    // Page data
     $renderData['page'] = [
 
-        'title'         => $pages[$currentPage][0] .' / '. $pages[$currentPage][1],
+        'title'         => $pages[$category]['title'] .' / '. $pages[$category]['modes'][$mode]['title'],
         'currentPage'   => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
-        'description'   => $pages[$currentPage][2]
+        'description'   => $pages[$category]['modes'][$mode]['description']
 
     ];
 
+
     // Section specific
-    switch($currentPage) {
+    switch($category .'.'. $mode) {
 
         // Homepage
-        case 'home':
+        case 'general.home':
             $renderData['settings'] = [
                 'friends'       => Users::getFriends(null, true, true, true)
             ];
             break;
 
-        // Avatar and background sizes
-        case 'avatar':
-        case 'background':
-            $renderData[$currentPage] = [
-
-                'max_width'     => Configuration::getConfig($currentPage .'_max_width'),
-                'max_height'    => Configuration::getConfig($currentPage .'_max_height'),
-                'min_width'     => Configuration::getConfig($currentPage .'_min_width'),
-                'min_height'    => Configuration::getConfig($currentPage .'_min_height'),
-                'max_size'      => Configuration::getConfig($currentPage .'_max_fsize'),
-                'max_size_view' => Main::getByteSymbol(Configuration::getConfig($currentPage .'_max_fsize'))
-
-            ];
-            break;
-
         // Profile
-        case 'userpage':
-
-            break;
-
-        // Profile
-        case 'profile':
+        case 'general.profile':
             $renderData['profile'] = [
 
                 'user'      => $currentUser->profileFields(),
@@ -742,7 +1023,7 @@ if(Users::checkLogin()) {
             break;
 
         // Options
-        case 'options':
+        case 'general.options':
             $renderData['options'] = [
 
                 'user'      => $currentUser->optionFields(),
@@ -752,18 +1033,43 @@ if(Users::checkLogin()) {
             break;
 
         // Friends
-        case 'friendlisting':
+        case 'friends.listing':
             $renderData['friends'] = array_chunk(array_reverse(Users::getFriends(null, true, true)), 12, true);
             break;
 
         // Pending Friend Requests
-        case 'friendrequests':
+        case 'friends.requests':
             $renderData['friends'] = array_chunk(array_reverse(Users::getPendingFriends(null, true)), 12, true);
             break;
 
+        // PM inbox
+        case 'messages.inbox':
+            $renderData['messages'] = Users::getPrivateMessages();
+            break;
+
         // Notification history
-        case 'notifications':
+        case 'notifications.history':
             $renderData['notifs'] = array_chunk(array_reverse(Users::getNotifications(null, 0, false, true)), 10, true);
+            break;
+
+        // Avatar and background sizes
+        case 'appearance.avatar':
+        case 'appearance.background':
+            $renderData[$mode] = [
+
+                'max_width'     => Configuration::getConfig($mode .'_max_width'),
+                'max_height'    => Configuration::getConfig($mode .'_max_height'),
+                'min_width'     => Configuration::getConfig($mode .'_min_width'),
+                'min_height'    => Configuration::getConfig($mode .'_min_height'),
+                'max_size'      => Configuration::getConfig($mode .'_max_fsize'),
+                'max_size_view' => Main::getByteSymbol(Configuration::getConfig($mode .'_max_fsize'))
+
+            ];
+            break;
+
+        // Profile
+        case 'appearance.userpage':
+
             break;
 
     }

@@ -2,20 +2,20 @@
 <h1 class="stylised">Common Tasks</h1>
 <h2>Profile</h2>
 <ul>
-    <li><a href="/settings/avatar" class="default">Change Avatar</a></li>
-    <li><a href="/settings/userpage" class="default">Change Userpage</a></li>
-    <li><a href="/settings/signature" class="default">Change Signature</a></li>
-    <li><a href="/settings/profile" class="default">Change Profile Details</a></li>
+    <li><a href="/settings/appearance/avatar" class="default">Change Avatar</a></li>
+    <li><a href="/settings/appearance/userpage" class="default">Change Userpage</a></li>
+    <li><a href="/settings/appearance/signature" class="default">Change Signature</a></li>
+    <li><a href="/settings/general/profile" class="default">Change Profile Details</a></li>
 </ul>
 <h2>Messaging</h2>
 <ul>
-    <li><a href="/messages/index" class="default">View Inbox</a></li>
+    <li><a href="/messages/inbox" class="default">View Inbox</a></li>
     <li><a href="/messages/compose" class="default">Send PM</a></li>
 </ul>
 <h2>Account</h2>
 <ul>
-    <li><a href="/settings/sessions" class="default">Manage Active Sessions</a></li>
-    <li><a href="/settings/password" class="default">Change Password</a></li>
+    <li><a href="/settings/advanced/sessions" class="default">Manage Active Sessions</a></li>
+    <li><a href="/settings/account/password" class="default">Change Password</a></li>
 </ul>
 <br />
 <h1 class="stylised">Personal Statistics</h1>
@@ -26,7 +26,7 @@
     <li>You have <b>{{ settings.friends|length - (settings.friends.online ? 1 : 0) - (settings.friends.offline ? 1 : 0) }} friend{% if settings.friends|length - (settings.friends.online ? 1 : 0) - (settings.friends.offline ? 1 : 0) != 1 %}s{% endif %}</b>.</li>
 </ul>
 <br />
-<h1 class="stylised"><a class="clean" href="/settings/friendlisting">Friends</a></h1>
+<h1 class="stylised"><a class="clean" href="/settings/friends/listing">Friends</a></h1>
 <h2 style="color: #080;">Online</h2>
 {% if settings.friends.online %}
     {% for key,friend in settings.friends.online %}

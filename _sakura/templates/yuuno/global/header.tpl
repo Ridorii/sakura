@@ -9,7 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="msapplication-TileColor" content="#fbeeff" />
         <meta name="msapplication-TileImage" content="/content/images/icons/ms-icon-144x144.png" />
-        <meta name="theme-color" content="#fbeeff" />
+        <meta name="theme-color" content="#9475B2" />
         {% if page.redirect %}
             <meta http-equiv="refresh" content="3; URL={{ page.redirect }}" />
         {% endif %}
@@ -147,7 +147,7 @@
             }
             {% endif %}
 
-            {% if php.self == '/profile.php' ? profile.data.userData.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.userData.userOptions.profileBackgroundSiteWide == 'true' and user.data.userData.profileBackground) %}
+            {% if php.self == '/profile.php' ? profile.data.userData.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.userData.userOptions.profileBackgroundSiteWide and user.data.userData.profileBackground) %}
                 initialiseParallax('userBackground');
             {% endif %}
 
@@ -165,7 +165,9 @@
                         <a class="menu-item" href="/" title="Return to the front page of Flashii">Home</a>
                         <a class="menu-item" href="/news" title="Here you can read updates on Flashii">News</a>
                         <a class="menu-item" href="//chat.{{ sakura.urlMain }}/" title="Chat with other Flashii members">Chat</a>
-                        <a class="menu-item" href="/forum" title="Discuss things with other members but static">Forums</a>
+                        {% if user.checkPermission('FORUM', 'USE_FORUM') %}
+                            <a class="menu-item" href="/forum" title="Discuss things with other members but static">Forums</a>
+                        {% endif %}
                         <a class="menu-item" href="/search" title="Search on Flashii">Search</a>
                         {% if session.checkLogin %}
                             <a class="menu-item" href="/members" title="View a list with all the activated user accounts">Members</a>
@@ -179,7 +181,7 @@
                             <a class="menu-item" href="/messages" title="Read your private message">Messages</a>
                             <a class="menu-item" href="/manage" title="Manage the site">Manage</a>
                             <a class="menu-item" href="/settings" title="Change your settings">Settings</a>
-                            <a class="menu-item" href="/logout?mode=logout&amp;time={{ php.time }}&amp;session={{ php.sessionid }}&amp;redirect={{ sakura.currentpage }}" title="End your login session" id="headerLogoutLink">Logout</a>
+                            <a class="menu-item" href="/logout?mode=logout&amp;time={{ php.time }}&amp;session={{ php.sessionid }}&amp;redirect={{ sakura.currentPage }}" title="End your login session" id="headerLogoutLink">Logout</a>
                         {% else %}
                             {% if sakura.lockAuth %}
                             <div class="menu-item" style="padding-left: 10px; padding-right: 10px;">Authentication is locked</div>
@@ -196,7 +198,7 @@
             </div>
             <div id="contentwrapper">
                 <div id="notifications"></div>
-            {% if php.self == '/profile.php' ? profile.data.userData.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.userData.userOptions.profileBackgroundSiteWide == 'true' and user.data.userData.profileBackground) %}
+                {% if php.self == '/profile.php' ? profile.data.userData.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.userData.userOptions.profileBackgroundSiteWide and user.data.userData.profileBackground) %}
                     <div id="userBackground" style="background-image: url('/bg/{{ (php.self == '/profile.php' ? profile : user).data.id }}');"></div>
                 {% endif %}
                 {% if not session.checkLogin and php.self != '/authenticate.php' %}
@@ -225,11 +227,11 @@
                 {% if user.checkPermission('SITE', 'RESTRICTED') %}
                     <div class="headerNotify" style="padding-top: 10px; padding-bottom: 10px; background: repeating-linear-gradient(-45deg, #B33, #B33 10px, #B00 10px, #B00 20px); text-align: center; color: #FFF; border: 1px solid #C00; box-shadow: 0px 0px 3px #C00;">
                         <h1>Your account is current in <span style="font-width: 700 !important;">restricted mode</span>!</h1>
-                        <div>A staff member has set your account to restricted mode most likely due to violation of the rules. You will <i>temporarily</i> not be able to use public features of the site. If you think this is a mistake please <a href="/contact" style="color: inherit;">get in touch with one of our staff members</a>.</div>
+                        <div>A staff member has set your account to restricted mode most likely due to violation of the rules. While restricted you won't be able to use most public features of the site. If you think this is a mistake please <a href="/contact" style="color: inherit;">get in touch with one of our staff members</a>.</div>
                     </div>
                 {% endif %}
                 <noscript>
-                    <div class="headerNotify" style="padding-top: 10px; padding-bottom: 10px;">
+                    <div class="headerNotify" style="padding-top: 10px; padding-bottom: 10px; background: repeating-linear-gradient(-45deg, #C2AFFE, #C2AFFE 10px, #D3BFFF 10px, #D3BFFF 20px);">
                         <h1>You have JavaScript disabled!</h1>
                         <p style="padding: 0 10px;">A lot of things on this site require JavaScript to be enabled (e.g. the chat), we try to keep both sides happy but it is highly recommended that you enable it (you'll also have to deal with this message being here if you don't enable it).</p>
                     </div>

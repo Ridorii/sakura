@@ -35,13 +35,14 @@ RewriteRule ^news.xml$ news.php?xml [L,QSA]
 
 # Settings
 RewriteRule ^settings/?$ settings.php [L,QSA]
-RewriteRule ^settings/([a-z]+)/?$ settings.php?mode=$1 [L,QSA]
-RewriteRule ^settings/([a-z]+)/p([0-9]+)/?$ settings.php?mode=$1&page=$2 [L,QSA]
+RewriteRule ^settings/([a-z]+)/?$ settings.php?cat=$1 [L,QSA]
+RewriteRule ^settings/([a-z]+)/([a-z]+)/?$ settings.php?cat=$1&mode=$2 [L,QSA]
+RewriteRule ^settings/([a-z]+)/([a-z]+)/p([0-9]+)/?$ settings.php?cat=$1&mode=$2&page=$3 [L,QSA]
 RewriteRule ^friends/?$ settings.php?friend-action=true [L,QSA]
 
 # Private Messages
-RewriteRule ^messages/?$ messages.php [L,QSA]
-RewriteRule ^messages/([a-z]+)/?$ messages.php?mode=$1 [L,QSA]
+RewriteRule ^messages/?$ settings.php?cat=messages [L,QSA]
+RewriteRule ^messages/([a-z]+)/?$ settings.php?cat=messages&mode=$1 [L,QSA]
 
 # Members
 RewriteRule ^members/?$ members.php [L,QSA]

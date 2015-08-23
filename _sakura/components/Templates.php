@@ -26,15 +26,21 @@ class Templates {
         $confPath = ROOT .'_sakura/templates/'. self::$_TPL .'/template.ini';
 
         // Check if the configuration file exists
-        if(!file_exists($confPath))
+        if(!file_exists($confPath)) {
+
             trigger_error('Template configuration does not exist', E_USER_ERROR);
+
+        }
 
         // Parse and store the configuration
         self::$_CFG = parse_ini_file($confPath, true);
 
         // Make sure we're not using a manage template for the main site or the other way around
-        if((bool)self::$_CFG['manage']['mode'] != (bool)Main::$_MANAGE_MODE)
+        if(defined('SAKURA_MANAGE') && (bool)self::$_CFG['manage']['mode'] != (bool)SAKURA_MANAGE) {
+
             trigger_error('Incorrect template type', E_USER_ERROR);
+
+        }
 
         // Start Twig
         self::twigLoader();

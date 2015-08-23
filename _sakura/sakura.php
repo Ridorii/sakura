@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150822');
+define('SAKURA_VERSION',    '20150823');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_COLOUR',     '#6C3082');
 define('SAKURA_STABLE',     false);
@@ -21,6 +21,13 @@ error_reporting(SAKURA_STABLE ? 0 : -1);
 
 // Set internal encoding method
 mb_internal_encoding('utf-8');
+
+// Stop the execution if the PHP Version is older than 5.4.0
+if(version_compare(phpversion(), '5.4.0', '<')) {
+
+    trigger_error('Sakura requires at least PHP 5.4.0, please upgrade to a newer PHP version.');
+
+}
 
 // Include libraries
 require_once ROOT .'_sakura/vendor/autoload.php';
@@ -53,6 +60,9 @@ set_error_handler(array('Sakura\Main', 'errorHandler'));
 // Initialise Main Class
 Main::init(ROOT .'_sakura/config/config.ini');
 
+// Assign servers file to whois class
+Whois::setServers(ROOT .'_sakura/'. Configuration::getLocalConfig('data', 'whoisservers'));
+
 // Start output buffering
 ob_start(Configuration::getConfig('use_gzip') ? 'ob_gzhandler' : null);
 
@@ -60,6 +70,20 @@ ob_start(Configuration::getConfig('use_gzip') ? 'ob_gzhandler' : null);
 $currentUser = new User(Session::$userId);
 
 if(!defined('SAKURA_NO_TPL')) {
+
+    // Initialise templating engine
+    Templates::init(
+        defined('SAKURA_MANAGE') ?
+        Configuration::getConfig('manage_style') : (
+            (
+                isset($currentUser->data['userData']['userOptions']['useMisaki']) &&
+                $currentUser->data['userData']['userOptions']['useMisaki'] &&
+                $currentUser->checkPermission('SITE', 'ALTER_PROFILE')
+            ) ?
+            'misaki' :
+            Configuration::getConfig('site_style')
+        )
+    );
 
     // Set base page rendering data
     $renderData = [

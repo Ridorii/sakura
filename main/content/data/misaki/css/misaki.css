@@ -367,6 +367,18 @@ a:active {
 /*
  * Profiles
  */
+.userNotFound {
+    margin: 10px 14px;
+    font-family: "Exo2-0-LightItalic", sans-serif;
+    font-size: 1.5em;
+    line-height: 1.3em;
+}
+
+.userNotFound > ul {
+    padding-left: 18px;
+    list-style: square;
+}
+
 .profile {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, .75);
     font-family: "Exo2-0-LightItalic", sans-serif;
@@ -576,6 +588,19 @@ a:active {
 .profile > .profileContent > .userPage > .statsRow > .forumStats > .inner > .forumStatCount > .threads {
     font-size: 1.2em;
     line-height: 1em;
+}
+
+/*
+ * User Background
+ */
+#userBackground {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    background: no-repeat center center / cover transparent;
 }
 
 /*

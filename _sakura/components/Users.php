@@ -47,12 +47,18 @@ class Users {
     public static function checkLogin($uid = null, $sid = null, $bypassCookies = false) {
 
         // Set $uid and $sid if they're null
-        if($uid == null)
+        if($uid == null) {
+
             $uid = Session::$userId;
 
+        }
+
         // ^
-        if($sid == null)
+        if($sid == null) {
+
             $sid = Session::$sessionId;
+
+        }
 
         // Check if cookie bypass is false
         if(!$bypassCookies) {
@@ -91,10 +97,6 @@ class Users {
 
         // Update the premium meta
         Users::updatePremiumMeta($uid);
-
-        // Redirect people that need to change their password to the new format
-        if(self::getUser($uid)['password_algo'] == 'legacy' && $_SERVER['PHP_SELF'] != '/authenticate.php' && $_SERVER['PHP_SELF'] != '/imageserve.php')
-            header('Location: /authenticate.php?legacy=true');
 
         // If everything went through return true
         return true;
