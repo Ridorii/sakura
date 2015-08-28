@@ -48,7 +48,10 @@
                 "20150820",
                 "20150821",
                 "20150822",
-                "20150823"
+                "20150823",
+                "20150825",
+                "20150826",
+                "20150828"
 
             ]
 
@@ -2249,6 +2252,41 @@
             {
                 "type":     "ADD",
                 "change":   "Quickly backport the required templates to switch back to the Yuuno template.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150825": [
+
+            {
+                "type":     "UPD",
+                "change":   "Moved profile templates to own folder.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150826": [
+
+            {
+                "type":     "ADD",
+                "change":   "Added profile entry for birthday.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150828": [
+
+            {
+                "type":     "UPD",
+                "change":   "Did a plethora of changes to Misaki.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Cleaned up the code for the front page stats.",
                 "user":     "Flashwave"
             }
 

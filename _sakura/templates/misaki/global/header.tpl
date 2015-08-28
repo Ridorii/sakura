@@ -84,19 +84,19 @@
             <div class="header-fade"></div>
             <div id="notifications"></div>
             <div id="header">
-                <div class="logo"></div>
-                <div class="text"></div>
-                <div class="floatRight">
-                    <div class="social">
-                        <ul>
-                            <li><a target="_blank" title="Flashii on Twitter" class="fa fa-twitter" href="https://twitter.com/_flashii"></a></li>
-                            <li><a target="_blank" title="Flashii on YouTube" class="fa fa-youtube-play" href="https://youtube.com/user/flashiinet"></a></li>
-                            <li><a target="_blank" title="Flashii on Steam" class="fa fa-steam" href="https://steamcommunity.com/groups/flashiinet"></a></li>
-                            <li><a title="Subscribe to the news page feed" class="fa fa-rss" href="/news.xml"></a></li>
-                        </ul>
-                        <div class="clear"></div>
-                    </div>
-                    <div class="image"></div>
+                <a href="/">
+                    <div class="logo"></div>
+                </a>
+                <div class="social">
+                    <ul>
+                        <li><a target="_blank" title="Flashii on Twitter" class="fa fa-twitter" href="https://twitter.com/_flashii"></a></li>
+                        <li><a target="_blank" title="Flashii on YouTube" class="fa fa-youtube-play" href="https://youtube.com/user/flashiinet"></a></li>
+                        <li><a target="_blank" title="Flashii on Steam" class="fa fa-steam" href="https://steamcommunity.com/groups/flashiinet"></a></li>
+                        <li><a target="_blank" title="Circlestorm on BitBucket" class="fa fa-bitbucket" href="https://bitbucket.org/circlestorm"></a></li>
+                        <li><a target="_blank" title="Flashii on osu!" class="fa fa-dot-circle-o" href="https://osu.ppy.sh/#"></a></li>
+                        <li><a title="Subscribe to the news page feed" class="fa fa-rss" href="/news.xml"></a></li>
+                    </ul>
+                    <div class="clear"></div>
                 </div>
             </div>
             <div id="wrapper">
@@ -112,7 +112,7 @@
                             <li><a href="/forum">Forum</a></li>
                             <li><a href="/members">Members</a></li>
                             <li><a href="/search">Search</a></li>
-                            <li><a href="/donate">Donate</a></li>
+                            <li><a href="/support">Support us</a></li>
                         </ul>
                         <ul class="nav-right floatRight">
                             <li class="nav-usermenu">
@@ -132,5 +132,4 @@
                             </li>
                             <li><a href="/u/{{ user.data.id }}" class="ignore"><img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.data.username }}" style="background-image: url('/a/{{ user.data.id }}');" class="nav-avatar" /></a></li>
                         </ul>
-                        <div class="clear"></div>
                     </div>

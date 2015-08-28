@@ -23,9 +23,9 @@
     {% endif %}
 {% endif %}
 <div class="head">Stats</div>
-We have <b>{{ stats.userCount }}</b>,
-<b><a href="/u/{{ stats.newestUser.id }}" class="default">{{ stats.newestUser.username }}</a></b> is the newest user,
-it has been <b>{{ stats.lastRegDate }}</b> since the last user registered and the forum has <b>{{ stats.topicCount }}</b> and <b>{{ stats.postCount }}</b>.
+We have <b>{{ stats.userCount }} user{% if stats.userCount != 1 %}s{% endif %}</b>,
+<b><a href="/u/{{ stats.newestUser.data.id }}" class="default">{{ stats.newestUser.data.username }}</a></b> is the newest user,
+it has been <b>{{ stats.lastRegDate }}</b> since the last user registered and the forum has <b>{{ stats.topicCount }} thread{% if stats.topicCount != 1 %}s{% endif %}</b> and <b>{{ stats.postCount }} post{% if stats.postCount != 1 %}s{% endif %}</b>.
 <div class="head">Online Users</div>
 {% if stats.onlineUsers %}
     All active users in the past 5 minutes:<br />

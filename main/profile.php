@@ -26,4 +26,4 @@ $renderData['page']['title'] = (
 );
 
 // Print page contents
-print Templates::render('main/profile.tpl', $renderData);
+print Templates::render('profile/index.tpl', $renderData);

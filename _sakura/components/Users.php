@@ -1428,4 +1428,11 @@ class Users {
 
     }
 
+    // Get the ID of the newest user
+    public static function getNewestUserId() {
+
+        return Database::fetch('users', false, ['password_algo' => ['nologin', '!=']], ['id', true], ['1'])['id'];
+
+    }
+
 }

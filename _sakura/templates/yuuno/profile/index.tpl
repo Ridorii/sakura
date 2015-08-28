@@ -11,7 +11,7 @@
         </ul>
     </div>
     {% else %}
-    	<div class="content profile">
+        <div class="content profile">
             <div class="{% if profile.userPage|length > 1 %}content-right {% endif %}content-column">
                 <div style="text-align: center;">
                     <img src="/a/{{ profile.data.id }}" alt="{{ profile.data.username }}'s Avatar" class="default-avatar-setting" style="box-shadow: 0 3px 7px #{% if profile.checkOnline %}484{% else %}844{% endif %};" /><br />
@@ -85,7 +85,7 @@
                             <h2 style="color: #A00; text-shadow: 0 0 7px #A00; margin-top: 0;">Bad</h2>
                             <span style="font-size: 10px; line-height: 10px;">This user has <b>{{ profile.getWarnings|length }} warning{% if profile.getWarnings|length != 1 %}s{% endif %}</b>.<br />After 5 to 10 warnings (depending on what they are for) this user may be permanently banned.</span>
                         {% else %}
-                            <h2 style="color: #0A0; text-shadow: 0 0 7px #0A0; margin-top: 0;">Good</h2>
+                            <h2 style="color: #080; text-shadow: 0 0 7px #080; margin-top: 0;">Good</h2>
                         {% endif %}
                     {% endif %}
                 </div>
