@@ -70,7 +70,7 @@
             // Space for things that need to happen onload
             window.addEventListener("load", function() {
 
-                {% if php.self == '/profile.php' ? profile.data.userData.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.userData.userOptions.profileBackgroundSiteWide and user.data.userData.profileBackground) %}
+                {% if php.self == '/profile.php' ? (profile.data.userData.profileBackground and not profile.data.userData.userOptions.disableProfileParallax) : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.userData.userOptions.profileBackgroundSiteWide and user.data.userData.profileBackground and not user.data.userData.userOptions.disableProfileParallax) %}
                     initialiseParallax('userBackground');
                 {% endif %}
 

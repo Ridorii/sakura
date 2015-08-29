@@ -57,8 +57,11 @@ class Templates {
         $twigEnv = [];
 
         // Enable caching
-        if(Configuration::getConfig('enable_tpl_cache'))
+        if(Configuration::getConfig('enable_tpl_cache')) {
+
             $twigEnv['cache'] = ROOT .'cache';
+
+        }
 
         // And now actually initialise the templating engine
         self::$_ENG = new Twig_Environment($twigLoader, $twigEnv);
@@ -71,7 +74,15 @@ class Templates {
     // Render template
     public static function render($file, $tags) {
 
-        return self::$_ENG->render($file, $tags);
+        try {
+
+            return self::$_ENG->render($file, $tags);
+
+        } catch(\Exception $e) {
+
+            trigger_error($e->getMessage(), E_USER_ERROR);
+
+        }
 
     }
 

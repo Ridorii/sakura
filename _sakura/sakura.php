@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150828');
+define('SAKURA_VERSION',    '20150829');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_COLOUR',     '#6C3082');
 define('SAKURA_STABLE',     false);
@@ -25,7 +25,7 @@ mb_internal_encoding('utf-8');
 // Stop the execution if the PHP Version is older than 5.4.0
 if(version_compare(phpversion(), '5.4.0', '<')) {
 
-    trigger_error('Sakura requires at least PHP 5.4.0, please upgrade to a newer PHP version.');
+    die('<h3>Sakura requires at least PHP 5.4.0, please upgrade to a newer PHP version.</h3>');
 
 }
 
@@ -69,21 +69,21 @@ ob_start(Configuration::getConfig('use_gzip') ? 'ob_gzhandler' : null);
 // Create a user object for the current logged in user
 $currentUser = new User(Session::$userId);
 
+// Prepare the name of the template to load (outside of SAKURA_NO_TPL because it's used in imageserve.php)
+$templateName = defined('SAKURA_MANAGE') ? Configuration::getConfig('manage_style') : (
+    (
+        isset($currentUser->data['userData']['userOptions']['useMisaki']) &&
+        $currentUser->data['userData']['userOptions']['useMisaki'] &&
+        $currentUser->checkPermission('SITE', 'ALTER_PROFILE')
+    ) ?
+    'misaki' :
+    Configuration::getConfig('site_style')
+);
+
 if(!defined('SAKURA_NO_TPL')) {
 
     // Initialise templating engine
-    Templates::init(
-        defined('SAKURA_MANAGE') ?
-        Configuration::getConfig('manage_style') : (
-            (
-                isset($currentUser->data['userData']['userOptions']['useMisaki']) &&
-                $currentUser->data['userData']['userOptions']['useMisaki'] &&
-                $currentUser->checkPermission('SITE', 'ALTER_PROFILE')
-            ) ?
-            'misaki' :
-            Configuration::getConfig('site_style')
-        )
-    );
+    Templates::init($templateName);
 
     // Set base page rendering data
     $renderData = [

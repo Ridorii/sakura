@@ -51,7 +51,8 @@
                 "20150823",
                 "20150825",
                 "20150826",
-                "20150828"
+                "20150828",
+                "20150829"
 
             ]
 
@@ -2287,6 +2288,26 @@
             {
                 "type":     "UPD",
                 "change":   "Cleaned up the code for the front page stats.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150829": [
+
+            {
+                "type":     "UPD",
+                "change":   "Improved template error handling.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed PHP version checker not halting the script entirely.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Make placeholder avatars different based on the templates.",
                 "user":     "Flashwave"
             }
 

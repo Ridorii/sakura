@@ -25,14 +25,16 @@ if(isset($_GET['m'])) {
 
         case 'avatar':
             // Set paths
-            $noAvatar       = ROOT . Configuration::getConfig('no_avatar_img');
-            $deactiveAvatar = ROOT . Configuration::getConfig('deactivated_avatar_img');
-            $bannedAvatar   = ROOT . Configuration::getConfig('banned_avatar_img');
+            $noAvatar       = ROOT . str_replace('{{ TPL }}', $templateName, Configuration::getConfig('no_avatar_img'));
+            $deactiveAvatar = ROOT . str_replace('{{ TPL }}', $templateName, Configuration::getConfig('deactivated_avatar_img'));
+            $bannedAvatar   = ROOT . str_replace('{{ TPL }}', $templateName, Configuration::getConfig('banned_avatar_img'));
 
             // If ?u= isn't set or if it isn't numeric
             if(!isset($_GET['u']) || !is_numeric($_GET['u']) || $_GET['u'] == 0) {
+
                 $serveImage = $noAvatar;
                 break;
+
             }
 
             // Get user data
