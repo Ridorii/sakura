@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "becd1aabf8b14aea30aa9218aee65fdd",
+    "hash": "eece9a97b0a0328b534ad22d30aab9bf",
     "packages": [
         {
-            "name": "flashwave/parsedown",
-            "version": "1.5.1",
+            "name": "erusev/parsedown",
+            "version": "1.5.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/flashii/parsedown.git",
-                "reference": "9da19c1108c39df9b42adc42e39b8371070652d0"
+                "url": "https://github.com/erusev/parsedown.git",
+                "reference": "0e89e3714bda18973184d30646306bb0a482bd96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flashii/parsedown/zipball/9da19c1108c39df9b42adc42e39b8371070652d0",
-                "reference": "9da19c1108c39df9b42adc42e39b8371070652d0",
+                "url": "https://api.github.com/repos/erusev/parsedown/zipball/0e89e3714bda18973184d30646306bb0a482bd96",
+                "reference": "0e89e3714bda18973184d30646306bb0a482bd96",
                 "shasum": ""
             },
             "type": "library",
@@ -26,7 +26,7 @@
                     "Parsedown": ""
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -43,20 +43,20 @@
                 "markdown",
                 "parser"
             ],
-            "time": "2015-01-24 13:01:47"
+            "time": "2015-08-03 09:24:05"
         },
         {
             "name": "paypal/rest-api-sdk-php",
-            "version": "v1.5.0",
+            "version": "v1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paypal/PayPal-PHP-SDK.git",
-                "reference": "18e4eaaf319b48de2457abb7b2b1807cfe704c0a"
+                "reference": "70b03c51879fa3d2392d89052b96e92f6e6f6512"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/18e4eaaf319b48de2457abb7b2b1807cfe704c0a",
-                "reference": "18e4eaaf319b48de2457abb7b2b1807cfe704c0a",
+                "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/70b03c51879fa3d2392d89052b96e92f6e6f6512",
+                "reference": "70b03c51879fa3d2392d89052b96e92f6e6f6512",
                 "shasum": ""
             },
             "require": {
@@ -91,7 +91,7 @@
                 "rest",
                 "sdk"
             ],
-            "time": "2015-06-25 17:12:03"
+            "time": "2015-08-17 19:32:59"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -150,25 +150,29 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.18.2",
+            "version": "v1.21.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "e8e6575abf6102af53ec283f7f14b89e304fa602"
+                "reference": "ca8d3aa90b6a01c82e07909fe815d6b443e75a23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/e8e6575abf6102af53ec283f7f14b89e304fa602",
-                "reference": "e8e6575abf6102af53ec283f7f14b89e304fa602",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ca8d3aa90b6a01c82e07909fe815d6b443e75a23",
+                "reference": "ca8d3aa90b6a01c82e07909fe815d6b443e75a23",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.7"
             },
+            "require-dev": {
+                "symfony/debug": "~2.7",
+                "symfony/phpunit-bridge": "~2.7"
+            },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.18-dev"
+                    "dev-master": "1.21-dev"
                 }
             },
             "autoload": {
@@ -203,7 +207,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-06-06 23:31:24"
+            "time": "2015-08-26 08:58:31"
         }
     ],
     "packages-dev": [],

@@ -2,7 +2,7 @@
 /*
  * Payment components (only slightly convoluted)
  */
- 
+
 namespace Sakura;
 
 use \PayPal\Api\Payer;

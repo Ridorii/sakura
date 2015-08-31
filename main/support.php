@@ -123,6 +123,23 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
 
 }
 
+// Premium tracker
+if(isset($_GET['tracker'])) {
+
+    $renderData['page'] = [
+
+        'title'         => 'Donation Tracker',
+        'currentPage'   => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
+        'premiumData'   => ($_PREMIUM = Users::getPremiumTrackerData()),
+        'premiumTable'  => array_chunk($_PREMIUM['table'], 20, true)
+
+    ];
+
+    print Templates::render('main/supporttracker.tpl', $renderData);
+    exit;
+
+}
+
 // Set default variables
 $renderData['page'] = [
 

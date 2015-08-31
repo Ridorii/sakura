@@ -1,105 +1,5 @@
 [
     {
-        "name": "flashwave/parsedown",
-        "version": "1.5.1",
-        "version_normalized": "1.5.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/flashii/parsedown.git",
-            "reference": "9da19c1108c39df9b42adc42e39b8371070652d0"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/flashii/parsedown/zipball/9da19c1108c39df9b42adc42e39b8371070652d0",
-            "reference": "9da19c1108c39df9b42adc42e39b8371070652d0",
-            "shasum": ""
-        },
-        "time": "2015-01-24 13:01:47",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Parsedown": ""
-            }
-        },
-        "notification-url": "http://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Emanuil Rusev",
-                "email": "hello@erusev.com",
-                "homepage": "http://erusev.com"
-            }
-        ],
-        "description": "Parser for Markdown.",
-        "homepage": "http://parsedown.org",
-        "keywords": [
-            "markdown",
-            "parser"
-        ]
-    },
-    {
-        "name": "twig/twig",
-        "version": "v1.18.2",
-        "version_normalized": "1.18.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/twigphp/Twig.git",
-            "reference": "e8e6575abf6102af53ec283f7f14b89e304fa602"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/twigphp/Twig/zipball/e8e6575abf6102af53ec283f7f14b89e304fa602",
-            "reference": "e8e6575abf6102af53ec283f7f14b89e304fa602",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.2.7"
-        },
-        "time": "2015-06-06 23:31:24",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.18-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Twig_": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com",
-                "homepage": "http://fabien.potencier.org",
-                "role": "Lead Developer"
-            },
-            {
-                "name": "Armin Ronacher",
-                "email": "armin.ronacher@active-4.com",
-                "role": "Project Founder"
-            },
-            {
-                "name": "Twig Team",
-                "homepage": "http://twig.sensiolabs.org/contributors",
-                "role": "Contributors"
-            }
-        ],
-        "description": "Twig, the flexible, fast, and secure template language for PHP",
-        "homepage": "http://twig.sensiolabs.org",
-        "keywords": [
-            "templating"
-        ]
-    },
-    {
         "name": "phpmailer/phpmailer",
         "version": "v5.2.10",
         "version_normalized": "5.2.10.0",
@@ -157,18 +57,81 @@
         "description": "PHPMailer is a full-featured email creation and transfer class for PHP"
     },
     {
-        "name": "paypal/rest-api-sdk-php",
-        "version": "v1.5.0",
-        "version_normalized": "1.5.0.0",
+        "name": "twig/twig",
+        "version": "v1.21.1",
+        "version_normalized": "1.21.1.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/paypal/PayPal-PHP-SDK.git",
-            "reference": "18e4eaaf319b48de2457abb7b2b1807cfe704c0a"
+            "url": "https://github.com/twigphp/Twig.git",
+            "reference": "ca8d3aa90b6a01c82e07909fe815d6b443e75a23"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/18e4eaaf319b48de2457abb7b2b1807cfe704c0a",
-            "reference": "18e4eaaf319b48de2457abb7b2b1807cfe704c0a",
+            "url": "https://api.github.com/repos/twigphp/Twig/zipball/ca8d3aa90b6a01c82e07909fe815d6b443e75a23",
+            "reference": "ca8d3aa90b6a01c82e07909fe815d6b443e75a23",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.7"
+        },
+        "require-dev": {
+            "symfony/debug": "~2.7",
+            "symfony/phpunit-bridge": "~2.7"
+        },
+        "time": "2015-08-26 08:58:31",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.21-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Twig_": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com",
+                "homepage": "http://fabien.potencier.org",
+                "role": "Lead Developer"
+            },
+            {
+                "name": "Armin Ronacher",
+                "email": "armin.ronacher@active-4.com",
+                "role": "Project Founder"
+            },
+            {
+                "name": "Twig Team",
+                "homepage": "http://twig.sensiolabs.org/contributors",
+                "role": "Contributors"
+            }
+        ],
+        "description": "Twig, the flexible, fast, and secure template language for PHP",
+        "homepage": "http://twig.sensiolabs.org",
+        "keywords": [
+            "templating"
+        ]
+    },
+    {
+        "name": "paypal/rest-api-sdk-php",
+        "version": "v1.5.1",
+        "version_normalized": "1.5.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/paypal/PayPal-PHP-SDK.git",
+            "reference": "70b03c51879fa3d2392d89052b96e92f6e6f6512"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/70b03c51879fa3d2392d89052b96e92f6e6f6512",
+            "reference": "70b03c51879fa3d2392d89052b96e92f6e6f6512",
             "shasum": ""
         },
         "require": {
@@ -179,7 +142,7 @@
         "require-dev": {
             "phpunit/phpunit": "3.7.*"
         },
-        "time": "2015-06-25 17:12:03",
+        "time": "2015-08-17 19:32:59",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -204,6 +167,47 @@
             "paypal",
             "rest",
             "sdk"
+        ]
+    },
+    {
+        "name": "erusev/parsedown",
+        "version": "1.5.4",
+        "version_normalized": "1.5.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/erusev/parsedown.git",
+            "reference": "0e89e3714bda18973184d30646306bb0a482bd96"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/erusev/parsedown/zipball/0e89e3714bda18973184d30646306bb0a482bd96",
+            "reference": "0e89e3714bda18973184d30646306bb0a482bd96",
+            "shasum": ""
+        },
+        "time": "2015-08-03 09:24:05",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Parsedown": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Emanuil Rusev",
+                "email": "hello@erusev.com",
+                "homepage": "http://erusev.com"
+            }
+        ],
+        "description": "Parser for Markdown.",
+        "homepage": "http://parsedown.org",
+        "keywords": [
+            "markdown",
+            "parser"
         ]
     }
 ]

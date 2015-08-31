@@ -1435,4 +1435,42 @@ class Users {
 
     }
 
+    // Get Premium tracker data
+    public static function getPremiumTrackerData() {
+
+        // Create data array
+        $data = [];
+
+        // Get database stuff
+        $table = Database::fetch('premium_log', true, null, ['id', true]);
+
+        // Add raw table data to data array
+        $data['table'] = $table;
+
+        // Create balance entry
+        $data['balance'] = 0.0;
+
+        // Create users entry
+        $data['users'] = [];
+
+        // Calculate the thing
+        foreach($table as $row) {
+
+            // Calculate balance
+            $data['balance'] = $data['balance'] + $row['amount'];
+
+            // Add userdata to table
+            if(!array_key_exists($row['uid'], $data['users'])) {
+
+                $data['users'][$row['uid']] = new User($row['uid']);
+
+            }
+
+        }
+
+        // Return the data
+        return $data;
+
+    }
+
 }

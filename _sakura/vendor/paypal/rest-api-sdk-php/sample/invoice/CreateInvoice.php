@@ -5,16 +5,17 @@
 // an invoice.
 
 require __DIR__ . '/../bootstrap.php';
-use PayPal\Api\Invoice;
-use PayPal\Api\MerchantInfo;
-use PayPal\Api\BillingInfo;
-use PayPal\Api\InvoiceItem;
-use PayPal\Api\Phone;
 use PayPal\Api\Address;
+use PayPal\Api\BillingInfo;
+use PayPal\Api\Cost;
 use PayPal\Api\Currency;
-use PayPal\Api\PaymentTerm;
-use PayPal\Api\ShippingInfo;
+use PayPal\Api\Invoice;
 use PayPal\Api\InvoiceAddress;
+use PayPal\Api\InvoiceItem;
+use PayPal\Api\MerchantInfo;
+use PayPal\Api\PaymentTerm;
+use PayPal\Api\Phone;
+use PayPal\Api\ShippingInfo;
 
 $invoice = new Invoice();
 
@@ -91,9 +92,13 @@ $items[0]->setTax($tax);
 
 // Second Item
 $items[1] = new InvoiceItem();
+// Lets add some discount to this item.
+$item1discount = new Cost();
+$item1discount->setPercent("3");
 $items[1]
     ->setName("Injection")
     ->setQuantity(5)
+    ->setDiscount($item1discount)
     ->setUnitPrice(new Currency());
 
 $items[1]->getUnitPrice()
@@ -107,6 +112,12 @@ $tax2->setPercent(3)->setName("Local Tax on Injection");
 $items[1]->setTax($tax2);
 
 $invoice->setItems($items);
+
+// #### Final Discount
+// You can add final discount to the invoice as shown below. You could either use "percent" or "value" when providing the discount
+$cost = new Cost();
+$cost->setPercent("2");
+$invoice->setDiscount($cost);
 
 $invoice->getPaymentTerm()
     ->setTermType("NET_45");

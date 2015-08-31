@@ -52,7 +52,9 @@
                 "20150825",
                 "20150826",
                 "20150828",
-                "20150829"
+                "20150829",
+                "20150830",
+                "20150831"
 
             ]
 
@@ -2308,6 +2310,36 @@
             {
                 "type":     "UPD",
                 "change":   "Make placeholder avatars different based on the templates.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150830": [
+
+            {
+                "type":     "ADD",
+                "change":   "Added donation tracker frontend.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150831": [
+
+            {
+                "type":     "UPD",
+                "change":   "Changed main navigation to font awesome icons.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed bug in settings panel with parent sections.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Updated twig libraries and switched to the unmodified Parsedown branch.",
                 "user":     "Flashwave"
             }
 

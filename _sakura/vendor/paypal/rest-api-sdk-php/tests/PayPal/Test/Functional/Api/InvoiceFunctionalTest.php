@@ -96,19 +96,6 @@ class InvoiceFunctionalTest extends \PHPUnit_Framework_TestCase
      * @param $invoice Invoice
      * @return Invoice
      */
-    public function testUpdate($invoice)
-    {
-        $this->markTestSkipped('Skipped as the fix is on the way. #PPTIPS-1932');
-        $result = $invoice->update($this->apiContext, $this->mockPayPalRestCall);
-        $this->assertNotNull($result);
-        $this->assertEquals($invoice->getId(), $result->getId());
-    }
-
-    /**
-     * @depends testSend
-     * @param $invoice Invoice
-     * @return Invoice
-     */
     public function testGetAll($invoice)
     {
         $result = Invoice::getAll(array('page_size' => '20', 'total_count_required' => 'true'), $this->apiContext, $this->mockPayPalRestCall);
@@ -132,6 +119,19 @@ class InvoiceFunctionalTest extends \PHPUnit_Framework_TestCase
         } while ($totalPages > 0 && $found == false);
         $this->assertTrue($found, "The Created Invoice was not found in the get list");
         $this->assertEquals($invoice->getId(), $foundObject->getId());
+    }
+
+
+    /**
+     * @depends testSend
+     * @param $invoice Invoice
+     * @return Invoice
+     */
+    public function testUpdate($invoice)
+    {
+        $result = $invoice->update($this->apiContext, $this->mockPayPalRestCall);
+        $this->assertNotNull($result);
+        $this->assertEquals($invoice->getId(), $result->getId());
     }
 
     /**

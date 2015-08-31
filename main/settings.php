@@ -975,7 +975,7 @@ if(Users::checkLogin()) {
 
     // Current settings page
     $category   = isset($_GET['cat'])               ? (array_key_exists($_GET['cat'],   $pages)                     ? $_GET['cat']  : false) : array_keys($pages)[0];
-    $mode       = isset($_GET['mode']) && $category ? (array_key_exists($_GET['mode'],  $pages[$category]['modes']) ? $_GET['mode'] : false) : array_keys($pages[array_keys($pages)[0]]['modes'])[0];
+    $mode       = isset($_GET['mode']) && $category ? (array_key_exists($_GET['mode'],  $pages[$category]['modes']) ? $_GET['mode'] : false) : array_keys($pages[$category]['modes'])[0];
 
     // Not found
     if(!$category || empty($category) || !$mode || empty($mode) || !$pages[$category]['modes'][$mode]['access']) {
