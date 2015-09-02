@@ -1473,4 +1473,11 @@ class Users {
 
     }
 
+    // Update donation tracker
+    public static function updatePremiumTracker($id, $amount, $comment) {
+
+
+
+    }
+
 }

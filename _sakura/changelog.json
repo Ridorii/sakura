@@ -54,7 +54,8 @@
                 "20150828",
                 "20150829",
                 "20150830",
-                "20150831"
+                "20150831",
+                "20150902"
 
             ]
 
@@ -2340,6 +2341,31 @@
             {
                 "type":     "UPD",
                 "change":   "Updated twig libraries and switched to the unmodified Parsedown branch.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150902": [
+
+            {
+                "type":     "REM",
+                "change":   "Removed dodgy old mobile view.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed menu width on smaller monitors.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Made the dropdowns in the memberlist usable on phones.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed special styling on support us button.",
                 "user":     "Flashwave"
             }
 

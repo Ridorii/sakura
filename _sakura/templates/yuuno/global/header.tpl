@@ -171,7 +171,7 @@
                         <a class="menu-item fa-search" href="/search" title="Search"></a>
                         {% if session.checkLogin %}
                             <a class="menu-item fa-users" href="/members" title="Members"></a>
-                            <a class="menu-item menu-donate fa-heart" href="/support" title="Support us"></a>
+                            <a class="menu-item fa-heart" href="/support" title="Support us"></a>
                         {% endif %}
                     </div>
                     <div class="menu-ucp fa" id="navMenuUser">
@@ -189,9 +189,6 @@
                             <a class="menu-item fa-sign-in" href="/authenticate" title="Login"></a>
                             {% endif %}
                         {% endif %}
-                    </div>
-                    <div class="menu-mob">
-                        <a class="menu-item" id="mobileNavToggle" href="javascript:;" onclick="mobileMenu(true);">Open Menu</a>
                     </div>
                     <div class="clear"></div>
                 </div>

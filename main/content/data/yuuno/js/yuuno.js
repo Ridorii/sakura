@@ -21,39 +21,6 @@ function cookieData(action, name, data) {
 
 }
 
-// Toggling the menu on mobile devices
-function mobileMenu(mode) {
-
-    // Assign the elements to variables
-    var ucpMenuBtn = document.getElementById('navMenuSite');
-    var navMenuBtn = document.getElementById('navMenuUser');
-    var mobMenuBtn = document.getElementById('mobileNavToggle');
-
-    // Open or close the menus depending on the values
-    if(mode) {
-
-        // Alter the classes
-        ucpMenuBtn.className = ucpMenuBtn.className + ' menu-hid';
-        navMenuBtn.className = navMenuBtn.className + ' menu-hid';
-
-        // Update the button
-        mobMenuBtn.innerHTML = 'Close Menu';
-        mobMenuBtn.setAttribute('onclick', 'mobileMenu(false);');
-
-    } else {
-
-        // Alter the classes
-        ucpMenuBtn.className = ucpMenuBtn.className.replace(' menu-hid', '');
-        navMenuBtn.className = navMenuBtn.className.replace(' menu-hid', '');
-
-        // Update the button
-        mobMenuBtn.innerHTML = 'Open Menu';
-        mobMenuBtn.setAttribute('onclick', 'mobileMenu(true);');
-
-    }
-
-}
-
 // Get the current unix/epoch timestamp
 function epochTime() {
 

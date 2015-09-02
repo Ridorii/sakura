@@ -7,20 +7,20 @@
     <div class="membersPage" style="min-height: 500px;">
         <div class="dropDown" style="margin: 0px auto; font-size: 1.5em; line-height: 1.5em; height: 30px;">
             <div class="dropDownInner" style="float: left; color: #FFF;">
-                <a class="dropDownDesc">Rank:</a>
-                <a href="/members/"{% if not page.active %} class="dropDownSelected"{% endif %}>All members</a>
+                <a class="dropDownDesc">Rank:</a><!--
+                --><a href="/members/"{% if not page.active %} class="dropDownSelected"{% endif %}>All members</a><!--
                 {% for rank in page.ranks %}
                     {% if not rank.hidden or (rank.hidden and page.active == rank.id) %}
-                        <a href="/members/{% if page.sort != page.sorts[0] %}{{ page.sort }}/{% endif %}{{ rank.id }}/" style="color: {{ rank.colour }};"{% if page.active == rank.id %} class="dropDownSelected"{% endif %}>{{ rank.name }}{% if rank.multi %}s{% endif %}</a>
+                        --><a href="/members/{% if page.sort != page.sorts[0] %}{{ page.sort }}/{% endif %}{{ rank.id }}/" style="color: {{ rank.colour }};"{% if page.active == rank.id %} class="dropDownSelected"{% endif %}>{{ rank.name }}{% if rank.multi %}s{% endif %}</a><!--
                     {% endif %}
                 {% endfor %}
-            </div>
-            <div class="dropDownInner" style="float: left;">
-                <a class="dropDownDesc">View:</a>
+            --></div>
+            <div class="dropDownInner" style="float: left;"><!--
+                --><a class="dropDownDesc">View:</a><!--
                 {% for sort in page.sorts %}
-                <a href="/members/{{ sort }}/{% if page.active %}{{ page.active }}/{% endif %}{% if page.page %}p{{ page.page + 1 }}/{% endif %}"{% if page.sort == sort %} class="dropDownSelected"{% endif %}>{{ sort|capitalize }}</a>
+                --><a href="/members/{{ sort }}/{% if page.active %}{{ page.active }}/{% endif %}{% if page.page %}p{{ page.page + 1 }}/{% endif %}"{% if page.sort == sort %} class="dropDownSelected"{% endif %}>{{ sort|capitalize }}</a><!--
                 {% endfor %}
-            </div>
+            --></div>
         </div>
         {% if page.notfound %}
         <h1 class="stylised" style="margin-top: 20px;">The requested rank was not found!</h1>

@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150831');
+define('SAKURA_VERSION',    '20150902');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_COLOUR',     '#6C3082');
 define('SAKURA_STABLE',     false);
@@ -87,6 +87,13 @@ if(!defined('SAKURA_NO_TPL')) {
 
     // Set base page rendering data
     $renderData = [
+
+        /*
+         * Idea for flexibility in templates and to reduce redundancy;
+         * Attempt to use a class instead of an assoc. array for the
+         *  template variables since twig supports this to make accessing
+         *  certain functions, like the time elapsed function easier.
+         */
 
         'sakura' => [
 
