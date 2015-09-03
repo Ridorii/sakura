@@ -275,34 +275,6 @@ class Main {
 
     }
 
-    // Generate disqus hmac (https://github.com/disqus/DISQUS-API-Recipes/blob/master/sso/php/sso.php)
-    public static function dsqHmacSha1($data, $key) {
-
-        $blocksize = 64;
-
-        if(strlen($key) > $blocksize) {
-
-            $key = pack('H*', sha1($key));
-
-        }
-
-        $key    = str_pad($key, $blocksize, chr(0x00));
-        $ipad   = str_repeat(chr(0x36), $blocksize);
-        $opad   = str_repeat(chr(0x5c), $blocksize);
-        $hmac   = pack(
-            'H*', sha1(
-                ($key ^ $opad) . pack(
-                    'H*', sha1(
-                        ($key ^ $ipad) . $data
-                    )
-                )
-            )
-        );
-
-        return bin2hex($hmac);
-
-    }
-
     // Loading info pages
     public static function loadInfoPage($id) {
 
@@ -464,15 +436,15 @@ class Main {
 
     }
 
-    // Get country code from CloudFlare header (which just returns EU if not found)
+    // Get country code from CloudFlare header (which just returns XX if not found)
     public static function getCountryCode() {
 
         // Check if the required header is set and return it
         if(isset($_SERVER['HTTP_CF_IPCOUNTRY']))
             return $_SERVER['HTTP_CF_IPCOUNTRY'];
 
-        // Return EU as a fallback
-        return 'EU';
+        // Return XX as a fallback
+        return 'XX';
 
     }
 
@@ -761,6 +733,58 @@ class Main {
 
         // Return the formatted string
         return $bytes;
+
+    }
+
+    // Get Premium tracker data
+    public static function getPremiumTrackerData() {
+
+        // Create data array
+        $data = [];
+
+        // Get database stuff
+        $table = Database::fetch('premium_log', true, null, ['id', true]);
+
+        // Add raw table data to data array
+        $data['table'] = $table;
+
+        // Create balance entry
+        $data['balance'] = 0.0;
+
+        // Create users entry
+        $data['users'] = [];
+
+        // Calculate the thing
+        foreach($table as $row) {
+
+            // Calculate balance
+            $data['balance'] = $data['balance'] + $row['amount'];
+
+            // Add userdata to table
+            if(!array_key_exists($row['uid'], $data['users'])) {
+
+                $data['users'][$row['uid']] = new User($row['uid']);
+
+            }
+
+        }
+
+        // Return the data
+        return $data;
+
+    }
+
+    // Update donation tracker
+    public static function updatePremiumTracker($id, $amount, $comment) {
+
+        Database::insert('premium_log', [
+
+            'uid'       => $id,
+            'amount'    => $amount,
+            'date'      => time(),
+            'comment'   => $comment
+
+        ]);
 
     }
 

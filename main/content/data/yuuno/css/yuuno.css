@@ -449,16 +449,17 @@ a#gotop.exit {
     .dropDown .dropDownInner {
         float: none !important;
         margin-bottom: 5px;
+        text-align: center;
     }
 
     .dropDown .dropDownInner a {
         padding: 3px 6px;
         float: none !important;
-        display: inline-block !important;
+        display: block !important;
     }
 
     .dropDown .dropDownInner a:not(:last-child) {
-        border-right: 2px solid #9475B2;
+        border-bottom: 2px solid #9475B2;
     }
 
     .membersPageList {

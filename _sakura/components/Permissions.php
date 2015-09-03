@@ -66,7 +66,8 @@ class Permissions {
         // Site management permissions
         'MANAGE' => [
 
-            'USE_MANAGE' => 1
+            'USE_MANAGE'        => 1,
+            'EDIT_INFO_PAGES'   => 2
 
         ]
 

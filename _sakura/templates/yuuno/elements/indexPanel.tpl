@@ -1,8 +1,8 @@
 {% if session.checkLogin %}
     <div class="head">Hi, {{ user.data.username }}!</div>
-    <a href="/settings/avatar"><img src="/a/{{ user.data.id }}" class="default-avatar-setting homepage-menu-avatar" /></a>
+    <a href="/settings/appearance/avatar/"><img src="/a/{{ user.data.id }}" class="default-avatar-setting homepage-menu-avatar" /></a>
     <ul class="panelQuickLinks">
-        <li><a href="/settings/friendrequests" title="Pending friend requests"><span class="fa fa-user-plus"></span><span class="count">{{ page.friend_req|length }}</span></a></li>
+        <li><a href="/settings/friends/requests/" title="Pending friend requests"><span class="fa fa-user-plus"></span><span class="count">{{ page.friend_req|length }}</span></a></li>
         <li><a href="/messages" title="View private messages"><span class="fa fa-envelope"></span><span class="count">0</span></a></li>
     </ul>
     <div class="clear"></div>

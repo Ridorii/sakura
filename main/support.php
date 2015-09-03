@@ -52,10 +52,10 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
                     $total = number_format($total, 2, '.', '');
 
                     // Generate item name
-                    $itemName = 'Flashii Tenshi - '. (string)$_POST['months'] .' month'. ((int)$_POST['months'] == 1 ? '' : 's');
+                    $itemName = Configuration::getConfig('sitename') .' Premium - '. (string)$_POST['months'] .' month'. ((int)$_POST['months'] == 1 ? '' : 's');
 
                     // Attempt to create a transaction
-                    if($transaction = Payments::createTransaction($total, $itemName, 'Flashii Tenshi Purchase', 'http://'. Configuration::getConfig('url_main') .'/support')) {
+                    if($transaction = Payments::createTransaction($total, $itemName, Configuration::getConfig('sitename') .' Premium Purchase', 'http://'. Configuration::getConfig('url_main') .'/support')) {
 
                         // Store the amount of months in the global session array
                         $_SESSION['premiumMonths'] = (int)$_POST['months'];
@@ -90,6 +90,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
                         // Make the user premium
                         $expiration = Users::addUserPremium(Session::$userId, (2628000 * $_SESSION['premiumMonths']));
                         Users::updatePremiumMeta(Session::$userId);
+                        Main::updatePremiumTracker(Session::$userId, ((float)Configuration::getConfig('premium_price_per_month') * $_SESSION['premiumMonths']), $currentUser->data['username'] .' bought premium for '. $_SESSION['premiumMonths'] .' month'. ($_SESSION['premiumMonths'] == 1 ? '' : 's') .'.');
 
                         // Redirect to the complete
                         header('Location: ?mode=complete');
@@ -130,7 +131,7 @@ if(isset($_GET['tracker'])) {
 
         'title'         => 'Donation Tracker',
         'currentPage'   => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
-        'premiumData'   => ($_PREMIUM = Users::getPremiumTrackerData()),
+        'premiumData'   => ($_PREMIUM = Main::getPremiumTrackerData()),
         'premiumTable'  => array_chunk($_PREMIUM['table'], 20, true)
 
     ];

@@ -55,7 +55,8 @@
                 "20150829",
                 "20150830",
                 "20150831",
-                "20150902"
+                "20150902",
+                "20150903"
 
             ]
 
@@ -2366,6 +2367,56 @@
             {
                 "type":     "REM",
                 "change":   "Removed special styling on support us button.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150903": [
+
+            {
+                "type":     "UPD",
+                "change":   "Moved donation tracker functions to Main class.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added insert function to tracker.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added a link to the tracker on the support page.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed undefined index in settings.php.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed All Members view on the memberlist not remembering the view option.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Created two new classes for future use (news and comments).",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed code for Disqus SSO.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Make unknown countries return XX instead of EU.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed Disqus.",
                 "user":     "Flashwave"
             }
 

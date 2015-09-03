@@ -15,12 +15,16 @@ $renderData['page'] = [
     'content'   => Main::mdParse("# Unable to load the requested info page.\r\n\r\nCheck the URL and try again.")
 ];
 
+// Set page id
+$pageId = isset($_GET['p']) ? strtolower($_GET['p']) : '';
+
 // Get info page data from the database
-if($ipData = Main::loadInfoPage(isset($_GET['p']) ? strtolower($_GET['p']) : '')) {
+if($ipData = Main::loadInfoPage($pageId)) {
 
     // Assign new proper variable
     $renderData['page'] = [
 
+        'id'        => $pageId,
         'title'     => $ipData['pagetitle'],
         'content'   => Main::mdParse($ipData['content'])
 

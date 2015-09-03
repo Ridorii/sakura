@@ -36,7 +36,7 @@
                 {% for supporter in page.premiumTable[page.currentPage] %}
                     <tr>
                         <td>
-                            {{ page.premiumData.users[supporter.uid].data.username }}
+                            <a href="/u/{{ page.premiumData.users[supporter.uid].data.id }}" class="default" style="color: {{ page.premiumData.users[supporter.uid].colour }}; text-shadow: 0 0 7px {% if page.premiumData.users[supporter.uid].colour != 'inherit' %}{{ page.premiumData.users[supporter.uid].colour }}{% else %}#222{% endif %};">{{ page.premiumData.users[supporter.uid].data.username }}</a>
                         </td>
                         <td style="color: {% if supporter.amount > 0 %}#0A0{% else %}#A00{% endif %};">
                             &#8364;{{ supporter.amount|number_format(2) }}

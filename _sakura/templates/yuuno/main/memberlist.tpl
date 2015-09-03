@@ -8,7 +8,7 @@
         <div class="dropDown" style="margin: 0px auto; font-size: 1.5em; line-height: 1.5em; height: 30px;">
             <div class="dropDownInner" style="float: left; color: #FFF;">
                 <a class="dropDownDesc">Rank:</a><!--
-                --><a href="/members/"{% if not page.active %} class="dropDownSelected"{% endif %}>All members</a><!--
+                --><a href="/members/{% if page.sort != page.sorts[0] %}{{ page.sort }}/{% endif %}"{% if not page.active %} class="dropDownSelected"{% endif %}>All members</a><!--
                 {% for rank in page.ranks %}
                     {% if not rank.hidden or (rank.hidden and page.active == rank.id) %}
                         --><a href="/members/{% if page.sort != page.sorts[0] %}{{ page.sort }}/{% endif %}{{ rank.id }}/" style="color: {{ rank.colour }};"{% if page.active == rank.id %} class="dropDownSelected"{% endif %}>{{ rank.name }}{% if rank.multi %}s{% endif %}</a><!--

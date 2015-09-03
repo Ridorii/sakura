@@ -18,14 +18,16 @@ RewriteRule ^feedback/?$ https://github.com/circlestorm/Sakura/issues [L,QSA]
 RewriteRule ^credits/?$ credits.php [L,QSA]
 RewriteRule ^index/?$ index.php [L,QSA]
 RewriteRule ^login/?$|^logout/?$|^activate/?$|^register/?$|^forgotpassword/?|^authenticate/?$ authenticate.php [L,QSA]
-RewriteRule ^donate/?$|^support/?$ support.php [L,QSA]
+RewriteRule ^support/?$ support.php [L,QSA]
+RewriteRule ^support/tracker/?$ support.php?tracker=true [L,QSA]
+RewriteRule ^support/tracker/([0-9]+)/?$ support.php?tracker=true&page=$1 [L,QSA]
 RewriteRule ^contact/?$ infopage.php?p=contact [L,QSA]
 RewriteRule ^changelog/?$ changelog.php [L,QSA]
 RewriteRule ^faq/?$ faq.php [L,QSA]
 RewriteRule ^search/?$ search.php [L,QSA]
 
 # Info pages
-RewriteRule ^p/([a-z]+)$ infopage.php?p=$1 [L,QSA]
+RewriteRule ^p/([a-z]+)/?$ infopage.php?p=$1 [L,QSA]
 
 # News
 RewriteRule ^news/?$ news.php [L,QSA]
