@@ -16,8 +16,8 @@ function hideYourMind(conflictions) {
         forMyFriends.setAttribute('type', 'audio/mp3');
         whenTheyCome.setAttribute('type', 'audio/ogg');
 
-        forMyFriends.setAttribute('src', '//' + sakuraVars.content_path + '/sounds/dicks.mp3');
-        whenTheyCome.setAttribute('src', '//' + sakuraVars.content_path + '/sounds/dicks.ogg');
+        forMyFriends.setAttribute('src', sakuraVars.content + '/sounds/dicks.mp3');
+        whenTheyCome.setAttribute('src', sakuraVars.content + '/sounds/dicks.ogg');
 
         dicksAre.appendChild(forMyFriends);
         dicksAre.appendChild(whenTheyCome);
@@ -39,8 +39,8 @@ function hideYourMind(conflictions) {
         von.setAttribute('type', 'audio/mp3');
         schnitzel.setAttribute('type', 'audio/ogg');
 
-        von.setAttribute('src', '//' + sakuraVars.content_path + '/sounds/mewow.mp3');
-        schnitzel.setAttribute('src', '//' + sakuraVars.content_path + '/sounds/mewow.ogg');
+        von.setAttribute('src', sakuraVars.content + '/sounds/mewow.mp3');
+        schnitzel.setAttribute('src', sakuraVars.content + '/sounds/mewow.ogg');
 
         noklz.appendChild(von);
         noklz.appendChild(schnitzel);

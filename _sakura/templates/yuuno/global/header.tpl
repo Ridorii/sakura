@@ -162,31 +162,29 @@
                 <div class="menu">
                     <div class="menu-nav fa" id="navMenuSite">
                         <!-- Navigation menu, displayed on left side of the bar. -->
-                        <a class="menu-item fa-home" href="/" title="Home"></a>
-                        <a class="menu-item fa-newspaper-o" href="/news" title="News"></a>
+                        <a class="menu-item fa-home" href="{{ urls.format('SITE_HOME') }}" title="Home"></a>
+                        <a class="menu-item fa-newspaper-o" href="{{ urls.format('SITE_NEWS') }}" title="News"></a>
                         <a class="menu-item fa-commenting" href="//chat.{{ sakura.urlMain }}/" title="Chat"></a>
-                        {% if user.checkPermission('FORUM', 'USE_FORUM') %}
-                            <a class="menu-item fa-list" href="/forum" title="Forums"></a>
-                        {% endif %}
-                        <a class="menu-item fa-search" href="/search" title="Search"></a>
+                        <a class="menu-item fa-list" href="{{ urls.format('FORUM_INDEX') }}" title="Forums"></a>
+                        <a class="menu-item fa-search" href="{{ urls.format('SITE_SEARCH') }}" title="Search"></a>
                         {% if session.checkLogin %}
-                            <a class="menu-item fa-users" href="/members" title="Members"></a>
-                            <a class="menu-item fa-heart" href="/support" title="Support us"></a>
+                            <a class="menu-item fa-users" href="{{ urls.format('SITE_MEMBERS') }}" title="Members"></a>
+                            <a class="menu-item fa-heart" href="{{ urls.format('SITE_PREMIUM') }}" title="Support us"></a>
                         {% endif %}
                     </div>
                     <div class="menu-ucp fa" id="navMenuUser">
                         <!-- User menu, displayed on right side of the bar. -->
                         {% if session.checkLogin %}
-                            <a class="menu-item avatar" href="/u/{{ user.data.id }}" title="Logged in as {{ user.data.username }}" style="background-image: url('/a/{{ user.data.id }}'); width: auto; color: {{ user.colour }}; font-weight: 700;"></a>
-                            <a class="menu-item fa-envelope" href="/messages" title="Messages"></a>
-                            <a class="menu-item fa-gavel" href="/manage" title="Manage"></a>
-                            <a class="menu-item fa-cogs" href="/settings" title="Settings"></a>
-                            <a class="menu-item fa-sign-out" href="/logout?mode=logout&amp;time={{ php.time }}&amp;session={{ php.sessionid }}&amp;redirect={{ sakura.currentPage }}" title="Logout" id="headerLogoutLink"></a>
+                            <a class="menu-item avatar" href="{{ urls.format('USER_PROFILE', [user.data.id]) }}" title="Logged in as {{ user.data.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.data.id]) }}'); width: auto; color: {{ user.colour }}; font-weight: 700;"></a>
+                            <a class="menu-item fa-envelope" href="{{ urls.format('SETTING_CAT', ['messages']) }}" title="Messages"></a>
+                            <a class="menu-item fa-gavel" href="{{ urls.format('MANAGE_INDEX') }}" title="Manage"></a>
+                            <a class="menu-item fa-cogs" href="{{ urls.format('SETTINGS_INDEX') }}" title="Settings"></a>
+                            <a class="menu-item fa-sign-out" href="{{ urls.format('USER_LOGOUT', [php.time, php.sessionid, sakura.currentPage]) }}" title="Logout" id="headerLogoutLink"></a>
                         {% else %}
                             {% if sakura.lockAuth %}
                             <div class="menu-item fa-lock" style="padding-left: 10px; padding-right: 10px;" title="Authentication is locked"></div>
                             {% else %}
-                            <a class="menu-item fa-sign-in" href="/authenticate" title="Login"></a>
+                            <a class="menu-item fa-sign-in" href="{{ urls.format('SITE_LOGIN') }}" title="Login"></a>
                             {% endif %}
                         {% endif %}
                     </div>
@@ -196,10 +194,10 @@
             <div id="contentwrapper">
                 <div id="notifications"></div>
                 {% if php.self == '/profile.php' ? profile.data.userData.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.userData.userOptions.profileBackgroundSiteWide and user.data.userData.profileBackground) %}
-                    <div id="userBackground" style="background-image: url('/bg/{{ (php.self == '/profile.php' ? profile : user).data.id }}');"></div>
+                    <div id="userBackground" style="background-image: url('{{ urls.format('IMAGE_BACKGROUND', [(php.self == '/profile.php' ? profile : user).data.id]) }}');"></div>
                 {% endif %}
                 {% if not session.checkLogin and php.self != '/authenticate.php' %}
-                    <form method="post" action="/authenticate" id="headerLoginForm" onkeydown="formEnterCatch(event, 'headerLoginButton');">
+                    <form method="post" action="{{ urls.format('AUTH_ACTION') }}" id="headerLoginForm" onkeydown="formEnterCatch(event, 'headerLoginButton');">
                         <input type="hidden" name="redirect" value="{{ sakura.currentPage }}" />
                         <input type="hidden" name="session" value="{{ php.sessionid }}" />
                         <input type="hidden" name="time" value="{{ php.time }}" />
@@ -224,7 +222,7 @@
                 {% if user.checkPermission('SITE', 'RESTRICTED') %}
                     <div class="headerNotify" style="padding-top: 10px; padding-bottom: 10px; background: repeating-linear-gradient(-45deg, #B33, #B33 10px, #B00 10px, #B00 20px); text-align: center; color: #FFF; border: 1px solid #C00; box-shadow: 0px 0px 3px #C00;">
                         <h1>Your account is current in <span style="font-width: 700 !important;">restricted mode</span>!</h1>
-                        <div>A staff member has set your account to restricted mode most likely due to violation of the rules. While restricted you won't be able to use most public features of the site. If you think this is a mistake please <a href="/contact" style="color: inherit;">get in touch with one of our staff members</a>.</div>
+                        <div>A staff member has set your account to restricted mode most likely due to violation of the rules. While restricted you won't be able to use most public features of the site. If you think this is a mistake please <a href="{{ urls.format('INFO_PAGE', ['contact']) }}" style="color: inherit;">get in touch with one of our staff members</a>.</div>
                     </div>
                 {% endif %}
                 <noscript>

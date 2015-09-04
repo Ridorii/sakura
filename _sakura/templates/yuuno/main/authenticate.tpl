@@ -1,6 +1,6 @@
 {% include 'global/header.tpl' %}
     {% if sakura.lockAuth %}
-    <h1 class="stylised" style="line-height: 1.8em; text-align: center;">Authentication is currently disallowed, try again later.</h1>
+        <h1 class="stylised" style="line-height: 1.8em; text-align: center;">Authentication is currently disallowed, try again later.</h1>
     {% else %}
     <div class="loginPage">
         <div class="loginCont">
@@ -8,7 +8,7 @@
                 <div class="head">
                     Login to {{ sakura.siteName }}
                 </div>
-                <form method="post" action="/authenticate" id="loginForm">
+                <form method="post" action="{{ urls.format('AUTH_ACTION') }}" id="loginForm">
                     <input type="hidden" name="redirect" value="{{ auth.redirect }}" />
                     <input type="hidden" name="session" value="{{ php.sessionid }}" />
                     <input type="hidden" name="time" value="{{ php.time }}" />
@@ -37,7 +37,7 @@
                 <div class="head">
                     Lost Password
                 </div>
-                <form method="post" action="/authenticate" id="passwordForm">
+                <form method="post" action="{{ urls.format('AUTH_ACTION') }}" id="passwordForm">
                     <input type="hidden" name="mode" value="forgotpassword" />
                     <input type="hidden" name="session" value="{{ php.sessionid }}" />
                     <input type="hidden" name="time" value="{{ php.time }}" />
@@ -68,7 +68,7 @@
                     Register on {{ sakura.siteName }}
                 </div>
                 {% if not sakura.disableRegistration %}
-                <form id="registerForm" method="post" action="/authenticate" style="display:{% if auth.blockRegister.do %}none{% else %}block{% endif %};">
+                <form id="registerForm" method="post" action="{{ urls.format('AUTH_ACTION') }}" style="display:{% if auth.blockRegister.do %}none{% else %}block{% endif %};">
                     <input type="hidden" name="mode" value="register" />
                     <input type="hidden" name="session" value="{{ php.sessionid }}" />
                     <input type="hidden" name="time" value="{{ php.time }}" />
@@ -97,36 +97,36 @@
                         <input class="inputStyling" type="password" id="registerConfirmPassword" name="confirmpassword" onkeyup="registerVarCheck(this.id, 'confirmpw', 'registerPassword');" placeholder="Just to make sure" />
                     </div>
                     {% if sakura.requireRegCodes %}
-                    <div class="leftAlign">
-                        <label for="registerCode">Registration Code:</label>
-                    </div>
-                    <div class="centreAlign">
-                        <input class="inputStyling" type="text" id="registerCode" name="registercode" placeholder="Ask another member for one" />
-                    </div>
+                        <div class="leftAlign">
+                            <label for="registerCode">Registration Code:</label>
+                        </div>
+                        <div class="centreAlign">
+                            <input class="inputStyling" type="text" id="registerCode" name="registercode" placeholder="Ask another member for one" />
+                        </div>
                     {% endif %}
                     {% if sakura.recaptchaEnable %}
-                    <div class="leftAlign">
-                        <label for="recaptcha_response_field">Verification:</label>
-                    </div>
-                    <div class="centreAlign">
-                        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-                        <div class="g-recaptcha" data-sitekey="{{ sakura.recaptchaPublic }}" style="margin: auto; display: inline-block;"></div>
-                        <noscript>
-                            <div style="width: 302px; height: 352px; margin: auto; display: inline-block;">
-                                <div style="width: 302px; height: 352px; position: relative;">
-                                    <div style="width: 302px; height: 352px; position: absolute;">
-                                        <iframe src="https://www.google.com/recaptcha/api/fallback?k={{ sakura.recaptchaPublic }}" frameborder="0" scrolling="no" style="width: 302px; height:352px; border-style: none;"></iframe>
-                                    </div>
-                                    <div style="width: 250px; height: 80px; position: absolute; border-style: none; bottom: 21px; left: 25px; margin: 0px; padding: 0px; right: 25px;">
-                                        <textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 80px; border: 1px solid #c1c1c1; margin: 0px; padding: 0px; resize: none;" value=""></textarea>
+                        <div class="leftAlign">
+                            <label for="recaptcha_response_field">Verification:</label>
+                        </div>
+                        <div class="centreAlign">
+                            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+                            <div class="g-recaptcha" data-sitekey="{{ sakura.recaptchaPublic }}" style="margin: auto; display: inline-block;"></div>
+                            <noscript>
+                                <div style="width: 302px; height: 352px; margin: auto; display: inline-block;">
+                                    <div style="width: 302px; height: 352px; position: relative;">
+                                        <div style="width: 302px; height: 352px; position: absolute;">
+                                            <iframe src="https://www.google.com/recaptcha/api/fallback?k={{ sakura.recaptchaPublic }}" frameborder="0" scrolling="no" style="width: 302px; height:352px; border-style: none;"></iframe>
+                                        </div>
+                                        <div style="width: 250px; height: 80px; position: absolute; border-style: none; bottom: 21px; left: 25px; margin: 0px; padding: 0px; right: 25px;">
+                                            <textarea id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response" style="width: 250px; height: 80px; border: 1px solid #c1c1c1; margin: 0px; padding: 0px; resize: none;" value=""></textarea>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </noscript>
-                    </div>
+                            </noscript>
+                        </div>
                     {% endif %}
                     <div class="subLinks centreAlign">
-                        <input class="inputStyling" name="tos" type="checkbox" class="ignore-css" id="registerToS" /><label for="registerToS">I agree to the <a class="default" href="/p/terms" target="_blank">Terms of Service</a>.
+                        <input class="inputStyling" name="tos" type="checkbox" class="ignore-css" id="registerToS" /><label for="registerToS">I agree to the <a class="default" href="{{ urls.format('INFO_PAGE', ['terms']) }}" target="_blank">Terms of Service</a>.
                     </div>
                     <div class="centreAlign">
                         <input class="inputStyling" type="submit" name="submit" value="Register" id="registerAccBtn" />
@@ -142,7 +142,7 @@
                         <p>If we find out that you already have an account we may question you about it, if you can give a good reason we'll let it slide otherwise we may issue a temporary ban.</p>
                     </div>
                     <div class="subLinks centreAlign">
-                        <a href="javascript:;" class="default" onclick="document.getElementById('registerWarn').style.display='none';document.getElementById('registerForm').style.display='block';">Register anyway</a>.
+                        <a href="javascript:void(0);" class="default" onclick="document.getElementById('registerWarn').style.display='none'; document.getElementById('registerForm').style.display='block';">Register anyway</a>.
                     </div>
                 </div>
                 {% endif %}
@@ -161,7 +161,7 @@
                 <div class="head">
                     Resend Activation E-mail
                 </div>
-                <form method="post" action="/authenticate" id="resendForm">
+                <form method="post" action="{{ urls.format('AUTH_ACTION') }}" id="resendForm">
                     <input type="hidden" name="mode" value="resendactivemail" />
                     <input type="hidden" name="session" value="{{ php.sessionid }}" />
                     <input type="hidden" name="time" value="{{ php.time }}" />

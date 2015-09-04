@@ -30,7 +30,7 @@ class Users {
         'lastunamechange'   => 0,
         'birthday'          => '',
         'posts'             => 0,
-        'country'           => 'EU',
+        'country'           => 'XX',
         'userData'          => '[]'
     ];
 

@@ -35,6 +35,7 @@ require_once ROOT .'_sakura/components/Main.php';
 require_once ROOT .'_sakura/components/Hashing.php';
 require_once ROOT .'_sakura/components/Configuration.php';
 require_once ROOT .'_sakura/components/Database.php';
+require_once ROOT .'_sakura/components/Urls.php';
 require_once ROOT .'_sakura/components/Templates.php';
 require_once ROOT .'_sakura/components/Permissions.php';
 require_once ROOT .'_sakura/components/Sessions.php';
@@ -70,6 +71,9 @@ ob_start(Configuration::getConfig('use_gzip') ? 'ob_gzhandler' : null);
 
 // Create a user object for the current logged in user
 $currentUser = new User(Session::$userId);
+
+// Create the Urls object
+$urls = new Urls();
 
 // Prepare the name of the template to load (outside of SAKURA_NO_TPL because it's used in imageserve.php)
 $templateName = defined('SAKURA_MANAGE') ? Configuration::getConfig('manage_style') : (
@@ -163,7 +167,8 @@ if(!defined('SAKURA_NO_TPL')) {
 
         ],
 
-        'user' => $currentUser
+        'user' => $currentUser,
+        'urls' => $urls
 
     ];
 

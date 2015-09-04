@@ -7,8 +7,8 @@
                 {% for post in posts %}
                     <tr class="post" id="p{{ post.post_id }}">
                         <td class="userpanel">
-                            {% if post.user.rank_main > 1 %}<a href="/u/{{ post.user.id }}" class="default username" style="color: {% if post.user.name_colour %}{{ post.user.name_colour }}{% else %}{{ post.rank.colour }}{% endif %};" title="Go to {{ post.user.username }}'s profile">{{ post.user.username }}</a>
-                            <img src="/a/{{ post.user.id }}" alt="{{ post.user.username }}" class="avatar" style="box-shadow: 0 3px 7px #{% if post.is_online %}484{% else %}844{% endif %};" />
+                            {% if post.user.rank_main > 1 %}<a href="{{ urls.format('USER_PROFILE', [post.user.id]) }}" class="default username" style="color: {% if post.user.name_colour %}{{ post.user.name_colour }}{% else %}{{ post.rank.colour }}{% endif %};" title="Go to {{ post.user.username }}'s profile">{{ post.user.username }}</a>
+                            <img src="{{ urls.format('IMAGE_AVATAR', [post.user.id]) }}" alt="{{ post.user.username }}" class="avatar" style="box-shadow: 0 3px 7px #{% if post.is_online %}484{% else %}844{% endif %};" />
                             {% else %}
                             <a class="username">[deleted user]</a>
                             {% endif %}
@@ -18,14 +18,14 @@
                                 {% if session.checkLogin %}
                                 <div class="actions">
                                     {% if user.data.id == post.user.id %}
-                                    <a class="fa fa-pencil-square-o" title="Edit this post" href="/forum/post/{{ post.post_id }}/edit"></a>
-                                    <a class="fa fa-trash" title="Delete this post" href="/forum/post/{{ post.post_id }}/delete"></a>
+                                    <a class="fa fa-pencil-square-o" title="Edit this post" href="{{ urls.format('FORUM_EDIT_POST', [post.post_id]) }}"></a>
+                                    <a class="fa fa-trash" title="Delete this post" href="{{ urls.format('FORUM_DELETE_POST', [post.post_id]) }}"></a>
                                     {% elseif post.user.rank_main > 1 %}
                                     {% if post.is_friend != 0 %}<a class="fa fa-{% if post.is_friend == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
-                                    <a class="fa fa-user-{% if post.is_friend == 0 %}plus{% else %}times{% endif %} forum-friend-toggle" title="{% if post.is_friend == 0 %}Add {{ post.user.username }} as a friend{% else %}Remove friend{% endif %}" href="/friends?{% if post.is_friend == 0 %}add{% else %}remove{% endif %}={{ post.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect=/forum/post/{{ post.post_id }}&amp;direct=true"></a>
-                                    <a class="fa fa-flag" title="Report {{ post.user.username }}" href="/u/{{ post.user.id }}/report"></a>
+                                    <a class="fa fa-user-{% if post.is_friend == 0 %}plus{% else %}times{% endif %} forum-friend-toggle" title="{% if post.is_friend == 0 %}Add {{ post.user.username }} as a friend{% else %}Remove friend{% endif %}" href="{% if post.is_friend == 0 %}{{ urls.format('FRIEND_ADD', [post.user.id, php.sessionid, php.time, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [post.user.id, php.sessionid, php.time, sakura.currentPage]) }}{% endif %}"></a>
+                                    <a class="fa fa-flag" title="Report {{ post.user.username }}" href="{{ urls.format('USER_REPORT', [post.user.id]) }}"></a>
                                     {% endif %}
-                                    <a class="fa fa-reply" title="Quote this post" href="/forum/post/{{ post.post_id }}/quote"></a>
+                                    <a class="fa fa-reply" title="Quote this post" href="{{ urls.format('FORUM_QUOTE_POST', [post.post_id]) }}"></a>
                                 </div>
                                 {% endif %}
                             </div>
@@ -36,7 +36,7 @@
                                     <a href="#p{{ post.post_id }}" class="clean">{{ post.post_subject }}</a>
                                 </div>
                                 <div class="date">
-                                    <a href="/forum/post/{{ post.post_id }}#p{{ post.post_id }}" class="clean" title="{{ post.post_time|date(sakura.dateFormat) }}">{{ post.time_elapsed }}</a>
+                                    <a href="{{ urls.format('FORUM_POST', [post.post_id]) }}#p{{ post.post_id }}" class="clean" title="{{ post.post_time|date(sakura.dateFormat) }}">{{ post.time_elapsed }}</a>
                                 </div>
                                 <div class="clear"></div>
                             </div>

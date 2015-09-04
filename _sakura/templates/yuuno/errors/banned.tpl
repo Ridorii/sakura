@@ -17,7 +17,7 @@
                     <li>You were banned on {{ ban.issued|date(sakura.dateFormat) }}.</li>
                     <li>{% if ban.expires %}This ban expires on {{ ban.expires|date(sakura.dateFormat) }}.{% else %}<b>You are permanently banned.</b>{% endif %}</li>
                     {% if ban.expires %}
-                    <li>You were banned by <a href="/u/{{ ban.issuer.id }}" class="default">{{ ban.issuer.username }}</a>.</li>
+                    <li>You were banned by <a href="{{ urls.format('USER_PROFILE', [ban.issuer.id]) }}" class="default">{{ ban.issuer.username }}</a>.</li>
                     {% endif %}
                 </ul>
             </div>

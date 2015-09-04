@@ -56,7 +56,8 @@
                 "20150830",
                 "20150831",
                 "20150902",
-                "20150903"
+                "20150903",
+                "20150904"
 
             ]
 
@@ -2417,6 +2418,41 @@
             {
                 "type":     "REM",
                 "change":   "Removed Disqus.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150904": [
+
+            {
+                "type":     "ADD",
+                "change":   "Added Urls class.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed credits page in favour of a markdown file in the root.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed /contact symlink, use /p/contact instead.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Implemented urls.format across templates.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Moved infopage.php into index.php.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed the special URL case for the messages section.",
                 "user":     "Flashwave"
             }
 

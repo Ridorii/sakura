@@ -62,7 +62,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
     $continue = true;
 
     // Referrer
-    $redirect = isset($_REQUEST['redirect']) ? $_REQUEST['redirect'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/');
+    $redirect = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/');
 
     // Compare time and session so we know the link isn't forged
     if(!isset($_REQUEST['add']) && !isset($_REQUEST['remove'])) {
@@ -193,13 +193,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
             );
 
         }
-
-    }
-
-    if(isset($_REQUEST['direct']) && $_REQUEST['direct'] && !isset($_REQUEST['ajax'])) {
-
-        header('Location: '. $renderData['page']['redirect']);
-        exit;
 
     }
 
