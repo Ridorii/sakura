@@ -13,4 +13,4 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sak
 header('HTTP/1.0 404 Not Found');
 
 // Print page contents
-print Templates::render('errors/http404.tpl', $renderData);
+print Templates::render('global/notfound.tpl', $renderData);

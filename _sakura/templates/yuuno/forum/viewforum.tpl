@@ -1,7 +1,9 @@
-{% include 'global/header.tpl' %}
+{% extends 'global/master.tpl' %}
+
+{% block content %}
     <div class="content homepage forum viewforum">
         <div class="content-column">
             {% include 'forum/forum.tpl' %}
         </div>
     </div>
-{% include 'global/footer.tpl' %}
+{% endblock %}

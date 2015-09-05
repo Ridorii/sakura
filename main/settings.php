@@ -62,14 +62,14 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
     $continue = true;
 
     // Referrer
-    $redirect = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/');
+    $redirect = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('SITE_INDEX'));
 
     // Compare time and session so we know the link isn't forged
     if(!isset($_REQUEST['add']) && !isset($_REQUEST['remove'])) {
 
         if(!isset($_REQUEST['ajax'])) {
 
-            header('Location: /settings/friends');
+            header('Location: '. $redirect);
             exit;
 
         }
@@ -207,12 +207,15 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 . '|'
                 . $renderData['page']['redirect']
             ) :
-            Templates::render('errors/information.tpl', $renderData);
+            Templates::render('global/information.tpl', $renderData);
     exit;
 
 } elseif(isset($_POST['submit']) && isset($_POST['submit'])) {
 
     $continue = true;
+
+    // Set redirector
+    $redirect = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('SETTINGS_INDEX');
 
     // Check if the user is logged in
     if(!Users::checkLogin() || !$continue) {
@@ -236,7 +239,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
         $renderData['page'] = [
 
             'title'     => 'Session expired',
-            'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+            'redirect'  => $redirect,
             'message'   => 'Your session has expired, please refresh the page and try again.',
             'success'   => 0
 
@@ -283,7 +286,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                     $renderData['page'] = [
 
                         'title'     => $msgTitle,
-                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                        'redirect'  => $redirect,
                         'message'   => 'You are not allowed to alter your '. strtolower($msgTitle) .'.',
                         'success'   => 0
 
@@ -305,7 +308,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                     $renderData['page'] = [
 
                         'title'     => $msgTitle,
-                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                        'redirect'  => $redirect,
                         'message'   => 'No file was uploaded.',
                         'success'   => 0
 
@@ -346,7 +349,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                     $renderData['page'] = [
 
                         'title'     => $msgTitle,
-                        'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                        'redirect'  => $redirect,
                         'message'   => $msg,
                         'success'   => 0
 
@@ -369,7 +372,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                         $renderData['page'] = [
 
                             'title'     => $msgTitle,
-                            'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                            'redirect'  => $redirect,
                             'message'   => 'Uploaded file is not an image.',
                             'success'   => 0
 
@@ -386,7 +389,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                         $renderData['page'] = [
 
                             'title'     => $msgTitle,
-                            'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                            'redirect'  => $redirect,
                             'message'   => 'This filetype is not allowed.',
                             'success'   => 0
 
@@ -403,7 +406,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                         $renderData['page'] = [
 
                             'title'     => $msgTitle,
-                            'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                            'redirect'  => $redirect,
                             'message'   => 'The resolution of this picture is too big.',
                             'success'   => 0
 
@@ -420,7 +423,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                         $renderData['page'] = [
 
                             'title'     => $msgTitle,
-                            'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                            'redirect'  => $redirect,
                             'message'   => 'The resolution of this picture is too small.',
                             'success'   => 0
 
@@ -437,7 +440,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                         $renderData['page'] = [
 
                             'title'     => $msgTitle,
-                            'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                            'redirect'  => $redirect,
                             'message'   => 'The filesize of this file is too large.',
                             'success'   => 0
 
@@ -467,7 +470,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                         $renderData['page'] = [
 
                             'title'     => $msgTitle,
-                            'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                            'redirect'  => $redirect,
                             'message'   => 'Something went wrong, please try again.',
                             'success'   => 0
 
@@ -492,7 +495,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 $renderData['page'] = [
 
                     'title'     => $msgTitle,
-                    'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                    'redirect'  => $redirect,
                     'message'   => 'Updated your '. strtolower($msgTitle) .'!',
                     'success'   => 1
 
@@ -549,7 +552,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 $renderData['page'] = [
 
                     'title'     => 'Profile update',
-                    'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                    'redirect'  => $redirect,
                     'message'   => 'Your profile has been updated!',
                     'success'   => 1
 
@@ -586,7 +589,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 $renderData['page'] = [
 
                     'title'     => 'Options change',
-                    'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                    'redirect'  => $redirect,
                     'message'   => 'Changed your options!',
                     'success'   => 1
 
@@ -595,7 +598,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 break;
 
             // Userpage
-            case 'userpage':
+            /*case 'userpage':
 
                 // Base64 encode the userpage
                 $userPage = base64_encode($_POST['userpage']);
@@ -607,13 +610,13 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 $renderData['page'] = [
 
                     'title'     => 'Userpage',
-                    'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                    'redirect'  => $redirect,
                     'message'   => 'Your userpage has been updated!',
                     'success'   => 1
 
                 ];
 
-                break;
+                break;*/
 
             // Fallback
             default:
@@ -622,7 +625,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 $renderData['page'] = [
 
                     'title'     => 'Unknown action',
-                    'redirect'  => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/settings',
+                    'redirect'  => $redirect,
                     'message'   => 'The requested method does not exist.',
                     'success'   => 0
 
@@ -645,7 +648,7 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 . '|'
                 . $renderData['page']['redirect']
             ) :
-            Templates::render('errors/information.tpl', $renderData);
+            Templates::render('global/information.tpl', $renderData);
     exit;
 
 }
@@ -981,7 +984,7 @@ if(Users::checkLogin()) {
     if(!$category || empty($category) || !$mode || empty($mode) || !$pages[$category]['modes'][$mode]['access']) {
 
         header('HTTP/1.0 404 Not Found');
-        print Templates::render('errors/http404.tpl', $renderData);
+        print Templates::render('global/notfound.tpl', $renderData);
         exit;
 
     }

@@ -24,7 +24,7 @@ if(!$topic) {
     ];
 
     // Print template
-    print Templates::render('errors/information.tpl', $renderData);
+    print Templates::render('global/information.tpl', $renderData);
     exit;
 
 }

@@ -10,9 +10,9 @@
         <meta name="msapplication-TileColor" content="#fbeeff" />
         <meta name="msapplication-TileImage" content="/content/images/icons/ms-icon-144x144.png" />
         <meta name="theme-color" content="#9475B2" />
-        {% if page.redirect %}
-            <meta http-equiv="refresh" content="3; URL={{ page.redirect }}" />
-        {% endif %}
+{% if page.redirect %}
+        <meta http-equiv="refresh" content="3; URL={{ page.redirect }}" />
+{% endif %}
         <link rel="apple-touch-icon" sizes="57x57" href="/content/images/icons/apple-icon-57x57.png" />
         <link rel="apple-touch-icon" sizes="60x60" href="/content/images/icons/apple-icon-60x60.png" />
         <link rel="apple-touch-icon" sizes="72x72" href="/content/images/icons/apple-icon-72x72.png" />
@@ -27,19 +27,10 @@
         <link rel="icon" type="image/png" sizes="96x96" href="/content/images/icons/favicon-96x96.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/content/images/icons/favicon-16x16.png" />
         <link rel="manifest" href="/manifest.json" />
+{{ block('meta') }}
         <!-- CSS -->
         <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/yuuno.css" />
-        {% if page.style %}
-        <style type="text/css">
-            {% for element,properties in page.style %}
-                {{ element|raw }} {
-                    {% for property,value in properties %}
-                        {{ property|raw }}: {{ value|raw }};
-                    {% endfor %}
-                }
-            {% endfor %}
-        </style>
-        {% endif %}
+{{ block('css') }}
         <!-- JS -->
         <script type="text/javascript" src="{{ sakura.resources }}/js/yuuno.js"></script>
         <script type="text/javascript">
@@ -67,45 +58,45 @@
 
             };
 
-        // Space for things that need to happen onload
-        window.addEventListener("load", function() {
+            // Space for things that need to happen onload
+            window.addEventListener("load", function() {
 
-            // Alter the go to top button
-            var gotop = document.getElementById('gotop');
-            gotop.setAttribute('href',      'javascript:void(0);');
-            gotop.setAttribute('onclick',   'scrollToTop();');
+                // Alter the go to top button
+                var gotop = document.getElementById('gotop');
+                gotop.setAttribute('href',      'javascript:void(0);');
+                gotop.setAttribute('onclick',   'scrollToTop();');
 
             {% if session.checkLogin %}
-            // Convert href to object in logout link
-            prepareAjaxLink('headerLogoutLink', 'submitPost', ', true, "Logging out..."');
+                // Convert href to object in logout link
+                prepareAjaxLink('headerLogoutLink', 'submitPost', ', true, "Logging out..."');
             {% elseif not sakura.lockAuth and php.self != '/authenticate.php' %}
-            // Make the header login form dynamic
-            var headerLoginForm = document.getElementById('headerLoginForm');
-            var createInput     = document.createElement('input');
-            var submit          = headerLoginForm.querySelector('[type="submit"]');
+                // Make the header login form dynamic
+                var headerLoginForm = document.getElementById('headerLoginForm');
+                var createInput     = document.createElement('input');
+                var submit          = headerLoginForm.querySelector('[type="submit"]');
 
-            createInput.setAttribute('name', 'ajax');
-            createInput.setAttribute('value', 'true');
-            createInput.setAttribute('type', 'hidden');
-            headerLoginForm.appendChild(createInput);
+                createInput.setAttribute('name', 'ajax');
+                createInput.setAttribute('value', 'true');
+                createInput.setAttribute('type', 'hidden');
+                headerLoginForm.appendChild(createInput);
 
-            submit.setAttribute('type', 'button');
-            submit.setAttribute('onclick', 'submitPost(\''+ headerLoginForm.action +'\', formToObject(\'headerLoginForm\'), true, \'Logging in...\');');
+                submit.setAttribute('type', 'button');
+                submit.setAttribute('onclick', 'submitPost(\''+ headerLoginForm.action +'\', formToObject(\'headerLoginForm\'), true, \'Logging in...\');');
             {% endif %}
 
             {% if session.checkLogin %}
-            // Make notification requests (there's a seperate one to make it happen before the first 60 seconds)
-            notifyRequest('{{ php.sessionid }}');
-
-            // Create interval
-            setInterval(function() {
+                // Make notification requests (there's a seperate one to make it happen before the first 60 seconds)
                 notifyRequest('{{ php.sessionid }}');
-            }, 60000);
+
+                // Create interval
+                setInterval(function() {
+                    notifyRequest('{{ php.sessionid }}');
+                }, 60000);
             {% endif %}
 
             {% if php.self == '/profile.php' and session.checkLogin and user.data.id != profile.user.id %}
-            // Make friend button dynamic
-            prepareAjaxLink('profileFriendToggle', 'submitPost', ', true, "{% if profile.friend == 0 %}Adding{% else %}Removing{% endif %} friend..."');
+                // Make friend button dynamic
+                prepareAjaxLink('profileFriendToggle', 'submitPost', ', true, "{% if profile.friend == 0 %}Adding{% else %}Removing{% endif %} friend..."');
             {% endif %}
 
             {% if php.self == '/viewtopic.php' and session.checkLogin %}
@@ -117,42 +108,52 @@
             {% endif %}
 
             {% if php.self == '/authenticate.php' and not sakura.lockAuth %}
-            // AJAX Form Submission
-            var forms = {
-                {% if not auth.changingPass %}
-                "loginForm": 'Logging in...',
-                {% if not sakura.disableRegistration %}"registerForm": 'Processing registration...',{% endif %}
-                {% if not sakura.requireActivation %}"resendForm": 'Attempting to resend activation...',{% endif %}
-                "passwordForm": 'Sending password recovery mail...'
-                {% else %}
-                "passwordForm": 'Changing password...'
-                {% endif %}
-            };
 
-            for(var i in forms) {
-                var form    = document.getElementById(i);
-                var submit  = form.querySelector('[type="submit"]');
+                // AJAX Form Submission
+                var forms = {
+                    {% if not auth.changingPass %}
+                        "loginForm": 'Logging in...',
+                    {% if not sakura.disableRegistration %}
+                        "registerForm": 'Processing registration...',
+                    {% endif %}
+                    {% if not sakura.requireActivation %}
+                        "resendForm": 'Attempting to resend activation...',
+                    {% endif %}
+                        "passwordForm": 'Sending password recovery mail...'
+                    {% else %}
+                        "passwordForm": 'Changing password...'
+                    {% endif %}
+                };
 
-                form.setAttribute('onkeydown', 'formEnterCatch(event, \''+ submit.id +'\');');
+                for(var i in forms) {
+                    var form    = document.getElementById(i);
+                    var submit  = form.querySelector('[type="submit"]');
 
-                submit.setAttribute('href',     'javascript:void(0);');
-                submit.setAttribute('onclick',  'submitPost(\''+ form.action +'\', formToObject(\''+ i+ '\'), true, \''+ forms[i] +'\', '+ (i == 'registerForm' ? 'true' : 'false') +');');
-                submit.setAttribute('type',     'button');
+                    form.setAttribute('onkeydown', 'formEnterCatch(event, \''+ submit.id +'\');');
 
-                var createInput = document.createElement('input');
-                createInput.setAttribute('name', 'ajax');
-                createInput.setAttribute('value', 'true');
-                createInput.setAttribute('type', 'hidden');
-                form.appendChild(createInput);
-            }
+                    submit.setAttribute('href',     'javascript:void(0);');
+                    submit.setAttribute('onclick',  'submitPost(\''+ form.action +'\', formToObject(\''+ i+ '\'), true, \''+ forms[i] +'\', '+ (i == 'registerForm' ? 'true' : 'false') +');');
+                    submit.setAttribute('type',     'button');
+
+                    var createInput = document.createElement('input');
+                    createInput.setAttribute('name', 'ajax');
+                    createInput.setAttribute('value', 'true');
+                    createInput.setAttribute('type', 'hidden');
+                    form.appendChild(createInput);
+                }
+
             {% endif %}
 
-            {% if php.self == '/profile.php' ? profile.data.userData.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.userData.userOptions.profileBackgroundSiteWide and user.data.userData.profileBackground) %}
+                {% if php.self == '/profile.php' ? (profile.data.userData.profileBackground and not profile.data.userData.userOptions.disableProfileParallax) : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.userData.userOptions.profileBackgroundSiteWide and user.data.userData.profileBackground and not user.data.userData.userOptions.disableProfileParallax) %}
+
                 initialiseParallax('userBackground');
+
             {% endif %}
 
-        });
+            });
+
         </script>
+{{ block('js') }}
     </head>
     <body>
         <div id="container">
@@ -168,7 +169,7 @@
                         <a class="menu-item fa-list" href="{{ urls.format('FORUM_INDEX') }}" title="Forums"></a>
                         <a class="menu-item fa-search" href="{{ urls.format('SITE_SEARCH') }}" title="Search"></a>
                         {% if session.checkLogin %}
-                            <a class="menu-item fa-users" href="{{ urls.format('SITE_MEMBERS') }}" title="Members"></a>
+                            <a class="menu-item fa-users" href="{{ urls.format('MEMBERLIST_INDEX') }}" title="Members"></a>
                             <a class="menu-item fa-heart" href="{{ urls.format('SITE_PREMIUM') }}" title="Support us"></a>
                         {% endif %}
                     </div>
@@ -182,9 +183,9 @@
                             <a class="menu-item fa-sign-out" href="{{ urls.format('USER_LOGOUT', [php.time, php.sessionid, sakura.currentPage]) }}" title="Logout" id="headerLogoutLink"></a>
                         {% else %}
                             {% if sakura.lockAuth %}
-                            <div class="menu-item fa-lock" style="padding-left: 10px; padding-right: 10px;" title="Authentication is locked"></div>
+                                <div class="menu-item fa-lock" style="padding-left: 10px; padding-right: 10px;" title="Authentication is locked"></div>
                             {% else %}
-                            <a class="menu-item fa-sign-in" href="{{ urls.format('SITE_LOGIN') }}" title="Login"></a>
+                                <a class="menu-item fa-sign-in" href="{{ urls.format('SITE_LOGIN') }}" title="Login"></a>
                             {% endif %}
                         {% endif %}
                     </div>
@@ -220,14 +221,60 @@
                     </form>
                 {% endif %}
                 {% if user.checkPermission('SITE', 'RESTRICTED') %}
-                    <div class="headerNotify" style="padding-top: 10px; padding-bottom: 10px; background: repeating-linear-gradient(-45deg, #B33, #B33 10px, #B00 10px, #B00 20px); text-align: center; color: #FFF; border: 1px solid #C00; box-shadow: 0px 0px 3px #C00;">
+                    <div class="headerNotify" style="background: repeating-linear-gradient(-45deg, #B33, #B33 10px, #B00 10px, #B00 20px); color: #FFF; border: 1px solid #C00; box-shadow: 0px 0px 3px #C00;">
                         <h1>Your account is current in <span style="font-width: 700 !important;">restricted mode</span>!</h1>
                         <div>A staff member has set your account to restricted mode most likely due to violation of the rules. While restricted you won't be able to use most public features of the site. If you think this is a mistake please <a href="{{ urls.format('INFO_PAGE', ['contact']) }}" style="color: inherit;">get in touch with one of our staff members</a>.</div>
                     </div>
                 {% endif %}
                 <noscript>
-                    <div class="headerNotify" style="padding-top: 10px; padding-bottom: 10px; background: repeating-linear-gradient(-45deg, #C2AFFE, #C2AFFE 10px, #D3BFFF 10px, #D3BFFF 20px);">
+                    <div class="headerNotify">
                         <h1>You have JavaScript disabled!</h1>
                         <p style="padding: 0 10px;">A lot of things on this site require JavaScript to be enabled (e.g. the chat), we try to keep both sides happy but it is highly recommended that you enable it (you'll also have to deal with this message being here if you don't enable it).</p>
                     </div>
                 </noscript>
+
+                {% block content %}
+                    <h1 class="stylised" style="text-align: center; margin: 2em auto;">{{ php.self }} is now printing!</h1>
+                {% endblock %}
+
+                <a id="gotop" class="fa fa-angle-double-up hidden" href="#top"></a>
+                {% if not sakura.versionInfo.stable %}
+                    <div style="background: repeating-linear-gradient(-45deg, #000, #000 10px, #FF0 10px, #FF0 20px); text-align: center; color: #FFF; box-shadow: 0px 0px 1em #FF0;">
+                        <div style="background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .9) 10%, rgba(0, 0, 0, .9) 90%, rgba(0, 0, 0, 0) 100%); display: inline-block; padding: 0 40px;">
+                            <h3><a style="color: inherit; text-decoration: none;" href="{{ urls.format('CHANGELOG') }}#r{{ sakura.versionInfo.version }}" target="_blank">Sakura Revision {{ sakura.versionInfo.version }} Development</a></h1>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="footer">
+                <div class="ftsections">
+                    <div class="copycentre">&copy; 2013-2015 <a href="//flash.moe/" target="_blank">Flashwave</a>, <a href="http://circlestorm.net/">et al</a>.</div>
+                    <ul class="ftsection">
+                        <li class="fthead">General</li>
+                        <li><a href="{{ urls.format('SITE_HOME') }}" title="Flashii Frontpage">Home</a></li>
+                        <li><a href="{{ urls.format('SITE_NEWS') }}" title="Flashii News &amp; Updates">News</a></li>
+                        <li><a href="{{ urls.format('SITE_SEARCH') }}" title="Do full-site search requests">Search</a></li>
+                        <li><a href="{{ urls.format('INFO_PAGE', ['contact']) }}" title="Contact our Staff">Contact</a></li>
+                        <li><a href="{{ urls.format('CHANGELOG') }}" title="All the changes made to Sakura are listed here">Changelog</a></li>
+                        <li><a href="{{ urls.format('SITE_PREMIUM') }}" title="Get Tenshi and help us pay the bills">Support us</a></li>
+                    </ul>
+                    <ul class="ftsection">
+                        <li class="fthead">Community</li>
+                        <li><a href="{{ urls.format('FORUM_INDEX') }}" title="Read and post on our forums">Forums</a></li>
+                        <li><a href="https://twitter.com/_flashii" target="_blank" title="Follow us on Twitter for news messages that are too short for the news page">Twitter</a></li>
+                        <li><a href="https://youtube.com/user/flashiinet" target="_blank" title="Our YouTube page where stuff barely ever gets uploaded, mainly used to archive community creations">YouTube</a></li>
+                        <li><a href="https://steamcommunity.com/groups/flashiinet" target="_blank" title="Our Steam group, play games with other members on the site">Steam</a></li>
+                        <li><a href="https://bitbucket.org/circlestorm" target="_blank" title="Our Open Source repository thing">BitBucket</a></li>
+                    </ul>
+                    <ul class="ftsection">
+                        <li class="fthead">Information</li>
+                        <li><a href="{{ urls.format('SITE_FAQ') }}" title="Questions that get Asked Frequently but not actually">FAQ</a></li>
+                        <li><a href="{{ urls.format('INFO_PAGE', ['rules']) }}" title="Some Rules and Information kind of summing up the ToS">Rules</a></li>
+                        <li><a href="//fiistat.us" target="_blank" title="Check the status on our Servers and related services">Server Status</a></li>
+                        <li><a href="{{ urls.format('INFO_PAGE', ['terms']) }}" title="Our Terms of Service">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

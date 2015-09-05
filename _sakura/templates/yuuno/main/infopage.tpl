@@ -1,5 +1,7 @@
 {% include 'global/header.tpl' %}
     <div class="content standalone markdown">
-        {{ page.content|raw }}
+        <div>
+            {{ page.content|raw }}
+        </div>
     </div>
 {% include 'global/footer.tpl' %}

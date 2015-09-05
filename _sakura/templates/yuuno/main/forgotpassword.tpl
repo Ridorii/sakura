@@ -1,4 +1,6 @@
-{% include 'global/header.tpl' %}
+{% extends 'global/master.tpl' %}
+
+{% block content %}
     <div class="content news settings">
         <div class="head">Forgot Password</div>
         <form method="post" action="{{ urls.format('AUTH_ACTION') }}" id="passwordForm">
@@ -23,4 +25,4 @@
             </div>
         </form>
     </div>
-{% include 'global/footer.tpl' %}
+{% endblock %}

@@ -14,8 +14,6 @@ RewriteBase /
 Options +FollowSymLinks -Indexes
 
 # Rewrite Rules
-RewriteRule ^feedback/?$ https://github.com/circlestorm/Sakura/issues [L,QSA]
-RewriteRule ^credits/?$ credits.php [L,QSA]
 RewriteRule ^index/?$ index.php [L,QSA]
 RewriteRule ^login/?$|^logout/?$|^activate/?$|^register/?$|^forgotpassword/?|^authenticate/?$ authenticate.php [L,QSA]
 RewriteRule ^support/?$ support.php [L,QSA]
@@ -82,5 +80,5 @@ RewriteRule ^forum/post/([0-9]+)/(quote|reply)/?$ posting.php?p=$1&quote=$1 [L,Q
 
 # Management
 RewriteRule ^manage/?$ manage.php [L,QSA]
-RewriteRule ^manage/([a-z\-]+)/?$ manage.php?page=$1&sub=0 [L,QSA]
-RewriteRule ^manage/([a-z\-]+)/([a-z\-]+)/?$ manage.php?page=$1&sub=$2 [L,QSA]
+RewriteRule ^manage/([a-z\-]+)/?$ manage.php?cat=$1&mode=0 [L,QSA]
+RewriteRule ^manage/([a-z\-]+)/([a-z\-]+)/?$ manage.php?cat=$1&mode=$2 [L,QSA]

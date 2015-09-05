@@ -66,8 +66,7 @@ class Permissions {
         // Site management permissions
         'MANAGE' => [
 
-            'USE_MANAGE'        => 1,
-            'EDIT_INFO_PAGES'   => 2
+            'USE_MANAGE' => 1
 
         ]
 
@@ -77,18 +76,29 @@ class Permissions {
     public static function check($layer, $action, $operator, $mode = 0) {
 
         // Check if the permission layer and the permission itself exists
-        if(!array_key_exists($layer, self::$permissions) || !array_key_exists($action, self::$permissions[$layer]))
+        if(!array_key_exists($layer, self::$permissions) || !array_key_exists($action, self::$permissions[$layer])) {
+
             return false;
 
+        }
+
         // Convert to the appropiate mode
-        if($mode === 2)
+        if($mode === 2) {
+
             $operator = self::getRankPermissions($operator)[$layer];
-        elseif($mode === 1)
+
+        } elseif($mode === 1) {
+
             $operator = self::getUserPermissions($operator)[$layer];
 
+        }
+
         // Perform the bitwise AND
-        if(bindec($operator) & self::$permissions[$layer][$action])
+        if(bindec($operator) & self::$permissions[$layer][$action]) {
+
             return true;
+
+        }
 
         // Else just return false
         return false;
@@ -103,12 +113,18 @@ class Permissions {
         $perms      = [];
 
         // Get permission row for all ranks
-        foreach($ranks as $rank)
+        foreach($ranks as $rank) {
+
             $getRanks[] = Database::fetch('permissions', false, ['rid' => [$rank, '='], 'uid' => [0 ,'=']]);
 
+        }
+
         // Check if getRanks is empty or if the rank id is 0 return the fallback
-        if(empty($getRanks) || in_array(0, $ranks))
+        if(empty($getRanks) || in_array(0, $ranks)) {
+
             $getRanks = [self::$fallback];
+
+        }
 
         // Go over the permission data
         foreach($getRanks as $rank) {
@@ -158,23 +174,35 @@ class Permissions {
         $rankPerms = self::getRankPermissions(json_decode($user['ranks'], true));
 
         // Just return the rank permissions if no special ones are set
-        if(empty($userPerms))
+        if(empty($userPerms)) {
+
             return $rankPerms;
+
+        }
 
         // Split the inherit option things up
         $inheritance = str_split($userPerms['rankinherit']);
 
         // Override site permissions
-        if(!$inheritance[0])
+        if(!$inheritance[0]) {
+
             $rankPerms['SITE'] = $userPerms['siteperms'];
 
+        }
+
         // Override management permissions
-        if(!$inheritance[1])
+        if(!$inheritance[1]) {
+
             $rankPerms['MANAGE'] = $userPerms['manageperms'];
 
+        }
+
         // Override forum permissions
-        if(!$inheritance[2])
+        if(!$inheritance[2]) {
+
             $rankPerms['FORUM'] = $userPerms['forumperms'];
+
+        }
 
         // Return permissions
         return $rankPerms;

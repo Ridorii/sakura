@@ -1,4 +1,6 @@
-{% include 'global/header.tpl' %}
+{% extends 'global/master.tpl' %}
+
+{% block content %}
 <div class="content">
     <div class="content-column forum posting">
         <form method="post" action="{{ sakura.currentPage }}">
@@ -57,4 +59,4 @@
         </form>
     </div>
 </div>
-{% include 'global/footer.tpl' %}
+{% endblock %}

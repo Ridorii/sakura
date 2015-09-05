@@ -24,7 +24,7 @@ if(!$forum) {
     ];
 
     // Print template
-    print Templates::render('errors/information.tpl', $renderData);
+    print Templates::render('global/information.tpl', $renderData);
     exit;
 
 }
@@ -42,7 +42,7 @@ if($forum['forum']['forum_type'] === 2) {
     ];
 
     // Print template
-    print Templates::render('errors/information.tpl', $renderData);
+    print Templates::render('global/information.tpl', $renderData);
     exit;
 
 }

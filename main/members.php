@@ -19,7 +19,7 @@ $renderData['page'] = [
     'sort'      => isset($_GET['sort']) && $_GET['sort'] && in_array($_GET['sort'], $_MEMBERLIST_SORTS) ? $_GET['sort'] : $_MEMBERLIST_SORTS[0],
     'title'     => isset($_GET['rank']) && $_GET['rank'] && !$_MEMBERLIST_NFOUND                        ? 'Viewing '. $_MEMBERLIST_RANKS[$_GET['rank']]['name'] . ($_MEMBERLIST_RANKS[$_GET['rank']]['multi'] ? 's' : '') : 'Member List',
     'page'      => isset($_GET['page']) && ($_GET['page'] - 1) >= 0                                     ? $_GET['page'] - 1 : 0,
-    'users'     => array_chunk($_MEMBERLIST_ACTIVE && !$_MEMBERLIST_NFOUND                              ? Users::getUsersInRank($_MEMBERLIST_ACTIVE, null, true, true) : Users::getAllUsers(), 30, true)
+    'users'     => array_chunk($_MEMBERLIST_ACTIVE && !$_MEMBERLIST_NFOUND                              ? Users::getUsersInRank($_MEMBERLIST_ACTIVE, null, true, true) : Users::getAllUsers(), Configuration::getConfig('members_per_page'), true)
 
 ];
 

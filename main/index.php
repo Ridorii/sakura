@@ -62,9 +62,9 @@ $renderData['stats'] = [
     'userCount'     => ($_INDEX_USER_COUNT      = count($_INDEX_USERS = Users::getAllUsers(false))),
     'newestUser'    => ($_INDEX_NEWEST_USER     = new User(Users::getNewestUserId())),
     'lastRegDate'   => ($_INDEX_LAST_REGDATE    = date_diff(date_create(date('Y-m-d', $_INDEX_NEWEST_USER->data['regdate'])), date_create(date('Y-m-d')))->format('%a')) .' day'. ($_INDEX_LAST_REGDATE == 1 ? '' : 's'),
-    'onlineUsers'   => Users::checkAllOnline(),
-    'topicCount'    => ($_TOPICS    = count(Database::fetch('topics'))),
-    'postCount'     => ($_POSTS     = count(Database::fetch('posts')))
+    'topicCount'    => ($_TOPICS                = count(Database::fetch('topics'))),
+    'postCount'     => ($_POSTS                 = count(Database::fetch('posts'))),
+    'onlineUsers'   => Users::checkAllOnline()
 ];
 
 // Print page contents

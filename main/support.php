@@ -15,7 +15,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
     // Initialise Payments class
     if(!Payments::init()) {
 
-        header('Location: /support?fail=true');
+        header('Location: '. $urls->format('SITE_PREMIUM') .'?fail=true');
 
     } else {
 
@@ -27,7 +27,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
                 // Compare time and session so we know the link isn't forged
                 if(!isset($_REQUEST['time']) || $_REQUEST['time'] < time() - 1000) {
 
-                    header('Location: /support?fail=true');
+                    header('Location: '. $urls->format('SITE_PREMIUM') .'?fail=true');
                     break;
 
                 }
@@ -35,7 +35,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
                 // Match session ids for the same reason
                 if(!isset($_REQUEST['session']) || $_REQUEST['session'] != session_id()) {
 
-                    header('Location: /support?fail=true');
+                    header('Location: '. $urls->format('SITE_PREMIUM') .'?fail=true');
                     break;
 
                 }
@@ -43,7 +43,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
                 // Half if shit isn't gucci
                 if(!isset($_POST['months']) || !is_numeric($_POST['months']) || (int)$_POST['months'] < 1 || (int)$_POST['months'] > Configuration::getConfig('premium_amount_max')) {
 
-                    header('Location: /support?fail=true');
+                    header('Location: '. $urls->format('SITE_PREMIUM') .'?fail=true');
 
                 } else {
 
@@ -55,7 +55,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
                     $itemName = Configuration::getConfig('sitename') .' Premium - '. (string)$_POST['months'] .' month'. ((int)$_POST['months'] == 1 ? '' : 's');
 
                     // Attempt to create a transaction
-                    if($transaction = Payments::createTransaction($total, $itemName, Configuration::getConfig('sitename') .' Premium Purchase', 'http://'. Configuration::getConfig('url_main') .'/support')) {
+                    if($transaction = Payments::createTransaction($total, $itemName, Configuration::getConfig('sitename') .' Premium Purchase', 'http://'. Configuration::getConfig('url_main') . $urls->format('SITE_PREMIUM'))) {
 
                         // Store the amount of months in the global session array
                         $_SESSION['premiumMonths'] = (int)$_POST['months'];
@@ -65,7 +65,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
 
                     } else {
 
-                        header('Location: /support?fail=true');
+                        header('Location: '. $urls->format('SITE_PREMIUM') .'?fail=true');
 
                     }
 
@@ -93,18 +93,18 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
                         Main::updatePremiumTracker(Session::$userId, ((float)Configuration::getConfig('premium_price_per_month') * $_SESSION['premiumMonths']), $currentUser->data['username'] .' bought premium for '. $_SESSION['premiumMonths'] .' month'. ($_SESSION['premiumMonths'] == 1 ? '' : 's') .'.');
 
                         // Redirect to the complete
-                        header('Location: ?mode=complete');
+                        header('Location: '. $urls->format('SITE_PREMIUM') .'?mode=complete');
                         exit;
 
                     }
 
                 }
 
-                header('Location: /support?fail=true');
+                header('Location: '. $urls->format('SITE_PREMIUM') .'?fail=true');
                 break;
 
             case 'complete':
-                print Templates::render('errors/premiumComplete.tpl', array_merge([
+                print Templates::render('main/premiumcomplete.tpl', array_merge([
                     'page' => [
                         'title' => 'Premium purchase complete!',
                         'expiration' => ($prem = Users::checkUserPremium(Session::$userId)[2]) !== null ? $prem : 0
@@ -113,7 +113,7 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
                 break;
 
             default:
-                header('Location: /support');
+                header('Location: '. $urls->format('SITE_PREMIUM'));
                 break;
 
         }

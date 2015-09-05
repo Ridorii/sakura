@@ -57,7 +57,8 @@
                 "20150831",
                 "20150902",
                 "20150903",
-                "20150904"
+                "20150904",
+                "20150905"
 
             ]
 
@@ -2453,6 +2454,61 @@
             {
                 "type":     "REM",
                 "change":   "Removed the special URL case for the messages section.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150905": [
+
+            {
+                "type":     "UPD",
+                "change":   "Finished implementation of Urls class.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fully fixed the user numbering bug on the List view.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added a configuration value to change how many users are displayed on the memberlist per page.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Made the payment cancelled message look less odd.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed out of line padding on info pages.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Use Twig Blocks instead of Includes.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed parallax disabling not working on Yuuno.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Implemented Urls class in PHP files.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Dropped SockChat class and rely on system permissions from Sock Chat permissions.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Implemented IP checking in the session manager.",
                 "user":     "Flashwave"
             }
 

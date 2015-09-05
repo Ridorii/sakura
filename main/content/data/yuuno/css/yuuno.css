@@ -343,9 +343,10 @@ a#gotop.exit {
 
 .standalone {
     background: #C2AEEE;
-    padding: 10px;
-    width: auto;
-    max-width: 1024px;
+}
+
+.standalone > div {
+    padding: 5px 10px;
 }
 
 .private-message {
@@ -671,13 +672,14 @@ a#gotop.exit {
 
 .headerNotify {
     margin: 10px auto;
-    padding: 2px 3px;
+    padding: 10px 3px;
     width: auto;
     max-width: 1024px;
     border: 1px solid #9475B2;
     box-shadow: 0 0 3px #9475B2;
     border-radius: 3px;
     background: #D3BFFF;
+    background: repeating-linear-gradient(-45deg, #C2AFFE, #C2AFFE 10px, #D3BFFF 10px, #D3BFFF 20px);
     display: block;
     text-align: center;
 }

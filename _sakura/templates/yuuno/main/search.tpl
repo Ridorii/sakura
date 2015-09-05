@@ -1,4 +1,6 @@
-{% include 'global/header.tpl' %}
+{% extends 'global/master.tpl' %}
+
+{% block content %}
 <div class="content" style="background: #FFF;">
     <div class="content-column news">
         <div class="head">Search</div>
@@ -17,4 +19,4 @@
         <gcse:searchresults></gcse:searchresults>
     </div>
 </div>
-{% include 'global/footer.tpl' %}
+{% endblock %}

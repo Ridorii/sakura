@@ -64,18 +64,27 @@ class Users {
         if(!$bypassCookies) {
 
             // Check if the cookies are set
-            if(!isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'id']) || !isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'session']))
+            if(!isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'id']) || !isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'session'])) {
+
                 return false;
+
+            }
 
         }
 
         // Check if the session exists
-        if(!$session = Session::checkSession($uid, $sid))
+        if(!$session = Session::checkSession($uid, $sid)) {
+
             return false;
 
+        }
+
         // Check if the user is activated
-        if(Permissions::check('SITE', 'DEACTIVATED', $uid, 1))
+        if(Permissions::check('SITE', 'DEACTIVATED', $uid, 1)) {
+
             return false;
+
+        }
 
         // Extend the cookie times if the remember flag is set
         if($session == 2 && !$bypassCookies) {
@@ -107,12 +116,18 @@ class Users {
     public static function login($username, $password, $remember = false, $cookies = true) {
 
         // Check if authentication is disallowed
-        if(Configuration::getConfig('lock_authentication'))
+        if(Configuration::getConfig('lock_authentication')) {
+
             return [0, 'AUTH_LOCKED'];
 
+        }
+
         // Check if the user that's trying to log in actually exists
-        if(!$uid = self::userExists($username, false))
+        if(!$uid = self::userExists($username, false)) {
+
             return [0, 'USER_NOT_EXIST'];
+
+        }
 
         // Get account data
         $user = self::getUser($uid);
@@ -140,8 +155,11 @@ class Users {
         }
 
         // Check if the user has the required privs to log in
-        if(Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
+        if(Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
+
             return [0, 'NOT_ALLOWED'];
+
+        }
 
         // Create a new session
         $sessionKey = Session::newSession($user['id'], $remember);
@@ -155,7 +173,7 @@ class Users {
         }
 
         // Successful login! (also has a thing for the legacy password system)
-        return [1, ($user['password_algo'] == 'legacy' ? 'LEGACY_SUCCESS' : 'LOGIN_SUCESS')];
+        return [1, 'LOGIN_SUCESS'];
 
     }
 
@@ -163,12 +181,18 @@ class Users {
     public static function logout() {
 
         // Check if user is logged in
-        if(!self::checkLogin())
+        if(!self::checkLogin()) {
+
             return false;
 
+        }
+
         // Remove the active session from the database
-        if(!Session::deleteSession(Session::$sessionId, true))
+        if(!Session::deleteSession(Session::$sessionId, true)) {
+
             return false;
+
+        }
 
         // Set cookies
         setcookie(Configuration::getConfig('cookie_prefix') .'id',      0,  time() - 60, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
@@ -183,61 +207,97 @@ class Users {
     public static function register($username, $password, $confirmpass, $email, $tos, $captcha = null, $regkey = null) {
 
         // Check if authentication is disallowed
-        if(Configuration::getConfig('lock_authentication'))
+        if(Configuration::getConfig('lock_authentication')) {
+
             return [0, 'AUTH_LOCKED'];
 
+        }
+
         // Check if registration is even enabled
-        if(Configuration::getConfig('disable_registration'))
+        if(Configuration::getConfig('disable_registration')) {
+
             return [0, 'DISABLED'];
+
+        }
 
         // Check if registration codes are required
         if(Configuration::getConfig('require_registration_code')) {
 
             // Check if the code is valid
-            if(!self::checkRegistrationCode($regkey))
+            if(!self::checkRegistrationCode($regkey)) {
+
                 return [0, 'INVALID_REG_KEY'];
+
+            }
 
         }
 
         // Check if the user agreed to the ToS
-        if(!$tos)
+        if(!$tos) {
+
             return [0, 'TOS'];
+
+        }
 
         // Verify the captcha if it's enabled
         if(Configuration::getConfig('recaptcha')) {
 
-            if(!Main::verifyCaptcha($captcha)['success'])
+            if(!Main::verifyCaptcha($captcha)['success']) {
+
                 return [0, 'CAPTCHA_FAIL'];
+
+            }
 
         }
 
         // Check if the username already exists
-        if(self::userExists($username, false))
+        if(self::userExists($username, false)) {
+
             return [0, 'USER_EXISTS'];
 
+        }
+
         // Username too short
-        if(strlen($username) < Configuration::getConfig('username_min_length'))
+        if(strlen($username) < Configuration::getConfig('username_min_length')) {
+
             return [0, 'NAME_TOO_SHORT'];
 
+        }
+
         // Username too long
-        if(strlen($username) > Configuration::getConfig('username_max_length'))
+        if(strlen($username) > Configuration::getConfig('username_max_length')) {
+
             return [0, 'NAME_TOO_LONG'];
 
+        }
+
         // Check if the given email address is formatted properly
-        if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
             return [0, 'INVALID_EMAIL'];
 
+        }
+
         // Check the MX record of the email
-        if(!Main::checkMXRecord($email))
+        if(!Main::checkMXRecord($email)) {
+
             return [0, 'INVALID_MX'];
 
+        }
+
         // Check password entropy
-        if(Main::pwdEntropy($password) < Configuration::getConfig('min_entropy'))
+        if(Main::pwdEntropy($password) < Configuration::getConfig('min_entropy')) {
+
             return [0, 'PASS_TOO_SHIT'];
 
+        }
+
         // Passwords do not match
-        if($password != $confirmpass)
+        if($password != $confirmpass) {
+
             return [0, 'PASS_NOT_MATCH'];
+
+        }
 
         // Set a few variables
         $usernameClean  = Main::cleanString($username, true);
@@ -295,8 +355,11 @@ class Users {
     public static function sendPasswordForgot($username, $email) {
 
         // Check if authentication is disallowed
-        if(Configuration::getConfig('lock_authentication'))
+        if(Configuration::getConfig('lock_authentication')) {
+
             return [0, 'AUTH_LOCKED'];
+
+        }
 
         // Clean username string
         $usernameClean  = Main::cleanString($username, true);
@@ -309,12 +372,18 @@ class Users {
         ]);
 
         // Check if user exists
-        if(count($user) < 2)
+        if(count($user) < 2) {
+
             return [0, 'USER_NOT_EXIST'];
 
+        }
+
         // Check if the user has the required privs to log in
-        if(Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
+        if(Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
+
             return [0, 'NOT_ALLOWED'];
+
+        }
 
         // Generate the verification key
         $verk = Main::newActionCode('LOST_PASS', $user['id'], [
@@ -323,13 +392,16 @@ class Users {
             ]
         ]);
 
+        // Create new urls object
+        $urls = new Urls();
+
         // Build the e-mail
         $message  = "Hello ". $user['username'] .",\r\n\r\n";
         $message .= "You are receiving this notification because you have (or someone pretending to be you has) requested a password reset link to be sent for your account on \"". Configuration::getConfig('sitename') ."\". If you did not request this notification then please ignore it, if you keep receiving it please contact the site administrator.\r\n\r\n";
         $message .= "To use this password reset key you need to go to a special page. To do this click the link provided below.\r\n\r\n";
-        $message .= "http://". Configuration::getConfig('url_main') ."/forgotpassword?pw=true&uid=". $user['id'] ."&key=". $verk ."\r\n\r\n";
+        $message .= "http://". Configuration::getConfig('url_main') . $urls->format('SITE_FORGOT_PASSWORD') ."?pw=true&uid=". $user['id'] ."&key=". $verk ."\r\n\r\n";
         $message .= "If successful you should be able to change your password here.\r\n\r\n";
-        $message .= "Alternatively if the above method fails for some reason you can go to http://". Configuration::getConfig('url_main') ."/forgotpassword?pw=true&uid=". $user['id'] ." and use the key listed below:\r\n\r\n";
+        $message .= "Alternatively if the above method fails for some reason you can go to http://". Configuration::getConfig('url_main') . $urls->format('SITE_FORGOT_PASSWORD') ."?pw=true&uid=". $user['id'] ." and use the key listed below:\r\n\r\n";
         $message .= "Verification key: ". $verk ."\r\n\r\n";
         $message .= "You can of course change this password yourself via the profile page. If you have any difficulties please contact the site administrator.\r\n\r\n";
         $message .= "--\r\n\r\nThanks\r\n\r\n". Configuration::getConfig('mail_signature');
@@ -346,23 +418,35 @@ class Users {
     public static function resetPassword($verk, $uid, $newpass, $verpass) {
 
         // Check if authentication is disallowed
-        if(Configuration::getConfig('lock_authentication'))
+        if(Configuration::getConfig('lock_authentication')) {
+
             return [0, 'AUTH_LOCKED'];
 
+        }
+
         // Check password entropy
-        if(Main::pwdEntropy($newpass) < Configuration::getConfig('min_entropy'))
+        if(Main::pwdEntropy($newpass) < Configuration::getConfig('min_entropy')) {
+
             return [0, 'PASS_TOO_SHIT'];
 
+        }
+
         // Passwords do not match
-        if($newpass != $verpass)
+        if($newpass != $verpass) {
+
             return [0, 'PASS_NOT_MATCH'];
+
+        }
 
         // Check the verification key
         $action = Main::useActionCode('LOST_PASS', $verk, $uid);
 
         // Check if we got a negative return
-        if(!$action[0])
+        if(!$action[0]) {
+
             return [0, $action[1]];
+
+        }
 
         // Hash the password
         $password   = Hashing::create_hash($newpass);
@@ -391,8 +475,11 @@ class Users {
     public static function resendActivationMail($username, $email) {
 
         // Check if authentication is disallowed
-        if(Configuration::getConfig('lock_authentication'))
+        if(Configuration::getConfig('lock_authentication')) {
+
             return [0, 'AUTH_LOCKED'];
+
+        }
 
         // Clean username string
         $usernameClean  = Main::cleanString($username, true);
@@ -405,12 +492,18 @@ class Users {
         ]);
 
         // Check if user exists
-        if(count($user) < 2)
+        if(count($user) < 2) {
+
             return [0, 'USER_NOT_EXIST'];
 
+        }
+
         // Check if a user is activated
-        if(!Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
+        if(!Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
+
             return [0, 'USER_ALREADY_ACTIVE'];
+
+        }
 
         // Send activation e-mail
         self::sendActivationMail($user['id']);
@@ -427,8 +520,11 @@ class Users {
         $user = Database::fetch('users', false, ['id' => [$uid, '=']]);
 
         // User is already activated or doesn't even exist
-        if(count($user) < 2 || !Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
+        if(count($user) < 2 || !Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
+
             return false;
+
+        }
 
         // Generate activation key
         $activate = ($customKey ? $customKey : Main::newActionCode('ACTIVATE', $uid, [
@@ -438,15 +534,18 @@ class Users {
             ]
         ]));
 
+        // Create new urls object
+        $urls = new Urls();
+
         // Build the e-mail
         $message  = "Welcome to ". Configuration::getConfig('sitename') ."!\r\n\r\n";
         $message .= "Please keep this e-mail for your records. Your account intormation is as follows:\r\n\r\n";
         $message .= "----------------------------\r\n\r\n";
         $message .= "Username: ". $user['username'] ."\r\n\r\n";
-        $message .= "Your profile: http://". Configuration::getConfig('url_main') ."/u/". $user['id'] ."\r\n\r\n";
+        $message .= "Your profile: http://". Configuration::getConfig('url_main') . $urls->format('USER_PROFILE', [$user['id']]) ."\r\n\r\n";
         $message .= "----------------------------\r\n\r\n";
         $message .= "Please visit the following link in order to activate your account:\r\n\r\n";
-        $message .= "http://". Configuration::getConfig('url_main') ."/activate?mode=activate&u=". $user['id'] ."&k=". $activate ."\r\n\r\n";
+        $message .= "http://". Configuration::getConfig('url_main') . $urls->format('SITE_ACTIVATE') ."?mode=activate&u=". $user['id'] ."&k=". $activate ."\r\n\r\n";
         $message .= "Your password has been securely stored in our database and cannot be retrieved. ";
         $message .= "In the event that it is forgotten, you will be able to reset it using the email address associated with your account.\r\n\r\n";
         $message .= "Thank you for registering.\r\n\r\n";
@@ -467,12 +566,18 @@ class Users {
         $user = Database::fetch('users', false, ['id' => [$uid, '=']]);
 
         // Check if user exists
-        if(!count($user) > 1)
+        if(!count($user) > 1) {
+
             return [0, 'USER_NOT_EXIST'];
 
+        }
+
         // Check if user is already activated
-        if(!Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
+        if(!Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
+
             return [0, 'USER_ALREADY_ACTIVE'];
+
+        }
 
         // Set default values for activation
         $rank   = 2;
@@ -485,8 +590,11 @@ class Users {
             $action = Main::useActionCode('ACTIVATE', $key, $uid);
 
             // Check if we got a negative return
-            if(!$action[0])
+            if(!$action[0]) {
+
                 return [0, $action[1]];
+
+            }
 
             // Assign the special values
             $instructionData    = json_decode($action[2], true);
@@ -518,12 +626,18 @@ class Users {
         $user = Database::fetch('users', false, ['id' => [$uid, '=']]);
 
         // Check if user exists
-        if(!count($user) > 1)
+        if(!count($user) > 1) {
+
             return [0, 'USER_NOT_EXIST'];
 
+        }
+
         // Check if user is already deactivated
-        if(Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
+        if(Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
+
             return [0, 'USER_ALREADY_DEACTIVE'];
+
+        }
 
         // Deactivate the account
         Database::update('users', [
@@ -556,8 +670,11 @@ class Users {
     public static function markRegistrationCodeUsed($code, $uid = 0) {
 
         // Check if the code exists
-        if(!$id = self::checkRegistrationCode($code))
+        if(!$id = self::checkRegistrationCode($code)) {
+
             return false;
+
+        }
 
         // Mark it as used
         Database::update('regcodes', [
@@ -579,12 +696,18 @@ class Users {
     public static function createRegistrationCode() {
 
         // Check if we're logged in
-        if(!self::checkLogin())
+        if(!self::checkLogin()) {
+
             return false;
 
+        }
+
         // Check if the user is not exceeding the maximum registration key amount
-        if(count(Database::fetch('regcodes', true, ['uid' => [Session::$userId, '=']])) >= Configuration::getConfig('max_reg_keys'))
+        if(count(Database::fetch('regcodes', true, ['uid' => [Session::$userId, '=']])) >= Configuration::getConfig('max_reg_keys')) {
+
             return false;
+
+        }
 
         // Generate a code by MD5'ing some random bullshit
         $code = md5('SAKURA'. rand(0, 99999999) . Session::$userId .'NOOKLSISGOD');
@@ -612,8 +735,11 @@ class Users {
         $ranks = json_decode($user['ranks'], true);
 
         // Check if the rank we're trying to set is actually there
-        if(!in_array($rid, $ranks))
+        if(!in_array($rid, $ranks)) {
+
             return false;
+
+        }
 
         // Update the row
         Database::update('users', [
@@ -709,8 +835,11 @@ class Users {
         $user = $userIdIsUserData ? $userid : self::getUser($userid);
 
         // Check if the main rank is the specified rank
-        if(in_array($user['rank_main'], $ranks))
+        if(in_array($user['rank_main'], $ranks)) {
+
             return true;
+
+        }
 
         // Decode the json for the user's ranks
         $uRanks = json_decode($user['ranks'], true);
@@ -750,8 +879,11 @@ class Users {
         $profileFields = Database::fetch('profilefields');
 
         // If there's nothing just return null
-        if(!count($profileFields))
+        if(!count($profileFields)) {
+
             return null;
+
+        }
 
         // Create output array
         $fields = [];
@@ -811,15 +943,21 @@ class Users {
         $profileFields = Database::fetch('profilefields');
 
         // If there's nothing just return null
-        if(!count($profileFields))
+        if(!count($profileFields)) {
+
             return null;
+
+        }
 
         // Assign the profileData variable
         $profileData = ($inputIsData ? $id : self::getUser($id)['userData']);
 
         // Once again if nothing was returned just return null
-        if(count($profileData) < 1 || $profileData == null || empty($profileData['profileFields']))
+        if(count($profileData) < 1 || $profileData == null || empty($profileData['profileFields'])) {
+
             return null;
+
+        }
 
         // Redeclare profileData
         $profileData = $profileData['profileFields'];
@@ -834,8 +972,11 @@ class Users {
             $fieldName = Main::cleanString($field['name'], true, true);
 
             // Check if the user has the current field set otherwise continue
-            if(!array_key_exists($fieldName, $profileData))
+            if(!array_key_exists($fieldName, $profileData)) {
+
                 continue;
+
+            }
 
             // Assign field to output with value
             $profile[$fieldName]            = array();
@@ -844,8 +985,11 @@ class Users {
             $profile[$fieldName]['islink']  = $field['islink'];
 
             // If the field is set to be a link add a value for that as well
-            if($field['islink'])
+            if($field['islink']) {
+
                 $profile[$fieldName]['link'] = str_replace('{{ VAL }}', $profileData[$fieldName], $field['linkformat']);
+
+            }
 
             // Check if we have additional options as well
             if($field['additional'] != null) {
@@ -857,8 +1001,11 @@ class Users {
                 foreach($additional as $subName => $subField) {
 
                     // Check if the user has the current field set otherwise continue
-                    if(!array_key_exists($subName, $profileData))
+                    if(!array_key_exists($subName, $profileData)) {
+
                         continue;
+
+                    }
 
                     // Assign field to output with value
                     $profile[$fieldName][$subName] = $profileData[$subName];
@@ -905,8 +1052,11 @@ class Users {
         $user = self::getUser($id);
 
         // Return false if the user doesn't exist because a user that doesn't exist can't be online
-        if(empty($user))
+        if(empty($user)) {
+
             return false;
+
+        }
 
         // Return true if the user was online in the last 5 minutes
         return ($user['lastdate'] > (time() - 500));
@@ -979,8 +1129,11 @@ class Users {
     public static function checkUserPremium($id) {
 
         // Check if the user has static premium
-        if(Permissions::check('SITE', 'STATIC_PREMIUM', $id, 1))
+        if(Permissions::check('SITE', 'STATIC_PREMIUM', $id, 1)) {
+
             return [2, 0, time() + 1];
+
+        }
 
         // Attempt to retrieve the premium record from the database
         $getRecord = Database::fetch('premium', false, [
@@ -988,8 +1141,11 @@ class Users {
         ]);
 
         // If nothing was returned just return false
-        if(empty($getRecord))
+        if(empty($getRecord)) {
+
             return [0];
+
+        }
 
         // Check if the Tenshi hasn't expired
         if($getRecord['expiredate'] < time()) {
@@ -1021,8 +1177,11 @@ class Users {
             self::addRanksToUser([$premiumRank], $id);
 
             // Check if the user's default rank is standard user and update it to premium
-            if(self::getUser($id)['rank_main'] == 2)
+            if(self::getUser($id)['rank_main'] == 2) {
+
                 self::setDefaultRank($id, $premiumRank);
+
+            }
 
         } elseif($check[0] == 0 && count($check) > 1) {
 
@@ -1040,8 +1199,11 @@ class Users {
         $user = Database::fetch('users', false, ['id' => [$id, '=']]);
 
         // Return false if no user was found
-        if(empty($user))
+        if(empty($user)) {
+
             $user = self::$emptyUser;
+
+        }
 
         // Parse the json in the additional section
         $user['userData'] = json_decode($user['userData'], true);
@@ -1058,8 +1220,11 @@ class Users {
         $rank = Database::fetch('ranks', false, ['id' => [$id, '=']]);
 
         // Return false if no rank was found
-        if(empty($rank))
+        if(empty($rank)) {
+
             return self::$emptyRank;
+
+        }
 
         // If rank was found return rank data
         return $rank;
@@ -1087,8 +1252,11 @@ class Users {
     public static function getUsersInRank($rankId, $users = null, $excludeAbyss = true) {
 
         // Get all users (or use the supplied user list to keep server load down)
-        if(!$users)
+        if(!$users) {
+
             $users = self::getAllUsers();
+
+        }
 
         // Make output array
         $rank = array();
@@ -1097,8 +1265,11 @@ class Users {
         foreach($users as $user) {
 
             // If so store the user's row in the array
-            if(self::checkIfUserHasRanks([$rankId], $user, true) && ($excludeAbyss ? $user['password_algo'] != 'nologin' : true))
+            if(self::checkIfUserHasRanks([$rankId], $user, true) && ($excludeAbyss ? $user['password_algo'] != 'nologin' : true)) {
+
                 $rank[] = $user;
+
+            }
 
         }
 
@@ -1120,12 +1291,18 @@ class Users {
         foreach($getUsers as $user) {
 
             // Skip abyss
-            if(!$includeAbyss && $user['password_algo'] == 'nologin')
+            if(!$includeAbyss && $user['password_algo'] == 'nologin') {
+
                 continue;
 
+            }
+
             // Skip if inactive and not include deactivated users
-            if(!$includeInactive && Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1))
+            if(!$includeInactive && Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
+
                 continue;
+
+            }
 
             $users[$user['id']] = $user;
 
@@ -1146,8 +1323,11 @@ class Users {
         $ranks = [];
 
         // Reorder shit
-        foreach($getRanks as $rank)
+        foreach($getRanks as $rank) {
+
             $ranks[$rank['id']] = $rank;
+
+        }
 
         // and return an array with the ranks
         return $ranks;
@@ -1173,10 +1353,18 @@ class Users {
         // Prepare conditions
         $conditions = array();
         $conditions['uid'] = [($uid ? $uid : Session::$userId), '='];
-        if($timediff)
+
+        if($timediff) {
+
             $conditions['timestamp'] = [time() - $timediff, '>'];
-        if($excludeRead)
+
+        }
+
+        if($excludeRead) {
+
             $conditions['notif_read'] = [0, '='];
+
+        }
 
         // Get notifications for the database
         $notifications = Database::fetch('notifications', true, $conditions);
@@ -1188,8 +1376,11 @@ class Users {
             foreach($notifications as $notification) {
 
                 // If the notifcation is already read skip
-                if($notification['notif_read'])
+                if($notification['notif_read']) {
+
                     continue;
+
+                }
 
                 // Mark them as read
                 self::markNotificationRead($notification['id']);
@@ -1273,8 +1464,11 @@ class Users {
     public static function getFriends($uid = null, $timestamps = false, $getData = false, $checkOnline = false) {
 
         // Assign $uid
-        if(!$uid)
+        if(!$uid) {
+
             $uid = Session::$userId;
+
+        }
 
         // Get all friends
         $getFriends = Database::fetch('friends', true, [
@@ -1318,8 +1512,11 @@ class Users {
     public static function getPendingFriends($uid = null, $getData = false) {
 
         // Assign $of automatically if it's not set
-        if(!$uid)
+        if(!$uid) {
+
             $uid = Session::$userId;
+
+        }
 
         // Get all friend entries from other people involved the current user
         $friends = Database::fetch('friends', true, [
@@ -1355,22 +1552,31 @@ class Users {
     public static function checkFriend($fid, $uid = null) {
 
         // Assign $uid
-        if(!$uid)
+        if(!$uid) {
+
             $uid = Session::$userId;
+
+        }
 
         // Get the user's friends
         $self = self::getFriends($uid);
 
         // Check if the friend is actually in the user's array
-        if(!in_array($fid, $self))
+        if(!in_array($fid, $self)) {
+
             return 0;
+
+        }
 
         // Get the friend's friends
         $friend = self::getFriends($fid);
 
         // Check if the friend is actually in the user's array
-        if(in_array($uid, $friend))
+        if(in_array($uid, $friend)) {
+
             return 2;
+
+        }
 
         // Return true if all went through
         return 1;
@@ -1381,12 +1587,18 @@ class Users {
     public static function addFriend($uid) {
 
         // Validate that the user exists
-        if(!self::getUser($uid))
+        if(!self::getUser($uid)) {
+
             return [0, 'USER_NOT_EXIST'];
 
+        }
+
         // Check if the user already has this user a friend
-        if(Database::fetch('friends', false, ['fid' => [$uid, '='], 'uid' => [Session::$userId, '=']]))
+        if(Database::fetch('friends', false, ['fid' => [$uid, '='], 'uid' => [Session::$userId, '=']])) {
+
             return [0, 'ALREADY_FRIENDS'];
+
+        }
 
         // Add friend
         Database::insert('friends', [
@@ -1404,8 +1616,11 @@ class Users {
     public static function removeFriend($uid, $deleteRequest = false) {
 
         // Check if the user has this user a friend
-        if(!Database::fetch('friends', false, ['fid' => [$uid, '='], 'uid' => [Session::$userId, '=']]))
+        if(!Database::fetch('friends', false, ['fid' => [$uid, '='], 'uid' => [Session::$userId, '=']])) {
+
             return [0, 'ALREADY_REMOVED'];
+
+        }
 
         // Remove friend
         Database::delete('friends', [

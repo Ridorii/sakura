@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150903');
+define('SAKURA_VERSION',    '20150905');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_COLOUR',     '#6C3082');
 define('SAKURA_STABLE',     false);
@@ -48,7 +48,6 @@ require_once ROOT .'_sakura/components/Manage.php';
 require_once ROOT .'_sakura/components/Bans.php';
 require_once ROOT .'_sakura/components/Whois.php';
 require_once ROOT .'_sakura/components/Payments.php';
-require_once ROOT .'_sakura/components/SockChat.php';
 
 // Include database extensions
 foreach(glob(ROOT .'_sakura/components/database/*.php') as $driver) {
@@ -144,10 +143,7 @@ if(!defined('SAKURA_NO_TPL')) {
             'requireActivation'     => Configuration::getConfig('require_activation'),
             'minPwdEntropy'         => Configuration::getConfig('min_entropy'),
             'minUsernameLength'     => Configuration::getConfig('username_min_length'),
-            'maxUsernameLength'     => Configuration::getConfig('username_max_length'),
-
-            'disqus_shortname'  => Configuration::getConfig('disqus_shortname'),
-            'disqus_api_key'    => Configuration::getConfig('disqus_api_key')
+            'maxUsernameLength'     => Configuration::getConfig('username_max_length')
 
         ],
 
@@ -189,7 +185,7 @@ if(!defined('SAKURA_NO_TPL')) {
         ]);
 
         Users::logout();
-        print Templates::render('errors/banned.tpl', $renderData);
+        print Templates::render('main/banned.tpl', $renderData);
         exit;
 
     }

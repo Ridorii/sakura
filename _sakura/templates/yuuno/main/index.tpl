@@ -1,4 +1,6 @@
-{% include 'global/header.tpl' %}
+{% extends 'global/master.tpl' %}
+
+{% block content %}
     <div class="content homepage">
         <div class="content-right content-column">
             {% include 'elements/indexPanel.tpl' %}
@@ -12,4 +14,4 @@
         <div class="clear"></div>
     </div>
     <script type="text/javascript" src="{{ sakura.resources }}/js/ybabstat.js"></script>
-{% include 'global/footer.tpl' %}
+{% endblock %}

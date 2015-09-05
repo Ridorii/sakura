@@ -23,7 +23,7 @@ if(isset($_REQUEST['mode'])) {
 
             $renderData['page'] = [
                 'title'     => 'Action failed',
-                'redirect'  => '/authenticate',
+                'redirect'  => $urls->format('AUTH_ACTION'),
                 'message'   => 'Timestamps differ too much, refresh the page and try again.',
                 'success'   => 0
             ];
@@ -38,7 +38,7 @@ if(isset($_REQUEST['mode'])) {
 
             $renderData['page'] = [
                 'title'     => 'Action failed',
-                'redirect'  => '/authenticate',
+                'redirect'  => $urls->format('AUTH_ACTION'),
                 'message'   => 'Invalid session, please try again.',
                 'success'   => 0
             ];
@@ -59,7 +59,7 @@ if(isset($_REQUEST['mode'])) {
             // Add page specific things
             $renderData['page'] = [
                 'title'     => 'Authentication',
-                'redirect'  => '/',
+                'redirect'  => $urls->format('SITE_HOME'),
                 'message'   => 'You are already authenticated. Redirecting...',
                 'success'   => 1
             ];
@@ -79,7 +79,7 @@ if(isset($_REQUEST['mode'])) {
                 // Add page specific data
                 $renderData['page'] = [
                     'title'     => 'Logout',
-                    'redirect'  => ($logout ? $_REQUEST['redirect'] : '/authenticate'),
+                    'redirect'  => ($logout ? $_REQUEST['redirect'] : $urls->format('SITE_LOGIN')),
                     'message'   => $logout ? 'You are now logged out.' : 'An unknown error occurred.',
                     'success'   => $logout ? 1 : 0
                 ];
@@ -105,7 +105,7 @@ if(isset($_REQUEST['mode'])) {
                 // Add page specific things
                 $renderData['page'] = [
                     'title'     => 'Forgot Password',
-                    'redirect'  => ($passforget[0] ? '/' : $_SERVER['PHP_SELF'] .'?pw=true&uid='. $_REQUEST['uid'] .'&verk='. $_REQUEST['verk']),
+                    'redirect'  => ($passforget[0] ? $urls->format('SITE_LOGIN') : $_SERVER['PHP_SELF'] .'?pw=true&uid='. $_REQUEST['uid'] .'&verk='. $_REQUEST['verk']),
                     'message'   => $messages[$passforget[1]],
                     'success'   => $passforget[0]
                 ];
@@ -130,7 +130,7 @@ if(isset($_REQUEST['mode'])) {
                 // Add page specific things
                 $renderData['page'] = [
                     'title'     => 'Activate account',
-                    'redirect'  => '/authenticate',
+                    'redirect'  => $urls->format('SITE_LOGIN'),
                     'message'   => $messages[$activate[1]],
                     'success'   => $activate[0]
                 ];
@@ -154,7 +154,7 @@ if(isset($_REQUEST['mode'])) {
                 // Add page specific things
                 $renderData['page'] = [
                     'title'     => 'Resend Activation',
-                    'redirect'  => '/authenticate',
+                    'redirect'  => $urls->format('SITE_HOME'),
                     'message'   => $messages[$resend[1]],
                     'success'   => $resend[0]
                 ];
@@ -180,7 +180,7 @@ if(isset($_REQUEST['mode'])) {
                 // Add page specific things
                 $renderData['page'] = [
                     'title'     => 'Login',
-                    'redirect'  => $login[0] ? $_REQUEST['redirect'] : '/authenticate',
+                    'redirect'  => $login[0] ? $_REQUEST['redirect'] : $urls->format('SITE_LOGIN'),
                     'message'   => $messages[$login[1]],
                     'success'   => $login[0]
                 ];
@@ -230,7 +230,7 @@ if(isset($_REQUEST['mode'])) {
                 // Add page specific things
                 $renderData['page'] = [
                     'title'     => 'Register',
-                    'redirect'  => ($register[0] ? '/' : '/authenticate'),
+                    'redirect'  => ($register[0] ? $urls->format('SITE_LOGIN') : $urls->format('SITE_REGISTER')),
                     'message'   => $messages[$register[1]],
                     'success'   => $register[0]
                 ];
@@ -254,7 +254,7 @@ if(isset($_REQUEST['mode'])) {
                 // Add page specific things
                 $renderData['page'] = [
                     'title'     => 'Lost Password',
-                    'redirect'  => '/authenticate',
+                    'redirect'  => $urls->format('SITE_FORGOT_PASSWORD'),
                     'message'   => $messages[$passforgot[1]],
                     'success'   => $passforgot[0]
                 ];
@@ -276,7 +276,7 @@ if(isset($_REQUEST['mode'])) {
                 . '|'
                 . $renderData['page']['redirect']
             ) :
-            Templates::render('errors/information.tpl', $renderData);
+            Templates::render('global/information.tpl', $renderData);
     exit;
 
 }
@@ -287,11 +287,11 @@ $renderData['page'] = [
 ];
 $renderData['auth'] = [
 
-    'redirect' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/',
+    'redirect' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('SITE_HOME'),
     'blockRegister' => [
 
         'do' => false
-        
+
     ]
 
 ];
@@ -302,11 +302,11 @@ if(Users::checkLogin()) {
     // Add page specific things
     $renderData['page'] = [
         'title'     => 'Authentication',
-        'redirect'  => '/',
+        'redirect'  => $urls->format('SITE_HOME'),
         'message'   => 'You are already logged in, log out to access this page.'
     ];
 
-    print Templates::render('errors/information.tpl', $renderData);
+    print Templates::render('global/information.tpl', $renderData);
     exit;
 
 }

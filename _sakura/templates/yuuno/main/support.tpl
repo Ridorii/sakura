@@ -1,15 +1,17 @@
-{% include 'global/header.tpl' %}
+{% extends 'global/master.tpl' %}
+
+{% block content %}
     {% if page.fail %}
-    <div class="headerNotify">
-        <h1>The payment failed or was cancelled!</h1>
-        <p>Something went wrong while processing the transaction, your PayPal account wasn't charged.</p>
-    </div>
+        <div class="headerNotify">
+            <h1>The payment failed or was cancelled!</h1>
+            <p>Something went wrong while processing the transaction, your PayPal account wasn't charged.</p>
+        </div>
     {% endif %}
     <div class="content support">
         <div class="head">Support {{ sakura.siteName }}</div>
         <div style="font-size: .9em; margin-bottom: 10px;">
             <p>In order to keep the site, its services and improvements on it going I need money but I'm not that big of a fan of asking for money without giving anything special in return thus Tenshi exists. Tenshi is the name for our supporter rank which gives you access to an extra set of features (which are listed further down on this page). With your help we can keep adding new stuff, get new hardware and keep the site awesome!</p>
-            <h3><a href="/support/tracker" class="default">Ever wonder what happens on the financial side of things? View the donation tracker!</a></h3>
+            <h3><a href="{{ urls.format('SITE_DONATE_TRACK') }}" class="default">Ever wonder what happens on the financial side of things? View the donation tracker!</a></h3>
         </div>
         {% if page.current[0] %}
         <div class="sectionHeader">
@@ -105,7 +107,7 @@
         {% endif %}
     </div>
     {% if session.checkLogin and user.checkPermission('SITE', 'OBTAIN_PREMIUM') %}
-        <form action="/support" method="post" id="purchaseForm" class="hidden">
+        <form action="{{ urls.format('SITE_PREMIUM') }}" method="post" id="purchaseForm" class="hidden">
             <input type="hidden" name="mode" value="purchase" />
             <input type="hidden" name="time" value="{{ php.time }}" />
             <input type="hidden" name="session" value="{{ php.sessionid }}" />
@@ -115,4 +117,4 @@
             window.onload = function() { document.getElementById('totalAmount').innerHTML = ({{ page.price }}).formatMoney(2); };
         </script>
     {% endif %}
-{% include 'global/footer.tpl' %}
+{% endblock %}

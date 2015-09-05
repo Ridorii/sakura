@@ -5,8 +5,6 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-DROP DATABASE IF EXISTS `sakura-development`;
-CREATE DATABASE `sakura-development` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
 USE `sakura-development`;
 
 DROP TABLE IF EXISTS `sakura_actioncodes`;
@@ -17,7 +15,7 @@ CREATE TABLE `sakura_actioncodes` (
   `actkey` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The URL key for using this code.',
   `instruction` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Things the backend should do upon using this code',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_apikeys`;
@@ -54,7 +52,7 @@ CREATE TABLE `sakura_bbcodes` (
   `description` varchar(512) COLLATE utf8_bin NOT NULL COMMENT 'Description of what this does.',
   `on_posting` tinyint(1) unsigned NOT NULL COMMENT 'Set if this bbcode is displayed on the posting page.',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO `sakura_bbcodes` (`id`, `regex`, `replace`, `title`, `description`, `on_posting`) VALUES
 (1, '/\\[b\\](.*?)\\[\\/b\\]/is', '<b>$1</b>',  'Bold', 'Make text bold. Usage: [b]text[/b].',  1),
@@ -65,8 +63,7 @@ INSERT INTO `sakura_bbcodes` (`id`, `regex`, `replace`, `title`, `description`, 
 (6, '/\\[url=([a-zA-Z0-9\\.\\$\\-\\_\\.\\+\\*\\!\\\'\\(\\)\\/\\:\\#]+)\\](.*?)\\[\\/url\\]/is', '<a href=\"$1\" target=\"_blank\">$2</a>',  'Link', 'Embed a URL. Usage: [url=http://google.com]Link to google![/url]', 0),
 (7, '/\\[url\\]([a-zA-Z0-9\\.\\$\\-\\_\\.\\+\\*\\!\\\'\\(\\)\\/\\:\\#]+)\\[\\/url\\]/is', '<a href=\"$1\" target=\"_blank\">$1</a>',  'Link', 'Make a link clickable (if the automatic algorithm doesn\'t do it already). Usage: [url]http://google.com[/url]', 1),
 (8, '/\\[quote\\=\\\"(.+)\\\"\\](.+)\\[\\/quote]/is', '<div class=\"quote\"><div class=\"quotee\">$1 wrote:</div><div class=\"text\">$2</div></div>', 'Quote',  'Quote a user\'s post. Usage: [quote=Flashwave]nookls is pretty[/quote]', 0),
-(9, '/\\[quote\\](.+)\\[\\/quote]/is',  '<div class=\"quote\"><div class=\"quotee\">Quote:</div><div class=\"text\">$1</div></div>',  'Quote',  'Quote a user\'s post. Usage: [quote]nookls is pretty[/quote]', 1)
-ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `regex` = VALUES(`regex`), `replace` = VALUES(`replace`), `title` = VALUES(`title`), `description` = VALUES(`description`), `on_posting` = VALUES(`on_posting`);
+(9, '/\\[quote\\](.+)\\[\\/quote]/is',  '<div class=\"quote\"><div class=\"quotee\">Quote:</div><div class=\"text\">$1</div></div>',  'Quote',  'Quote a user\'s post. Usage: [quote]nookls is pretty[/quote]', 1);
 
 DROP TABLE IF EXISTS `sakura_config`;
 CREATE TABLE `sakura_config` (
@@ -83,15 +80,15 @@ INSERT INTO `sakura_config` (`config_name`, `config_value`) VALUES
 ('cookie_path', '/'),
 ('site_style',  'yuuno'),
 ('manage_style',  'broomcloset'),
-('smtp_server', 'smtp-mail.outlook.com'),
-('smtp_auth', '1'),
-('smtp_secure', 'tls'),
-('smtp_port', '587'),
-('smtp_username', 'flashii@outlook.com'),
+('smtp_server', ''),
+('smtp_auth', ''),
+('smtp_secure', ''),
+('smtp_port', ''),
+('smtp_username', ''),
 ('smtp_password', ''),
 ('smtp_replyto_mail', 'admin@flashii.net'),
 ('smtp_replyto_name', 'Flashwave'),
-('smtp_from_email', 'flashii@outlook.com'),
+('smtp_from_email', ''),
 ('smtp_from_name',  'Flashii Noreply'),
 ('sitename',  'Cutting Edgii'),
 ('recaptcha', '0'),
@@ -117,9 +114,6 @@ INSERT INTO `sakura_config` (`config_name`, `config_value`) VALUES
 ('premium_amount_max',  '24'),
 ('alumni_rank_id',  '9'),
 ('url_main',  'flashii.test'),
-('disqus_shortname',  'flashii'),
-('disqus_api_key',  ''),
-('disqus_api_secret', ''),
 ('front_page_news_posts', '3'),
 ('date_format', 'D Y-m-d H:i:s T'),
 ('news_posts_per_page', '3'),
@@ -131,9 +125,6 @@ INSERT INTO `sakura_config` (`config_name`, `config_value`) VALUES
 ('url_api', 'api.flashii.test'),
 ('content_path',  '/content'),
 ('user_uploads',  'uploads'),
-('no_avatar_img', 'main/content/images/no-av.png'),
-('deactivated_avatar_img',  'main/content/images/deactivated-av.png'),
-('banned_avatar_img', 'main/content/images/banned-av.png'),
 ('no_background_img', 'main/content/pixel.png'),
 ('no_header_img', 'main/content/images/triangles.png'),
 ('pixel_img', 'main/content/pixel.png'),
@@ -142,8 +133,13 @@ INSERT INTO `sakura_config` (`config_name`, `config_value`) VALUES
 ('background_max_height', '1440'),
 ('background_min_height', '16'),
 ('background_min_width',  '16'),
-('max_online_time', '500')
-ON DUPLICATE KEY UPDATE `config_name` = VALUES(`config_name`), `config_value` = VALUES(`config_value`);
+('max_online_time', '500'),
+('no_avatar_img', 'main/content/data/{{ TPL }}/images/no-av.png'),
+('deactivated_avatar_img',  'main/content/data/{{ TPL }}/images/deactivated-av.png'),
+('banned_avatar_img', 'main/content/data/{{ TPL }}/images/banned-av.png'),
+('session_check', '2'),
+('url_rewrite', '1'),
+('members_per_page',  '30');
 
 DROP TABLE IF EXISTS `sakura_emoticons`;
 CREATE TABLE `sakura_emoticons` (
@@ -189,8 +185,7 @@ INSERT INTO `sakura_emoticons` (`emote_string`, `emote_path`) VALUES
 (':wtf:', '/content/images/emoticons/wtf.gif'),
 (':sleep:', '/content/images/emoticons/zzz.gif'),
 (':what:',  '/content/images/emoticons/what.png'),
-(':smug:',  '/content/images/emoticons/smug.png')
-ON DUPLICATE KEY UPDATE `emote_string` = VALUES(`emote_string`), `emote_path` = VALUES(`emote_path`);
+(':smug:',  '/content/images/emoticons/smug.png');
 
 DROP TABLE IF EXISTS `sakura_faq`;
 CREATE TABLE `sakura_faq` (
@@ -199,7 +194,7 @@ CREATE TABLE `sakura_faq` (
   `question` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The question.',
   `answer` text COLLATE utf8_bin NOT NULL COMMENT 'The answer.',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_forums`;
@@ -212,7 +207,7 @@ CREATE TABLE `sakura_forums` (
   `forum_type` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'Forum type, 0 for regular board, 1 for category and 2 for link.',
   `forum_icon` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Display icon for the forum.',
   PRIMARY KEY (`forum_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_friends`;
@@ -265,18 +260,19 @@ CREATE TABLE `sakura_messages` (
   `subject` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title of the message',
   `content` text COLLATE utf8_bin NOT NULL COMMENT 'Contents of the message.',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_news`;
 CREATE TABLE `sakura_news` (
-  `id` bigint(128) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
-  `uid` bigint(128) unsigned NOT NULL COMMENT 'ID of user who posted this news message.',
-  `date` int(64) unsigned NOT NULL COMMENT 'News post timestamp.',
+  `id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
+  `category` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Category ID.',
+  `uid` bigint(255) unsigned NOT NULL COMMENT 'ID of user who posted this news message.',
+  `date` int(11) unsigned NOT NULL COMMENT 'News post timestamp.',
   `title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title of the post.',
   `content` text COLLATE utf8_bin NOT NULL COMMENT 'Contents of the post',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_notifications`;
@@ -294,7 +290,7 @@ CREATE TABLE `sakura_notifications` (
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   CONSTRAINT `sakura_notifications_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_optionfields`;
@@ -308,8 +304,9 @@ CREATE TABLE `sakura_optionfields` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO `sakura_optionfields` (`id`, `name`, `description`, `formtype`, `require_perm`) VALUES
-('profileBackgroundSiteWide', 'Display profile background site wide', 'This will make the profile background you set on your profile appear on the entire site (except on other profiles).',  'checkbox', 'CREATE_BACKGROUND')
-ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `name` = VALUES(`name`), `description` = VALUES(`description`), `formtype` = VALUES(`formtype`), `require_perm` = VALUES(`require_perm`);
+('disableProfileParallax',  'Disable Parallaxing',  'This will stop your background from responding to your mouse movement, this will only affect your background.',  'checkbox', 'CHANGE_BACKGROUND'),
+('profileBackgroundSiteWide', 'Display profile background site wide', 'This will make the profile background you set on your profile appear on the entire site (except on other profiles).',  'checkbox', 'CREATE_BACKGROUND'),
+('useMisaki', 'Use the testing style',  'This will make the site use the new Misaki style instead of Yuuno.', 'checkbox', 'ALTER_PROFILE');
 
 DROP TABLE IF EXISTS `sakura_permissions`;
 CREATE TABLE `sakura_permissions` (
@@ -322,16 +319,16 @@ CREATE TABLE `sakura_permissions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO `sakura_permissions` (`rid`, `uid`, `siteperms`, `manageperms`, `forumperms`, `rankinherit`) VALUES
-(1, 0,  '0000000000000000000000000001', '000',  '1',  '000'),
-(2, 0,  '0000111111111100111101101100', '000',  '1',  '000'),
-(3, 0,  '0001111111111111111111111100', '011',  '1',  '000'),
-(4, 0,  '0111111111111111111111111100', '111',  '1',  '000'),
-(5, 0,  '0001111111111111111111111100', '101',  '1',  '000'),
-(6, 0,  '0000111111111100111101101100', '000',  '0',  '000'),
-(7, 0,  '0001111111111111111111111100', '011',  '1',  '000'),
-(8, 0,  '0001111111111111111111111100', '000',  '1',  '000'),
-(9, 0,  '0001111111111111111111111100', '000',  '1',  '000')
-ON DUPLICATE KEY UPDATE `rid` = VALUES(`rid`), `uid` = VALUES(`uid`), `siteperms` = VALUES(`siteperms`), `manageperms` = VALUES(`manageperms`), `forumperms` = VALUES(`forumperms`), `rankinherit` = VALUES(`rankinherit`);
+(1, 0,  '0000000000000000000000000001', '00', '0',  '000'),
+(2, 0,  '0000111111111100111101101100', '00', '1',  '000'),
+(3, 0,  '0001111111111111111111111100', '11', '1',  '000'),
+(4, 0,  '1111111111111111111111111100', '11', '1',  '000'),
+(5, 0,  '0001111111111111111111111100', '11', '1',  '000'),
+(6, 0,  '0000111111111100111101101100', '00', '0',  '000'),
+(7, 0,  '0001111111111111111111111100', '01', '1',  '000'),
+(8, 0,  '0001111111111111111111111100', '00', '1',  '000'),
+(9, 0,  '0001111111111111111111111100', '00', '1',  '000'),
+(10,  0,  '0000000011010100101000100010', '00', '0',  '000');
 
 DROP TABLE IF EXISTS `sakura_posts`;
 CREATE TABLE `sakura_posts` (
@@ -355,7 +352,7 @@ CREATE TABLE `sakura_posts` (
   KEY `poster_id` (`poster_id`),
   CONSTRAINT `sakura_posts_ibfk_1` FOREIGN KEY (`topic_id`) REFERENCES `sakura_topics` (`topic_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `sakura_posts_ibfk_2` FOREIGN KEY (`forum_id`) REFERENCES `sakura_forums` (`forum_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_premium`;
@@ -368,6 +365,17 @@ CREATE TABLE `sakura_premium` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
+DROP TABLE IF EXISTS `sakura_premium_log`;
+CREATE TABLE `sakura_premium_log` (
+  `id` int(16) unsigned NOT NULL AUTO_INCREMENT COMMENT 'MySQL Generated ID used for sorting.',
+  `uid` bigint(255) unsigned NOT NULL COMMENT 'User ID of purchaser',
+  `amount` float NOT NULL COMMENT 'Amount that was transferred.',
+  `date` int(11) unsigned NOT NULL COMMENT 'Date when the purchase was made.',
+  `comment` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'A short description of the action taken.',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
 DROP TABLE IF EXISTS `sakura_profilefields`;
 CREATE TABLE `sakura_profilefields` (
   `id` int(64) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID used for ordering on the userpage.',
@@ -378,7 +386,7 @@ CREATE TABLE `sakura_profilefields` (
   `description` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Description of the field displayed in the control panel.',
   `additional` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Undocumented JSON array containing special options if needed (probably only going to be used for the YouTube field).',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO `sakura_profilefields` (`id`, `name`, `formtype`, `islink`, `linkformat`, `description`, `additional`) VALUES
 (1, 'Website',  'url',  1,  '{{ VAL }}',  'URL to your website',  ''),
@@ -392,8 +400,7 @@ INSERT INTO `sakura_profilefields` (`id`, `name`, `formtype`, `islink`, `linkfor
 (9, 'Origin', 'text', 0,  '', 'Your Origin User ID',  ''),
 (10,  'Xbox Live',  'text', 1,  'https://account.xbox.com/en-GB/Profile?Gamertag={{ VAL }}',  'Your Xbox User ID',  ''),
 (11,  'PSN',  'text', 1,  'http://psnprofiles.com/{{ VAL }}', 'Your PSN User ID', ''),
-(12,  'Last.fm',  'text', 1,  'http://last.fm/user/{{ VAL }}',  'Your Last.fm username',  '')
-ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `name` = VALUES(`name`), `formtype` = VALUES(`formtype`), `islink` = VALUES(`islink`), `linkformat` = VALUES(`linkformat`), `description` = VALUES(`description`), `additional` = VALUES(`additional`);
+(12,  'Last.fm',  'text', 1,  'http://last.fm/user/{{ VAL }}',  'Your Last.fm username',  '');
 
 DROP TABLE IF EXISTS `sakura_ranks`;
 CREATE TABLE `sakura_ranks` (
@@ -405,7 +412,7 @@ CREATE TABLE `sakura_ranks` (
   `description` text COLLATE utf8_bin NOT NULL COMMENT 'A description of what a user of this rank can do/is supposed to do.',
   `title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Default user title if user has none set.',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO `sakura_ranks` (`id`, `name`, `multi`, `hidden`, `colour`, `description`, `title`) VALUES
 (1, 'Deactivated',  0,  1,  '#555', 'Users that are yet to be activated or that deactivated their own account.',  'Deactivated'),
@@ -415,9 +422,9 @@ INSERT INTO `sakura_ranks` (`id`, `name`, `multi`, `hidden`, `colour`, `descript
 (5, 'Developer',  1,  0,  '#824CA0',  'Users that either create or test new features of the site.', 'Staff'),
 (6, 'Bot',  1,  1,  '#9E8DA7',  'Reserved user accounts for services.', 'Bot'),
 (7, 'Chat moderator', 1,  0,  '#09F', 'Moderators of the chat room.', 'Staff'),
-(8, 'Tenshi', 0,  0,  '#EE9400',  'Users that donated $5.00 or more in order to keep the site and it\'s services alive!', 'Tenshi'),
-(9, 'Alumnii',  0,  0,  '#FF69B4',  'People who have contributed to the community but have moved on or resigned.',  'Alumnii')
-ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `name` = VALUES(`name`), `multi` = VALUES(`multi`), `hidden` = VALUES(`hidden`), `colour` = VALUES(`colour`), `description` = VALUES(`description`), `title` = VALUES(`title`);
+(8, 'Tenshi', 0,  0,  '#EE9400',  'Users that bought premium to help us keep the site and its services alive!', 'Tenshi'),
+(9, 'Alumnii',  0,  0,  '#FF69B4',  'People who have contributed to the community but have moved on or resigned.',  'Alumnii'),
+(10,  'Restricted', 0,  1,  '#333', 'Users that are restricted.', 'Restricted');
 
 DROP TABLE IF EXISTS `sakura_regcodes`;
 CREATE TABLE `sakura_regcodes` (
@@ -458,27 +465,8 @@ CREATE TABLE `sakura_sessions` (
   PRIMARY KEY (`id`),
   KEY `userid` (`userid`),
   CONSTRAINT `sakura_sessions_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=165 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-
-DROP TABLE IF EXISTS `sakura_sock_perms`;
-CREATE TABLE `sakura_sock_perms` (
-  `rid` bigint(128) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of rank that this permission counts for (set to 0 if user).',
-  `uid` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of the user this permission counts for (set to 0 if rank).',
-  `perms` varchar(128) COLLATE utf8_bin NOT NULL DEFAULT '1,0,0,0,0,0' COMMENT 'Permission data (has access, in-chat rank, user type, log access, nick access, channel creation)'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-INSERT INTO `sakura_sock_perms` (`rid`, `uid`, `perms`) VALUES
-(1, 0,  '0,0,0,0,0,0'),
-(2, 0,  '1,0,0,0,0,0'),
-(3, 0,  '1,3,1,1,1,1'),
-(4, 0,  '1,4,2,1,1,2'),
-(5, 0,  '1,2,1,1,1,1'),
-(6, 0,  '1,0,0,0,0,0'),
-(7, 0,  '1,2,1,1,1,1'),
-(8, 0,  '1,1,0,1,1,1'),
-(9, 0,  '1,1,0,1,1,1')
-ON DUPLICATE KEY UPDATE `rid` = VALUES(`rid`), `uid` = VALUES(`uid`), `perms` = VALUES(`perms`);
 
 DROP TABLE IF EXISTS `sakura_topics`;
 CREATE TABLE `sakura_topics` (
@@ -496,7 +484,7 @@ CREATE TABLE `sakura_topics` (
   PRIMARY KEY (`topic_id`),
   KEY `forum_id` (`forum_id`),
   CONSTRAINT `sakura_topics_ibfk_1` FOREIGN KEY (`forum_id`) REFERENCES `sakura_forums` (`forum_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_users`;
@@ -520,12 +508,12 @@ CREATE TABLE `sakura_users` (
   `regdate` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Timestamp of account creation.',
   `lastdate` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Last time anything was done on this account.',
   `lastunamechange` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Last username change.',
-  `birthday` varchar(16) COLLATE utf8_bin DEFAULT NULL COMMENT 'Birthdate of the user.',
-  `country` varchar(4) COLLATE utf8_bin NOT NULL COMMENT 'Contains ISO 3166 country code of user''s registration location.',
+  `birthday` date DEFAULT NULL COMMENT 'Birthdate of the user.',
+  `country` char(2) COLLATE utf8_bin NOT NULL COMMENT 'Contains ISO 3166 country code of user''s registration location.',
   `userData` text COLLATE utf8_bin COMMENT 'All additional profile data.',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_clean` (`username_clean`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_warnings`;
@@ -544,4 +532,4 @@ CREATE TABLE `sakura_warnings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
--- 2015-08-21 22:06:54
+-- 2015-09-05 16:08:34

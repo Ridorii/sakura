@@ -7,8 +7,11 @@
 // Filesystem path to the _sakura folder WITHOUT an ending /
 // This can also be set before an include of this file in case
 //  you're using git to keep in sync and don't want conflicts
-if(!isset($sockSakuraPath))
-    $sockSakuraPath = ''; 
+if(!isset($sockSakuraPath)) {
+
+    $sockSakuraPath = '';
+
+}
 
 /* * * DON'T EDIT ANYTHING BELOW THIS LINE * * */
 
@@ -18,7 +21,8 @@ require_once $sockSakuraPath .'/sakura.php';
 use sockchat\Auth;
 use Sakura\Session;
 use Sakura\Users;
-use Sakura\SockChat;
+use Sakura\Permissions;
+use Sakura\User;
 
 if(Auth::getPageType() == AUTH_FETCH) {
 
@@ -29,8 +33,11 @@ if(Auth::getPageType() == AUTH_FETCH) {
         Auth::AppendArguments([Session::$userId, Session::$sessionId]);
         Auth::Accept();
 
-    } else 
+    } else {
+
         Auth::Deny();
+
+    }
 
 } else {
 
@@ -41,51 +48,43 @@ if(Auth::getPageType() == AUTH_FETCH) {
     // Check if session is active else deny
     if(Session::checkSession($uid, $sid)) {
 
-        // Get user and rank data
-        $user = Users::getUser($uid);
-        $rank = Users::getRank($user['rank_main']);
-
-        // Deny group and user id 0
-        if($user['id'] == 0 || $rank['id'] == 0 || $user['password_algo'] == 'nologin') {
+        // Check if they can access the chat
+        if(Permissions::check('SITE', 'DEACTIVATED', $uid, 1) && Permissions::check('SITE', 'RESTRICTED', $uid, 1)) {
 
             Auth::Deny();
             Auth::Serve();
             exit;
 
         }
+
+        // Create a user object
+        $user = new User($uid);
 
         // Set the user's data
         Auth::SetUserData(
-            $user['id'],
-            $user['username'],
-            $user['name_colour'] == null ? $rank['colour'] : $user['name_colour']
+            $user->data['id'],
+            $user->data['username'],
+            $user->colour()
         );
-
-        // Get the user's permissions
-        $perms = SockChat::getUserPermissions($user['id']);
-
-        // Check if they can access the chat
-        if(!$perms['access']) {
-
-            Auth::Deny();
-            Auth::Serve();
-            exit;
-
-        }
 
         // Set the common permissions
         Auth::SetCommonPermissions(
-            $perms['rank'],
-            $perms['type'],
-            $perms['logs'],
-            $perms['nick'],
-            $perms['channel']
+            bindec(Permissions::getUserPermissions($uid)['SITE']),
+            Permissions::check('MANAGE',    'USE_MANAGE',           $uid, 1) ? 1 : 0,
+            Permissions::check('SITE',      'CREATE_BACKGROUND',    $uid, 1) ? 1 : 0,
+            Permissions::check('SITE',      'CHANGE_USERNAME',      $uid, 1) ? 1 : 0,
+            Permissions::check('SITE',      'MULTIPLE_GROUPS',      $uid, 1) ? 2 : (
+                Permissions::check('SITE', 'CREATE_GROUP',          $uid, 1) ? 1 : 0
+            )
         );
 
         Auth::Accept();
 
-    } else 
+    } else {
+
         Auth::Deny();
+
+    }
 
 }
 

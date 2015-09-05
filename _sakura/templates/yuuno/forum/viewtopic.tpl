@@ -1,4 +1,6 @@
-{% include 'global/header.tpl' %}
+{% extends 'global/master.tpl' %}
+
+{% block content %}
     <div class="content homepage forum viewtopic">
         <div class="content-column">
             <div class="head">{{ forum.forum.forum_name }} / {{ topic.topic_title }}</div>
@@ -56,4 +58,4 @@
             {% include 'forum/forumBtns.tpl' %}
         </div>
     </div>
-{% include 'global/footer.tpl' %}
+{% endblock %}

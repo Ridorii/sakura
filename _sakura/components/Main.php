@@ -192,8 +192,11 @@ class Main {
         $mail->SetFrom(Configuration::getConfig('smtp_from_email'), Configuration::getConfig('smtp_from_name'));
 
         // Set the addressee
-        foreach($to as $email => $name)
+        foreach($to as $email => $name) {
+
             $mail->AddBCC($email, $name);
+
+        }
 
         // Subject line
         $mail->Subject = $subject;
@@ -222,8 +225,11 @@ class Main {
         $mail->ClearAddresses();
 
         // If we got an error return the error
-        if(!$send)
+        if(!$send) {
+
             return $mail->ErrorInfo;
+
+        }
 
         // Else just return whatever
         return $send;
@@ -239,12 +245,18 @@ class Main {
         $string = strip_tags($string);
 
         // If set also make the string lowercase
-        if($lower)
+        if($lower){
+
             $string = strtolower($string);
 
+        }
+
         // If set remove all characters that aren't a-z or 0-9
-        if($nospecial)
+        if($nospecial) {
+
             $string = preg_replace('/[^a-z0-9]/', '', $string);
+
+        }
 
         // Return clean string
         return $string;
@@ -265,8 +277,11 @@ class Main {
             $newsPosts[$newsId]['rdata']    = Users::getRank($newsPosts[$newsId]['udata']['rank_main']);
 
             // Check if a custom name colour is set and if so overwrite the rank colour
-            if($newsPosts[$newsId]['udata']['name_colour'] != null)
+            if($newsPosts[$newsId]['udata']['name_colour'] != null){
+
                 $newsPosts[$newsId]['rdata']['colour'] = $newsPosts[$newsId]['udata']['name_colour'];
+
+            }
 
         }
 
@@ -307,12 +322,18 @@ class Main {
         if(filter_var($ip, FILTER_VALIDATE_IP)) {
 
             // IPv4
-            if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
+            if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+
                 return 4;
 
+            }
+
             // IPv6
-            if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+            if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+
                 return 6;
+
+            }
 
         }
 
@@ -334,8 +355,11 @@ class Main {
         $binaryIP = null;
 
         // "Build" binary IP
-        foreach($unpacked as $char)
+        foreach($unpacked as $char) {
+
             $binaryIP .= str_pad(decbin(ord($char)), 8, '0', STR_PAD_LEFT);
+
+        }
 
         // Return IP
         return $binaryIP;
@@ -406,8 +430,11 @@ class Main {
         foreach($cfhosts as $subnet) {
 
             // Return true if found
-            if(self::matchSubnet($ip, $subnet))
+            if(self::matchSubnet($ip, $subnet)) {
+
                 return true;
+
+            }
 
         }
 
@@ -426,8 +453,11 @@ class Main {
         if(self::checkCFIP($ip)) {
 
             // If it is check if the CloudFlare IP header is set and if it is assign it to the ip variable
-            if(isset($_SERVER['HTTP_CF_CONNECTING_IP']))
+            if(isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+
                 $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+
+            }
 
         }
 
@@ -440,8 +470,11 @@ class Main {
     public static function getCountryCode() {
 
         // Check if the required header is set and return it
-        if(isset($_SERVER['HTTP_CF_IPCOUNTRY']))
+        if(isset($_SERVER['HTTP_CF_IPCOUNTRY'])) {
+
             return $_SERVER['HTTP_CF_IPCOUNTRY'];
+
+        }
 
         // Return XX as a fallback
         return 'XX';
@@ -452,8 +485,11 @@ class Main {
     public static function newActionCode($action, $userid, $instruct) {
 
         // Make sure the user we're working with exists
-        if(Users::getUser($userid)['id'] == 0)
+        if(Users::getUser($userid)['id'] == 0) {
+
             return false;
+
+        }
 
         // Convert the instruction array to a JSON
         $instruct = json_encode($instruct);
@@ -484,14 +520,20 @@ class Main {
         ]);
 
         // Check if the code exists
-        if(count($keyRow) <= 1)
+        if(count($keyRow) <= 1) {
+
             return [0, 'INVALID_CODE'];
+
+        }
 
         // Check if the code was intended for the user that's using this code
         if($keyRow['userid'] != 0) {
 
-            if($keyRow['userid'] != $uid)
+            if($keyRow['userid'] != $uid) {
+
                 return [0, 'INVALID_USER'];
+
+            }
 
         }
 
@@ -523,10 +565,15 @@ class Main {
         $iso3166 = json_decode(utf8_encode(file_get_contents(ROOT .'_sakura/'. Configuration::getLocalConfig('data', 'iso3166'))), true);
 
         // Check if key exists
-        if(array_key_exists($code, $iso3166))
+        if(array_key_exists($code, $iso3166)) {
+
             return $iso3166[$code]; // If entry found return the full name
-        else
+
+        } else {
+
             return 'Unknown'; // Else return unknown
+
+        }
 
     }
 
@@ -548,8 +595,11 @@ class Main {
         $return = Database::fetch('logtypes', false, ['id' => [$type, '=']]);
 
         // Check if type exists and else return a unformattable string
-        if(count($return) < 2)
+        if(count($return) < 2) {
+
             return 'Unknown action.';
+
+        }
 
         // Return the string
         return $return['string'];
