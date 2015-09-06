@@ -58,7 +58,8 @@
                 "20150902",
                 "20150903",
                 "20150904",
-                "20150905"
+                "20150905",
+                "20150906"
 
             ]
 
@@ -2509,6 +2510,41 @@
             {
                 "type":     "ADD",
                 "change":   "Implemented IP checking in the session manager.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150906": [
+
+            {
+                "type":     "REM",
+                "change":   "Removed unused URLs.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add ability to hide certain settings modes from the menu.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Gave the error handler a massive update.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Made friendlist mobile friendly.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed restricted.tpl not being referenced properly.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added cookie notification.",
                 "user":     "Flashwave"
             }
 

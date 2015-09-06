@@ -187,6 +187,19 @@ INSERT INTO `sakura_emoticons` (`emote_string`, `emote_path`) VALUES
 (':what:',  '/content/images/emoticons/what.png'),
 (':smug:',  '/content/images/emoticons/smug.png');
 
+
+DROP TABLE IF EXISTS `sakura_error_log`;
+CREATE TABLE `sakura_error_log` (
+  `id` varchar(32) COLLATE utf8_bin NOT NULL,
+  `timestamp` varchar(128) COLLATE utf8_bin NOT NULL,
+  `error_type` int(16) unsigned NOT NULL,
+  `error_line` int(32) unsigned NOT NULL,
+  `error_string` varchar(512) COLLATE utf8_bin NOT NULL,
+  `error_file` varchar(512) COLLATE utf8_bin NOT NULL,
+  `backtrace` text COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
 DROP TABLE IF EXISTS `sakura_faq`;
 CREATE TABLE `sakura_faq` (
   `id` bigint(128) unsigned NOT NULL AUTO_INCREMENT COMMENT 'MySQL Generated ID used for sorting.',

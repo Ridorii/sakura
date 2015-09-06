@@ -1416,6 +1416,7 @@ a#gotop.exit {
     border-radius: 3px;
     box-shadow: inset 0 0 1px #9475B2;
     background: #E4CFFF;
+    transition: .2s;
 }
 
 .settings .friends-list > div:not(:last-child):hover {
@@ -1436,7 +1437,7 @@ a#gotop.exit {
 
 .settings .friends-list > div > .friends-list-actions {
     display: none;
-    background: linear-gradient(0deg, #9475B2, #C2AFFE) #9475B2;
+    background: linear-gradient(0deg, #9475B2, transparent) transparent;
 }
 
 .settings .friends-list > div > .friends-list-actions > a {
@@ -1475,6 +1476,18 @@ a#gotop.exit {
 
 .settings .friends-list > div > .friends-list-actions > .fill {
     width: 100%;
+}
+
+@media (max-width: 1024px) {
+
+    .settings .friends-list > div:not(:last-child) {
+        margin-bottom: 6px;
+    }
+
+    .settings .friends-list > div > .friends-list-actions {
+        display: block;
+    }
+
 }
 
 /*

@@ -77,7 +77,7 @@ function notifyUI(content) {
     if(content.link) {
 
         notif       .setAttribute('sakurahref', content.link);
-        notifContent.setAttribute('onclick',    'notifyOpen(this.parentNode.id);');
+        notifContent.setAttribute('onclick',    content.link.substring(0, 11) == 'javascript:' ? content.link.substring(11) : 'notifyOpen(this.parentNode.id);');
 
     }
     notifContent    .appendChild(notifTitle);

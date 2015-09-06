@@ -66,8 +66,6 @@ class Urls {
         'SETTINGS_INDEX'    => ['/settings.php',                        '/settings'],
         'SETTING_CAT'       => ['/settings.php?cat=%s',                 '/settings/%s'],
         'SETTING_MODE'      => ['/settings.php?cat=%s&mode=%s',         '/settings/%s/%s'],
-        'MESSAGES_INDEX'    => ['/settings.php?cat=messages',           '/messages'],
-        'MESSAGES_MODE'     => ['/settings.php?cat=messages&mode=%s',   '/messages/%s'],
 
         // Friend Actions
         'FRIEND_ACTION' => ['/settings.php?friend-action=true',                                             '/friends'],

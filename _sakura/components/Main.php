@@ -114,10 +114,43 @@ class Main {
     // Error Handler
     public static function errorHandler($errno, $errstr, $errfile, $errline) {
 
-        // Set some variables to work with including A HUGE fallback hackjob for the templates folder
+        // Remove ROOT path from the error string and file location
         $errstr     = str_replace(ROOT, '', $errstr);
         $errfile    = str_replace(ROOT, '', $errfile);
-        $templates  = ROOT .'_sakura/templates/';
+
+        // Attempt to log the error to the database
+        if(Database::$_DATABASE !== null) {
+
+            // Encode backtrace data
+            $backtrace = base64_encode(json_encode(debug_backtrace()));
+
+            // Check if this error has already been logged in the past
+            if($past = Database::fetch('error_log', false, ['backtrace' => [$backtrace, '=', true], 'error_string' => [$errstr, '=']])) {
+
+                // If so assign the errid
+                $errid = $past['id'];
+
+            } else {
+
+                // Create an error ID
+                $errid = substr(md5(microtime()), rand(0, 22), 10);
+
+                // Log the error
+                Database::insert('error_log', [
+
+                    'id'            => $errid,
+                    'timestamp'     => date("r"),
+                    'error_type'    => $errno,
+                    'error_line'    => $errline,
+                    'error_string'  => $errstr,
+                    'error_file'    => $errfile,
+                    'backtrace'     => $backtrace
+
+                ]);
+
+            }
+
+        }
 
         switch ($errno) {
 
@@ -141,18 +174,78 @@ class Main {
 
         }
 
-        // Use file_get_contents instead of Twig in case the problem is related to twig
-        $errorPage = file_get_contents($templates. 'errorPage.tpl');
-
-        // str_replace {{ error }} on the error page with the error data
-        $error = str_replace('{{ error }}', $error, $errorPage);
-
         // Truncate all previous outputs
         ob_clean();
         ob_end_clean();
 
+        // Build page
+        $errorPage = '<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Sakura Internal Error</title>
+        <style type="text/css">
+            body { margin: 0; padding: 0; background: #EEE; color: #000; font: 12px/20px Verdana, Arial, Helvetica, sans-serif; }
+            h1, h2 { font-weight: 100; background: #CAA; padding: 8px 5px 10px; margin: 0; font-style: italic; font-family: serif; }
+            h1 { border-radius: 8px 8px 0 0; }
+            h2 { margin: 0 -10px; }
+            .container { border: 1px solid #CAA; margin: 10px auto; background: #FFF; box-shadow: 2px 2px 1em #888; max-width: 1024px; border-radius: 10px; }
+            .container .inner { padding: 0px 10px; }
+            .container .inner .error { background: #555; color: #EEE; border-left: 5px solid #C22; padding: 4px 6px; text-shadow: 0px 1px 1px #888; white-space: pre-wrap; word-wrap: break-word; margin: 12px 0; border-radius: 5px; box-shadow: inset 0 0 1em #333; }
+            .container .footer { border-top: 1px solid #CAA; font-size: x-small; padding: 0px 5px 1px; }
+            a { color: #77E; text-decoration: none; }
+            a:hover { text-decoration: underline; }
+            a:active { color: #E77; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>An error occurred while executing the script.</h1>
+            <div class="inner">
+                <p>To prevent potential security risks or data loss Sakura has stopped execution of the script.</p>';
+
+if(isset($errid)) {
+
+    $errorPage .= '<p>The error and surrounding data has been logged.</p>
+    <h2>'. (SAKURA_STABLE ? 'Report the following text to a staff member' : 'Logged as') .'</h2><pre class="error">'. $errid .'</pre>';
+
+} else {
+
+    $errorPage .= '<p>Sakura was not able to log this error which could mean that there was an error with the database connection. If you\'re the system administrator check the database credentials and make sure the server is running and if you\'re not please let the system administrator know about this error if it occurs again.</p>';
+
+}
+
+if(!SAKURA_STABLE) {
+    $errorPage .= '                <h2>Summary</h2>
+                <pre class="error">'. $error .'</pre>
+                <h2>Backtraces</h2>';
+
+    foreach(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $num => $trace) {
+
+        $errorPage .= '<h3>#'. $num .'</h3><pre class="error">';
+
+        foreach($trace as $key => $val) {
+
+            $errorPage .= str_pad('['. $key .']', 12) .'=> '. (is_array($val) || is_object($val) ? json_encode($val) : $val) ."\r\n";
+
+        }
+
+        $errorPage .= '</pre>';
+
+    }
+
+}
+
+$errorPage .= '</div>
+            <div class="footer">
+                Sakura r'. SAKURA_VERSION .'.
+            </div>
+        </div>
+    </body>
+</html>';
+
         // Die and display error message
-        die($error);
+        die($errorPage);
 
     }
 

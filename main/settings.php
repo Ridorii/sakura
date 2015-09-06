@@ -672,7 +672,8 @@ if(Users::checkLogin()) {
                         'Welcome to the Settings Panel. From here you can monitor, view and update your profile and preferences.'
 
                     ],
-                    'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED')
+                    'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                    'menu' => true
 
                 ],
                 'profile' => [
@@ -683,7 +684,8 @@ if(Users::checkLogin()) {
                         'These are the external account links etc. on your profile, shouldn\'t need any additional explanation for this one.'
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'ALTER_PROFILE')
+                    'access' => $currentUser->checkPermission('SITE', 'ALTER_PROFILE'),
+                    'menu' => true
 
                 ],
                 'options' => [
@@ -694,7 +696,8 @@ if(Users::checkLogin()) {
                         'These are a few personalisation options for the site while you\'re logged in.'
 
                     ],
-                    'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED')
+                    'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                    'menu' => true
 
                 ],
                 'groups' => [
@@ -705,7 +708,8 @@ if(Users::checkLogin()) {
                         '{{ user.colour }}'
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'JOIN_GROUPS')
+                    'access' => $currentUser->checkPermission('SITE', 'JOIN_GROUPS'),
+                    'menu' => true
 
                 ]
 
@@ -726,7 +730,8 @@ if(Users::checkLogin()) {
                         'Manage your friends.'
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'MANAGE_FRIENDS')
+                    'access' => $currentUser->checkPermission('SITE', 'MANAGE_FRIENDS'),
+                    'menu' => true
 
                 ],
                 'requests' => [
@@ -737,7 +742,8 @@ if(Users::checkLogin()) {
                         'Handle friend requests.'
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'MANAGE_FRIENDS')
+                    'access' => $currentUser->checkPermission('SITE', 'MANAGE_FRIENDS'),
+                    'menu' => true
 
                 ]
 
@@ -758,7 +764,8 @@ if(Users::checkLogin()) {
                         'The list of messages you\'ve received.'
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'USE_MESSAGES')
+                    'access' => $currentUser->checkPermission('SITE', 'USE_MESSAGES'),
+                    'menu' => true
 
                 ],
                 'sent' => [
@@ -769,7 +776,8 @@ if(Users::checkLogin()) {
                         'The list of messages you\'ve sent to other users.'
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'USE_MESSAGES')
+                    'access' => $currentUser->checkPermission('SITE', 'USE_MESSAGES'),
+                    'menu' => true
 
                 ],
                 'compose' => [
@@ -780,7 +788,20 @@ if(Users::checkLogin()) {
                         'Write a new message.'
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'SEND_MESSAGES')
+                    'access' => $currentUser->checkPermission('SITE', 'SEND_MESSAGES'),
+                    'menu' => true
+
+                ],
+                'read' => [
+
+                    'title' => 'Read',
+                    'description' => [
+
+                        'Read a message.'
+
+                    ],
+                    'access' => $currentUser->checkPermission('SITE', 'USE_MESSAGES'),
+                    'menu' => false
 
                 ]
 
@@ -801,7 +822,8 @@ if(Users::checkLogin()) {
                         'The history of notifications that have been sent to you.'
 
                     ],
-                    'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED')
+                    'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                    'menu' => true
 
                 ]
 
@@ -824,7 +846,8 @@ if(Users::checkLogin()) {
 
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_AVATAR')
+                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_AVATAR'),
+                    'menu' => true
 
                 ],
                 'background' => [
@@ -836,7 +859,8 @@ if(Users::checkLogin()) {
                         'Maximum image size is {{ background.max_width }}x{{ background.max_height }}, minimum image size is {{ background.min_width }}x{{ background.min_height }}, maximum file size is {{ background.max_size_view }}.'
 
                     ],
-                    'access' => (isset($currentUser->data['userData']['profileBackground']) && $currentUser->checkPermission('SITE', 'CHANGE_BACKGROUND')) || $currentUser->checkPermission('SITE', 'CREATE_BACKGROUND')
+                    'access' => (isset($currentUser->data['userData']['profileBackground']) && $currentUser->checkPermission('SITE', 'CHANGE_BACKGROUND')) || $currentUser->checkPermission('SITE', 'CREATE_BACKGROUND'),
+                    'menu' => true
 
                 ],
                 'userpage' => [
@@ -847,7 +871,8 @@ if(Users::checkLogin()) {
                         'The custom text that is displayed on your profile.'
 
                     ],
-                    'access' => (isset($currentUser->data['userData']['userPage']) && $currentUser->checkPermission('SITE', 'CHANGE_USERPAGE')) || $currentUser->checkPermission('SITE', 'CREATE_USERPAGE')
+                    'access' => (isset($currentUser->data['userData']['userPage']) && $currentUser->checkPermission('SITE', 'CHANGE_USERPAGE')) || $currentUser->checkPermission('SITE', 'CREATE_USERPAGE'),
+                    'menu' => true
 
                 ]
 
@@ -868,7 +893,8 @@ if(Users::checkLogin()) {
                         'You e-mail address is used for password recovery and stuff like that, we won\'t spam you ;).'
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_EMAIL')
+                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_EMAIL'),
+                    'menu' => true
 
                 ],
                 'username' => [
@@ -880,7 +906,8 @@ if(Users::checkLogin()) {
                         '<b>You can only change this once every 30 days so choose wisely.</b>'
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_USERNAME')
+                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_USERNAME'),
+                    'menu' => true
 
                 ],
                 'usertitle' => [
@@ -891,7 +918,8 @@ if(Users::checkLogin()) {
                         'That little piece of text displayed under your username on your profile.'
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_USERTITLE')
+                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_USERTITLE'),
+                    'menu' => true
 
                 ],
                 'password' => [
@@ -902,7 +930,8 @@ if(Users::checkLogin()) {
                         'Used to authenticate with the site and certain related services.'
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_PASSWORD')
+                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_PASSWORD'),
+                    'menu' => true
 
                 ],
                 'ranks' => [
@@ -913,7 +942,8 @@ if(Users::checkLogin()) {
                         'Manage what ranks you\'re in and what is set as your main rank. Your main rank is highlighted. You get the permissions of all of the ranks you\'re in combined.'
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'ALTER_RANKS')
+                    'access' => $currentUser->checkPermission('SITE', 'ALTER_RANKS'),
+                    'menu' => true
 
                 ]
 
@@ -936,7 +966,8 @@ if(Users::checkLogin()) {
                         'If you get logged out after clicking one you\'ve most likely killed your current session, to make it easier to avoid this from happening your current session is highlighted.'
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'MANAGE_SESSIONS')
+                    'access' => $currentUser->checkPermission('SITE', 'MANAGE_SESSIONS'),
+                    'menu' => true
 
                 ],
                 'registrationkeys' => [
@@ -948,7 +979,8 @@ if(Users::checkLogin()) {
                         'Each user can generate 5 of these keys, bans and deactivates render these keys useless.'
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'CREATE_REGKEYS')
+                    'access' => $currentUser->checkPermission('SITE', 'CREATE_REGKEYS'),
+                    'menu' => true
 
                 ],
                 'deactivate' => [
@@ -959,7 +991,8 @@ if(Users::checkLogin()) {
                         'You can deactivate your account here if you want to leave :(.'
 
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'DEACTIVATE_ACCOUNT')
+                    'access' => $currentUser->checkPermission('SITE', 'DEACTIVATE_ACCOUNT'),
+                    'menu' => true
 
                 ]
 
@@ -1084,8 +1117,6 @@ if(Users::checkLogin()) {
 
     $renderData['page']['title'] = 'Restricted!';
 
-    print Templates::render('global/header.tpl', $renderData);
-    print Templates::render('elements/restricted.tpl', $renderData);
-    print Templates::render('global/footer.tpl', $renderData);
+    print Templates::render('global/restricted.tpl', $renderData);
 
 }

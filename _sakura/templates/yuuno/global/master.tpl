@@ -46,6 +46,7 @@
 
                 },
 
+                "siteName":         "{{ sakura.siteName }}",
                 "urlMain":          "{{ sakura.urlMain }}",
                 "content":          "{{ sakura.contentPath }}",
                 "resources":        "{{ sakura.resources }}",
@@ -149,6 +150,17 @@
                 initialiseParallax('userBackground');
 
             {% endif %}
+
+                if(!cookieData('get', sakuraVars.cookie.prefix +'accept_cookies')) {
+
+                    notifyUI({
+                        "title":    sakuraVars.siteName + " uses cookies!",
+                        "text":     "Click this if you're OK with that and want to hide this message.",
+                        "img":      "FONT:fa-asterisk",
+                        "link":     "javascript:cookieData('set', '"+ sakuraVars.cookie.prefix +"accept_cookies', 'true');notifyClose(this.parentNode.id);"
+                    });
+
+                }
 
             });
 

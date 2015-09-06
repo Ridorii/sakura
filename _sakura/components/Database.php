@@ -8,7 +8,7 @@ namespace Sakura;
 class Database {
 
     // Database container
-    private static $_DATABASE;
+    public static $_DATABASE;
 
     // Initialisation function
     public static function init($wrapper) {
@@ -17,8 +17,11 @@ class Database {
         $wrapper = __NAMESPACE__ .'\DBWrapper\\'. strtolower($wrapper);
 
         // Check if the class exists
-        if(!class_exists($wrapper))
+        if(!class_exists($wrapper)) {
+
             trigger_error('Failed to load database wrapper', E_USER_ERROR);
+
+        }
 
         // Initialise SQL wrapper
         self::$_DATABASE = new $wrapper;

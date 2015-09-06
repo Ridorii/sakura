@@ -8,8 +8,8 @@ namespace Sakura;
 class Configuration {
 
     // Configuration data
-    private static $_LCNF;
-    private static $_DCNF;
+    private static $_LCNF = [];
+    private static $_DCNF = [];
 
     // Initialise configuration, does not contain database initialisation because explained below
     public static function init($local) {
@@ -115,13 +115,18 @@ class Configuration {
     }
 
     // Get values from the configuration in the database
-    public static function getConfig($key) {
+    public static function getConfig($key, $returnNull = false) {
 
         // Check if the key that we're looking for exists
         if(array_key_exists($key, self::$_DCNF)) {
 
             // Then return the value
             return self::$_DCNF[$key];
+
+        } elseif($returnNull) {
+
+            // Avoid the error trigger if requested
+            return null;
 
         } else {
 
