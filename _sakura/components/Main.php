@@ -522,6 +522,13 @@ $errorPage .= '</div>
         // Check if IP is in a CloudFlare subnet
         foreach($cfhosts as $subnet) {
 
+            // Check if the subnet isn't empty (git newline prevention)
+            if(strlen($subnet) < 1) {
+
+                continue;
+
+            }
+
             // Return true if found
             if(self::matchSubnet($ip, $subnet)) {
 

@@ -1,5 +1,7 @@
 {% extends 'global/master.tpl' %}
 
+{% block title %}Forgot Password{% endblock %}
+
 {% block content %}
     <div class="content news settings">
         <div class="head">Forgot Password</div>

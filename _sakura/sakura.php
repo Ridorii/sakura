@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150906');
+define('SAKURA_VERSION',    '20150907');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_COLOUR',     '#6C3082');
 define('SAKURA_STABLE',     false);
@@ -173,15 +173,14 @@ if(!defined('SAKURA_NO_TPL')) {
 
         // Additional render data
         $renderData = array_merge($renderData, [
+
             'ban' => [
                 'reason'    => $ban['reason'],
                 'issued'    => $ban['issued'],
                 'expires'   => $ban['expires'],
                 'issuer'    => Users::getUser($ban['issuer'])
-            ],
-            'page' => [
-                'title' => 'You are banned!'
             ]
+
         ]);
 
         Users::logout();

@@ -11,7 +11,7 @@ function cookieData(action, name, data) {
             return (result = new RegExp('(^|; )' + encodeURIComponent(name) + '=([^;]*)').exec(document.cookie)) ? result[2] : '';
 
         case 'set':
-            document.cookie = name + '=' + data;
+            document.cookie = name + '=' + data + '; path=/';
             return null;
 
         default:
@@ -42,6 +42,7 @@ function notifyUI(content) {
     var notifTitle      = document.createElement('div');
     var notifText       = document.createElement('div');
     var notifClose      = document.createElement('div');
+    var notifCloseIcon  = document.createElement('div');
     var notifClear      = document.createElement('div');
     var iconCont;
 
@@ -87,6 +88,7 @@ function notifyUI(content) {
     // Add close button
     notifClose  .className = 'notification-close';
     notifClose  .setAttribute('onclick', 'notifyClose(this.parentNode.id);');
+    notifClose  .appendChild(notifCloseIcon);
     notif       .appendChild(notifClose);
 
     // Add .clear
@@ -543,29 +545,31 @@ function submitPost(action, requestParts, busyView, msg, resetCaptchaOnFailure) 
     // If using the busy view thing update the text displayed to the return of the request
     if(busyView) {
 
-        ajaxBusyView(true, request[1], (request[2] == '1' ? 'ok' : 'fail'));
+        ajaxBusyView(true, request[0], (request[1] == '1' ? 'ok' : 'fail'));
 
     }
 
     // If request reset the recaptcha on failure
-    if(resetCaptchaOnFailure && request[2] != '1' && sakuraVars.recpatchaEnabled) {
+    if(resetCaptchaOnFailure && request[1] != '1' && sakuraVars.recpatchaEnabled) {
 
         grecaptcha.reset();
 
     }
 
     setTimeout(function(){
+
         if(busyView) {
 
             ajaxBusyView(false);
 
         }
 
-        if(request[2] == '1') {
+        if(request[1] == '1') {
 
-            window.location = request[3];
+            window.location = request[2];
 
         }
+
     }, 2000);
 
     return;

@@ -17,7 +17,6 @@ $renderData['newsPosts'] = Main::getNewsPosts((isset($_GET['id']) && !isset($_GE
 
 $renderData['page'] = [
 
-    'title'         => (isset($_GET['id']) ? (count($renderData['newsPosts']) ? $renderData['newsPosts'][0]['title'] : 'Post does not exist!') : 'News'),
     'view_post'     => isset($_GET['id']) && count($renderData['newsPosts']),
     'currentPage'   => 0
 
@@ -28,23 +27,27 @@ if(isset($_GET['xml'])) {
 
     // Meta data attributes
     $metaData = [
+
         'title'         => ($_FEED_TITLE = Configuration::getConfig('sitename')) .' News',
         'link'          => ($_FEED_URL = 'http://'. Configuration::getConfig('url_main')),
         'description'   => 'News about '. $_FEED_TITLE,
         'language'      => 'en-gb',
         'webMaster'     => (new User(1))->data['email'] .' ('. $_FEED_TITLE .' Webmaster)',
         'pubDate'       => ($_FEED_DATE = date('r', $renderData['newsPosts'][0]['date'])),
-        'lastBuildDate' => $_FEED_DATE,
+        'lastBuildDate' => $_FEED_DATE
+
     ];
 
     // Item attributes
     $itemData = [
+
         'title'         => ['text' => '{EVAL}',                     'eval' => '$newsPost["title"]'],
         'link'          => ['text' => $_FEED_URL .'/news/{EVAL}',   'eval' => '$newsPost["id"]'],
         'guid'          => ['text' => $_FEED_URL .'/news/{EVAL}',   'eval' => '$newsPost["id"]'],
         'pubDate'       => ['text' => '{EVAL}',                     'eval' => 'date("D, d M Y G:i:s O", $newsPost["date"])'],
         'dc:publisher'  => ['text' => '{EVAL}',                     'eval' => '$newsPost["udata"]["username"]'],
-        'description'   => ['cdata' => '{EVAL}',                    'eval' => '$newsPost["parsed"]'],
+        'description'   => ['cdata' => '{EVAL}',                    'eval' => '$newsPost["parsed"]']
+
     ];
 
     // Create a new DOM document

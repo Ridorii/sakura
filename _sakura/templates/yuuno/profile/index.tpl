@@ -1,7 +1,11 @@
 {% extends 'global/master.tpl' %}
 
+{% set profileHidden = profile.checkPermission('SITE', 'DEACTIVATED') or profile.data.password_algo == 'nologin' or (profile.checkPermission('SITE', 'RESTRICTED') and (user.data.id != profile.data.id and not user.checkPermission('MANAGE', 'USE_MANAGE'))) %}
+
+{% block title %}{% if profileHidden %}User not found!{% else %}Profile of {{ profile.data.username }}{% endif %}{% endblock %}
+
 {% block content %}
-    {% if profile.checkPermission('SITE', 'DEACTIVATED') or profile.data.password_algo == 'nologin' or (profile.checkPermission('SITE', 'RESTRICTED') and (user.data.id != profile.data.id and not user.checkPermission('MANAGE', 'USE_MANAGE'))) %}
+    {% if profileHidden %}
     <div class="content standalone" style="padding: 20px;">
         <h1>The requested user does not exist!</h1>
         There are a few possible reasons for this:

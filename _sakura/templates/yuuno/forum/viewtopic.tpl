@@ -1,5 +1,7 @@
 {% extends 'global/master.tpl' %}
 
+{% block title %}{{ topic.topic_title }}{% endblock %}
+
 {% block content %}
     <div class="content homepage forum viewtopic">
         <div class="content-column">

@@ -1,5 +1,7 @@
 {% extends 'global/master.tpl' %}
 
+{% block title %}Donation Tracker{% endblock %}
+
 {% block content %}
     <div class="content support">
         <div class="head">Donation Tracker</div>

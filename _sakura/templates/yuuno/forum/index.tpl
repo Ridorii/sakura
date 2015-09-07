@@ -1,5 +1,7 @@
 {% extends 'global/master.tpl' %}
 
+{% block title %}Forum Listing{% endblock %}
+
 {% block content %}
     <div class="content homepage forum">
         <div class="content-right content-column">

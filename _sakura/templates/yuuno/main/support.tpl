@@ -1,5 +1,7 @@
 {% extends 'global/master.tpl' %}
 
+{% block title %}Support {{ sakura.siteName }}{% endblock %}
+
 {% block content %}
     {% if page.fail %}
         <div class="headerNotify">

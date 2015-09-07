@@ -59,7 +59,8 @@
                 "20150903",
                 "20150904",
                 "20150905",
-                "20150906"
+                "20150906",
+                "20150907"
 
             ]
 
@@ -2545,6 +2546,46 @@
             {
                 "type":     "ADD",
                 "change":   "Added cookie notification.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150907": [
+
+            {
+                "type":     "FIX",
+                "change":   "Fixed cookie notification reappearing after accepting.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed infopage templates not using the new blocks method.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Removed the _developer_data folder, split the SQL structure and data up into two files respectively and moved the Sock Chat auth script to a new directory.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Updated the CloudFlare IPs list.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed newline causing an error in CloudFlare check.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Moved document title setting to templates instead of in the PHP file.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Restyle explosive notifications and make them not explosive.",
                 "user":     "Flashwave"
             }
 

@@ -22,10 +22,11 @@ if(isset($_REQUEST['mode'])) {
         if(!isset($_REQUEST['time']) || $_REQUEST['time'] < time() - 1000) {
 
             $renderData['page'] = [
-                'title'     => 'Action failed',
+
                 'redirect'  => $urls->format('AUTH_ACTION'),
                 'message'   => 'Timestamps differ too much, refresh the page and try again.',
                 'success'   => 0
+
             ];
 
             // Prevent
@@ -37,10 +38,11 @@ if(isset($_REQUEST['mode'])) {
         if(!isset($_REQUEST['session']) || $_REQUEST['session'] != session_id()) {
 
             $renderData['page'] = [
-                'title'     => 'Action failed',
+
                 'redirect'  => $urls->format('AUTH_ACTION'),
                 'message'   => 'Invalid session, please try again.',
                 'success'   => 0
+
             ];
 
             // Prevent
@@ -58,10 +60,11 @@ if(isset($_REQUEST['mode'])) {
 
             // Add page specific things
             $renderData['page'] = [
-                'title'     => 'Authentication',
+
                 'redirect'  => $urls->format('SITE_HOME'),
                 'message'   => 'You are already authenticated. Redirecting...',
                 'success'   => 1
+
             ];
         }
 
@@ -78,10 +81,11 @@ if(isset($_REQUEST['mode'])) {
 
                 // Add page specific data
                 $renderData['page'] = [
-                    'title'     => 'Logout',
+
                     'redirect'  => ($logout ? $_REQUEST['redirect'] : $urls->format('SITE_LOGIN')),
                     'message'   => $logout ? 'You are now logged out.' : 'An unknown error occurred.',
                     'success'   => $logout ? 1 : 0
+
                 ];
 
                 break;
@@ -93,6 +97,7 @@ if(isset($_REQUEST['mode'])) {
 
                 // Array containing "human understandable" messages
                 $messages = [
+
                     'INVALID_VERK'      => 'The verification key supplied was invalid!',
                     'INVALID_CODE'      => 'Invalid verification key, if you think this is an error contact the administrator.',
                     'INVALID_USER'      => 'The used verification key is not designated for this user.',
@@ -100,14 +105,16 @@ if(isset($_REQUEST['mode'])) {
                     'PASS_TOO_SHIT'     => 'Your password is too weak, try adding some special characters.',
                     'PASS_NOT_MATCH'    => 'Passwords do not match.',
                     'SUCCESS'           => 'Successfully changed your password, you may now log in.'
+
                 ];
 
                 // Add page specific things
                 $renderData['page'] = [
-                    'title'     => 'Forgot Password',
+
                     'redirect'  => ($passforget[0] ? $urls->format('SITE_LOGIN') : $_SERVER['PHP_SELF'] .'?pw=true&uid='. $_REQUEST['uid'] .'&verk='. $_REQUEST['verk']),
                     'message'   => $messages[$passforget[1]],
                     'success'   => $passforget[0]
+
                 ];
 
                 break;
@@ -120,19 +127,22 @@ if(isset($_REQUEST['mode'])) {
 
                 // Array containing "human understandable" messages
                 $messages = [
+
                     'USER_NOT_EXIST'        => 'The user you tried to activate does not exist.',
                     'USER_ALREADY_ACTIVE'   => 'The user you tried to activate is already active.',
                     'INVALID_CODE'          => 'Invalid activation code, if you think this is an error contact the administrator.',
                     'INVALID_USER'          => 'The used activation code is not designated for this user.',
                     'SUCCESS'               => 'Successfully activated your account, you may now log in.'
+
                 ];
 
                 // Add page specific things
                 $renderData['page'] = [
-                    'title'     => 'Activate account',
+
                     'redirect'  => $urls->format('SITE_LOGIN'),
                     'message'   => $messages[$activate[1]],
                     'success'   => $activate[0]
+
                 ];
 
                 break;
@@ -145,18 +155,21 @@ if(isset($_REQUEST['mode'])) {
 
                 // Array containing "human understandable" messages
                 $messages = [
+
                     'AUTH_LOCKED'           => 'Authentication is currently not allowed, try again later.',
                     'USER_NOT_EXIST'        => 'The user you tried to activate does not exist (confirm the username/email combination).',
                     'USER_ALREADY_ACTIVE'   => 'The user you tried to activate is already active.',
                     'SUCCESS'               => 'The activation e-mail has been sent to the address associated with your account.'
+
                 ];
 
                 // Add page specific things
                 $renderData['page'] = [
-                    'title'     => 'Resend Activation',
+
                     'redirect'  => $urls->format('SITE_HOME'),
                     'message'   => $messages[$resend[1]],
                     'success'   => $resend[0]
+
                 ];
 
                 break;
@@ -169,20 +182,23 @@ if(isset($_REQUEST['mode'])) {
 
                 // Array containing "human understandable" messages
                 $messages = [
+
                     'AUTH_LOCKED'           => 'Authentication is currently not allowed, try again later.',
                     'USER_NOT_EXIST'        => 'The user you tried to log into does not exist.',
                     'INCORRECT_PASSWORD'    => 'The password you entered was invalid.',
                     'NOT_ALLOWED'           => 'Your account does not have the required permissions to log in.',
                     'NO_LOGIN'              => 'Logging into this account is disabled.',
                     'LOGIN_SUCESS'          => 'Login successful!'
+
                 ];
 
                 // Add page specific things
                 $renderData['page'] = [
-                    'title'     => 'Login',
+
                     'redirect'  => $login[0] ? $_REQUEST['redirect'] : $urls->format('SITE_LOGIN'),
                     'message'   => $messages[$login[1]],
                     'success'   => $login[0]
+
                 ];
 
                 break;
@@ -211,6 +227,7 @@ if(isset($_REQUEST['mode'])) {
 
                 // Array containing "human understandable" messages
                 $messages = [
+
                     'AUTH_LOCKED'       => 'Authentication is currently not allowed, try again later.',
                     'DISABLED'          => 'Registration is currently disabled.',
                     'INVALID_REG_KEY'   => 'The given registration code was invalid.',
@@ -225,14 +242,16 @@ if(isset($_REQUEST['mode'])) {
                     'INVALID_MX'        => 'No valid MX-Record found on the e-mail address you supplied.',
                     'EMAILSENT'         => 'Your registration went through! An activation e-mail has been sent.',
                     'SUCCESS'           => 'Your registration went through! Welcome to '. Configuration::getConfig('sitename') .'!'
+
                 ];
 
                 // Add page specific things
                 $renderData['page'] = [
-                    'title'     => 'Register',
+
                     'redirect'  => ($register[0] ? $urls->format('SITE_LOGIN') : $urls->format('SITE_REGISTER')),
                     'message'   => $messages[$register[1]],
                     'success'   => $register[0]
+
                 ];
 
                 break;
@@ -245,18 +264,21 @@ if(isset($_REQUEST['mode'])) {
 
                 // Array containing "human understandable" messages
                 $messages = [
+
                     'AUTH_LOCKED'           => 'Authentication is currently not allowed, try again later.',
                     'USER_NOT_EXIST'        => 'The requested user does not exist (confirm the username/email combination).',
                     'NOT_ALLOWED'           => 'Your account does not have the required permissions to change your password.',
                     'SUCCESS'               => 'The password reset e-mail has been sent to the address associated with your account.'
+
                 ];
 
                 // Add page specific things
                 $renderData['page'] = [
-                    'title'     => 'Lost Password',
+
                     'redirect'  => $urls->format('SITE_FORGOT_PASSWORD'),
                     'message'   => $messages[$passforgot[1]],
                     'success'   => $passforgot[0]
+
                 ];
 
                 break;
@@ -268,13 +290,9 @@ if(isset($_REQUEST['mode'])) {
     // Print page contents or if the AJAX request is set only display the render data
     print   isset($_REQUEST['ajax']) ?
             (
-                $renderData['page']['title']
-                . '|'
-                . $renderData['page']['message']
-                . '|'
-                . $renderData['page']['success']
-                . '|'
-                . $renderData['page']['redirect']
+                $renderData['page']['message'] .'|'.
+                $renderData['page']['success'] .'|'.
+                $renderData['page']['redirect']
             ) :
             Templates::render('global/information.tpl', $renderData);
     exit;
@@ -282,9 +300,6 @@ if(isset($_REQUEST['mode'])) {
 }
 
 // Add page specific things
-$renderData['page'] = [
-    'title' => 'Authentication'
-];
 $renderData['auth'] = [
 
     'redirect' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('SITE_HOME'),
@@ -301,9 +316,10 @@ if(Users::checkLogin()) {
 
     // Add page specific things
     $renderData['page'] = [
-        'title'     => 'Authentication',
+
         'redirect'  => $urls->format('SITE_HOME'),
         'message'   => 'You are already logged in, log out to access this page.'
+
     ];
 
     print Templates::render('global/information.tpl', $renderData);
@@ -315,8 +331,10 @@ if(Users::checkLogin()) {
 if(count($regUserIP = Users::getUsersByIP(Main::getRemoteIP()))) {
 
     $renderData['auth']['blockRegister'] = [
+
         'do'        => true,
         'username'  => $regUserIP[array_rand($regUserIP)]['username']
+
     ];
 
 }
@@ -324,7 +342,6 @@ if(count($regUserIP = Users::getUsersByIP(Main::getRemoteIP()))) {
 // If password forgot things are set display password forget thing
 if(isset($_REQUEST['pw']) && $_REQUEST['pw']) {
 
-    $renderData['page']['title']        = 'Resetting Password';
     $renderData['auth']['changingPass'] = true;
     $renderData['auth']['userId']       = $_REQUEST['uid'];
 

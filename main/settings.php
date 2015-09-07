@@ -76,7 +76,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
         $renderData['page'] = [
 
-            'title'     => 'Action failed',
             'redirect'  => $redirect,
             'message'   => 'One of the required operators isn\'t set.',
             'success'   => 0
@@ -93,7 +92,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
         $renderData['page'] = [
 
-            'title'     => 'Action failed',
             'redirect'  => $redirect,
             'message'   => 'You can\'t be friends with yourself, stop trying to bend reality.',
             'success'   => 0
@@ -110,7 +108,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
         $renderData['page'] = [
 
-            'title'     => 'Action failed',
             'redirect'  => $redirect,
             'message'   => 'Timestamps differ too much, refresh the page and try again.',
             'success'   => 0
@@ -127,7 +124,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
         $renderData['page'] = [
 
-            'title'     => 'Action failed',
             'redirect'  => $redirect,
             'message'   => 'Invalid session, please try again.',
             'success'   => 0
@@ -169,7 +165,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
         // Add page specific things
         $renderData['page'] = [
 
-            'title'     => 'Managing Friends',
             'redirect'  => $redirect,
             'message'   => $messages[$action[1]],
             'success'   => $action[0]
@@ -199,13 +194,9 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
     // Print page contents or if the AJAX request is set only display the render data
     print   isset($_REQUEST['ajax']) ?
             (
-                $renderData['page']['title']
-                . '|'
-                . $renderData['page']['message']
-                . '|'
-                . $renderData['page']['success']
-                . '|'
-                . $renderData['page']['redirect']
+                $renderData['page']['message'] .'|'.
+                $renderData['page']['success'] .'|'.
+                $renderData['page']['redirect']
             ) :
             Templates::render('global/information.tpl', $renderData);
     exit;
@@ -222,7 +213,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
         $renderData['page'] = [
 
-            'title'     => 'Settings',
             'redirect'  => '/authenticate',
             'message'   => 'You must be logged in to edit your settings.',
             'success'   => 0
@@ -238,7 +228,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
 
         $renderData['page'] = [
 
-            'title'     => 'Session expired',
             'redirect'  => $redirect,
             'message'   => 'Your session has expired, please refresh the page and try again.',
             'success'   => 0
@@ -285,7 +274,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                     // Set render data
                     $renderData['page'] = [
 
-                        'title'     => $msgTitle,
                         'redirect'  => $redirect,
                         'message'   => 'You are not allowed to alter your '. strtolower($msgTitle) .'.',
                         'success'   => 0
@@ -307,7 +295,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                     // Set render data
                     $renderData['page'] = [
 
-                        'title'     => $msgTitle,
                         'redirect'  => $redirect,
                         'message'   => 'No file was uploaded.',
                         'success'   => 0
@@ -348,7 +335,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                     // Set render data
                     $renderData['page'] = [
 
-                        'title'     => $msgTitle,
                         'redirect'  => $redirect,
                         'message'   => $msg,
                         'success'   => 0
@@ -371,7 +357,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                         // Set render data
                         $renderData['page'] = [
 
-                            'title'     => $msgTitle,
                             'redirect'  => $redirect,
                             'message'   => 'Uploaded file is not an image.',
                             'success'   => 0
@@ -388,7 +373,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                         // Set render data
                         $renderData['page'] = [
 
-                            'title'     => $msgTitle,
                             'redirect'  => $redirect,
                             'message'   => 'This filetype is not allowed.',
                             'success'   => 0
@@ -405,7 +389,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                         // Set render data
                         $renderData['page'] = [
 
-                            'title'     => $msgTitle,
                             'redirect'  => $redirect,
                             'message'   => 'The resolution of this picture is too big.',
                             'success'   => 0
@@ -422,7 +405,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                         // Set render data
                         $renderData['page'] = [
 
-                            'title'     => $msgTitle,
                             'redirect'  => $redirect,
                             'message'   => 'The resolution of this picture is too small.',
                             'success'   => 0
@@ -439,7 +421,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                         // Set render data
                         $renderData['page'] = [
 
-                            'title'     => $msgTitle,
                             'redirect'  => $redirect,
                             'message'   => 'The filesize of this file is too large.',
                             'success'   => 0
@@ -469,7 +450,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                         // Set render data
                         $renderData['page'] = [
 
-                            'title'     => $msgTitle,
                             'redirect'  => $redirect,
                             'message'   => 'Something went wrong, please try again.',
                             'success'   => 0
@@ -494,7 +474,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 // Set render data
                 $renderData['page'] = [
 
-                    'title'     => $msgTitle,
                     'redirect'  => $redirect,
                     'message'   => 'Updated your '. strtolower($msgTitle) .'!',
                     'success'   => 1
@@ -551,7 +530,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 // Set render data
                 $renderData['page'] = [
 
-                    'title'     => 'Profile update',
                     'redirect'  => $redirect,
                     'message'   => 'Your profile has been updated!',
                     'success'   => 1
@@ -588,7 +566,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 // Set render data
                 $renderData['page'] = [
 
-                    'title'     => 'Options change',
                     'redirect'  => $redirect,
                     'message'   => 'Changed your options!',
                     'success'   => 1
@@ -609,7 +586,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 // Set render data
                 $renderData['page'] = [
 
-                    'title'     => 'Userpage',
                     'redirect'  => $redirect,
                     'message'   => 'Your userpage has been updated!',
                     'success'   => 1
@@ -624,7 +600,6 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                 // Set render data
                 $renderData['page'] = [
 
-                    'title'     => 'Unknown action',
                     'redirect'  => $redirect,
                     'message'   => 'The requested method does not exist.',
                     'success'   => 0
@@ -640,13 +615,9 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
     // Print page contents or if the AJAX request is set only display the render data
     print   isset($_REQUEST['ajax']) ?
             (
-                $renderData['page']['title']
-                . '|'
-                . $renderData['page']['message']
-                . '|'
-                . $renderData['page']['success']
-                . '|'
-                . $renderData['page']['redirect']
+                $renderData['page']['message'] .'|'.
+                $renderData['page']['success'] .'|'.
+                $renderData['page']['redirect']
             ) :
             Templates::render('global/information.tpl', $renderData);
     exit;
@@ -1031,7 +1002,8 @@ if(Users::checkLogin()) {
     // Page data
     $renderData['page'] = [
 
-        'title'         => $pages[$category]['title'] .' / '. $pages[$category]['modes'][$mode]['title'],
+        'category'      => $pages[$category]['title'],
+        'mode'          => $pages[$category]['modes'][$mode]['title'],
         'currentPage'   => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
         'description'   => $pages[$category]['modes'][$mode]['description']
 
@@ -1115,8 +1087,7 @@ if(Users::checkLogin()) {
 
 } else {
 
-    $renderData['page']['title'] = 'Restricted!';
-
+    // If not allowed print the restricted page
     print Templates::render('global/restricted.tpl', $renderData);
 
 }

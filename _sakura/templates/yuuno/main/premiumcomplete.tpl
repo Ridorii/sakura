@@ -1,5 +1,7 @@
 {% extends 'global/master.tpl' %}
 
+{% block title %}Purchase complete!{% endblock %}
+
 {% block content %}
     <div class="content standalone" style="text-align: center;">
         <h1 class="stylised" style="margin: 1em auto;">Thank you for your contribution!</h1>

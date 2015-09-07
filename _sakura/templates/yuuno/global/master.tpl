@@ -3,7 +3,7 @@
     <head>
         <!-- META -->
         <meta charset="{{ sakura.charset }}" />
-        <title>{{ page.title }}</title>
+        <title>{% block title %}{{ sakura.siteName }}{% endblock %}</title>
         <meta name="description" content="{{ sakura.siteDesc }}" />
         <meta name="keywords" content="{{ sakura.siteTags }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
@@ -11,7 +11,7 @@
         <meta name="msapplication-TileImage" content="/content/images/icons/ms-icon-144x144.png" />
         <meta name="theme-color" content="#9475B2" />
 {% if page.redirect %}
-        <meta http-equiv="refresh" content="3; URL={{ page.redirect }}" />
+        <meta http-equiv="refresh" content="{{ page.redirectTimeout ? page.redirectTimeout : '3' }}; URL={{ page.redirect }}" />
 {% endif %}
         <link rel="apple-touch-icon" sizes="57x57" href="/content/images/icons/apple-icon-57x57.png" />
         <link rel="apple-touch-icon" sizes="60x60" href="/content/images/icons/apple-icon-60x60.png" />
@@ -157,7 +157,7 @@
                         "title":    sakuraVars.siteName + " uses cookies!",
                         "text":     "Click this if you're OK with that and want to hide this message.",
                         "img":      "FONT:fa-asterisk",
-                        "link":     "javascript:cookieData('set', '"+ sakuraVars.cookie.prefix +"accept_cookies', 'true');notifyClose(this.parentNode.id);"
+                        "link":     "javascript:cookieData('set', '"+ sakuraVars.cookie.prefix +"accept_cookies', 'true; expires="+ (new Date(2147483647000)).toUTCString() +"');notifyClose(this.parentNode.id);"
                     });
 
                 }

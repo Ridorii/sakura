@@ -1,5 +1,7 @@
 {% extends 'global/master.tpl' %}
 
+{% block title %}Search{% endblock %}
+
 {% block content %}
 <div class="content" style="background: #FFF;">
     <div class="content-column news">

@@ -14,8 +14,9 @@ if(isset($_GET['p'])) {
 
     // Set default variables
     $renderData['page'] = [
-        'title'     => 'Info pages',
+
         'content'   => Main::mdParse("# Unable to load the requested info page.\r\n\r\nCheck the URL and try again.")
+
     ];
 
     // Set page id
@@ -48,8 +49,7 @@ $forumMode = isset($_GET['forum']) ? ($_GET['forum'] == true) : false;
 $renderData['newsPosts'] = ($forumMode ? null : Main::getNewsPosts(Configuration::getConfig('front_page_news_posts')));
 
 $renderData['page'] = [
-    'title'         => ($forumMode ? 'Forum Listing' : Configuration::getConfig('sitename')),
-    'friend_req'    => Users::getPendingFriends()
+    'friend_req' => Users::getPendingFriends()
 ];
 
 $renderData['board'] = [

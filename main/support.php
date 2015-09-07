@@ -105,10 +105,13 @@ if(isset($_REQUEST['mode']) && Users::checkLogin() && Permissions::check('SITE',
 
             case 'complete':
                 print Templates::render('main/premiumcomplete.tpl', array_merge([
+
                     'page' => [
-                        'title' => 'Premium purchase complete!',
+
                         'expiration' => ($prem = Users::checkUserPremium(Session::$userId)[2]) !== null ? $prem : 0
+
                     ]
+
                ], $renderData));
                 break;
 
@@ -129,7 +132,6 @@ if(isset($_GET['tracker'])) {
 
     $renderData['page'] = [
 
-        'title'         => 'Donation Tracker',
         'currentPage'   => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
         'premiumData'   => ($_PREMIUM = Main::getPremiumTrackerData()),
         'premiumTable'  => array_chunk($_PREMIUM['table'], 20, true)
@@ -144,7 +146,6 @@ if(isset($_GET['tracker'])) {
 // Set default variables
 $renderData['page'] = [
 
-    'title'         => 'Support '. Configuration::getConfig('sitename'),
     'fail'          => isset($_GET['fail']),
     'price'         => Configuration::getConfig('premium_price_per_month'),
     'current'       => $currentUser->checkPremium(),

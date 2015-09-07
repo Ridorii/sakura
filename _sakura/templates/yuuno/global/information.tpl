@@ -1,5 +1,7 @@
 {% extends 'global/master.tpl' %}
 
+{% block title %}Information{% endblock %}
+
 {% block content %}
     <div class="content standalone">
         <div>

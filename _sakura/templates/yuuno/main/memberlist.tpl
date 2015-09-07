@@ -1,10 +1,19 @@
 {% extends 'global/master.tpl' %}
 
+{% set rankTitle %}
+{% if page.notfound %}Not found{% else %}{% if not page.active %}All members{% else %}{{ page.ranks[page.active].name }}{% if page.ranks[page.active].multi %}s{% endif %}{% endif %}{% endif %}
+{% endset %}
+
+{% set rankDescription %}
+{% if page.notfound %}The requested rank could not be found!{% else %}{% if not page.active %}The entire user list.{% else %}{{ page.ranks[page.active].description }}{% endif %}{% endif %}
+{% endset %}
+
+{% block title %}{{ rankTitle }}{% endblock %}
+
 {% block content %}
-    {% if session.checkLogin %}
-    <div class="headerNotify" style="padding: 10px 0; margin-bottom: 1px;">
-        <h1 style="text-shadow: 0px 0px 5px #555;{% if page.active %} color: {{ page.ranks[page.active].colour }};{% endif %}">{% if not page.active %}All members{% else %}{{ page.ranks[page.active].name }}{% if page.ranks[page.active].multi %}s{% endif %}{% endif %}</h1>
-        <h3>{% if not page.active %}The entire user list.{% else %}{{ page.ranks[page.active].description }}{% endif %}</h3>
+    <div class="headerNotify" style="margin-bottom: 1px;">
+        <h1 style="text-shadow: 0px 0px 5px #555;{% if page.active %} color: {{ page.ranks[page.active].colour }};{% endif %}">{{ rankTitle }}</h1>
+        <h3>{{ rankDescription }}</h3>
     </div>
     <div class="membersPage" style="min-height: 500px;">
         <div class="dropDown" style="margin: 0px auto; font-size: 1.5em; line-height: 1.5em; height: 30px;">
@@ -24,86 +33,83 @@
                 {% endfor %}
             </div>
         </div>
-        {% if page.notfound %}
-        <h1 class="stylised" style="margin-top: 20px;">The requested rank was not found!</h1>
-        {% else %}
-        <div class="membersPageList {{ page.sort }}">
-            {% if page.sort == page.sorts[2] %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>Username</th>
-                        <th>Registered</th>
-                        <th>Last online</th>
-                        <th>User title</th>
-                        <th>Country</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th>No.</th>
-                        <th>Username</th>
-                        <th>Registered</th>
-                        <th>Last online</th>
-                        <th>User title</th>
-                        <th>Country</th>
-                    </tr>
-                </tfoot>
-                {% for count,user in page.users[page.page] %}
-                <tbody>
-                    <tr>
-                        <td>
-                            #{{ page.active ? count + 1 : count }}
-                        </td>
-                        <td>
-                            <a href="{{ urls.format('USER_PROFILE', [user.id]) }}" class="default" style="font-weight: bold; color: {{ page.ranks[user.rank_main].colour }};">{{ user.username }}</a>
-                        </td>
-                        <td>
-                            {{ user.regdate|date(sakura.dateFormat) }}
-                        </td>
-                        <td>
-                            {% if user.lastdate == 0 %}<i>Never logged in.</i>{% else %}{{ user.lastdate|date(sakura.dateFormat) }}{% endif %}
-                        </td>
-                        <td>
-                            {% if not user.usertitle %}<i>{{ page.ranks[user.rank_main].title }}</i>{% else %}{{ user.usertitle }}{% endif %}
-                        </td>
-                        <td>
-                            <img src="{{ sakura.contentPath }}/images/flags/{{ user.country|lower }}.png" alt="{% if user.country|lower == 'eu' %}?{% else %}{{ user.country }}{% endif %}" />
-                        </td>
-                    </tr>
-                </tbody>
-                {% endfor %}
-            </table>
-            {% else %}
-                {% for user in page.users[page.page] %}
-                    <a href="{{ urls.format('USER_PROFILE', [user.id]) }}">{# These comment tags are here to prevent the link extending too far
-                        #}<div class="userBox" id="u{{ user.id }}">{#
-                            #}<img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.username }}"  style="background: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}') no-repeat center / contain;" />{#
-                            #}<span class="userBoxUserName"{% if page.sort == page.sorts[1] %} style="color: {{ page.ranks[user.rank_main].colour }};"{% endif %}>{#
-                                #}{{ user.username }}{#
-                            #}</span>{#
-                        #}</div>{#
-                    #}</a>
-                {% endfor %}
-            {% endif %}
-        </div>
+        {% if not page.users|length %}
+            <h1 class="stylised" style="margin: 2em 0;">This rank has no members!</h1>
+        {% elseif not page.notfound %}
+            <div class="membersPageList {{ page.sort }}">
+                {% if page.sort == page.sorts[2] %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Username</th>
+                            <th>Registered</th>
+                            <th>Last online</th>
+                            <th>User title</th>
+                            <th>Country</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>No.</th>
+                            <th>Username</th>
+                            <th>Registered</th>
+                            <th>Last online</th>
+                            <th>User title</th>
+                            <th>Country</th>
+                        </tr>
+                    </tfoot>
+                    {% for count,user in page.users[page.page] %}
+                    <tbody>
+                        <tr>
+                            <td>
+                                #{{ page.active ? count + 1 : count }}
+                            </td>
+                            <td>
+                                <a href="{{ urls.format('USER_PROFILE', [user.id]) }}" class="default" style="font-weight: bold; color: {{ page.ranks[user.rank_main].colour }};">{{ user.username }}</a>
+                            </td>
+                            <td>
+                                {{ user.regdate|date(sakura.dateFormat) }}
+                            </td>
+                            <td>
+                                {% if user.lastdate == 0 %}<i>Never logged in.</i>{% else %}{{ user.lastdate|date(sakura.dateFormat) }}{% endif %}
+                            </td>
+                            <td>
+                                {% if not user.usertitle %}<i>{{ page.ranks[user.rank_main].title }}</i>{% else %}{{ user.usertitle }}{% endif %}
+                            </td>
+                            <td>
+                                <img src="{{ sakura.contentPath }}/images/flags/{{ user.country|lower }}.png" alt="{% if user.country|lower == 'eu' %}?{% else %}{{ user.country }}{% endif %}" />
+                            </td>
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+                {% else %}
+                    {% for user in page.users[page.page] %}
+                        <a href="{{ urls.format('USER_PROFILE', [user.id]) }}">{# These comment tags are here to prevent the link extending too far
+                            #}<div class="userBox" id="u{{ user.id }}">{#
+                                #}<img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.username }}"  style="background: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}') no-repeat center / contain;" />{#
+                                #}<span class="userBoxUserName"{% if page.sort == page.sorts[1] %} style="color: {{ page.ranks[user.rank_main].colour }};"{% endif %}>{#
+                                    #}{{ user.username }}{#
+                                #}</span>{#
+                            #}</div>{#
+                        #}</a>
+                    {% endfor %}
+                {% endif %}
+            </div>
         {% endif %}
         {% if page.users|length > 1 %}
-        <div class="pagination">
-        {% if page.page > 0 %}
-            <a href="{% if page.sort and page.active %}{{ urls.format('MEMBERLIST_ALL', [page.sort, page.active, page.page]) }}{% elseif page.sort %}{{ urls.format('MEMBERLIST_SORT_PAGE', [page.sort, page.page]) }}{% elseif page.active %}{{ urls.format('MEMBERLIST_RANK_PAGE', [page.active, page.page]) }}{% else %}{{ urls.format('MEMBERLIST_PAGE', [page.page]) }}{% endif %}"><span class="fa fa-step-backward"></span></a>
-        {% endif %}
-        {% for count,navpage in page.users %}
-            <a href="{% if page.sort and page.active %}{{ urls.format('MEMBERLIST_ALL', [page.sort, page.active, (count + 1)]) }}{% elseif page.sort %}{{ urls.format('MEMBERLIST_SORT_PAGE', [page.sort, (count + 1)]) }}{% elseif page.active %}{{ urls.format('MEMBERLIST_RANK_PAGE', [page.active, (count + 1)]) }}{% else %}{{ urls.format('MEMBERLIST_PAGE', [(count + 1)]) }}{% endif %}"{% if count == page.page %} class="current"{% endif %}>{{ count + 1 }}</a>
-        {% endfor %}
-        {% if page.page + 1 < page.users|length %}
-            <a href="{% if page.sort and page.active %}{{ urls.format('MEMBERLIST_ALL', [page.sort, page.active, (page.page + 2)]) }}{% elseif page.sort %}{{ urls.format('MEMBERLIST_SORT_PAGE', [page.sort, (page.page + 2)]) }}{% elseif page.active %}{{ urls.format('MEMBERLIST_RANK_PAGE', [page.active, (page.page + 2)]) }}{% else %}{{ urls.format('MEMBERLIST_PAGE', [(page.page + 2)]) }}{% endif %}"><span class="fa fa-step-forward"></span></a>
-        {% endif %}
-        </div>
+            <div class="pagination">
+                {% if page.page > 0 %}
+                    <a href="{% if page.sort and page.active %}{{ urls.format('MEMBERLIST_ALL', [page.sort, page.active, page.page]) }}{% elseif page.sort %}{{ urls.format('MEMBERLIST_SORT_PAGE', [page.sort, page.page]) }}{% elseif page.active %}{{ urls.format('MEMBERLIST_RANK_PAGE', [page.active, page.page]) }}{% else %}{{ urls.format('MEMBERLIST_PAGE', [page.page]) }}{% endif %}"><span class="fa fa-step-backward"></span></a>
+                {% endif %}
+                {% for count,navpage in page.users %}
+                    <a href="{% if page.sort and page.active %}{{ urls.format('MEMBERLIST_ALL', [page.sort, page.active, (count + 1)]) }}{% elseif page.sort %}{{ urls.format('MEMBERLIST_SORT_PAGE', [page.sort, (count + 1)]) }}{% elseif page.active %}{{ urls.format('MEMBERLIST_RANK_PAGE', [page.active, (count + 1)]) }}{% else %}{{ urls.format('MEMBERLIST_PAGE', [(count + 1)]) }}{% endif %}"{% if count == page.page %} class="current"{% endif %}>{{ count + 1 }}</a>
+                {% endfor %}
+                {% if page.page + 1 < page.users|length %}
+                    <a href="{% if page.sort and page.active %}{{ urls.format('MEMBERLIST_ALL', [page.sort, page.active, (page.page + 2)]) }}{% elseif page.sort %}{{ urls.format('MEMBERLIST_SORT_PAGE', [page.sort, (page.page + 2)]) }}{% elseif page.active %}{{ urls.format('MEMBERLIST_RANK_PAGE', [page.active, (page.page + 2)]) }}{% else %}{{ urls.format('MEMBERLIST_PAGE', [(page.page + 2)]) }}{% endif %}"><span class="fa fa-step-forward"></span></a>
+                {% endif %}
+            </div>
         {% endif %}
     </div>
-    {% else %}
-        {% include 'elements/restricted.tpl' %}
-    {% endif %}
 {% endblock %}

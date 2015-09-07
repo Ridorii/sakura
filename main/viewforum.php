@@ -47,12 +47,6 @@ if($forum['forum']['forum_type'] === 2) {
 
 }
 
-$renderData['page'] = [
-
-    'title' => 'Forums / '. $forum['forum']['forum_name']
-
-];
-
 $renderData['board'] = [
 
     'forums' => [

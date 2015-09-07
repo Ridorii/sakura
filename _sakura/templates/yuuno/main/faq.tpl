@@ -1,5 +1,7 @@
 {% extends 'global/master.tpl' %}
 
+{% block title %}Frequently Asked Questions{% endblock %}
+
 {% block content %}
     <div class="content settings">
         <div class="content-right content-column">

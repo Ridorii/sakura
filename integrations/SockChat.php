@@ -7,6 +7,9 @@
 // Filesystem path to the _sakura folder WITHOUT an ending /
 // This can also be set before an include of this file in case
 //  you're using git to keep in sync and don't want conflicts
+// You can also create a PHP file including this SockChat.php
+//  file so it's always up-to-date! Don't forget to include the
+//  variable below in the file __BEFORE__ the include!
 if(!isset($sockSakuraPath)) {
 
     $sockSakuraPath = '';

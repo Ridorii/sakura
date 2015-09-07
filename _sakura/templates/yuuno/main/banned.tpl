@@ -1,5 +1,7 @@
 {% extends 'global/master.tpl' %}
 
+{% block title %}You are banned!{% endblock %}
+
 {% block content %}
     <div class="content">
         <div class="content-column news banned">

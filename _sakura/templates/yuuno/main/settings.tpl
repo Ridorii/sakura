@@ -1,5 +1,7 @@
 {% extends 'global/master.tpl' %}
 
+{% block title %}{{ page.category }} / {{ page.mode }}{% endblock %}
+
 {% block content %}
     <div class="content settings messages">
         <div class="content-right content-column">
@@ -7,7 +9,7 @@
         </div>
         <div class="content-left content-column">
             <div class="head">
-                {{ page.title }}
+                {{ page.category }} / {{ page.mode }}
             </div>
             <div class="settings-explanation">
             {% for descline in page.description %}

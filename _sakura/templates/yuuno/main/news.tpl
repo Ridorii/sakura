@@ -1,5 +1,7 @@
 {% extends 'global/master.tpl' %}
 
+{% block title %}{% if page.view_post %}{{ newsPosts[0].title }}{% elseif newsPosts|length < 1 %}Post does not exist!{% else %}News{% endif %}{% endblock %}
+
 {% block content %}
     <div class="content">
         <div class="content-column news">

@@ -937,8 +937,9 @@ a#gotop.exit {
 #notifications > div {
     cursor: pointer;
     text-align: left;
-    display: inline-block;
-    height: 80px;
+    display: flex;
+    align-items: stretch;
+    min-height: 80px;
     background: rgba(113, 74, 150, .9);
     border: 1px solid #507;
     border-right-width: 5px;
@@ -959,12 +960,17 @@ a#gotop.exit {
 }
 
 #notifications > div > .notification-icon {
-    float: left;
-    width: 80px;
     height: 80px;
-    text-align: center;
+    width: 80px;
+    vertical-align: middle;
     background: rgba(0, 0, 0, .5);
-    display: block;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+#notifications > div > .notification-icon > * {
+    margin: 0 auto;
 }
 
 #notifications > div > .notification-icon > img {
@@ -972,49 +978,58 @@ a#gotop.exit {
     max-width: 80px;
 }
 
-#notifications > div > .notification-icon > .font-icon {
-    margin: .34em 0;
-}
-
 #notifications > div > .notification-content {
-    float: left;
     min-width: 350px;
     max-width: 450px;
     padding-right: 6px;
-    border-left: 1px solid rgb(85, 0, 119);
-    height: 80px;
+    border-left: 1px solid #507;
     margin-left: 2px;
-    padding-left: 8px;
+    flex-grow: 2;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
 #notifications > div > .notification-content > .notification-title {
     font-weight: 300;
     font-size: 1.7em;
-    margin-top: 1em;
+    line-height: 1.5em;
+    padding-left: 4px;
+    border-bottom: 1px solid #507;
 }
 
-#notifications > div > .notification-close:before {
-    font-family: FontAwesome;
-    content: "\f00d";
+#notifications > div > .notification-content > .notification-text {
+    padding-left: 4px;
 }
 
 #notifications > div > .notification-close {
     font-size: 2em;
-    float: right;
-    height: 80px;
     width: 20px;
+    line-height: 100%;
     background: #507;
     margin-top: -3px;
-    padding-bottom: 6px;
+    margin-bottom: -3px;
     padding-left: 2px;
+    padding-bottom: 3px;
     border-left: 3px solid #507;
-    line-height: 3.4em;
     text-align: center;
-    display: none;
+    visibility: hidden;
+    display: flex;
+    align-items: center;
+}
+
+#notifications > div > .notification-close > div {
+    margin: 0 auto;
 }
 
 #notifications > div:hover > .notification-close {
-    display: block;
+    visibility: visible;
+}
+
+#notifications > div > .notification-close > div:before {
+    font-family: FontAwesome;
+    content: "\f00d";
 }
 
 @media (max-width: 600px) {
@@ -1030,19 +1045,17 @@ a#gotop.exit {
     }
 
     #notifications > div {
-        height: 40px;
+        min-height: 40px;
         width: 100%;
         background: rgba(113, 74, 150, 1);
         border: 0;
         margin: 0 !important;
-        box-shadow: 0 0 0;
-        float: left;
     }
 
     #notifications > div > .notification-icon {
         width: 40px;
         height: 40px;
-        text-align: center;
+        flex-shrink: 0;
     }
 
     #notifications > div > .notification-icon > img {
@@ -1051,7 +1064,6 @@ a#gotop.exit {
     }
 
     #notifications > div > .notification-icon > .font-icon {
-        margin: .34em 0;
         font-size: 2em;
     }
 
@@ -1060,16 +1072,21 @@ a#gotop.exit {
         min-width: 0;
         width: auto;
         border-left: 0;
-        height: 40px;
         margin: 0;
         padding-left: 4px;
-        display: inline-block;
+        flex-grow: 2;
     }
 
     #notifications > div > .notification-content > .notification-title {
         font-weight: 700;
         font-size: 1em;
         margin: 0;
+        padding: 0;
+    }
+
+    #notifications > div > .notification-content > .notification-text {
+        margin: 0;
+        padding: 0;
     }
 
     #notifications > div > .notification-close {
@@ -1078,15 +1095,13 @@ a#gotop.exit {
         margin: 0;
         padding: 0;
         border: 0;
-        line-height: 1.5em;
-        text-align: center;
         margin-right: 4px;
-        display: block;
+        visibility: visible;
+        flex-shrink: 0;
     }
 
-    #notifications > div > .notification-close:after {
-        clear: both !important;
-        float: none;
+    #notifications > div > .notification-close > div {
+        margin-top: -1px;
     }
 
 }

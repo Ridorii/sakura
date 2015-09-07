@@ -18,7 +18,6 @@ if(!$topic) {
     // Set render data
     $renderData['page'] = [
 
-        'title'     => 'Information',
         'message'   => 'The topic you tried to access does not exist.'
 
     ];
@@ -36,11 +35,6 @@ $renderData = array_merge($renderData, $topic, [
 
         'viewforum' => false,
         'viewtopic' => true,
-
-    ],
-    'page' => [
-
-        'title' => $topic['topic']['topic_title']
 
     ]
 
