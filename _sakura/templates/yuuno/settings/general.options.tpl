@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div style="padding: 8px 0;">
-                    <input type="{{ field.formtype }}" name="option_{{ field.id }}" class="inputStyling"{% if options.user[field.id] %}{% if field.formtype == 'checkbox' and options.user[field.id] %} checked="checked" value="option_{{ field.id }}"{% else %} value="{{ options.user[field.id] }}"{% endif %}{% endif %} />
+                    <input type="{{ field.formtype }}" name="option_{{ field.id }}" class="inputStyling"{% if user.data.userData.userOptions[field.id] %}{% if field.formtype == 'checkbox' and user.data.userData.userOptions[field.id] %} checked="checked" value="option_{{ field.id }}"{% else %} value="{{ user.data.userData.userOptions[field.id] }}"{% endif %}{% endif %} />
                 </div>
             </div>
         {% endfor %}

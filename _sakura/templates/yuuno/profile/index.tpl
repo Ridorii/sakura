@@ -37,15 +37,18 @@
                         </div>
                         {% endif %}
                         <hr class="default" />
-                        <b>Joined</b> {{ profile.data.regdate|date(sakura.dateFormat) }}
+                        <b>Joined</b> <span title="{{ profile.data.regdate|date(sakura.dateFormat) }}">{{ profile.elapsed.joined }}</span>
                         <br />
                         {% if profile.data.lastdate < 1 %}
                             <b>{{ profile.data.username }} hasn't logged in yet.</b>
                         {% else %}
-                            <b>Last Seen on</b> {{ profile.data.lastdate|date(sakura.dateFormat) }}
+                            <b>Last online</b> <span title="{{ profile.data.lastdate|date(sakura.dateFormat) }}">{{ profile.elapsed.lastOnline }}</span>
                         {% endif %}
                         <br />
                         <b>{{ profile.data.username }} has {% if not profile.forumStats.posts %}no{% else %}{{ profile.forumStats.posts }}{% endif %} forum post{% if profile.forumStats.posts != 1 %}s{% endif %}.</b>
+                        {% if profile.data.birthday != '0000-00-00' %}
+                            <br /><b>Age</b> <span title="{{ profile.data.birthday }}">{{ profile.elapsed(' old').birth }}</span>
+                        {% endif %}
                         {% if profile.profileFields %}
                             <hr class="default" />
                             {% if session.checkLogin %}
@@ -57,7 +60,7 @@
                                     </td>
                                     <td style="text-align: right;">
                                         {% if name == 'youtube' %}
-                                            <a href="https://youtube.com/{% if field.youtubetype == 'true' %}channel{% else %}user{% endif %}/{{ field.value }}" class="default">{% if field.youtubetype == 'true' %}{{ profile.data.username }}'s Channel{% else %}{{ field.value }}{% endif %}</a>
+                                            <a href="https://youtube.com/{% if field.youtubetype == true %}channel{% else %}user{% endif %}/{{ field.value }}" class="default">{% if field.youtubetype == true %}{{ profile.data.username }}'s Channel{% else %}{{ field.value }}{% endif %}</a>
                                         {% else %}
                                             {% if field.islink %}
                                                 <a href="{{ field.link }}" class="default">

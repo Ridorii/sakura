@@ -60,7 +60,8 @@
                 "20150904",
                 "20150905",
                 "20150906",
-                "20150907"
+                "20150907",
+                "20150908"
 
             ]
 
@@ -2586,6 +2587,36 @@
             {
                 "type":     "FIX",
                 "change":   "Restyle explosive notifications and make them not explosive.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150908": [
+
+            {
+                "type":     "REM",
+                "change":   "Removed ability to switch to Misaki through the site options (it's currently very broken).",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Hide Groups menu from the Settings page as the backend functionality is delayed until after the first stable.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed checkboxes not doing what they're supposed to do.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added birthdate changing.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Made dates on profile a bit more readable.",
                 "user":     "Flashwave"
             }
 

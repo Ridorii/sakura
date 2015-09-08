@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150907');
+define('SAKURA_VERSION',    '20150908');
 define('SAKURA_VLABEL',     'Eminence');
 define('SAKURA_COLOUR',     '#6C3082');
 define('SAKURA_STABLE',     false);
@@ -75,15 +75,7 @@ $currentUser = new User(Session::$userId);
 $urls = new Urls();
 
 // Prepare the name of the template to load (outside of SAKURA_NO_TPL because it's used in imageserve.php)
-$templateName = defined('SAKURA_MANAGE') ? Configuration::getConfig('manage_style') : (
-    (
-        isset($currentUser->data['userData']['userOptions']['useMisaki']) &&
-        $currentUser->data['userData']['userOptions']['useMisaki'] &&
-        $currentUser->checkPermission('SITE', 'ALTER_PROFILE')
-    ) ?
-    'misaki' :
-    Configuration::getConfig('site_style')
-);
+$templateName = defined('SAKURA_MANAGE') ? Configuration::getConfig('manage_style') : Configuration::getConfig('site_style');
 
 if(!defined('SAKURA_NO_TPL')) {
 
@@ -98,6 +90,8 @@ if(!defined('SAKURA_NO_TPL')) {
          * Attempt to use a class instead of an assoc. array for the
          *  template variables since twig supports this to make accessing
          *  certain functions, like the time elapsed function easier.
+         * Update 2015-09-08: Apparently this will be added in PHP 7 so
+         *  we'll be looking out for that.
          */
 
         'sakura' => [

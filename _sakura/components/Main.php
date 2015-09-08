@@ -827,14 +827,17 @@ $errorPage .= '</div>
     }
 
     // Time elapsed
-    public static function timeElapsed($timestamp) {
+    public static function timeElapsed($timestamp, $append = ' ago', $none = 'Just now') {
 
         // Subtract the entered timestamp from the current timestamp
         $time = time() - $timestamp;
 
         // If the new timestamp is below 1 return a standard string
-        if($time < 1)
-            return 'Just now';
+        if($time < 1) {
+
+            return $none;
+
+        }
 
         // Array containing time "types"
         $times = [
@@ -857,7 +860,7 @@ $errorPage .= '</div>
                 $round = round($calc);
 
                 // Return the string
-                return $round .' '. $times[$secs] . ($round == 1 ? '' : 's') .' ago';
+                return $round .' '. $times[$secs] . ($round == 1 ? '' : 's') . $append;
 
             }
 

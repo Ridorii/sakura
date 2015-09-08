@@ -28,16 +28,16 @@
 <br />
 <h1 class="stylised"><a class="clean" href="/settings/friends/listing">Friends</a></h1>
 <h2 style="color: #080;">Online</h2>
-{% if settings.friends.online %}
-    {% for key,friend in settings.friends.online %}
+{% if user.getFriends(true, true, true).online %}
+    {% for key,friend in user.getFriends(true, true, true).online %}
         <a href="/u/{{ friend.user.username }}" class="default" style="color: {% if friend.user.name_colour %}{{ friend.user.name_colour }}{% else %}{{ friend.rank.colour }}{% endif %}">{{ friend.user.username }}</a>{% if key + 1 != settings.friends.online|length %},{% endif %}
     {% endfor %}
 {% else %}
     <h4>No friends are online.</h4>
 {% endif %}
 <h2 style="color: #800;">Offline</h2>
-{% if settings.friends.offline %}
-    {% for key,friend in settings.friends.offline %}
+{% if user.getFriends(true, true, true).offline %}
+    {% for key,friend in user.getFriends(true, true, true).offline %}
         <a href="/u/{{ friend.user.username }}" class="default" style="color: {% if friend.user.name_colour %}{{ friend.user.name_colour }}{% else %}{{ friend.rank.colour }}{% endif %}">{{ friend.user.username }}</a>{% if key + 1 != settings.friends.offline|length %},{% endif %}
     {% endfor %}
 {% else %}

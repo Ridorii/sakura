@@ -135,9 +135,9 @@ class User {
     }
 
     // Get all the friend of this user
-    public function getFriends() {
+    public function getFriends($timestamps = false, $getData = false, $checkOnline = false) {
 
-        return Users::getFriends($this->data['id']);
+        return Users::getFriends($this->data['id'], $timestamps, $getData, $checkOnline);
 
     }
 
@@ -152,6 +152,19 @@ class User {
     public function checkPermission($layer, $action) {
 
         return Permissions::check($layer, $action, $this->data['id'], 1);
+
+    }
+
+    // Get amount of time since user events
+    public function elapsed($append = ' ago', $none = 'Just now') {
+
+        return [
+
+            'joined'        => Main::timeElapsed($this->data['regdate'],                $append, $none),
+            'lastOnline'    => Main::timeElapsed($this->data['lastdate'],               $append, $none),
+            'birth'         => Main::timeElapsed(strtotime($this->data['birthday']),    $append, $none)
+
+        ];
 
     }
 

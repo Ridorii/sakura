@@ -508,15 +508,8 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                         // Go over each additional value
                         foreach($field['additional'] as $addKey => $addVal) {
 
-                            // Skip if the value is empty
-                            if(!isset($_POST['profile_additional_'. $addKey]) || empty($_POST['profile_additional_'. $addKey])) {
-
-                                continue;
-
-                            }
-
                             // Add to the array
-                            $store[$addKey] = $_POST['profile_additional_'. $addKey];
+                            $store[$addKey] = (isset($_POST['profile_additional_'. $addKey]) || !empty($_POST['profile_additional_'. $addKey])) ? $_POST['profile_additional_'. $addKey] : false;
 
                         }
 
@@ -535,6 +528,49 @@ if(isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications
                     'success'   => 1
 
                 ];
+
+                // Birthdays
+                if(isset($_POST['birthday_day']) && isset($_POST['birthday_month']) && isset($_POST['birthday_year'])) {
+
+                    // Check if the values aren't fucked with
+                    if($_POST['birthday_day'] < 0 || $_POST['birthday_day'] > 31 || $_POST['birthday_month'] < 0 || $_POST['birthday_month'] > 12 || ($_POST['birthday_year'] != 0 && $_POST['birthday_year'] < (date("Y") - 100)) || $_POST['birthday_year'] > date("Y")) {
+
+                        $renderData['page']['message'] = 'Your birthdate is invalid.';
+                        $renderData['page']['success'] = 0;
+                        break;
+
+                    }
+
+                    // Check if the values aren't fucked with
+                    if(($_POST['birthday_day'] < 1 && $_POST['birthday_month'] > 0) || ($_POST['birthday_day'] > 0 && $_POST['birthday_month'] < 1)) {
+
+                        $renderData['page']['message'] = 'Only setting a day or month is disallowed.';
+                        $renderData['page']['success'] = 0;
+                        break;
+
+                    }
+
+                    // Check if the values aren't fucked with
+                    if($_POST['birthday_year'] > 0 && ($_POST['birthday_day'] < 1 || $_POST['birthday_month'] < 1)) {
+
+                        $renderData['page']['message'] = 'Only setting a year is disallowed.';
+                        $renderData['page']['success'] = 0;
+                        break;
+
+                    }
+
+                    $birthdate = implode('-', [$_POST['birthday_year'], $_POST['birthday_month'], $_POST['birthday_day']]);
+
+                    Database::update('users', [
+                        [
+                            'birthday' => $birthdate
+                        ],
+                        [
+                            'id' => [Session::$userId, '=']
+                        ]
+                    ]);
+
+                }
 
                 break;
 
@@ -670,7 +706,7 @@ if(Users::checkLogin()) {
                     'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
                     'menu' => true
 
-                ],
+                ]/*,
                 'groups' => [
 
                     'title' => 'Groups',
@@ -682,7 +718,7 @@ if(Users::checkLogin()) {
                     'access' => $currentUser->checkPermission('SITE', 'JOIN_GROUPS'),
                     'menu' => true
 
-                ]
+                ]*/
 
             ]
 
@@ -1013,19 +1049,27 @@ if(Users::checkLogin()) {
     // Section specific
     switch($category .'.'. $mode) {
 
-        // Homepage
-        case 'general.home':
-            $renderData['settings'] = [
-                'friends'       => Users::getFriends(null, true, true, true)
-            ];
-            break;
-
         // Profile
         case 'general.profile':
             $renderData['profile'] = [
 
-                'user'      => $currentUser->profileFields(),
-                'fields'    => Users::getProfileFields()
+                'fields'    => Users::getProfileFields(),
+                'months'    => [
+
+                    1   => 'January',
+                    2   => 'February',
+                    3   => 'March',
+                    4   => 'April',
+                    5   => 'May',
+                    6   => 'June',
+                    7   => 'July',
+                    8   => 'August',
+                    9   => 'September',
+                    10  => 'October',
+                    11  => 'November',
+                    12  => 'December'
+
+                ]
 
             ];
             break;
@@ -1034,8 +1078,7 @@ if(Users::checkLogin()) {
         case 'general.options':
             $renderData['options'] = [
 
-                'user'      => $currentUser->optionFields(),
-                'fields'    => Users::getOptionFields()
+                'fields' => Users::getOptionFields()
 
             ];
             break;

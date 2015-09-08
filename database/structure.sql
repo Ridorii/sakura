@@ -363,7 +363,7 @@ CREATE TABLE `sakura_users` (
   `regdate` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Timestamp of account creation.',
   `lastdate` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Last time anything was done on this account.',
   `lastunamechange` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Last username change.',
-  `birthday` date DEFAULT NULL COMMENT 'Birthdate of the user.',
+  `birthday` date DEFAULT NOT NULL COMMENT 'Birthdate of the user.',
   `country` char(2) COLLATE utf8_bin NOT NULL COMMENT 'Contains ISO 3166 country code of user''s registration location.',
   `userData` text COLLATE utf8_bin COMMENT 'All additional profile data.',
   PRIMARY KEY (`id`),
