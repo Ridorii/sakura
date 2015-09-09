@@ -140,6 +140,7 @@ class Main {
 
                     'id'            => $errid,
                     'timestamp'     => date("r"),
+                    'revision'      => SAKURA_VERSION,
                     'error_type'    => $errno,
                     'error_line'    => $errline,
                     'error_string'  => $errstr,

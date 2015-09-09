@@ -67,6 +67,18 @@
 
         },
 
+        "Cirno": {
+
+            "colour": "#2F66DB",
+
+            "revisions": [
+
+                "20150909"
+
+            ]
+
+        },
+
         "Heliotrope": {
 
             "colour": "#DF73FF",
@@ -2617,6 +2629,31 @@
             {
                 "type":     "UPD",
                 "change":   "Made dates on profile a bit more readable.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150909": [
+
+            {
+                "type":     "FIX",
+                "change":   "Happy Cirno day!",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Renamed main folder to public since we're not using a subdomained system anymore.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed the striped bar on the footer due to (obvious) negative feedback.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Made error logger log Sakura version.",
                 "user":     "Flashwave"
             }
 

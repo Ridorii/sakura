@@ -8,9 +8,9 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION',    '20150908');
-define('SAKURA_VLABEL',     'Eminence');
-define('SAKURA_COLOUR',     '#6C3082');
+define('SAKURA_VERSION',    '20150909');
+define('SAKURA_VLABEL',     'Cirno');
+define('SAKURA_COLOUR',     '#2F66DB');
 define('SAKURA_STABLE',     false);
 
 // Define Sakura Path

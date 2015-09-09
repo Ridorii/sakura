@@ -250,17 +250,10 @@
                 {% endblock %}
 
                 <a id="gotop" class="fa fa-angle-double-up hidden" href="#top"></a>
-                {% if not sakura.versionInfo.stable %}
-                    <div style="background: repeating-linear-gradient(-45deg, #000, #000 10px, #FF0 10px, #FF0 20px); text-align: center; color: #FFF; box-shadow: 0px 0px 1em #FF0;">
-                        <div style="background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .9) 10%, rgba(0, 0, 0, .9) 90%, rgba(0, 0, 0, 0) 100%); display: inline-block; padding: 0 40px;">
-                            <h3><a style="color: inherit; text-decoration: none;" href="{{ urls.format('CHANGELOG') }}#r{{ sakura.versionInfo.version }}" target="_blank">Sakura Revision {{ sakura.versionInfo.version }} Development</a></h1>
-                        </div>
-                    </div>
-                {% endif %}
             </div>
             <div class="footer">
                 <div class="ftsections">
-                    <div class="copycentre">&copy; 2013-2015 <a href="//flash.moe/" target="_blank">Flashwave</a>, <a href="http://circlestorm.net/">et al</a>.</div>
+                    <div class="copycentre">{% if not sakura.versionInfo.stable %}<a href="{{ urls.format('CHANGELOG') }}#r{{ sakura.versionInfo.version }}" target="_blank">Sakura Revision {{ sakura.versionInfo.version }} Development</a>{% endif %} &copy; 2013-2015 <a href="//flash.moe/" target="_blank">Flashwave</a>, <a href="http://circlestorm.net/">et al</a>. </div>
                     <ul class="ftsection">
                         <li class="fthead">General</li>
                         <li><a href="{{ urls.format('SITE_HOME') }}" title="Flashii Frontpage">Home</a></li>
