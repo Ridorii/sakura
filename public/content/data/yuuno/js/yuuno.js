@@ -171,6 +171,13 @@ function notifyOpen(id) {
 // Request notifications
 function notifyRequest(session) {
 
+    // Check if the document isn't hidden
+    if(document.hidden) {
+
+        return;
+
+    }
+
     // Create XMLHttpRequest and notifyURL
     var notificationWatcher = new XMLHttpRequest();
     var notifyURL           = '//' + sakuraVars.urlMain + '/settings.php?request-notifications=true&time=' + epochTime() + '&session=' + session;

@@ -13,12 +13,12 @@ define('SAKURA_NO_TPL', true);
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sakura.php';
 
 // Path the changelog JSON
-$changelogFile  = json_decode(file_get_contents(ROOT .'_sakura/changelog.json'), true);
-$changelog      = array();
+$changelog = json_decode(file_get_contents(ROOT .'_sakura/changelog.json'), true);
+//$changelog      = array();
 
 // Create version categories
-foreach($changelogFile['versions'] as $name => $data) {
-    
+/*foreach($changelogFile['versions'] as $name => $data) {
+
     // Reverse the array
     $data['revisions'] = array_reverse($data['revisions'], true);
 
@@ -30,19 +30,22 @@ foreach($changelogFile['versions'] as $name => $data) {
 
     }
 
-}
+}*/
 
 // Sort changes properly
-foreach($changelogFile['changelog'] as $ver => $data) {
+/*foreach($changelogFile['changelog'] as $ver => $data) {
 
     // Reverse the array
     $data = array_reverse($data, true);
 
     // Add the log to the array
-    foreach($data as $id => $change)
+    foreach($data as $id => $change) {
+
         $changelog[$ver]['changes'][$id] = $change;
 
-}
+    }
+
+}*/
 
 // Add a thing to only get the json
 if(isset($_REQUEST['getjson'])) {
@@ -57,13 +60,15 @@ if(isset($_REQUEST['getjson'])) {
 $changelogHTML = null;
 
 // Format HTML
-foreach($changelog as $revisionId => $revisionData) {
+foreach(array_reverse($changelog['changelog'], true) as $revisionId => $revisionData) {
 
     $changelogHTML .= '<div class="release" id="r'. $revisionId .'">';
 
-    $changelogHTML .= '<a href="#r'. $revisionId .'" class="title" style="color: '. $revisionData['colour'] .';">Revision '. $revisionId .' ('. $revisionData['name'] .')</a>';
+    $changelogHTML .= '<a href="#r'. $revisionId .'" class="title" style="color: '. $changelog['versions'][$revisionData[0]] .';">Revision '. $revisionId .' ('. ucfirst($revisionData[0]) .')</a>';
 
-    foreach($revisionData['changes'] as $id => $changeData) {
+    unset($revisionData[0]);
+
+    foreach($revisionData as $id => $changeData) {
 
         $changelogHTML .= '<div id="r'. $revisionId .'c'. $id .'">';
 

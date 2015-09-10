@@ -2,138 +2,10 @@
 
     "versions": {
 
-        "Eminence": {
-
-            "colour": "#6C3082",
-
-            "revisions": [
-
-                "20150508",
-                "20150509",
-                "20150512",
-                "20150523",
-                "20150524",
-                "20150525",
-                "20150526",
-                "20150529",
-                "20150530",
-                "20150602",
-                "20150604",
-                "20150619",
-                "20150620",
-                "20150621",
-                "20150627",
-                "20150628",
-                "20150629",
-                "20150630",
-                "20150701",
-                "20150702",
-                "20150703",
-                "20150704",
-                "20150705",
-                "20150706",
-                "20150707",
-                "20150725",
-                "20150728",
-                "20150730",
-                "20150731",
-                "20150807",
-                "20150809",
-                "20150810",
-                "20150811",
-                "20150812",
-                "20150813",
-                "20150818",
-                "20150819",
-                "20150820",
-                "20150821",
-                "20150822",
-                "20150823",
-                "20150825",
-                "20150826",
-                "20150828",
-                "20150829",
-                "20150830",
-                "20150831",
-                "20150902",
-                "20150903",
-                "20150904",
-                "20150905",
-                "20150906",
-                "20150907",
-                "20150908"
-
-            ]
-
-        },
-
-        "Cirno": {
-
-            "colour": "#2F66DB",
-
-            "revisions": [
-
-                "20150909"
-
-            ]
-
-        },
-
-        "Heliotrope": {
-
-            "colour": "#DF73FF",
-
-            "revisions": [
-
-                "20150427",
-                "20150428",
-                "20150429",
-                "20150430",
-                "20150501",
-                "20150502",
-                "20150503",
-                "20150504",
-                "20150505",
-                "20150506"
-
-            ]
-
-        },
-
-        "Cyan": {
-
-            "colour": "#4EC9B0",
-
-            "revisions": [
-
-                "20150221",
-                "20150222",
-                "20150308",
-                "20150321",
-                "20150322",
-                "20150329",
-                "20150330",
-                "20150401",
-                "20150402",
-                "20150405",
-                "20150406",
-                "20150407",
-                "20150408",
-                "20150412",
-                "20150413",
-                "20150414",
-                "20150417",
-                "20150418",
-                "20150419",
-                "20150420",
-                "20150421",
-                "20150424",
-                "20150425",
-                "20150426"
-
-            ]
-
-        }
+        "cirno":        "#2F66DB",
+        "eminence":     "#6C3082",
+        "heliotrope":   "#DF73FF",
+        "cyan":         "#4EC9B0"
 
     },
 
@@ -141,6 +13,7 @@
 
         "20150221": [
 
+            "cyan",
             {
                 "type":     "ADD",
                 "change":   "Start work on new Flashii backend using leftover BBBB2.",
@@ -156,6 +29,7 @@
 
         "20150222": [
 
+            "cyan",
             {
                 "type":     "ADD",
                 "change":   "Upload assets.",
@@ -166,6 +40,7 @@
 
         "20150308": [
 
+            "cyan",
             {
                 "type":     "ADD",
                 "change":   "Dynamic SQL database library.",
@@ -221,6 +96,7 @@
 
         "20150321": [
 
+            "cyan",
             {
                 "type":     "UPD",
                 "change":   "Change entire system to static classes.",
@@ -241,6 +117,7 @@
 
         "20150322": [
 
+            "cyan",
             {
                 "type":     "ADD",
                 "change":   "Add sessions class.",
@@ -256,6 +133,7 @@
 
         "20150329": [
 
+            "cyan",
             {
                 "type":     "ADD",
                 "change":   "Add files for sys.flashii.net.",
@@ -336,6 +214,7 @@
 
         "20150330": [
 
+            "cyan",
             {
                 "type":     "ADD",
                 "change":   "Add chat directory.",
@@ -356,6 +235,7 @@
 
         "20150401": [
 
+            "cyan",
             {
                 "type":     "ADD",
                 "change":   "Add more function descriptions.",
@@ -426,6 +306,7 @@
 
         "20150402": [
 
+            "cyan",
             {
                 "type":     "ADD",
                 "change":   "Add hardcoded dummy group and user.",
@@ -456,6 +337,7 @@
 
         "20150405": [
 
+            "cyan",
             {
                 "type":     "ADD",
                 "change":   "Add example config.",
@@ -476,6 +358,7 @@
 
         "20150406": [
 
+            "cyan",
             {
                 "type":     "UPD",
                 "change":   "Open source'd and repository now hosted on GitHub.",
@@ -511,6 +394,7 @@
 
         "20150407": [
 
+            "cyan",
             {
                 "type":     "UPD",
                 "change":   "Replace tabs with 4 spaces.",
@@ -521,6 +405,7 @@
 
         "20150408": [
 
+            "cyan",
             {
                 "type":     "UPD",
                 "change":   "More work on the authentication pages.",
@@ -536,6 +421,7 @@
 
         "20150412": [
 
+            "cyan",
             {
                 "type":     "FIX",
                 "change":   "Fix massive mistake causing all hashes to break.",
@@ -556,6 +442,7 @@
 
         "20150413": [
 
+            "cyan",
             {
                 "type":     "UPD",
                 "change":   "Update SQL structure.",
@@ -576,6 +463,7 @@
 
         "20150414": [
 
+            "cyan",
             {
                 "type":     "ADD",
                 "change":   "Add PayPal SDK.",
@@ -601,6 +489,7 @@
 
         "20150417": [
 
+            "cyan",
             {
                 "type":     "UPD",
                 "change":   "Logging in works!",
@@ -621,6 +510,7 @@
 
         "20150418": [
 
+            "cyan",
             {
                 "type":     "UPD",
                 "change":   "Logging out works.",
@@ -661,6 +551,7 @@
 
         "20150419": [
 
+            "cyan",
             {
                 "type":     "ADD",
                 "change":   "Add automatic user activation.",
@@ -676,6 +567,7 @@
 
         "20150420": [
 
+            "cyan",
             {
                 "type":     "ADD",
                 "change":   "Add AJAX form submission.",
@@ -691,6 +583,7 @@
 
         "20150421": [
 
+            "cyan",
             {
                 "type":     "ADD",
                 "change":   "Add e-mail sanitising to registration process.",
@@ -716,6 +609,7 @@
 
         "20150424": [
 
+            "cyan",
             {
                 "type":     "UPD",
                 "change":   "Update .gitignore.",
@@ -761,6 +655,7 @@
 
         "20150425": [
 
+            "cyan",
             {
                 "type":     "ADD",
                 "change":   "Add custom user colours.",
@@ -796,6 +691,7 @@
 
         "20150426": [
 
+            "cyan",
             {
                 "type":     "FIX",
                 "change":   "The system thinking 0 is the rank ID for deactivated while it's 1.",
@@ -816,6 +712,7 @@
 
         "20150427": [
 
+            "heliotrope",
             {
                 "type":     "ADD",
                 "change":   "Begin work on profile system.",
@@ -986,6 +883,7 @@
 
         "20150428": [
 
+            "heliotrope",
             {
                 "type":     "ADD",
                 "change":   "Add base Sock Chat extensions.",
@@ -1006,6 +904,7 @@
 
         "20150429": [
 
+            "heliotrope",
             {
                 "type":     "FIX",
                 "change":   "Fix chat online users counter on frontpage.",
@@ -1021,6 +920,7 @@
 
         "20150430": [
 
+            "heliotrope",
             {
                 "type":     "ADD",
                 "change":   "Begin work on management panel.",
@@ -1031,6 +931,7 @@
 
         "20150501": [
 
+            "heliotrope",
             {
                 "type":     "UPD",
                 "change":   "Improve error page.",
@@ -1041,6 +942,7 @@
 
         "20150502": [
 
+            "heliotrope",
             {
                 "type":     "ADD",
                 "change":   "Add supporter page.",
@@ -1051,6 +953,7 @@
 
         "20150503": [
 
+            "heliotrope",
             {
                 "type":     "UPD",
                 "change":   "Improved manage navigation.",
@@ -1071,6 +974,7 @@
 
         "20150504": [
 
+            "heliotrope",
             {
                 "type":     "REM",
                 "change":   "Removed blank background for inactive users (will make the backend handle removal).",
@@ -1091,6 +995,7 @@
 
         "20150505": [
 
+            "heliotrope",
             {
                 "type":     "UPD",
                 "change":   "getWarnings() can now return all warnings when the first parameter is false.",
@@ -1121,6 +1026,7 @@
 
         "20150506": [
 
+            "heliotrope",
             {
                 "type":     "UPD",
                 "change":   "Add some content retrieval functions for the forum.",
@@ -1141,6 +1047,7 @@
 
         "20150508": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added notification system.",
@@ -1151,6 +1058,7 @@
 
         "20150509": [
 
+            "eminence",
             {
                 "type":     "FIX",
                 "change":   "Fixed missing newline in a template file.",
@@ -1196,6 +1104,7 @@
 
         "20150512": [
 
+            "eminence",
             {
                 "type":     "FIX",
                 "change":   "Fix {{ sakura.currentpage }} redirecting to the php file that's being used without the right attributes.",
@@ -1211,6 +1120,7 @@
 
         "20150523": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Move Manage and Forum to a subdirectory instead of a subdomain.",
@@ -1231,6 +1141,7 @@
 
         "20150524": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Move site description and tags to the config.",
@@ -1281,6 +1192,7 @@
 
         "20150525": [
 
+            "eminence",
             {
                 "type":     "FIX",
                 "change":   "Made the registration recaptcha refresh upon failure.",
@@ -1326,6 +1238,7 @@
 
         "20150526": [
 
+            "eminence",
             {
                 "type":     "FIX",
                 "change":   "Redid the fonts.",
@@ -1341,6 +1254,7 @@
 
         "20150529": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added beginning bits for the permissioning system.",
@@ -1401,6 +1315,7 @@
 
         "20150530": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Compress Yuuno back to one CSS file again.",
@@ -1426,6 +1341,7 @@
 
         "20150602": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added JSON indentation/pretty printing function.",
@@ -1436,6 +1352,7 @@
 
         "20150604": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Redid some of the users table structure.",
@@ -1451,6 +1368,7 @@
 
         "20150619": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added notification history section contents to settings panel.",
@@ -1461,6 +1379,7 @@
 
         "20150620": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added friends system.",
@@ -1486,6 +1405,7 @@
 
         "20150621": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Changed the options next to the avatar on the index panel.",
@@ -1501,6 +1421,7 @@
 
         "20150627": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Put the Forum Listing and Front Page in the same PHP file as they both request nearly identical info (only difference is probably news post/forum posts).",
@@ -1536,6 +1457,7 @@
 
         "20150628": [
 
+            "eminence",
             {
                 "type":     "REM",
                 "change":   "Removed getUserProfileData() which decodes the json in the userData column and do it in the getUser() function.",
@@ -1566,6 +1488,7 @@
 
         "20150629": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added topic and post counters to the frontpage.",
@@ -1581,6 +1504,7 @@
 
         "20150630": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added Payments class.",
@@ -1596,6 +1520,7 @@
 
         "20150701": [
 
+            "eminence",
             {
                 "type":     "FIX",
                 "change":   "Fixed a multitude of fuckups.",
@@ -1631,6 +1556,7 @@
 
         "20150702": [
 
+            "eminence",
             {
                 "type":     "FIX",
                 "change":   "Fixed a mistake in the stylesheet causing the support page to deform when resized.",
@@ -1646,6 +1572,7 @@
 
         "20150703": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Add basic example of the version 1 API framework.",
@@ -1656,6 +1583,7 @@
 
         "20150704": [
 
+            "eminence",
             {
                 "type":     "FIX",
                 "change":   "Fixed profile rewrite rule causing errors in some environments (e.g. Win32).",
@@ -1671,6 +1599,7 @@
 
         "20150705": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added count functionality to database wrapper.",
@@ -1721,6 +1650,7 @@
 
         "20150706": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added pending friend requests counter to the frontpage.",
@@ -1731,6 +1661,7 @@
 
         "20150707": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added post and topic count variable to the profile.",
@@ -1741,6 +1672,7 @@
 
         "20150725": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added stuff for Disqus SSO.",
@@ -1756,6 +1688,7 @@
 
         "20150728": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Made the amount of news posts loaded on the frontpage configurable.",
@@ -1771,6 +1704,7 @@
 
         "20150730": [
 
+            "eminence",
             {
                 "type":     "FIX",
                 "change":   "Use the same date() formatting everywhere.",
@@ -1811,6 +1745,7 @@
 
         "20150731": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Redid footer links and styling.",
@@ -1871,6 +1806,7 @@
 
         "20150807": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added profile changing frontend.",
@@ -1886,6 +1822,7 @@
 
         "20150809": [
 
+            "eminence",
             {
                 "type":     "FIX",
                 "change":   "Fixed homepage friends link going to the wrong location.",
@@ -1936,6 +1873,7 @@
 
         "20150810": [
 
+            "eminence",
             {
                 "type":     "FIX",
                 "change":   "Attempt to fix error while trying to get the old avatar name.",
@@ -2006,6 +1944,7 @@
 
         "20150811": [
 
+            "eminence",
             {
                 "type":     "REM",
                 "change":   "Remove unneeded rules from .htaccess in the content folder.",
@@ -2026,6 +1965,7 @@
 
         "20150812": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added device icons to Yuuno.",
@@ -2036,6 +1976,7 @@
 
         "20150813": [
 
+            "eminence",
             {
                 "type":     "FIX",
                 "change":   "Fixed some broken links on manage.",
@@ -2051,6 +1992,7 @@
 
         "20150818": [
 
+            "eminence",
             {
                 "type":     "FIX",
                 "change":   "Fixed urls in Misaki.",
@@ -2066,6 +2008,7 @@
 
         "20150819": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Only make the SQL library fetch an associative array since the numbered one is not used anywhere.",
@@ -2121,6 +2064,7 @@
 
         "20150820": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Cleaned up the sakura template variable.",
@@ -2141,6 +2085,7 @@
 
         "20150821": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Moved image serving file to the new user api.",
@@ -2211,6 +2156,7 @@
 
         "20150822": [
 
+            "eminence",
             {
                 "type":     "FIX",
                 "change":   "Fixed premium purchasing being broken somehow.",
@@ -2221,6 +2167,7 @@
 
         "20150823": [
 
+            "eminence",
             {
                 "type":     "REM",
                 "change":   "Removed a reference to the legacy password hashing method in Users::checkLogin().",
@@ -2281,6 +2228,7 @@
 
         "20150825": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Moved profile templates to own folder.",
@@ -2291,6 +2239,7 @@
 
         "20150826": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added profile entry for birthday.",
@@ -2301,6 +2250,7 @@
 
         "20150828": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Did a plethora of changes to Misaki.",
@@ -2316,6 +2266,7 @@
 
         "20150829": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Improved template error handling.",
@@ -2336,6 +2287,7 @@
 
         "20150830": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added donation tracker frontend.",
@@ -2346,6 +2298,7 @@
 
         "20150831": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Changed main navigation to font awesome icons.",
@@ -2366,6 +2319,7 @@
 
         "20150902": [
 
+            "eminence",
             {
                 "type":     "REM",
                 "change":   "Removed dodgy old mobile view.",
@@ -2391,6 +2345,7 @@
 
         "20150903": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Moved donation tracker functions to Main class.",
@@ -2441,6 +2396,7 @@
 
         "20150904": [
 
+            "eminence",
             {
                 "type":     "ADD",
                 "change":   "Added Urls class.",
@@ -2476,6 +2432,7 @@
 
         "20150905": [
 
+            "eminence",
             {
                 "type":     "UPD",
                 "change":   "Finished implementation of Urls class.",
@@ -2531,6 +2488,7 @@
 
         "20150906": [
 
+            "eminence",
             {
                 "type":     "REM",
                 "change":   "Removed unused URLs.",
@@ -2566,6 +2524,7 @@
 
         "20150907": [
 
+            "eminence",
             {
                 "type":     "FIX",
                 "change":   "Fixed cookie notification reappearing after accepting.",
@@ -2606,6 +2565,7 @@
 
         "20150908": [
 
+            "eminence",
             {
                 "type":     "REM",
                 "change":   "Removed ability to switch to Misaki through the site options (it's currently very broken).",
@@ -2636,6 +2596,7 @@
 
         "20150909": [
 
+            "cirno",
             {
                 "type":     "FIX",
                 "change":   "Happy Cirno day!",
@@ -2654,6 +2615,22 @@
             {
                 "type":     "ADD",
                 "change":   "Made error logger log Sakura version.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150910": [
+
+            "eminence",
+            {
+                "type":     "UPD",
+                "change":   "Made notification pulling stop when the tab isn't selected.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed changelog sorting.",
                 "user":     "Flashwave"
             }
 
