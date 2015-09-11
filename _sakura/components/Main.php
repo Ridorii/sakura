@@ -339,7 +339,7 @@ $errorPage .= '</div>
         $string = strip_tags($string);
 
         // If set also make the string lowercase
-        if($lower){
+        if($lower) {
 
             $string = strtolower($string);
 
@@ -354,33 +354,6 @@ $errorPage .= '</div>
 
         // Return clean string
         return $string;
-
-    }
-
-    // Getting news posts
-    public static function getNewsPosts($limit = null, $pid = false) {
-
-        // Get news posts
-        $newsPosts = Database::fetch('news', true, ($pid ? ['id' => [$limit, '=']] : null), ['id', true], ($limit && !$pid ? [$limit] : null));
-
-        // Get user data
-        foreach($newsPosts as $newsId => $newsPost) {
-
-            $newsPosts[$newsId]['parsed']   = self::mdParse($newsPost['content']);
-            $newsPosts[$newsId]['udata']    = Users::getUser($newsPost['uid']);
-            $newsPosts[$newsId]['rdata']    = Users::getRank($newsPosts[$newsId]['udata']['rank_main']);
-
-            // Check if a custom name colour is set and if so overwrite the rank colour
-            if($newsPosts[$newsId]['udata']['name_colour'] != null){
-
-                $newsPosts[$newsId]['rdata']['colour'] = $newsPosts[$newsId]['udata']['name_colour'];
-
-            }
-
-        }
-
-        // Return posts
-        return $newsPosts;
 
     }
 

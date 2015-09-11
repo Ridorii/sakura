@@ -14,47 +14,6 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sak
 
 // Path the changelog JSON
 $changelog = json_decode(file_get_contents(ROOT .'_sakura/changelog.json'), true);
-//$changelog      = array();
-
-// Create version categories
-/*foreach($changelogFile['versions'] as $name => $data) {
-
-    // Reverse the array
-    $data['revisions'] = array_reverse($data['revisions'], true);
-
-    foreach($data['revisions'] as $rev) {
-
-        $changelog[$rev]['name']      = $name;
-        $changelog[$rev]['colour']    = $data['colour'];
-        $changelog[$rev]['changes']   = array();
-
-    }
-
-}*/
-
-// Sort changes properly
-/*foreach($changelogFile['changelog'] as $ver => $data) {
-
-    // Reverse the array
-    $data = array_reverse($data, true);
-
-    // Add the log to the array
-    foreach($data as $id => $change) {
-
-        $changelog[$ver]['changes'][$id] = $change;
-
-    }
-
-}*/
-
-// Add a thing to only get the json
-if(isset($_REQUEST['getjson'])) {
-
-    // Print encoded json and exit
-    print json_encode($changelog);
-    exit;
-
-}
 
 // Create variable to store HTML in
 $changelogHTML = null;
@@ -68,7 +27,7 @@ foreach(array_reverse($changelog['changelog'], true) as $revisionId => $revision
 
     unset($revisionData[0]);
 
-    foreach($revisionData as $id => $changeData) {
+    foreach(array_reverse($revisionData) as $id => $changeData) {
 
         $changelogHTML .= '<div id="r'. $revisionId .'c'. $id .'">';
 

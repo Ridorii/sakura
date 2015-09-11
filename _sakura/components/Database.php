@@ -64,7 +64,7 @@ class Database {
     }
 
     // Count from database
-    public static function count($table, $data, $prefix = null) {
+    public static function count($table, $data = null, $prefix = null) {
 
         return self::$_DATABASE->count($table, $data, $prefix);
 

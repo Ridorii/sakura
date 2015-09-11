@@ -1195,21 +1195,8 @@ class Users {
     // Get user data by id
     public static function getUser($id) {
 
-        // Execute query
-        $user = Database::fetch('users', false, ['id' => [$id, '=']]);
-
-        // Return false if no user was found
-        if(empty($user)) {
-
-            $user = self::$emptyUser;
-
-        }
-
-        // Parse the json in the additional section
-        $user['userData'] = json_decode($user['userData'], true);
-
         // If user was found return user data
-        return $user;
+        return (new User($id))->data;
 
     }
 

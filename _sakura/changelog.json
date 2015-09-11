@@ -2634,6 +2634,68 @@
                 "user":     "Flashwave"
             }
 
+        ],
+
+        "20150911": [
+
+            "eminence",
+            {
+                "type":     "UPD",
+                "change":   "Migrate more user object references to the new API.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Add missing $data = null to the count database method.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Directly count index statistics from the database as opposed to retrieving an array and counting that.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Make the legacy getUser function reference the new API.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Moved index news posts over to the new API.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150912": [
+
+            "eminence",
+            {
+                "type":     "UPD",
+                "change":   "Moved pagination to self-contained template file.",
+                "user":     "Flashwave"
+            },,
+            {
+                "type":     "UPD",
+                "change":   "Moved news section over to new API.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed old news function.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed sorting in the changelog.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed getjson method from changelog.",
+                "user":     "Flashwave"
+            }
+
         ]
 
     }

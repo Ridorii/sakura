@@ -357,7 +357,7 @@ class MySQL {
     }
 
     // Count data from the database
-    public function count($table, $data, $prefix = null) {
+    public function count($table, $data = null, $prefix = null) {
 
         // Begin preparation of the statement
         $prepare = 'SELECT COUNT(*) FROM `' . ($prefix ? $prefix : Configuration::getLocalConfig('database', 'prefix')) . $table . '`';

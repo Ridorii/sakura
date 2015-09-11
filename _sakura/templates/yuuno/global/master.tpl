@@ -269,7 +269,8 @@
                         <li><a href="https://twitter.com/_flashii" target="_blank" title="Follow us on Twitter for news messages that are too short for the news page">Twitter</a></li>
                         <li><a href="https://youtube.com/user/flashiinet" target="_blank" title="Our YouTube page where stuff barely ever gets uploaded, mainly used to archive community creations">YouTube</a></li>
                         <li><a href="https://steamcommunity.com/groups/flashiinet" target="_blank" title="Our Steam group, play games with other members on the site">Steam</a></li>
-                        <li><a href="https://bitbucket.org/circlestorm" target="_blank" title="Our Open Source repository thing">BitBucket</a></li>
+                        <li><a href="https://bitbucket.org/circlestorm" target="_blank" title="Our BitBucket organisation">BitBucket</a></li>
+                        <li><a href="https://github.com/circlestorm" target="_blank" title="Our GitHub organisation">GitHub</a></li>
                     </ul>
                     <ul class="ftsection">
                         <li class="fthead">Information</li>

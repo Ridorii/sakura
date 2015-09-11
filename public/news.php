@@ -12,18 +12,14 @@ use DOMDocument;
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sakura.php';
 
-// Add page specific things
-$renderData['newsPosts'] = Main::getNewsPosts((isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])) ? $_GET['id'] : null, (isset($_GET['id']) && !isset($_GET['xml']) && is_numeric($_GET['id'])));
-
-$renderData['page'] = [
-
-    'view_post'     => isset($_GET['id']) && count($renderData['newsPosts']),
-    'currentPage'   => 0
-
-];
+// Create a new News object
+$news = new News(isset($_GET['cat']) ? $_GET['cat'] : Configuration::getConfig('site_news_category'));
 
 // News XML feed
 if(isset($_GET['xml'])) {
+
+    // Get the news posts
+    $posts = $news->getPosts();
 
     // Meta data attributes
     $metaData = [
@@ -33,7 +29,7 @@ if(isset($_GET['xml'])) {
         'description'   => 'News about '. $_FEED_TITLE,
         'language'      => 'en-gb',
         'webMaster'     => (new User(1))->data['email'] .' ('. $_FEED_TITLE .' Webmaster)',
-        'pubDate'       => ($_FEED_DATE = date('r', $renderData['newsPosts'][0]['date'])),
+        'pubDate'       => ($_FEED_DATE = date('r', $posts[array_keys($posts)[0]]['date'])),
         'lastBuildDate' => $_FEED_DATE
 
     ];
@@ -41,12 +37,12 @@ if(isset($_GET['xml'])) {
     // Item attributes
     $itemData = [
 
-        'title'         => ['text' => '{EVAL}',                     'eval' => '$newsPost["title"]'],
-        'link'          => ['text' => $_FEED_URL .'/news/{EVAL}',   'eval' => '$newsPost["id"]'],
-        'guid'          => ['text' => $_FEED_URL .'/news/{EVAL}',   'eval' => '$newsPost["id"]'],
-        'pubDate'       => ['text' => '{EVAL}',                     'eval' => 'date("D, d M Y G:i:s O", $newsPost["date"])'],
-        'dc:publisher'  => ['text' => '{EVAL}',                     'eval' => '$newsPost["udata"]["username"]'],
-        'description'   => ['cdata' => '{EVAL}',                    'eval' => '$newsPost["parsed"]']
+        'title'         => ['text'  => '{EVAL}',                    'eval' =>   '$post["title"]'],
+        'link'          => ['text'  => $_FEED_URL .'/news/{EVAL}',  'eval' =>   '$post["id"]'],
+        'guid'          => ['text'  => $_FEED_URL .'/news/{EVAL}',  'eval' =>   '$post["id"]'],
+        'pubDate'       => ['text'  => '{EVAL}',                    'eval' =>   'date("D, d M Y G:i:s O", $post["date"])'],
+        'dc:publisher'  => ['text'  => '{EVAL}',                    'eval' =>   '$post["poster"]->data["username"]'],
+        'description'   => ['cdata' => '{EVAL}',                    'eval' =>   '$post["content_parsed"]']
 
     ];
 
@@ -82,7 +78,7 @@ if(isset($_GET['xml'])) {
     }
 
     // Add all the posts
-    foreach($renderData['newsPosts'] as $newsPost) {
+    foreach($posts as $post) {
 
         // Create item element
         $fPost = $feed->createElement('item');
@@ -128,14 +124,15 @@ if(isset($_GET['xml'])) {
 
 }
 
-// If we're not using the XML feed and we're not viewing a single post create pages
-if(!isset($_GET['id'])) {
+$renderData = array_merge($renderData, [
 
-    // Create the current page
-    $renderData['newsPosts']            = array_chunk($renderData['newsPosts'], Configuration::getConfig('news_posts_per_page'), true);
-    $renderData['page']['currentPage']  = isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0;
+    'news'          => $news,
+    'postsPerPage'  => Configuration::getConfig('news_posts_per_page'),
+    'viewPost'      => isset($_GET['id']),
+    'postExists'    => $news->postExists(isset($_GET['id']) ? $_GET['id'] : 0),
+    'currentPage'   => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0
 
-}
+]);
 
 // Print page contents
 print Templates::render('main/news.tpl', $renderData);

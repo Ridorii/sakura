@@ -15,7 +15,7 @@ if(isset($_GET['p'])) {
     // Set default variables
     $renderData['page'] = [
 
-        'content'   => Main::mdParse("# Unable to load the requested info page.\r\n\r\nCheck the URL and try again.")
+        'content' => Main::mdParse("# Unable to load the requested info page.\r\n\r\nCheck the URL and try again.")
 
     ];
 
@@ -45,8 +45,9 @@ if(isset($_GET['p'])) {
 // Are we in forum mode?
 $forumMode = isset($_GET['forum']) ? ($_GET['forum'] == true) : false;
 
-// Add page specific things
-$renderData['newsPosts'] = ($forumMode ? null : Main::getNewsPosts(Configuration::getConfig('front_page_news_posts')));
+$renderData['news'] = ($forumMode ? null : (new News(Configuration::getConfig('site_news_category'))));
+
+$renderData['newsCount'] = Configuration::getConfig('front_page_news_posts');
 
 $renderData['page'] = [
     'friend_req' => Users::getPendingFriends()
@@ -59,11 +60,11 @@ $renderData['board'] = [
 ];
 
 $renderData['stats'] = [
-    'userCount'     => ($_INDEX_USER_COUNT      = count($_INDEX_USERS = Users::getAllUsers(false))),
+    'userCount'     => Database::count('users', ['password_algo' => ['nologin', '!='], 'rank_main' => ['1', '!=']])[0],
     'newestUser'    => ($_INDEX_NEWEST_USER     = new User(Users::getNewestUserId())),
     'lastRegDate'   => ($_INDEX_LAST_REGDATE    = date_diff(date_create(date('Y-m-d', $_INDEX_NEWEST_USER->data['regdate'])), date_create(date('Y-m-d')))->format('%a')) .' day'. ($_INDEX_LAST_REGDATE == 1 ? '' : 's'),
-    'topicCount'    => ($_TOPICS                = count(Database::fetch('topics'))),
-    'postCount'     => ($_POSTS                 = count(Database::fetch('posts'))),
+    'topicCount'    => Database::count('topics')[0],
+    'postCount'     => Database::count('posts')[0],
     'onlineUsers'   => Users::checkAllOnline()
 ];
 
