@@ -78,7 +78,7 @@ if(Configuration::getConfig('no_cron_service')) {
 
         } else {
 
-            shell_exec(PHP_BINDIR .'/php '. ROOT .'_sakura/cron.php > /dev/null 2>/dev/null &');
+            pclose(popen(PHP_BINDIR .'/php '. ROOT .'_sakura/cron.php > /dev/null 2>/dev/null &', 'r'));
 
         }
 

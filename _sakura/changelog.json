@@ -2715,6 +2715,11 @@
                 "type":     "ADD",
                 "change":   "Added Windows no cron task method.",
                 "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added Linux no cron task method.",
+                "user":     "Flashwave"
             }
 
         ]
