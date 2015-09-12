@@ -2674,7 +2674,7 @@
                 "type":     "UPD",
                 "change":   "Moved pagination to self-contained template file.",
                 "user":     "Flashwave"
-            },,
+            },
             {
                 "type":     "UPD",
                 "change":   "Moved news section over to new API.",
@@ -2693,6 +2693,27 @@
             {
                 "type":     "REM",
                 "change":   "Removed getjson method from changelog.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150913": [
+
+            "eminence",
+            {
+                "type":     "UPD",
+                "change":   "Rewrote code for scroll to top button.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added (commented out) beginnings of on-site chat interface.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added Windows no cron task method.",
                 "user":     "Flashwave"
             }
 

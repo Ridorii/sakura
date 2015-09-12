@@ -818,10 +818,10 @@ var n = this,
 window.onscroll = function() {
 
     // Assign the gotop button to a variable
-    var gotop = document.getElementById('gotop');
+    var gotop = document.getElementById('scrollToTop');
 
     // If the vertical offset of the page is below 112px (just below the header) keep the button hidden
-    if(this.pageYOffset < 112) {
+    if(this.pageYOffset < 1) {
 
         // Check if the "exit" is in the classes and if it isn't continue
         if(gotop.className.indexOf('exit') < 0) {
@@ -835,15 +835,16 @@ window.onscroll = function() {
 
                 // Set a timeout to add the hidden class after 600ms
                 setTimeout(function() {
-                    gotop.className = gotop.className + ' hidden';
+                    if(this.pageYOffset < 1) {
+                        gotop.className = gotop.className + ' hidden';
+                    }
                 }, 600);
-
             }
 
         }
 
     // Else show the button
-    } else if(this.pageYOffset > 112) {
+    } else if(this.pageYOffset > 0) {
 
         // Check if enter is set
         if(gotop.className.indexOf('enter') < 0) {

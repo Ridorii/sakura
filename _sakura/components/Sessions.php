@@ -15,8 +15,11 @@ class Session {
     public static function init() {
 
         // Start PHP session
-        if(session_status() != PHP_SESSION_ACTIVE)
+        if(session_status() != PHP_SESSION_ACTIVE) {
+
             session_start();
+
+        }
 
         // Assign user and session IDs
         self::$userId       = isset($_COOKIE[Configuration::getConfig('cookie_prefix') .'id'])      ? $_COOKIE[Configuration::getConfig('cookie_prefix') .'id']         : 0;

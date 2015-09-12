@@ -65,6 +65,43 @@ Main::init(ROOT .'_sakura/config/config.ini');
 // Assign servers file to whois class
 Whois::setServers(ROOT .'_sakura/'. Configuration::getLocalConfig('data', 'whoisservers'));
 
+// Check if we the system has a cron service
+if(Configuration::getConfig('no_cron_service')) {
+
+    // If not do an "asynchronous" call to the cron.php script
+    if(Configuration::getConfig('no_cron_last') < (time() - Configuration::getConfig('no_cron_interval'))) {
+
+        // Check OS
+        if(substr(strtolower(PHP_OS), 0, 3) == 'win') {
+
+            pclose(popen('start /B '. PHP_BINDIR .'\php.exe '. addslashes(ROOT .'_sakura\cron.php'), 'r'));
+
+        } else {
+
+            shell_exec(PHP_BINDIR .'/php '. ROOT .'_sakura/cron.php > /dev/null 2>/dev/null &');
+
+        }
+
+        // Update last execution time
+        Database::update('config', [
+
+            [
+
+                'config_value' => time()
+
+            ],
+            [
+
+                'config_name' => ['no_cron_last', '=']
+
+            ]
+
+        ]);
+
+    }
+
+}
+
 // Start output buffering
 ob_start(Configuration::getConfig('use_gzip') ? 'ob_gzhandler' : null);
 

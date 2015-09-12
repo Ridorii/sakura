@@ -98,7 +98,7 @@
                     <h1 class="stylised">Total: &#8364;<span id="totalAmount"></span></h1>
                 </div>
                 <div style="float: right;">
-                    <button class="inputStyling" onclick="document.getElementById('purchaseForm').submit();">Get <span id="monthNoBtn">1</span> month<span id="monthsTrailingS"></span> of Tenshi</button>
+                    <button class="inputStyling" onclick="ajaxBusyView(true, 'Please wait...');document.getElementById('purchaseForm').submit();">Get <span id="monthNoBtn">1</span> month<span id="monthsTrailingS"></span> of Tenshi</button>
                 </div>
                 <div class="clear"></div>
             </div>
