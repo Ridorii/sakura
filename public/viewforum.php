@@ -7,56 +7,52 @@
 namespace Sakura;
 
 // Include components
-require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sakura.php';
+require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
 // Get the forum's data
 $forum = Forum::getForum(isset($_GET['f']) ? $_GET['f'] : 0);
 
 // Check if the forum exists
-if(!$forum) {
-
+if (!$forum) {
     // Set render data
     $renderData['page'] = [
 
-        'title'     => 'Information',
-        'message'   => 'The subforum you tried to access does not exist.'
+        'title' => 'Information',
+        'message' => 'The subforum you tried to access does not exist.',
 
     ];
 
     // Print template
     print Templates::render('global/information.tpl', $renderData);
     exit;
-
 }
 
 // Check if the forum isn't a link
-if($forum['forum']['forum_type'] === 2) {
-
+if ($forum['forum']['forum_type'] === 2) {
     // Set render data
     $renderData['page'] = [
 
-        'title'     => 'Information',
-        'message'   => 'The forum you tried to access is a link. You\'re being redirected.',
-        'redirect'  => $forum['forum']['forum_link']
+        'title' => 'Information',
+        'message' => 'The forum you tried to access is a link. You\'re being redirected.',
+        'redirect' => $forum['forum']['forum_link'],
 
     ];
 
     // Print template
     print Templates::render('global/information.tpl', $renderData);
     exit;
-
 }
 
 $renderData['board'] = [
 
     'forums' => [
 
-        $forum
+        $forum,
 
     ],
     'topics' => Forum::getTopics($forum['forum']['forum_id']),
     'viewforum' => true,
-    'viewtopic' => false
+    'viewtopic' => false,
 
 ];
 

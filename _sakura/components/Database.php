@@ -5,69 +5,73 @@
 
 namespace Sakura;
 
-class Database {
-
+class Database
+{
     // Database container
-    public static $_DATABASE;
+    public static $database;
 
     // Initialisation function
-    public static function init($wrapper) {
+    public static function init($wrapper)
+    {
 
         // Make the wrapper class name lowercase
-        $wrapper = __NAMESPACE__ .'\DBWrapper\\'. strtolower($wrapper);
+        $wrapper = __NAMESPACE__ . '\DBWrapper\\' . strtolower($wrapper);
 
         // Check if the class exists
-        if(!class_exists($wrapper)) {
-
+        if (!class_exists($wrapper)) {
             trigger_error('Failed to load database wrapper', E_USER_ERROR);
-
         }
 
         // Initialise SQL wrapper
-        self::$_DATABASE = new $wrapper;
+        self::$database = new $wrapper;
 
     }
 
     // Select from database
-    public static function select($table, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*', $prefix = null) {
+    public static function select($table, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*', $prefix = null)
+    {
 
-        return self::$_DATABASE->select($table, $data, $order, $limit, $group, $distinct, $column, $prefix);
+        return self::$database->select($table, $data, $order, $limit, $group, $distinct, $column, $prefix);
 
     }
 
     // Fetch from database
-    public static function fetch($table, $fetchAll = true, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*', $prefix = null) {
+    public static function fetch($table, $fetchAll = true, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*', $prefix = null)
+    {
 
-        return self::$_DATABASE->fetch($table, $fetchAll, $data, $order, $limit, $group, $distinct, $column, $prefix);
+        return self::$database->fetch($table, $fetchAll, $data, $order, $limit, $group, $distinct, $column, $prefix);
 
     }
 
     // Insert into database
-    public static function insert($table, $data, $prefix = null) {
+    public static function insert($table, $data, $prefix = null)
+    {
 
-        return self::$_DATABASE->insert($table, $data, $prefix);
+        return self::$database->insert($table, $data, $prefix);
 
     }
 
     // Update in database
-    public static function update($table, $data, $prefix = null) {
+    public static function update($table, $data, $prefix = null)
+    {
 
-        return self::$_DATABASE->update($table, $data, $prefix);
+        return self::$database->update($table, $data, $prefix);
 
     }
 
     // Delete from database
-    public static function delete($table, $data, $prefix = null) {
+    public static function delete($table, $data, $prefix = null)
+    {
 
-        return self::$_DATABASE->delete($table, $data, $prefix);
+        return self::$database->delete($table, $data, $prefix);
 
     }
 
     // Count from database
-    public static function count($table, $data = null, $prefix = null) {
+    public static function count($table, $data = null, $prefix = null)
+    {
 
-        return self::$_DATABASE->count($table, $data, $prefix);
+        return self::$database->count($table, $data, $prefix);
 
     }
-
 }

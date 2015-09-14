@@ -10,54 +10,42 @@
 // You can also create a PHP file including this SockChat.php
 //  file so it's always up-to-date! Don't forget to include the
 //  variable below in the file __BEFORE__ the include!
-if(!isset($sockSakuraPath)) {
-
+if (!isset($sockSakuraPath)) {
     $sockSakuraPath = '';
-
 }
 
 /* * * DON'T EDIT ANYTHING BELOW THIS LINE * * */
 
 // Include Sakura
-require_once $sockSakuraPath .'/sakura.php';
+require_once $sockSakuraPath . '/sakura.php';
 
-use sockchat\Auth;
-use Sakura\Session;
-use Sakura\Users;
 use Sakura\Permissions;
+use Sakura\Session;
 use Sakura\User;
+use Sakura\Users;
+use sockchat\Auth;
 
-if(Auth::getPageType() == AUTH_FETCH) {
-
+if (Auth::getPageType() == AUTH_FETCH) {
     // Check if user is logged into the Sakura backend if not deny
-    if(Users::checkLogin()) {
-
+    if (Users::checkLogin()) {
         // If so append the required arguments and accept
         Auth::AppendArguments([Session::$userId, Session::$sessionId]);
         Auth::Accept();
-
     } else {
-
         Auth::Deny();
-
     }
-
 } else {
-
     // Get arguments
     $uid = $_REQUEST['arg1'];
     $sid = $_REQUEST['arg2'];
 
     // Check if session is active else deny
-    if(Session::checkSession($uid, $sid)) {
-
+    if (Session::checkSession($uid, $sid)) {
         // Check if they can access the chat
-        if(Permissions::check('SITE', 'DEACTIVATED', $uid, 1) && Permissions::check('SITE', 'RESTRICTED', $uid, 1)) {
-
+        if (Permissions::check('SITE', 'DEACTIVATED', $uid, 1) && Permissions::check('SITE', 'RESTRICTED', $uid, 1)) {
             Auth::Deny();
             Auth::Serve();
             exit;
-
         }
 
         // Create a user object
@@ -73,22 +61,18 @@ if(Auth::getPageType() == AUTH_FETCH) {
         // Set the common permissions
         Auth::SetCommonPermissions(
             bindec(Permissions::getUserPermissions($uid)['SITE']),
-            Permissions::check('MANAGE',    'USE_MANAGE',           $uid, 1) ? 1 : 0,
-            Permissions::check('SITE',      'CREATE_BACKGROUND',    $uid, 1) ? 1 : 0,
-            Permissions::check('SITE',      'CHANGE_USERNAME',      $uid, 1) ? 1 : 0,
-            Permissions::check('SITE',      'MULTIPLE_GROUPS',      $uid, 1) ? 2 : (
-                Permissions::check('SITE', 'CREATE_GROUP',          $uid, 1) ? 1 : 0
+            Permissions::check('MANAGE', 'USE_MANAGE', $uid, 1) ? 1 : 0,
+            Permissions::check('SITE', 'CREATE_BACKGROUND', $uid, 1) ? 1 : 0,
+            Permissions::check('SITE', 'CHANGE_USERNAME', $uid, 1) ? 1 : 0,
+            Permissions::check('SITE', 'MULTIPLE_GROUPS', $uid, 1) ? 2 : (
+                Permissions::check('SITE', 'CREATE_GROUP', $uid, 1) ? 1 : 0
             )
         );
 
         Auth::Accept();
-
     } else {
-
         Auth::Deny();
-
     }
-
 }
 
 // Serve the authentication data

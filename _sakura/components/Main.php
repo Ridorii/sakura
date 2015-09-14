@@ -8,10 +8,11 @@ namespace Sakura;
 use Parsedown;
 use PHPMailer;
 
-class Main {
-
+class Main
+{
     // Constructor
-    public static function init($config) {
+    public static function init($config)
+    {
 
         // Configuration Management and local configuration
         Configuration::init($config);
@@ -28,32 +29,35 @@ class Main {
     }
 
     // Parse markdown
-    public static function mdParse($text) {
+    public static function mdParse($text)
+    {
 
         return (new Parsedown())->text($text);
 
     }
 
     // Get bbcodes
-    public static function getBBcodes() {
+    public static function getBBcodes()
+    {
 
         return Database::fetch('bbcodes');
 
     }
 
     // Parse bbcodes
-    public static function bbParse($text) {
+    public static function bbParse($text)
+    {
 
         // Get bbcode regex from the database
         $bbcodes = Database::fetch('bbcodes');
 
         // Split the regex
-        $regex = array_map(function($arr) {
+        $regex = array_map(function ($arr) {
             return $arr['regex'];
         }, $bbcodes);
 
         // Split the replacement
-        $replace = array_map(function($arr) {
+        $replace = array_map(function ($arr) {
             return $arr['replace'];
         }, $bbcodes);
 
@@ -66,23 +70,23 @@ class Main {
     }
 
     // Get emoticons
-    public static function getEmotes() {
+    public static function getEmotes()
+    {
 
         return Database::fetch('emoticons');
 
     }
 
     // Parsing emoticons
-    public static function parseEmotes($text) {
+    public static function parseEmotes($text)
+    {
 
         // Get emoticons from the database
         $emotes = Database::fetch('emoticons');
 
         // Do the replacements
-        foreach($emotes as $emote) {
-
-            $text = str_replace($emote['emote_string'], '<img src="'. $emote['emote_path'] .'" class="emoticon" alt="'. $emote['emote_string'] .'" />', $text);
-
+        foreach ($emotes as $emote) {
+            $text = str_replace($emote['emote_string'], '<img src="' . $emote['emote_path'] . '" class="emoticon" alt="' . $emote['emote_string'] . '" />', $text);
         }
 
         // Return the parsed text
@@ -91,16 +95,15 @@ class Main {
     }
 
     // Verify ReCAPTCHA
-    public static function verifyCaptcha($response) {
+    public static function verifyCaptcha($response)
+    {
 
         // Attempt to get the response
-        $resp = @file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='. Configuration::getConfig('recaptcha_private') .'&response='. $response);
+        $resp = @file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . Configuration::getConfig('recaptcha_private') . '&response=' . $response);
 
         // In the highly unlikely case that it failed to get anything forge a false
-        if(!$resp) {
-
+        if (!$resp) {
             return false;
-
         }
 
         // Decode the response JSON from the servers
@@ -112,49 +115,44 @@ class Main {
     }
 
     // Error Handler
-    public static function errorHandler($errno, $errstr, $errfile, $errline) {
+    public static function errorHandler($errno, $errstr, $errfile, $errline)
+    {
 
         // Remove ROOT path from the error string and file location
-        $errstr     = str_replace(ROOT, '', $errstr);
-        $errfile    = str_replace(ROOT, '', $errfile);
+        $errstr = str_replace(ROOT, '', $errstr);
+        $errfile = str_replace(ROOT, '', $errfile);
 
         // Attempt to log the error to the database
-        if(Database::$_DATABASE !== null) {
-
+        if (Database::$database !== null) {
             // Encode backtrace data
             $backtrace = base64_encode(json_encode(debug_backtrace()));
 
             // Check if this error has already been logged in the past
-            if($past = Database::fetch('error_log', false, ['backtrace' => [$backtrace, '=', true], 'error_string' => [$errstr, '=']])) {
-
+            if ($past = Database::fetch('error_log', false, ['backtrace' => [$backtrace, '=', true], 'error_string' => [$errstr, '=']])) {
                 // If so assign the errid
                 $errid = $past['id'];
-
             } else {
-
                 // Create an error ID
                 $errid = substr(md5(microtime()), rand(0, 22), 10);
 
                 // Log the error
                 Database::insert('error_log', [
 
-                    'id'            => $errid,
-                    'timestamp'     => date("r"),
-                    'revision'      => SAKURA_VERSION,
-                    'error_type'    => $errno,
-                    'error_line'    => $errline,
-                    'error_string'  => $errstr,
-                    'error_file'    => $errfile,
-                    'backtrace'     => $backtrace
+                    'id' => $errid,
+                    'timestamp' => date("r"),
+                    'revision' => SAKURA_VERSION,
+                    'error_type' => $errno,
+                    'error_line' => $errline,
+                    'error_string' => $errstr,
+                    'error_file' => $errfile,
+                    'backtrace' => $backtrace,
 
                 ]);
-
             }
 
         }
 
         switch ($errno) {
-
             case E_ERROR:
             case E_USER_ERROR:
                 $error = '<b>FATAL ERROR</b>: ' . $errstr . ' on line ' . $errline . ' in ' . $errfile;
@@ -172,7 +170,6 @@ class Main {
 
             default:
                 $error = '<b>Unknown error type</b> [' . $errno . ']: ' . $errstr . ' on line ' . $errline . ' in ' . $errfile;
-
         }
 
         // Truncate all previous outputs
@@ -205,41 +202,33 @@ class Main {
             <div class="inner">
                 <p>To prevent potential security risks or data loss Sakura has stopped execution of the script.</p>';
 
-if(isset($errid)) {
+        if (isset($errid)) {
+            $errorPage .= '<p>The error and surrounding data has been logged.</p>
+    <h2>' . (SAKURA_STABLE ? 'Report the following text to a staff member' : 'Logged as') . '</h2><pre class="error">' . $errid . '</pre>';
+        } else {
+            $errorPage .= '<p>Sakura was not able to log this error which could mean that there was an error with the database connection. If you\'re the system administrator check the database credentials and make sure the server is running and if you\'re not please let the system administrator know about this error if it occurs again.</p>';
+        }
 
-    $errorPage .= '<p>The error and surrounding data has been logged.</p>
-    <h2>'. (SAKURA_STABLE ? 'Report the following text to a staff member' : 'Logged as') .'</h2><pre class="error">'. $errid .'</pre>';
-
-} else {
-
-    $errorPage .= '<p>Sakura was not able to log this error which could mean that there was an error with the database connection. If you\'re the system administrator check the database credentials and make sure the server is running and if you\'re not please let the system administrator know about this error if it occurs again.</p>';
-
-}
-
-if(!SAKURA_STABLE) {
-    $errorPage .= '                <h2>Summary</h2>
-                <pre class="error">'. $error .'</pre>
+        if (!SAKURA_STABLE) {
+            $errorPage .= '                <h2>Summary</h2>
+                <pre class="error">' . $error . '</pre>
                 <h2>Backtraces</h2>';
 
-    foreach(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $num => $trace) {
+            foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $num => $trace) {
+                $errorPage .= '<h3>#' . $num . '</h3><pre class="error">';
 
-        $errorPage .= '<h3>#'. $num .'</h3><pre class="error">';
+                foreach ($trace as $key => $val) {
+                    $errorPage .= str_pad('[' . $key . ']', 12) . '=> ' . (is_array($val) || is_object($val) ? json_encode($val) : $val) . "\r\n";
+                }
 
-        foreach($trace as $key => $val) {
-
-            $errorPage .= str_pad('['. $key .']', 12) .'=> '. (is_array($val) || is_object($val) ? json_encode($val) : $val) ."\r\n";
+                $errorPage .= '</pre>';
+            }
 
         }
 
-        $errorPage .= '</pre>';
-
-    }
-
-}
-
-$errorPage .= '</div>
+        $errorPage .= '</div>
             <div class="footer">
-                Sakura r'. SAKURA_VERSION .'.
+                Sakura r' . SAKURA_VERSION . '.
             </div>
         </div>
     </body>
@@ -251,7 +240,8 @@ $errorPage .= '</div>
     }
 
     // Send emails
-    public static function sendMail($to, $subject, $body) {
+    public static function sendMail($to, $subject, $body)
+    {
 
         // Initialise PHPMailer
         $mail = new PHPMailer();
@@ -272,11 +262,9 @@ $errorPage .= '</div>
         $mail->Port = Configuration::getConfig('smtp_port');
 
         // If authentication is required log in as well
-        if(Configuration::getConfig('smtp_auth')) {
-
+        if (Configuration::getConfig('smtp_auth')) {
             $mail->Username = Configuration::getConfig('smtp_username');
             $mail->Password = base64_decode(Configuration::getConfig('smtp_password'));
-
         }
 
         // Add a reply-to header
@@ -286,10 +274,8 @@ $errorPage .= '</div>
         $mail->SetFrom(Configuration::getConfig('smtp_from_email'), Configuration::getConfig('smtp_from_name'));
 
         // Set the addressee
-        foreach($to as $email => $name) {
-
+        foreach ($to as $email => $name) {
             $mail->AddBCC($email, $name);
-
         }
 
         // Subject line
@@ -299,12 +285,12 @@ $errorPage .= '</div>
         $mail->isHTML(true);
 
         // Set email contents
-        $htmlMail = file_get_contents(ROOT .'_sakura/templates/htmlEmail.tpl');
+        $htmlMail = file_get_contents(ROOT . '_sakura/templates/htmlEmail.tpl');
 
         // Replace template tags
-        $htmlMail = str_replace('{{ sitename }}',   Configuration::getConfig('sitename'),       $htmlMail);
-        $htmlMail = str_replace('{{ siteurl }}',    '//'. Configuration::getConfig('url_main'), $htmlMail);
-        $htmlMail = str_replace('{{ contents }}',   self::mdParse($body),                       $htmlMail);
+        $htmlMail = str_replace('{{ sitename }}', Configuration::getConfig('sitename'), $htmlMail);
+        $htmlMail = str_replace('{{ siteurl }}', '//' . Configuration::getConfig('url_main'), $htmlMail);
+        $htmlMail = str_replace('{{ contents }}', self::mdParse($body), $htmlMail);
 
         // Set HTML body
         $mail->Body = $htmlMail;
@@ -319,7 +305,7 @@ $errorPage .= '</div>
         $mail->ClearAddresses();
 
         // If we got an error return the error
-        if(!$send) {
+        if (!$send) {
 
             return $mail->ErrorInfo;
 
@@ -331,7 +317,8 @@ $errorPage .= '</div>
     }
 
     // Cleaning strings
-    public static function cleanString($string, $lower = false, $nospecial = false) {
+    public static function cleanString($string, $lower = false, $noSpecial = false)
+    {
 
         // Run common sanitisation function over string
         $string = htmlentities($string, ENT_NOQUOTES | ENT_HTML401, Configuration::getConfig('charset'));
@@ -339,17 +326,13 @@ $errorPage .= '</div>
         $string = strip_tags($string);
 
         // If set also make the string lowercase
-        if($lower) {
-
+        if ($lower) {
             $string = strtolower($string);
-
         }
 
         // If set remove all characters that aren't a-z or 0-9
-        if($nospecial) {
-
+        if ($noSpecial) {
             $string = preg_replace('/[^a-z0-9]/', '', $string);
-
         }
 
         // Return clean string
@@ -358,7 +341,8 @@ $errorPage .= '</div>
     }
 
     // Loading info pages
-    public static function loadInfoPage($id) {
+    public static function loadInfoPage($id)
+    {
 
         // Get contents from the database
         $infopage = Database::fetch('infopages', false, ['shorthand' => [$id, '=']]);
@@ -369,7 +353,8 @@ $errorPage .= '</div>
     }
 
     // Validate MX records
-    public static function checkMXRecord($email) {
+    public static function checkMXRecord($email)
+    {
 
         // Get the domain from the e-mail address
         $domain = substr(strstr($email, '@'), 1);
@@ -383,25 +368,20 @@ $errorPage .= '</div>
     }
 
     // Check IP version
-    public static function ipVersion($ip) {
+    public static function ipVersion($ip)
+    {
 
         // Check if var is IP
-        if(filter_var($ip, FILTER_VALIDATE_IP)) {
-
+        if (filter_var($ip, FILTER_VALIDATE_IP)) {
             // IPv4
-            if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-
+            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
                 return 4;
-
             }
 
             // IPv6
-            if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-
+            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
                 return 6;
-
             }
-
         }
 
         // Not an IP or unknown type
@@ -410,7 +390,8 @@ $errorPage .= '</div>
     }
 
     // Convert inet_pton to string with bits
-    public static function inetToBits($inet) {
+    public static function inetToBits($inet)
+    {
 
         // Unpack string
         $unpacked = unpack('A16', $inet);
@@ -422,10 +403,8 @@ $errorPage .= '</div>
         $binaryIP = null;
 
         // "Build" binary IP
-        foreach($unpacked as $char) {
-
+        foreach ($unpacked as $char) {
             $binaryIP .= str_pad(decbin(ord($char)), 8, '0', STR_PAD_LEFT);
-
         }
 
         // Return IP
@@ -434,20 +413,19 @@ $errorPage .= '</div>
     }
 
     // Match IP subnets
-    public static function matchSubnet($ip, $range) {
+    public static function matchSubnet($ip, $range)
+    {
 
         // Use the proper IP type
-        switch(self::ipVersion($ip)) {
-
+        switch (self::ipVersion($ip)) {
             case 4:
-
                 // Break the range up in parts
                 list($subnet, $bits) = explode('/', $range);
 
                 // Convert IP and Subnet to long
-                $ip     = ip2long($ip);
+                $ip = ip2long($ip);
                 $subnet = ip2long($subnet);
-                $mask   = -1 << (32 - $bits);
+                $mask = -1 << (32 - $bits);
 
                 // In case the supplied subnet wasn't correctly aligned
                 $subnet &= $mask;
@@ -456,20 +434,19 @@ $errorPage .= '</div>
                 return ($ip & $mask) == $subnet;
 
             case 6:
-
                 // Break the range up in parts
                 list($subnet, $bits) = explode('/', $range);
 
                 // Convert subnet to packed address and convert it to binary
-                $subnet         = inet_pton($subnet);
-                $binarySubnet   = self::inetToBits($subnet);
+                $subnet = inet_pton($subnet);
+                $binarySubnet = self::inetToBits($subnet);
 
                 // Convert IPv6 to packed address and convert it to binary as well
-                $ip         = inet_pton($ip);
-                $binaryIP   = self::inetToBits($ip);
+                $ip = inet_pton($ip);
+                $binaryIP = self::inetToBits($ip);
 
                 // Return bits of the strings according to the bits
-                $ipBits     = substr($binaryIP,     0, $bits);
+                $ipBits = substr($binaryIP, 0, $bits);
                 $subnetBits = substr($binarySubnet, 0, $bits);
 
                 return ($ipBits === $subnetBits);
@@ -482,10 +459,11 @@ $errorPage .= '</div>
     }
 
     // Check if IP is a CloudFlare IP
-    public static function checkCFIP($ip) {
+    public static function checkCFIP($ip)
+    {
 
         // Get CloudFlare Subnet list
-        $cfhosts = file_get_contents(ROOT .'_sakura/'. Configuration::getLocalConfig('data', 'cfipv'. (self::ipVersion($ip))));
+        $cfhosts = file_get_contents(ROOT . '_sakura/' . Configuration::getLocalConfig('data', 'cfipv' . (self::ipVersion($ip))));
 
         // Replace \r\n with \n
         $cfhosts = str_replace("\r\n", "\n", $cfhosts);
@@ -494,22 +472,16 @@ $errorPage .= '</div>
         $cfhosts = explode("\n", $cfhosts);
 
         // Check if IP is in a CloudFlare subnet
-        foreach($cfhosts as $subnet) {
-
+        foreach ($cfhosts as $subnet) {
             // Check if the subnet isn't empty (git newline prevention)
-            if(strlen($subnet) < 1) {
-
+            if (strlen($subnet) < 1) {
                 continue;
-
             }
 
             // Return true if found
-            if(self::matchSubnet($ip, $subnet)) {
-
+            if (self::matchSubnet($ip, $subnet)) {
                 return true;
-
             }
-
         }
 
         // Return false if fails
@@ -518,21 +490,18 @@ $errorPage .= '</div>
     }
 
     // Gets IP of current visitor
-    public static function getRemoteIP() {
+    public static function getRemoteIP()
+    {
 
         // Assign REMOTE_ADDR to a variables
         $ip = $_SERVER['REMOTE_ADDR'];
 
         // Check if the IP is a CloudFlare IP
-        if(self::checkCFIP($ip)) {
-
+        if (self::checkCFIP($ip)) {
             // If it is check if the CloudFlare IP header is set and if it is assign it to the ip variable
-            if(isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
-
+            if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
                 $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
-
             }
-
         }
 
         // Return the correct IP
@@ -541,13 +510,12 @@ $errorPage .= '</div>
     }
 
     // Get country code from CloudFlare header (which just returns XX if not found)
-    public static function getCountryCode() {
+    public static function getCountryCode()
+    {
 
         // Check if the required header is set and return it
-        if(isset($_SERVER['HTTP_CF_IPCOUNTRY'])) {
-
+        if (isset($_SERVER['HTTP_CF_IPCOUNTRY'])) {
             return $_SERVER['HTTP_CF_IPCOUNTRY'];
-
         }
 
         // Return XX as a fallback
@@ -556,13 +524,12 @@ $errorPage .= '</div>
     }
 
     // Create a new action code
-    public static function newActionCode($action, $userid, $instruct) {
+    public static function newActionCode($action, $userid, $instruct)
+    {
 
         // Make sure the user we're working with exists
-        if(Users::getUser($userid)['id'] == 0) {
-
+        if (Users::getUser($userid)['id'] == 0) {
             return false;
-
         }
 
         // Convert the instruction array to a JSON
@@ -573,10 +540,10 @@ $errorPage .= '</div>
 
         // Insert the key into the database
         Database::insert('actioncodes', [
-            'action'        => $action,
-            'userid'        => $userid,
-            'actkey'        => $key,
-            'instruction'   => $instruct
+            'action' => $action,
+            'userid' => $userid,
+            'actkey' => $key,
+            'instruction' => $instruct,
         ]);
 
         // Return the key
@@ -585,35 +552,30 @@ $errorPage .= '</div>
     }
 
     // Use an action code
-    public static function useActionCode($action, $key, $uid = 0) {
+    public static function useActionCode($action, $key, $uid = 0)
+    {
 
         // Retrieve the row from the database
         $keyRow = Database::fetch('actioncodes', false, [
-            'actkey' => [$key,      '='],
-            'action' => [$action,   '=']
+            'actkey' => [$key, '='],
+            'action' => [$action, '='],
         ]);
 
         // Check if the code exists
-        if(count($keyRow) <= 1) {
-
+        if (count($keyRow) <= 1) {
             return [0, 'INVALID_CODE'];
-
         }
 
         // Check if the code was intended for the user that's using this code
-        if($keyRow['userid'] != 0) {
-
-            if($keyRow['userid'] != $uid) {
-
+        if ($keyRow['userid'] != 0) {
+            if ($keyRow['userid'] != $uid) {
                 return [0, 'INVALID_USER'];
-
             }
-
         }
 
         // Remove the key from the database
         Database::delete('actioncodes', [
-            'id' => [$keyRow['id'], '=']
+            'id' => [$keyRow['id'], '='],
         ]);
 
         // Return success
@@ -622,7 +584,8 @@ $errorPage .= '</div>
     }
 
     // Calculate password entropy
-    public static function pwdEntropy($pw) {
+    public static function pwdEntropy($pw)
+    {
 
         // Decode utf-8 chars
         $pw = utf8_decode($pw);
@@ -633,26 +596,25 @@ $errorPage .= '</div>
     }
 
     // Get country name from ISO 3166 code
-    public static function getCountryName($code) {
+    public static function getCountryName($code)
+    {
 
         // Parse JSON file
-        $iso3166 = json_decode(utf8_encode(file_get_contents(ROOT .'_sakura/'. Configuration::getLocalConfig('data', 'iso3166'))), true);
+        $iso3166 = json_decode(utf8_encode(file_get_contents(ROOT . '_sakura/' . Configuration::getLocalConfig('data', 'iso3166'))), true);
 
         // Check if key exists
-        if(array_key_exists($code, $iso3166)) {
-
+        if (array_key_exists($code, $iso3166)) {
             return $iso3166[$code]; // If entry found return the full name
-
-        } else {
-
-            return 'Unknown'; // Else return unknown
-
         }
+
+        // Else return unknown
+        return 'Unknown';
 
     }
 
     // Get FAQ data
-    public static function getFaqData() {
+    public static function getFaqData()
+    {
 
         // Do database call
         $faq = Database::fetch('faq', true, null, ['id']);
@@ -663,16 +625,15 @@ $errorPage .= '</div>
     }
 
     // Get log type string
-    public static function getLogStringFromType($type) {
+    public static function getLogStringFromType($type)
+    {
 
         // Query the database
         $return = Database::fetch('logtypes', false, ['id' => [$type, '=']]);
 
         // Check if type exists and else return a unformattable string
-        if(count($return) < 2) {
-
+        if (count($return) < 2) {
             return 'Unknown action.';
-
         }
 
         // Return the string
@@ -681,7 +642,8 @@ $errorPage .= '</div>
     }
 
     // Get formatted logs
-    public static function getUserLogs($uid = 0) {
+    public static function getUserLogs($uid = 0)
+    {
 
         // Check if a user is specified
         $conditions = ($uid ? ['uid' => [$uid, '=']] : null);
@@ -693,15 +655,13 @@ $errorPage .= '</div>
         $logs = array();
 
         // Iterate over entries
-        foreach($logsDB as $log) {
-
+        foreach ($logsDB as $log) {
             // Store usable data
             $logs[$log['id']] = [
-                'user'      => $_USER = Users::getUser($log['uid']),
-                'rank'      => Users::getRank($_USER['rank_main']),
-                'string'    => vsprintf(self::getLogStringFromType($log['action']), json_decode($log['attribs'], true))
+                'user' => $_USER = Users::getUser($log['uid']),
+                'rank' => Users::getRank($_USER['rank_main']),
+                'string' => vsprintf(self::getLogStringFromType($log['action']), json_decode($log['attribs'], true)),
             ];
-
         }
 
         // Return new logs
@@ -710,7 +670,8 @@ $errorPage .= '</div>
     }
 
     // Indent JSON
-    public static function jsonPretty($json) {
+    public static function jsonPretty($json)
+    {
 
         // Defines
         $tab = '    ';
@@ -720,70 +681,53 @@ $errorPage .= '</div>
         $obj = json_decode($json);
 
         // Validate the object
-        if($obj === false)
+        if ($obj === false) {
             return false;
+        }
 
         // Re-encode the json and get the length
         $json = json_encode($obj);
         $len = strlen($json);
 
         // Go over the entries
-        for($c = 0; $c < $len; $c++) {
-
+        for ($c = 0; $c < $len; $c++) {
             // Get the current character
             $char = $json[$c];
 
-            switch($char) {
-
+            switch ($char) {
                 case '[':
                 case '{':
-                    if($str) {
-
+                    if ($str) {
                         $out .= $char;
-
                     } else {
-
-                        $out .= $char ."\r\n". str_repeat($tab, $lvl + 1);
+                        $out .= $char . "\r\n" . str_repeat($tab, $lvl + 1);
                         $lvl++;
-
                     }
                     break;
 
                 case ']':
                 case '}':
-                    if($str) {
-
+                    if ($str) {
                         $out .= $char;
-
                     } else {
-
                         $lvl--;
-                        $out .= "\r\n". str_repeat($tab, $lvl) . $char;
-
+                        $out .= "\r\n" . str_repeat($tab, $lvl) . $char;
                     }
                     break;
 
                 case ',':
-                    if($str) {
-
+                    if ($str) {
                         $out .= $char;
-
                     } else {
-
-                        $out .= ",\r\n". str_repeat($tab, $lvl);
-
+                        $out .= ",\r\n" . str_repeat($tab, $lvl);
                     }
                     break;
 
                 case ':':
-                    if($str) {
-
+                    if ($str) {
                         $out .= $char;
-
                     } else {
-
                         $out .= ": ";
-
                     }
                     break;
 
@@ -801,53 +745,50 @@ $errorPage .= '</div>
     }
 
     // Time elapsed
-    public static function timeElapsed($timestamp, $append = ' ago', $none = 'Just now') {
+    public static function timeElapsed($timestamp, $append = ' ago', $none = 'Just now')
+    {
 
         // Subtract the entered timestamp from the current timestamp
         $time = time() - $timestamp;
 
         // If the new timestamp is below 1 return a standard string
-        if($time < 1) {
-
+        if ($time < 1) {
             return $none;
-
         }
 
         // Array containing time "types"
         $times = [
             365 * 24 * 60 * 60 => 'year',
-             30 * 24 * 60 * 60 => 'month',
-                  24 * 60 * 60 => 'day',
-                       60 * 60 => 'hour',
-                            60 => 'minute',
-                             1 => 'second'
+            30 * 24 * 60 * 60 => 'month',
+            24 * 60 * 60 => 'day',
+            60 * 60 => 'hour',
+            60 => 'minute',
+            1 => 'second',
         ];
 
-        foreach($times as $secs => $str) {
-
+        foreach ($times as $secs => $str) {
             // Do a devision to check if the given timestamp fits in the current "type"
             $calc = $time / $secs;
 
-            if($calc >= 1) {
-
+            if ($calc >= 1) {
                 // Round the number
                 $round = round($calc);
 
                 // Return the string
-                return $round .' '. $times[$secs] . ($round == 1 ? '' : 's') . $append;
-
+                return $round . ' ' . $times[$secs] . ($round == 1 ? '' : 's') . $append;
             }
-
         }
 
     }
 
     // Get the byte symbol from a value
-    public static function getByteSymbol($bytes) {
+    public static function getByteSymbol($bytes)
+    {
 
         // Return nothing if the input was 0
-        if(!$bytes)
+        if (!$bytes) {
             return;
+        }
 
         // Array with byte symbols
         $symbols = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
@@ -856,7 +797,7 @@ $errorPage .= '</div>
         $exp = floor(log($bytes) / log(1024));
 
         // Format the things
-        $bytes = sprintf("%.2f ". $symbols[$exp], ($bytes / pow(1024, floor($exp))));
+        $bytes = sprintf("%.2f " . $symbols[$exp], ($bytes / pow(1024, floor($exp))));
 
         // Return the formatted string
         return $bytes;
@@ -864,7 +805,8 @@ $errorPage .= '</div>
     }
 
     // Get Premium tracker data
-    public static function getPremiumTrackerData() {
+    public static function getPremiumTrackerData()
+    {
 
         // Create data array
         $data = [];
@@ -882,18 +824,16 @@ $errorPage .= '</div>
         $data['users'] = [];
 
         // Calculate the thing
-        foreach($table as $row) {
-
+        foreach ($table as $row) {
             // Calculate balance
             $data['balance'] = $data['balance'] + $row['amount'];
 
             // Add userdata to table
-            if(!array_key_exists($row['uid'], $data['users'])) {
+            if (!array_key_exists($row['uid'], $data['users'])) {
 
                 $data['users'][$row['uid']] = new User($row['uid']);
 
             }
-
         }
 
         // Return the data
@@ -902,17 +842,17 @@ $errorPage .= '</div>
     }
 
     // Update donation tracker
-    public static function updatePremiumTracker($id, $amount, $comment) {
+    public static function updatePremiumTracker($id, $amount, $comment)
+    {
 
         Database::insert('premium_log', [
 
-            'uid'       => $id,
-            'amount'    => $amount,
-            'date'      => time(),
-            'comment'   => $comment
+            'uid' => $id,
+            'amount' => $amount,
+            'date' => time(),
+            'comment' => $comment,
 
         ]);
 
     }
-
 }

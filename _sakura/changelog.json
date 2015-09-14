@@ -2720,6 +2720,22 @@
                 "type":     "ADD",
                 "change":   "Added Linux no cron task method.",
                 "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Remove old notifications after a month.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150914": [
+
+            "eminence",
+            {
+                "type":     "UPD",
+                "change":   "Make indentation style PSR2 standard compliant.",
+                "user":     "Flashwave"
             }
 
         ]

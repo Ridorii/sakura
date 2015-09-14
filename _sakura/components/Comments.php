@@ -5,8 +5,7 @@
 
 namespace Sakura;
 
-class Comments {
-
-
+class Comments
+{
 
 }

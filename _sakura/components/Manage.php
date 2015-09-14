@@ -2,11 +2,10 @@
 /*
  * Management Class
  */
- 
+
 namespace Sakura;
 
-class Manage {
-
-    
+class Manage
+{
 
 }

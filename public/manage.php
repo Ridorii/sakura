@@ -10,14 +10,12 @@ namespace Sakura;
 define('SAKURA_MANAGE', true);
 
 // Include components
-require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) .'_sakura/sakura.php';
+require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
 // Make sure user has the permissions to view this
-if(!Permissions::check('MANAGE', 'USE_MANAGE', Session::$userId, 1)) {
-
+if (!Permissions::check('MANAGE', 'USE_MANAGE', Session::$userId, 1)) {
     header('Location: /');
     exit;
-
 }
 
 // Management pages
@@ -25,129 +23,129 @@ $managePages = [
 
     'index' => [
         'desc' => 'Index',
-        'subs'  => [
+        'subs' => [
             'front-page' => [
-                'desc' => 'Front Page'
-            ]
-        ]
+                'desc' => 'Front Page',
+            ],
+        ],
     ],
 
     'reports' => [
         'desc' => 'Reports',
-        'subs'  => [
+        'subs' => [
             'front-page' => [
-                'desc' => 'Front Page'
-            ]
-        ]
+                'desc' => 'Front Page',
+            ],
+        ],
     ],
 
     'banning' => [
         'desc' => 'Banning',
-        'subs'  => [
+        'subs' => [
             'front-page' => [
-                'desc' => 'Front Page'
-            ]
-        ]
+                'desc' => 'Front Page',
+            ],
+        ],
     ],
 
     'warnings' => [
         'desc' => 'Warnings',
-        'subs'  => [
+        'subs' => [
             'front-thing' => [
-                'desc' => 'thing'
-            ]
-        ]
+                'desc' => 'thing',
+            ],
+        ],
     ],
 
     'user-notes' => [
         'desc' => 'User notes',
-        'subs'  => [
+        'subs' => [
             'front-page' => [
-                'desc' => 'Front Page'
-            ]
-        ]
+                'desc' => 'Front Page',
+            ],
+        ],
     ],
 
     'action-logs' => [
         'desc' => 'Action logs',
-        'subs'  => [
+        'subs' => [
             'front-page' => [
-                'desc' => 'Front Page'
-            ]
-        ]
+                'desc' => 'Front Page',
+            ],
+        ],
     ],
 
     'action-logs' => [
         'desc' => 'Action logs',
-        'subs'  => [
+        'subs' => [
             'front-page' => [
-                'desc' => 'Front Page'
-            ]
-        ]
+                'desc' => 'Front Page',
+            ],
+        ],
     ],
 
     'statistics' => [
         'desc' => 'Statistics',
-        'subs'  => [
+        'subs' => [
             'front-page' => [
-                'desc' => 'Front Page'
-            ]
-        ]
+                'desc' => 'Front Page',
+            ],
+        ],
     ],
 
     'general-settings' => [
         'desc' => 'General Settings',
-        'subs'  => [
+        'subs' => [
             'front-page' => [
-                'desc' => 'Front Page'
-            ]
-        ]
+                'desc' => 'Front Page',
+            ],
+        ],
     ],
 
     'users' => [
         'desc' => 'Users',
-        'subs'  => [
+        'subs' => [
             'front-page' => [
-                'desc' => 'Front Page'
-            ]
-        ]
+                'desc' => 'Front Page',
+            ],
+        ],
     ],
 
     'ranks' => [
         'desc' => 'Ranks',
-        'subs'  => [
+        'subs' => [
             'front-page' => [
-                'desc' => 'Front Page'
-            ]
-        ]
+                'desc' => 'Front Page',
+            ],
+        ],
     ],
 
     'permissions' => [
         'desc' => 'Permissions',
-        'subs'  => [
+        'subs' => [
             'front-page' => [
-                'desc' => 'Front Page'
-            ]
-        ]
+                'desc' => 'Front Page',
+            ],
+        ],
     ],
 
     'info-pages' => [
         'desc' => 'Info pages',
-        'subs'  => [
+        'subs' => [
             'front-page' => [
-                'desc' => 'Front Page'
-            ]
-        ]
+                'desc' => 'Front Page',
+            ],
+        ],
     ],
 
     'system' => [
         'desc' => 'System',
-        'subs'  => [
+        'subs' => [
             'front-page' => [
-                'desc' => 'Front Page'
-            ]
-        ]
-    ]
+                'desc' => 'Front Page',
+            ],
+        ],
+    ],
 
 ];
 
@@ -174,9 +172,9 @@ $renderData['page'] = [
             key($_MANAGE_SUBS)
         ) :
         key($_MANAGE_SUBS)
-    )
+    ),
 
 ];
 
 // Print page contents
-print Templates::render('pages/'. $_MANAGE_ACTIVE_PAGE .'/'. $_MANAGE_ACTIVE_SUB .'.tpl', $renderData);
+print Templates::render('pages/' . $_MANAGE_ACTIVE_PAGE . '/' . $_MANAGE_ACTIVE_SUB . '.tpl', $renderData);
