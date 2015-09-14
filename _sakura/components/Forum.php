@@ -339,14 +339,14 @@ class Forum
                 'posts',
                 ['poster_id' => [$uid, '=']]
             )[0],
-            'topics' => Database::count(
+            'topics' => count(Database::fetch(
                 'posts',
                 true,
                 ['poster_id' => [$uid, '=']],
                 ['post_time'],
                 null,
                 ['topic_id']
-            )[0],
+            )),
         ];
 
     }

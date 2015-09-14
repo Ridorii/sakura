@@ -2736,6 +2736,11 @@
                 "type":     "UPD",
                 "change":   "Make indentation style PSR2 standard compliant.",
                 "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed error on profile page relating to forum stats.",
+                "user":     "Flashwave"
             }
 
         ]
