@@ -28,7 +28,11 @@ class Configuration
             self::$local = $local;
         } else {
             // Otherwise trigger an error
-            trigger_error('Failed to load local configuration file, check the structure of the file to see if you made mistake somewhere', E_USER_ERROR);
+            trigger_error(
+                'Failed to load local configuration file,' .
+                ' check the structure of the file to see if you made mistake somewhere',
+                E_USER_ERROR
+            );
         }
 
     }
@@ -73,7 +77,10 @@ class Configuration
         }
 
         // If it doesn't exist trigger an error to avoid explosions
-        trigger_error('Unable to get local configuration value "' . $key . '"', E_USER_ERROR);
+        trigger_error(
+            'Unable to get local configuration value "' . $key . '"',
+            E_USER_ERROR
+        );
 
     }
 
@@ -111,7 +118,10 @@ class Configuration
         }
 
         // Then return the value
-        trigger_error('Unable to get configuration value "' . $key . '"', E_USER_ERROR);
+        trigger_error(
+            'Unable to get configuration value "' . $key . '"',
+            E_USER_ERROR
+        );
 
     }
 }

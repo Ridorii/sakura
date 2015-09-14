@@ -86,7 +86,11 @@ class Main
 
         // Do the replacements
         foreach ($emotes as $emote) {
-            $text = str_replace($emote['emote_string'], '<img src="' . $emote['emote_path'] . '" class="emoticon" alt="' . $emote['emote_string'] . '" />', $text);
+            $text = str_replace(
+                $emote['emote_string'],
+                '<img src="' . $emote['emote_path'] . '" class="emoticon" alt="' . $emote['emote_string'] . '" />',
+                $text
+            );
         }
 
         // Return the parsed text
@@ -99,7 +103,12 @@ class Main
     {
 
         // Attempt to get the response
-        $resp = @file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . Configuration::getConfig('recaptcha_private') . '&response=' . $response);
+        $resp = @file_get_contents(
+            'https://www.google.com/recaptcha/api/siteverify?secret='
+            . Configuration::getConfig('recaptcha_private')
+            . '&response='
+            . $response
+        );
 
         // In the highly unlikely case that it failed to get anything forge a false
         if (!$resp) {
@@ -128,7 +137,12 @@ class Main
             $backtrace = base64_encode(json_encode(debug_backtrace()));
 
             // Check if this error has already been logged in the past
-            if ($past = Database::fetch('error_log', false, ['backtrace' => [$backtrace, '=', true], 'error_string' => [$errstr, '=']])) {
+            if ($past = Database::fetch(
+                'error_log',
+                false,
+                ['backtrace' => [$backtrace, '=', true],
+                    'error_string' => [$errstr, '=']]
+            )) {
                 // If so assign the errid
                 $errid = $past['id'];
             } else {
@@ -169,7 +183,8 @@ class Main
                 break;
 
             default:
-                $error = '<b>Unknown error type</b> [' . $errno . ']: ' . $errstr . ' on line ' . $errline . ' in ' . $errfile;
+                $error = '<b>Unknown error type</b> [' . $errno . ']: ' . $errstr . ' on line ' . $errline
+                . ' in ' . $errfile;
         }
 
         // Truncate all previous outputs
@@ -183,13 +198,18 @@ class Main
         <meta charset="utf-8" />
         <title>Sakura Internal Error</title>
         <style type="text/css">
-            body { margin: 0; padding: 0; background: #EEE; color: #000; font: 12px/20px Verdana, Arial, Helvetica, sans-serif; }
-            h1, h2 { font-weight: 100; background: #CAA; padding: 8px 5px 10px; margin: 0; font-style: italic; font-family: serif; }
+            body { margin: 0; padding: 0; background: #EEE; color: #000;
+                font: 12px/20px Verdana, Arial, Helvetica, sans-serif; }
+            h1, h2 { font-weight: 100; background: #CAA; padding: 8px 5px 10px;
+                margin: 0; font-style: italic; font-family: serif; }
             h1 { border-radius: 8px 8px 0 0; }
             h2 { margin: 0 -10px; }
-            .container { border: 1px solid #CAA; margin: 10px auto; background: #FFF; box-shadow: 2px 2px 1em #888; max-width: 1024px; border-radius: 10px; }
+            .container { border: 1px solid #CAA; margin: 10px auto; background: #FFF;
+                box-shadow: 2px 2px 1em #888; max-width: 1024px; border-radius: 10px; }
             .container .inner { padding: 0px 10px; }
-            .container .inner .error { background: #555; color: #EEE; border-left: 5px solid #C22; padding: 4px 6px; text-shadow: 0px 1px 1px #888; white-space: pre-wrap; word-wrap: break-word; margin: 12px 0; border-radius: 5px; box-shadow: inset 0 0 1em #333; }
+            .container .inner .error { background: #555; color: #EEE; border-left: 5px solid #C22;
+                padding: 4px 6px; text-shadow: 0px 1px 1px #888; white-space: pre-wrap;
+                word-wrap: break-word; margin: 12px 0; border-radius: 5px; box-shadow: inset 0 0 1em #333; }
             .container .footer { border-top: 1px solid #CAA; font-size: x-small; padding: 0px 5px 1px; }
             a { color: #77E; text-decoration: none; }
             a:hover { text-decoration: underline; }
@@ -204,9 +224,13 @@ class Main
 
         if (isset($errid)) {
             $errorPage .= '<p>The error and surrounding data has been logged.</p>
-    <h2>' . (SAKURA_STABLE ? 'Report the following text to a staff member' : 'Logged as') . '</h2><pre class="error">' . $errid . '</pre>';
+    <h2>' . (SAKURA_STABLE ? 'Report the following text to a staff member' : 'Logged as') . '</h2>
+    <pre class="error">' . $errid . '</pre>';
         } else {
-            $errorPage .= '<p>Sakura was not able to log this error which could mean that there was an error with the database connection. If you\'re the system administrator check the database credentials and make sure the server is running and if you\'re not please let the system administrator know about this error if it occurs again.</p>';
+            $errorPage .= '<p>Sakura was not able to log this error which could mean that there was an error
+             with the database connection. If you\'re the system administrator check the database credentials
+              and make sure the server is running and if you\'re not please let the system administrator
+               know about this error if it occurs again.</p>';
         }
 
         if (!SAKURA_STABLE) {
@@ -218,7 +242,15 @@ class Main
                 $errorPage .= '<h3>#' . $num . '</h3><pre class="error">';
 
                 foreach ($trace as $key => $val) {
-                    $errorPage .= str_pad('[' . $key . ']', 12) . '=> ' . (is_array($val) || is_object($val) ? json_encode($val) : $val) . "\r\n";
+                    $errorPage .=
+                    str_pad(
+                        '[' . $key . ']',
+                        12
+                    ) . '=> ' . (
+                        is_array($val) || is_object($val) ?
+                        json_encode($val) :
+                        $val
+                    ) . "\r\n";
                 }
 
                 $errorPage .= '</pre>';
@@ -306,9 +338,7 @@ class Main
 
         // If we got an error return the error
         if (!$send) {
-
             return $mail->ErrorInfo;
-
         }
 
         // Else just return whatever
@@ -463,7 +493,9 @@ class Main
     {
 
         // Get CloudFlare Subnet list
-        $cfhosts = file_get_contents(ROOT . '_sakura/' . Configuration::getLocalConfig('data', 'cfipv' . (self::ipVersion($ip))));
+        $cfhosts = file_get_contents(
+            ROOT . '_sakura/' . Configuration::getLocalConfig('data', 'cfipv' . (self::ipVersion($ip)))
+        );
 
         // Replace \r\n with \n
         $cfhosts = str_replace("\r\n", "\n", $cfhosts);
@@ -600,7 +632,14 @@ class Main
     {
 
         // Parse JSON file
-        $iso3166 = json_decode(utf8_encode(file_get_contents(ROOT . '_sakura/' . Configuration::getLocalConfig('data', 'iso3166'))), true);
+        $iso3166 = json_decode(
+            utf8_encode(
+                file_get_contents(
+                    ROOT . '_sakura/' . Configuration::getLocalConfig('data', 'iso3166')
+                )
+            ),
+            true
+        );
 
         // Check if key exists
         if (array_key_exists($code, $iso3166)) {
@@ -830,9 +869,7 @@ class Main
 
             // Add userdata to table
             if (!array_key_exists($row['uid'], $data['users'])) {
-
                 $data['users'][$row['uid']] = new User($row['uid']);
-
             }
         }
 

@@ -22,7 +22,15 @@ $changelogHTML = null;
 foreach (array_reverse($changelog['changelog'], true) as $revisionId => $revisionData) {
     $changelogHTML .= '<div class="release" id="r' . $revisionId . '">';
 
-    $changelogHTML .= '<a href="#r' . $revisionId . '" class="title" style="color: ' . $changelog['versions'][$revisionData[0]] . ';">Revision ' . $revisionId . ' (' . ucfirst($revisionData[0]) . ')</a>';
+    $changelogHTML .= '<a href="#r'
+    . $revisionId
+    . '" class="title" style="color: '
+    . $changelog['versions'][$revisionData[0]]
+    . ';">Revision '
+    . $revisionId
+    . ' ('
+    . ucfirst($revisionData[0])
+    . ')</a>';
 
     unset($revisionData[0]);
 
@@ -54,7 +62,9 @@ foreach (array_reverse($changelog['changelog'], true) as $revisionId => $revisio
         $changelogHTML .= $changeData['change'];
         $changelogHTML .= '</span>';
 
-        $changelogHTML .= '<a class="changeuser" target="_blank" href="http://bitbucket.org/' . strtolower($changeData['user']) . '">';
+        $changelogHTML .= '<a class="changeuser" target="_blank" href="http://bitbucket.org/'
+        . strtolower($changeData['user'])
+        . '">';
         $changelogHTML .= $changeData['user'];
         $changelogHTML .= '</a>';
 

@@ -86,10 +86,16 @@ if (isset($_GET['xml'])) {
 
             // Create value
             eval('$value = ' . $valueData['eval'] . ';');
-            $value = str_replace('{EVAL}', $value, $valueData[(array_key_exists('cdata', $valueData) ? 'cdata' : 'text')]);
+            $value = str_replace(
+                '{EVAL}',
+                $value,
+                $valueData[(array_key_exists('cdata', $valueData) ? 'cdata' : 'text')]
+            );
 
             // Create text node or cdata container
-            $pElemText = (array_key_exists('cdata', $valueData)) ? $feed->createCDATASection($value) : $feed->createTextNode($value);
+            $pElemText = (array_key_exists('cdata', $valueData)) ?
+            $feed->createCDATASection($value) :
+            $feed->createTextNode($value);
 
             // Append them
             $pElem->appendChild($pElemText);

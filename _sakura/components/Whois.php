@@ -52,7 +52,10 @@ class Whois
 
         // Check for neccesary keys
         if (!array_key_exists('tld', $servers) || !array_key_exists('ip', $servers)) {
-            trigger_error('One or more of the required whois lists isn\'t set, please check your whois servers file', E_USER_ERROR);
+            trigger_error(
+                'One or more of the required whois lists isn\'t set, please check your whois servers file',
+                E_USER_ERROR
+            );
         }
 
         // If everything is gucci set self::$servers
@@ -113,7 +116,9 @@ class Whois
 
         // Get proper whois server address
         if (!$server = $servers[$tld]) {
-            return 'Error: No appropriate whois server found for the TLD ' . $tld . ', check if the given address is correct.';
+            return 'Error: No appropriate whois server found for the TLD '
+            . $tld
+            . ', check if the given address is correct.';
         }
 
         // Get results from whois server
@@ -133,7 +138,12 @@ class Whois
                     $result = self::queryWhois(($server = $matches[1]), $address);
 
                     // ...and append the retrieved values to the return variable
-                    $return .= "\r\n-------------\r\n\r\n" . $address . " domain lookup results from " . $server . ":\r\n" . $result;
+                    $return .= "\r\n-------------\r\n\r\n"
+                    . $address
+                    . " domain lookup results from "
+                    . $server
+                    . ":\r\n"
+                    . $result;
                 }
             }
         }
@@ -188,7 +198,19 @@ class Whois
     {
 
         // Open socket
-        $query = @fsockopen($server, $port, $errno, $errstr, $timeout) or trigger_error('Failed to open socket: ' . $errno . ' - ' . $errstr, E_USER_ERROR);
+        $query = @fsockopen(
+            $server,
+            $port,
+            $errno,
+            $errstr,
+            $timeout
+        ) or trigger_error(
+            'Failed to open socket: '
+            . $errno
+            . ' - '
+            . $errstr,
+            E_USER_ERROR
+        );
 
         // Send address
         fputs($query, $address . "\r\n");

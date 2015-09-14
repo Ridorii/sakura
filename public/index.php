@@ -58,7 +58,17 @@ $renderData['board'] = [
 $renderData['stats'] = [
     'userCount' => Database::count('users', ['password_algo' => ['nologin', '!='], 'rank_main' => ['1', '!=']])[0],
     'newestUser' => ($_INDEX_NEWEST_USER = new User(Users::getNewestUserId())),
-    'lastRegDate' => ($_INDEX_LAST_REGDATE = date_diff(date_create(date('Y-m-d', $_INDEX_NEWEST_USER->data['regdate'])), date_create(date('Y-m-d')))->format('%a')) . ' day' . ($_INDEX_LAST_REGDATE == 1 ? '' : 's'),
+    'lastRegDate' => ($_INDEX_LAST_REGDATE = date_diff(
+        date_create(
+            date(
+                'Y-m-d',
+                $_INDEX_NEWEST_USER->data['regdate']
+            )
+        ),
+        date_create(
+            date('Y-m-d')
+        )
+    )->format('%a')) . ' day' . ($_INDEX_LAST_REGDATE == 1 ? '' : 's'),
     'topicCount' => Database::count('topics')[0],
     'postCount' => Database::count('posts')[0],
     'onlineUsers' => Users::checkAllOnline(),

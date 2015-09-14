@@ -14,7 +14,8 @@ if (isset($_REQUEST['mode'])) {
     // Continue
     $continue = true;
 
-    // Make sure we're not in activate mode since adding a timestamp and accessing the PHP session id is kind of hard when you're in an e-mail client
+    // Make sure we're not in activate mode since adding a timestamp
+    //  and accessing the PHP session id is kind of hard when you're in an e-mail client
     if (!isset($_REQUEST['mode']) || $_REQUEST['mode'] != 'activate') {
         // Compare time and session so we know the link isn't forged
         if (!isset($_REQUEST['time']) || $_REQUEST['time'] < time() - 1000) {
@@ -79,7 +80,12 @@ if (isset($_REQUEST['mode'])) {
 
             case 'changepassword':
                 // Attempt change
-                $passforget = Users::resetPassword($_REQUEST['verk'], $_REQUEST['uid'], $_REQUEST['newpw'], $_REQUEST['verpw']);
+                $passforget = Users::resetPassword(
+                    $_REQUEST['verk'],
+                    $_REQUEST['uid'],
+                    $_REQUEST['newpw'],
+                    $_REQUEST['verpw']
+                );
 
                 // Array containing "human understandable" messages
                 $messages = [
@@ -97,7 +103,11 @@ if (isset($_REQUEST['mode'])) {
                 // Add page specific things
                 $renderData['page'] = [
 
-                    'redirect' => ($passforget[0] ? $urls->format('SITE_LOGIN') : $_SERVER['PHP_SELF'] . '?pw=true&uid=' . $_REQUEST['uid'] . '&verk=' . $_REQUEST['verk']),
+                    'redirect' => (
+                        $passforget[0] ?
+                        $urls->format('SITE_LOGIN') :
+                        $_SERVER['PHP_SELF'] . '?pw=true&uid=' . $_REQUEST['uid'] . '&verk=' . $_REQUEST['verk']
+                    ),
                     'message' => $messages[$passforget[1]],
                     'success' => $passforget[0],
 

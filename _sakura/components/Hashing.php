@@ -34,43 +34,36 @@ namespace Sakura;
 class Hashing
 {
     // These variables can be changed without break the existing hashes
-    private static $_PBKDF2_HASH_ALGORITHM = 'sha256';
-    private static $_PBKDF2_ITERATIONS = 1000;
-    private static $_PBKDF2_SALT_BYTES = 24;
-    private static $_PBKDF2_HASH_BYTES = 24;
-
-    // Changing these will break them though
-    private static $_HASH_ALGORITHM_INDEX = 0;
-    private static $_HASH_ITERATION_INDEX = 1;
-    private static $_HASH_SALT_INDEX = 2;
-    private static $_HASH_PBKDF2_INDEX = 3;
-    private static $_HASH_SECTIONS = 4;
+    private static $hashAlgorithm = 'sha256';
+    private static $iterations = 1000;
+    private static $saltBytes = 24;
+    private static $hashBytes = 24;
 
     // Returns an array formatted like: [algorithm, iterations, salt, hash]
-    public static function create_hash($pass)
+    public static function createHash($pass)
     {
 
         $salt = base64_encode(
             \mcrypt_create_iv(
-                self::$_PBKDF2_SALT_BYTES,
+                self::$saltBytes,
                 MCRYPT_DEV_URANDOM
             )
         );
 
         $hash = base64_encode(
             self::pbkdf2(
-                self::$_PBKDF2_HASH_ALGORITHM,
+                self::$hashAlgorithm,
                 $pass,
                 $salt,
-                self::$_PBKDF2_ITERATIONS,
-                self::$_PBKDF2_HASH_BYTES,
+                self::$iterations,
+                self::$hashBytes,
                 true
             )
         );
 
         $passwordData = array(
-            self::$_PBKDF2_HASH_ALGORITHM,
-            self::$_PBKDF2_ITERATIONS,
+            self::$hashAlgorithm,
+            self::$iterations,
             $salt,
             $hash,
         );
@@ -80,22 +73,22 @@ class Hashing
     }
 
     // Validates hashed password
-    public static function validate_password($password, $params)
+    public static function validatePassword($password, $params)
     {
 
-        if (count($params) < self::$_HASH_SECTIONS) {
+        if (count($params) < 4) {
             return false;
         }
 
-        $pbkdf2 = base64_decode($params[self::$_HASH_PBKDF2_INDEX]);
+        $pbkdf2 = base64_decode($params[3]);
 
-        $validate = self::slow_equals(
+        $validate = self::slowEquals(
             $pbkdf2,
             $dick = self::pbkdf2(
-                $params[self::$_HASH_ALGORITHM_INDEX],
+                $params[0],
                 $password,
-                $params[self::$_HASH_SALT_INDEX],
-                (int) $params[self::$_HASH_ITERATION_INDEX],
+                $params[2],
+                (int) $params[1],
                 strlen($pbkdf2),
                 true
             )
@@ -106,7 +99,7 @@ class Hashing
     }
 
     // Compares two strings $a and $b in length-constant time.
-    public static function slow_equals($a, $b)
+    public static function slowEquals($a, $b)
     {
 
         $diff = strlen($a) ^ strlen($b);
@@ -141,11 +134,17 @@ class Hashing
         $algorithm = strtolower($algorithm);
 
         if (!in_array($algorithm, hash_algos(), true)) {
-            trigger_error('PBKDF2 ERROR: Invalid hash algorithm.', E_USER_ERROR);
+            trigger_error(
+                'PBKDF2 ERROR: Invalid hash algorithm.',
+                E_USER_ERROR
+            );
         }
 
         if ($count <= 0 || $key_length <= 0) {
-            trigger_error('PBKDF2 ERROR: Invalid parameters.', E_USER_ERROR);
+            trigger_error(
+                'PBKDF2 ERROR: Invalid parameters.',
+                E_USER_ERROR
+            );
         }
 
         if (function_exists('hash_pbkdf2')) {

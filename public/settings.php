@@ -23,7 +23,10 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     $notifications = array();
 
     // Check if the user is logged in
-    if (Users::checkLogin() && isset($_REQUEST['time']) && $_REQUEST['time'] > (time() - 1000) && isset($_REQUEST['session']) && $_REQUEST['session'] == session_id()) {
+    if (Users::checkLogin()
+        && isset($_REQUEST['time'])
+        && $_REQUEST['time'] > (time() - 1000)
+        && isset($_REQUEST['session']) && $_REQUEST['session'] == session_id()) {
         // Get the user's notifications from the past forever but exclude read notifications
         $userNotifs = Users::getNotifications(null, 0, true, true);
 
@@ -119,7 +122,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     // Continue if nothing fucked up
     if ($continue) {
         // Execute the action
-        $action = (isset($_REQUEST['add']) ? Users::addFriend($_REQUEST['add']) : Users::removeFriend($_REQUEST['remove'], true));
+        $action = (isset($_REQUEST['add']) ?
+            Users::addFriend($_REQUEST['add']) :
+            Users::removeFriend($_REQUEST['remove'], true));
 
         // Set the messages
         $messages = [
@@ -197,7 +202,11 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     }
 
     // Check session variables
-    if (!isset($_REQUEST['timestamp']) || $_REQUEST['timestamp'] < time() - 1000 || !isset($_REQUEST['sessid']) || $_REQUEST['sessid'] != session_id() || !$continue) {
+    if (!isset($_REQUEST['timestamp'])
+        || $_REQUEST['timestamp'] < time() - 1000
+        || !isset($_REQUEST['sessid'])
+        || $_REQUEST['sessid'] != session_id()
+        || !$continue) {
         $renderData['page'] = [
 
             'redirect' => $redirect,
@@ -224,7 +233,10 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     case 'background':
                         $userDataKey = 'profileBackground';
                         $msgTitle = 'Background';
-                        $permission = (!empty($currentUser->data['userData'][$userDataKey]) && $currentUser->checkPermission('SITE', 'CHANGE_BACKGROUND')) || $currentUser->checkPermission('SITE', 'CREATE_BACKGROUND');
+                        $permission = (
+                            !empty($currentUser->data['userData'][$userDataKey])
+                            && $currentUser->checkPermission('SITE', 'CHANGE_BACKGROUND')
+                        ) || $currentUser->checkPermission('SITE', 'CREATE_BACKGROUND');
                         break;
 
                     case 'avatar':
@@ -251,7 +263,8 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 // Set path variables
                 $filepath = ROOT . Configuration::getConfig('user_uploads') . '/';
                 $filename = $filepath . $mode . '_' . Session::$userId;
-                $currfile = isset($currentUser->data['userData'][$userDataKey]) && !empty($_OLDFILE = $currentUser->data['userData'][$userDataKey]) ? $_OLDFILE : null;
+                $currfile = isset($currentUser->data['userData'][$userDataKey])
+                && !empty($_OLDFILE = $currentUser->data['userData'][$userDataKey]) ? $_OLDFILE : null;
 
                 // Check if $_FILES is set
                 if (!isset($_FILES[$mode]) && empty($_FILES[$mode])) {
@@ -323,7 +336,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     }
 
                     // Check if the image is an allowed filetype
-                    if ((($metadata[2] !== IMAGETYPE_GIF) && ($metadata[2] !== IMAGETYPE_JPEG) && ($metadata[2] !== IMAGETYPE_PNG))) {
+                    if ((($metadata[2] !== IMAGETYPE_GIF)
+                        && ($metadata[2] !== IMAGETYPE_JPEG)
+                        && ($metadata[2] !== IMAGETYPE_PNG))) {
                         // Set render data
                         $renderData['page'] = [
 
@@ -337,7 +352,8 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     }
 
                     // Check if the image is too large
-                    if (($metadata[0] > Configuration::getConfig($mode . '_max_width') || $metadata[1] > Configuration::getConfig($mode . '_max_height'))) {
+                    if (($metadata[0] > Configuration::getConfig($mode . '_max_width')
+                        || $metadata[1] > Configuration::getConfig($mode . '_max_height'))) {
                         // Set render data
                         $renderData['page'] = [
 
@@ -351,7 +367,8 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     }
 
                     // Check if the image is too small
-                    if (($metadata[0] < Configuration::getConfig($mode . '_min_width') || $metadata[1] < Configuration::getConfig($mode . '_min_height'))) {
+                    if (($metadata[0] < Configuration::getConfig($mode . '_min_width')
+                        || $metadata[1] < Configuration::getConfig($mode . '_min_height'))) {
                         // Set render data
                         $renderData['page'] = [
 
@@ -441,7 +458,10 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         // Go over each additional value
                         foreach ($field['additional'] as $addKey => $addVal) {
                             // Add to the array
-                            $store[$addKey] = (isset($_POST['profile_additional_' . $addKey]) || !empty($_POST['profile_additional_' . $addKey])) ? $_POST['profile_additional_' . $addKey] : false;
+                            $store[$addKey] = (isset($_POST['profile_additional_' . $addKey])
+                                || !empty($_POST['profile_additional_' . $addKey])) ?
+                            $_POST['profile_additional_' . $addKey] :
+                            false;
                         }
                     }
                 }
@@ -459,29 +479,54 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 ];
 
                 // Birthdays
-                if (isset($_POST['birthday_day']) && isset($_POST['birthday_month']) && isset($_POST['birthday_year'])) {
+                if (isset($_POST['birthday_day'])
+                    && isset($_POST['birthday_month'])
+                    && isset($_POST['birthday_year'])) {
                     // Check if the values aren't fucked with
-                    if ($_POST['birthday_day'] < 0 || $_POST['birthday_day'] > 31 || $_POST['birthday_month'] < 0 || $_POST['birthday_month'] > 12 || ($_POST['birthday_year'] != 0 && $_POST['birthday_year'] < (date("Y") - 100)) || $_POST['birthday_year'] > date("Y")) {
+                    if ($_POST['birthday_day'] < 0
+                        || $_POST['birthday_day'] > 31
+                        || $_POST['birthday_month'] < 0
+                        || $_POST['birthday_month'] > 12
+                        || (
+                            $_POST['birthday_year'] != 0
+                            && $_POST['birthday_year'] < (date("Y") - 100)
+                        )
+                        || $_POST['birthday_year'] > date("Y")) {
                         $renderData['page']['message'] = 'Your birthdate is invalid.';
                         $renderData['page']['success'] = 0;
                         break;
                     }
 
                     // Check if the values aren't fucked with
-                    if (($_POST['birthday_day'] < 1 && $_POST['birthday_month'] > 0) || ($_POST['birthday_day'] > 0 && $_POST['birthday_month'] < 1)) {
+                    if ((
+                        $_POST['birthday_day'] < 1
+                        && $_POST['birthday_month'] > 0
+                    )
+                        || (
+                            $_POST['birthday_day'] > 0
+                            && $_POST['birthday_month'] < 1)
+                    ) {
                         $renderData['page']['message'] = 'Only setting a day or month is disallowed.';
                         $renderData['page']['success'] = 0;
                         break;
                     }
 
                     // Check if the values aren't fucked with
-                    if ($_POST['birthday_year'] > 0 && ($_POST['birthday_day'] < 1 || $_POST['birthday_month'] < 1)) {
+                    if ($_POST['birthday_year'] > 0
+                        && (
+                            $_POST['birthday_day'] < 1
+                            || $_POST['birthday_month'] < 1
+                        )
+                    ) {
                         $renderData['page']['message'] = 'Only setting a year is disallowed.';
                         $renderData['page']['success'] = 0;
                         break;
                     }
 
-                    $birthdate = implode('-', [$_POST['birthday_year'], $_POST['birthday_month'], $_POST['birthday_day']]);
+                    $birthdate = implode(
+                        '-',
+                        [$_POST['birthday_year'], $_POST['birthday_month'], $_POST['birthday_day']]
+                    );
 
                     Database::update('users', [
                         [
@@ -510,7 +555,10 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         continue;
                     }
 
-                    $store[$field['id']] = isset($_POST['option_' . $field['id']]) && !empty($_POST['option_' . $field['id']]) ? $_POST['option_' . $field['id']] : null;
+                    $store[$field['id']] = isset($_POST['option_' . $field['id']])
+                    && !empty($_POST['option_' . $field['id']]) ?
+                    $_POST['option_' . $field['id']] :
+                    null;
                 }
 
                 // Update database
@@ -590,7 +638,8 @@ if (Users::checkLogin()) {
                     'title' => 'Home',
                     'description' => [
 
-                        'Welcome to the Settings Panel. From here you can monitor, view and update your profile and preferences.',
+                        'Welcome to the Settings Panel.
+                        From here you can monitor, view and update your profile and preferences.',
 
                     ],
                     'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
@@ -602,7 +651,8 @@ if (Users::checkLogin()) {
                     'title' => 'Edit Profile',
                     'description' => [
 
-                        'These are the external account links etc. on your profile, shouldn\'t need any additional explanation for this one.',
+                        'These are the external account links etc.
+                        on your profile, shouldn\'t need any additional explanation for this one.',
 
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'ALTER_PROFILE'),
@@ -763,7 +813,9 @@ if (Users::checkLogin()) {
                     'description' => [
 
                         'Your avatar which is displayed all over the site and on your profile.',
-                        'Maximum image size is {{ avatar.max_width }}x{{ avatar.max_height }}, minimum image size is {{ avatar.min_width }}x{{ avatar.min_height }}, maximum file size is {{ avatar.max_size_view }}.',
+                        'Maximum image size is {{ avatar.max_width }}x{{ avatar.max_height }},
+                        minimum image size is {{ avatar.min_width }}x{{ avatar.min_height }},
+                        maximum file size is {{ avatar.max_size_view }}.',
 
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'CHANGE_AVATAR'),
@@ -776,10 +828,15 @@ if (Users::checkLogin()) {
                     'description' => [
 
                         'The background that is displayed on your profile.',
-                        'Maximum image size is {{ background.max_width }}x{{ background.max_height }}, minimum image size is {{ background.min_width }}x{{ background.min_height }}, maximum file size is {{ background.max_size_view }}.',
+                        'Maximum image size is {{ background.max_width }}x{{ background.max_height }},
+                        minimum image size is {{ background.min_width }}x{{ background.min_height }},
+                        maximum file size is {{ background.max_size_view }}.',
 
                     ],
-                    'access' => (isset($currentUser->data['userData']['profileBackground']) && $currentUser->checkPermission('SITE', 'CHANGE_BACKGROUND')) || $currentUser->checkPermission('SITE', 'CREATE_BACKGROUND'),
+                    'access' => (
+                        isset($currentUser->data['userData']['profileBackground'])
+                        && $currentUser->checkPermission('SITE', 'CHANGE_BACKGROUND')
+                    ) || $currentUser->checkPermission('SITE', 'CREATE_BACKGROUND'),
                     'menu' => true,
 
                 ],
@@ -791,7 +848,10 @@ if (Users::checkLogin()) {
                         'The custom text that is displayed on your profile.',
 
                     ],
-                    'access' => (isset($currentUser->data['userData']['userPage']) && $currentUser->checkPermission('SITE', 'CHANGE_USERPAGE')) || $currentUser->checkPermission('SITE', 'CREATE_USERPAGE'),
+                    'access' => (
+                        isset($currentUser->data['userData']['userPage'])
+                        && $currentUser->checkPermission('SITE', 'CHANGE_USERPAGE')
+                    ) || $currentUser->checkPermission('SITE', 'CREATE_USERPAGE'),
                     'menu' => true,
 
                 ],
@@ -859,7 +919,9 @@ if (Users::checkLogin()) {
                     'title' => 'Ranks',
                     'description' => [
 
-                        'Manage what ranks you\'re in and what is set as your main rank. Your main rank is highlighted. You get the permissions of all of the ranks you\'re in combined.',
+                        'Manage what ranks you\'re in and what is set as your main rank.
+                        Your main rank is highlighted.
+                        You get the permissions of all of the ranks you\'re in combined.',
 
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'ALTER_RANKS'),
@@ -881,9 +943,13 @@ if (Users::checkLogin()) {
                     'title' => 'Sessions',
                     'description' => [
 
-                        'Session keys are a way of identifying yourself with the system without keeping your password in memory.',
-                        'If someone finds one of your session keys they could possibly compromise your account, if you see any sessions here that shouldn\'t be here hit the Kill button to kill the selected session.',
-                        'If you get logged out after clicking one you\'ve most likely killed your current session, to make it easier to avoid this from happening your current session is highlighted.',
+                        'Session keys are a way of identifying yourself with the system without keeping
+                        your password in memory.',
+                        'If someone finds one of your session keys they could possibly compromise your account,
+                        if you see any sessions here that shouldn\'t be here hit the Kill button to kill the
+                            selected session.',
+                        'If you get logged out after clicking one you\'ve most likely killed your current session,
+                        to make it easier to avoid this from happening your current session is highlighted.',
 
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'MANAGE_SESSIONS'),
@@ -895,7 +961,8 @@ if (Users::checkLogin()) {
                     'title' => 'Registration Keys',
                     'description' => [
 
-                        'Sometimes we activate the registration key system which means that users can only register using your "referer" keys, this means we can keep unwanted people from registering.',
+                        'Sometimes we activate the registration key system which means that users can only
+                        register using your "referer" keys,this means we can keep unwanted people from registering.',
                         'Each user can generate 5 of these keys, bans and deactivates render these keys useless.',
 
                     ],
@@ -923,16 +990,24 @@ if (Users::checkLogin()) {
     ];
 
     // Current settings page
-    $category = isset($_GET['cat']) ? (array_key_exists($_GET['cat'], $pages) ? $_GET['cat'] : false) : array_keys($pages)[0];
+    $category = isset($_GET['cat']) ? (
+        array_key_exists($_GET['cat'], $pages) ? $_GET['cat'] : false
+    ) : array_keys($pages)[0];
     $mode = false;
 
     // Only continue setting mode if $category is true
     if ($category) {
-        $mode = isset($_GET['mode']) && $category ? (array_key_exists($_GET['mode'], $pages[$category]['modes']) ? $_GET['mode'] : false) : array_keys($pages[$category]['modes'])[0];
+        $mode = isset($_GET['mode']) && $category ? (
+            array_key_exists($_GET['mode'], $pages[$category]['modes']) ? $_GET['mode'] : false
+        ) : array_keys($pages[$category]['modes'])[0];
     }
 
     // Not found
-    if (!$category || empty($category) || !$mode || empty($mode) || !$pages[$category]['modes'][$mode]['access']) {
+    if (!$category
+        || empty($category)
+        || !$mode
+        || empty($mode)
+        || !$pages[$category]['modes'][$mode]['access']) {
         header('HTTP/1.0 404 Not Found');
         print Templates::render('global/notfound.tpl', $renderData);
         exit;

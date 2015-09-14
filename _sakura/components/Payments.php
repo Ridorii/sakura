@@ -82,7 +82,7 @@ class Payments
         // Create transaction
         $trans = new Transaction();
 
-        // Set transaction data (aka shit we already set but whatever who cares we need to set it again 500 times over again anyway, YAY TECHNOLOGY!)
+        // Set transaction data
         $trans->setAmount($amount)
             ->setItemList($list)
             ->setDescription($transDescription)

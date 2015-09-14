@@ -15,12 +15,23 @@ if (Users::checkLogin()) {
     $renderData['page'] = [
 
         'ranks' => ($_MEMBERLIST_RANKS = Users::getAllRanks()),
-        'active' => ($_MEMBERLIST_ACTIVE = (isset($_GET['rank']) && $_GET['rank'] && array_key_exists($_GET['rank'], $_MEMBERLIST_RANKS) ? $_GET['rank'] : 0)),
-        'notfound' => ($_MEMBERLIST_NFOUND = (isset($_GET['rank']) && !array_key_exists($_GET['rank'], $_MEMBERLIST_RANKS) && $_GET['rank'] != 0)),
+        'active' => ($_MEMBERLIST_ACTIVE = (
+            isset($_GET['rank'])
+            && $_GET['rank']
+            && array_key_exists($_GET['rank'], $_MEMBERLIST_RANKS) ? $_GET['rank'] : 0
+        )),
+        'notfound' => ($_MEMBERLIST_NFOUND = (
+            isset($_GET['rank'])
+            && !array_key_exists($_GET['rank'], $_MEMBERLIST_RANKS) && $_GET['rank'] != 0
+        )),
         'sorts' => ($_MEMBERLIST_SORTS = ['boxes', 'rectangles', 'list']),
-        'sort' => isset($_GET['sort']) && $_GET['sort'] && in_array($_GET['sort'], $_MEMBERLIST_SORTS) ? $_GET['sort'] : $_MEMBERLIST_SORTS[0],
+        'sort' => isset($_GET['sort']) && $_GET['sort'] && in_array($_GET['sort'], $_MEMBERLIST_SORTS) ?
+        $_GET['sort'] :
+        $_MEMBERLIST_SORTS[0],
         'page' => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
-        'users' => array_chunk($_MEMBERLIST_ACTIVE && !$_MEMBERLIST_NFOUND ? Users::getUsersInRank($_MEMBERLIST_ACTIVE, null, true, true) : Users::getAllUsers(), Configuration::getConfig('members_per_page'), true),
+        'users' => array_chunk($_MEMBERLIST_ACTIVE && !$_MEMBERLIST_NFOUND ?
+            Users::getUsersInRank($_MEMBERLIST_ACTIVE, null, true, true) :
+            Users::getAllUsers(), Configuration::getConfig('members_per_page'), true),
 
     ];
 

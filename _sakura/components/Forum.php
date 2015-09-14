@@ -44,12 +44,14 @@ class Forum
                 $return[$forum['forum_category']]['forums'][$forum['forum_id']] = $forum;
 
                 // Get the topic count
-                $return[$forum['forum_category']]['forums'][$forum['forum_id']]['topic_count'] = Database::count('topics', [
+                $return[$forum['forum_category']]['forums'][$forum['forum_id']]['topic_count'] =
+                Database::count('topics', [
                     'forum_id' => [$forum['forum_id'], '='],
                 ])[0];
 
                 // Get the post count
-                $return[$forum['forum_category']]['forums'][$forum['forum_id']]['post_count'] = Database::count('posts', [
+                $return[$forum['forum_category']]['forums'][$forum['forum_id']]['post_count'] =
+                Database::count('posts', [
                     'forum_id' => [$forum['forum_id'], '='],
                 ])[0];
 
@@ -264,7 +266,12 @@ class Forum
                 'is_online' => Users::checkUserOnline($_POSTER['id']),
                 'is_friend' => Users::checkFriend($_POSTER['id']),
                 'parsed_post' => self::parseMarkUp($post['post_text'], $post['parse_mode'], $post['enable_emotes']),
-                'signature' => empty($_POSTER['userData']['signature']) ? '' : self::parseMarkUp($_POSTER['userData']['signature']['text'], $_POSTER['userData']['signature']['mode']),
+                'signature' => empty($_POSTER['userData']['signature']) ?
+                '' :
+                self::parseMarkUp(
+                    $_POSTER['userData']['signature']['text'],
+                    $_POSTER['userData']['signature']['mode']
+                ),
             ]);
 
             // Just in case
@@ -328,8 +335,18 @@ class Forum
 
         // Collect the stats
         return [
-            'posts' => Database::count('posts', ['poster_id' => [$uid, '=']])[0],
-            'topics' => count(Database::fetch('posts', true, ['poster_id' => [$uid, '=']], ['post_time'], null, ['topic_id'])),
+            'posts' => Database::count(
+                'posts',
+                ['poster_id' => [$uid, '=']]
+            )[0],
+            'topics' => Database::count(
+                'posts',
+                true,
+                ['poster_id' => [$uid, '=']],
+                ['post_time'],
+                null,
+                ['topic_id']
+            )[0],
         ];
 
     }

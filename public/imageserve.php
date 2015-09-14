@@ -23,9 +23,21 @@ if (isset($_GET['m'])) {
     switch ($_GET['m']) {
         case 'avatar':
             // Set paths
-            $noAvatar = ROOT . str_replace('{{ TPL }}', $templateName, Configuration::getConfig('no_avatar_img'));
-            $deactiveAvatar = ROOT . str_replace('{{ TPL }}', $templateName, Configuration::getConfig('deactivated_avatar_img'));
-            $bannedAvatar = ROOT . str_replace('{{ TPL }}', $templateName, Configuration::getConfig('banned_avatar_img'));
+            $noAvatar = ROOT . str_replace(
+                '{{ TPL }}',
+                $templateName,
+                Configuration::getConfig('no_avatar_img')
+            );
+            $deactiveAvatar = ROOT . str_replace(
+                '{{ TPL }}',
+                $templateName,
+                Configuration::getConfig('deactivated_avatar_img')
+            );
+            $bannedAvatar = ROOT . str_replace(
+                '{{ TPL }}',
+                $templateName,
+                Configuration::getConfig('banned_avatar_img')
+            );
 
             // If ?u= isn't set or if it isn't numeric
             if (!isset($_GET['u']) || !is_numeric($_GET['u']) || $_GET['u'] == 0) {
@@ -84,7 +96,8 @@ if (isset($_GET['m'])) {
             }
 
             // Check if user has a background set
-            if (empty($user->data['userData']['profileBackground']) || !file_exists($userDirPath . $user->data['userData']['profileBackground'])) {
+            if (empty($user->data['userData']['profileBackground'])
+                || !file_exists($userDirPath . $user->data['userData']['profileBackground'])) {
                 $serveImage = $noBackground;
                 break;
             }
@@ -119,7 +132,8 @@ if (isset($_GET['m'])) {
             }
 
             // Check if user has a background set
-            if (empty($user->data['userData']['profileHeader']) || !file_exists($userDirPath . $user->data['userData']['profileHeader'])) {
+            if (empty($user->data['userData']['profileHeader'])
+                || !file_exists($userDirPath . $user->data['userData']['profileHeader'])) {
                 $serveImage = $noHeader;
                 break;
             }

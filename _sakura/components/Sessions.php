@@ -20,9 +20,17 @@ class Session
             session_start();
         }
 
-        // Assign user and session IDs
-        self::$userId = isset($_COOKIE[Configuration::getConfig('cookie_prefix') . 'id']) ? $_COOKIE[Configuration::getConfig('cookie_prefix') . 'id'] : 0;
-        self::$sessionId = isset($_COOKIE[Configuration::getConfig('cookie_prefix') . 'session']) ? $_COOKIE[Configuration::getConfig('cookie_prefix') . 'session'] : '';
+        // Assign user ID
+        self::$userId =
+        isset($_COOKIE[Configuration::getConfig('cookie_prefix') . 'id']) ?
+        $_COOKIE[Configuration::getConfig('cookie_prefix') . 'id'] :
+        0;
+
+        // Assign session ID
+        self::$sessionId =
+        isset($_COOKIE[Configuration::getConfig('cookie_prefix') . 'session']) ?
+        $_COOKIE[Configuration::getConfig('cookie_prefix') . 'session'] :
+        '';
 
     }
 

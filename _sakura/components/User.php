@@ -17,11 +17,24 @@ class User
     {
 
         // Get the user database row
-        $this->data = Database::fetch('users', false, ['id' => [$uid, '=', true], 'username_clean' => [Main::cleanString($uid, true), '=', true]]);
+        $this->data = Database::fetch(
+            'users',
+            false,
+            [
+                'id' => [$uid, '=', true],
+                'username_clean' => [Main::cleanString($uid, true), '=', true],
+            ]
+        );
 
         // Check if anything like the username exists
         if (empty($this->data)) {
-            $this->data = Database::fetch('users', false, ['username_clean' => ['%' . Main::cleanString($uid, true) . '%', 'LIKE']]);
+            $this->data = Database::fetch(
+                'users',
+                false,
+                [
+                    'username_clean' => ['%' . Main::cleanString($uid, true) . '%', 'LIKE'],
+                ]
+            );
         }
 
         // Check if the user actually exists
@@ -49,7 +62,11 @@ class User
         }
 
         // Assign the user's main rank to a special variable since we'll use it a lot
-        $this->mainRank = $this->ranks[array_key_exists($this->data['rank_main'], $this->ranks) ? $this->data['rank_main'] : array_keys($this->ranks)[0]];
+        $this->mainRank = $this->ranks[
+            array_key_exists($this->data['rank_main'], $this->ranks) ?
+            $this->data['rank_main'] :
+            array_keys($this->ranks)[0]
+        ];
 
     }
 
@@ -204,7 +221,11 @@ class User
 
             // If the field is set to be a link add a value for that as well
             if ($field['islink']) {
-                $profile[$fieldName]['link'] = str_replace('{{ VAL }}', $this->data['userData']['profileFields'][$fieldName], $field['linkformat']);
+                $profile[$fieldName]['link'] = str_replace(
+                    '{{ VAL }}',
+                    $this->data['userData']['profileFields'][$fieldName],
+                    $field['linkformat']
+                );
             }
 
             // Check if we have additional options as well

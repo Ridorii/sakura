@@ -61,7 +61,8 @@ class Users
         // Check if cookie bypass is false
         if (!$bypassCookies) {
             // Check if the cookies are set
-            if (!isset($_COOKIE[Configuration::getConfig('cookie_prefix') . 'id']) || !isset($_COOKIE[Configuration::getConfig('cookie_prefix') . 'session'])) {
+            if (!isset($_COOKIE[Configuration::getConfig('cookie_prefix') . 'id']) ||
+                !isset($_COOKIE[Configuration::getConfig('cookie_prefix') . 'session'])) {
                 return false;
             }
         }
@@ -78,8 +79,23 @@ class Users
 
         // Extend the cookie times if the remember flag is set
         if ($session == 2 && !$bypassCookies) {
-            setcookie(Configuration::getConfig('cookie_prefix') . 'id', $uid, time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
-            setcookie(Configuration::getConfig('cookie_prefix') . 'session', $sid, time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
+            // User ID cookie
+            setcookie(
+                Configuration::getConfig('cookie_prefix') . 'id',
+                $uid,
+                time() + 604800,
+                Configuration::getConfig('cookie_path'),
+                Configuration::getConfig('cookie_domain')
+            );
+
+            // Session ID cookie
+            setcookie(
+                Configuration::getConfig('cookie_prefix') . 'session',
+                $sid,
+                time() + 604800,
+                Configuration::getConfig('cookie_path'),
+                Configuration::getConfig('cookie_domain')
+            );
         }
 
         // Update last online
@@ -125,7 +141,7 @@ class Users
 
             // Default hashing method
             default:
-                if (!Hashing::validate_password($password, [
+                if (!Hashing::validatePassword($password, [
                     $user['password_algo'],
                     $user['password_iter'],
                     $user['password_salt'],
@@ -146,8 +162,23 @@ class Users
 
         // Set cookies
         if ($cookies) {
-            setcookie(Configuration::getConfig('cookie_prefix') . 'id', $user['id'], time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
-            setcookie(Configuration::getConfig('cookie_prefix') . 'session', $sessionKey, time() + 604800, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
+            // User ID cookie
+            setcookie(
+                Configuration::getConfig('cookie_prefix') . 'id',
+                $user['id'],
+                time() + 604800,
+                Configuration::getConfig('cookie_path'),
+                Configuration::getConfig('cookie_domain')
+            );
+
+            // Session ID cookie
+            setcookie(
+                Configuration::getConfig('cookie_prefix') . 'session',
+                $sessionKey,
+                time() + 604800,
+                Configuration::getConfig('cookie_path'),
+                Configuration::getConfig('cookie_domain')
+            );
         }
 
         // Successful login! (also has a thing for the legacy password system)
@@ -170,8 +201,23 @@ class Users
         }
 
         // Set cookies
-        setcookie(Configuration::getConfig('cookie_prefix') . 'id', 0, time() - 60, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
-        setcookie(Configuration::getConfig('cookie_prefix') . 'session', '', time() - 60, Configuration::getConfig('cookie_path'), Configuration::getConfig('cookie_domain'));
+        // User ID
+        setcookie(
+            Configuration::getConfig('cookie_prefix') . 'id',
+            0,
+            time() - 60,
+            Configuration::getConfig('cookie_path'),
+            Configuration::getConfig('cookie_domain')
+        );
+
+        // Session ID
+        setcookie(
+            Configuration::getConfig('cookie_prefix') . 'session',
+            '',
+            time() - 60,
+            Configuration::getConfig('cookie_path'),
+            Configuration::getConfig('cookie_domain')
+        );
 
         // Return true indicating a successful logout
         return true;
@@ -250,7 +296,7 @@ class Users
         // Set a few variables
         $usernameClean = Main::cleanString($username, true);
         $emailClean = Main::cleanString($email, true);
-        $password = Hashing::create_hash($password);
+        $password = Hashing::createHash($password);
         $requireActive = Configuration::getConfig('require_activation');
         $userRank = $requireActive ? [1] : [2];
         $userRankJson = json_encode($userRank);
@@ -381,7 +427,7 @@ class Users
         }
 
         // Hash the password
-        $password = Hashing::create_hash($newpass);
+        $password = Hashing::createHash($newpass);
         $time = time();
 
         // Update the user
@@ -478,7 +524,13 @@ class Users
         $message .= "--\r\n\r\nThanks\r\n\r\n" . Configuration::getConfig('mail_signature');
 
         // Send the message
-        Main::sendMail([$user['email'] => $user['username']], Configuration::getConfig('sitename') . ' Activation Mail', $message);
+        Main::sendMail(
+            [
+                $user['email'] => $user['username'],
+            ],
+            Configuration::getConfig('sitename') . ' Activation Mail',
+            $message
+        );
 
         // Return true indicating that the things have been sent
         return true;
@@ -506,7 +558,8 @@ class Users
         $rank = 2;
         $ranks = json_encode([2]);
 
-        // Check if a key is set (there's an option to not set one for user management reasons but you can't really get around this anyway)
+        /* Check if a key is set (there's an option to not set one for user
+        management reasons but you can't really get around this anyway) */
         if ($requireKey) {
             // Check the action code
             $action = Main::useActionCode('ACTIVATE', $key, $uid);
@@ -547,16 +600,12 @@ class Users
 
         // Check if user exists
         if (!count($user) > 1) {
-
             return [0, 'USER_NOT_EXIST'];
-
         }
 
         // Check if user is already deactivated
         if (Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
-
             return [0, 'USER_ALREADY_DEACTIVE'];
-
         }
 
         // Deactivate the account
@@ -593,9 +642,7 @@ class Users
 
         // Check if the code exists
         if (!$id = self::checkRegistrationCode($code)) {
-
             return false;
-
         }
 
         // Mark it as used
@@ -620,16 +667,16 @@ class Users
 
         // Check if we're logged in
         if (!self::checkLogin()) {
-
             return false;
-
         }
 
         // Check if the user is not exceeding the maximum registration key amount
-        if (count(Database::fetch('regcodes', true, ['uid' => [Session::$userId, '=']])) >= Configuration::getConfig('max_reg_keys')) {
-
+        if (Database::count(
+            'regcodes',
+            true,
+            ['uid' => [Session::$userId, '=']]
+        )[0] >= Configuration::getConfig('max_reg_keys')) {
             return false;
-
         }
 
         // Generate a code by MD5'ing some random bullshit
@@ -660,9 +707,7 @@ class Users
 
         // Check if the rank we're trying to set is actually there
         if (!in_array($rid, $ranks)) {
-
             return false;
-
         }
 
         // Update the row
@@ -692,12 +737,10 @@ class Users
 
         // Go over all the new ranks
         foreach ($ranks as $rank) {
-
             // Check if the user already has this rank and set it if not
             if (!in_array($rank, $current)) {
                 $current[] = (int) $rank;
             }
-
         }
 
         // Encode the array
@@ -730,12 +773,10 @@ class Users
 
         // Check the current ranks for ranks in the set array
         foreach ($current as $key => $rank) {
-
             // Unset the rank
             if (in_array($rank, $ranks)) {
                 unset($current[$key]);
             }
-
         }
 
         // Encode the array
@@ -765,9 +806,7 @@ class Users
 
         // Check if the main rank is the specified rank
         if (in_array($user['rank_main'], $ranks)) {
-
             return true;
-
         }
 
         // Decode the json for the user's ranks
@@ -775,12 +814,10 @@ class Users
 
         // If not go over all ranks and check if the user has them
         foreach ($ranks as $rank) {
-
             // We check if $rank is in $user['ranks'] and if yes return true
             if (in_array($rank, $uRanks)) {
                 return true;
             }
-
         }
 
         // If all fails return false
@@ -812,9 +849,7 @@ class Users
 
         // If there's nothing just return null
         if (!count($profileFields)) {
-
             return null;
-
         }
 
         // Create output array
@@ -822,11 +857,9 @@ class Users
 
         // Iterate over the fields and clean them up
         foreach ($profileFields as $field) {
-
             $fields[$field['id']] = $field;
             $fields[$field['id']]['ident'] = Main::cleanString($field['name'], true, true);
             $fields[$field['id']]['addit'] = json_decode($field['additional'], true);
-
         }
 
         // Return the yeahs
@@ -843,9 +876,7 @@ class Users
 
         // If there's nothing just return null
         if (!count($optionFields)) {
-
             return null;
-
         }
 
         // Create output array
@@ -853,15 +884,11 @@ class Users
 
         // Iterate over the fields and clean them up
         foreach ($optionFields as $field) {
-
             if (!Permissions::check('SITE', $field['require_perm'], Session::$userId, 1)) {
-
                 continue;
-
             }
 
             $fields[$field['id']] = $field;
-
         }
 
         // Return the yeahs
@@ -878,9 +905,7 @@ class Users
 
         // If there's nothing just return null
         if (!count($profileFields)) {
-
             return null;
-
         }
 
         // Assign the profileData variable
@@ -888,9 +913,7 @@ class Users
 
         // Once again if nothing was returned just return null
         if (count($profileData) < 1 || $profileData == null || empty($profileData['profileFields'])) {
-
             return null;
-
         }
 
         // Redeclare profileData
@@ -901,15 +924,12 @@ class Users
 
         // Check if profile fields aren't fake
         foreach ($profileFields as $field) {
-
             // Completely strip all special characters from the field name
             $fieldName = Main::cleanString($field['name'], true, true);
 
             // Check if the user has the current field set otherwise continue
             if (!array_key_exists($fieldName, $profileData)) {
-
                 continue;
-
             }
 
             // Assign field to output with value
@@ -920,34 +940,25 @@ class Users
 
             // If the field is set to be a link add a value for that as well
             if ($field['islink']) {
-
                 $profile[$fieldName]['link'] = str_replace('{{ VAL }}', $profileData[$fieldName], $field['linkformat']);
-
             }
 
             // Check if we have additional options as well
             if ($field['additional'] != null) {
-
                 // Decode the json of the additional stuff
                 $additional = json_decode($field['additional'], true);
 
                 // Go over all additional forms
                 foreach ($additional as $subName => $subField) {
-
                     // Check if the user has the current field set otherwise continue
                     if (!array_key_exists($subName, $profileData)) {
-
                         continue;
-
                     }
 
                     // Assign field to output with value
                     $profile[$fieldName][$subName] = $profileData[$subName];
-
                 }
-
             }
-
         }
 
         // Return appropiate profile data
@@ -989,9 +1000,7 @@ class Users
 
         // Return false if the user doesn't exist because a user that doesn't exist can't be online
         if (empty($user)) {
-
             return false;
-
         }
 
         // Return true if the user was online in the last 5 minutes
@@ -1029,15 +1038,12 @@ class Users
 
         // If the user already exists do an update call, otherwise an insert call
         if (empty($getUser)) {
-
             Database::insert('premium', [
                 'uid' => $id,
                 'startdate' => $start,
                 'expiredate' => $expire,
             ]);
-
         } else {
-
             Database::update('premium', [
                 [
                     'expiredate' => $expire,
@@ -1046,7 +1052,6 @@ class Users
                     'uid' => [$id, '='],
                 ],
             ]);
-
         }
 
         // Return the expiration timestamp
@@ -1070,9 +1075,7 @@ class Users
 
         // Check if the user has static premium
         if (Permissions::check('SITE', 'STATIC_PREMIUM', $id, 1)) {
-
             return [2, 0, time() + 1];
-
         }
 
         // Attempt to retrieve the premium record from the database
@@ -1082,18 +1085,14 @@ class Users
 
         // If nothing was returned just return false
         if (empty($getRecord)) {
-
             return [0];
-
         }
 
         // Check if the Tenshi hasn't expired
         if ($getRecord['expiredate'] < time()) {
-
             self::removeUserPremium($id);
             self::updatePremiumMeta($id);
             return [0, $getRecord['startdate'], $getRecord['expiredate']];
-
         }
 
         // Else return the start and expiration date
@@ -1113,22 +1112,16 @@ class Users
 
         // Check if the user has premium
         if ($check[0] == 1) {
-
             // If so add the rank to them
             self::addRanksToUser([$premiumRank], $id);
 
             // Check if the user's default rank is standard user and update it to premium
             if (self::getUser($id)['rank_main'] == 2) {
-
                 self::setDefaultRank($id, $premiumRank);
-
             }
-
         } elseif ($check[0] == 0 && count($check) > 1) {
-
             // Else remove the rank from them
             self::removeRanksFromUser([$premiumRank], $id);
-
         }
 
     }
@@ -1151,9 +1144,7 @@ class Users
 
         // Return false if no rank was found
         if (empty($rank)) {
-
             return self::$emptyRank;
-
         }
 
         // If rank was found return rank data
@@ -1185,9 +1176,7 @@ class Users
 
         // Get all users (or use the supplied user list to keep server load down)
         if (!$users) {
-
             $users = self::getAllUsers();
-
         }
 
         // Make output array
@@ -1195,14 +1184,11 @@ class Users
 
         // Go over all users and check if they have the rank id
         foreach ($users as $user) {
-
             // If so store the user's row in the array
-            if (self::checkIfUserHasRanks([$rankId], $user, true) && ($excludeAbyss ? $user['password_algo'] != 'nologin' : true)) {
-
+            if (self::checkIfUserHasRanks([$rankId], $user, true)
+                && ($excludeAbyss ? $user['password_algo'] != 'nologin' : true)) {
                 $rank[] = $user;
-
             }
-
         }
 
         // Then return the array with the user rows
@@ -1222,23 +1208,17 @@ class Users
 
         // Reorder shit
         foreach ($getUsers as $user) {
-
             // Skip abyss
             if (!$includeAbyss && $user['password_algo'] == 'nologin') {
-
                 continue;
-
             }
 
             // Skip if inactive and not include deactivated users
             if (!$includeInactive && Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
-
                 continue;
-
             }
 
             $users[$user['id']] = $user;
-
         }
 
         // and return an array with the users
@@ -1258,9 +1238,7 @@ class Users
 
         // Reorder shit
         foreach ($getRanks as $rank) {
-
             $ranks[$rank['id']] = $rank;
-
         }
 
         // and return an array with the ranks
@@ -1291,15 +1269,11 @@ class Users
         $conditions['uid'] = [($uid ? $uid : Session::$userId), '='];
 
         if ($timediff) {
-
             $conditions['timestamp'] = [time() - $timediff, '>'];
-
         }
 
         if ($excludeRead) {
-
             $conditions['notif_read'] = [0, '='];
-
         }
 
         // Get notifications for the database
@@ -1307,22 +1281,16 @@ class Users
 
         // Mark the notifications as read
         if ($markRead) {
-
             // Iterate over all entries
             foreach ($notifications as $notification) {
-
                 // If the notifcation is already read skip
                 if ($notification['notif_read']) {
-
                     continue;
-
                 }
 
                 // Mark them as read
                 self::markNotificationRead($notification['id']);
-
             }
-
         }
 
         // Return the notifications
@@ -1382,7 +1350,6 @@ class Users
 
         // Go over each message and check if they are for the current user
         foreach ($messages as $message) {
-
             // Store the message
             $store[$message['id']] = $message;
 
@@ -1391,7 +1358,6 @@ class Users
             $store[$message['id']]['data']['from']['rank'] = self::getRank($_MSG_USR['rank_main']);
             $store[$message['id']]['data']['to']['user'] = ($_MSG_USR = self::getUser($message['to_user']));
             $store[$message['id']]['data']['to']['rank'] = self::getRank($_MSG_USR['rank_main']);
-
         }
 
         // Return store array
@@ -1405,9 +1371,7 @@ class Users
 
         // Assign $uid
         if (!$uid) {
-
             $uid = Session::$userId;
-
         }
 
         // Get all friends
@@ -1420,7 +1384,6 @@ class Users
 
         // Iterate over the raw database return
         foreach ($getFriends as $key => $friend) {
-
             // Add friend to array
             $friends[($timestamps ? $friend['fid'] : $key)] = $getData ? ([
 
@@ -1428,19 +1391,16 @@ class Users
                 'rank' => self::getRank($_UDATA['rank_main']),
 
             ]) : $friend[($timestamps ? 'timestamp' : 'fid')];
-
         }
 
         // Check who is online and who isn't
         if ($checkOnline) {
-
             // Check each user
             foreach ($friends as $key => $friend) {
-
-                $friends[self::checkUserOnline($getData ? $friend['user']['id'] : $friend) ? 'online' : 'offline'][] = $friend;
-
+                $friends[
+                    self::checkUserOnline($getData ? $friend['user']['id'] : $friend) ? 'online' : 'offline'
+                ][] = $friend;
             }
-
         }
 
         // Return formatted array
@@ -1454,9 +1414,7 @@ class Users
 
         // Assign $of automatically if it's not set
         if (!$uid) {
-
             $uid = Session::$userId;
-
         }
 
         // Get all friend entries from other people involved the current user
@@ -1469,19 +1427,15 @@ class Users
 
         // Check if the friends are mutual
         foreach ($friends as $friend) {
-
             // Check if the friend is mutual
             if (!self::checkFriend($friend['uid'], $uid)) {
-
                 $pending[] = $getData ? ([
 
                     'user' => ($_UDATA = self::getUser($friend['uid'])),
                     'rank' => self::getRank($_UDATA['rank_main']),
 
                 ]) : $friend;
-
             }
-
         }
 
         // Return the pending friends
@@ -1495,9 +1449,7 @@ class Users
 
         // Assign $uid
         if (!$uid) {
-
             $uid = Session::$userId;
-
         }
 
         // Get the user's friends
@@ -1505,9 +1457,7 @@ class Users
 
         // Check if the friend is actually in the user's array
         if (!in_array($fid, $self)) {
-
             return 0;
-
         }
 
         // Get the friend's friends
@@ -1515,9 +1465,7 @@ class Users
 
         // Check if the friend is actually in the user's array
         if (in_array($uid, $friend)) {
-
             return 2;
-
         }
 
         // Return true if all went through
@@ -1531,16 +1479,12 @@ class Users
 
         // Validate that the user exists
         if (!self::getUser($uid)) {
-
             return [0, 'USER_NOT_EXIST'];
-
         }
 
         // Check if the user already has this user a friend
         if (Database::fetch('friends', false, ['fid' => [$uid, '='], 'uid' => [Session::$userId, '=']])) {
-
             return [0, 'ALREADY_FRIENDS'];
-
         }
 
         // Add friend
@@ -1561,9 +1505,7 @@ class Users
 
         // Check if the user has this user a friend
         if (!Database::fetch('friends', false, ['fid' => [$uid, '='], 'uid' => [Session::$userId, '=']])) {
-
             return [0, 'ALREADY_REMOVED'];
-
         }
 
         // Remove friend
@@ -1574,12 +1516,10 @@ class Users
 
         // Attempt to remove the request
         if ($deleteRequest) {
-
             Database::delete('friends', [
                 'fid' => [Session::$userId, '='],
                 'uid' => [$uid, '='],
             ]);
-
         }
 
         // Return true because yay
@@ -1594,5 +1534,4 @@ class Users
         return Database::fetch('users', false, ['password_algo' => ['nologin', '!=']], ['id', true], ['1'])['id'];
 
     }
-
 }
