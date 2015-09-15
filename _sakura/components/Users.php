@@ -67,13 +67,27 @@ class Users
             }
         }
 
-        // Check if the session exists
-        if (!$session = Session::checkSession($uid, $sid)) {
-            return false;
-        }
+        // Check if the session exists and check if the user is activated
+        if (!$session = Session::checkSession($uid, $sid)
+            || Permissions::check('SITE', 'DEACTIVATED', $uid, 1)) {
+            // Unset User ID
+            setcookie(
+                Configuration::getConfig('cookie_prefix') . 'id',
+                0,
+                time() - 60,
+                Configuration::getConfig('cookie_path'),
+                Configuration::getConfig('cookie_domain')
+            );
 
-        // Check if the user is activated
-        if (Permissions::check('SITE', 'DEACTIVATED', $uid, 1)) {
+            // Unset Session ID
+            setcookie(
+                Configuration::getConfig('cookie_prefix') . 'session',
+                '',
+                time() - 60,
+                Configuration::getConfig('cookie_path'),
+                Configuration::getConfig('cookie_domain')
+            );
+
             return false;
         }
 
@@ -200,8 +214,7 @@ class Users
             return false;
         }
 
-        // Set cookies
-        // User ID
+        // Unset User ID
         setcookie(
             Configuration::getConfig('cookie_prefix') . 'id',
             0,
@@ -210,7 +223,7 @@ class Users
             Configuration::getConfig('cookie_domain')
         );
 
-        // Session ID
+        // Unset Session ID
         setcookie(
             Configuration::getConfig('cookie_prefix') . 'session',
             '',

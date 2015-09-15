@@ -181,7 +181,7 @@ img {
     max-height: 100%;
 }
 
-img.default-avatar-setting {
+.default-avatar-setting {
     max-width: 200px;
     max-height: 200px;
     border: 3px solid #EEE;
@@ -591,7 +591,7 @@ a.default:active {
 #chatUserList > div > .avatar {
     width: 50px;
     height: 50px;
-    background: transparent url("/pixel.png") no-repeat scroll left center / contain;
+    background: transparent url("/content/pixel.png") no-repeat scroll left center / contain;
     border-radius: 5px;
 }
 
@@ -2093,4 +2093,81 @@ textarea.inputStyling {
     overflow: auto;
     padding: 6px 10px;
     border-radius: 3px;
+}
+
+/*
+ *  Comments
+ */
+.comments {
+}
+
+.comments .comment-input-section {
+    border-top: 1px solid #9475B2;
+    border-bottom: 1px solid #9475B2;
+}
+
+.comments .comment {
+    display: flex;
+    align-items: stretch;
+    margin: 2px 0;
+}
+
+.comments .comment > .comment-avatar {
+    height: 58px;
+    width: 58px;
+    background: url("/content/pixel.png") no-repeat scroll left center / contain;
+    flex-shrink: 0;
+    margin-right: 2px;
+    border-radius: 4px;
+    border: 1px solid #9475B2;
+}
+
+.comments .comment > .comment-pointer {
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 0px 15px 15px 0px;
+    border-color: transparent #FFF transparent transparent;
+}
+
+.comments .comment > .comment-text {
+    border-radius: 0 5px 5px 5px;
+    border: 0;
+    min-height: 50px;
+    height: 50px;
+    flex-grow: 2;
+    padding: 5px;
+    font: 12px/20px "SegoeUI", "Segoe UI", sans-serif;
+    background: #FFF;
+}
+
+.comments .comment > .comment-submit {
+    flex-shrink: 0;
+    font-family: FontAwesome;
+    height: 60px;
+    width: 60px;
+    border-radius: 4px;
+    margin-left: 2px;
+    border: 0;
+    background: #9475B2;
+    color: #FFF;
+    font-size: 2em;
+}
+
+.comments ul {
+    list-style: none;
+}
+
+.comments ul > li > ul {
+    margin-left: 40px;
+}
+
+.comments ul > li > ul .comment > .comment-avatar {
+    height: 48px;
+    width: 48px;
+}
+
+.comments ul > li > ul .comment > .comment-text {
+    min-height: 40px;
+    height: 40px;
 }

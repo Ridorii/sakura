@@ -2743,6 +2743,27 @@
                 "user":     "Flashwave"
             }
 
+        ],
+
+        "20150915": [
+
+            "eminence",
+            {
+                "type":     "FIX",
+                "change":   "Fixed session cookies remaining after session dying, a more wholesome fix would require refactoring the session system so that's on the todo list now.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed friendslisting on Settings frontpage being broken.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed news page explosions.",
+                "user":     "Flashwave"
+            }
+
         ]
 
     }

@@ -248,7 +248,7 @@
                 {% block content %}
                     <h1 class="stylised" style="text-align: center; margin: 2em auto;">{{ php.self }} is now printing!</h1>
                 {% endblock %}
-{#}
+{#
                 <div id="chat">
                     <div id="chatOnlineUsers">
                         <div class="chatOnlineListTitle">

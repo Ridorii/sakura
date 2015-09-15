@@ -7,5 +7,9 @@ namespace Sakura;
 
 class Comments
 {
-
+    // Constructor
+    public function ___construct()
+    {
+        //
+    }
 }

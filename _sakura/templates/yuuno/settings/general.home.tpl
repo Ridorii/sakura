@@ -30,7 +30,7 @@
 <h2 style="color: #080;">Online</h2>
 {% if user.getFriends(true, true, true).online %}
     {% for key,friend in user.getFriends(true, true, true).online %}
-        <a href="/u/{{ friend.user.username }}" class="default" style="color: {% if friend.user.name_colour %}{{ friend.user.name_colour }}{% else %}{{ friend.rank.colour }}{% endif %}">{{ friend.user.username }}</a>{% if key + 1 != settings.friends.online|length %},{% endif %}
+        <a href="/u/{{ friend.user.username }}" class="default" style="color: {% if friend.user.name_colour %}{{ friend.user.name_colour }}{% else %}{{ friend.rank.colour }}{% endif %}">{{ friend.user.username }}</a>{% if key + 1 != user.getFriends(true, true, true).online|length %},{% endif %}
     {% endfor %}
 {% else %}
     <h4>No friends are online.</h4>
@@ -38,7 +38,7 @@
 <h2 style="color: #800;">Offline</h2>
 {% if user.getFriends(true, true, true).offline %}
     {% for key,friend in user.getFriends(true, true, true).offline %}
-        <a href="/u/{{ friend.user.username }}" class="default" style="color: {% if friend.user.name_colour %}{{ friend.user.name_colour }}{% else %}{{ friend.rank.colour }}{% endif %}">{{ friend.user.username }}</a>{% if key + 1 != settings.friends.offline|length %},{% endif %}
+        <a href="/u/{{ friend.user.username }}" class="default" style="color: {% if friend.user.name_colour %}{{ friend.user.name_colour }}{% else %}{{ friend.rank.colour }}{% endif %}">{{ friend.user.username }}</a>{% if key + 1 != user.getFriends(true, true, true).offline|length %},{% endif %}
     {% endfor %}
 {% else %}
     <h4>No friends are offline.</h4>
