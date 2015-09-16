@@ -16,9 +16,6 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sa
 
 // Notifications
 if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications']) {
-    // Set CORS header
-    header('Access-Control-Allow-Origin: *');
-
     // Create the notification container array
     $notifications = array();
 
@@ -198,7 +195,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 
         ];
 
-        break;
+        $continue = false;
     }
 
     // Check session variables
@@ -215,7 +212,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 
         ];
 
-        break;
+        $continue = false;
     }
 
     // Change settings
@@ -541,7 +538,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 
                 break;
 
-            // Profile
+            // Site Options
             case 'options':
                 // Get profile fields and create storage var
                 $fields = Users::getOptionFields();
@@ -569,6 +566,58 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 
                     'redirect' => $redirect,
                     'message' => 'Changed your options!',
+                    'success' => 1,
+
+                ];
+
+                break;
+
+            // Usertitle
+            case 'usertitle':
+                // Check permissions
+                if (!$currentUser->checkPermission('SITE', 'CHANGE_USERTITLE')) {
+                    $renderData['page'] = [
+
+                        'redirect' => $redirect,
+                        'message' => 'You aren\'t allowed to change your usertitle.',
+                        'success' => 0,
+
+                    ];
+
+                    break;
+                }
+
+                // Check length
+                if (isset($_POST['usertitle']) ? (strlen($_POST['usertitle']) > 64) : false) {
+                    $renderData['page'] = [
+
+                        'redirect' => $redirect,
+                        'message' => 'Your usertitle is too long.',
+                        'success' => 0,
+
+                    ];
+
+                    break;
+                }
+
+                // Update database
+                Database::update(
+                    'users',
+                    [
+                        [
+                            'usertitle' => (isset($_POST['usertitle']) ? $_POST['usertitle'] : null),
+                        ],
+                        [
+                            'id' => [Session::$userId, '='],
+                        ],
+                    ]
+                );
+
+                // Set render data
+                $renderData['page'] = [
+
+                    'redirect' => $redirect,
+                    'message' => 'Updated your usertitle!',
                     'success' => 1,
 
                 ];
@@ -892,7 +941,7 @@ if (Users::checkLogin()) {
                 ],
                 'usertitle' => [
 
-                    'title' => 'Username',
+                    'title' => 'Usertitle',
                     'description' => [
 
                         'That little piece of text displayed under your username on your profile.',
@@ -1102,6 +1151,11 @@ if (Users::checkLogin()) {
 
         // Profile
         case 'appearance.userpage':
+            break;
+
+        // Username changing
+        case 'account.username':
+            $renderData['difference'] = Main::timeElapsed($currentUser->data['lastunamechange']);
             break;
     }
 

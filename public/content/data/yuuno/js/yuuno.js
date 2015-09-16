@@ -375,16 +375,7 @@ function ajaxBusyView(show, message, type) {
 }
 
 // Making a post request using AJAX
-function ajaxPost(url, data) {
-
-    // Create a new XMLHttpRequest
-    var req = new XMLHttpRequest();
-
-    // Open a post request
-    req.open("POST", url, false);
-
-    // Set the request header to a form
-    req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+function ajaxPost(url, data, callback) {
 
     // Combine name and value with an = inbetween
     var query = [];
@@ -394,11 +385,50 @@ function ajaxPost(url, data) {
 
     }
 
-    // Join the array and submit the request
-    req.send(query.join("&"));
+    // Join the array
+    query = query.join("&");
 
-    // If the HTTP resonse was 200 return the page
-    return (req.status === 200 ? req.responseText : null);
+    // Create XMLHttpRequest
+    var request = new XMLHttpRequest();
+
+    // Open a post request
+    request.open('POST', url, true);
+
+    // Wait for the readiness to change
+    request.onreadystatechange = function() {
+
+        // Wait for completion
+        if(request.readyState === 4) {
+
+            if(request.status === 200) {
+
+                callback.call(request.responseText);
+
+            } else {
+
+                ajaxBusyView(false);
+
+                notifyUI({
+                    "title":    "An internal server error occurred!",
+                    "text":     "If this problem persists please report this to the administrator.",
+                    "img":      "FONT:fa-chain-broken",
+                    "timeout":  60000,
+                    "sound":    false
+                });
+
+                return null;
+
+            }
+
+        }
+
+    }
+
+    // Set headers
+    request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    // Submit the request
+    request.send(query);
 
 }
 
@@ -444,6 +474,26 @@ function prepareAjaxLink(linkId, callback, attrs) {
     // Update link attributes
     link.setAttribute('href',       'javascript:void(0);');
     link.setAttribute('onclick',    callback +'(\''+ action +'\', JSON.parse(\''+ JSON.stringify(variables) +'\')'+ (typeof attrs != 'undefined' ? attrs : '') +');');
+
+}
+
+function prepareAjaxForm(formId, message, resetCaptchaOnFailure) {
+
+    // Get the form
+    var form = document.getElementById(formId);
+
+    // Create the AJAX form input
+    var createHidden = document.createElement('input');
+
+    // Set the attributes
+    createHidden.setAttribute('name', 'ajax');
+    createHidden.setAttribute('value', 'true');
+    createHidden.setAttribute('type', 'hidden');
+    form.appendChild(createHidden);
+
+    // Update form
+    form.setAttribute('onsubmit', 'submitPost(\''+ form.action +'\', formToObject(\''+ formId +'\'), true, \''+ (message ? message : 'Please wait...') +'\', '+ (resetCaptchaOnFailure ? 'true' : 'false') +');');
+    form.setAttribute('action', 'javascript:void(0);');
 
 }
 
@@ -517,25 +567,6 @@ function generateForm(formId, formAttr, formData, appendTo) {
 
 }
 
-// Enter substitute
-function formEnterCatch(key, id) {
-
-    // 13 == Enter
-    if(key.which == 13) {
-
-        // Submit the form
-        document.getElementById(id).click();
-
-        // Return true if yeah
-        return true;
-
-    }
-
-    // Return false if not
-    return false;
-
-}
-
 // Submitting a form using an AJAX POST request
 function submitPost(action, requestParts, busyView, msg, resetCaptchaOnFailure) {
 
@@ -547,17 +578,29 @@ function submitPost(action, requestParts, busyView, msg, resetCaptchaOnFailure) 
     }
 
     // Submit the AJAX request
-    var request = ajaxPost(action, requestParts).split('|');
+    var request = ajaxPost(action, requestParts, function() {
+
+        submitPostHandler(this, busyView, resetCaptchaOnFailure);
+
+    });
+
+}
+
+// Submitting a form using an AJAX POST request
+function submitPostHandler(result, busyView, resetCaptchaOnFailure) {
+
+    // Split result
+    result = result.split('|');
 
     // If using the busy view thing update the text displayed to the return of the request
     if(busyView) {
 
-        ajaxBusyView(true, request[0], (request[1] == '1' ? 'ok' : 'fail'));
+        ajaxBusyView(true, result[0], (result[1] == '1' ? 'ok' : 'fail'));
 
     }
 
     // If request reset the recaptcha on failure
-    if(resetCaptchaOnFailure && request[1] != '1' && sakuraVars.recpatchaEnabled) {
+    if(resetCaptchaOnFailure && result[1] != '1' && sakuraVars.recaptchaEnabled) {
 
         grecaptcha.reset();
 
@@ -571,9 +614,9 @@ function submitPost(action, requestParts, busyView, msg, resetCaptchaOnFailure) 
 
         }
 
-        if(request[1] == '1') {
+        if(result[1] == '1') {
 
-            window.location = request[2];
+            window.location = result[2];
 
         }
 

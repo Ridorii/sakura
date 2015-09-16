@@ -32,7 +32,9 @@
                         <div class="clear"></div>
                     </div>
                 {% endif %}
-                {% include 'elements/comments.tpl' %}
+                {% if viewPost and postExists %}
+                    {% include 'elements/comments.tpl' %}
+                {% endif %}
             {% else %}
                 <div style="padding: 20px;">
                     <h1>The requested news post does not exist!</h1>

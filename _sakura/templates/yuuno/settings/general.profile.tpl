@@ -54,16 +54,8 @@
 </form>
 <script type="text/javascript">
 window.addEventListener("load", function() {
-    var editProfileForm = document.getElementById('editProfileForm');
-    var createInput     = document.createElement('input');
-    var submit          = editProfileForm.querySelector('[type="submit"]');
 
-    createInput.setAttribute('name', 'ajax');
-    createInput.setAttribute('value', 'true');
-    createInput.setAttribute('type', 'hidden');
-    editProfileForm.appendChild(createInput);
+    prepareAjaxForm('editProfileForm', 'Updating Profile...');
 
-    submit.setAttribute('type', 'button');
-    submit.setAttribute('onclick', 'submitPost(\''+ editProfileForm.action +'\', formToObject(\'editProfileForm\'), true, \'Updating Profile...\');');
 });
 </script>

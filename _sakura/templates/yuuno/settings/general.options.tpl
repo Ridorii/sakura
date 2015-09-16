@@ -23,17 +23,9 @@
     </form>
     <script type="text/javascript">
     window.addEventListener("load", function() {
-        var optionsForm = document.getElementById('optionsForm');
-        var createInput = document.createElement('input');
-        var submit      = optionsForm.querySelector('[type="submit"]');
 
-        createInput.setAttribute('name', 'ajax');
-        createInput.setAttribute('value', 'true');
-        createInput.setAttribute('type', 'hidden');
-        optionsForm.appendChild(createInput);
+        prepareAjaxForm('optionsForm', 'Changing Options...');
 
-        submit.setAttribute('type', 'button');
-        submit.setAttribute('onclick', 'submitPost(\''+ optionsForm.action +'\', formToObject(\'optionsForm\'), true, \'Changing Options...\');');
     });
     </script>
 {% else %}

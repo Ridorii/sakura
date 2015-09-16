@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20150915');
+define('SAKURA_VERSION', '20150916');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 define('SAKURA_STABLE', false);
@@ -157,8 +157,6 @@ if (!defined('SAKURA_NO_TPL')) {
             'recaptchaEnabled' => Configuration::getConfig('recaptcha'),
 
             'disableRegistration' => Configuration::getConfig('disable_registration'),
-            'lockSite' => Configuration::getConfig('lock_site'),
-            'lockSiteReason' => Configuration::getConfig('lock_site_reason'),
             'lockAuth' => Configuration::getConfig('lock_authentication'),
             'requireRegCodes' => Configuration::getConfig('require_registration_code'),
             'requireActivation' => Configuration::getConfig('require_activation'),
@@ -188,6 +186,21 @@ if (!defined('SAKURA_NO_TPL')) {
         'urls' => $urls,
 
     ];
+
+    // Site closing
+    if (Configuration::getConfig('site_closed')) {
+        // Additional render data
+        $renderData = array_merge($renderData, [
+
+            'page' => [
+                'message' => Configuration::getConfig('site_closed_reason'),
+            ],
+
+        ]);
+
+        print Templates::render('global/information.tpl', $renderData);
+        exit;
+    }
 
     // Ban checking
     if (Users::checkLogin() && $ban = Bans::checkBan(Session::$userId)) {

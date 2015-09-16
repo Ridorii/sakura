@@ -28,8 +28,8 @@
             </td>
             <td class="forumLastColumn">
                 <div>
-                    {% if forum.last_poster.user.id %}
-                        <a href="{{ urls.format('FORUM_THREAD', [forum.last_poster.post.topic_id]) }}" class="default">{{ forum.last_poster.post.post_subject }}</a><br /><span title="{{ forum.last_poster.post.post_time|date(sakura.dateFormat) }}">{{ forum.last_poster.elap }}</span> by {% if forum.last_poster.user.id %}<a href="{{ urls.format('USER_PROFILE', [forum.last_poster.user.id]) }}" class="default" style="color: {% if forum.last_poster.user.name_colour %}{{ forum.last_poster.user.name_colour }}{% else %}{{ forum.last_poster.rank.colour }}{% endif %};">{{ forum.last_poster.user.username }}</a>{% else %}[deleted user]{% endif %} <a href="{{ urls.format('FORUM_POST', [forum.last_poster.post.post_id]) }}#p{{ forum.last_poster.post.post_id }}" class="default fa fa-tag"></a>
+                    {% if forum.last_post.post_id %}
+                        <a href="{{ urls.format('FORUM_THREAD', [forum.last_post.topic_id]) }}" class="default">{{ forum.last_post.post_subject }}</a><br /><span title="{{ forum.last_post.post_time|date(sakura.dateFormat) }}">{{ forum.last_post.elapsed }}</span> by {% if forum.last_poster.data.id %}<a href="{{ urls.format('USER_PROFILE', [forum.last_poster.data.id]) }}" class="default" style="color: {{ forum.last_poster.colour }}; text-shadow: 0 0 5px {% if forum.last_poster.colour != 'inherit' %}{{ forum.last_poster.colour }}{% else %}#222{% endif %};">{{ forum.last_poster.data.username }}</a>{% else %}[deleted user]{% endif %} <a href="{{ urls.format('FORUM_POST', [forum.last_poster.post.post_id]) }}#p{{ forum.last_poster.post.post_id }}" class="default fa fa-tag"></a>
                     {% else %}
                         There are no posts in this forum.<br />&nbsp;
                     {% endif %}

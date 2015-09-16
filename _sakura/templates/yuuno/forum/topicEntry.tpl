@@ -6,8 +6,8 @@
         <a href="{{ urls.format('FORUM_THREAD', [topic.topic_id]) }}" class="default">{{ topic.topic_title }}</a>
     </td>
     <td class="topicAuthor">
-        {% if topic.first_poster.user.id %}
-            <a href="{{ urls.format('USER_PROFILE', [topic.first_poster.user.id]) }}" class="default" style="color: {% if topic.first_poster.user.name_colour %}{{ topic.first_poster.user.name_colour }}{% else %}{{ topic.first_poster.rank.colour }}{% endif %};">{{ topic.first_poster.user.username }}</a>
+        {% if topic.first_poster.data.id %}
+            <a href="{{ urls.format('USER_PROFILE', [topic.first_poster.data.id]) }}" class="default" style="color: {{ topic.first_poster.colour }}; text-shadow: 0 0 5px {% if topic.first_poster.colour != 'inherit' %}{{ topic.first_poster.colour }}{% else %}#222{% endif %};">{{ topic.first_poster.data.username }}</a>
         {% else %}
             [deleted user]
         {% endif %}
@@ -17,11 +17,11 @@
         <div class="views" title="Amount of times this topic has been viewed.">{{ topic.topic_views }}</div>
     </td>
     <td class="topicLast">
-        {% if topic.last_poster.user.id %}
-            <a href="{{ urls.format('USER_PROFILE', [topic.last_poster.user.id]) }}" class="default" style="color: {% if topic.last_poster.user.name_colour %}{{ topic.last_poster.user.name_colour }}{% else %}{{ topic.last_poster.rank.colour }}{% endif %};">{{ topic.last_poster.user.username }}</a>
+        {% if topic.last_poster.data.id %}
+            <a href="{{ urls.format('USER_PROFILE', [topic.last_poster.data.id]) }}" class="default" style="color: {{ topic.last_poster.colour }}; text-shadow: 0 0 5px {% if topic.last_poster.colour != 'inherit' %}{{ topic.last_poster.colour }}{% else %}#222{% endif %};">{{ topic.last_poster.data.username }}</a>
         {% else %}
             [deleted user]
-        {% endif %} <a href="{{ urls.format('FORUM_POST', [topic.last_poster.post.post_id]) }}#p{{ topic.last_poster.post.post_id }}" class="default fa fa-tag"></a><br />
-        <span title="{{ topic.last_poster.post.post_time|date(sakura.dateFormat) }}">{{ topic.last_poster.elap }}</span>
+        {% endif %} <a href="{{ urls.format('FORUM_POST', [topic.last_post.post.post_id]) }}#p{{ topic.last_post.post.post_id }}" class="default fa fa-tag"></a><br />
+        <span title="{{ topic.last_post.post.post_time|date(sakura.dateFormat) }}">{{ topic.last_post.elapsed }}</span>
     </td>
 </tr>

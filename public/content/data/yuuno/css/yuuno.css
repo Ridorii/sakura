@@ -2109,17 +2109,17 @@ textarea.inputStyling {
 .comments .comment {
     display: flex;
     align-items: stretch;
-    margin: 2px 0;
+    margin: 3px 0;
 }
 
 .comments .comment > .comment-avatar {
-    height: 58px;
-    width: 58px;
-    background: url("/content/pixel.png") no-repeat scroll left center / contain;
+    height: 60px;
+    width: 60px;
+    background: rgba(0, 0, 0, .2) url("/content/pixel.png") no-repeat scroll left center / contain;
     flex-shrink: 0;
     margin-right: 2px;
     border-radius: 4px;
-    border: 1px solid #9475B2;
+    border: 0;
 }
 
 .comments .comment > .comment-pointer {
@@ -2127,18 +2127,35 @@ textarea.inputStyling {
     height: 0px;
     border-style: solid;
     border-width: 0px 15px 15px 0px;
-    border-color: transparent #FFF transparent transparent;
+    border-color: transparent #F6F6F6 transparent transparent;
+    margin-top: 10px;
 }
 
-.comments .comment > .comment-text {
-    border-radius: 0 5px 5px 5px;
+.comments .comment > .comment-content {
+    border-radius: 5px;
     border: 0;
     min-height: 50px;
     height: 50px;
     flex-grow: 2;
     padding: 5px;
     font: 12px/20px "SegoeUI", "Segoe UI", sans-serif;
-    background: #FFF;
+    background: #F6F6F6;
+}
+
+.comments .comment > .comment-content > .comment-controls {
+    float: right;
+}
+
+.comments .comment > .comment-content > .comment-controls > ul > li {
+    float: left;
+    margin: 0 5px;
+    opacity: 0;
+    transition: .5s;
+}
+
+.comments .comment > .comment-content:hover > .comment-controls > ul > li,
+.comments .comment > .comment-content > .comment-controls > ul > li.shown {
+    opacity: 1;
 }
 
 .comments .comment > .comment-submit {
@@ -2148,10 +2165,19 @@ textarea.inputStyling {
     width: 60px;
     border-radius: 4px;
     margin-left: 2px;
-    border: 0;
-    background: #9475B2;
-    color: #FFF;
     font-size: 2em;
+    background: linear-gradient(0deg, #9475B2 10%, #C2AFFE 90%);
+    color: #306;
+    border: 1px solid #9475B2;
+    cursor: pointer;
+}
+
+.comments .comment > .comment-submit:hover {
+    background: linear-gradient(0deg, #9475B2 30%, #C2AFFE 70%);
+}
+
+.comments .comment > .comment-submit:active {
+    background: linear-gradient(180deg, #9475B2 30%, #C2AFFE 70%);
 }
 
 .comments ul {
@@ -2163,11 +2189,11 @@ textarea.inputStyling {
 }
 
 .comments ul > li > ul .comment > .comment-avatar {
-    height: 48px;
-    width: 48px;
+    height: 50px;
+    width: 50px;
 }
 
-.comments ul > li > ul .comment > .comment-text {
+.comments ul > li > ul .comment > .comment-content {
     min-height: 40px;
     height: 40px;
 }

@@ -2764,6 +2764,62 @@
                 "user":     "Flashwave"
             }
 
+        ],
+
+        "20150916": [
+
+            "eminence",
+            {
+                "type":     "ADD",
+                "change":   "Begin implementation of new comment system.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Made ajaxPost async.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fix AJAX submitted forms using a strange behaviour.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed CORS from the notification system since we're not using subdomains anymore.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed usertitle page having Username as the title.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added usertitle changing.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added site closing.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed user class related issues in the forum.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed reference to users class in permissions class.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added more templates for the settings page.",
+                "user":     "Flashwave"
+            }
+
         ]
 
     }

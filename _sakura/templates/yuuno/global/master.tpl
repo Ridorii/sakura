@@ -72,17 +72,7 @@
                 prepareAjaxLink('headerLogoutLink', 'submitPost', ', true, "Logging out..."');
             {% elseif not sakura.lockAuth and php.self != '/authenticate.php' %}
                 // Make the header login form dynamic
-                var headerLoginForm = document.getElementById('headerLoginForm');
-                var createInput     = document.createElement('input');
-                var submit          = headerLoginForm.querySelector('[type="submit"]');
-
-                createInput.setAttribute('name', 'ajax');
-                createInput.setAttribute('value', 'true');
-                createInput.setAttribute('type', 'hidden');
-                headerLoginForm.appendChild(createInput);
-
-                submit.setAttribute('type', 'button');
-                submit.setAttribute('onclick', 'submitPost(\''+ headerLoginForm.action +'\', formToObject(\'headerLoginForm\'), true, \'Logging in...\');');
+                prepareAjaxForm('headerLoginForm', 'Logging in...');
             {% endif %}
 
             {% if session.checkLogin %}
@@ -127,20 +117,7 @@
                 };
 
                 for(var i in forms) {
-                    var form    = document.getElementById(i);
-                    var submit  = form.querySelector('[type="submit"]');
-
-                    form.setAttribute('onkeydown', 'formEnterCatch(event, \''+ submit.id +'\');');
-
-                    submit.setAttribute('href',     'javascript:void(0);');
-                    submit.setAttribute('onclick',  'submitPost(\''+ form.action +'\', formToObject(\''+ i+ '\'), true, \''+ forms[i] +'\', '+ (i == 'registerForm' ? 'true' : 'false') +');');
-                    submit.setAttribute('type',     'button');
-
-                    var createInput = document.createElement('input');
-                    createInput.setAttribute('name', 'ajax');
-                    createInput.setAttribute('value', 'true');
-                    createInput.setAttribute('type', 'hidden');
-                    form.appendChild(createInput);
+                    prepareAjaxForm(i, forms[i], (i == 'registerForm'));
                 }
 
             {% endif %}
@@ -210,7 +187,7 @@
                     <div id="userBackground" style="background-image: url('{{ urls.format('IMAGE_BACKGROUND', [(php.self == '/profile.php' ? profile : user).data.id]) }}');"></div>
                 {% endif %}
                 {% if not session.checkLogin and php.self != '/authenticate.php' %}
-                    <form method="post" action="{{ urls.format('AUTH_ACTION') }}" id="headerLoginForm" onkeydown="formEnterCatch(event, 'headerLoginButton');">
+                    <form method="post" action="{{ urls.format('AUTH_ACTION') }}" id="headerLoginForm">
                         <input type="hidden" name="redirect" value="{{ sakura.currentPage }}" />
                         <input type="hidden" name="session" value="{{ php.sessionid }}" />
                         <input type="hidden" name="time" value="{{ php.time }}" />

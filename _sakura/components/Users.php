@@ -1508,7 +1508,7 @@ class Users
         ]);
 
         // Return true because yay
-        return [1, Users::checkFriend($uid) == 2 ? 'FRIENDS' : 'NOT_MUTUAL'];
+        return [1, self::checkFriend($uid) == 2 ? 'FRIENDS' : 'NOT_MUTUAL'];
 
     }
 

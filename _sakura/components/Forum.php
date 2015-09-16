@@ -61,12 +61,13 @@ class Forum
                 ], ['post_id', true]);
 
                 // Add last poster data and the details about the post as well
-                $return[$forum['forum_category']]['forums'][$forum['forum_id']]['last_poster'] = [
-                    'post' => $lastPost,
-                    'user' => ($_LAST_POSTER = Users::getUser($lastPost['poster_id'])),
-                    'rank' => Users::getRank($_LAST_POSTER['rank_main']),
-                    'elap' => Main::timeElapsed($lastPost['post_time']),
-                ];
+                $return[$forum['forum_category']]['forums'][$forum['forum_id']]['last_poster'] = new User($lastPost['poster_id']);
+
+                // Add last poster data and the details about the post as well
+                $return[$forum['forum_category']]['forums'][$forum['forum_id']]['last_post'] = array_merge(
+                    empty($lastPost) ? [] : $lastPost,
+                    ['elapsed' => Main::timeElapsed($lastPost['post_time'])]
+                );
             }
         }
 
@@ -120,11 +121,11 @@ class Forum
                 'forum_id' => [$sub['forum_id'], '='],
             ], ['post_id', true]);
 
-            $forum['forums'][$key]['last_poster'] = [
-                'post' => $lastPost,
-                'user' => ($lastPoster = Users::getUser($lastPost['poster_id'])),
-                'rank' => Users::getRank($lastPoster['rank_main']),
-            ];
+            $forum['forums'][$key]['last_poster'] = new User($lastPost['poster_id']);
+            $forum['forums'][$key]['last_post'] = array_merge(
+                empty($lastPost) ? [] : $lastPost,
+                ['elapsed' => Main::timeElapsed($lastPost['post_time'])]
+            );
         }
 
         // Lastly grab the topics for this forum
@@ -156,24 +157,24 @@ class Forum
                 'topic_id' => [$topic['topic_id'], '='],
             ]);
 
-            $topics[$key]['first_poster'] = [
-                'post' => $firstPost,
-                'user' => ($_FIRST_POSTER = Users::getUser($firstPost['poster_id'])),
-                'rank' => Users::getRank($_FIRST_POSTER['rank_main']),
-                'elap' => Main::timeElapsed($firstPost['post_time']),
-            ];
+            $topics[$key]['first_poster'] = new User($firstPost['poster_id']);
+
+            $topics[$key]['first_post'] = array_merge(
+                empty($firstPost) ? [] : $firstPost,
+                ['elapsed' => Main::timeElapsed($firstPost['post_time'])]
+            );
 
             // Get last post in topics
             $lastPost = Database::fetch('posts', false, [
                 'topic_id' => [$topic['topic_id'], '='],
             ], ['post_id', true]);
 
-            $topics[$key]['last_poster'] = [
-                'post' => $lastPost,
-                'user' => ($_LAST_POSTER = Users::getUser($lastPost['poster_id'])),
-                'rank' => Users::getRank($_LAST_POSTER['rank_main']),
-                'elap' => Main::timeElapsed($lastPost['post_time']),
-            ];
+            $topics[$key]['last_poster'] = new User($lastPost['poster_id']);
+
+            $topics[$key]['last_post'] = array_merge(
+                empty($lastPost) ? [] : $lastPost,
+                ['elapsed' => Main::timeElapsed($lastPost['post_time'])]
+            );
         }
 
         return $topics;
@@ -229,26 +230,24 @@ class Forum
             'topic_id' => [$topic['topic']['topic_id'], '='],
         ]);
 
-        // Get the data of the first poster
-        $topic['topic']['first_poster'] = [
-            'post' => $firstPost,
-            'user' => ($_FIRST_POSTER = Users::getUser($firstPost['poster_id'])),
-            'rank' => Users::getRank($_FIRST_POSTER['rank_main']),
-            'elap' => Main::timeElapsed($firstPost['post_time']),
-        ];
+        $topic['topic']['first_poster'] = new User($firstPost['poster_id']);
+
+        $topic['topic']['first_post'] = array_merge(
+            empty($firstPost) ? [] : $firstPost,
+            ['elapsed' => Main::timeElapsed($firstPost['post_time'])]
+        );
 
         // Get last post in topics
         $lastPost = Database::fetch('posts', false, [
             'topic_id' => [$topic['topic']['topic_id'], '='],
         ], ['post_id', true]);
 
-        // Get the data of the last poster
-        $topic['topic']['last_poster'] = [
-            'post' => $lastPost,
-            'user' => ($_LAST_POSTER = Users::getUser($lastPost['poster_id'])),
-            'rank' => Users::getRank($_LAST_POSTER['rank_main']),
-            'elap' => Main::timeElapsed($lastPost['post_time']),
-        ];
+        $topic['topic']['last_poster'] = new User($lastPost['poster_id']);
+
+        $topic['topic']['last_post'] = array_merge(
+            empty($lastPost) ? [] : $lastPost,
+            ['elapsed' => Main::timeElapsed($lastPost['post_time'])]
+        );
 
         // Create space for posts
         $topic['posts'] = [];
@@ -257,14 +256,9 @@ class Forum
         foreach ($rawPosts as $post) {
             // Add post and metadata to the global storage array
             $topic['posts'][$post['post_id']] = array_merge($post, [
+                'user' => (new User($post['poster_id'])),
+                'elapsed' => Main::timeElapsed($post['post_time']),
                 'is_op' => ($post['poster_id'] == $firstPost['poster_id'] ? '1' : '0'),
-                'user' => ($_POSTER = Users::getUser($post['poster_id'])),
-                'rank' => Users::getRank($_POSTER['rank_main']),
-                'time_elapsed' => Main::timeElapsed($post['post_time']),
-                'country' => Main::getCountryName($_POSTER['country']),
-                'is_premium' => Users::checkUserPremium($_POSTER['id'])[0],
-                'is_online' => Users::checkUserOnline($_POSTER['id']),
-                'is_friend' => Users::checkFriend($_POSTER['id']),
                 'parsed_post' => self::parseMarkUp($post['post_text'], $post['parse_mode'], $post['enable_emotes']),
                 'signature' => empty($_POSTER['userData']['signature']) ?
                 '' :
