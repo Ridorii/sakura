@@ -11,7 +11,7 @@ class News
     private $posters = []; // Posters array (so we don't create a new user object every time)
 
     // Initialise the news object
-    public function __construct($category, $comments = true)
+    public function __construct($category)
     {
 
         // Get the news posts and assign them to $posts
@@ -31,9 +31,13 @@ class News
             // Attach the poster
             $post['poster'] = $this->posters[$post['uid']];
 
+            // Load comments
+            $post['comments'] = $this->comments = new Comments('news-' . $category . '-' . $post['id']);
+
             // Add post to posts array
             $this->posts[$post['id']] = $post;
         }
+
     }
 
     // Get the amount of posts

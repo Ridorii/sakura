@@ -230,6 +230,24 @@ class Urls
             '/manage/%s/%s',
         ],
 
+        // Comments urls
+        'COMMENT_POST' => [
+            '/settings.php?comment-action=true',
+            '/comments',
+        ],
+        'COMMENT_LIKE' => [
+            '/settings.php?comment-action=true&id=%u&mode=like&session=%s',
+            '/comments?id=%u&mode=like&session=%s',
+        ],
+        'COMMENT_DISLIKE' => [
+            '/settings.php?comment-action=true&id=%u&mode=dislike&session=%s',
+            '/comments?id=%u&mode=dislike&session=%s',
+        ],
+        'COMMENT_DELETE' => [
+            '/settings.php?comment-action=true&id=%u&mode=delete&session=%s',
+            '/comments?id=%u&mode=delete&session=%s',
+        ],
+
     ];
 
     // Get a formatted url

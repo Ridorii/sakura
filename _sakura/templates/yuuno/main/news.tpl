@@ -25,15 +25,15 @@
             {% if (viewPost ? postExists : newsPosts|length) %}
                 {% for post in newsPosts %}
                     {% include 'elements/newsPost.tpl' %}
+                    {% if viewPost and postExists %}
+                        {% include 'elements/comments.tpl' %}
+                    {% endif %}
                 {% endfor %}
                 {% if not (viewPost and postExists) and news.getPosts(postsPerPage)|length > 1 %}
                     <div>
                         {% include 'elements/pagination.tpl' %}
                         <div class="clear"></div>
                     </div>
-                {% endif %}
-                {% if viewPost and postExists %}
-                    {% include 'elements/comments.tpl' %}
                 {% endif %}
             {% else %}
                 <div style="padding: 20px;">

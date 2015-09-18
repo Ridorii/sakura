@@ -12,7 +12,7 @@ class Session
     public $sessionId;
 
     // Initialise new session
-    public function ___construct()
+    public function __construct()
     {
 
         // Check if a PHP session was already started and if not start one

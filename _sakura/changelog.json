@@ -2820,6 +2820,22 @@
                 "user":     "Flashwave"
             }
 
+        ],
+
+        "20150918": [
+
+            "eminence",
+            {
+                "type":     "UPD",
+                "change":   "Changed report flag to an exclamation thing.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Added more comments stuff.",
+                "user":     "Flashwave"
+            }
+
         ]
 
     }

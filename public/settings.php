@@ -47,6 +47,62 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     // Set header, convert the array to json, print it and exit
     print json_encode($notifications);
     exit;
+} elseif (isset($_REQUEST['comment-action']) && $_REQUEST['comment-action'] && Users::checkLogin()) {
+    // Referrer
+    $redirect = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('SITE_INDEX'));
+
+    // Continue
+    $continue = true;
+
+    // Match session ids for the same reason
+    if (!isset($_REQUEST['session']) || $_REQUEST['session'] != session_id()) {
+        $renderData['page'] = [
+
+            'redirect' => $redirect,
+            'message' => 'Invalid session, please try again.',
+            'success' => 0,
+
+        ];
+
+        // Prevent
+        $continue = false;
+    }
+
+    // Select the right action
+    if ($continue) {
+        switch (isset($_REQUEST['mode']) ? $_REQUEST['mode'] : false) {
+            case 'like':
+
+                break;
+
+            case 'dislike':
+
+                break;
+
+            case 'delete':
+
+                break;
+
+            default:
+                $renderData['page'] = [
+
+                    'redirect' => $redirect,
+                    'message' => 'Did nothing.',
+                    'success' => 0,
+
+                ];
+        }
+    }
+
+    // Print page contents or if the AJAX request is set only display the render data
+    print isset($_REQUEST['ajax']) ?
+    (
+        $renderData['page']['message'] . '|' .
+        $renderData['page']['success'] . '|' .
+        $renderData['page']['redirect']
+    ) :
+    Templates::render('global/information.tpl', $renderData);
+    exit;
 } elseif (isset($_REQUEST['friend-action']) && $_REQUEST['friend-action'] && Users::checkLogin()) {
     // Friends
     // Continue

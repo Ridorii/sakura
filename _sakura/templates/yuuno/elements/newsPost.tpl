@@ -12,5 +12,5 @@
 </div>
 <div class="clear"></div>
 <div class="news-post-time">
-    Posted on {{ post.date|date(sakura.dateFormat) }}{% if not (viewPost and postExists) %} <a class="default" href="{{ urls.format('SITE_NEWS_POST', [post.id]) }}">X comments</a>{% endif %}
+    Posted on {{ post.date|date(sakura.dateFormat) }}{% if not (viewPost and postExists) %} <a class="default" href="{{ urls.format('SITE_NEWS_POST', [post.id]) }}#comments">{{ post.comments.count }} comment{% if post.comments.count != 1 %}s{% endif %}</a>{% endif %}
 </div>

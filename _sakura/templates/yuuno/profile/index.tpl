@@ -32,7 +32,7 @@
                             {% else %}
                                 {% if profile.checkFriends(user.data.id) != 0 %}<a class="fa fa-{% if profile.checkFriends(user.data.id) == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
                                 <a class="fa fa-user-{% if profile.checkFriends(user.data.id) == 0 %}plus{% else %}times{% endif %}" title="{% if profile.checkFriends(user.data.id) == 0 %}Add {{ legacyprofile.data.username }} as a friend{% else %}Remove friend{% endif %}" href="{% if profile.checkFriends(user.data.id) == 0 %}{{ urls.format('FRIEND_ADD', [profile.data.id, php.sessionid, php.time, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [profile.data.id, php.sessionid, php.time, sakura.currentPage]) }}{% endif %}" id="profileFriendToggle"></a>
-                                <a class="fa fa-flag" title="Report {{ profile.data.username }}" href="{{ urls.format('USER_REPORT', [profile.data.id]) }}"></a>
+                                <a class="fa fa-exclamation-circle" title="Report {{ profile.data.username }}" href="{{ urls.format('USER_REPORT', [profile.data.id]) }}"></a>
                             {% endif %}
                         </div>
                         {% endif %}
