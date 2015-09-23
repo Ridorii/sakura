@@ -5,8 +5,6 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-USE `sakura-development`;
-
 TRUNCATE `sakura_bbcodes`;
 INSERT INTO `sakura_bbcodes` (`id`, `regex`, `replace`, `title`, `description`, `on_posting`) VALUES
 (1, '/\\[b\\](.*?)\\[\\/b\\]/is',   '<b>$1</b>',    'Bold', 'Make text bold. Usage: [b]text[/b].',  1),
@@ -24,36 +22,36 @@ INSERT INTO `sakura_config` (`config_name`, `config_value`) VALUES
 ('recaptcha_public',    ''),
 ('recaptcha_private',   ''),
 ('charset', 'utf-8'),
-('cookie_prefix',   'sakura_'),
-('cookie_domain',   'sakura.dev'),
+('cookie_prefix',   'fii_'),
+('cookie_domain',   'flashii.test'),
 ('cookie_path', '/'),
 ('site_style',  'yuuno'),
 ('manage_style',    'broomcloset'),
 ('smtp_server', ''),
-('smtp_auth',   ''),
-('smtp_secure', ''),
+('smtp_auth',   '1'),
+('smtp_secure', 'tls'),
 ('smtp_port',   ''),
 ('smtp_username',   ''),
 ('smtp_password',   ''),
 ('smtp_replyto_mail',   ''),
-('smtp_replyto_name',   ''),
+('smtp_replyto_name',   'Flashwave'),
 ('smtp_from_email', ''),
-('smtp_from_name',  ''),
-('sitename',    'Sakura'),
+('smtp_from_name',  'Flashii Noreply'),
+('sitename',    'Cutting Edgii'),
 ('recaptcha',   '0'),
 ('require_activation',  '0'),
 ('require_registration_code',   '0'),
 ('disable_registration',    '0'),
 ('max_reg_keys',    '5'),
-('mail_signature',  ''),
+('mail_signature',  'Team Flashii'),
 ('lock_authentication', '0'),
 ('min_entropy', '1'),
-('sitedesc',    ''),
-('sitetags',    '[]'),
+('sitedesc',    'Live development environment for the script that powers Flashii.net called Sakura.'),
+('sitetags',    '[\"Flashii\",\"Media\",\"Flashwave\",\"Circle\",\"Zeniea\",\"MalwareUp\",\"Cybernetics\",\"Saibateku\",\"Community\",\"osu!\",\"osu\"]'),
 ('username_min_length', '3'),
 ('username_max_length', '16'),
-('lock_site',   '0'),
-('lock_site_reason',    ''),
+('site_closed', '0'),
+('site_closed_reason',  'meow'),
 ('use_gzip',    '0'),
 ('enable_tpl_cache',    '0'),
 ('paypal_client_id',    ''),
@@ -71,25 +69,30 @@ INSERT INTO `sakura_config` (`config_name`, `config_value`) VALUES
 ('avatar_max_height',   '512'),
 ('avatar_max_width',    '512'),
 ('avatar_max_fsize',    '2097152'),
-('url_api', 'api.sakura.dev'),
+('url_api', 'api.flashii.test'),
 ('content_path',    '/content'),
 ('user_uploads',    'uploads'),
-('no_background_img',   'main/content/pixel.png'),
-('no_header_img',   'main/content/images/triangles.png'),
-('pixel_img',   'main/content/pixel.png'),
+('no_background_img',   'public/content/pixel.png'),
+('no_header_img',   'public/content/images/triangles.png'),
+('pixel_img',   'public/content/pixel.png'),
 ('background_max_fsize',    '5242880'),
 ('background_max_width',    '2560'),
 ('background_max_height',   '1440'),
 ('background_min_height',   '16'),
 ('background_min_width',    '16'),
 ('max_online_time', '500'),
-('no_avatar_img',   'main/content/data/{{ TPL }}/images/no-av.png'),
-('deactivated_avatar_img',  'main/content/data/{{ TPL }}/images/deactivated-av.png'),
-('banned_avatar_img',   'main/content/data/{{ TPL }}/images/banned-av.png'),
-('session_check',   '2'),
+('no_avatar_img',   'public/content/data/{{ TPL }}/images/no-av.png'),
+('deactivated_avatar_img',  'public/content/data/{{ TPL }}/images/deactivated-av.png'),
+('banned_avatar_img',   'public/content/data/{{ TPL }}/images/banned-av.png'),
+('session_check',   '4'),
 ('url_rewrite', '1'),
 ('members_per_page',    '30'),
-('admin_email', '');
+('admin_email', 'me@flash.moe'),
+('site_news_category',  'site-news'),
+('no_cron_service', '1'),
+('no_cron_interval',    '30'),
+('no_cron_last',    '1443040870'),
+('old_username_reserve',    '90');
 
 TRUNCATE `sakura_emoticons`;
 INSERT INTO `sakura_emoticons` (`emote_string`, `emote_path`) VALUES
@@ -132,6 +135,28 @@ INSERT INTO `sakura_emoticons` (`emote_string`, `emote_path`) VALUES
 (':what:',  '/content/images/emoticons/what.png'),
 (':smug:',  '/content/images/emoticons/smug.png');
 
+TRUNCATE `sakura_forums`;
+INSERT INTO `sakura_forums` (`forum_id`, `forum_name`, `forum_desc`, `forum_link`, `forum_category`, `forum_type`, `forum_icon`) VALUES
+(1, 'General',  'General category', '', 0,  1,  ''),
+(2, 'Introductions',    'Help us get to know you better!',  '', 1,  0,  'fa-smile-o'),
+(3, 'General Discussion',   'Civilised discussions about things that don\'t have their own subforum.',  '', 1,  0,  'fa-comments'),
+(4, 'BUG SPORTS',   'Post all new BUG SPORTS tutorials here (this is the off topic forum for those who couldn\'t guess).',  '', 1,  0,  'fa-bug'),
+(5, 'Programming',  'Programming discussion',   '', 0,  1,  ''),
+(6, 'Web Development',  'Talk about the PHPython on Rails.js.', '', 5,  0,  'fa-html5'),
+(7, 'General Programming',  'Mostly desktop stuff here.',   '', 5,  0,  'fa-code'),
+(8, 'Media',    'Media discussion', '', 0,  1,  ''),
+(9, 'Anime & Manga',    'Your waifu is shit.',  '', 8,  0,  'fa-yen'),
+(10,    'Video Games',  'Sakura Clicker is the best game ever and you know it.',    '', 8,  0,  'fa-gamepad'),
+(11,    'osu!', 'Talk about clicking circles like an insane person.',   '', 10, 0,  'fa-dot-circle-o'),
+(12,    'Feedback', 'Site Feedback',    '', 0,  1,  ''),
+(13,    'Staff',    'Tell us how to do our jobs.',  '', 12, 0,  'fa-balance-scale'),
+(14,    'Sakura',   'Report bugs or give us feature suggestions about the script Flashii runs on here.',    '', 12, 0,  'fa-heartbeat'),
+(15,    'Staff',    'Staff discussion', '', 0,  1,  ''),
+(16,    'Slack',    'A direct link to Slack.',  'https://circlestorm.slack.com/',   15, 2,  'fa-slack'),
+(17,    'Office 365',   'A direct link to Office 365.', 'https://login.microsoftonline.com/',   15, 2,  'fa-envelope-o'),
+(18,    'General Discussion',   'Discuss Staff Stuff.', '', 15, 0,  'fa-user-secret'),
+(19,    'Retarded Palace',  'This is where deleted threads rot.',   '', 15, 0,  'fa-trash-o');
+
 TRUNCATE `sakura_optionfields`;
 INSERT INTO `sakura_optionfields` (`id`, `name`, `description`, `formtype`, `require_perm`) VALUES
 ('disableProfileParallax',  'Disable Parallaxing',  'This will stop your background from responding to your mouse movement, this will only affect your background.',    'checkbox', 'CHANGE_BACKGROUND'),
@@ -149,7 +174,8 @@ INSERT INTO `sakura_permissions` (`rid`, `uid`, `siteperms`, `manageperms`, `for
 (7, 0,  '0001111111111111111111111100', '01',   '1',    '000'),
 (8, 0,  '0001111111111111111111111100', '00',   '1',    '000'),
 (9, 0,  '0001111111111111111111111100', '00',   '1',    '000'),
-(10,    0,  '0000000011010100101000100010', '00',   '0',    '000');
+(10,    0,  '0000000011010100101000100010', '00',   '0',    '000'),
+(11,    0,  '0000111111111100111101101100', '00',   '1',    '000');
 
 TRUNCATE `sakura_profilefields`;
 INSERT INTO `sakura_profilefields` (`id`, `name`, `formtype`, `islink`, `linkformat`, `description`, `additional`) VALUES
@@ -177,6 +203,7 @@ INSERT INTO `sakura_ranks` (`id`, `name`, `multi`, `hidden`, `colour`, `descript
 (7, 'Chat moderator',   1,  0,  '#09F', 'Moderators of the chat room.', 'Staff'),
 (8, 'Tenshi',   0,  0,  '#EE9400',  'Users that bought premium to help us keep the site and its services alive!',   'Tenshi'),
 (9, 'Alumnii',  0,  0,  '#FF69B4',  'People who have contributed to the community but have moved on or resigned.',  'Alumnii'),
-(10,    'Restricted',   0,  1,  '#333', 'Users that are restricted.',   'Restricted');
+(10,    'Restricted',   0,  1,  '#333', 'Users that are restricted.',   'Restricted'),
+(11,    'Early Supporter',  1,  0,  '#0049EE',  'User that donated before the premium system.', 'Early Supporter');
 
--- 2015-09-06 14:19:12
+-- 2015-09-23 20:43:17

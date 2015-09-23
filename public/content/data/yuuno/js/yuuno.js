@@ -600,7 +600,7 @@ function submitPostHandler(result, busyView, resetCaptchaOnFailure) {
     }
 
     // If request reset the recaptcha on failure
-    if(resetCaptchaOnFailure && result[1] != '1' && sakuraVars.recaptchaEnabled) {
+    if(resetCaptchaOnFailure && result[1] != '1' && sakuraVars.recaptchaEnabled != '0') {
 
         grecaptcha.reset();
 

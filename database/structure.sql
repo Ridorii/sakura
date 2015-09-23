@@ -55,6 +55,20 @@ CREATE TABLE `sakura_bbcodes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
+DROP TABLE IF EXISTS `sakura_comments`;
+CREATE TABLE `sakura_comments` (
+  `comment_id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'MySQL Generated ID used for sorting.',
+  `comment_category` varchar(32) COLLATE utf8_bin NOT NULL COMMENT 'Comment category.',
+  `comment_timestamp` int(11) unsigned NOT NULL COMMENT 'Timestamp of when this comment was posted.',
+  `comment_poster` bigint(255) unsigned NOT NULL COMMENT 'User ID of the poster.',
+  `comment_likes` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Upvotes of the comments.',
+  `comment_dislikes` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Downvotes of the comments.',
+  `comment_reply_to` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of the comment this comment is a reply to',
+  `comment_text` text COLLATE utf8_bin NOT NULL COMMENT 'Content of the comment.',
+  PRIMARY KEY (`comment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
 DROP TABLE IF EXISTS `sakura_config`;
 CREATE TABLE `sakura_config` (
   `config_name` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Array key for configuration value',
@@ -73,6 +87,7 @@ DROP TABLE IF EXISTS `sakura_error_log`;
 CREATE TABLE `sakura_error_log` (
   `id` varchar(32) COLLATE utf8_bin NOT NULL COMMENT 'An ID that is created when an error occurs.',
   `timestamp` varchar(128) COLLATE utf8_bin NOT NULL COMMENT 'A datestring from when the error occurred.',
+  `revision` int(16) unsigned NOT NULL COMMENT 'Sakura Revision number.',
   `error_type` int(16) unsigned NOT NULL COMMENT 'The PHP error type of this error.',
   `error_line` int(32) unsigned NOT NULL COMMENT 'The line that caused this error.',
   `error_string` varchar(512) COLLATE utf8_bin NOT NULL COMMENT 'PHP''s description of this error.',
@@ -276,7 +291,7 @@ CREATE TABLE `sakura_ranks` (
   `hidden` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Don''t show any public links to this rank.',
   `colour` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Colour used for the username of a member of this rank.',
   `description` text COLLATE utf8_bin NOT NULL COMMENT 'A description of what a user of this rank can do/is supposed to do.',
-  `title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Default user title if user has none set.',
+  `title` varchar(64) COLLATE utf8_bin NOT NULL COMMENT 'Default user title if user has none set.',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -318,9 +333,8 @@ CREATE TABLE `sakura_sessions` (
   `expire` int(16) unsigned NOT NULL COMMENT 'The timestamp for when this session should end, -1 for permanent. ',
   `remember` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'If set to 1 session will be extended each time a page is loaded.',
   PRIMARY KEY (`id`),
-  KEY `userid` (`userid`),
-  CONSTRAINT `sakura_sessions_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  KEY `userid` (`userid`)
+) ENGINE=MEMORY DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_topics`;
@@ -339,6 +353,19 @@ CREATE TABLE `sakura_topics` (
   PRIMARY KEY (`topic_id`),
   KEY `forum_id` (`forum_id`),
   CONSTRAINT `sakura_topics_ibfk_1` FOREIGN KEY (`forum_id`) REFERENCES `sakura_forums` (`forum_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+DROP TABLE IF EXISTS `sakura_username_history`;
+CREATE TABLE `sakura_username_history` (
+  `change_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Identifier',
+  `change_time` int(11) unsigned NOT NULL COMMENT 'Timestamp of change',
+  `user_id` bigint(255) unsigned NOT NULL COMMENT 'User ID',
+  `username_new` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'New username',
+  `username_new_clean` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Clean new username',
+  `username_old` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Old username',
+  `username_old_clean` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Clean old username',
+  PRIMARY KEY (`change_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -362,8 +389,7 @@ CREATE TABLE `sakura_users` (
   `usertitle` varchar(64) COLLATE utf8_bin DEFAULT NULL COMMENT 'Custom user title of the user, when empty reverts to their derault group name.',
   `regdate` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Timestamp of account creation.',
   `lastdate` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Last time anything was done on this account.',
-  `lastunamechange` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Last username change.',
-  `birthday` date DEFAULT NOT NULL COMMENT 'Birthdate of the user.',
+  `birthday` date NOT NULL COMMENT 'Birthdate of the user.',
   `country` char(2) COLLATE utf8_bin NOT NULL COMMENT 'Contains ISO 3166 country code of user''s registration location.',
   `userData` text COLLATE utf8_bin COMMENT 'All additional profile data.',
   PRIMARY KEY (`id`),
@@ -387,4 +413,4 @@ CREATE TABLE `sakura_warnings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
--- 2015-09-06 14:14:33
+-- 2015-09-23 20:45:04

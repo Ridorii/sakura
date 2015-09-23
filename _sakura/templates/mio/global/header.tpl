@@ -12,26 +12,15 @@
         {% endif %}
         <!-- CSS -->
         <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/mio.css" />
-        {% if page.style %}
-        <style type="text/css">
-            {% for element,properties in page.style %}
-                {{ element|raw }} {
-                    {% for property,value in properties %}
-                        {{ property|raw }}: {{ value|raw }};
-                    {% endfor %}
-                }
-            {% endfor %}
-        </style>
-        {% endif %}
         <!-- JS -->
         <script type="text/javascript" src="{{ sakura.resources }}/js/mio.js"></script>
 	</head>
     <body>
         <div class="flashii-bar">
-            <a href="//{{ sakura.urls.main }}/login"<!-- onclick="flashii_login(true);"-->Login</a> |
-            <a href="//{{ sakura.urls.main }}/register">Register</a>
+            <a href="javascript:void(0);" onclick="flashii_login(true);">Login</a> |
+            <a href="/register">Register</a>
         </div>
 		<a href="//{{ sakura.urls.main }}/">
-			<img class="logo" src="//{{ sakura.urls.content }}/pixel.png" alt="{{ sakura.sitename }}" />
+			<img class="logo" src="/content/pixel.png" alt="{{ sakura.sitename }}" />
 		</a>
 		<br />

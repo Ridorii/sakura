@@ -2836,6 +2836,43 @@
                 "user":     "Flashwave"
             }
 
+        ],
+
+        "20150919": [
+
+            "eminence",
+            {
+                "type":     "REM",
+                "change":   "Removed Main::jsonPretty in favour of the built in PHP version.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150923": [
+
+            "eminence",
+            {
+                "type":     "ADD",
+                "change":   "Added a JavaScript error reporter.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Redirect a new user to /p/welcome on first login.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Changed sakura_sessions to a MEMORY table.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Implement username changing.",
+                "user":     "Flashwave"
+            }
+
         ]
 
     }

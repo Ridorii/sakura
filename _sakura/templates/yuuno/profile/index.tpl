@@ -23,7 +23,7 @@
                     <img src="{{ urls.format('IMAGE_AVATAR', [profile.data.id]) }}" alt="{{ profile.data.username }}'s Avatar" class="default-avatar-setting" style="box-shadow: 0 3px 7px #{% if profile.checkOnline %}484{% else %}844{% endif %};" /><br />
                     {% if profile.data.rank_main > 1 and profile.checkBan|length < 1 %}
                         <span style="font-size: .8em;">{{ profile.userTitle }}</span>
-                        <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px {% if profile.colour != 'inherit' %}{{ profile.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;">{{ profile.data.username }}</h1>
+                        <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px {% if profile.colour != 'inherit' %}{{ profile.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;"{% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0]['username_old'] }} before {{ profile.getUsernameHistory[0]['change_time']|date(sakura.dateFormat) }}."{% endif %}>{{ profile.data.username }}</h1>
                             {% if profile.checkPremium[0] %}<img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi" /> {% endif %}<img src="{{ sakura.contentPath }}/images/flags/{{ profile.country.short|lower }}.png" alt="{{ profile.country.short }}" /> <span style="font-size: .9em; line-height: 11px;">{{ profile.country.long }}</span>
                         {% if session.checkLogin %}
                         <div class="user-actions">

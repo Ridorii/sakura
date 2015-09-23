@@ -108,7 +108,7 @@
                             <input class="inputStyling" type="text" id="registerCode" name="registercode" placeholder="Ask another member for one" />
                         </div>
                     {% endif %}
-                    {% if sakura.recaptchaEnable %}
+                    {% if sakura.recaptchaEnabled %}
                         <div class="leftAlign">
                             <label for="recaptcha_response_field">Verification:</label>
                         </div>

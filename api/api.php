@@ -71,4 +71,4 @@ switch (isset($elems[0]) ? $elems[0] : false) {
         $return = ['error' => ['NO_API_VERSION']];
 }
 
-echo isset($_GET['pretty']) ? Main::jsonPretty(json_encode([$return])) : json_encode([$return]);
+echo json_encode([$return], (isset($_GET['pretty']) ? JSON_PRETTY_PRINT : 0));

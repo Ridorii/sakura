@@ -334,6 +334,17 @@ a.default:active {
     padding-bottom: 5px;
 }
 
+@media (max-width: 1024px) {
+    .ajax-busy {
+        background: rgba(0, 0, 0, .8);
+    }
+
+    .ajax-busy .ajax-inner {
+        background: transparent;
+        box-shadow: 0 0 0 transparent;
+    }
+}
+
 .homepage .content-right ul {
     margin: 10px 0;
     margin-left: 30px;

@@ -196,7 +196,7 @@ class Users
         }
 
         // Successful login! (also has a thing for the legacy password system)
-        return [1, 'LOGIN_SUCESS'];
+        return [1, 'LOGIN_SUCCESS', $user['id']];
 
     }
 
@@ -329,7 +329,6 @@ class Users
             'last_ip' => Main::getRemoteIP(),
             'regdate' => time(),
             'lastdate' => 0,
-            'lastunamechange' => time(),
             'country' => Main::getCountryCode(),
             'userData' => '[]',
         ]);

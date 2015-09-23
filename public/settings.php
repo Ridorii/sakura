@@ -680,6 +680,44 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 
                 break;
 
+            // Username changing
+            case 'username':
+                // Check permissions
+                if (!$currentUser->checkPermission('SITE', 'CHANGE_USERNAME')) {
+                    $renderData['page'] = [
+
+                        'redirect' => $redirect,
+                        'message' => 'You aren\'t allowed to change your username.',
+                        'success' => 0,
+
+                    ];
+
+                    break;
+                }
+
+                // Attempt username change
+                $userNameChange = $currentUser->setUsername(isset($_POST['username']) ? $_POST['username'] : '');
+
+                // Messages
+                $messages = [
+                    'TOO_SHORT' => 'Your new name is too short!',
+                    'TOO_LONG' => 'Your new name is too long!',
+                    'TOO_RECENT' => 'The username you tried to use is reserved, try again later.',
+                    'IN_USE' => 'Someone already has this username!',
+                    'SUCCESS' => 'Successfully changed your username!',
+                ];
+
+                // Set render data
+                $renderData['page'] = [
+
+                    'redirect' => $redirect,
+                    'message' => $messages[$userNameChange[1]],
+                    'success' => $userNameChange[0],
+
+                ];
+
+                break;
+
             // Userpage
             /*case 'userpage':
 
@@ -1211,7 +1249,7 @@ if (Users::checkLogin()) {
 
         // Username changing
         case 'account.username':
-            $renderData['difference'] = Main::timeElapsed($currentUser->data['lastunamechange']);
+            $renderData['difference'] = $currentUser->getUsernameHistory() ? Main::timeElapsed($currentUser->getUsernameHistory()[0]['change_time']) : 0;
             break;
     }
 

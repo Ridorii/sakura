@@ -5,19 +5,19 @@
         Welcome to Flashii! This is a site for a bunch of friends to hang out, nothing special.<br />Anyone is pretty much welcome to register so why not have a go?
         <br />
         <br />
-        <a class="registerbutton" href="//{{ sakura.urls.main }}/register">Register!</a>
-        <a class="loginbutton" href="//{{ sakura.urls.main }}/login">Login</a>
+        <a class="registerbutton" href="/register">Register!</a>
+        <a class="loginbutton" href="/login">Login</a>
     </div>
     <div class="mioblog">
-        <h3 class="miotitle" style="margin: 0;">Latest News Posts<span class="windowbutton-container" onclick="hidePageSection('latestnewsposts',1);"><img class="minbutton" src="//{{ sakura.urls.content }}/pixel.png" alt="_"></span></h3>
+        <h3 class="miotitle" style="margin: 0;">Latest News Posts<span class="windowbutton-container" onclick="hidePageSection('latestnewsposts',1);"><img class="minbutton" src="/content/pixel.png" alt="_"></span></h3>
         <div class="mioboxcontent sub" style="margin: 0;">
-            {% for newsPost in newsPosts %}
+            {% for post in news.getPosts(0, newsCount) %}
                 {% include 'elements/newsPost.tpl' %}
             {% endfor %}
         </div>
     </div>
     <div class="mioblog">
-        <h3 class="miotitle" style="margin: 0;">Statistics<span class="windowbutton-container" onclick="hidePageSection('sitestatistics',1);"><img class="minbutton" src="//{{ sakura.urls.content }}/pixel.png" alt="_"></span></h3>
+        <h3 class="miotitle" style="margin: 0;">Statistics<span class="windowbutton-container" onclick="hidePageSection('sitestatistics',1);"><img class="minbutton" src="/content/pixel.png" alt="_"></span></h3>
         <div class="mioboxcontent sub" style="margin: 0;">
             <table class="miotable" style="text-align:center;">
                 <tbody>

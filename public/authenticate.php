@@ -178,14 +178,14 @@ if (isset($_REQUEST['mode'])) {
                     'INCORRECT_PASSWORD' => 'The password you entered was invalid.',
                     'NOT_ALLOWED' => 'Your account does not have the required permissions to log in.',
                     'NO_LOGIN' => 'Logging into this account is disabled.',
-                    'LOGIN_SUCESS' => 'Login successful!',
+                    'LOGIN_SUCCESS' => 'Login successful!',
 
                 ];
 
                 // Add page specific things
                 $renderData['page'] = [
 
-                    'redirect' => $login[0] ? $_REQUEST['redirect'] : $urls->format('SITE_LOGIN'),
+                    'redirect' => $login[0] ? ((new User($login[2]))->data['lastdate'] ? $_REQUEST['redirect'] : $urls->format('INFO_PAGE', ['welcome'])) : $urls->format('SITE_LOGIN'),
                     'message' => $messages[$login[1]],
                     'success' => $login[0],
 

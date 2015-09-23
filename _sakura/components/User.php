@@ -336,4 +336,82 @@ class User
         return $warnings;
 
     }
+
+    // Get username change history
+    public function getUsernameHistory()
+    {
+
+        // Do the database query
+        $changes = Database::fetch('username_history', true, [
+            'user_id' => [$this->data['id'], '='],
+        ], ['change_id', true]);
+
+        // Return all the warnings
+        return $changes;
+
+    }
+
+    // Set a new username
+    public function setUsername($username)
+    {
+
+        // Create a cleaned version
+        $username_clean = Main::cleanString($username, true);
+
+        // Check if the username is too short
+        if (strlen($username_clean) < Configuration::getConfig('username_min_length')) {
+            return [0, 'TOO_SHORT'];
+        }
+
+        // Check if the username is too long
+        if (strlen($username_clean) > Configuration::getConfig('username_max_length')) {
+            return [0, 'TOO_LONG'];
+        }
+
+        // Check if this username hasn't been used in the last amount of days set in the config
+        $getOld = Database::fetch('username_history', false, [
+            'username_old_clean' => [$username_clean, '='],
+            'change_time' => [(Configuration::getConfig('old_username_reserve') * 24 * 60 * 60), '>'],
+        ], ['change_id', true]);
+
+        // Check if anything was returned
+        if ($getOld) {
+            return [0, 'TOO_RECENT', $getOld['change_time']];
+        }
+
+        // Check if the username is already in use
+        $getInUse = Database::fetch('users', false, [
+            'username_clean' => [$username_clean, '='],
+        ]);
+
+        // Check if anything was returned
+        if ($getInUse) {
+            return [0, 'IN_USE', $getInUse['id']];
+        }
+
+        // Insert into username_history table
+        Database::insert('username_history', [
+            'change_time' => time(),
+            'user_id' => $this->data['id'],
+            'username_new' => $username,
+            'username_new_clean' => $username_clean,
+            'username_old' => $this->data['username'],
+            'username_old_clean' => $this->data['username_clean'],
+        ]);
+
+        // Update userrow
+        Database::update('users', [
+            [
+                'username' => $username,
+                'username_clean' => $username_clean,
+            ],
+            [
+                'id' => [$this->data['id'], '='],
+            ],
+        ]);
+
+        // Return success
+        return [1, 'SUCCESS', $username];
+
+    }
 }
