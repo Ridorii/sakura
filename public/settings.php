@@ -329,7 +329,6 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         'success' => 0,
 
                     ];
-
                     break;
                 }
 
@@ -365,7 +364,6 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         'success' => 0,
 
                     ];
-
                     break;
                 }
 
@@ -487,7 +485,6 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     'success' => 1,
 
                 ];
-
                 break;
 
             // Profile
@@ -591,7 +588,6 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     ]);
 
                 }
-
                 break;
 
             // Site Options
@@ -625,7 +621,6 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     'success' => 1,
 
                 ];
-
                 break;
 
             // Usertitle
@@ -639,7 +634,6 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         'success' => 0,
 
                     ];
-
                     break;
                 }
 
@@ -652,7 +646,6 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         'success' => 0,
 
                     ];
-
                     break;
                 }
 
@@ -677,7 +670,6 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     'success' => 1,
 
                 ];
-
                 break;
 
             // Username changing
@@ -715,28 +707,122 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     'success' => $userNameChange[0],
 
                 ];
+                break;
 
+            // E-mail changing
+            case 'email':
+                // Check permissions
+                if (!$currentUser->checkPermission('SITE', 'CHANGE_EMAIL')) {
+                    $renderData['page'] = [
+
+                        'redirect' => $redirect,
+                        'message' => 'You aren\'t allowed to change your e-mail address.',
+                        'success' => 0,
+
+                    ];
+
+                    break;
+                }
+
+                // Attempt e-mail change
+                $emailChange = $currentUser->setEMailAddress(isset($_POST['email']) ? $_POST['email'] : '');
+
+                // Messages
+                $messages = [
+                    'INVALID' => 'Your e-mail isn\'t considered valid!',
+                    'IN_USE' => 'This e-mail address has already been used!',
+                    'SUCCESS' => 'Successfully changed your e-mail address!',
+                ];
+
+                // Set render data
+                $renderData['page'] = [
+
+                    'redirect' => $redirect,
+                    'message' => $messages[$emailChange[1]],
+                    'success' => $emailChange[0],
+
+                ];
+                break;
+
+            // Password changing
+            case 'password':
+                // Check permissions
+                if (!$currentUser->checkPermission('SITE', 'CHANGE_PASSWORD')) {
+                    $renderData['page'] = [
+
+                        'redirect' => $redirect,
+                        'message' => 'You aren\'t allowed to change your password.',
+                        'success' => 0,
+
+                    ];
+
+                    break;
+                }
+
+                // Attempt password change
+                $passChange = $currentUser->setPassword(isset($_POST['oldpassword']) ? $_POST['oldpassword'] : '', isset($_POST['newpassword']) ? $_POST['newpassword'] : '', isset($_POST['newpasswordconfirm']) ? $_POST['newpasswordconfirm'] : '');
+
+                // Messages
+                $messages = [
+                    'NO_LOGIN' => 'How are you even logged in right now?',
+                    'INCORRECT_PASSWORD' => 'The password you provided is incorrect!',
+                    'PASS_TOO_SHIT' => 'Your password isn\'t strong enough!',
+                    'PASS_NOT_MATCH' => 'Your new passwords don\'t match!',
+                    'SUCCESS' => 'Successfully changed your password!',
+                ];
+
+                // Set render data
+                $renderData['page'] = [
+
+                    'redirect' => $redirect,
+                    'message' => $messages[$passChange[1]],
+                    'success' => $passChange[0],
+
+                ];
+                break;
+
+            // Deactivation
+            case 'deactivate':
+                // Check permissions
+                if (!$currentUser->checkPermission('SITE', 'DEACTIVATE_ACCOUNT')) {
+                    $renderData['page'] = [
+
+                        'redirect' => $redirect,
+                        'message' => 'You aren\'t allowed to deactivate your own account.',
+                        'success' => 0,
+
+                    ];
+
+                    break;
+                }
+
+                // Set render data
+                $renderData['page'] = [
+
+                    'redirect' => $redirect,
+                    'message' => 'Nothing happened.',
+                    'success' => 1,
+
+                ];
                 break;
 
             // Userpage
-            /*case 'userpage':
+            case 'userpage':
+                // Base64 encode the userpage
+                $userPage = base64_encode($_POST['userpage']);
 
-            // Base64 encode the userpage
-            $userPage = base64_encode($_POST['userpage']);
+                // Update database
+                Users::updateUserDataField(Session::$userId, ['userPage' => $userPage]);
 
-            // Update database
-            Users::updateUserDataField(Session::$userId, ['userPage' => [$userPage, 0]]);
+                // Set render data
+                $renderData['page'] = [
 
-            // Set render data
-            $renderData['page'] = [
+                    'redirect' => $redirect,
+                    'message' => 'Your userpage has been updated!',
+                    'success' => 1,
 
-            'redirect'  => $redirect,
-            'message'   => 'Your userpage has been updated!',
-            'success'   => 1
-
-            ];
-
-            break;*/
+                ];
+                break;
 
             // Fallback
             default:
@@ -1245,6 +1331,7 @@ if (Users::checkLogin()) {
 
         // Profile
         case 'appearance.userpage':
+            $renderData['userPage'] = isset($currentUser->data['userData']['userPage']) ? base64_decode($currentUser->data['userData']['userPage']) : '';
             break;
 
         // Username changing

@@ -337,6 +337,21 @@ class User
 
     }
 
+    // Get all warnings issued to the user
+    public function userPage()
+    {
+
+        return isset($this->data['userData']['userPage']) ?
+        Main::mdParse(
+            base64_decode(
+                $this->data['userData']['userPage']
+            ),
+            true
+        ) :
+        null;
+
+    }
+
     // Get username change history
     public function getUsernameHistory()
     {
@@ -412,6 +427,94 @@ class User
 
         // Return success
         return [1, 'SUCCESS', $username];
+
+    }
+
+    // Set a new e-mail address
+    public function setEMailAddress($email)
+    {
+
+        // Validate e-mail address
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return [0, 'INVALID'];
+        }
+
+        // Check if the username is already in use
+        $getInUse = Database::fetch('users', false, [
+            'email' => [$email, '='],
+        ]);
+
+        // Check if anything was returned
+        if ($getInUse) {
+            return [0, 'IN_USE', $getInUse['id']];
+        }
+
+        // Update userrow
+        Database::update('users', [
+            [
+                'email' => $email,
+            ],
+            [
+                'id' => [$this->data['id'], '='],
+            ],
+        ]);
+
+        // Return success
+        return [1, 'SUCCESS', $email];
+
+    }
+
+    // Set a new password
+    public function setPassword($old, $new, $confirm)
+    {
+        // Validate password
+        switch ($this->data['password_algo']) {
+            // Abyssing
+            case 'nologin':
+                return [0, 'NO_LOGIN'];
+
+            // Default hashing method
+            default:
+                if (!Hashing::validatePassword($old, [
+                    $this->data['password_algo'],
+                    $this->data['password_iter'],
+                    $this->data['password_salt'],
+                    $this->data['password_hash'],
+                ])) {
+                    return [0, 'INCORRECT_PASSWORD', $this->data['password_chan']];
+                }
+
+        }
+
+        // Check password entropy
+        if (Main::pwdEntropy($new) < Configuration::getConfig('min_entropy')) {
+            return [0, 'PASS_TOO_SHIT'];
+        }
+
+        // Passwords do not match
+        if ($new != $confirm) {
+            return [0, 'PASS_NOT_MATCH'];
+        }
+
+        // Create hash
+        $password = Hashing::createHash($new);
+
+        // Update userrow
+        Database::update('users', [
+            [
+                'password_hash' => $password[3],
+                'password_salt' => $password[2],
+                'password_algo' => $password[0],
+                'password_iter' => $password[1],
+                'password_chan' => time(),
+            ],
+            [
+                'id' => [$this->data['id'], '='],
+            ],
+        ]);
+
+        // Return success
+        return [1, 'SUCCESS'];
 
     }
 }

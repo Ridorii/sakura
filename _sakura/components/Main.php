@@ -29,10 +29,14 @@ class Main
     }
 
     // Parse markdown
-    public static function mdParse($text)
+    public static function mdParse($text, $escape = false)
     {
 
-        return (new Parsedown())->text($text);
+        $pd = new Parsedown();
+
+        return $escape ?
+        $pd->setMarkupEscaped(true)->text($text) :
+        $pd->text($text);
 
     }
 
@@ -140,8 +144,11 @@ class Main
             if ($past = Database::fetch(
                 'error_log',
                 false,
-                ['backtrace' => [$backtrace, '=', true],
-                    'error_string' => [$errstr, '=']]
+                [
+                    'backtrace' => [$backtrace, '=', true],
+                    'error_string' => [$errstr, '='],
+                    'error_line' => [$errstr, '='],
+                ]
             )) {
                 // If so assign the errid
                 $errid = $past['id'];

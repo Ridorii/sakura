@@ -2869,7 +2869,58 @@
             },
             {
                 "type":     "ADD",
-                "change":   "Implement username changing.",
+                "change":   "Implemented username changing.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20150926": [
+
+            "eminence",
+            {
+                "type":     "UPD",
+                "change":   "Improved the ajaxBusyView thing.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added AJAX methods to the friend actions in the settings panel.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed unneeded .htaccess files.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Removed unneeded lines from .gitignore.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added userpages back in.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added live preview for userpages.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed sanitising in userpages code.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added 4 of the 5 Account section pages (all except Ranks as this system is getting a change soon probably).",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added Deactivate Account template and <a href='http://i.flash.moe/1443283802-329-2769.png' target='_blank'>placeholder logic</a>.",
                 "user":     "Flashwave"
             }
 

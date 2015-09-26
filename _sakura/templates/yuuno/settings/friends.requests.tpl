@@ -1,3 +1,15 @@
+{% block js %}
+<script type="text/javascript">
+window.addEventListener("load", function() {
+    var friendsListActions = document.querySelectorAll('[id^="friendslist-friend-action-"]');
+
+    for (var i in friendsListActions) {
+        prepareAjaxLink(friendsListActions[i], 'submitPost', ', true, "Please wait.."');
+    }
+});
+</script>
+{% endblock %}
+
 {% if friends|length %}
     <div class="friends-list">
         {% for friend in friends[page.currentPage] %}
@@ -7,8 +19,8 @@
                     <div class="friends-list-name" style="color: {% if friend.user.name_colour %}{{ friend.user.name_colour }}{% else %}{{ friend.rank.colour }}{% endif %};">{{ friend.user.username }}</div>
                 </a>
                 <div class="friends-list-actions">
-                    <a class="add fa fa-check" title="Add friend" href="/friends?add={{ friend.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect=/settings/friendrequests&amp;direct=true"></a>
-                    <a class="remove fa fa-remove" title="Remove friend" href="/friends?remove={{ friend.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect=/settings/friends/requests&amp;direct=true"></a>
+                    <a class="add fa fa-check" title="Add friend" href="/friends?add={{ friend.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect=/settings/friendrequests&amp;direct=true" id="friendslist-friend-action-add-{{ friend.user.id }}"></a>
+                    <a class="remove fa fa-remove" title="Remove friend" href="/friends?remove={{ friend.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}&amp;redirect=/settings/friends/requests&amp;direct=true" id="friendslist-friend-action-remove-{{ friend.user.id }}"></a>
                     <div class="clear"></div>
                 </div>
             </div>

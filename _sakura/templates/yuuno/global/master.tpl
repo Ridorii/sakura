@@ -143,13 +143,11 @@
 
             // Error reporter
             window.onerror = function(msg, url, line, col, error) {
-
-                    notifyUI({
-                        "title":    "An error has occurred!",
-                        "text":     "There was a problem while executing the JavaScript code for this page: " + msg + ", URL: " + url + ", Line: " + line + ", Column: " + col + ". Please report this to a developer.",
-                        "img":      "FONT:fa-warning"
-                    });
-
+                notifyUI({
+                    "title":    "An error has occurred!",
+                    "text":     "There was a problem while executing the JavaScript code for this page: " + msg + ", URL: " + url + ", Line: " + line + ", Column: " + col + ". Please report this to a developer.",
+                    "img":      "FONT:fa-warning"
+                });
             }
 
         </script>

@@ -845,6 +845,14 @@ function scrollToTop() {
 
 }
 
+function replaceTag(tag) {
+    return {'&': '&amp;', '<': '&lt;', '>': '&gt;'}[tag] || tag;
+}
+
+function safeTagsReplace(str) {
+    return str.replace(/[&<>]/g, replaceTag);
+}
+
 // Formatting money
 Number.prototype.formatMoney = function(c, d, t) {
 var n = this,

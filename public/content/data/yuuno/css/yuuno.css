@@ -307,7 +307,8 @@ a.default:active {
 }
 
 .ajax-busy {
-    background: rgba(0, 0, 0, .4);
+    background: #222;
+    background: linear-gradient(0deg, rgba(0, 0, 0, .4), transparent) rgba(0, 0, 0, .8);
     position: fixed;
     top: 0;
     left: 0;
@@ -316,33 +317,21 @@ a.default:active {
     z-index: 5;
     text-align: center;
     opacity: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .ajax-busy .ajax-inner {
     line-height: 2em;
     color: #FFF;
-    background: #222;
-    background: linear-gradient(0deg, rgba(0, 0, 0, .4) 20%, transparent) rgba(0, 0, 0, .8);
     display: inline-block;
-    margin: 10% auto 0;
     padding: 10px 20px 15px;
     border-radius: 10px;
-    box-shadow: 0 5px 1em #111;
 }
 
 .ajax-busy .ajax-inner h2 {
-    padding-bottom: 5px;
-}
-
-@media (max-width: 1024px) {
-    .ajax-busy {
-        background: rgba(0, 0, 0, .8);
-    }
-
-    .ajax-busy .ajax-inner {
-        background: transparent;
-        box-shadow: 0 0 0 transparent;
-    }
+    line-height: 2em;
 }
 
 .homepage .content-right ul {

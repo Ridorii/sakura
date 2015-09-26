@@ -1,26 +1,34 @@
-{#
-{% if preview %}
-    <div class="markdown" style="max-height: 600px;overflow-y:auto;">
-        {{ preview|raw }}
-    </div>
-    <hr class="default" />
-{% endif %}
-<form enctype="multipart/form-data" method="post" action="{{ sakura.currentPage }}">
+{% block js %}
+<script type="text/javascript" charset="utf-8" src="{{ sakura.contentPath }}/libraries/showdown.js"></script>
+{% endblock %}
+
+<div class="markdown" id="userPagePreview" style="max-height: 500px; overflow-y: auto; background: #C2AEEE; box-shadow: inset 0 0 1em 1em #D3BFFF;">
+    <noscript>
+        <h1 class="stylised" style="margin: 1em auto;">The preview requires JavaScript, enable it.</h1>
+    </noscript>
+</div>
+<hr class="default" />
+<form enctype="multipart/form-data" method="post" action="{{ sakura.currentPage }}" id="userPageEditorForm">
     <input type="hidden" name="sessid" value="{{ php.sessionid }}" />
     <input type="hidden" name="timestamp" value="{{ php.time }}" />
     <input type="hidden" name="mode" value="userpage" />
-    <div><textarea name="userpage" placeholder="# Welcome to my profile page!" class="inputStyling" style="width: calc(100% - 12px); height: 500px;" />{{ userPage.content }}</textarea></div>
-    <div>
-        <h2>Parse mode</h2>
-        <input type="radio" name="parse" value="bbcode" id="bbcode"{% if userPage.parse == 1 %} checked="checked"{% endif %} /> <label for="bbcode">BBCodes</label>
-        <input type="radio" name="parse" value="markdown" id="markdown"{% if userPage.parse == 2 %} checked="checked"{% endif %} /> <label for="markdown">Markdown</label>
-        <input type="radio" name="parse" value="plain" id="plain"{% if userPage.parse == 0 %} checked="checked"{% endif %} /> <label for="plain">Plain Text</label>
-    </div>
+    <div><textarea name="userpage" id="userPageEditor" placeholder="# Welcome to my user page!" class="inputStyling" style="width: calc(100% - 12px); height: 400px;" />{% if userPage %}{{ userPage }}{% else %}# Welcome to my user page!{% endif %}</textarea></div>
     <div class="profile-save">
         <input type="submit" value="Save" name="submit" class="inputStyling" />
-        <input type="submit" value="Preview" name="preview" class="inputStyling" />
         <input type="reset" value="Reset" name="reset" class="inputStyling" />
     </div>
 </form>
-#}
-<h1 class="stylised">Redoing this bc garbage.</h1>
+<script type="text/javascript">
+var converter = new showdown.Converter();
+
+function updateUserPage() {
+    document.getElementById('userPagePreview').innerHTML = converter.makeHtml(safeTagsReplace(document.getElementById('userPageEditor').value));
+}
+
+document.getElementById('userPageEditor').addEventListener('keyup', updateUserPage);
+
+window.addEventListener('load', function() {
+    prepareAjaxForm('userPageEditorForm', 'Updating user page...');
+    updateUserPage();
+});
+</script>

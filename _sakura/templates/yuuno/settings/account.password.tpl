@@ -4,15 +4,15 @@
     <input type="hidden" name="mode" value="password" />
     <div class="profile-field">
         <div><h2>Current Password</h2></div>
-        <div><input type="password" name="currentpw" placeholder="Enter your current password for verification." class="inputStyling" /></div>
+        <div><input type="password" name="oldpassword" placeholder="Enter your current password for verification." class="inputStyling" /></div>
     </div>
     <div class="profile-field">
         <div><h2>New Password</h2></div>
-        <div><input type="password" name="newpw" placeholder="Enter your new password." class="inputStyling" /></div>
+        <div><input type="password" name="newpassword" placeholder="Enter your new password." class="inputStyling" /></div>
     </div>
     <div class="profile-field">
         <div><h2>Confirmation</h2></div>
-        <div><input type="password" name="conpw" placeholder="Enter your new password again to make sure you didn't fuck up." class="inputStyling" /></div>
+        <div><input type="password" name="newpasswordconfirm" placeholder="Enter your new password again to make sure you didn't fuck up." class="inputStyling" /></div>
     </div>
     <div class="profile-save">
         <input type="submit" value="Save" name="submit" class="inputStyling" />
