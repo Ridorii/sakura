@@ -422,48 +422,6 @@ a.default:active {
 
 }
 
-#actionBtns {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    z-index: 4;
-}
-
-#actionBtns > a {
-    display: flex;
-    flex-direction: column;
-    margin: 5px 0;
-    background: rgba(0, 0, 0, .5);
-    color: #FFF;
-    font-size: 2em;
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
-    border-radius: 5px 0 0 5px;
-    text-decoration: none;
-    text-align: center;
-    text-shadow: 0 0 2px #FFF;
-    position: relative;
-    transition: .5s;
-    box-shadow: 0 0 2px #222;
-}
-
-#actionBtns > a:hover {
-    text-shadow: 0 0 5px #FFF;
-}
-
-#actionBtns > a:active {
-    text-shadow: 0 0 7px #FFF;
-}
-
-#actionBtns > a.enter {
-    animation: slideInFromRight 1 .6s, fadeIn 1 .6s;
-}
-
-#actionBtns > a.exit {
-    animation: slideOutToBottom 1 .6s, fadeOut 1 .6s;
-}
-
 #headerLoginForm {
     background: rgba(211, 191, 255, .8);
     border: 1px solid #9475B2;
@@ -546,63 +504,6 @@ a.default:active {
 .panelQuickLinks a:active {
     color: #725390;
     text-shadow: 0 0 8px #8364A1;
-}
-
-/*
- * Site chat styling
- */
-#chat > #chatOnlineUsers {
-    position: fixed;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 300px;
-    background: rgba(0, 0, 0, .7);
-    color: #FFF;
-    z-index: 3;
-    box-shadow: 0 0 2px #222;
-    overflow: auto;
-}
-
-#chat > #chatOnlineUsers > div {
-    margin: 5px;
-}
-
-#chat > #chatOnlineUsers > .chatOnlineListTitle {
-    background: none;
-    font-size: 2em;
-    line-height: 1.2em;
-    font-family: "SegoeUI-Light", sans-serif;
-    padding: 5px;
-}
-
-#chatUserList > div {
-    display: flex;
-    align-items: center;
-    background: rgba(0, 0, 0, .7);
-    padding: 5px;
-    border-radius: 5px;
-}
-
-#chatUserList > div:not(:last-child) {
-    margin-bottom: 5px;
-}
-
-#chatUserList > div > .avatar {
-    width: 50px;
-    height: 50px;
-    background: transparent url("/content/pixel.png") no-repeat scroll left center / contain;
-    border-radius: 5px;
-}
-
-#chatUserList > div > .options {
-    margin-left: 10px;
-}
-
-#chatUserList > div > .options > .actions {
-    list-style: none;
-    font-size: .8em;
-    line-height: 1.2em;
 }
 
 /*

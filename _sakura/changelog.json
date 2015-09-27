@@ -2924,6 +2924,32 @@
                 "user":     "Flashwave"
             }
 
+        ],
+
+        "20150927": [
+
+            "eminence",
+            {
+                "type":     "FIX",
+                "change":   "Fixed age being displayed on profile despite the user not having a year set.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed the same error being logged multiple times.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed the scroll to top button.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added some fundamentals for the on-site chat.",
+                "user":     "Flashwave"
+            }
+
         ]
 
     }

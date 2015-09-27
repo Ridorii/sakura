@@ -147,7 +147,7 @@ class Main
                 [
                     'backtrace' => [$backtrace, '=', true],
                     'error_string' => [$errstr, '='],
-                    'error_line' => [$errstr, '='],
+                    'error_line' => [$errline, '='],
                 ]
             )) {
                 // If so assign the errid

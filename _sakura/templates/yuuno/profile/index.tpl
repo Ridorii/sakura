@@ -46,7 +46,7 @@
                         {% endif %}
                         <br />
                         <b>{{ profile.data.username }} has {% if not profile.forumStats.posts %}no{% else %}{{ profile.forumStats.posts }}{% endif %} forum post{% if profile.forumStats.posts != 1 %}s{% endif %}.</b>
-                        {% if profile.data.birthday != '0000-00-00' %}
+                        {% if profile.data.birthday != '0000-00-00' and profile.data.birthday|split('-')[0] > 0 %}
                             <br /><b>Age</b> <span title="{{ profile.data.birthday }}">{{ profile.elapsed(' old').birth }}</span>
                         {% endif %}
                         {% if profile.profileFields %}

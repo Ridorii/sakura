@@ -13,5 +13,8 @@
         </div>
         <div class="clear"></div>
     </div>
+{% endblock %}
+
+{% block js %}
     <script type="text/javascript" src="{{ sakura.resources }}/js/ybabstat.js"></script>
 {% endblock %}

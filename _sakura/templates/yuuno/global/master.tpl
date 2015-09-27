@@ -62,11 +62,6 @@
             // Space for things that need to happen onload
             window.addEventListener("load", function() {
 
-                // Alter the go to top button
-                var gotop = document.getElementById('scrollToTop');
-                gotop.setAttribute('href',      'javascript:void(0);');
-                gotop.setAttribute('onclick',   'scrollToTop();');
-
             {% if session.checkLogin %}
                 // Convert href to object in logout link
                 prepareAjaxLink('headerLogoutLink', 'submitPost', ', true, "Logging out..."');
@@ -234,37 +229,8 @@
                 {% block content %}
                     <h1 class="stylised" style="text-align: center; margin: 2em auto;">{{ php.self }} is now printing!</h1>
                 {% endblock %}
-{#
-                <div id="chat">
-                    <div id="chatOnlineUsers">
-                        <div class="chatOnlineListTitle">
-                            Online Users
-                        </div>
-                        <div id="chatUserList">
-                            <div>
-                                <div class="avatar" style="background-image: url('/a/1');"></div>
-                                <div class="options">
-                                    <div class="username" style="color: #2B3F84;">Hanyuu</div>
-                                    <div class="actions">Display actions</div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="avatar" style="background-image: url('/a/2');"></div>
-                                <div class="options">
-                                    <div class="username" style="color: #C00;">Flashwave</div>
-                                    <div class="actions">Display actions</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-#}
-                <div id="actionBtns">
-{#                    <a id="showChatTicker" class="fa fa-list" href="#"></a>
-                    <a id="showOnlineUsers" class="fa fa-users" href="#"></a>
-                    <a id="openSiteChat" class="fa fa-comments-o" href="#"></a>#}
-                    <a id="scrollToTop" class="fa fa-angle-double-up larger hidden" onclick="scrollToTop();" href="#top"></a>
-                </div>
+
+                {# include 'global/chat.tpl' #}
             </div>
             <div class="footer">
                 <div class="ftsections">
