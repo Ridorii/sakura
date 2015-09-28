@@ -2950,6 +2950,27 @@
                 "user":     "Flashwave"
             }
 
+        ],
+
+        "20150928": [
+
+            "eminence",
+            {
+                "type":     "FIX",
+                "change":   "Fixed view order on the header menu on mobile.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added new animations on the header menu.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Readd footer on mobile.",
+                "user":     "Flashwave"
+            }
+
         ]
 
     }

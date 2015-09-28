@@ -118,19 +118,6 @@ body {
     padding-bottom: 220px;
 }
 
-/* Can't be bothered to figure this out since it'll spazz out anyway */
-@media (max-width: 650px) {
-
-    .footer {
-        display: none;
-    }
-
-    #contentwrapper {
-        padding-bottom: 0;
-    }
-
-}
-
 .clear {
     clear: both !important;
     float: none !important;
@@ -523,7 +510,7 @@ a.default:active {
     text-decoration: none;
     font: 100 70px/80px "SegoeUI-Light", "SegoeUI", "Segoe UI", sans-serif;
     color: #B06AC4;
-    transition: color .2s, text-shadow .2s;
+    transition: .2s;
 }
 
 .header .logo:hover {
@@ -546,15 +533,22 @@ a.default:active {
 
 .header .menu {
     border-bottom: 2px solid #9475B2;
+    display: block;
+}
+
+.header .menu:after {
+    clear: both;
+    content: " ";
+    display: block;
+    height: 0;
+    visibility: hidden;
 }
 
 .header .menu .menu-nav {
-    text-align: left;
     float: left;
 }
 
 .header .menu .menu-ucp {
-    text-align: right;
     float: right;
 }
 
@@ -565,27 +559,28 @@ a.default:active {
     color: inherit;
     text-decoration: none;
     text-align: center;
-    transition: border-color .5s, background .3s;
+    transition: .3s;
     height: 30px;
     width: 30px;
     line-height: 30px;
     vertical-align: middle;
     font-size: 1.6em;
     color: #75569B;
+    background: linear-gradient(180deg, transparent 0%, transparent 50%, #8364A1 100%);
+    background-size: 100% 200%;
+}
+
+.header .menu .menu-item:hover {
+    background-position: 0 50%;
+}
+
+.header .menu .menu-item:active {
+    background-position: 0 100%;
 }
 
 .header .menu .menu-item.avatar {
     padding-left: 30px;
     background: url('/pixel.png') no-repeat scroll left center / contain transparent;
-}
-
-.header .menu .menu-item:hover {
-    border-color: #503180 !important;
-}
-
-.header .menu .menu-item:active {
-    border-color: #503180 !important;
-    background-color: #503180 !important;
 }
 
 @media (max-width: 1024px) {
@@ -597,15 +592,9 @@ a.default:active {
         width: auto;
     }
 
-    .header .menu .menu-nav,
-    .header .menu .menu-ucp {
-        display: inline-block;
-        float: none;
-        text-align: center;
-    }
-
-    .header .menu .menu-ucp {
-        margin-left: -1px;
+    .header .menu > div {
+        float: none !important;
+        display: inline;
     }
 
     .header .menu .menu-item {
@@ -615,6 +604,15 @@ a.default:active {
         line-height: 50px;
         font-size: 2em;
         display: inline-block;
+    }
+
+    .header .menu .menu-item:hover {
+        background: transparent;
+    }
+
+    .header .menu .menu-item:active {
+        background: #75569B;
+        color: #9575B2;
     }
 
     .header .menu .menu-item.avatar {
@@ -690,6 +688,18 @@ a.default:active {
     width: 100%;
     font-size: .9em;
     line-height: 1.8em;
+}
+
+@media (max-width: 1024px) {
+
+    .footer {
+        position: inherit;
+    }
+
+    #contentwrapper {
+        padding: 0;
+    }
+
 }
 
 /*

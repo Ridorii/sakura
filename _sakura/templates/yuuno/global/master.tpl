@@ -152,9 +152,9 @@
         <div id="container">
             <span id="top"></span>
             <div class="header" id="header">
-                <a class="logo" href="//{{ sakura.urlMain }}/">{{ sakura.siteName }}</a>
-                <div class="menu">
-                    <div class="menu-nav fa" id="navMenuSite">
+                <a class="logo" href="{{ urls.format('SITE_HOME') }}">{{ sakura.siteName }}</a>
+                <div class="menu fa">
+                    <div class="menu-nav" id="navMenuSite">
                         <!-- Navigation menu, displayed on left side of the bar. -->
                         <a class="menu-item fa-home" href="{{ urls.format('SITE_HOME') }}" title="Home"></a>
                         <a class="menu-item fa-newspaper-o" href="{{ urls.format('SITE_NEWS') }}" title="News"></a>
@@ -166,7 +166,7 @@
                             <a class="menu-item fa-heart" href="{{ urls.format('SITE_PREMIUM') }}" title="Support us"></a>
                         {% endif %}
                     </div>
-                    <div class="menu-ucp fa" id="navMenuUser">
+                    <div class="menu-ucp" id="navMenuUser">
                         <!-- User menu, displayed on right side of the bar. -->
                         {% if session.checkLogin %}
                             <a class="menu-item avatar" href="{{ urls.format('USER_PROFILE', [user.data.id]) }}" title="Logged in as {{ user.data.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.data.id]) }}'); width: auto; color: {{ user.colour }}; font-weight: 700;"></a>
@@ -182,7 +182,6 @@
                             {% endif %}
                         {% endif %}
                     </div>
-                    <div class="clear"></div>
                 </div>
             </div>
             <div id="contentwrapper">
