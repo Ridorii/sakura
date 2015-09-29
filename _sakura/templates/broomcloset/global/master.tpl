@@ -10,47 +10,87 @@
 {% endif %}
 {{ block('meta') }}
         <!-- CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/broomcloset.css" />
         <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/bootstrap.css" />
         <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/bootstrap-theme.css" />
         <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
 {{ block('css') }}
         <!-- JS -->
-        <script type="text/javascript" src="{{ sakura.contentPath }}/libraries/jquery.js"></script>
-        <script type="text/javascript" src="{{ sakura.resources }}/js/bootstrap.js"></script>
+        <script type="text/javascript" charset="utf-8" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ sakura.resources }}/js/bootstrap.js"></script>
 {{ block('js') }}
     </head>
     <body>
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="logo">
-                <a href="/manage/">Broom Closet</a> /
-                <a href="/manage/{{ page.activepage }}/">{{ page.pages[page.activepage].desc }}</a> /
-                <a href="/manage/{{ page.activepage }}/{{ page.activesub }}/">{{ page.pages[page.activepage].subs[page.activesub].desc }}</a>
-            </div>
-            <div class="nav">
-                <div class="menu" id="siteNav">
-                    <div style="color: {{ user.colour }};">{{ user.data.username }}</div>
-                    <a href="/">Return to Site Index</a>
-                    <a href="/logout?mode=logout&amp;time={{ php.time }}&amp;session={{ php.sessionid }}&amp;redirect=/">Logout</a>
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ urls.format('MANAGE_INDEX') }}">The Broomcloset</a>
                 </div>
-                <div class="menu" id="pageNav">
-                    <div>Navigation</div>
-                    {% for short,page in page.pages %}
-                        <a href="/manage/{{ short }}/">{{ page.desc }}</a>
-                    {% endfor %}
-                </div>
-                <div class="menu" id="subNav">
-                    <div>{{ page.pages[page.activepage].desc }}</div>
-                    {% for short,sub in page.pages[page.activepage].subs %}
-                        <a href="/manage/{{ page.activepage }}/{{ short }}/">{{ sub.desc }}</a>
-                    {% endfor %}
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li><a href="{{ urls.format('MANAGE_INDEX') }}">Dashboard</a></li>
+                        <li><a href="{{ urls.format('MANAGE_CAT', ['reports']) }}">Reports</a></li>
+                        <li><a href="{{ urls.format('MANAGE_CAT', ['infopages']) }}">Info pages</a></li>
+                        <li><a href="{{ urls.format('MANAGE_CAT', ['system']) }}">System information</a></li>
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Users <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['users', 'manage']) }}">Manage users</a></li>
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['users', 'ranks']) }}">Manage ranks</a></li>
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['users', 'groups']) }}">Manage groups</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['users', 'warnings']) }}">Warnings</a></li>
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['users', 'bans']) }}">Bans</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Forums <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['forums', 'manage']) }}">Manage forums</a></li>
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['forums', 'moderate']) }}">Moderate forums</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Permissions <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['permissions', 'global']) }}">Global permissions</a></li>
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['permissions', 'forums']) }}">Forum permissions</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Logs <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['logs', 'all']) }}">Full log</a></li>
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['logs', 'management']) }}">Management logs</a></li>
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['logs', 'errors']) }}">Error logs</a></li>
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['logs', 'user']) }}">User logs</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: {{ user.colour }};">{{ user.data.username }} <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ urls.format('USER_PROFILE', [user.data.id]) }}">View Profile</a></li>
+                                <li><a href="{{ urls.format('SETTINGS_INDEX') }}">Site settings</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{{ urls.format('SITE_HOME') }}">Back to site</a></li>
+                                <li><a href="{{ urls.format('USER_LOGOUT', [php.time, php.sessionid, urls.format('SITE_HOME')]) }}">Logout</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{{ urls.format('CHANGELOG') }}#r{{ sakura.versionInfo.version }}" style="color: {{ sakura.versionInfo.colour }};" title="{{ sakura.versionInfo.label }} {{ sakura.versionInfo.stable ? 'Stable' : 'Development' }}">Sakura r{{ sakura.versionInfo.version }}</a></li>
+                    </ul>
                 </div>
             </div>
         </nav>
-        <div id="contentwrapper">
+        <div class="container-fluid">
 {{ block('content') }}
-        </div>
-        <div class="footer">
-            <div style="color: {{ sakura.versionInfo.colour }};">Sakura b{{ sakura.versionInfo.version }} ({{ sakura.versionInfo.label }}/{{ sakura.versionInfo.stable ? 'Stable' : 'Development' }})</div>
         </div>
     </body>
 </html>

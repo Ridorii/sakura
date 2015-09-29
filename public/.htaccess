@@ -85,5 +85,5 @@ RewriteRule ^forum/post/([0-9]+)/(quote|reply)/?$ posting.php?p=$1&quote=$1 [L,Q
 
 # Management
 RewriteRule ^manage/?$ manage.php [L,QSA]
-RewriteRule ^manage/([a-z\-]+)/?$ manage.php?cat=$1&mode=0 [L,QSA]
+RewriteRule ^manage/([a-z\-]+)/?$ manage.php?cat=$1 [L,QSA]
 RewriteRule ^manage/([a-z\-]+)/([a-z\-]+)/?$ manage.php?cat=$1&mode=$2 [L,QSA]

@@ -2984,6 +2984,7 @@
             {
                 "type":     "FIX",
                 "change":   "Fixed user avatar going all over the place on mobile.",
+                "user":     "Flashwave"
             }
 
         ]

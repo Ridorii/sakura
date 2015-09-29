@@ -18,163 +18,54 @@ if (!Permissions::check('MANAGE', 'USE_MANAGE', Session::$userId, 1)) {
     exit;
 }
 
-// Management pages
-$managePages = [
-
-    'index' => [
-        'desc' => 'Index',
-        'subs' => [
-            'front-page' => [
-                'desc' => 'Front Page',
-            ],
-        ],
+// Modes
+$modes = [
+    'dashboard' => [
+        'index',
     ],
-
-    'reports' => [
-        'desc' => 'Reports',
-        'subs' => [
-            'front-page' => [
-                'desc' => 'Front Page',
-            ],
-        ],
-    ],
-
-    'banning' => [
-        'desc' => 'Banning',
-        'subs' => [
-            'front-page' => [
-                'desc' => 'Front Page',
-            ],
-        ],
-    ],
-
-    'warnings' => [
-        'desc' => 'Warnings',
-        'subs' => [
-            'front-thing' => [
-                'desc' => 'thing',
-            ],
-        ],
-    ],
-
-    'user-notes' => [
-        'desc' => 'User notes',
-        'subs' => [
-            'front-page' => [
-                'desc' => 'Front Page',
-            ],
-        ],
-    ],
-
-    'action-logs' => [
-        'desc' => 'Action logs',
-        'subs' => [
-            'front-page' => [
-                'desc' => 'Front Page',
-            ],
-        ],
-    ],
-
-    'action-logs' => [
-        'desc' => 'Action logs',
-        'subs' => [
-            'front-page' => [
-                'desc' => 'Front Page',
-            ],
-        ],
-    ],
-
-    'statistics' => [
-        'desc' => 'Statistics',
-        'subs' => [
-            'front-page' => [
-                'desc' => 'Front Page',
-            ],
-        ],
-    ],
-
-    'general-settings' => [
-        'desc' => 'General Settings',
-        'subs' => [
-            'front-page' => [
-                'desc' => 'Front Page',
-            ],
-        ],
-    ],
-
-    'users' => [
-        'desc' => 'Users',
-        'subs' => [
-            'front-page' => [
-                'desc' => 'Front Page',
-            ],
-        ],
-    ],
-
-    'ranks' => [
-        'desc' => 'Ranks',
-        'subs' => [
-            'front-page' => [
-                'desc' => 'Front Page',
-            ],
-        ],
-    ],
-
-    'permissions' => [
-        'desc' => 'Permissions',
-        'subs' => [
-            'front-page' => [
-                'desc' => 'Front Page',
-            ],
-        ],
-    ],
-
-    'info-pages' => [
-        'desc' => 'Info pages',
-        'subs' => [
-            'front-page' => [
-                'desc' => 'Front Page',
-            ],
-        ],
-    ],
-
     'system' => [
-        'desc' => 'System',
-        'subs' => [
-            'front-page' => [
-                'desc' => 'Front Page',
-            ],
-        ],
+        'index',
     ],
-
+    'error' => [
+        'index',
+    ],
 ];
 
-// Add page specific things
-$renderData['page'] = [
+// Select mode
+$category = isset($_GET['cat'])
+? (
+    array_key_exists($_GET['cat'], $modes) ?
+    $_GET['cat'] :
+    'error'
+)
+: key($modes);
+$mode = isset($_GET['mode'])
+? (
+    in_array($_GET['mode'], $modes[$category]) ?
+    $_GET['mode'] :
+    'error'
+)
+: $modes[$category][0];
 
-    'title' => 'Manage Index',
-    'pages' => $managePages,
-    'activepage' => $_MANAGE_ACTIVE_PAGE = (
-        isset($_GET['page']) ?
-        (
-            array_key_exists($_GET['page'], $managePages) ?
-            $_GET['page'] :
-            key($managePages)
-        ) :
-        key($managePages)
-    ),
-    'subs' => $_MANAGE_SUBS = $managePages[$_MANAGE_ACTIVE_PAGE]['subs'],
-    'activesub' => $_MANAGE_ACTIVE_SUB = (
-        isset($_GET['sub']) ?
-        (
-            array_key_exists($_GET['sub'], $_MANAGE_SUBS) ?
-            $_GET['sub'] :
-            key($_MANAGE_SUBS)
-        ) :
-        key($_MANAGE_SUBS)
-    ),
+// Override category if mode is error
+if ($mode == 'error') {
+    $category = 'error';
+    $mode = key($modes[$category]);
+}
 
-];
+// Add special variables
+switch ($category . '.' . $mode) {
+    case 'system.index':
+        $renderData = array_merge($renderData, [
+            'uname' => [
+                'osn' => php_uname('s'),
+                'osv' => php_uname('v'),
+                'host' => php_uname('n'),
+                'arch' => php_uname('m'),
+            ],
+        ]);
+        break;
+}
 
 // Print page contents
-print Templates::render('pages/' . $_MANAGE_ACTIVE_PAGE . '/' . $_MANAGE_ACTIVE_SUB . '.tpl', $renderData);
+print Templates::render('pages/' . $mode . '.' . $category . '.tpl', $renderData);
