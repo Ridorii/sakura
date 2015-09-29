@@ -2971,6 +2971,21 @@
                 "user":     "Flashwave"
             }
 
+        ],
+
+        "20150929": [
+
+            "eminence",
+            {
+                "type":     "UPD",
+                "change":   "(As much as I regret it,) Start moving Manage to bootstrap.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed user avatar going all over the place on mobile.",
+            }
+
         ]
 
     }

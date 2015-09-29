@@ -617,6 +617,7 @@ a.default:active {
 
     .header .menu .menu-item.avatar {
         padding-left: 50px;
+        background: url('/pixel.png') no-repeat scroll left center / contain transparent;
     }
 
 }

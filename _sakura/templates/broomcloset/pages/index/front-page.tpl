@@ -1,4 +1,8 @@
-{% include 'global/header.tpl' %}
+{% extends 'global/master.tpl' %}
+
+{% block title %}The Broomcloset{% endblock %}
+
+{% block content %}
 <h1>Latest 5 reports</h1>
 <table>
     <thead>
@@ -34,4 +38,4 @@
         </tr>
     </tbody>
 </table>
-{% include 'global/footer.tpl' %}
+{% endblock %}
