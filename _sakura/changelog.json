@@ -2987,6 +2987,22 @@
                 "user":     "Flashwave"
             }
 
+        ],
+
+        "20151003": [
+
+            "eminence",
+            {
+                "type":     "FIX",
+                "change":   "Fixed public/.htaccess.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed template not being found in manage.",
+                "user":     "Flashwave"
+            }
+
         ]
 
     }

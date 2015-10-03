@@ -23,8 +23,12 @@ $modes = [
     'dashboard' => [
         'index',
     ],
-    'system' => [
-        'index',
+    'configuration' => [
+        'general',
+        'security',
+        'authentication',
+        'appearance',
+        'performance',
     ],
     'error' => [
         'index',
@@ -50,8 +54,16 @@ $mode = isset($_GET['mode'])
 // Override category if mode is error
 if ($mode == 'error') {
     $category = 'error';
-    $mode = key($modes[$category]);
+    $mode = $modes[$category][0];
 }
+
+// Set page data
+$renderData = array_merge($renderData, [
+    'manage' => [
+        'category' => $category,
+        'mode' => $mode,
+    ],
+]);
 
 // Add special variables
 switch ($category . '.' . $mode) {
@@ -63,6 +75,10 @@ switch ($category . '.' . $mode) {
                 'host' => php_uname('n'),
                 'arch' => php_uname('m'),
             ],
+        ]);
+        break;
+    case 'config.index':
+        $renderData = array_merge($renderData, [
         ]);
         break;
 }

@@ -34,11 +34,21 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-left">
-                        <li><a href="{{ urls.format('MANAGE_INDEX') }}">Dashboard</a></li>
-                        <li><a href="{{ urls.format('MANAGE_CAT', ['reports']) }}">Reports</a></li>
-                        <li><a href="{{ urls.format('MANAGE_CAT', ['infopages']) }}">Info pages</a></li>
-                        <li><a href="{{ urls.format('MANAGE_CAT', ['system']) }}">System information</a></li>
-                        <li class="dropdown">
+                        <li{% if manage.category == 'dashboard' %} class="active"{% endif %}><a href="{{ urls.format('MANAGE_INDEX') }}">Dashboard</a></li>
+                        <li{% if manage.category == 'news' %} class="active"{% endif %}><a href="{{ urls.format('MANAGE_CAT', ['news']) }}">News</a></li>
+                        <li class="dropdown{% if manage.category == 'configuration' %} active{% endif %}">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Configuration <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['configuration', 'general']) }}">General</a></li>
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['configuration', 'security']) }}">Security</a></li>
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['configuration', 'authentication']) }}">Authentication</a></li>
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['configuration', 'appearance']) }}">Appearance</a></li>
+                                <li><a href="{{ urls.format('MANAGE_MODE', ['configuration', 'performance']) }}">Performance</a></li>
+                            </ul>
+                        </li>
+                        <li{% if manage.category == 'reports' %} class="active"{% endif %}><a href="{{ urls.format('MANAGE_CAT', ['reports']) }}">Reports</a></li>
+                        <li{% if manage.category == 'infopages' %} class="active"{% endif %}><a href="{{ urls.format('MANAGE_CAT', ['infopages']) }}">Info pages</a></li>
+                        <li class="dropdown{% if manage.category == 'users' %} active{% endif %}">
                             <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Users <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ urls.format('MANAGE_MODE', ['users', 'manage']) }}">Manage users</a></li>
@@ -49,21 +59,21 @@
                                 <li><a href="{{ urls.format('MANAGE_MODE', ['users', 'bans']) }}">Bans</a></li>
                             </ul>
                         </li>
-                        <li class="dropdown">
+                        <li class="dropdown{% if manage.category == 'forums' %} active{% endif %}">
                             <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Forums <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ urls.format('MANAGE_MODE', ['forums', 'manage']) }}">Manage forums</a></li>
                                 <li><a href="{{ urls.format('MANAGE_MODE', ['forums', 'moderate']) }}">Moderate forums</a></li>
                             </ul>
                         </li>
-                        <li class="dropdown">
+                        <li class="dropdown{% if manage.category == 'permissions' %} active{% endif %}">
                             <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Permissions <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ urls.format('MANAGE_MODE', ['permissions', 'global']) }}">Global permissions</a></li>
                                 <li><a href="{{ urls.format('MANAGE_MODE', ['permissions', 'forums']) }}">Forum permissions</a></li>
                             </ul>
                         </li>
-                        <li class="dropdown">
+                        <li class="dropdown{% if manage.category == 'logs' %} active{% endif %}">
                             <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Logs <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{{ urls.format('MANAGE_MODE', ['logs', 'all']) }}">Full log</a></li>

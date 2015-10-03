@@ -14,7 +14,6 @@ RewriteBase /
 Options +FollowSymLinks -Indexes
 
 # Rewrite Rules
-RewriteRule ^index/?$ index.php [L,QSA]
 RewriteRule ^login/?$|^logout/?$|^activate/?$|^register/?$|^forgotpassword/?|^authenticate/?$ authenticate.php [L,QSA]
 RewriteRule ^support/?$ support.php [L,QSA]
 RewriteRule ^support/tracker/?$ support.php?tracker=true [L,QSA]
@@ -59,9 +58,9 @@ RewriteRule ^u/?$ profile.php [L,QSA]
 RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/?$ profile.php?u=$1 [L,QSA]
 RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/header/?$ imageserve.php?m=header&u=$1 [L,QSA]
 RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/groups/?$ profile.php?u=$1&view=groups [L,QSA]
-RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/friends/?$ profile.php?u=$1$view=friends [L,QSA]
-RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/threads/?$ profile.php?u=$1$view=threads [L,QSA]
-RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/posts/?$ profile.php?u=$1$view=posts [L,QSA]
+RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/friends/?$ profile.php?u=$1&view=friends [L,QSA]
+RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/threads/?$ profile.php?u=$1&view=threads [L,QSA]
+RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/posts/?$ profile.php?u=$1&view=posts [L,QSA]
 RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/report/?$ report.php?mode=user&id=$1 [L,QSA]
 
 # Groups
