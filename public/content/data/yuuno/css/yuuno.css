@@ -784,9 +784,11 @@ a.default:active {
  */
 .membersPage {
     width: 100%;
+    margin: 0 auto;
     padding: 10px 0;
     overflow: hidden;
     text-align: center;
+    max-width: 1280px;
 }
 
 .membersPage a {

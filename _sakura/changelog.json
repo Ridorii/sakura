@@ -3003,6 +3003,17 @@
                 "user":     "Flashwave"
             }
 
+        ],
+
+        "20151003": [
+
+            "eminence",
+            {
+                "type":     "UPD",
+                "change":   "Restrict width of memberlist.",
+                "user":     "Flashwave"
+            }
+
         ]
 
     }
