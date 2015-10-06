@@ -2064,6 +2064,7 @@ textarea.inputStyling {
     border: 0;
     min-height: 50px;
     height: 50px;
+    min-width: 300px;
     flex-grow: 2;
     padding: 5px;
     font: 12px/20px "SegoeUI", "Segoe UI", sans-serif;
@@ -2101,8 +2102,7 @@ textarea.inputStyling {
 #comments .comment > .comment-submit {
     flex-shrink: 0;
     font-family: FontAwesome;
-    height: 60px;
-    width: 60px;
+    width: 50px;
     border-radius: 4px;
     margin-left: 2px;
     font-size: 2em;
@@ -2112,12 +2112,20 @@ textarea.inputStyling {
     cursor: pointer;
 }
 
+#comments .comment > .comment-submit.new {
+    width: 60px;
+}
+
 #comments .comment > .comment-submit:hover {
     background: linear-gradient(0deg, #9475B2 30%, #C2AFFE 70%);
 }
 
 #comments .comment > .comment-submit:active {
     background: linear-gradient(180deg, #9475B2 30%, #C2AFFE 70%);
+}
+
+#comments .comments-discussion {
+    overflow: auto;
 }
 
 #comments ul {

@@ -7,7 +7,7 @@
                             <ul>
                                 <li><a href="{{ urls.format('USER_REPORT', [comment.comment_poster.data.id]) }}" class="underline">Report</a></li>
                                 <li><a href="{{ urls.format('COMMENT_DELETE', [comment.comment_id, php.sessionid])}}" class="underline">Delete</a></li>
-                                <li><a href="javascript:void(0);" onclick="commentReply({{ comment.comment_id }});" class="underline">Reply</a></li>
+                                <li><a href="javascript:void(0);" onclick="commentReply({{ comment.comment_id }}, '{{ php.sessionid }}', '{{ comment.comment_category }}', '{{ urls.format('COMMENT_POST') }}', '{{ urls.format('IMAGE_AVATAR', [user.data.id]) }}');" class="underline">Reply</a></li>
                                 <li class="shown voting like"><a href="{{ urls.format('COMMENT_LIKE', [comment.comment_id, php.sessionid])}}" class="clean"><span class="fa fa-thumbs-up"></span> {{ comment.comment_likes }}</a></li>
                                 <li class="shown voting dislike"><a href="{{ urls.format('COMMENT_DISLIKE', [comment.comment_id, php.sessionid])}}" class="clean"><span class="fa fa-thumbs-down"></span> {{ comment.comment_dislikes }}</a></li>
                             </ul>
@@ -18,11 +18,9 @@
                         </div>
                     </div>
                 </div>
-                {% if comment.comment_replies %}
-                    <ul>
-                        {% for comment in comment.comment_replies %}
-                            {% include 'elements/comment.tpl' %}
-                        {% endfor %}
-                    </ul>
-                {% endif %}
+                <ul>
+                    {% for comment in comment.comment_replies %}
+                        {% include 'elements/comment.tpl' %}
+                    {% endfor %}
+                </ul>
             </li>

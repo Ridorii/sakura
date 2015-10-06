@@ -74,4 +74,32 @@ class Comments
         return $layer;
 
     }
+
+    // Sorting
+    public function makeComment($uid, $reply, $content)
+    {
+
+        // Check if the comment is long enough
+        if (strlen($content) < Configuration::getConfig('comment_min_length')) {
+            return [0, 'TOO_SHORT'];
+        }
+
+        // Check if the comment isn't too long
+        if (strlen($content) > Configuration::getConfig('comment_max_length')) {
+            return [0, 'TOO_LONG'];
+        }
+
+        // Insert into database
+        Database::insert('comments', [
+            'comment_category' => $this->category,
+            'comment_timestamp' => time(),
+            'comment_poster' => $uid,
+            'comment_reply_to' => (int) $reply,
+            'comment_text' => $content,
+        ]);
+
+        // Return success
+        return [1, 'SUCCESS'];
+
+    }
 }

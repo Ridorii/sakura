@@ -853,14 +853,107 @@ function safeTagsReplace(str) {
     return str.replace(/[&<>]/g, replaceTag);
 }
 
+function commentReply(id, session, category, action, avatar) {
+
+    // Find subject post
+    var replyingTo = document.getElementById('comment-' + id);
+
+    // Check if it actually exists
+    if(typeof replyingTo === 'undefined') {
+        return false;
+    }
+
+    // Container
+    var replyContainer = document.createElement('li');
+
+    // Form
+    var replyForm = document.createElement('form');
+    replyForm.id = 'comment-reply-' + id;
+    replyForm.action = action;
+    replyForm.method = 'post';
+
+    // Session
+    var replyInput = document.createElement('input');
+    replyInput.type = 'hidden';
+    replyInput.name = 'session';
+    replyInput.value = session;
+    replyForm.appendChild(replyInput);
+
+    // Category
+    var replyInput = document.createElement('input');
+    replyInput.type = 'hidden';
+    replyInput.name = 'category';
+    replyInput.value = category;
+    replyForm.appendChild(replyInput);
+
+    // Reply ID
+    var replyInput = document.createElement('input');
+    replyInput.type = 'hidden';
+    replyInput.name = 'replyto';
+    replyInput.value = id;
+    replyForm.appendChild(replyInput);
+
+    // Mode
+    var replyInput = document.createElement('input');
+    replyInput.type = 'hidden';
+    replyInput.name = 'mode';
+    replyInput.value = 'comment';
+    replyForm.appendChild(replyInput);
+
+    // Comment container
+    var replyDiv = document.createElement('div');
+    replyDiv.className = 'comment';
+
+    // Avatar
+    var replyAvatar = document.createElement('div');
+    replyAvatar.className = 'comment-avatar';
+    replyAvatar.style = 'background-image: url(' + avatar + ')';
+    replyDiv.appendChild(replyAvatar);
+
+    // Pointer
+    var replyPoint = document.createElement('div');
+    replyPoint.className = 'comment-pointer';
+    replyDiv.appendChild(replyPoint);
+
+    // Textarea
+    var replyText = document.createElement('textarea');
+    replyText.className = 'comment-content';
+    replyText.name = 'comment';
+    replyDiv.appendChild(replyText);
+
+    // Submit
+    var replySubmit = document.createElement('input');
+    replySubmit.className = 'comment-submit';
+    replySubmit.type = 'submit';
+    replySubmit.name = 'submit';
+    replySubmit.value = "\uf1d8";
+    replyDiv.appendChild(replySubmit);
+
+    // Append to form
+    replyForm.appendChild(replyDiv);
+
+    // Append form to container
+    replyContainer.appendChild(replyForm);
+
+    // Insert the HTML
+    replyingTo.children[1].appendChild(replyContainer);
+
+    // Prepare AJAX submission
+    prepareAjaxForm(replyForm.id, 'Replying...');
+
+}
+
 // Formatting money
 Number.prototype.formatMoney = function(c, d, t) {
-var n = this,
-    c = isNaN(c = Math.abs(c)) ? 2 : c,
-    d = d == undefined ? "." : d,
-    t = t == undefined ? "," : t,
-    s = n < 0 ? "-" : "",
-    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
-    j = (j = i.length) > 3 ? j % 3 : 0;
-   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
- };
+
+    var n = this,
+        c = isNaN(c = Math.abs(c)) ? 2 : c,
+        d = d == undefined ? "." : d,
+        t = t == undefined ? "," : t,
+        s = n < 0 ? "-" : "",
+        i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+        j = (j = i.length) > 3 ? j % 3 : 0;
+
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+
+};

@@ -72,22 +72,39 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     if ($continue) {
         switch (isset($_REQUEST['mode']) ? $_REQUEST['mode'] : false) {
             case 'like':
-
                 break;
 
             case 'dislike':
-
                 break;
 
             case 'delete':
+                break;
 
+            case 'comment':
+                // Attempt to make a new comment
+                $comment = (new Comments($_POST['category']))->makeComment($currentUser->data['id'], $_POST['replyto'], $_POST['comment']);
+
+                // Messages
+                $messages = [
+                    'TOO_SHORT' => 'The comment you\'re trying to make is too short!',
+                    'TOO_LONG' => 'The comment you\'re trying to make is too long!',
+                    'SUCCESS' => 'Posted!',
+                ];
+
+                $renderData['page'] = [
+
+                    'redirect' => $redirect,
+                    'message' => $messages[$comment[1]],
+                    'success' => $comment[0],
+
+                ];
                 break;
 
             default:
                 $renderData['page'] = [
 
                     'redirect' => $redirect,
-                    'message' => 'Did nothing.',
+                    'message' => 'Unknown action.',
                     'success' => 0,
 
                 ];

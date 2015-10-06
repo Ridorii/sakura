@@ -3005,12 +3005,23 @@
 
         ],
 
-        "20151003": [
+        "20151004": [
 
             "eminence",
             {
                 "type":     "UPD",
                 "change":   "Restrict width of memberlist.",
+                "user":     "Flashwave"
+            }
+
+        ],
+
+        "20151006": [
+
+            "eminence",
+            {
+                "type":     "ADD",
+                "change":   "Added comment posting.",
                 "user":     "Flashwave"
             }
 
