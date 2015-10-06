@@ -2013,14 +2013,17 @@ textarea.inputStyling {
  *  Comments
  */
 #comments .comment-input-section {
-    border-top: 1px solid #9475B2;
     border-bottom: 1px solid #9475B2;
 }
 
 #comments .comment {
     display: flex;
     align-items: stretch;
-    margin: 3px 0;
+    margin-bottom: 3px;
+}
+
+#comments .comments-discussion .comment {
+    margin-top: 3px;
 }
 
 #comments .comment > .comment-avatar {

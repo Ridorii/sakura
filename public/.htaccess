@@ -57,6 +57,7 @@ RewriteRule ^members/([a-z]+)/([0-9]+)/p([0-9]+)/?$ members.php?sort=$1&rank=$2&
 RewriteRule ^u/?$ profile.php [L,QSA]
 RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/?$ profile.php?u=$1 [L,QSA]
 RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/header/?$ imageserve.php?m=header&u=$1 [L,QSA]
+RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/comments/?$ profile.php?u=$1&view=comments [L,QSA]
 RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/groups/?$ profile.php?u=$1&view=groups [L,QSA]
 RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/friends/?$ profile.php?u=$1&view=friends [L,QSA]
 RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/threads/?$ profile.php?u=$1&view=threads [L,QSA]

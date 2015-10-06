@@ -169,6 +169,14 @@ class User
 
     }
 
+    // Get a user's profile comments
+    public function profileComments()
+    {
+
+        return new Comments('profile-' . $this->data['id']);
+
+    }
+
     // Get amount of time since user events
     public function elapsed($append = ' ago', $none = 'Just now')
     {

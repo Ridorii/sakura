@@ -3023,6 +3023,11 @@
                 "type":     "ADD",
                 "change":   "Added comment posting.",
                 "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added profile comments.",
+                "user":     "Flashwave"
             }
 
         ]

@@ -183,6 +183,10 @@ class Urls
             '/profile.php?u=%s',
             '/u/%s',
         ],
+        'USER_COMMENTS' => [
+            '/profile.php?u=%u&view=comments',
+            '/u/%u/comments',
+        ],
         'USER_GROUP' => [
             '/group.php?g=%u',
             '/g/%u',
