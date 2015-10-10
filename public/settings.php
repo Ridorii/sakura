@@ -115,7 +115,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 $comments->makeVote(
-                    $currentUser->data['id'],
+                    $currentUser->data['user_id'],
                     isset($_REQUEST['id']) ? $_REQUEST['id'] : 0,
                     isset($_REQUEST['state']) && $_REQUEST['state'] ? '1' : '0'
                 );
