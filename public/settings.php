@@ -68,8 +68,24 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
         $continue = false;
     }
 
+    // Match session ids for the same reason
+    if (!isset($_REQUEST['category'])) {
+        $renderData['page'] = [
+
+            'redirect' => $redirect,
+            'message' => 'No category was set.',
+            'success' => 0,
+
+        ];
+
+        // Prevent
+        $continue = false;
+    }
+
     // Select the right action
     if ($continue) {
+        $comments = new Comments($_REQUEST['category']);
+
         switch (isset($_REQUEST['mode']) ? $_REQUEST['mode'] : false) {
             case 'like':
                 break;
@@ -78,11 +94,70 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 break;
 
             case 'delete':
+                $comment = $comments->getComment(isset($_REQUEST['id']) ? $_REQUEST['id'] : 0);
+
+                // Check if the comment was actually made by the current user
+                if (!$comment) {
+                    $renderData['page'] = [
+
+                        'redirect' => $redirect,
+                        'message' => 'The requested comment does not exist.',
+                        'success' => 0,
+
+                    ];
+                    break;
+                }
+
+                // Check if the user can delete comments
+                if (!$currentUser->checkPermission('SITE', 'DELETE_COMMENTS')) {
+                    $renderData['page'] = [
+
+                        'redirect' => $redirect,
+                        'message' => 'You aren\'t allowed delete to comments.',
+                        'success' => 0,
+
+                    ];
+                    break;
+                }
+
+                // Check if the comment was actually made by the current user
+                if ($comment['comment_poster'] !== $currentUser->data['id']) {
+                    $renderData['page'] = [
+
+                        'redirect' => $redirect,
+                        'message' => 'You can\'t delete the comments of others.',
+                        'success' => 0,
+
+                    ];
+                    break;
+                }
+
+                $comments->removeComment(isset($_REQUEST['id']) ? $_REQUEST['id'] : 0);
+
+                $renderData['page'] = [
+
+                    'redirect' => $redirect,
+                    'message' => 'The comment has been deleted!',
+                    'success' => 1,
+
+                ];
                 break;
 
             case 'comment':
+                // Check if the user can delete comments
+                if (!$currentUser->checkPermission('SITE', 'CREATE_COMMENTS')) {
+                    $renderData['page'] = [
+
+                        'redirect' => $redirect,
+                        'message' => 'You aren\'t allowed to comment.',
+                        'success' => 0,
+
+                    ];
+                    break;
+                }
+
                 // Attempt to make a new comment
-                $comment = (new Comments($_POST['category']))->makeComment($currentUser->data['id'], $_POST['replyto'], $_POST['comment']);
+                $comment = $comments->makeComment($currentUser->data['id'], $_POST['replyto'], $_POST['comment']);
 
                 // Messages
                 $messages = [

@@ -51,6 +51,7 @@ class Comments
 
             // Attach the poster
             $comment['comment_poster'] = $this->commenters[$comment['comment_poster']];
+            $comment['comment_text'] = Main::parseEmotes(Main::cleanString($comment['comment_text']));
 
             // Add post to posts array
             $layer[$comment['comment_id']] = $comment;
@@ -75,7 +76,18 @@ class Comments
 
     }
 
-    // Sorting
+    // Getting a single comment
+    public function getComment($cid)
+    {
+
+        // Get from database
+        return Database::fetch('comments', false, [
+            'comment_id' => [$cid, '='],
+        ]);
+
+    }
+
+    // Creating
     public function makeComment($uid, $reply, $content)
     {
 
@@ -100,6 +112,17 @@ class Comments
 
         // Return success
         return [1, 'SUCCESS'];
+
+    }
+
+    // Deleting
+    public function removeComment($cid)
+    {
+
+        // Remove from database
+        return Database::delete('comments', [
+            'comment_id' => [$cid, '='],
+        ]);
 
     }
 }

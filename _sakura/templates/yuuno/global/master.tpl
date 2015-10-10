@@ -152,7 +152,7 @@
         <div id="container">
             <span id="top"></span>
             <div class="header" id="header">
-                <a class="logo" href="{{ urls.format('SITE_HOME') }}">{{ sakura.siteName }}</a>
+                <a class="logo" href="{{ urls.format('SITE_HOME') }}">{% if sakura.siteLogo %}<img src="{{ sakura.siteLogo }}" alt="{{ sakura.siteName }}" />{% else %}{{ sakura.siteName }}{% endif %}</a>
                 <div class="menu fa">
                     <div class="menu-nav" id="navMenuSite">
                         <!-- Navigation menu, displayed on left side of the bar. -->

@@ -248,8 +248,8 @@ class Urls
             '/comments?id=%u&mode=dislike&session=%s',
         ],
         'COMMENT_DELETE' => [
-            '/settings.php?comment-action=true&id=%u&mode=delete&session=%s',
-            '/comments?id=%u&mode=delete&session=%s',
+            '/settings.php?comment-action=true&id=%u&category=%s&mode=delete&session=%s',
+            '/comments?id=%u&mode=delete&category=%s&session=%s',
         ],
 
     ];

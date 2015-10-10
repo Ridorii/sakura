@@ -2,7 +2,9 @@
 
 {% set profileHidden = profile.checkPermission('SITE', 'DEACTIVATED') or profile.data.password_algo == 'nologin' or (profile.checkPermission('SITE', 'RESTRICTED') and (user.data.id != profile.data.id and not user.checkPermission('MANAGE', 'USE_MANAGE'))) %}
 
-{% set sidePanel = profile.userPage|length > 1 %}
+{% set noUserpage = profile.userPage|length < 1 %}
+
+{% set profileView = noUserpage and profileView == 'index' ? 'comments' : profileView %}
 
 {% block title %}{% if profileHidden %}User not found!{% else %}Profile of {{ profile.data.username }}{% endif %}{% endblock %}
 
@@ -20,7 +22,7 @@
     </div>
     {% else %}
         <div class="content profile">
-            <div class="{% if sidePanel %}content-right {% endif %}content-column">
+            <div class="content-right content-column">
                 <div style="text-align: center;">
                     <img src="{{ urls.format('IMAGE_AVATAR', [profile.data.id]) }}" alt="{{ profile.data.username }}'s Avatar" class="default-avatar-setting" style="box-shadow: 0 3px 7px #{% if profile.checkOnline %}484{% else %}844{% endif %};" /><br />
                     {% if profile.data.rank_main > 1 and profile.checkBan|length < 1 %}
@@ -40,7 +42,9 @@
                             <a class="fa fa-file-text-o" title="View {{ profile.data.username }}'s profile page" href="{{ urls.format('USER_PROFILE', [profile.data.id]) }}"></a>
                             <a class="fa fa-plus-square" title="View {{ profile.data.username }} threads" href="{{ urls.format('USER_THREADS', [profile.data.id]) }}"></a>
                             <a class="fa fa-reply" title="View {{ profile.data.username }} posts" href="{{ urls.format('USER_POSTS', [profile.data.id]) }}"></a>
-                            <a class="fa fa-comments-o" title="View {{ profile.data.username }}'s profile comments" href="{{ urls.format('USER_COMMENTS', [profile.data.id]) }}"></a>
+                            {% if not noUserpage %}
+                                <a class="fa fa-comments-o" title="View {{ profile.data.username }}'s profile comments" href="{{ urls.format('USER_COMMENTS', [profile.data.id]) }}"></a>
+                            {% endif %}
                         </div>
                         {% endif %}
                         <hr class="default" />
@@ -106,7 +110,7 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="content-left content-column{% if not sidePanel %} hidden{% endif %}">
+            <div class="content-left content-column">
                 {% include 'profile/' ~ profileView ~ '.tpl' %}
             </div>
             <div class="clear"></div>

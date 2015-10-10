@@ -13,6 +13,11 @@
                     <input class="comment-submit new" name="submit" type="submit" value="&#xf1d8;" />
                 </div>
             </form>
+            <script type="text/javascript">
+                window.addEventListener("load", function() {
+                    prepareAjaxForm('commentsForm', 'Posting comment...');
+                });
+            </script>
         {% else %}
             <h1 class="stylised" style="text-align: center; padding: 10px 0">Log in to comment!</h1>
         {% endif %}
@@ -29,8 +34,13 @@
         </ul>
     </div>
 </div>
-<script type="text/javascript">
-window.addEventListener("load", function() {
-    prepareAjaxForm('commentsForm', 'Posting comment...');
-});
-</script>
+
+{% block js %}
+    <script type="text/javascript">
+        var deletionLinks = document.querySelectorAll('.comment-deletion-link');
+
+        for(var link in deletionLinks) {
+            prepareAjaxLink(deletionLinks[link].id, 'submitPost', ', true, "Deleting..."');
+        }
+    </script>
+{% endblock %}

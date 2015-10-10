@@ -863,8 +863,18 @@ function commentReply(id, session, category, action, avatar) {
         return false;
     }
 
+    // Attempt to get previously created box
+    var replyBox = document.getElementById('comment-reply-container-' + id);
+
+    // Remove it if it already exists
+    if(replyBox) {
+        removeId('comment-reply-container-' + id);
+        return false;
+    }
+
     // Container
     var replyContainer = document.createElement('li');
+    replyContainer.id = 'comment-reply-container-' + id;
 
     // Form
     var replyForm = document.createElement('form');
@@ -936,7 +946,11 @@ function commentReply(id, session, category, action, avatar) {
     replyContainer.appendChild(replyForm);
 
     // Insert the HTML
-    replyingTo.children[1].appendChild(replyContainer);
+    if(replyingTo.children[1].children.length > 0) {
+        replyingTo.children[1].insertBefore(replyContainer, replyingTo.children[1].firstChild);
+    } else {
+        replyingTo.children[1].appendChild(replyContainer);
+    }
 
     // Prepare AJAX submission
     prepareAjaxForm(replyForm.id, 'Replying...');

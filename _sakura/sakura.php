@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151006');
+define('SAKURA_VERSION', '20151010');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 define('SAKURA_STABLE', false);
@@ -148,6 +148,7 @@ if (!defined('SAKURA_NO_TPL')) {
 
             'charset' => Configuration::getConfig('charset'),
             'siteName' => Configuration::getConfig('sitename'),
+            'siteLogo' => Configuration::getConfig('sitelogo'),
             'siteDesc' => Configuration::getConfig('sitedesc'),
             'siteTags' => implode(", ", json_decode(Configuration::getConfig('sitetags'), true)),
             'dateFormat' => Configuration::getConfig('date_format'),

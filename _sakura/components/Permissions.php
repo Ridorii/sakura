@@ -53,6 +53,9 @@ class Permissions
             'MULTIPLE_GROUPS' => 33554432, // Can create multiple groups (requires single group perm)
             'CHANGE_NAMECOLOUR' => 67108864, // Can change their username colour
             'STATIC_PREMIUM' => 134217728, // User has static premium status
+            'CREATE_COMMENTS' => 268435456, // User can make comments
+            'DELETE_COMMENTS' => 536870912, // User can delete own comments
+            'VOTE_COMMENTS' => 1073741824, // User can vote on comments
 
         ],
 

@@ -15,6 +15,8 @@ $profile = new User(isset($_GET['u']) ? $_GET['u'] : 0);
 // Views array
 $views = [
     'index',
+    'threads',
+    'posts',
     'comments',
 ];
 

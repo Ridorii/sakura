@@ -3030,6 +3030,42 @@
                 "user":     "Flashwave"
             }
 
+        ],
+
+        "20151010": [
+
+            "eminence",
+            {
+                "type":     "FIX",
+                "change":   "Limited comment indentation to 4 layers to prevent overflow.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed reply box appearing at the end of the already made replies.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed profile comments not showing when a user doesn't have a userpage.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed friends in friendslisting going all over the place.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added sitelogo configuration variable.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added permissions to commenting.",
+                "user":     "Flashwave"
+            }
+
         ]
 
     }
