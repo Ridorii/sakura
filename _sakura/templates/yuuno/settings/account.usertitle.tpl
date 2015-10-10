@@ -5,7 +5,7 @@
     <h3 style="text-align: center;">Your current user title is:<br /><span style="font-weight: 700;">{{ user.userTitle }}</span></h3>
     <div class="profile-field">
         <div><h2>Usertitle</h2></div>
-        <div><input type="text" name="usertitle" placeholder="Enter your new user title (Max 64 characters)" class="inputStyling" value="{{ user.data.usertitle }}" /></div>
+        <div><input type="text" name="usertitle" placeholder="Enter your new user title (Max 64 characters)" class="inputStyling" value="{{ user.userTitle }}" /></div>
     </div>
     <div class="profile-save">
         <input type="submit" value="Save" name="submit" class="inputStyling" />

@@ -13,7 +13,7 @@ define('SAKURA_NO_TPL', true);
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
 // Set Content type
-//header('Content-Type: application/octet-stream');
+header('Content-Type: application/octet-stream');
 
 // Path to user uploads
 $userDirPath = ROOT . Configuration::getConfig('user_uploads') . '/';
@@ -61,13 +61,13 @@ if (isset($_GET['m'])) {
             }
 
             // Check if user has an avatar set
-            if (empty($user->data['userData']['userAvatar']) || !file_exists($userDirPath . $user->data['userData']['userAvatar'])) {
+            if (empty($user->data['user_data']['userAvatar']) || !file_exists($userDirPath . $user->data['user_data']['userAvatar'])) {
                 $serveImage = $noAvatar;
                 break;
             }
 
             // Check if the avatar exist and assign it to a value
-            $serveImage = $userDirPath . $user->data['userData']['userAvatar'];
+            $serveImage = $userDirPath . $user->data['user_data']['userAvatar'];
             break;
 
         case 'background':
@@ -96,14 +96,14 @@ if (isset($_GET['m'])) {
             }
 
             // Check if user has a background set
-            if (empty($user->data['userData']['profileBackground'])
-                || !file_exists($userDirPath . $user->data['userData']['profileBackground'])) {
+            if (empty($user->data['user_data']['profileBackground'])
+                || !file_exists($userDirPath . $user->data['user_data']['profileBackground'])) {
                 $serveImage = $noBackground;
                 break;
             }
 
             // Check if the avatar exist and assign it to a value
-            $serveImage = $userDirPath . $user->data['userData']['profileBackground'];
+            $serveImage = $userDirPath . $user->data['user_data']['profileBackground'];
             break;
 
         case 'header':
@@ -132,14 +132,14 @@ if (isset($_GET['m'])) {
             }
 
             // Check if user has a background set
-            if (empty($user->data['userData']['profileHeader'])
-                || !file_exists($userDirPath . $user->data['userData']['profileHeader'])) {
+            if (empty($user->data['user_data']['profileHeader'])
+                || !file_exists($userDirPath . $user->data['user_data']['profileHeader'])) {
                 $serveImage = $noHeader;
                 break;
             }
 
             // Check if the avatar exist and assign it to a value
-            $serveImage = $userDirPath . $user->data['userData']['profileHeader'];
+            $serveImage = $userDirPath . $user->data['user_data']['profileHeader'];
             break;
 
         default:

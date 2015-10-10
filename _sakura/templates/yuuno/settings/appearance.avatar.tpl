@@ -5,7 +5,7 @@
     <input type="hidden" name="MAX_FILE_SIZE" value="{{ avatar.max_size }}" />
     <div style="text-align: center;">
         <div>
-            <img src="/a/{{ user.data.id }}" alt="Your Avatar" class="default-avatar-setting" />
+            <img src="/a/{{ user.data.user_id }}" alt="Your Avatar" class="default-avatar-setting" />
         </div>
         <div>
             <input type="file" name="avatar" />

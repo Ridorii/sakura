@@ -5,12 +5,12 @@
 {% set pagination = {'page': currentPage, 'pages': news.getPosts(postsPerPage), 'urlPattern': 'SITE_NEWS_PAGE'} %}
 
 {% if viewPost and postExists %}
-{% set commentsCategory = 'news-' ~ newsPosts[0].category ~ '-' ~ newsPosts[0].id %}
-{% set comments = newsPosts[0].comments.comments %}
+{% set commentsCategory = 'news-' ~ newsPosts[0].news_category ~ '-' ~ newsPosts[0].news_id %}
+{% set comments = newsPosts[0].news_comments.comments %}
 {% endif %}
 
 {% set title %}
-{% if not (viewPost ? postExists : newsPosts|length) %}Post does not exist!{% elseif viewPost and postExists %}{{ newsPosts[0].title }}{% else %}News{% endif %}
+{% if not (viewPost ? postExists : newsPosts|length) %}Post does not exist!{% elseif viewPost and postExists %}{{ newsPosts[0].news_title }}{% else %}News{% endif %}
 {% endset %}
 
 {% block title %}{{ title }}{% endblock %}

@@ -1,5 +1,5 @@
 {% block js %}
-<script type="text/javascript" charset="utf-8" src="{{ sakura.contentPath }}/libraries/showdown.js"></script>
+    <script type="text/javascript" charset="utf-8" src="{{ sakura.contentPath }}/libraries/showdown.js"></script>
 {% endblock %}
 
 <div class="markdown" id="userPagePreview" style="max-height: 500px; overflow-y: auto; background: #C2AEEE; box-shadow: inset 0 0 1em 1em #D3BFFF;">

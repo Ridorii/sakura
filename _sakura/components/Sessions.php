@@ -43,13 +43,13 @@ class Session
 
         // Insert the session into the database
         Database::insert('sessions', [
-            'userip' => Main::getRemoteIP(),
-            'useragent' => Main::cleanString($_SERVER['HTTP_USER_AGENT']),
-            'userid' => $userId,
-            'skey' => $session,
-            'started' => time(),
-            'expire' => time() + 604800,
-            'remember' => $remember ? '1' : '0',
+            'user_id' => $userId,
+            'user_ip' => Main::getRemoteIP(),
+            'user_agent' => Main::cleanString($_SERVER['HTTP_USER_AGENT']),
+            'session_key' => $session,
+            'session_start' => time(),
+            'session_expire' => time() + 604800,
+            'session_remember' => $remember ? '1' : '0',
         ]);
 
         // Return the session key
@@ -62,7 +62,7 @@ class Session
     {
 
         // Get session from database
-        $session = Database::fetch('sessions', true, ['userid' => [$userId, '='], 'skey' => [$sessionId, '=']]);
+        $session = Database::fetch('sessions', true, ['user_id' => [$userId, '='], 'session_key' => [$sessionId, '=']]);
 
         // Check if we actually got something in return
         if (!count($session)) {
@@ -72,9 +72,9 @@ class Session
         $session = $session[0];
 
         // Check if the session expired
-        if ($session['expire'] < time()) {
+        if ($session['session_expire'] < time()) {
             // If it is delete the session...
-            self::deleteSession($session['id']);
+            self::deleteSession($session['session_id']);
 
             // ...and return false
             return false;
@@ -83,7 +83,7 @@ class Session
         // Origin checking
         if ($ipCheck = Configuration::getConfig('session_check')) {
             // Split both IPs up
-            $sessionIP = explode('.', $session['userip']);
+            $sessionIP = explode('.', $session['user_ip']);
             $userIP = explode('.', Main::getRemoteIP());
 
             // Take 1 off the ipCheck variable so it's equal to the array keys
@@ -124,12 +124,12 @@ class Session
         }
 
         // If the remember flag is set extend the session time
-        if ($session['remember']) {
-            Database::update('sessions', [['expire' => time() + 604800], ['id' => [$session['id'], '=']]]);
+        if ($session['session_remember']) {
+            Database::update('sessions', [['session_expire' => time() + 604800], ['session_id' => [$session['session_id'], '=']]]);
         }
 
         // Return 2 if the remember flag is set and return 1 if not
-        return $session['remember'] ? 2 : 1;
+        return $session['session_remember'] ? 2 : 1;
 
     }
 
@@ -138,12 +138,12 @@ class Session
     {
 
         // Check if the session exists
-        if (!Database::fetch('sessions', [($key ? 'skey' : 'id'), true, [$sessionId, '=']])) {
+        if (!Database::fetch('sessions', [($key ? 'session_key' : 'session_id'), true, [$sessionId, '=']])) {
             return false;
         }
 
         // Run the query
-        Database::delete('sessions', [($key ? 'skey' : 'id') => [$sessionId, '=']]);
+        Database::delete('sessions', [($key ? 'session_key' : 'session_id') => [$sessionId, '=']]);
 
         // Return true if key was found and deleted
         return true;

@@ -6,7 +6,7 @@
         <input type="hidden" name="MAX_FILE_SIZE" value="{{ background.max_size }}" />
         <div style="text-align: center;">
             <div>
-                <img src="/bg/{{ user.data.id }}" alt="Your Background" class="default-avatar-setting" style="max-width: 90%; max-height: 90%;" />
+                <img src="/bg/{{ user.data.user_id }}" alt="Your Background" class="default-avatar-setting" style="max-width: 90%; max-height: 90%;" />
             </div>
             <div>
                 <input type="file" name="background" />

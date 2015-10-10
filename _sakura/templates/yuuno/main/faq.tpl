@@ -10,17 +10,17 @@
             </div>
             <div class="right-menu-nav">
             {% for question in page.questions %}
-            <a href="#{{ question.short }}" class="default">{{ question.question }}</a>
+            <a href="#{{ question.faq_shorthand }}" class="default">{{ question.faq_question }}</a>
             {% endfor %}
             </div>
         </div>
         <div class="content-left content-column">
             {% for question in page.questions %}
-            <div class="head" id="{{ question.short }}">
-                {{ question.question }}
-                <a href="#{{ question.short }}" class="fa fa-quote-right news-rss default"></a>
+            <div class="head" id="{{ question.faq_shorthand }}">
+                {{ question.faq_question }}
+                <a href="#{{ question.faq_shorthand }}" class="fa fa-quote-right news-rss default"></a>
             </div>
-            <p>{{ question.answer }}</p>
+            <p>{{ question.faq_answer }}</p>
             {% endfor %}
         </div>
         <div class="clear"></div>

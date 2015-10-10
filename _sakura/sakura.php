@@ -1,7 +1,7 @@
 <?php
 /*
  * Sakura Community Management System
- * (c) 2013-2015 Flashwave <http://flash.moe> & Circlestorm <http://circlestorm.net>
+ * (c) 2013-2015 Flashwave <http://flash.moe>
  */
 
 // Declare namespace
@@ -38,6 +38,7 @@ require_once ROOT . '_sakura/components/Templates.php';
 require_once ROOT . '_sakura/components/Permissions.php';
 require_once ROOT . '_sakura/components/Sessions.php';
 require_once ROOT . '_sakura/components/User.php';
+require_once ROOT . '_sakura/components/Rank.php';
 require_once ROOT . '_sakura/components/Users.php';
 require_once ROOT . '_sakura/components/Forum.php';
 require_once ROOT . '_sakura/components/News.php';

@@ -27,8 +27,8 @@ if (isset($_GET['xml'])) {
         'link' => ($_FEED_URL = 'http://' . Configuration::getConfig('url_main')),
         'description' => 'News about ' . $_FEED_TITLE,
         'language' => 'en-gb',
-        'webMaster' => (new User(1))->data['email'] . ' (' . $_FEED_TITLE . ' Webmaster)',
-        'pubDate' => ($_FEED_DATE = date('r', $posts[array_keys($posts)[0]]['date'])),
+        'webMaster' => Configuration::getConfig('admin_email') . ' (' . $_FEED_TITLE . ' Webmaster)',
+        'pubDate' => ($_FEED_DATE = date('r', $posts[array_keys($posts)[0]]['news_timestamp'])),
         'lastBuildDate' => $_FEED_DATE,
 
     ];
@@ -36,12 +36,12 @@ if (isset($_GET['xml'])) {
     // Item attributes
     $itemData = [
 
-        'title' => ['text' => '{EVAL}', 'eval' => '$post["title"]'],
-        'link' => ['text' => $_FEED_URL . '/news/{EVAL}', 'eval' => '$post["id"]'],
-        'guid' => ['text' => $_FEED_URL . '/news/{EVAL}', 'eval' => '$post["id"]'],
-        'pubDate' => ['text' => '{EVAL}', 'eval' => 'date("D, d M Y G:i:s O", $post["date"])'],
-        'dc:publisher' => ['text' => '{EVAL}', 'eval' => '$post["poster"]->data["username"]'],
-        'description' => ['cdata' => '{EVAL}', 'eval' => '$post["content_parsed"]'],
+        'title' => ['text' => '0', 'eval' => '$post["news_title"]'],
+        'link' => ['text' => $_FEED_URL . (new Urls())->format('SITE_NEWS_POST', ['0']), 'eval' => '$post["news_id"]'],
+        'guid' => ['text' => $_FEED_URL . (new Urls())->format('SITE_NEWS_POST', ['0']), 'eval' => '$post["news_id"]'],
+        'pubDate' => ['text' => '{EVAL}', 'eval' => 'date("D, d M Y G:i:s O", $post["news_timestamp"])'],
+        'dc:publisher' => ['text' => '0', 'eval' => '$post["news_poster"]->data["username"]'],
+        'description' => ['cdata' => '0', 'eval' => '$post["news_content_parsed"]'],
 
     ];
 
@@ -87,7 +87,7 @@ if (isset($_GET['xml'])) {
             // Create value
             eval('$value = ' . $valueData['eval'] . ';');
             $value = str_replace(
-                '{EVAL}',
+                '0',
                 $value,
                 $valueData[(array_key_exists('cdata', $valueData) ? 'cdata' : 'text')]
             );

@@ -205,6 +205,10 @@ class Urls
             '/settings.php?cat=%s&mode=%s',
             '/settings/%s/%s',
         ],
+        'SETTING_PAGE' => [
+            '/settings.php?cat=%s&mode=%s&page=%u',
+            '/settings/%s/%s/p%u',
+        ],
 
         // Friend Actions
         'FRIEND_ACTION' => [
@@ -239,13 +243,9 @@ class Urls
             '/settings.php?comment-action=true',
             '/comments',
         ],
-        'COMMENT_LIKE' => [
-            '/settings.php?comment-action=true&id=%u&mode=like&session=%s',
-            '/comments?id=%u&mode=like&session=%s',
-        ],
-        'COMMENT_DISLIKE' => [
-            '/settings.php?comment-action=true&id=%u&mode=dislike&session=%s',
-            '/comments?id=%u&mode=dislike&session=%s',
+        'COMMENT_VOTE' => [
+            '/settings.php?comment-action=true&id=%u&mode=vote&state=%u&category=%s&session=%s',
+            '/comments?id=%u&mode=vote&state=%u&category=%s&session=%s',
         ],
         'COMMENT_DELETE' => [
             '/settings.php?comment-action=true&id=%u&category=%s&mode=delete&session=%s',

@@ -10,12 +10,12 @@ class Permissions
     // Fallback permission data
     private static $fallback = [
 
-        'rid' => 0,
-        'uid' => 0,
-        'siteperms' => 1,
-        'manageperms' => 0,
-        'forumperms' => 0,
-        'rankinherit' => 111,
+        'rank_id' => 0,
+        'user_id' => 0,
+        'permissions_site' => 1,
+        'permissions_manage' => 0,
+        'permissions_forums' => 0,
+        'permissions_inherit' => 111,
 
     ];
 
@@ -56,6 +56,7 @@ class Permissions
             'CREATE_COMMENTS' => 268435456, // User can make comments
             'DELETE_COMMENTS' => 536870912, // User can delete own comments
             'VOTE_COMMENTS' => 1073741824, // User can vote on comments
+            'CHANGE_SIGNATURE' => 2147483648, // User can vote on comments
 
         ],
 
@@ -111,7 +112,7 @@ class Permissions
 
         // Get permission row for all ranks
         foreach ($ranks as $rank) {
-            $getRanks[] = Database::fetch('permissions', false, ['rid' => [$rank, '='], 'uid' => [0, '=']]);
+            $getRanks[] = Database::fetch('permissions', false, ['rank_id' => [$rank, '='], 'user_id' => [0, '=']]);
         }
 
         // Check if getRanks is empty or if the rank id is 0 return the fallback
@@ -126,18 +127,18 @@ class Permissions
                 // Store the data of the current rank in $perms
                 $perms = [
 
-                    'SITE' => $rank['siteperms'],
-                    'MANAGE' => $rank['manageperms'],
-                    'FORUM' => $rank['forumperms'],
+                    'SITE' => $rank['permissions_site'],
+                    'MANAGE' => $rank['permissions_manage'],
+                    'FORUM' => $rank['permissions_forums'],
 
                 ];
             } else {
                 // Perform a bitwise OR on the ranks
                 $perms = [
 
-                    'SITE' => $perms['SITE'] | $rank['siteperms'],
-                    'MANAGE' => $perms['MANAGE'] | $rank['manageperms'],
-                    'FORUM' => $perms['FORUM'] | $rank['forumperms'],
+                    'SITE' => $perms['SITE'] | $rank['permissions_site'],
+                    'MANAGE' => $perms['MANAGE'] | $rank['permissions_manage'],
+                    'FORUM' => $perms['FORUM'] | $rank['permissions_forums'],
 
                 ];
             }
@@ -156,10 +157,10 @@ class Permissions
         $user = new User($uid);
 
         // Attempt to get the permission row of a user
-        $userPerms = Database::fetch('permissions', false, ['rid' => [0, '='], 'uid' => [$user->data['id'], '=']]);
+        $userPerms = Database::fetch('permissions', false, ['rank_id' => [0, '='], 'user_id' => [$user->data['user_id'], '=']]);
 
         // Get their rank permissions
-        $rankPerms = self::getRankPermissions(json_decode($user->data['ranks'], true));
+        $rankPerms = self::getRankPermissions(json_decode($user->data['user_ranks'], true));
 
         // Just return the rank permissions if no special ones are set
         if (empty($userPerms)) {
@@ -167,21 +168,21 @@ class Permissions
         }
 
         // Split the inherit option things up
-        $inheritance = str_split($userPerms['rankinherit']);
+        $inheritance = str_split($userPerms['permissions_inherit']);
 
         // Override site permissions
         if (!$inheritance[0]) {
-            $rankPerms['SITE'] = $userPerms['siteperms'];
+            $rankPerms['SITE'] = $userPerms['permissions_site'];
         }
 
         // Override management permissions
         if (!$inheritance[1]) {
-            $rankPerms['MANAGE'] = $userPerms['manageperms'];
+            $rankPerms['MANAGE'] = $userPerms['permissions_manage'];
         }
 
         // Override forum permissions
         if (!$inheritance[2]) {
-            $rankPerms['FORUM'] = $userPerms['forumperms'];
+            $rankPerms['FORUM'] = $userPerms['permissions_forums'];
         }
 
         // Return permissions

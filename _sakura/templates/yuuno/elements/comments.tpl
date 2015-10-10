@@ -7,7 +7,7 @@
                 <input type="hidden" name="replyto" value="0" />
                 <input type="hidden" name="mode" value="comment" />
                 <div class="comment">
-                    <div class="comment-avatar" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.data.id]) }}');"></div>
+                    <div class="comment-avatar" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.data.user_id]) }}');"></div>
                     <div class="comment-pointer"></div>
                     <textarea class="comment-content" name="comment" placeholder="Join the conversation..."></textarea>
                     <input class="comment-submit new" name="submit" type="submit" value="&#xf1d8;" />
@@ -38,9 +38,17 @@
 {% block js %}
     <script type="text/javascript">
         var deletionLinks = document.querySelectorAll('.comment-deletion-link');
+        var likeLinks = document.querySelectorAll('.comment-like-link');
+        var dislikeLinks = document.querySelectorAll('.comment-dislike-link');
 
         for(var link in deletionLinks) {
             prepareAjaxLink(deletionLinks[link].id, 'submitPost', ', true, "Deleting..."');
+        }
+        for(var link in dislikeLinks) {
+            prepareAjaxLink(likeLinks[link].id, 'submitPost', ', true, "Voting..."');
+        }
+        for(var link in dislikeLinks) {
+            prepareAjaxLink(dislikeLinks[link].id, 'submitPost', ', true, "Voting..."');
         }
     </script>
 {% endblock %}

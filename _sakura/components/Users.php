@@ -32,16 +32,18 @@ class Users
         'birthday' => '',
         'posts' => 0,
         'country' => 'XX',
-        'userData' => '[]',
+        'user_data' => '[]',
     ];
 
     // Empty rank template
     public static $emptyRank = [
-        'id' => 0,
-        'rankname' => 'Sakura Rank',
-        'multi' => 0,
-        'colour' => '#444',
-        'description' => 'A hardcoded dummy rank for fallback.',
+        'rank_id' => 0,
+        'rank_name' => 'Sakura Rank',
+        'rank_multiple' => null,
+        'rank_hidden' => 1,
+        'rank_colour' => '#444',
+        'rank_description' => 'A hardcoded dummy rank for fallback.',
+        'rank_title' => '',
     ];
 
     // Check if a user is logged in
@@ -115,10 +117,10 @@ class Users
         // Update last online
         Database::update('users', [
             [
-                'lastdate' => time(),
+                'user_last_online' => time(),
             ],
             [
-                'id' => [$uid, '='],
+                'user_id' => [$uid, '='],
             ],
         ]);
 
@@ -324,17 +326,17 @@ class Users
             'password_iter' => $password[1],
             'email' => $emailClean,
             'rank_main' => $userRank[0],
-            'ranks' => $userRankJson,
+            'user_ranks' => $userRankJson,
             'register_ip' => Main::getRemoteIP(),
             'last_ip' => Main::getRemoteIP(),
-            'regdate' => time(),
-            'lastdate' => 0,
-            'country' => Main::getCountryCode(),
-            'userData' => '[]',
+            'user_registered' => time(),
+            'user_last_online' => 0,
+            'user_country' => Main::getCountryCode(),
+            'user_data' => '[]',
         ]);
 
         // Get userid of the new user
-        $uid = Database::fetch('users', false, ['username_clean' => [$usernameClean, '=']])['id'];
+        $uid = Database::fetch('users', false, ['username_clean' => [$usernameClean, '=']])['user_id'];
 
         // Check if we require e-mail activation
         if ($requireActive) {
@@ -378,12 +380,12 @@ class Users
         }
 
         // Check if the user has the required privs to log in
-        if (Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
+        if (Permissions::check('SITE', 'DEACTIVATED', $user['user_id'], 1)) {
             return [0, 'NOT_ALLOWED'];
         }
 
         // Generate the verification key
-        $verk = Main::newActionCode('LOST_PASS', $user['id'], [
+        $verk = Main::newActionCode('LOST_PASS', $user['user_id'], [
             'meta' => [
                 'password_change' => 1,
             ],
@@ -396,9 +398,9 @@ class Users
         $message = "Hello " . $user['username'] . ",\r\n\r\n";
         $message .= "You are receiving this notification because you have (or someone pretending to be you has) requested a password reset link to be sent for your account on \"" . Configuration::getConfig('sitename') . "\". If you did not request this notification then please ignore it, if you keep receiving it please contact the site administrator.\r\n\r\n";
         $message .= "To use this password reset key you need to go to a special page. To do this click the link provided below.\r\n\r\n";
-        $message .= "http://" . Configuration::getConfig('url_main') . $urls->format('SITE_FORGOT_PASSWORD') . "?pw=true&uid=" . $user['id'] . "&key=" . $verk . "\r\n\r\n";
+        $message .= "http://" . Configuration::getConfig('url_main') . $urls->format('SITE_FORGOT_PASSWORD') . "?pw=true&uid=" . $user['user_id'] . "&key=" . $verk . "\r\n\r\n";
         $message .= "If successful you should be able to change your password here.\r\n\r\n";
-        $message .= "Alternatively if the above method fails for some reason you can go to http://" . Configuration::getConfig('url_main') . $urls->format('SITE_FORGOT_PASSWORD') . "?pw=true&uid=" . $user['id'] . " and use the key listed below:\r\n\r\n";
+        $message .= "Alternatively if the above method fails for some reason you can go to http://" . Configuration::getConfig('url_main') . $urls->format('SITE_FORGOT_PASSWORD') . "?pw=true&uid=" . $user['user_id'] . " and use the key listed below:\r\n\r\n";
         $message .= "Verification key: " . $verk . "\r\n\r\n";
         $message .= "You can of course change this password yourself via the profile page. If you have any difficulties please contact the site administrator.\r\n\r\n";
         $message .= "--\r\n\r\nThanks\r\n\r\n" . Configuration::getConfig('mail_signature');
@@ -452,7 +454,7 @@ class Users
                 'password_chan' => $time,
             ],
             [
-                'id' => [$uid, '='],
+                'user_id' => [$uid, '='],
             ],
         ]);
 
@@ -486,12 +488,12 @@ class Users
         }
 
         // Check if a user is activated
-        if (!Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
+        if (!Permissions::check('SITE', 'DEACTIVATED', $user['user_id'], 1)) {
             return [0, 'USER_ALREADY_ACTIVE'];
         }
 
         // Send activation e-mail
-        self::sendActivationMail($user['id']);
+        self::sendActivationMail($user['user_id']);
 
         // Return success
         return [1, 'SUCCESS'];
@@ -503,10 +505,10 @@ class Users
     {
 
         // Get the user data
-        $user = Database::fetch('users', false, ['id' => [$uid, '=']]);
+        $user = Database::fetch('users', false, ['user_id' => [$uid, '=']]);
 
         // User is already activated or doesn't even exist
-        if (count($user) < 2 || !Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
+        if (count($user) < 2 || !Permissions::check('SITE', 'DEACTIVATED', $user['user_id'], 1)) {
             return false;
         }
 
@@ -514,7 +516,7 @@ class Users
         $activate = ($customKey ? $customKey : Main::newActionCode('ACTIVATE', $uid, [
             'user' => [
                 'rank_main' => 2,
-                'ranks' => json_encode([2]),
+                'user_ranks' => json_encode([2]),
             ],
         ]));
 
@@ -526,10 +528,10 @@ class Users
         $message .= "Please keep this e-mail for your records. Your account intormation is as follows:\r\n\r\n";
         $message .= "----------------------------\r\n\r\n";
         $message .= "Username: " . $user['username'] . "\r\n\r\n";
-        $message .= "Your profile: http://" . Configuration::getConfig('url_main') . $urls->format('USER_PROFILE', [$user['id']]) . "\r\n\r\n";
+        $message .= "Your profile: http://" . Configuration::getConfig('url_main') . $urls->format('USER_PROFILE', [$user['user_id']]) . "\r\n\r\n";
         $message .= "----------------------------\r\n\r\n";
         $message .= "Please visit the following link in order to activate your account:\r\n\r\n";
-        $message .= "http://" . Configuration::getConfig('url_main') . $urls->format('SITE_ACTIVATE') . "?mode=activate&u=" . $user['id'] . "&k=" . $activate . "\r\n\r\n";
+        $message .= "http://" . Configuration::getConfig('url_main') . $urls->format('SITE_ACTIVATE') . "?mode=activate&u=" . $user['user_id'] . "&k=" . $activate . "\r\n\r\n";
         $message .= "Your password has been securely stored in our database and cannot be retrieved. ";
         $message .= "In the event that it is forgotten, you will be able to reset it using the email address associated with your account.\r\n\r\n";
         $message .= "Thank you for registering.\r\n\r\n";
@@ -554,7 +556,7 @@ class Users
     {
 
         // Get the user data
-        $user = Database::fetch('users', false, ['id' => [$uid, '=']]);
+        $user = Database::fetch('users', false, ['user_id' => [$uid, '=']]);
 
         // Check if user exists
         if (!count($user) > 1) {
@@ -562,7 +564,7 @@ class Users
         }
 
         // Check if user is already activated
-        if (!Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
+        if (!Permissions::check('SITE', 'DEACTIVATED', $user['user_id'], 1)) {
             return [0, 'USER_ALREADY_ACTIVE'];
         }
 
@@ -584,17 +586,17 @@ class Users
             // Assign the special values
             $instructionData = json_decode($action[2], true);
             $rank = $instructionData['user']['rank_main'];
-            $ranks = $instructionData['user']['ranks'];
+            $ranks = $instructionData['user']['user_ranks'];
         }
 
         // Activate the account
         Database::update('users', [
             [
                 'rank_main' => $rank,
-                'ranks' => $ranks,
+                'user_ranks' => $ranks,
             ],
             [
-                'id' => [$uid, '='],
+                'user_id' => [$uid, '='],
             ],
         ]);
 
@@ -608,7 +610,7 @@ class Users
     {
 
         // Get the user data
-        $user = Database::fetch('users', false, ['id' => [$uid, '=']]);
+        $user = Database::fetch('users', false, ['user_id' => [$uid, '=']]);
 
         // Check if user exists
         if (!count($user) > 1) {
@@ -616,7 +618,7 @@ class Users
         }
 
         // Check if user is already deactivated
-        if (Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
+        if (Permissions::check('SITE', 'DEACTIVATED', $user['user_id'], 1)) {
             return [0, 'USER_ALREADY_DEACTIVE'];
         }
 
@@ -624,10 +626,10 @@ class Users
         Database::update('users', [
             [
                 'rank_main' => 2,
-                'ranks' => json_encode([2]),
+                'user_ranks' => json_encode([2]),
             ],
             [
-                'id' => [$uid, '='],
+                'user_id' => [$uid, '='],
             ],
         ]);
 
@@ -715,7 +717,7 @@ class Users
         $user = $userIdIsUserData ? $uid : self::getUser($uid);
 
         // Decode the json
-        $ranks = json_decode($user['ranks'], true);
+        $ranks = json_decode($user['user_ranks'], true);
 
         // Check if the rank we're trying to set is actually there
         if (!in_array($rid, $ranks)) {
@@ -728,7 +730,7 @@ class Users
                 'rank_main' => $rid,
             ],
             [
-                'id' => [$uid, '='],
+                'user_id' => [$uid, '='],
             ],
         ]);
 
@@ -745,7 +747,7 @@ class Users
         $user = $userIdIsUserData ? $uid : self::getUser($uid);
 
         // Decode the array
-        $current = json_decode($user['ranks'], true);
+        $current = json_decode($user['user_ranks'], true);
 
         // Go over all the new ranks
         foreach ($ranks as $rank) {
@@ -761,10 +763,10 @@ class Users
         // Update the row
         Database::update('users', [
             [
-                'ranks' => $current,
+                'user_ranks' => $current,
             ],
             [
-                'id' => [$uid, '='],
+                'user_id' => [$uid, '='],
             ],
         ]);
 
@@ -781,7 +783,7 @@ class Users
         $user = $userIdIsUserData ? $uid : self::getUser($uid);
 
         // Get the ranks
-        $current = json_decode($user['ranks'], true);
+        $current = json_decode($user['user_ranks'], true);
 
         // Check the current ranks for ranks in the set array
         foreach ($current as $key => $rank) {
@@ -797,10 +799,10 @@ class Users
         // Update the row
         Database::update('users', [
             [
-                'ranks' => $current,
+                'user_ranks' => $current,
             ],
             [
-                'id' => [$uid, '='],
+                'user_id' => [$uid, '='],
             ],
         ]);
 
@@ -822,7 +824,7 @@ class Users
         }
 
         // Decode the json for the user's ranks
-        $uRanks = json_decode($user['ranks'], true);
+        $uRanks = json_decode($user['user_ranks'], true);
 
         // If not go over all ranks and check if the user has them
         foreach ($ranks as $rank) {
@@ -845,10 +847,10 @@ class Users
         $user = Main::cleanString($user, true);
 
         // Do database request
-        $user = Database::fetch('users', true, [($id ? 'id' : 'username_clean') => [$user, '=']]);
+        $user = Database::fetch('users', true, [($id ? 'user_id' : 'username_clean') => [$user, '=']]);
 
         // Return count (which would return 0, aka false, if nothing was found)
-        return count($user) ? $user[0]['id'] : false;
+        return count($user) ? $user[0]['user_id'] : false;
 
     }
 
@@ -869,9 +871,9 @@ class Users
 
         // Iterate over the fields and clean them up
         foreach ($profileFields as $field) {
-            $fields[$field['id']] = $field;
-            $fields[$field['id']]['ident'] = Main::cleanString($field['name'], true, true);
-            $fields[$field['id']]['addit'] = json_decode($field['additional'], true);
+            $fields[$field['field_id']] = $field;
+            $fields[$field['field_id']]['field_identity'] = Main::cleanString($field['field_name'], true, true);
+            $fields[$field['field_id']]['field_additional'] = json_decode($field['field_additional'], true);
         }
 
         // Return the yeahs
@@ -896,11 +898,11 @@ class Users
 
         // Iterate over the fields and clean them up
         foreach ($optionFields as $field) {
-            if (!Permissions::check('SITE', $field['require_perm'], Session::$userId, 1)) {
+            if (!Permissions::check('SITE', $field['option_permission'], Session::$userId, 1)) {
                 continue;
             }
 
-            $fields[$field['id']] = $field;
+            $fields[$field['option_id']] = $field;
         }
 
         // Return the yeahs
@@ -921,7 +923,7 @@ class Users
         }
 
         // Assign the profileData variable
-        $profileData = ($inputIsData ? $id : self::getUser($id)['userData']);
+        $profileData = ($inputIsData ? $id : self::getUser($id)['user_data']);
 
         // Once again if nothing was returned just return null
         if (count($profileData) < 1 || $profileData == null || empty($profileData['profileFields'])) {
@@ -983,7 +985,7 @@ class Users
     {
 
         // We retrieve the current content from the database
-        $current = self::getUser($id)['userData'];
+        $current = self::getUser($id)['user_data'];
 
         // Merge the arrays
         $data = array_merge($current, $data);
@@ -994,10 +996,10 @@ class Users
         // Store it in the database
         Database::update('users', [
             [
-                'userData' => $data,
+                'user_data' => $data,
             ],
             [
-                'id' => [$id, '='],
+                'user_id' => [$id, '='],
             ],
         ]);
 
@@ -1016,7 +1018,7 @@ class Users
         }
 
         // Return true if the user was online in the last 5 minutes
-        return ($user['lastdate'] > (time() - 500));
+        return ($user['user_last_online'] > (time() - 500));
 
     }
 
@@ -1028,7 +1030,7 @@ class Users
         $time = time() - 500;
 
         // Get all online users in the past 5 minutes
-        $getAll = Database::fetch('users', true, ['lastdate' => [$time, '>']]);
+        $getAll = Database::fetch('users', true, ['user_last_online' => [$time, '>']]);
 
         // Return all the online users
         return $getAll;
@@ -1041,27 +1043,27 @@ class Users
 
         // Check if there's already a record of premium for this user in the database
         $getUser = Database::fetch('premium', false, [
-            'uid' => [$id, '='],
+            'user_id' => [$id, '='],
         ]);
 
         // Calculate the (new) start and expiration timestamp
-        $start = isset($getUser['startdate']) ? $getUser['startdate'] : time();
-        $expire = isset($getUser['expiredate']) ? $getUser['expiredate'] + $seconds : time() + $seconds;
+        $start = isset($getUser['premium_start']) ? $getUser['premium_start'] : time();
+        $expire = isset($getUser['premium_expire']) ? $getUser['premium_expire'] + $seconds : time() + $seconds;
 
         // If the user already exists do an update call, otherwise an insert call
         if (empty($getUser)) {
             Database::insert('premium', [
-                'uid' => $id,
-                'startdate' => $start,
-                'expiredate' => $expire,
+                'user_id' => $id,
+                'premium_start' => $start,
+                'premium_expire' => $expire,
             ]);
         } else {
             Database::update('premium', [
                 [
-                    'expiredate' => $expire,
+                    'premium_expire' => $expire,
                 ],
                 [
-                    'uid' => [$id, '='],
+                    'user_id' => [$id, '='],
                 ],
             ]);
         }
@@ -1076,7 +1078,7 @@ class Users
     {
 
         Database::delete('premium', [
-            'uid' => [$id, '='],
+            'user_id' => [$id, '='],
         ]);
 
     }
@@ -1092,7 +1094,7 @@ class Users
 
         // Attempt to retrieve the premium record from the database
         $getRecord = Database::fetch('premium', false, [
-            'uid' => [$id, '='],
+            'user_id' => [$id, '='],
         ]);
 
         // If nothing was returned just return false
@@ -1101,14 +1103,14 @@ class Users
         }
 
         // Check if the Tenshi hasn't expired
-        if ($getRecord['expiredate'] < time()) {
+        if ($getRecord['premium_expire'] < time()) {
             self::removeUserPremium($id);
             self::updatePremiumMeta($id);
-            return [0, $getRecord['startdate'], $getRecord['expiredate']];
+            return [0, $getRecord['premium_start'], $getRecord['premium_expire']];
         }
 
         // Else return the start and expiration date
-        return [1, $getRecord['startdate'], $getRecord['expiredate']];
+        return [1, $getRecord['premium_start'], $getRecord['premium_expire']];
 
     }
 
@@ -1152,7 +1154,7 @@ class Users
     {
 
         // Execute query
-        $rank = Database::fetch('ranks', false, ['id' => [$id, '=']]);
+        $rank = Database::fetch('ranks', false, ['rank_id' => [$id, '=']]);
 
         // Return false if no rank was found
         if (empty($rank)) {
@@ -1226,11 +1228,11 @@ class Users
             }
 
             // Skip if inactive and not include deactivated users
-            if (!$includeInactive && Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
+            if (!$includeInactive && Permissions::check('SITE', 'DEACTIVATED', $user['user_id'], 1)) {
                 continue;
             }
 
-            $users[$user['id']] = $user;
+            $users[$user['user_id']] = $user;
         }
 
         // and return an array with the users
@@ -1250,7 +1252,7 @@ class Users
 
         // Reorder shit
         foreach ($getRanks as $rank) {
-            $ranks[$rank['id']] = $rank;
+            $ranks[$rank['rank_id']] = $rank;
         }
 
         // and return an array with the ranks
@@ -1264,7 +1266,7 @@ class Users
 
         // Do the database query
         $warnings = Database::fetch('warnings', true, ($uid ? [
-            ($iid ? 'iid' : 'uid') => [$uid, '='],
+            ($iid ? 'moderator_id' : 'user_id') => [$uid, '='],
         ] : null));
 
         // Return all the warnings
@@ -1278,14 +1280,14 @@ class Users
 
         // Prepare conditions
         $conditions = array();
-        $conditions['uid'] = [($uid ? $uid : Session::$userId), '='];
+        $conditions['user_id'] = [($uid ? $uid : Session::$userId), '='];
 
         if ($timediff) {
-            $conditions['timestamp'] = [time() - $timediff, '>'];
+            $conditions['alert_timestamp'] = [time() - $timediff, '>'];
         }
 
         if ($excludeRead) {
-            $conditions['notif_read'] = [0, '='];
+            $conditions['alert_read'] = [0, '='];
         }
 
         // Get notifications for the database
@@ -1296,12 +1298,12 @@ class Users
             // Iterate over all entries
             foreach ($notifications as $notification) {
                 // If the notifcation is already read skip
-                if ($notification['notif_read']) {
+                if ($notification['alert_read']) {
                     continue;
                 }
 
                 // Mark them as read
-                self::markNotificationRead($notification['id']);
+                self::markNotificationRead($notification['user_id']);
             }
         }
 
@@ -1317,10 +1319,10 @@ class Users
         // Execute an update statement
         Database::update('notifications', [
             [
-                'notif_read' => ($mode ? 1 : 0),
+                'alert_read' => ($mode ? 1 : 0),
             ],
             [
-                'id' => [$id, '='],
+                'alert_id' => [$id, '='],
             ],
         ]);
 
@@ -1335,15 +1337,15 @@ class Users
 
         // Insert it into the database
         Database::insert('notifications', [
-            'uid' => $user,
-            'timestamp' => $time,
-            'notif_read' => 0,
-            'notif_sound' => ($sound ? 1 : 0),
-            'notif_title' => $title,
-            'notif_text' => $text,
-            'notif_link' => $link,
-            'notif_img' => $img,
-            'notif_timeout' => $timeout,
+            'user_id' => $user,
+            'alert_timestamp' => $time,
+            'alert_read' => 0,
+            'alert_sound' => ($sound ? 1 : 0),
+            'alert_title' => $title,
+            'alert_text' => $text,
+            'alert_link' => $link,
+            'alert_img' => $img,
+            'alert_timeout' => $timeout,
         ]);
 
     }
@@ -1388,7 +1390,7 @@ class Users
 
         // Get all friends
         $getFriends = Database::fetch('friends', true, [
-            'uid' => [$uid, '='],
+            'user_id' => [$uid, '='],
         ]);
 
         // Create the friends array
@@ -1397,12 +1399,12 @@ class Users
         // Iterate over the raw database return
         foreach ($getFriends as $key => $friend) {
             // Add friend to array
-            $friends[($timestamps ? $friend['fid'] : $key)] = $getData ? ([
+            $friends[($timestamps ? $friend['friend_id'] : $key)] = $getData ? ([
 
-                'user' => ($_UDATA = self::getUser($friend['fid'])),
+                'user' => ($_UDATA = self::getUser($friend['friend_id'])),
                 'rank' => self::getRank($_UDATA['rank_main']),
 
-            ]) : $friend[($timestamps ? 'timestamp' : 'fid')];
+            ]) : $friend[($timestamps ? 'friend_timestamp' : 'friend_id')];
         }
 
         // Check who is online and who isn't
@@ -1410,7 +1412,7 @@ class Users
             // Check each user
             foreach ($friends as $key => $friend) {
                 $friends[
-                    self::checkUserOnline($getData ? $friend['user']['id'] : $friend) ? 'online' : 'offline'
+                    self::checkUserOnline($getData ? $friend['user']['user_id'] : $friend) ? 'online' : 'offline'
                 ][] = $friend;
             }
         }
@@ -1431,7 +1433,7 @@ class Users
 
         // Get all friend entries from other people involved the current user
         $friends = Database::fetch('friends', true, [
-            'fid' => [$uid, '='],
+            'friend_id' => [$uid, '='],
         ]);
 
         // Create pending array
@@ -1440,10 +1442,10 @@ class Users
         // Check if the friends are mutual
         foreach ($friends as $friend) {
             // Check if the friend is mutual
-            if (!self::checkFriend($friend['uid'], $uid)) {
+            if (!self::checkFriend($friend['user_id'], $uid)) {
                 $pending[] = $getData ? ([
 
-                    'user' => ($_UDATA = self::getUser($friend['uid'])),
+                    'user' => ($_UDATA = self::getUser($friend['user_id'])),
                     'rank' => self::getRank($_UDATA['rank_main']),
 
                 ]) : $friend;
@@ -1495,15 +1497,15 @@ class Users
         }
 
         // Check if the user already has this user a friend
-        if (Database::fetch('friends', false, ['fid' => [$uid, '='], 'uid' => [Session::$userId, '=']])) {
+        if (Database::fetch('friends', false, ['friend_id' => [$uid, '='], 'user_id' => [Session::$userId, '=']])) {
             return [0, 'ALREADY_FRIENDS'];
         }
 
         // Add friend
         Database::insert('friends', [
-            'uid' => Session::$userId,
-            'fid' => $uid,
-            'timestamp' => time(),
+            'user_id' => Session::$userId,
+            'friend_id' => $uid,
+            'friend_timestamp' => time(),
         ]);
 
         // Return true because yay
@@ -1516,21 +1518,21 @@ class Users
     {
 
         // Check if the user has this user a friend
-        if (!Database::fetch('friends', false, ['fid' => [$uid, '='], 'uid' => [Session::$userId, '=']])) {
+        if (!Database::fetch('friends', false, ['friend_id' => [$uid, '='], 'user_id' => [Session::$userId, '=']])) {
             return [0, 'ALREADY_REMOVED'];
         }
 
         // Remove friend
         Database::delete('friends', [
-            'uid' => [Session::$userId, '='],
-            'fid' => [$uid, '='],
+            'user_id' => [Session::$userId, '='],
+            'friend_id' => [$uid, '='],
         ]);
 
         // Attempt to remove the request
         if ($deleteRequest) {
             Database::delete('friends', [
-                'fid' => [Session::$userId, '='],
-                'uid' => [$uid, '='],
+                'friend_id' => [Session::$userId, '='],
+                'user_id' => [$uid, '='],
             ]);
         }
 
@@ -1543,7 +1545,7 @@ class Users
     public static function getNewestUserId()
     {
 
-        return Database::fetch('users', false, ['password_algo' => ['nologin', '!=']], ['id', true], ['1'])['id'];
+        return Database::fetch('users', false, ['password_algo' => ['nologin', '!=']], ['user_id', true], ['1'])['user_id'];
 
     }
 }

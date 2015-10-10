@@ -27,8 +27,8 @@ if (isset($_GET['p'])) {
         $renderData['page'] = [
 
             'id' => $pageId,
-            'title' => $ipData['pagetitle'],
-            'content' => Main::mdParse($ipData['content']),
+            'title' => $ipData['page_title'],
+            'content' => Main::mdParse($ipData['page_content']),
 
         ];
     }
@@ -62,7 +62,7 @@ $renderData['stats'] = [
         date_create(
             date(
                 'Y-m-d',
-                $_INDEX_NEWEST_USER->data['regdate']
+                $_INDEX_NEWEST_USER->data['user_registered']
             )
         ),
         date_create(

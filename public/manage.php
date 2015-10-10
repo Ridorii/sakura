@@ -78,8 +78,6 @@ switch ($category . '.' . $mode) {
         ]);
         break;
     case 'config.index':
-        $renderData = array_merge($renderData, [
-        ]);
         break;
 }
 

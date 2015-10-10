@@ -53,14 +53,14 @@ if (Auth::getPageType() == AUTH_FETCH) {
 
         // Set the user's data
         Auth::SetUserData(
-            $user->data['id'],
+            $user->data['user_id'],
             $user->data['username'],
             $user->colour()
         );
 
         // Set the common permissions
         Auth::SetCommonPermissions(
-            bindec(Permissions::getUserPermissions($uid)['SITE']),
+            $user->mainRank['hierarchy'],
             Permissions::check('MANAGE', 'USE_MANAGE', $uid, 1) ? 1 : 0,
             Permissions::check('SITE', 'CREATE_BACKGROUND', $uid, 1) ? 1 : 0,
             Permissions::check('SITE', 'CHANGE_USERNAME', $uid, 1) ? 1 : 0,

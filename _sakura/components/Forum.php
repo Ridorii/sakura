@@ -259,7 +259,7 @@ class Forum
                 'user' => (new User($post['poster_id'])),
                 'elapsed' => Main::timeElapsed($post['post_time']),
                 'is_op' => ($post['poster_id'] == $firstPost['poster_id'] ? '1' : '0'),
-                'parsed_post' => self::parseMarkUp($post['post_text'], $post['parse_mode'], $post['enable_emotes']),
+                'parsed_post' => self::parseMarkUp($post['post_text'], $post['post_parse'], $post['post_emotes']),
                 'signature' => empty($_POSTER['userData']['signature']) ?
                 '' :
                 self::parseMarkUp(

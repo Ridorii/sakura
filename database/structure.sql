@@ -3,8 +3,6 @@
 SET NAMES utf8;
 SET time_zone = '+00:00';
 
-DROP DATABASE IF EXISTS `sakura-development`;
-CREATE DATABASE `sakura-development` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
 USE `sakura-development`;
 
 DROP TABLE IF EXISTS `sakura_actioncodes`;
@@ -29,29 +27,29 @@ CREATE TABLE `sakura_apikeys` (
 
 DROP TABLE IF EXISTS `sakura_bans`;
 CREATE TABLE `sakura_bans` (
-  `id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
-  `uid` bigint(255) unsigned NOT NULL COMMENT 'ID of user that was banned, 0 for just an IP ban.',
+  `ban_id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
+  `user_id` bigint(255) unsigned NOT NULL COMMENT 'ID of user that was banned, 0 for just an IP ban.',
   `ban_begin` int(11) unsigned NOT NULL COMMENT 'Timestamp when the user was banned.',
   `ban_end` int(11) unsigned NOT NULL COMMENT 'Timestamp when the user should regain access to the site.',
   `ban_reason` varchar(512) COLLATE utf8_bin DEFAULT NULL COMMENT 'Reason given for the ban.',
-  `mod_id` bigint(255) unsigned NOT NULL COMMENT 'ID of moderator that banned this user,',
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`),
-  KEY `mod_id` (`mod_id`),
-  CONSTRAINT `sakura_bans_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sakura_bans_ibfk_2` FOREIGN KEY (`mod_id`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  `ban_moderator` bigint(255) unsigned NOT NULL COMMENT 'ID of moderator that banned this user,',
+  PRIMARY KEY (`ban_id`),
+  KEY `uid` (`user_id`),
+  KEY `mod_id` (`ban_moderator`),
+  CONSTRAINT `sakura_bans_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `sakura_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sakura_bans_ibfk_2` FOREIGN KEY (`ban_moderator`) REFERENCES `sakura_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_bbcodes`;
 CREATE TABLE `sakura_bbcodes` (
-  `id` int(64) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
-  `regex` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Regular expression string for the BBCode.',
-  `replace` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'What to replace it with.',
-  `title` varchar(128) COLLATE utf8_bin NOT NULL COMMENT 'Button title for this bbcode.',
-  `description` varchar(512) COLLATE utf8_bin NOT NULL COMMENT 'Description of what this does.',
-  `on_posting` tinyint(1) unsigned NOT NULL COMMENT 'Set if this bbcode is displayed on the posting page.',
-  PRIMARY KEY (`id`)
+  `bbcode_id` int(64) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
+  `bbcode_regex` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Regular expression string for the BBCode.',
+  `bbcode_replace` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'What to replace it with.',
+  `bbcode_title` varchar(128) COLLATE utf8_bin NOT NULL COMMENT 'Button title for this bbcode.',
+  `bbcode_description` varchar(512) COLLATE utf8_bin NOT NULL COMMENT 'Description of what this does.',
+  `bbcode_display` tinyint(1) unsigned NOT NULL COMMENT 'Set if this bbcode is displayed on the posting page.',
+  PRIMARY KEY (`bbcode_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -61,11 +59,17 @@ CREATE TABLE `sakura_comments` (
   `comment_category` varchar(32) COLLATE utf8_bin NOT NULL COMMENT 'Comment category.',
   `comment_timestamp` int(11) unsigned NOT NULL COMMENT 'Timestamp of when this comment was posted.',
   `comment_poster` bigint(255) unsigned NOT NULL COMMENT 'User ID of the poster.',
-  `comment_likes` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Upvotes of the comments.',
-  `comment_dislikes` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Downvotes of the comments.',
   `comment_reply_to` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of the comment this comment is a reply to',
   `comment_text` text COLLATE utf8_bin NOT NULL COMMENT 'Content of the comment.',
   PRIMARY KEY (`comment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+DROP TABLE IF EXISTS `sakura_comment_votes`;
+CREATE TABLE `sakura_comment_votes` (
+  `vote_comment` bigint(255) unsigned NOT NULL COMMENT 'ID of the comment that was voted on.',
+  `vote_user` bigint(255) unsigned NOT NULL COMMENT 'ID of the voter.',
+  `vote_state` tinyint(1) unsigned NOT NULL COMMENT '0 = dislike, 1 = like.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -85,24 +89,24 @@ CREATE TABLE `sakura_emoticons` (
 
 DROP TABLE IF EXISTS `sakura_error_log`;
 CREATE TABLE `sakura_error_log` (
-  `id` varchar(32) COLLATE utf8_bin NOT NULL COMMENT 'An ID that is created when an error occurs.',
-  `timestamp` varchar(128) COLLATE utf8_bin NOT NULL COMMENT 'A datestring from when the error occurred.',
-  `revision` int(16) unsigned NOT NULL COMMENT 'Sakura Revision number.',
+  `error_id` varchar(32) COLLATE utf8_bin NOT NULL COMMENT 'An ID that is created when an error occurs.',
+  `error_timestamp` varchar(128) COLLATE utf8_bin NOT NULL COMMENT 'A datestring from when the error occurred.',
+  `error_revision` int(16) unsigned NOT NULL COMMENT 'Sakura Revision number.',
   `error_type` int(16) unsigned NOT NULL COMMENT 'The PHP error type of this error.',
   `error_line` int(32) unsigned NOT NULL COMMENT 'The line that caused this error.',
   `error_string` varchar(512) COLLATE utf8_bin NOT NULL COMMENT 'PHP''s description of this error.',
   `error_file` varchar(512) COLLATE utf8_bin NOT NULL COMMENT 'The file in which this error occurred.',
-  `backtrace` text COLLATE utf8_bin NOT NULL COMMENT 'A full base64 and json encoded backtrace containing all environment data.'
+  `error_backtrace` text COLLATE utf8_bin NOT NULL COMMENT 'A full base64 and json encoded backtrace containing all environment data.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_faq`;
 CREATE TABLE `sakura_faq` (
-  `id` bigint(128) unsigned NOT NULL AUTO_INCREMENT COMMENT 'MySQL Generated ID used for sorting.',
-  `short` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Used for linking directly to a question.',
-  `question` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The question.',
-  `answer` text COLLATE utf8_bin NOT NULL COMMENT 'The answer.',
-  PRIMARY KEY (`id`)
+  `faq_id` bigint(128) unsigned NOT NULL AUTO_INCREMENT COMMENT 'MySQL Generated ID used for sorting.',
+  `faq_shorthand` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Used for linking directly to a question.',
+  `faq_question` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The question.',
+  `faq_answer` text COLLATE utf8_bin NOT NULL COMMENT 'The answer.',
+  PRIMARY KEY (`faq_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -119,23 +123,32 @@ CREATE TABLE `sakura_forums` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
+DROP TABLE IF EXISTS `sakura_forum_permissions`;
+CREATE TABLE `sakura_forum_permissions` (
+  `forum_id` bigint(255) unsigned NOT NULL COMMENT 'Forum ID',
+  `rank_id` bigint(128) unsigned NOT NULL COMMENT 'Rank ID, leave 0 for a user',
+  `user_id` bigint(255) unsigned NOT NULL COMMENT 'User ID, leave 0 for a rank',
+  `forum_perms` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Forum action permission string'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
 DROP TABLE IF EXISTS `sakura_friends`;
 CREATE TABLE `sakura_friends` (
-  `uid` bigint(255) unsigned NOT NULL COMMENT 'ID of the user that added the friend.',
-  `fid` bigint(255) unsigned NOT NULL COMMENT 'ID of the user that was added as a friend.',
-  `timestamp` int(11) unsigned NOT NULL COMMENT 'Timestamp of action.',
-  KEY `uid` (`uid`),
-  KEY `fid` (`fid`),
-  CONSTRAINT `sakura_friends_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sakura_friends_ibfk_2` FOREIGN KEY (`fid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  `user_id` bigint(255) unsigned NOT NULL COMMENT 'ID of the user that added the friend.',
+  `friend_id` bigint(255) unsigned NOT NULL COMMENT 'ID of the user that was added as a friend.',
+  `friend_timestamp` int(11) unsigned NOT NULL COMMENT 'Timestamp of action.',
+  KEY `uid` (`user_id`),
+  KEY `fid` (`friend_id`),
+  CONSTRAINT `sakura_friends_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `sakura_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sakura_friends_ibfk_2` FOREIGN KEY (`friend_id`) REFERENCES `sakura_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_infopages`;
 CREATE TABLE `sakura_infopages` (
-  `shorthand` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Name used for calling this page up in the /r/URL',
-  `pagetitle` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title displayed on the top of the page',
-  `content` text COLLATE utf8_bin NOT NULL COMMENT 'Content of the page'
+  `page_shorthand` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Name used for calling this page up in the /r/URL',
+  `page_title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title displayed on the top of the page',
+  `page_content` text COLLATE utf8_bin NOT NULL COMMENT 'Content of the page'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -147,7 +160,7 @@ CREATE TABLE `sakura_logs` (
   `attribs` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Optional attributes, vsprintf() style.',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
-  CONSTRAINT `sakura_logs_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sakura_logs_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `sakura_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -174,53 +187,53 @@ CREATE TABLE `sakura_messages` (
 
 DROP TABLE IF EXISTS `sakura_news`;
 CREATE TABLE `sakura_news` (
-  `id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
-  `category` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Category ID.',
-  `uid` bigint(255) unsigned NOT NULL COMMENT 'ID of user who posted this news message.',
-  `date` int(11) unsigned NOT NULL COMMENT 'News post timestamp.',
-  `title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title of the post.',
-  `content` text COLLATE utf8_bin NOT NULL COMMENT 'Contents of the post',
-  PRIMARY KEY (`id`)
+  `news_id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
+  `news_category` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Category ID.',
+  `user_id` bigint(255) unsigned NOT NULL COMMENT 'ID of user who posted this news message.',
+  `news_timestamp` int(11) unsigned NOT NULL COMMENT 'News post timestamp.',
+  `news_title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title of the post.',
+  `news_content` text COLLATE utf8_bin NOT NULL COMMENT 'Contents of the post',
+  PRIMARY KEY (`news_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_notifications`;
 CREATE TABLE `sakura_notifications` (
-  `id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
-  `uid` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'User ID this notification is intended for.',
-  `timestamp` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Timestamp when this notification was created.',
-  `notif_read` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Toggle for unread and read.',
-  `notif_sound` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Toggle if a sound should be played upon receiving the notification.',
-  `notif_title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title displayed on the notification.',
-  `notif_text` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Text displayed.',
-  `notif_link` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Link (empty for no link).',
-  `notif_img` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Image path, prefix with font: to use a font class instead of an image.',
-  `notif_timeout` int(16) unsigned NOT NULL DEFAULT '0' COMMENT 'How long the notification should stay on screen in milliseconds, 0 for forever.',
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`),
-  CONSTRAINT `sakura_notifications_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  `alert_id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
+  `user_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'User ID this notification is intended for.',
+  `alert_timestamp` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Timestamp when this notification was created.',
+  `alert_read` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Toggle for unread and read.',
+  `alert_sound` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Toggle if a sound should be played upon receiving the notification.',
+  `alert_title` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title displayed on the notification.',
+  `alert_text` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Text displayed.',
+  `alert_link` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Link (empty for no link).',
+  `alert_img` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Image path, prefix with font: to use a font class instead of an image.',
+  `alert_timeout` int(16) unsigned NOT NULL DEFAULT '0' COMMENT 'How long the notification should stay on screen in milliseconds, 0 for forever.',
+  PRIMARY KEY (`alert_id`),
+  KEY `uid` (`user_id`),
+  CONSTRAINT `sakura_notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `sakura_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_optionfields`;
 CREATE TABLE `sakura_optionfields` (
-  `id` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Unique identifier for accessing this option.',
-  `name` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Description of the field in a proper way.',
-  `description` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Longer description of the option.',
-  `formtype` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Type attribute in the input element.',
-  `require_perm` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The minimum permission level this option requires.',
-  UNIQUE KEY `id` (`id`)
+  `option_id` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Unique identifier for accessing this option.',
+  `option_name` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Description of the field in a proper way.',
+  `option_description` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Longer description of the option.',
+  `option_type` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Type attribute in the input element.',
+  `option_permission` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The minimum permission level this option requires.',
+  UNIQUE KEY `id` (`option_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_permissions`;
 CREATE TABLE `sakura_permissions` (
-  `rid` bigint(128) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of the rank this permissions set is used for.',
-  `uid` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of the user this permissions set is used for.',
-  `siteperms` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '000000000000000000000000000' COMMENT 'Site permissions.',
-  `manageperms` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '0' COMMENT 'Site management permissions',
-  `forumperms` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '0' COMMENT 'Forum permissions.',
-  `rankinherit` varchar(4) COLLATE utf8_bin NOT NULL DEFAULT '000' COMMENT 'Rank inheritance, only used when user specific.'
+  `rank_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of the rank this permissions set is used for.',
+  `user_id` bigint(255) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of the user this permissions set is used for.',
+  `permissions_site` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '0' COMMENT 'Site permissions.',
+  `permissions_manage` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '0' COMMENT 'Site management permissions',
+  `permissions_forums` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '0' COMMENT 'Forum permissions.',
+  `permissions_inherit` varchar(4) COLLATE utf8_bin NOT NULL DEFAULT '0' COMMENT 'Rank inheritance, only used when user specific.'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -232,9 +245,9 @@ CREATE TABLE `sakura_posts` (
   `poster_id` bigint(255) unsigned DEFAULT '0' COMMENT 'ID of poster of this post.',
   `poster_ip` varchar(40) COLLATE utf8_bin NOT NULL COMMENT 'IP of poster.',
   `post_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Time this post was made.',
-  `parse_mode` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'Switch the type of parser that''s used.',
-  `enable_sig` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT 'Toggle if signature should be shown.',
-  `enable_emotes` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT 'Toggle if emoticons should be parsed.',
+  `post_parse` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'Switch the type of parser that''s used.',
+  `post_signature` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT 'Toggle if signature should be shown.',
+  `post_emotes` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT 'Toggle if emoticons should be parsed.',
   `post_subject` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Subject of the post.',
   `post_text` text COLLATE utf8_bin NOT NULL COMMENT 'Contents of the post.',
   `post_edit_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Time this post was last edited.',
@@ -251,48 +264,49 @@ CREATE TABLE `sakura_posts` (
 
 DROP TABLE IF EXISTS `sakura_premium`;
 CREATE TABLE `sakura_premium` (
-  `uid` bigint(255) unsigned NOT NULL COMMENT 'ID of the user that purchased Tenshi.',
-  `startdate` int(11) unsigned NOT NULL COMMENT 'Timestamp of first purchase.',
-  `expiredate` int(11) unsigned NOT NULL COMMENT 'Expiration timestamp.',
-  UNIQUE KEY `uid` (`uid`),
-  CONSTRAINT `sakura_premium_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  `user_id` bigint(255) unsigned NOT NULL COMMENT 'ID of the user that purchased Tenshi.',
+  `premium_start` int(11) unsigned NOT NULL COMMENT 'Timestamp of first purchase.',
+  `premium_expire` int(11) unsigned NOT NULL COMMENT 'Expiration timestamp.',
+  UNIQUE KEY `uid` (`user_id`),
+  CONSTRAINT `sakura_premium_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `sakura_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_premium_log`;
 CREATE TABLE `sakura_premium_log` (
-  `id` int(16) unsigned NOT NULL AUTO_INCREMENT COMMENT 'MySQL Generated ID used for sorting.',
-  `uid` bigint(255) unsigned NOT NULL COMMENT 'User ID of purchaser',
-  `amount` float NOT NULL COMMENT 'Amount that was transferred.',
-  `date` int(11) unsigned NOT NULL COMMENT 'Date when the purchase was made.',
-  `comment` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'A short description of the action taken.',
-  PRIMARY KEY (`id`)
+  `transaction_id` int(16) unsigned NOT NULL AUTO_INCREMENT COMMENT 'MySQL Generated ID used for sorting.',
+  `user_id` bigint(255) unsigned NOT NULL COMMENT 'User ID of purchaser',
+  `transaction_amount` float NOT NULL COMMENT 'Amount that was transferred.',
+  `transaction_date` int(11) unsigned NOT NULL COMMENT 'Date when the purchase was made.',
+  `transaction_comment` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'A short description of the action taken.',
+  PRIMARY KEY (`transaction_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_profilefields`;
 CREATE TABLE `sakura_profilefields` (
-  `id` int(64) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID used for ordering on the userpage.',
-  `name` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Name of the field.',
-  `formtype` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Type attribute in the input element.',
-  `islink` tinyint(1) unsigned NOT NULL COMMENT 'Set if this value should be put in a href.',
-  `linkformat` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'If the form is a link how should it be formatted? {{ VAL }} gets replace with the value.',
-  `description` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Description of the field displayed in the control panel.',
-  `additional` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Undocumented JSON array containing special options if needed (probably only going to be used for the YouTube field).',
-  PRIMARY KEY (`id`)
+  `field_id` int(64) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID used for ordering on the userpage.',
+  `field_name` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Name of the field.',
+  `field_type` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Type attribute in the input element.',
+  `field_link` tinyint(1) unsigned NOT NULL COMMENT 'Set if this value should be put in a href.',
+  `field_linkformat` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'If the form is a link how should it be formatted? {{ VAL }} gets replace with the value.',
+  `field_description` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Description of the field displayed in the control panel.',
+  `field_additional` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Undocumented JSON array containing special options if needed (probably only going to be used for the YouTube field).',
+  PRIMARY KEY (`field_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_ranks`;
 CREATE TABLE `sakura_ranks` (
-  `id` bigint(128) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
-  `name` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Display name of the rank.',
-  `multi` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Can the rank name have an s at the end?',
-  `hidden` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Don''t show any public links to this rank.',
-  `colour` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Colour used for the username of a member of this rank.',
-  `description` text COLLATE utf8_bin NOT NULL COMMENT 'A description of what a user of this rank can do/is supposed to do.',
-  `title` varchar(64) COLLATE utf8_bin NOT NULL COMMENT 'Default user title if user has none set.',
-  PRIMARY KEY (`id`)
+  `rank_id` bigint(128) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
+  `rank_hierarchy` int(11) unsigned NOT NULL COMMENT 'Rank hierarchy.',
+  `rank_name` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Display name of the rank.',
+  `rank_multiple` varchar(10) COLLATE utf8_bin DEFAULT NULL COMMENT 'Used when addressing this rank as a multiple',
+  `rank_hidden` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Don''t show any public links to this rank.',
+  `rank_colour` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Colour used for the username of a member of this rank.',
+  `rank_description` text COLLATE utf8_bin NOT NULL COMMENT 'A description of what a user of this rank can do/is supposed to do.',
+  `rank_title` varchar(64) COLLATE utf8_bin NOT NULL COMMENT 'Default user title if user has none set.',
+  PRIMARY KEY (`rank_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -305,7 +319,7 @@ CREATE TABLE `sakura_regcodes` (
   `key_used` tinyint(1) unsigned NOT NULL COMMENT 'Boolean for setting this key as used.',
   PRIMARY KEY (`id`),
   KEY `created_by` (`created_by`),
-  CONSTRAINT `sakura_regcodes_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sakura_regcodes_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `sakura_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -324,16 +338,16 @@ CREATE TABLE `sakura_reports` (
 
 DROP TABLE IF EXISTS `sakura_sessions`;
 CREATE TABLE `sakura_sessions` (
-  `id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management. ',
-  `userip` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'IP of the user this session is spawned for.',
-  `useragent` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'User agent of the user this session is spawned for.',
-  `userid` bigint(255) unsigned NOT NULL COMMENT 'ID of the user this session is spawned for. ',
-  `skey` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Session key, allow direct access to the user''s account. ',
-  `started` int(16) unsigned NOT NULL COMMENT 'The timestamp for when the session was started. ',
-  `expire` int(16) unsigned NOT NULL COMMENT 'The timestamp for when this session should end, -1 for permanent. ',
-  `remember` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'If set to 1 session will be extended each time a page is loaded.',
-  PRIMARY KEY (`id`),
-  KEY `userid` (`userid`)
+  `session_id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management. ',
+  `user_id` bigint(255) unsigned NOT NULL COMMENT 'ID of the user this session is spawned for. ',
+  `user_ip` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'IP of the user this session is spawned for.',
+  `user_agent` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'User agent of the user this session is spawned for.',
+  `session_key` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Session key, allow direct access to the user''s account. ',
+  `session_start` int(16) unsigned NOT NULL COMMENT 'The timestamp for when the session was started. ',
+  `session_expire` int(16) unsigned NOT NULL COMMENT 'The timestamp for when this session should end, -1 for permanent. ',
+  `session_remember` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'If set to 1 session will be extended each time a page is loaded.',
+  PRIMARY KEY (`session_id`),
+  KEY `userid` (`user_id`)
 ) ENGINE=MEMORY DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
@@ -371,7 +385,7 @@ CREATE TABLE `sakura_username_history` (
 
 DROP TABLE IF EXISTS `sakura_users`;
 CREATE TABLE `sakura_users` (
-  `id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management. ',
+  `user_id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management. ',
   `username` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Username set at registration.',
   `username_clean` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'A more cleaned up version of the username for backend usage.',
   `password_hash` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Hashing algo used for the password hash.',
@@ -382,35 +396,35 @@ CREATE TABLE `sakura_users` (
   `password_new` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Field with array containing new password data beit that they requested a password change.',
   `email` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'E-mail of the user for password restoring etc.',
   `rank_main` mediumint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'Main rank of the user.',
-  `ranks` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '[0]' COMMENT 'Array containing the ranks the user is part of.',
-  `name_colour` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Additional name colour, when empty colour defaults to group colour.',
+  `user_ranks` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '[0]' COMMENT 'Array containing the ranks the user is part of.',
+  `user_colour` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Additional name colour, when empty colour defaults to group colour.',
   `register_ip` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'IP used for the creation of this account.',
   `last_ip` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Last IP that was used to log into this account.',
-  `usertitle` varchar(64) COLLATE utf8_bin DEFAULT NULL COMMENT 'Custom user title of the user, when empty reverts to their derault group name.',
-  `regdate` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Timestamp of account creation.',
-  `lastdate` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Last time anything was done on this account.',
-  `birthday` date NOT NULL COMMENT 'Birthdate of the user.',
-  `country` char(2) COLLATE utf8_bin NOT NULL COMMENT 'Contains ISO 3166 country code of user''s registration location.',
-  `userData` text COLLATE utf8_bin COMMENT 'All additional profile data.',
-  PRIMARY KEY (`id`),
+  `user_title` varchar(64) COLLATE utf8_bin DEFAULT NULL COMMENT 'Custom user title of the user, when empty reverts to their derault group name.',
+  `user_registered` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Timestamp of account creation.',
+  `user_last_online` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Last time anything was done on this account.',
+  `user_birthday` date NOT NULL COMMENT 'Birthdate of the user.',
+  `user_country` char(2) COLLATE utf8_bin NOT NULL COMMENT 'Contains ISO 3166 country code of user''s registration location.',
+  `user_data` text COLLATE utf8_bin COMMENT 'All additional profile data.',
+  PRIMARY KEY (`user_id`),
   UNIQUE KEY `username_clean` (`username_clean`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
 DROP TABLE IF EXISTS `sakura_warnings`;
 CREATE TABLE `sakura_warnings` (
-  `id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
-  `uid` bigint(255) unsigned NOT NULL COMMENT 'ID of user that was warned.',
-  `iid` bigint(255) unsigned NOT NULL COMMENT 'ID of the user that issued the warning.',
-  `issued` int(16) unsigned NOT NULL COMMENT 'Timestamp of the date the warning was issued.',
-  `expire` int(16) unsigned NOT NULL COMMENT 'Timstamp when the warning should expire, 0 for a permanent warning.',
-  `reason` varchar(512) COLLATE utf8_bin DEFAULT NULL COMMENT 'Reason for the warning.',
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`),
-  KEY `iid` (`iid`),
-  CONSTRAINT `sakura_warnings_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sakura_warnings_ibfk_2` FOREIGN KEY (`iid`) REFERENCES `sakura_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  `warning_id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
+  `user_id` bigint(255) unsigned NOT NULL COMMENT 'ID of user that was warned.',
+  `moderator_id` bigint(255) unsigned NOT NULL COMMENT 'ID of the user that issued the warning.',
+  `warning_issued` int(16) unsigned NOT NULL COMMENT 'Timestamp of the date the warning was issued.',
+  `warning_expire` int(16) unsigned NOT NULL COMMENT 'Timstamp when the warning should expire, 0 for a permanent warning.',
+  `warning_reason` varchar(512) COLLATE utf8_bin DEFAULT NULL COMMENT 'Reason for the warning.',
+  PRIMARY KEY (`warning_id`),
+  KEY `uid` (`user_id`),
+  KEY `iid` (`moderator_id`),
+  CONSTRAINT `sakura_warnings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `sakura_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sakura_warnings_ibfk_2` FOREIGN KEY (`moderator_id`) REFERENCES `sakura_users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
--- 2015-09-23 20:45:04
+-- 2015-10-10 21:14:40

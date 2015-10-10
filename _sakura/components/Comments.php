@@ -53,6 +53,20 @@ class Comments
             $comment['comment_poster'] = $this->commenters[$comment['comment_poster']];
             $comment['comment_text'] = Main::parseEmotes(Main::cleanString($comment['comment_text']));
 
+            // Get likes and dislikes
+            $votes = $this->getVotes($comment['comment_id']);
+            $comment['comment_likes'] = 0;
+            $comment['comment_dislikes'] = 0;
+
+            // Store amount in their respective variables
+            foreach ($votes as $vote) {
+                if ($vote['vote_state']) {
+                    $comment['comment_likes'] += 1;
+                } else {
+                    $comment['comment_dislikes'] += 1;
+                }
+            }
+
             // Add post to posts array
             $layer[$comment['comment_id']] = $comment;
 
@@ -87,6 +101,17 @@ class Comments
 
     }
 
+    // Getting comment votes
+    public function getVotes($cid)
+    {
+
+        // Get from database
+        return Database::fetch('comment_votes', true, [
+            'vote_comment' => [$cid, '='],
+        ]);
+
+    }
+
     // Creating
     public function makeComment($uid, $reply, $content)
     {
@@ -112,6 +137,50 @@ class Comments
 
         // Return success
         return [1, 'SUCCESS'];
+
+    }
+
+    // Voting
+    public function makeVote($uid, $cid, $mode)
+    {
+
+        // Attempt to get previous vote
+        $vote = Database::fetch('comment_votes', false, [
+            'vote_user' => [$uid, '='],
+            'vote_comment' => [$cid, '='],
+        ]);
+
+        // Check if anything was returned
+        if ($vote) {
+            // Check if the vote that's being casted is the same
+            if ($vote['vote_state'] == $mode) {
+                // Delete the vote
+                Database::delete('comment_votes', [
+                    'vote_user' => [$uid, '='],
+                    'vote_comment' => [$cid, '='],
+                ]);
+            } else {
+                // Otherwise update the vote
+                Database::update('comment_votes', [
+                    [
+                        'vote_state' => $mode,
+                    ],
+                    [
+                        'vote_user' => [$uid, '='],
+                        'vote_comment' => [$cid, '='],
+                    ],
+                ]);
+            }
+        } else {
+            // Create a vote
+            Database::insert('comment_votes', [
+                'vote_user' => $uid,
+                'vote_comment' => $cid,
+                'vote_state' => $mode,
+            ]);
+        }
+
+        return true;
 
     }
 

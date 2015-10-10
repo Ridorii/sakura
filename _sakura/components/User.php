@@ -21,7 +21,7 @@ class User
             'users',
             false,
             [
-                'id' => [$uid, '=', true],
+                'user_id' => [$uid, '=', true],
                 'username_clean' => [Main::cleanString($uid, true), '=', true],
             ]
         );
@@ -43,16 +43,16 @@ class User
             $this->data = Users::$emptyUser;
         }
 
-        // Decode the json in the userData column
-        $this->data['userData'] = json_decode(!empty($this->data['userData']) ? $this->data['userData'] : '[]', true);
+        // Decode the json in the user_data column
+        $this->data['user_data'] = json_decode(!empty($this->data['user_data']) ? $this->data['user_data'] : '[]', true);
 
         // Decode the ranks json array
-        $ranks = json_decode($this->data['ranks'], true);
+        $ranks = json_decode($this->data['user_ranks'], true);
 
         // Get the rows for all the ranks
         foreach ($ranks as $rank) {
             // Store the database row in the array
-            $this->ranks[$rank] = Database::fetch('ranks', false, ['id' => [$rank, '=']]);
+            $this->ranks[$rank] = Database::fetch('ranks', false, ['rank_id' => [$rank, '=']]);
         }
 
         // Check if ranks were set
@@ -75,7 +75,7 @@ class User
     {
 
         // Check if the main rank is the specified rank
-        if (in_array($this->mainRank['id'], $ranks)) {
+        if (in_array($this->mainRank['rank_id'], $ranks)) {
             return true;
         }
 
@@ -96,7 +96,7 @@ class User
     public function colour()
     {
 
-        return empty($this->data['name_colour']) ? $this->mainRank['colour'] : $this->data['name_colour'];
+        return empty($this->data['user_colour']) ? $this->mainRank['rank_colour'] : $this->data['user_colour'];
 
     }
 
@@ -104,7 +104,7 @@ class User
     public function userTitle()
     {
 
-        return empty($this->data['usertitle']) ? $this->mainRank['title'] : $this->data['usertitle'];
+        return empty($this->data['user_title']) ? $this->mainRank['rank_title'] : $this->data['user_title'];
 
     }
 
@@ -114,8 +114,8 @@ class User
 
         return [
 
-            'long' => Main::getCountryName($this->data['country']),
-            'short' => $this->data['country'],
+            'long' => Main::getCountryName($this->data['user_country']),
+            'short' => $this->data['user_country'],
 
         ];
 
@@ -125,7 +125,7 @@ class User
     public function checkOnline()
     {
 
-        return $this->data['lastdate'] > (time() - Configuration::getConfig('max_online_time'));
+        return $this->data['user_last_online'] > (time() - Configuration::getConfig('max_online_time'));
 
     }
 
@@ -133,7 +133,7 @@ class User
     public function forumStats()
     {
 
-        return Forum::getUserStats($this->data['id']);
+        return Forum::getUserStats($this->data['user_id']);
 
     }
 
@@ -141,7 +141,7 @@ class User
     public function checkFriends($with)
     {
 
-        return Users::checkFriend($this->data['id'], $with);
+        return Users::checkFriend($this->data['user_id'], $with);
 
     }
 
@@ -149,7 +149,7 @@ class User
     public function getFriends($timestamps = false, $getData = false, $checkOnline = false)
     {
 
-        return Users::getFriends($this->data['id'], $timestamps, $getData, $checkOnline);
+        return Users::getFriends($this->data['user_id'], $timestamps, $getData, $checkOnline);
 
     }
 
@@ -157,7 +157,7 @@ class User
     public function checkBan()
     {
 
-        return Bans::checkBan($this->data['id']);
+        return Bans::checkBan($this->data['user_id']);
 
     }
 
@@ -165,7 +165,7 @@ class User
     public function checkPermission($layer, $action)
     {
 
-        return Permissions::check($layer, $action, $this->data['id'], 1);
+        return Permissions::check($layer, $action, $this->data['user_id'], 1);
 
     }
 
@@ -173,7 +173,7 @@ class User
     public function profileComments()
     {
 
-        return new Comments('profile-' . $this->data['id']);
+        return new Comments('profile-' . $this->data['user_id']);
 
     }
 
@@ -183,9 +183,9 @@ class User
 
         return [
 
-            'joined' => Main::timeElapsed($this->data['regdate'], $append, $none),
-            'lastOnline' => Main::timeElapsed($this->data['lastdate'], $append, $none),
-            'birth' => Main::timeElapsed(strtotime($this->data['birthday']), $append, $none),
+            'joined' => Main::timeElapsed($this->data['user_registered'], $append, $none),
+            'lastOnline' => Main::timeElapsed($this->data['user_last_online'], $append, $none),
+            'birth' => Main::timeElapsed(strtotime($this->data['user_birthday']), $append, $none),
 
         ];
 
@@ -204,7 +204,7 @@ class User
         }
 
         // Once again if nothing was returned just return null
-        if (empty($this->data['userData']['profileFields'])) {
+        if (empty($this->data['user_data']['profileFields'])) {
             return;
         }
 
@@ -214,42 +214,42 @@ class User
         // Check if profile fields aren't fake
         foreach ($profileFields as $field) {
             // Completely strip all special characters from the field name
-            $fieldName = Main::cleanString($field['name'], true, true);
+            $fieldName = Main::cleanString($field['field_name'], true, true);
 
             // Check if the user has the current field set otherwise continue
-            if (!array_key_exists($fieldName, $this->data['userData']['profileFields'])) {
+            if (!array_key_exists($fieldName, $this->data['user_data']['profileFields'])) {
                 continue;
             }
 
             // Assign field to output with value
             $profile[$fieldName] = array();
-            $profile[$fieldName]['name'] = $field['name'];
-            $profile[$fieldName]['value'] = $this->data['userData']['profileFields'][$fieldName];
-            $profile[$fieldName]['islink'] = $field['islink'];
+            $profile[$fieldName]['name'] = $field['field_name'];
+            $profile[$fieldName]['value'] = $this->data['user_data']['profileFields'][$fieldName];
+            $profile[$fieldName]['islink'] = $field['field_link'];
 
             // If the field is set to be a link add a value for that as well
-            if ($field['islink']) {
+            if ($field['field_link']) {
                 $profile[$fieldName]['link'] = str_replace(
                     '{{ VAL }}',
-                    $this->data['userData']['profileFields'][$fieldName],
-                    $field['linkformat']
+                    $this->data['user_data']['profileFields'][$fieldName],
+                    $field['field_linkformat']
                 );
             }
 
             // Check if we have additional options as well
-            if ($field['additional'] != null) {
+            if ($field['field_additional'] != null) {
                 // Decode the json of the additional stuff
-                $additional = json_decode($field['additional'], true);
+                $additional = json_decode($field['field_additional'], true);
 
                 // Go over all additional forms
                 foreach ($additional as $subName => $subField) {
                     // Check if the user has the current field set otherwise continue
-                    if (!array_key_exists($subName, $this->data['userData']['profileFields'])) {
+                    if (!array_key_exists($subName, $this->data['user_data']['profileFields'])) {
                         continue;
                     }
 
                     // Assign field to output with value
-                    $profile[$fieldName][$subName] = $this->data['userData']['profileFields'][$subName];
+                    $profile[$fieldName][$subName] = $this->data['user_data']['profileFields'][$subName];
                 }
             }
         }
@@ -272,7 +272,7 @@ class User
         }
 
         // Once again if nothing was returned just return null
-        if (empty($this->data['userData']['userOptions'])) {
+        if (empty($this->data['user_data']['userOptions'])) {
             return;
         }
 
@@ -282,17 +282,17 @@ class User
         // Check if profile fields aren't fake
         foreach ($optionFields as $field) {
             // Check if the user has the current field set otherwise continue
-            if (!array_key_exists($field['id'], $this->data['userData']['userOptions'])) {
+            if (!array_key_exists($field['option_id'], $this->data['user_data']['userOptions'])) {
                 continue;
             }
 
             // Make sure the user has the proper permissions to use this option
-            if (!$this->checkPermission('SITE', $field['require_perm'])) {
+            if (!$this->checkPermission('SITE', $field['option_permission'])) {
                 continue;
             }
 
             // Assign field to output with value
-            $options[$field['id']] = $this->data['userData']['userOptions'][$field['id']];
+            $options[$field['option_id']] = $this->data['user_data']['userOptions'][$field['option_id']];
         }
 
         // Return appropiate profile data
@@ -305,13 +305,13 @@ class User
     {
 
         // Check if the user has static premium
-        if (Permissions::check('SITE', 'STATIC_PREMIUM', $this->data['id'], 1)) {
+        if (Permissions::check('SITE', 'STATIC_PREMIUM', $this->data['user_id'], 1)) {
             return [2, 0, time() + 1];
         }
 
         // Attempt to retrieve the premium record from the database
         $getRecord = Database::fetch('premium', false, [
-            'uid' => [$this->data['id'], '='],
+            'user_id' => [$this->data['user_id'], '='],
         ]);
 
         // If nothing was returned just return false
@@ -320,14 +320,14 @@ class User
         }
 
         // Check if the Tenshi hasn't expired
-        if ($getRecord['expiredate'] < time()) {
-            Users::removeUserPremium($this->data['id']);
-            Users::updatePremiumMeta($this->data['id']);
-            return [0, $getRecord['startdate'], $getRecord['expiredate']];
+        if ($getRecord['premium_expire'] < time()) {
+            Users::removeUserPremium($this->data['user_id']);
+            Users::updatePremiumMeta($this->data['user_id']);
+            return [0, $getRecord['premium_start'], $getRecord['premium_expire']];
         }
 
         // Else return the start and expiration date
-        return [1, $getRecord['startdate'], $getRecord['expiredate']];
+        return [1, $getRecord['premium_start'], $getRecord['premium_expire']];
 
     }
 
@@ -337,7 +337,7 @@ class User
 
         // Do the database query
         $warnings = Database::fetch('warnings', true, [
-            'uid' => [$this->data['id'], '='],
+            'user_id' => [$this->data['user_id'], '='],
         ]);
 
         // Return all the warnings
@@ -349,10 +349,10 @@ class User
     public function userPage()
     {
 
-        return isset($this->data['userData']['userPage']) ?
+        return isset($this->data['user_data']['userPage']) ?
         Main::mdParse(
             base64_decode(
-                $this->data['userData']['userPage']
+                $this->data['user_data']['userPage']
             ),
             true
         ) :
@@ -366,7 +366,7 @@ class User
 
         // Do the database query
         $changes = Database::fetch('username_history', true, [
-            'user_id' => [$this->data['id'], '='],
+            'user_id' => [$this->data['user_id'], '='],
         ], ['change_id', true]);
 
         // Return all the warnings
@@ -415,7 +415,7 @@ class User
         // Insert into username_history table
         Database::insert('username_history', [
             'change_time' => time(),
-            'user_id' => $this->data['id'],
+            'user_id' => $this->data['user_id'],
             'username_new' => $username,
             'username_new_clean' => $username_clean,
             'username_old' => $this->data['username'],
@@ -429,7 +429,7 @@ class User
                 'username_clean' => $username_clean,
             ],
             [
-                'id' => [$this->data['id'], '='],
+                'id' => [$this->data['user_id'], '='],
             ],
         ]);
 
@@ -463,7 +463,7 @@ class User
                 'email' => $email,
             ],
             [
-                'id' => [$this->data['id'], '='],
+                'id' => [$this->data['user_id'], '='],
             ],
         ]);
 
@@ -517,7 +517,7 @@ class User
                 'password_chan' => time(),
             ],
             [
-                'id' => [$this->data['id'], '='],
+                'id' => [$this->data['user_id'], '='],
             ],
         ]);
 

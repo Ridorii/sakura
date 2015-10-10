@@ -185,7 +185,7 @@ if (isset($_REQUEST['mode'])) {
                 // Add page specific things
                 $renderData['page'] = [
 
-                    'redirect' => $login[0] ? ((new User($login[2]))->data['lastdate'] ? $_REQUEST['redirect'] : $urls->format('INFO_PAGE', ['welcome'])) : $urls->format('SITE_LOGIN'),
+                    'redirect' => $login[0] ? ((new User($login[2]))->data['user_last_online'] ? $_REQUEST['redirect'] : $urls->format('INFO_PAGE', ['welcome'])) : $urls->format('SITE_LOGIN'),
                     'message' => $messages[$login[1]],
                     'success' => $login[0],
 

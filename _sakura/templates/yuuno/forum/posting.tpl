@@ -13,8 +13,8 @@
             <hr class="default" />
             <div class="posting-bbcodes">
                 {% for bbcode in posting.bbcodes %}
-                    {% if bbcode.on_posting %}
-                        <button type="button" class="inputStyling small">{{ bbcode.title }}</button>
+                    {% if bbcode.bbcode_display %}
+                        <button type="button" class="inputStyling small">{{ bbcode.bbcode_title }}</button>
                     {% endif %}
                 {% endfor %}
             </div>

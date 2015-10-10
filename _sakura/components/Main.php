@@ -57,12 +57,12 @@ class Main
 
         // Split the regex
         $regex = array_map(function ($arr) {
-            return $arr['regex'];
+            return $arr['bbcode_regex'];
         }, $bbcodes);
 
         // Split the replacement
         $replace = array_map(function ($arr) {
-            return $arr['replace'];
+            return $arr['bbcode_replace'];
         }, $bbcodes);
 
         // Do the replacement
@@ -145,7 +145,7 @@ class Main
                 'error_log',
                 false,
                 [
-                    'backtrace' => [$backtrace, '=', true],
+                    'error_backtrace' => [$backtrace, '=', true],
                     'error_string' => [$errstr, '='],
                     'error_line' => [$errline, '='],
                 ]
@@ -159,14 +159,14 @@ class Main
                 // Log the error
                 Database::insert('error_log', [
 
-                    'id' => $errid,
-                    'timestamp' => date("r"),
-                    'revision' => SAKURA_VERSION,
+                    'error_id' => $errid,
+                    'error_timestamp' => date("r"),
+                    'error_revision' => SAKURA_VERSION,
                     'error_type' => $errno,
                     'error_line' => $errline,
                     'error_string' => $errstr,
                     'error_file' => $errfile,
-                    'backtrace' => $backtrace,
+                    'error_backtrace' => $backtrace,
 
                 ]);
             }
@@ -382,7 +382,7 @@ class Main
     {
 
         // Get contents from the database
-        $infopage = Database::fetch('infopages', false, ['shorthand' => [$id, '=']]);
+        $infopage = Database::fetch('infopages', false, ['page_shorthand' => [$id, '=']]);
 
         // Return the data if there is any else just return false
         return count($infopage) ? $infopage : false;
@@ -663,7 +663,7 @@ class Main
     {
 
         // Do database call
-        $faq = Database::fetch('faq', true, null, ['id']);
+        $faq = Database::fetch('faq', true, null, ['faq_id']);
 
         // Return FAQ data
         return $faq;
@@ -783,7 +783,7 @@ class Main
         $data = [];
 
         // Get database stuff
-        $table = Database::fetch('premium_log', true, null, ['id', true]);
+        $table = Database::fetch('premium_log', true, null, ['transaction_id', true]);
 
         // Add raw table data to data array
         $data['table'] = $table;
@@ -797,11 +797,11 @@ class Main
         // Calculate the thing
         foreach ($table as $row) {
             // Calculate balance
-            $data['balance'] = $data['balance'] + $row['amount'];
+            $data['balance'] = $data['balance'] + $row['transaction_amount'];
 
             // Add userdata to table
-            if (!array_key_exists($row['uid'], $data['users'])) {
-                $data['users'][$row['uid']] = new User($row['uid']);
+            if (!array_key_exists($row['user_id'], $data['users'])) {
+                $data['users'][$row['user_id']] = new User($row['user_id']);
             }
         }
 
@@ -816,10 +816,10 @@ class Main
 
         Database::insert('premium_log', [
 
-            'uid' => $id,
-            'amount' => $amount,
-            'date' => time(),
-            'comment' => $comment,
+            'user_id' => $id,
+            'transaction_amount' => $amount,
+            'transaction_date' => time(),
+            'transaction_comment' => $comment,
 
         ]);
 

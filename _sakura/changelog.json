@@ -3064,6 +3064,36 @@
                 "type":     "ADD",
                 "change":   "Added permissions to commenting.",
                 "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed comment reply ID collision.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added comment voting.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Cleaned up and uniform'd column names.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed static urls in settings.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed settings index friend count not working.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Added signature section to the settings page.",
+                "user":     "Flashwave"
             }
 
         ]

@@ -1,8 +1,3 @@
-# Block access to every file starting with a dot
-<Files ".*">
-	Require all denied
-</Files>
-
 # Set Error documents
 ErrorDocument 404 /404.php
 ErrorDocument 403 /404.php

@@ -15,27 +15,27 @@ class News
     {
 
         // Get the news posts and assign them to $posts
-        $posts = Database::fetch('news', true, ['category' => [$category, '=']], ['id', true]);
+        $posts = Database::fetch('news', true, ['news_category' => [$category, '=']], ['news_id', true]);
 
         // Attach poster data
         foreach ($posts as $post) {
             // Check if we already have an object for this user
-            if (!array_key_exists($post['uid'], $this->posters)) {
+            if (!array_key_exists($post['user_id'], $this->posters)) {
                 // Create new object
-                $this->posters[$post['uid']] = new User($post['uid']);
+                $this->posters[$post['user_id']] = new User($post['user_id']);
             }
 
             // Parse the news post
-            $post['content_parsed'] = Main::mdParse($post['content']);
+            $post['news_content_parsed'] = Main::mdParse($post['news_content']);
 
             // Attach the poster
-            $post['poster'] = $this->posters[$post['uid']];
+            $post['news_poster'] = $this->posters[$post['user_id']];
 
             // Load comments
-            $post['comments'] = $this->comments = new Comments('news-' . $category . '-' . $post['id']);
+            $post['news_comments'] = $this->comments = new Comments('news-' . $category . '-' . $post['news_id']);
 
             // Add post to posts array
-            $this->posts[$post['id']] = $post;
+            $this->posts[$post['news_id']] = $post;
         }
 
     }

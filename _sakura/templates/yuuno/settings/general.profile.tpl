@@ -1,4 +1,4 @@
-{% set birthday = user.data.birthday|split('-') %}
+{% set birthday = user.data.user_birthday|split('-') %}
 
 <form enctype="multipart/form-data" method="post" action="{{ sakura.currentPage }}" id="editProfileForm">
     <input type="hidden" name="sessid" value="{{ php.sessionid }}" />
@@ -7,15 +7,15 @@
     {% for field in profile.fields %}
         <div class="profile-field">
             <div>
-                <h2>{{ field.name }}</h2>
+                <h2>{{ field.field_name }}</h2>
             </div>
             <div>
-                <input type="{{ field.formtype }}" name="profile_{{ field.ident }}" class="inputStyling" placeholder="{{ field.description }}"{% if user.profileFields[field.ident].value %}{% if field.formtype == 'checkbox' and user.profileFields[field.ident].value == 'true' %} checked="checked" value="profile_{{ field.ident }}"{% else %} value="{{ user.profileFields[field.ident].value }}"{% endif %}{% endif %} />
+                <input type="{{ field.field_type }}" name="profile_{{ field.field_identity }}" class="inputStyling" placeholder="{{ field.field_description }}"{% if user.profileFields[field.field_identity].value %}{% if field.field_type == 'checkbox' and user.profileFields[field.field_identity].value == 'true' %} checked="checked" value="profile_{{ field.field_identity }}"{% else %} value="{{ user.profileFields[field.field_identity].value }}"{% endif %}{% endif %} />
             </div>
-            {% if field.addit %}
-                {% for id,addit in field.addit %}
+            {% if field.field_additional %}
+                {% for id,addit in field.field_additional %}
                     <div>
-                        <input type="{{ addit[0] }}" id="{{ id }}" name="profile_additional_{{ id }}"{% if user.profileFields[field.ident][id] %}{% if addit[0] == 'checkbox' and user.profileFields[field.ident][id] == true %} checked="checked"{% else %} value="{{ user.profileFields[field.ident][id] }}"{% endif %}{% endif %} />
+                        <input type="{{ addit[0] }}" id="{{ id }}" name="profile_additional_{{ id }}"{% if user.profileFields[field.field_identity][id] %}{% if addit[0] == 'checkbox' and user.profileFields[field.field_identity][id] == true %} checked="checked"{% else %} value="{{ user.profileFields[field.field_identity][id] }}"{% endif %}{% endif %} />
                         <label for="{{ id }}" style="font-size: 10px;">{{ addit[1]|raw }}</label>
                     </div>
                 {% endfor %}
