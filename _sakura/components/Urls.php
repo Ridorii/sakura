@@ -209,6 +209,10 @@ class Urls
             '/settings.php?cat=%s&mode=%s&page=%u',
             '/settings/%s/%s/p%u',
         ],
+        'REQUEST_NOTIFICATIONS' => [
+            '/settings.php?request-notifications=true',
+            '/notifications',
+        ],
 
         // Friend Actions
         'FRIEND_ACTION' => [
