@@ -409,7 +409,7 @@ class User
 
         // Check if anything was returned
         if ($getInUse) {
-            return [0, 'IN_USE', $getInUse['id']];
+            return [0, 'IN_USE', $getInUse['user_id']];
         }
 
         // Insert into username_history table
@@ -429,7 +429,7 @@ class User
                 'username_clean' => $username_clean,
             ],
             [
-                'id' => [$this->data['user_id'], '='],
+                'user_id' => [$this->data['user_id'], '='],
             ],
         ]);
 
@@ -454,7 +454,7 @@ class User
 
         // Check if anything was returned
         if ($getInUse) {
-            return [0, 'IN_USE', $getInUse['id']];
+            return [0, 'IN_USE', $getInUse['user_id']];
         }
 
         // Update userrow
@@ -463,7 +463,7 @@ class User
                 'email' => $email,
             ],
             [
-                'id' => [$this->data['user_id'], '='],
+                'user_id' => [$this->data['user_id'], '='],
             ],
         ]);
 
@@ -517,7 +517,7 @@ class User
                 'password_chan' => time(),
             ],
             [
-                'id' => [$this->data['user_id'], '='],
+                'user_id' => [$this->data['user_id'], '='],
             ],
         ]);
 

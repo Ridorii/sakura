@@ -3096,6 +3096,17 @@
                 "user":     "Flashwave"
             }
 
+        ],
+
+        "20151011": [
+
+            "eminence",
+            {
+                "type":     "FIX",
+                "change":   "Fixed incorrect id references.",
+                "user":     "Flashwave"
+            }
+
         ]
 
     }
