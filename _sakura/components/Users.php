@@ -10,7 +10,7 @@ class Users
 
     // Empty user template
     public static $emptyUser = [
-        'id' => 0,
+        'user_id' => 0,
         'username' => 'Sakura User',
         'username_clean' => 'sakura user',
         'password_hash' => '',
@@ -167,19 +167,19 @@ class Users
         }
 
         // Check if the user has the required privs to log in
-        if (Permissions::check('SITE', 'DEACTIVATED', $user['id'], 1)) {
+        if (Permissions::check('SITE', 'DEACTIVATED', $user['user_id'], 1)) {
             return [0, 'NOT_ALLOWED'];
         }
 
         // Create a new session
-        $sessionKey = Session::newSession($user['id'], $remember);
+        $sessionKey = Session::newSession($user['user_id'], $remember);
 
         // Set cookies
         if ($cookies) {
             // User ID cookie
             setcookie(
                 Configuration::getConfig('cookie_prefix') . 'id',
-                $user['id'],
+                $user['user_id'],
                 time() + 604800,
                 Configuration::getConfig('cookie_path'),
                 Configuration::getConfig('cookie_domain')
@@ -196,7 +196,7 @@ class Users
         }
 
         // Successful login! (also has a thing for the legacy password system)
-        return [1, 'LOGIN_SUCCESS', $user['id']];
+        return [1, 'LOGIN_SUCCESS', $user['user_id']];
 
     }
 
