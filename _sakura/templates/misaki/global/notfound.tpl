@@ -6,10 +6,6 @@
 		<link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/error.css" />
 	</head>
 	<body>
-		<audio autoplay="">
-			<source src="//{{ sakura.urls.content }}/sounds/notfound.ogg" type="audio/ogg" />
-			<source src="//{{ sakura.urls.content }}/sounds/notfound.mp3" type="audio/mp3" />
-		</audio>
 		<div id="wrap">
 			<h1>
 				<img src="{{ sakura.resources }}/images/404-info.gif" />

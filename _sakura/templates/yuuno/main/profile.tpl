@@ -10,16 +10,16 @@
 
 {% block content %}
     {% if profileHidden %}
-    <div class="content standalone" style="padding: 20px;">
-        <h1>The requested user does not exist!</h1>
-        There are a few possible reasons for this:
-        <ul style="padding-left: 40px;">
-            <li>They changed their username.</li>
-            <li>They may have been <a href="{{ urls.format('SITE_FAQ') }}#abyss" class="default">abyss'd</a>.</li>
-            <li>You made a typo.</li>
-            <li>They never existed.</li>
-        </ul>
-    </div>
+        <div class="content standalone" style="padding: 20px;">
+            <h1>The requested user does not exist!</h1>
+            There are a few possible reasons for this:
+            <ul style="padding-left: 40px;">
+                <li>They changed their username.</li>
+                <li>They may have been <a href="{{ urls.format('SITE_FAQ') }}#abyss" class="default">abyss'd</a>.</li>
+                <li>You made a typo.</li>
+                <li>They never existed.</li>
+            </ul>
+        </div>
     {% else %}
         <div class="content profile">
             <div class="content-right content-column">
@@ -40,8 +40,9 @@
                             {% endif %}
                             <hr class="default" />
                             <a class="fa fa-file-text-o" title="View {{ profile.data.username }}'s profile page" href="{{ urls.format('USER_PROFILE', [profile.data.user_id]) }}"></a>
-                            <a class="fa fa-plus-square" title="View {{ profile.data.username }} threads" href="{{ urls.format('USER_THREADS', [profile.data.user_id]) }}"></a>
-                            <a class="fa fa-reply" title="View {{ profile.data.username }} posts" href="{{ urls.format('USER_POSTS', [profile.data.user_id]) }}"></a>
+                            <a class="fa fa-plus-square" title="View {{ profile.data.username }}'s threads" href="{{ urls.format('USER_THREADS', [profile.data.user_id]) }}"></a>
+                            <a class="fa fa-reply" title="View {{ profile.data.username }}'s posts" href="{{ urls.format('USER_POSTS', [profile.data.user_id]) }}"></a>
+                            <a class="fa fa-users" title="View {{ profile.data.username }}'s friends" href="{{ urls.format('USER_FRIENDS', [profile.data.user_id]) }}"></a>
                             {% if not noUserpage %}
                                 <a class="fa fa-comments-o" title="View {{ profile.data.username }}'s profile comments" href="{{ urls.format('USER_COMMENTS', [profile.data.user_id]) }}"></a>
                             {% endif %}

@@ -7,7 +7,7 @@
         <meta name="description" content="{{ sakura.siteDesc }}" />
         <meta name="keywords" content="{{ sakura.siteTags }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-        <meta name="msapplication-TileColor" content="#fbeeff" />
+        <meta name="msapplication-TileColor" content="#9475b2" />
         <meta name="msapplication-TileImage" content="/content/images/icons/ms-icon-144x144.png" />
         <meta name="theme-color" content="#9475B2" />
 {% if page.redirect %}

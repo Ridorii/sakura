@@ -4,14 +4,18 @@
  */
 
 /*
+ * Define charset
+ */
+@charset "utf-8";
+
+/*
  * Import fonts
  */
-@import url('//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'); /* Font Awesome */
+@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'); /* Font Awesome */
 @import url('/content/fonts/springsteel-light/font.css'); /* Springsteel Light */
 @import url('/content/fonts/exo2-0-italic/font.css'); /* Exo 2.0 Italic */
 @import url('/content/fonts/exo2-0-light/font.css'); /* Exo 2.0 Light */
 @import url('/content/fonts/exo2-0-lightitalic/font.css'); /* Exo 2.0 Light Italic */
-@import url('/content/fonts/aller/font.css'); /* Aller */
 
 /*
  * Import markdown stylesheet
@@ -122,6 +126,10 @@ a:active {
 
 .rightAlign {
     text-align: right;
+}
+
+.username {
+    font-weight: bold;
 }
 
 /*

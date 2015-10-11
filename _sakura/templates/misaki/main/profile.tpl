@@ -1,23 +1,33 @@
-{% include 'global/header.tpl' %}
-    {% if profile.checkPermission('SITE', 'DEACTIVATED') or profile.data.password_algo == 'nologin' or (profile.checkPermission('SITE', 'RESTRICTED') and (user.data.id != profile.data.id and not user.checkPermission('MANAGE', 'USE_MANAGE'))) %}
-    <div class="userNotFound">
-        <h1 class="sectionHead">user not found!</h1>
-        There are a few possible reasons for this:
-        <ul>
-            <li>They changed their username.</li>
-            <li>They may have been <a href="/faq#abyss" class="default">abyss'd</a>.</li>
-            <li>You made a typo.</li>
-            <li>They never existed.</li>
-        </ul>
-    </div>
+{% extends 'global/master.tpl' %}
+
+{% set profileHidden = profile.checkPermission('SITE', 'DEACTIVATED') or profile.data.password_algo == 'nologin' or (profile.checkPermission('SITE', 'RESTRICTED') and (user.data.user_id != profile.data.user_id and not user.checkPermission('MANAGE', 'USE_MANAGE'))) %}
+
+{% set noUserpage = profile.userPage|length < 1 %}
+
+{% set profileView = noUserpage and profileView == 'index' ? 'comments' : profileView %}
+
+{% block title %}{% if profileHidden %}User not found!{% else %}Profile of {{ profile.data.username }}{% endif %}{% endblock %}
+
+{% block content %}
+    {% if profileHidden %}
+        <div class="userNotFound">
+            <h1 class="sectionHead">user not found!</h1>
+            There are a few possible reasons for this:
+            <ul>
+                <li>They changed their username.</li>
+                <li>They may have been <a href="{{ urls.format('SITE_FAQ') }}#abyss" class="default">abyss'd</a>.</li>
+                <li>You made a typo.</li>
+                <li>They never existed.</li>
+            </ul>
+        </div>
     {% else %}
         <div class="profile" id="u{{ profile.data.user_id }}">
-            <div class="profileHeader" style="background-image: url('/u/{{ profile.data.user_id }}/header');">
+            <div class="profileHeader" style="background-image: url('{{ urls.format('IMAGE_HEADER', [profile.data.user_id]) }}');">
                 <div class="profileFade"></div>
                 <div class="headerLeft">
-                    <img class="userAvatar" src="/a/{{ profile.data.user_id }}" alt="{{ profile.data.username }}'s Avatar" />
+                    <img class="userAvatar" src="{{ urls.format('IMAGE_AVATAR', [profile.data.user_id]) }}" alt="{{ profile.data.username }}'s Avatar" />
                     <div class="userData">
-                        <div class="profileUsername" style="color: {{ profile.colour }};">
+                        <div class="profileUsername" style="color: {{ profile.colour }};"{% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0]['username_old'] }} before {{ profile.getUsernameHistory[0]['change_time']|date(sakura.dateFormat) }}."{% endif %}>
                             {{ profile.data.username }}
                         </div>
                         <div class="profileUsertitle">
@@ -26,8 +36,8 @@
                     </div>
                 </div>
                 <div class="joinedLast">
-                    <div>Joined {{ profile.data.regdate|date(sakura.dateFormat) }}</div>
-                    <div>{% if profile.data.lastdate == 0 %}User hasn't logged in yet.{% else %}Last Active {{ profile.data.lastdate|date(sakura.dateFormat) }}{% endif %}</div>
+                    <div>Joined <span title="{{ profile.data.user_registered|date(sakura.dateFormat) }}">{{ profile.elapsed.joined }}</span></div>
+                    <div>{% if profile.data.user_last_online < 1 %}User hasn't logged in yet.{% else %}Last Active <span title="{{ profile.data.user_last_online|date(sakura.dateFormat) }}">{{ profile.elapsed.lastOnline }}</span>{% endif %}</div>
                 </div>
                 <div class="clear"></div>
             </div>
@@ -115,13 +125,13 @@
                 {% if not profile.checkPermission('SITE', 'DEACTIVATED') %}
                     <div class="statsRow">
                         <div class="profilePlatform">
-                            <a class="inner" href="/u/{{ profile.data.user_id }}/friends">
+                            <a class="inner" href="{{ urls.format('USER_FRIENDS', [profile.data.user_id]) }}">
                                 <div>Friends</div>
                                 <div class="count">{{ profile.getFriends|length }}</div>
                             </a>
                         </div>
                         <div class="profilePlatform">
-                            <a class="inner" href="/u/{{ profile.data.user_id }}/groups">
+                            <a class="inner" href="{{ urls.format('USER_GROUPS', [profile.data.user_id]) }}">
                                 <div>Groups</div>
                                 <div class="count">n/a</div>
                             </a>
@@ -130,16 +140,18 @@
                             <div class="inner">
                                 <div class="forumStatTitle">Forum stats</div>
                                 <div class="forumStatCount">
-                                    <a class="posts" href="/u/{{ profile.data.user_id }}/posts">{{ profile.forumStats.posts }} post{% if profile.forumStats.posts != 1 %}s{% endif %}</a>
-                                    <a class="threads" href="/u/{{ profile.data.user_id }}/threads">{% if profile.forumStats.topics %}{{ profile.forumStats.topics }}{% else %}0{% endif %} thread{% if profile.forumStats.topics != 1 %}s{% endif %}</a>
+                                    <a class="posts" href="{{ urls.format('USER_POSTS', [profile.data.user_id]) }}">{{ profile.forumStats.posts }} post{% if profile.forumStats.posts != 1 %}s{% endif %}</a>
+                                    <a class="threads" href="{{ urls.format('USER_THREADS', [profile.data.user_id]) }}">{% if profile.forumStats.topics %}{{ profile.forumStats.topics }}{% else %}0{% endif %} thread{% if profile.forumStats.topics != 1 %}s{% endif %}</a>
                                 </div>
                                 <div class="clear"></div>
                             </div>
                         </div>
                         <div class="clear"></div>
                     </div>
-                    <div class="userPage profilePlatform markdown{% if profile.userPage|length < 1 %} hidden{% endif %}">
-                        <div class="inner">{{ profile.userPage|raw }}</div>
+                    <div class="userPage profilePlatform">
+                        <div class="inner">
+                            {% include 'profile/' ~ profileView ~ '.tpl' %}
+                        </div>
                     </div>
                 {% endif %}
                 </div>
@@ -147,4 +159,4 @@
             </div>
         </div>
     {% endif %}
-{% include 'global/footer.tpl' %}
+{% endblock %}

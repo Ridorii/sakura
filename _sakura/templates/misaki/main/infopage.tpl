@@ -1,5 +1,11 @@
-{% include 'global/header.tpl' %}
+{% extends 'global/master.tpl' %}
+
+{% block title %}{% if page.title %}{{ page.title }}{% else %}Not found!{% endif %}{% endblock %}
+
+{% block content %}
     <div class="markdown">
-        {{ page.content|raw }}
+        <div>
+            {{ page.content|raw }}
+        </div>
     </div>
-{% include 'global/footer.tpl' %}
+{% endblock %}

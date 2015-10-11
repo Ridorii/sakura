@@ -104,6 +104,12 @@ $urls = new Urls();
 $templateName =
 defined('SAKURA_MANAGE') ?
 Configuration::getConfig('manage_style') :
+(
+    isset($currentUser->data['user_data']['userOptions']['useMisaki']) &&
+    $currentUser->data['user_data']['userOptions']['useMisaki'] &&
+    $currentUser->checkPermission('SITE', 'ALTER_PROFILE')
+) ?
+'misaki' :
 Configuration::getConfig('site_style');
 
 if (!defined('SAKURA_NO_TPL')) {

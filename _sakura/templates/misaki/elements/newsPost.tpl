@@ -1,18 +1,18 @@
-<div class="news-post" id="n{{ newsPost.id }}">
+<div class="news-post" id="n{{ post.news_id }}">
     <div class="news-header">
-        <a class="news-title floatLeft" href="/news/{{ newsPost.id }}">{{ newsPost.title }}</a>
+        <a class="news-title floatLeft" href="{{ urls.format('SITE_NEWS_POST', [post.news_id]) }}">{{ post.news_title }}</a>
         <div class="news-details floatRight">
-            <div>{{ newsPost.date|date("D Y-m-d H:i:s T") }}</div>
-            <div>Posted by <a style="color: {{ newsPost.rdata.colour }};" href="/u/{{ newsPost.uid }}">{{ newsPost.udata.username }}</a>{% if newsPosts|length > 1 %} / <a class="default" href="/news/{{ newsPost.id }}#disqus_thread">View comments</a>{% endif %}</div>
+            <div>{{ post.news_timestamp|date(sakura.dateFormat) }}</div>
+            <div>Posted by <a class="username" style="color: {{ post.news_poster.colour }};" href="{{ urls.format('USER_PROFILE', [post.news_poster.data.user_id]) }}">{{ post.news_poster.data.username }}</a>{% if posts|length > 1 %} / <a class="default" href="{{ urls.format('SITE_NEWS_POST', [post.news_id]) }}#comments">View comments</a>{% endif %}</div>
         </div>
         <div class="clear"></div>
     </div>
     <div class="news-content">
         <div class="news-avatar">
-            <img src="/a/{{ newsPost.uid }}" alt="{{ newsPost.udata.username }}" />
+            <img src="{{ urls.format('IMAGE_AVATAR', [post.news_poster.data.user_id]) }}" alt="{{ post.news_poster.data.username }}" />
         </div>
         <div class="news-text">
-            {{ newsPost.parsed|raw }}
+            {{ post.news_content_parsed|raw }}
         </div>
         <div class="clear"></div>
     </div>
