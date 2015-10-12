@@ -34,15 +34,16 @@
                             {% if user.data.user_id == profile.data.user_id %}
                                 <a class="fa fa-pencil-square-o" title="Edit your profile" href="{{ urls.format('SETTING_MODE', ['general', 'profile']) }}"></a>
                             {% else %}
-                                {% if profile.checkFriends(user.data.user_id) != 0 %}<a class="fa fa-{% if profile.checkFriends(user.data.user_id) == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
-                                <a class="fa fa-user-{% if profile.checkFriends(user.data.user_id) == 0 %}plus{% else %}times{% endif %}" title="{% if profile.checkFriends(user.data.user_id) == 0 %}Add {{ legacyprofile.data.username }} as a friend{% else %}Remove friend{% endif %}" href="{% if profile.checkFriends(user.data.user_id) == 0 %}{{ urls.format('FRIEND_ADD', [profile.data.user_id, php.sessionid, php.time, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [profile.data.user_id, php.sessionid, php.time, sakura.currentPage]) }}{% endif %}" id="profileFriendToggle"></a>
+                                {% if user.checkFriends(profile.data.user_id) != 0 %}<a class="fa fa-{% if user.checkFriends(profile.data.user_id) == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
+                                <a class="fa fa-user-{% if user.checkFriends(profile.data.user_id) == 0 %}plus{% else %}times{% endif %}" title="{% if user.checkFriends(profile.data.user_id) == 0 %}Add {{ legacyprofile.data.username }} as a friend{% else %}Remove friend{% endif %}" href="{% if user.checkFriends(profile.data.user_id) == 0 %}{{ urls.format('FRIEND_ADD', [profile.data.user_id, php.sessionid, php.time, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [profile.data.user_id, php.sessionid, php.time, sakura.currentPage]) }}{% endif %}" id="profileFriendToggle"></a>
                                 <a class="fa fa-exclamation-circle" title="Report {{ profile.data.username }}" href="{{ urls.format('USER_REPORT', [profile.data.user_id]) }}"></a>
                             {% endif %}
                             <hr class="default" />
-                            <a class="fa fa-file-text-o" title="View {{ profile.data.username }}'s profile page" href="{{ urls.format('USER_PROFILE', [profile.data.user_id]) }}"></a>
-                            <a class="fa fa-plus-square" title="View {{ profile.data.username }}'s threads" href="{{ urls.format('USER_THREADS', [profile.data.user_id]) }}"></a>
+                            <a class="fa fa-file-text-o" title="View {{ profile.data.username }}'s user page" href="{{ urls.format('USER_PROFILE', [profile.data.user_id]) }}"></a>
+                            <a class="fa fa-list" title="View {{ profile.data.username }}'s threads" href="{{ urls.format('USER_THREADS', [profile.data.user_id]) }}"></a>
                             <a class="fa fa-reply" title="View {{ profile.data.username }}'s posts" href="{{ urls.format('USER_POSTS', [profile.data.user_id]) }}"></a>
-                            <a class="fa fa-users" title="View {{ profile.data.username }}'s friends" href="{{ urls.format('USER_FRIENDS', [profile.data.user_id]) }}"></a>
+                            <a class="fa fa-user-plus" title="View {{ profile.data.username }}'s friends" href="{{ urls.format('USER_FRIENDS', [profile.data.user_id]) }}"></a>
+                            {#<a class="fa fa-users" title="View {{ profile.data.username }}'s groups" href="{{ urls.format('USER_GROUPS', [profile.data.user_id]) }}"></a>#}
                             {% if not noUserpage %}
                                 <a class="fa fa-comments-o" title="View {{ profile.data.username }}'s profile comments" href="{{ urls.format('USER_COMMENTS', [profile.data.user_id]) }}"></a>
                             {% endif %}

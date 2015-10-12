@@ -1439,8 +1439,11 @@ class Users
 
         // Check if the friends are mutual
         foreach ($friends as $friend) {
+            // Create user object
+            $user = new User($uid);
+
             // Check if the friend is mutual
-            if (!self::checkFriend($friend['user_id'], $uid)) {
+            if (!$user->checkFriends($friend['user_id'])) {
                 $pending[] = $getData ? ([
 
                     'user' => ($_UDATA = self::getUser($friend['user_id'])),
@@ -1452,90 +1455,6 @@ class Users
 
         // Return the pending friends
         return $pending;
-
-    }
-
-    // Check if a friend is mutual
-    public static function checkFriend($fid, $uid = null)
-    {
-
-        // Assign $uid
-        if (!$uid) {
-            $uid = Session::$userId;
-        }
-
-        // Get the user's friends
-        $self = self::getFriends($uid);
-
-        // Check if the friend is actually in the user's array
-        if (!in_array($fid, $self)) {
-            return 0;
-        }
-
-        // Get the friend's friends
-        $friend = self::getFriends($fid);
-
-        // Check if the friend is actually in the user's array
-        if (in_array($uid, $friend)) {
-            return 2;
-        }
-
-        // Return true if all went through
-        return 1;
-
-    }
-
-    // Adding a friend
-    public static function addFriend($uid)
-    {
-
-        // Validate that the user exists
-        if (!self::getUser($uid)) {
-            return [0, 'USER_NOT_EXIST'];
-        }
-
-        // Check if the user already has this user a friend
-        if (Database::fetch('friends', false, ['friend_id' => [$uid, '='], 'user_id' => [Session::$userId, '=']])) {
-            return [0, 'ALREADY_FRIENDS'];
-        }
-
-        // Add friend
-        Database::insert('friends', [
-            'user_id' => Session::$userId,
-            'friend_id' => $uid,
-            'friend_timestamp' => time(),
-        ]);
-
-        // Return true because yay
-        return [1, self::checkFriend($uid) == 2 ? 'FRIENDS' : 'NOT_MUTUAL'];
-
-    }
-
-    // Removing a friend
-    public static function removeFriend($uid, $deleteRequest = false)
-    {
-
-        // Check if the user has this user a friend
-        if (!Database::fetch('friends', false, ['friend_id' => [$uid, '='], 'user_id' => [Session::$userId, '=']])) {
-            return [0, 'ALREADY_REMOVED'];
-        }
-
-        // Remove friend
-        Database::delete('friends', [
-            'user_id' => [Session::$userId, '='],
-            'friend_id' => [$uid, '='],
-        ]);
-
-        // Attempt to remove the request
-        if ($deleteRequest) {
-            Database::delete('friends', [
-                'friend_id' => [Session::$userId, '='],
-                'user_id' => [$uid, '='],
-            ]);
-        }
-
-        // Return true because yay
-        return [1, 'REMOVED'];
 
     }
 

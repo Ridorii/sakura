@@ -187,6 +187,22 @@ class Urls
             '/profile.php?u=%u&view=comments',
             '/u/%u/comments',
         ],
+        'USER_FRIENDS' => [
+            '/profile.php?u=%u&view=friends',
+            '/u/%u/friends',
+        ],
+        'USER_GROUPS' => [
+            '/profile.php?u=%u&view=groups',
+            '/u/%u/groups',
+        ],
+        'USER_THREADS' => [
+            '/profile.php?u=%u&view=threads',
+            '/u/%u/threads',
+        ],
+        'USER_POSTS' => [
+            '/profile.php?u=%u&view=posts',
+            '/u/%u/posts',
+        ],
         'USER_GROUP' => [
             '/group.php?g=%u',
             '/g/%u',

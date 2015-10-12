@@ -126,11 +126,96 @@ class User
 
     }
 
+    // Add a new friend
+    public function addFriend($uid)
+    {
+
+        // Create the foreign object
+        $user = new User($uid);
+
+        // Validate that the user exists
+        if ($user->checkPermission('SITE', 'DEACTIVATED')) {
+            return [0, 'USER_NOT_EXIST'];
+        }
+
+        // Get check
+        $check = $this->checkFriends($uid);
+
+        // Check if the user already has this user a friend
+        if ($check) {
+            return [0, 'ALREADY_FRIENDS'];
+        }
+
+        // Add friend
+        Database::insert('friends', [
+            'user_id' => Session::$userId,
+            'friend_id' => $uid,
+            'friend_timestamp' => time(),
+        ]);
+
+        // Return true because yay
+        return [1, $check == 2 ? 'FRIENDS' : 'NOT_MUTUAL'];
+
+    }
+
+    // Remove a friend
+    public function removeFriend($uid, $deleteRequest = false)
+    {
+
+        // Create the foreign object
+        $user = new User($uid);
+
+        // Validate that the user exists
+        if ($user->checkPermission('SITE', 'DEACTIVATED')) {
+            return [0, 'USER_NOT_EXIST'];
+        }
+
+        // Check if the user has this user a friend
+        if (!$this->checkFriends($uid)) {
+            return [0, 'ALREADY_REMOVED'];
+        }
+
+        // Remove friend
+        Database::delete('friends', [
+            'user_id' => [Session::$userId, '='],
+            'friend_id' => [$uid, '='],
+        ]);
+
+        // Attempt to remove the request
+        if ($deleteRequest) {
+            Database::delete('friends', [
+                'friend_id' => [Session::$userId, '='],
+                'user_id' => [$uid, '='],
+            ]);
+        }
+
+        // Return true because yay
+        return [1, 'REMOVED'];
+
+    }
+
     // Check if the user is friends with the currently authenticated
     public function checkFriends($with)
     {
 
-        return Users::checkFriend($this->data['user_id'], $with);
+        // Get the friend's friends
+        $friend = in_array($this->data['user_id'], (new User($with))->getFriends());
+
+        // Get the user's friends
+        $self = in_array($with, $this->getFriends());
+
+        // Check if the friend is actually in the user's array
+        if ($friend && $self) {
+            return 2;
+        }
+
+        // Check if the friend is actually in the user's array
+        if ($self) {
+            return 1;
+        }
+
+        // Return true if all went through
+        return 0;
 
     }
 

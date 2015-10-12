@@ -232,7 +232,6 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     Templates::render('global/information.tpl', $renderData);
     exit;
 } elseif (isset($_REQUEST['friend-action']) && $_REQUEST['friend-action'] && Users::checkLogin()) {
-    // Friends
     // Continue
     $continue = true;
 
@@ -304,8 +303,8 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     if ($continue) {
         // Execute the action
         $action = (isset($_REQUEST['add']) ?
-            Users::addFriend($_REQUEST['add']) :
-            Users::removeFriend($_REQUEST['remove'], true));
+            $currentUser->addFriend($_REQUEST['add']) :
+            $currentUser->removeFriend($_REQUEST['remove'], true));
 
         // Set the messages
         $messages = [

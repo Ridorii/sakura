@@ -586,17 +586,16 @@ a:active {
  * Homepage
  */
 .homepage .frontStats {
-    margin: 1em 0;
+    padding-bottom: 5px;
     width: 100%;
     display: flex;
-    justify-content: space-around;
-    align-items: stretch;
-    flex-wrap: wrap;
     font: 2.5em/1em "Exo2-0-LightItalic", sans-serif;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, .75);
 }
 
 .homepage .frontStats > div {
+    flex-grow: 1;
+    flex-shrink: 1;
     background: rgba(148, 117, 178, .2);
     box-shadow: 0 2px 6px rgba(0, 0, 0, .75);
     margin: 5px;
@@ -605,6 +604,10 @@ a:active {
 .homepage .frontStats > div > div {
     padding: 10px 14px;
     display: block;
+}
+
+.homepage .frontStats > div > div > span:not(:first-child) {
+    float: right;
 }
 
 /*
