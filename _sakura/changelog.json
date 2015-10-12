@@ -3107,6 +3107,42 @@
                 "user":     "Flashwave"
             }
 
+        ],
+
+        "20151012": [
+
+            "eminence",
+            {
+                "type":     "FIX",
+                "change":   "Fixed Misaki template tags.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "ADD",
+                "change":   "Readded code for testing style.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Fixed broken ternary in the testing style switching code.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "FIX",
+                "change":   "Display comment counts in Misaki.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "UPD",
+                "change":   "Redid the markup of Misaki profiles.",
+                "user":     "Flashwave"
+            },
+            {
+                "type":     "REM",
+                "change":   "Removed LIKE SELECT statement from the User class.",
+                "user":     "Flashwave"
+            }
+
         ]
 
     }

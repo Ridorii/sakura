@@ -3,7 +3,7 @@
         <a class="news-title floatLeft" href="{{ urls.format('SITE_NEWS_POST', [post.news_id]) }}">{{ post.news_title }}</a>
         <div class="news-details floatRight">
             <div>{{ post.news_timestamp|date(sakura.dateFormat) }}</div>
-            <div>Posted by <a class="username" style="color: {{ post.news_poster.colour }};" href="{{ urls.format('USER_PROFILE', [post.news_poster.data.user_id]) }}">{{ post.news_poster.data.username }}</a>{% if posts|length > 1 %} / <a class="default" href="{{ urls.format('SITE_NEWS_POST', [post.news_id]) }}#comments">View comments</a>{% endif %}</div>
+            <div>Posted by <a class="username" style="color: {{ post.news_poster.colour }};" href="{{ urls.format('USER_PROFILE', [post.news_poster.data.user_id]) }}">{{ post.news_poster.data.username }}</a>{% if not (viewPost and postExists) %} / <a class="default" href="{{ urls.format('SITE_NEWS_POST', [post.news_id]) }}#comments">{{ post.news_comments.count }} comment{% if post.news_comments.count != 1 %}s{% endif %}</a>{% endif %}</div>
         </div>
         <div class="clear"></div>
     </div>

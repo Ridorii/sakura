@@ -26,17 +26,6 @@ class User
             ]
         );
 
-        // Check if anything like the username exists
-        if (empty($this->data)) {
-            $this->data = Database::fetch(
-                'users',
-                false,
-                [
-                    'username_clean' => ['%' . Main::cleanString($uid, true) . '%', 'LIKE'],
-                ]
-            );
-        }
-
         // Check if the user actually exists
         if (empty($this->data)) {
             // If not assign as the fallback user

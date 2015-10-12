@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151011');
+define('SAKURA_VERSION', '20151012');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 define('SAKURA_STABLE', false);
@@ -105,12 +105,14 @@ $templateName =
 defined('SAKURA_MANAGE') ?
 Configuration::getConfig('manage_style') :
 (
-    isset($currentUser->data['user_data']['userOptions']['useMisaki']) &&
-    $currentUser->data['user_data']['userOptions']['useMisaki'] &&
-    $currentUser->checkPermission('SITE', 'ALTER_PROFILE')
-) ?
-'misaki' :
-Configuration::getConfig('site_style');
+    (
+        isset($currentUser->data['user_data']['userOptions']['useMisaki']) &&
+        $currentUser->data['user_data']['userOptions']['useMisaki'] &&
+        $currentUser->checkPermission('SITE', 'ALTER_PROFILE')
+    ) ?
+    'misaki' :
+    Configuration::getConfig('site_style')
+);
 
 if (!defined('SAKURA_NO_TPL')) {
     // Initialise templating engine

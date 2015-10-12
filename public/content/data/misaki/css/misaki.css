@@ -379,15 +379,23 @@ a:active {
 .profile {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, .75);
     font-family: "Exo2-0-LightItalic", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-content: stretch;
+    width: 100%;
     position: relative;
     top: -35px;
+    margin-bottom: -35px;
+}
+
+.profile .profileContainer {
+    display: flex;
 }
 
 .profile .profilePlatform {
     background: rgba(148, 117, 178, .2);
     box-shadow: 0 2px 6px rgba(0, 0, 0, .75);
-    margin-left: 10px;
-    margin-top: 10px;
+    margin: 0 0 10px 10px;
 }
 
 .profile .profilePlatform > .inner {
@@ -403,61 +411,57 @@ a:active {
 
 .profile > .profileHeader {
     height: 250px;
-    float: left;
     width: 100%;
+    display: flex;
+    align-items: flex-end;
 }
 
-.profile > .profileHeader > .profileFade {
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .7) 30%, rgba(0, 0, 0, 0) 100%);
-    height: 160px;
-    width: 100%;
-    position: relative;
-    top: 60px;
-    z-index: 1;
-}
-
-.profile > .profileHeader > .headerLeft > .userAvatar {
+.profile > .profileHeader > .userAvatar {
+    font-size: 0;
+    background: transparent no-repeat scroll left center / contain;
     height: 200px;
     width: 200px;
-    position: relative;
-    top: -100px;
-    z-index: 2;
-    margin-left: 10px;
     border-radius: 2px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, .75);
-    float: left;
+    margin: 10px;
+    margin-bottom: -10px;
+    flex-shrink: 0;
 }
 
-.profile > .profileHeader > .headerLeft > .userData {
+.profile > .profileHeader > .userData {
+    display: flex;
+    align-items: center;
     position: relative;
-    top: -16px;
-    float: left;
-    margin: 0 10px;
-    z-index: 3;
+    top: -55px;
+    width: 100%;
 }
 
-.profile > .profileHeader > .headerLeft > .userData > .profileUsername {
+.profile > .profileHeader > .userData > .headerLeft {
+    flex-grow: 1;
+}
+
+.profile > .profileHeader > .userData > .headerLeft > .profileUsername {
     font-size: 3em;
     line-height: .8em;
 }
 
-.profile > .profileHeader > .headerLeft > .userData > .profileUsertitle {
-    margin-left: 12px;
+.profile > .profileHeader > .userData > .headerLeft > .profileUserTitle {
+    padding-left: 12px;
 }
 
-.profile > .profileHeader > .joinedLast {
-    position: relative;
-    top: -10px;
-    z-index: 3;
-    float: right;
+.profile > .profileHeader > .userData > .headerRight {
     text-align: right;
-    margin-right: 10px;
+    padding-right: 12px;
+}
+
+.profile > .profileContent {
+    margin: 10px 10px 0 0;
 }
 
 .profile > .profileContent > .userDataBar {
-    float: left;
     width: 210px;
     margin-top: 10px;
+    flex-shrink: 0;
 }
 
 .profile > .profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies {
@@ -539,51 +543,30 @@ a:active {
     text-align: center;
 }
 
-.profile > .profileContent > .userPage {
-    float: left;
-    width: 800px;
+.profile > .profileContent > .profileMain {
+    width: 100%;
 }
 
-.profile > .profileContent > .userPage > .statsRow > div {
-    float: left;
-    width: 200px;
+.profile > .profileContent > .profileMain > .statsRow {
+    width: 100%;
+    display: flex;
+}
+
+.profile > .profileContent > .profileMain > .statsRow > div {
     font-size: 2.5em;
     line-height: 1em;
+    flex-basis: 0;
+    flex-grow: 1;
+    flex-shrink: 0;
 }
 
-.profile > .profileContent > .userPage > .statsRow > div > .inner > .count {
-    font-size: 1.2em;
-    line-height: 1em;
-    text-align: right;
-}
-
-.profile > .profileContent > .userPage > .statsRow > .forumStats {
-    width: 370px;
-}
-
-.profile > .profileContent > .userPage > .statsRow > .forumStats > .inner > .forumStatTitle {
-    float: left;
-}
-
-.profile > .profileContent > .userPage > .statsRow > .forumStats > .inner > .forumStatCount {
+.profile > .profileContent > .profileMain > .statsRow .inner > .count {
     float: right;
-    text-align: right;
 }
 
-.profile > .profileContent > .userPage > .statsRow > .forumStats > .inner > .forumStatCount > a {
-    display: block;
+.profile > .profileContent > .profileMain > .statsRow .inner a {
     text-decoration: none;
     color: inherit;
-}
-
-.profile > .profileContent > .userPage > .statsRow > .forumStats > .inner > .forumStatCount > .posts {
-    font-size: .8em;
-    line-height: 1.25em;
-}
-
-.profile > .profileContent > .userPage > .statsRow > .forumStats > .inner > .forumStatCount > .threads {
-    font-size: 1.2em;
-    line-height: 1em;
 }
 
 /*

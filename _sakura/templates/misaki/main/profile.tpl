@@ -22,26 +22,24 @@
         </div>
     {% else %}
         <div class="profile" id="u{{ profile.data.user_id }}">
-            <div class="profileHeader" style="background-image: url('{{ urls.format('IMAGE_HEADER', [profile.data.user_id]) }}');">
-                <div class="profileFade"></div>
-                <div class="headerLeft">
-                    <img class="userAvatar" src="{{ urls.format('IMAGE_AVATAR', [profile.data.user_id]) }}" alt="{{ profile.data.username }}'s Avatar" />
-                    <div class="userData">
+            <div class="profileHeaderContent profileHeader" style="background-image: linear-gradient(0deg, transparent 0%, transparent 12%, rgba(0, 0, 0, .7) 30%, transparent 76%, transparent 100%), url('{{ urls.format('IMAGE_HEADER', [profile.data.user_id]) }}');">
+                <div class="userAvatar" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [profile.data.user_id]) }}');">{{ profile.data.username }}'s Avatar</div>
+                <div class="userData">
+                    <div class="headerLeft">
                         <div class="profileUsername" style="color: {{ profile.colour }};"{% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0]['username_old'] }} before {{ profile.getUsernameHistory[0]['change_time']|date(sakura.dateFormat) }}."{% endif %}>
                             {{ profile.data.username }}
                         </div>
-                        <div class="profileUsertitle">
+                        <div class="profileUserTitle">
                             {{ profile.userTitle }}
                         </div>
                     </div>
+                    <div class="headerRight">
+                        <div>Joined <span title="{{ profile.data.user_registered|date(sakura.dateFormat) }}">{{ profile.elapsed.joined }}</span></div>
+                        <div>{% if profile.data.user_last_online < 1 %}User hasn't logged in yet.{% else %}Last Active <span title="{{ profile.data.user_last_online|date(sakura.dateFormat) }}">{{ profile.elapsed.lastOnline }}</span>{% endif %}</div>
+                    </div>
                 </div>
-                <div class="joinedLast">
-                    <div>Joined <span title="{{ profile.data.user_registered|date(sakura.dateFormat) }}">{{ profile.elapsed.joined }}</span></div>
-                    <div>{% if profile.data.user_last_online < 1 %}User hasn't logged in yet.{% else %}Last Active <span title="{{ profile.data.user_last_online|date(sakura.dateFormat) }}">{{ profile.elapsed.lastOnline }}</span>{% endif %}</div>
-                </div>
-                <div class="clear"></div>
             </div>
-            <div class="profileContent">
+            <div class="profileContainer profileContent">
                 <div class="userDataBar">
                 {% if not profile.checkPermission('SITE', 'DEACTIVATED') and (profile.checkPremium[0] or profile.checkPermission('MANAGE', 'USE_MANAGE')) %}
                     <div class="profilePlatform hierarchyContainer">
@@ -121,32 +119,56 @@
                         </div>
                     </div>
                 </div>
-                <div class="userPage">
+                <div class="profileMain">
                 {% if not profile.checkPermission('SITE', 'DEACTIVATED') %}
                     <div class="statsRow">
+                        {% if profileView != (noUserpage ? 'comments' : 'index') %}
+                            <div class="profilePlatform">
+                                <a class="inner" title="Userpage" href="{{ urls.format('USER_PROFILE', [profile.data.user_id]) }}">
+                                    <div class="fa fa-user"></div>
+                                </a>
+                            </div>
+                        {% endif %}
+                        {% if profileView != 'friends' %}
                         <div class="profilePlatform">
-                            <a class="inner" href="{{ urls.format('USER_FRIENDS', [profile.data.user_id]) }}">
-                                <div>Friends</div>
+                            <a class="inner" title="Friends" href="{{ urls.format('USER_FRIENDS', [profile.data.user_id]) }}">
+                                <div class="fa fa-user-plus"></div>
                                 <div class="count">{{ profile.getFriends|length }}</div>
                             </a>
                         </div>
+                        {% endif %}
+                        {% if profileView != 'groups' %}
                         <div class="profilePlatform">
-                            <a class="inner" href="{{ urls.format('USER_GROUPS', [profile.data.user_id]) }}">
-                                <div>Groups</div>
-                                <div class="count">n/a</div>
+                            <a class="inner" title="Groups" href="{{ urls.format('USER_GROUPS', [profile.data.user_id]) }}">
+                                <div class="fa fa-users"></div>
+                                <div class="count">0</div>
                             </a>
                         </div>
-                        <div class="profilePlatform forumStats">
-                            <div class="inner">
-                                <div class="forumStatTitle">Forum stats</div>
-                                <div class="forumStatCount">
-                                    <a class="posts" href="{{ urls.format('USER_POSTS', [profile.data.user_id]) }}">{{ profile.forumStats.posts }} post{% if profile.forumStats.posts != 1 %}s{% endif %}</a>
-                                    <a class="threads" href="{{ urls.format('USER_THREADS', [profile.data.user_id]) }}">{% if profile.forumStats.topics %}{{ profile.forumStats.topics }}{% else %}0{% endif %} thread{% if profile.forumStats.topics != 1 %}s{% endif %}</a>
-                                </div>
-                                <div class="clear"></div>
-                            </div>
+                        {% endif %}
+                        {% if profileView != 'comments' %}
+                        <div class="profilePlatform">
+                            <a class="inner" title="Comments" href="{{ urls.format('USER_COMMENTS', [profile.data.user_id]) }}">
+                                <div class="fa fa-comments"></div>
+                                <div class="count">{{ profile.profileComments.count }}</div>
+                            </a>
                         </div>
-                        <div class="clear"></div>
+                        {% endif %}
+                        {% if profileView != 'threads' %}
+                        <div class="profilePlatform">
+                            <a class="inner" title="Threads" href="{{ urls.format('USER_THREADS', [profile.data.user_id]) }}">
+                                <div class="fa fa-list"></div>
+                                <div class="count">{{ profile.forumStats.topics }}</div>
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% if profileView != 'posts' %}
+                        <div class="profilePlatform">
+                            <a class="inner" title="Posts" href="{{ urls.format('USER_POSTS', [profile.data.user_id]) }}">
+                                <div class="fa fa-reply"></div>
+                                <div class="count">{{ profile.forumStats.posts }}</div>
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="userPage profilePlatform">
                         <div class="inner">
@@ -155,7 +177,6 @@
                     </div>
                 {% endif %}
                 </div>
-                <div class="clear"></div>
             </div>
         </div>
     {% endif %}
