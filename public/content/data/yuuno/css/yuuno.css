@@ -479,7 +479,7 @@ a.default:active {
     color: #8364A1;
     text-decoration: none;
     text-shadow: 0 0 2px #9475B2;
-    transition: all .2s;
+    transition: .2s;
 }
 
 .indexSidePanelLinks > a:hover,
@@ -510,7 +510,7 @@ a.default:active {
     text-decoration: none;
     font: 100 70px/80px "SegoeUI-Light", "SegoeUI", "Segoe UI", sans-serif;
     color: #B06AC4;
-    transition: .2s;
+    transition: color .2s, text-shadow .2s;
 }
 
 .header .logo:hover {
@@ -559,7 +559,7 @@ a.default:active {
     color: inherit;
     text-decoration: none;
     text-align: center;
-    transition: .3s;
+    transition: background .3s, border-color .3s;
     height: 30px;
     width: 30px;
     line-height: 30px;
