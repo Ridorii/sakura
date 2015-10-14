@@ -41,13 +41,13 @@ class User
         // Get the rows for all the ranks
         foreach ($ranks as $rank) {
             // Store the database row in the array
-            $this->ranks[$rank] = Database::fetch('ranks', false, ['rank_id' => [$rank, '=']]);
+            $this->ranks[$rank] = new Rank($rank);
         }
 
         // Check if ranks were set
         if (empty($this->ranks)) {
             // If not assign the fallback rank
-            $this->ranks[0] = Users::$emptyRank;
+            $this->ranks[0] = new Rank(0);
         }
 
         // Assign the user's main rank to a special variable since we'll use it a lot
@@ -64,7 +64,7 @@ class User
     {
 
         // Check if the main rank is the specified rank
-        if (in_array($this->mainRank['rank_id'], $ranks)) {
+        if ($this->mainRank->id() === $ranks) {
             return true;
         }
 
@@ -85,7 +85,7 @@ class User
     public function colour()
     {
 
-        return empty($this->data['user_colour']) ? $this->mainRank['rank_colour'] : $this->data['user_colour'];
+        return empty($this->data['user_colour']) ? $this->mainRank->colour() : $this->data['user_colour'];
 
     }
 
@@ -93,7 +93,7 @@ class User
     public function userTitle()
     {
 
-        return empty($this->data['user_title']) ? $this->mainRank['rank_title'] : $this->data['user_title'];
+        return empty($this->data['user_title']) ? $this->mainRank->title() : $this->data['user_title'];
 
     }
 

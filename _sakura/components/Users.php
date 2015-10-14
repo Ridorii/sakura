@@ -813,27 +813,7 @@ class Users
     public static function checkIfUserHasRanks($ranks, $userid, $userIdIsUserData = false)
     {
 
-        // Get the specified user
-        $user = $userIdIsUserData ? $userid : self::getUser($userid);
-
-        // Check if the main rank is the specified rank
-        if (in_array($user['rank_main'], $ranks)) {
-            return true;
-        }
-
-        // Decode the json for the user's ranks
-        $uRanks = json_decode($user['user_ranks'], true);
-
-        // If not go over all ranks and check if the user has them
-        foreach ($ranks as $rank) {
-            // We check if $rank is in $user['ranks'] and if yes return true
-            if (in_array($rank, $uRanks)) {
-                return true;
-            }
-        }
-
-        // If all fails return false
-        return false;
+        return $userIdIsUserData ? $userid->checkIfUserHasRanks($ranks) : (new User($userid))->checkIfUserHasRanks($ranks);
 
     }
 
@@ -1151,16 +1131,8 @@ class Users
     public static function getRank($id)
     {
 
-        // Execute query
-        $rank = Database::fetch('ranks', false, ['rank_id' => [$id, '=']]);
-
-        // Return false if no rank was found
-        if (empty($rank)) {
-            return self::$emptyRank;
-        }
-
         // If rank was found return rank data
-        return $rank;
+        return (new Rank($id))->data;
 
     }
 
@@ -1198,7 +1170,7 @@ class Users
         foreach ($users as $user) {
             // If so store the user's row in the array
             if (self::checkIfUserHasRanks([$rankId], $user, true)
-                && ($excludeAbyss ? $user['password_algo'] != 'nologin' : true)) {
+                && ($excludeAbyss ? $user->data['password_algo'] != 'nologin' : true)) {
                 $rank[] = $user;
             }
         }
@@ -1230,7 +1202,7 @@ class Users
                 continue;
             }
 
-            $users[$user['user_id']] = $user;
+            $users[$user['user_id']] = new User($user['user_id']);
         }
 
         // and return an array with the users
@@ -1250,7 +1222,7 @@ class Users
 
         // Reorder shit
         foreach ($getRanks as $rank) {
-            $ranks[$rank['rank_id']] = $rank;
+            $ranks[$rank['rank_id']] = new Rank($rank['rank_id']);
         }
 
         // and return an array with the ranks

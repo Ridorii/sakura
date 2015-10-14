@@ -1,18 +1,18 @@
 {% extends 'global/master.tpl' %}
 
 {% set rankTitle %}
-{% if page.notfound %}Not found{% else %}{% if not page.active %}All members{% else %}{{ page.ranks[page.active].rank_name }}{{ page.ranks[page.active].rank_multiple }}{% endif %}{% endif %}
+{% if page.notfound %}Not found{% else %}{% if not page.active %}All members{% else %}{{ page.ranks[page.active].name(true) }}{% endif %}{% endif %}
 {% endset %}
 
 {% set rankDescription %}
-{% if page.notfound %}The requested rank could not be found!{% else %}{% if not page.active %}The entire user list.{% else %}{{ page.ranks[page.active].rank_description }}{% endif %}{% endif %}
+{% if page.notfound %}The requested rank could not be found!{% else %}{% if not page.active %}The entire user list.{% else %}{{ page.ranks[page.active].description }}{% endif %}{% endif %}
 {% endset %}
 
 {% block title %}{{ rankTitle }}{% endblock %}
 
 {% block content %}
     <div class="headerNotify" style="margin-bottom: 1px;">
-        <h1 style="text-shadow: 0px 0px 5px #555;{% if page.active %} color: {{ page.ranks[page.active].rank_colour }};{% endif %}">{{ rankTitle }}</h1>
+        <h1 style="{% if page.active %}text-shadow: 0px 0px 5px {{ page.ranks[page.active].colour }}; color: {{ page.ranks[page.active].colour }};{% else %}text-shadow: 0px 0px 5px #555;{% endif %}">{{ rankTitle }}</h1>
         <h3>{{ rankDescription }}</h3>
     </div>
     <div class="membersPage" style="min-height: 500px;">
@@ -21,8 +21,8 @@
                 <a class="dropDownDesc">Rank:</a>
                 <a href="{% if page.page and page.sort %}{{ urls.format('MEMBERLIST_SORT_PAGE', [page.sort, (page.page + 1)]) }}{% elseif page.sort %}{{ urls.format('MEMBERLIST_SORT', [page.sort]) }}{% elseif page.page %}{{ urls.format('MEMBERLIST_PAGE', [(page.page + 1)]) }}{% else %}{{ urls.format('MEMBERLIST_INDEX') }}{% endif %}"{% if not page.active %} class="dropDownSelected"{% endif %}>All members</a>
                 {% for rank in page.ranks %}
-                    {% if not rank.rank_hidden or (rank.rank_hidden and page.active == rank.rank_id) %}
-                        <a href="{% if page.sort %}{{ urls.format('MEMBERLIST_SORT_RANK', [page.sort, rank.rank_id]) }}{% else %}{{ urls.format('MEMBERLIST_RANK', [rank.rank_id]) }}{% endif %}" style="color: {{ rank.rank_colour }};"{% if page.active == rank.rank_id %} class="dropDownSelected"{% endif %}>{{ rank.rank_name }}{{ rank.rank_multiple }}</a>
+                    {% if not rank.hidden or (rank.hidden and page.active == rank.id) %}
+                        <a href="{% if page.sort %}{{ urls.format('MEMBERLIST_SORT_RANK', [page.sort, rank.id]) }}{% else %}{{ urls.format('MEMBERLIST_RANK', [rank.id]) }}{% endif %}" style="color: {{ rank.colour }};"{% if page.active == rank.id %} class="dropDownSelected"{% endif %}>{{ rank.name(true) }}</a>
                     {% endif %}
                 {% endfor %}
             </div>
@@ -66,19 +66,19 @@
                                 #{{ page.active ? count + 1 : count }}
                             </td>
                             <td>
-                                <a href="{{ urls.format('USER_PROFILE', [user.user_id]) }}" class="default" style="font-weight: bold; color: {{ page.ranks[user.rank_main].rank_colour }};">{{ user.username }}</a>
+                                <a href="{{ urls.format('USER_PROFILE', [user.data.user_id]) }}" class="default" style="font-weight: bold; color: {{ user.colour }}; text-shadow: 0 0 5px {{ user.colour }};">{{ user.data.username }}</a>
+                            </td>
+                            <td title="{{ user.data.user_registered|date(sakura.dateFormat) }}">
+                                {{ user.elapsed.joined }}
+                            </td>
+                            <td title="{% if user.data.user_last_online == 0 %}Never logged in.{% else %}{{ user.data.user_last_online|date(sakura.dateFormat) }}{% endif %}">
+                                {% if user.data.user_last_online == 0 %}<i>Never logged in.</i>{% else %}{{ user.elapsed.lastOnline }}{% endif %}
                             </td>
                             <td>
-                                {{ user.regdate|date(sakura.dateFormat) }}
+                                {{ user.userTitle }}
                             </td>
                             <td>
-                                {% if user.user_last_online == 0 %}<i>Never logged in.</i>{% else %}{{ user.user_last_online|date(sakura.dateFormat) }}{% endif %}
-                            </td>
-                            <td>
-                                {% if not user.user_title %}<i>{{ page.ranks[user.rank_main].rank_title }}</i>{% else %}{{ user.user_title }}{% endif %}
-                            </td>
-                            <td>
-                                <img src="{{ sakura.contentPath }}/images/flags/{{ user.user_country|lower }}.png" alt="{% if user.user_country|lower == 'eu' %}?{% else %}{{ user.user_country }}{% endif %}" />
+                                <img src="{{ sakura.contentPath }}/images/flags/{{ user.country.short|lower }}.png" alt="{% if user.country.short|lower == 'xx' %}?{% else %}{{ user.country.long }}{% endif %}" title="{% if user.country.short|lower == 'xx' %}Unknown{% else %}{{ user.country.long }}{% endif %}" />
                             </td>
                         </tr>
                     </tbody>
@@ -86,11 +86,11 @@
                 </table>
                 {% else %}
                     {% for user in page.users[page.page] %}
-                        <a href="{{ urls.format('USER_PROFILE', [user.user_id]) }}">{# These comment tags are here to prevent the link extending too far
-                            #}<div class="userBox" id="u{{ user.user_id }}">{#
-                                #}<img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.username }}"  style="background: url('{{ urls.format('IMAGE_AVATAR', [user.user_id]) }}') no-repeat center / contain;" />{#
-                                #}<span class="userBoxUserName"{% if page.sort == page.sorts[1] %} style="color: {{ page.ranks[user.rank_main].rank_colour }};"{% endif %}>{#
-                                    #}{{ user.username }}{#
+                        <a href="{{ urls.format('USER_PROFILE', [user.data.user_id]) }}">{# These comment tags are here to prevent the link extending too far
+                            #}<div class="userBox" id="u{{ user.data.user_id }}">{#
+                                #}<img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.data.username }}"  style="background: url('{{ urls.format('IMAGE_AVATAR', [user.data.user_id]) }}') no-repeat center / contain;" />{#
+                                #}<span class="userBoxUserName" style="color: {{ user.colour }};">{#
+                                    #}{{ user.data.username }}{#
                                 #}</span>{#
                             #}</div>{#
                         #}</a>
