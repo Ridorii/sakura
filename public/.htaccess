@@ -13,7 +13,6 @@ RewriteRule ^login/?$|^logout/?$|^activate/?$|^register/?$|^forgotpassword/?|^au
 RewriteRule ^support/?$ support.php [L,QSA]
 RewriteRule ^support/tracker/?$ support.php?tracker=true [L,QSA]
 RewriteRule ^support/tracker/([0-9]+)/?$ support.php?tracker=true&page=$1 [L,QSA]
-RewriteRule ^changelog/?$ changelog.php [L,QSA]
 RewriteRule ^faq/?$ faq.php [L,QSA]
 RewriteRule ^search/?$ search.php [L,QSA]
 

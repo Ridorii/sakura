@@ -71,10 +71,6 @@ class Urls
             '/authenticate.php',
             '/activate',
         ],
-        'CHANGELOG' => [
-            '/changelog.php',
-            '/changelog',
-        ],
         'INFO_PAGE' => [
             '/index.php?p=%s',
             '/p/%s',

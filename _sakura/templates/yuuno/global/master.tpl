@@ -233,14 +233,14 @@
             </div>
             <div class="footer">
                 <div class="ftsections">
-                    <div class="copycentre">{% if not sakura.versionInfo.stable %}<a href="{{ urls.format('CHANGELOG') }}#r{{ sakura.versionInfo.version }}" target="_blank">Sakura Revision {{ sakura.versionInfo.version }} Development</a>{% endif %} &copy; 2013-2015 <a href="//flash.moe/" target="_blank">Flashwave</a>, <a href="http://circlestorm.net/">et al</a>. </div>
+                    <div class="copycentre">{% if not sakura.versionInfo.stable %}<a href="https://sakura.flash.moe/#r{{ sakura.versionInfo.version }}" target="_blank">Sakura Revision {{ sakura.versionInfo.version }} Development</a>{% endif %} &copy; 2013-2015 <a href="https://flash.moe/" target="_blank">Flashwave</a>, <a href="https://circlestorm.net/">et al</a>. </div>
                     <ul class="ftsection">
                         <li class="fthead">General</li>
                         <li><a href="{{ urls.format('SITE_HOME') }}" title="Flashii Frontpage">Home</a></li>
                         <li><a href="{{ urls.format('SITE_NEWS') }}" title="Flashii News &amp; Updates">News</a></li>
                         <li><a href="{{ urls.format('SITE_SEARCH') }}" title="Do full-site search requests">Search</a></li>
                         <li><a href="{{ urls.format('INFO_PAGE', ['contact']) }}" title="Contact our Staff">Contact</a></li>
-                        <li><a href="{{ urls.format('CHANGELOG') }}" title="All the changes made to Sakura are listed here">Changelog</a></li>
+                        <li><a href="https://sakura.flash.moe" target="_blank" title="All the changes made to Sakura are listed here">Changelog</a></li>
                         <li><a href="{{ urls.format('SITE_PREMIUM') }}" title="Get Tenshi and help us pay the bills">Support us</a></li>
                     </ul>
                     <ul class="ftsection">
@@ -262,5 +262,46 @@
                 </div>
             </div>
         </div>
+        {% if not sakura.versionInfo.stable and php.self == '/index.php' and not page.id %}
+        <script type="text/javascript" src="https://sakura.flash.moe/?get={{ sakura.versionInfo.version|slice(0, 4) }}-{{ sakura.versionInfo.version|slice(4, 2) }}-{{ sakura.versionInfo.version|slice(6, 2) }}&amp;variable=true"></script>
+        <script type="text/javascript">
+            window.addEventListener("load", function() {
+                // Check if the changelog variable is an object
+                if(typeof changelog === 'object') {
+                    // Grab the index panel
+                    var indexPanel = document.getElementById('indexPanel');
+
+                    // Create the head container
+                    var changelogTitle = document.createElement('div');
+                    changelogTitle.className = 'head';
+                    changelogTitle.style.marginBottom = '1px';
+
+                    // Create a link
+                    var changelogLink = document.createElement('a');
+                    changelogLink.className = 'underline';
+                    changelogLink.target = '_blank';
+                    changelogLink.href = 'https://sakura.flash.moe/#r{{ sakura.versionInfo.version }}';
+
+                    // Create the text container
+                    var changelogTitleText = document.createTextNode('Changelog');
+
+                    // Append everything
+                    changelogLink.appendChild(changelogTitleText);
+                    changelogTitle.appendChild(changelogLink);
+                    indexPanel.appendChild(changelogTitle);
+
+                    // Create and append all changelog entries
+                    for (var i in changelog) {
+                        var entry = document.createElement('div');
+                        entry.style.fontSize = '.8em';
+                        entry.style.lineHeight = '1.5em';
+                        var text = document.createTextNode('[' + changelog[i]['change_action']['action_name'] + '] ' + changelog[i]['change_message']);
+                        entry.appendChild(text);
+                        indexPanel.appendChild(entry);
+                    }
+                }
+            });
+        </script>
+        {% endif %}
     </body>
 </html>
