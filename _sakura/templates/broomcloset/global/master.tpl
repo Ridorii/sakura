@@ -13,11 +13,11 @@
         <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/broomcloset.css" />
         <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/bootstrap.css" />
         <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/bootstrap-theme.css" />
-        <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" type="text/css" href="{{ sakura.contentPath }}/fonts/font-awesome/font.css" />
 {{ block('css') }}
         <!-- JS -->
-        <script type="text/javascript" charset="utf-8" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-        <script type="text/javascript" charset="utf-8" src="{{ sakura.resources }}/js/bootstrap.js"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ sakura.resources }}/libraries/jquery.js"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ sakura.contentPath }}/js/bootstrap.js"></script>
 {{ block('js') }}
     </head>
     <body>
@@ -94,7 +94,7 @@
                                 <li><a href="{{ urls.format('USER_LOGOUT', [php.time, php.sessionid, urls.format('SITE_HOME')]) }}">Logout</a></li>
                             </ul>
                         </li>
-                        <li><a href="{{ urls.format('CHANGELOG') }}#r{{ sakura.versionInfo.version }}" style="color: {{ sakura.versionInfo.colour }};" title="{{ sakura.versionInfo.label }} {{ sakura.versionInfo.stable ? 'Stable' : 'Development' }}">Sakura r{{ sakura.versionInfo.version }}</a></li>
+                        <li><a href="https://sakura.flash.moe/#r{{ sakura.versionInfo.version }}" style="color: {{ sakura.versionInfo.colour }};" title="{{ sakura.versionInfo.label }} {{ sakura.versionInfo.stable ? 'Stable' : 'Development' }}">Sakura r{{ sakura.versionInfo.version }}</a></li>
                     </ul>
                 </div>
             </div>

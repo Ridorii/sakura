@@ -7,7 +7,7 @@
 @charset "utf-8";
 
 /* Import Font Awesome */
-@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
+@import url('/content/fonts/font-awesome/font.css');
 
 /* Import Segoe UI */
 @import url('/content/fonts/segoeui/font.css');

@@ -1273,7 +1273,7 @@ class Users
                 }
 
                 // Mark them as read
-                self::markNotificationRead($notification['user_id']);
+                self::markNotificationRead($notification['alert_id']);
             }
         }
 

@@ -265,6 +265,16 @@
         {% if not sakura.versionInfo.stable and php.self == '/index.php' and not page.id %}
         <script type="text/javascript" src="https://sakura.flash.moe/?get={{ sakura.versionInfo.version|slice(0, 4) }}-{{ sakura.versionInfo.version|slice(4, 2) }}-{{ sakura.versionInfo.version|slice(6, 2) }}&amp;variable=true"></script>
         <script type="text/javascript">
+            // Column colours for actions
+            var changelogColours = [
+                'inherit', // Unknown
+                '#2A2', // Added
+                '#2AA', // Updated
+                '#2AA', // Fixed
+                '#A22', // Removed
+                '#62C', // Exported
+            ];
+
             window.addEventListener("load", function() {
                 // Check if the changelog variable is an object
                 if(typeof changelog === 'object') {
@@ -290,15 +300,33 @@
                     changelogTitle.appendChild(changelogLink);
                     indexPanel.appendChild(changelogTitle);
 
+                    // Create changelog table
+                    var changelogTable = document.createElement('table');
+                    changelogTable.style.fontSize = '.8em';
+                    changelogTable.style.lineHeight = '1.5em';
+
                     // Create and append all changelog entries
                     for (var i in changelog) {
-                        var entry = document.createElement('div');
-                        entry.style.fontSize = '.8em';
-                        entry.style.lineHeight = '1.5em';
-                        var text = document.createTextNode('[' + changelog[i]['change_action']['action_name'] + '] ' + changelog[i]['change_message']);
-                        entry.appendChild(text);
-                        indexPanel.appendChild(entry);
+                        // Create elements
+                        var changelogRow = document.createElement('tr');
+                        var changelogColumnAction = document.createElement('td');
+                        var changelogColumnMessage = document.createElement('td');
+
+                        // Set data
+                        changelogColumnAction.appendChild(document.createTextNode(changelog[i]['change_action']['action_name']));
+                        changelogColumnAction.style.textAlign = 'center';
+                        changelogColumnAction.style.padding = '0 2px';
+                        changelogColumnAction.style.background = changelogColours[changelog[i]['change_action']['action_id']];
+                        changelogColumnMessage.appendChild(document.createTextNode(changelog[i]['change_message']));
+
+                        // Append
+                        changelogRow.appendChild(changelogColumnAction);
+                        changelogRow.appendChild(changelogColumnMessage);
+                        changelogTable.appendChild(changelogRow);
                     }
+
+                    // Append it to indexPanel
+                    indexPanel.appendChild(changelogTable);
                 }
             });
         </script>
