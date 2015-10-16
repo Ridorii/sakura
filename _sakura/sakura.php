@@ -161,7 +161,7 @@ if (!defined('SAKURA_NO_TPL')) {
             'siteDesc' => Configuration::getConfig('sitedesc'),
             'siteTags' => implode(", ", json_decode(Configuration::getConfig('sitetags'), true)),
             'dateFormat' => Configuration::getConfig('date_format'),
-            'currentPage' => '//' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'],
+            'currentPage' => '//' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
 
             'recaptchaPublic' => Configuration::getConfig('recaptcha_public'),
             'recaptchaEnabled' => Configuration::getConfig('recaptcha'),
