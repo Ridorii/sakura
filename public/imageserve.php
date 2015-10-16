@@ -40,7 +40,7 @@ if (isset($_GET['m'])) {
             );
 
             // If ?u= isn't set or if it isn't numeric
-            if (!isset($_GET['u']) || !is_numeric($_GET['u']) || $_GET['u'] == 0) {
+            if (!isset($_GET['u']) || !is_numeric($_GET['u'])) {
                 $serveImage = $noAvatar;
                 break;
             }

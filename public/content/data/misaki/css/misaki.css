@@ -321,7 +321,7 @@ a:active {
 #content > #navigation .nav-avatar {
     height: 30px;
     width: 30px;
-    background: url('/pixel.png') no-repeat scroll left center / contain transparent;
+    background: url('/pixel.png') no-repeat scroll left center / cover transparent;
 }
 
 #content > #navigation > ul > li > ul {
@@ -418,7 +418,7 @@ a:active {
 
 .profile > .profileHeader > .userAvatar {
     font-size: 0;
-    background: transparent no-repeat scroll left center / contain;
+    background: transparent no-repeat scroll left center / cover;
     height: 200px;
     width: 200px;
     border-radius: 2px;
