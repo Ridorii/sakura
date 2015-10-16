@@ -16,8 +16,8 @@
         <link rel="stylesheet" type="text/css" href="{{ sakura.contentPath }}/fonts/font-awesome/font.css" />
 {{ block('css') }}
         <!-- JS -->
-        <script type="text/javascript" charset="utf-8" src="{{ sakura.resources }}/libraries/jquery.js"></script>
-        <script type="text/javascript" charset="utf-8" src="{{ sakura.contentPath }}/js/bootstrap.js"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ sakura.contentPath }}/libraries/jquery.js"></script>
+        <script type="text/javascript" charset="utf-8" src="{{ sakura.resources }}/js/bootstrap.js"></script>
 {{ block('js') }}
     </head>
     <body>

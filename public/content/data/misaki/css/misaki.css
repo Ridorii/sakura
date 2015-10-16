@@ -512,6 +512,10 @@ a:active {
     content: "\f005";
 }
 
+.profile > .profileContent > .userDataBar > .userAccounts a {
+    color: inherit;
+}
+
 .profile > .profileContent > .userDataBar > .userAccounts > .inner > .field > div:nth-child(1) {
     float: left;
     font-weight: bold;
