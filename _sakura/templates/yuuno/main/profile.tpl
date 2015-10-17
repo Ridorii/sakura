@@ -102,13 +102,26 @@
                         <h2 style="color: #222; text-shadow: 0 0 7px #222; margin-top: 0;">Banned</h2>
                     {% elseif profile.checkPermission('SITE', 'RESTRICTED') %}
                         <h2 style="color: #800; text-shadow: 0 0 7px #800; margin-top: 0;">Restricted</h2>
+                    {% elseif profile.getWarnings %}
+                        <h2 style="color: #A00; text-shadow: 0 0 7px #A00; margin-top: 0;">Bad</h2>
                     {% else %}
-                        {% if profile.getWarnings %}
-                            <h2 style="color: #A00; text-shadow: 0 0 7px #A00; margin-top: 0;">Bad</h2>
-                            <span style="font-size: 10px; line-height: 10px;">This user has <b>{{ profile.getWarnings|length }} warning{% if profile.getWarnings|length != 1 %}s{% endif %}</b>.<br />After 5 to 10 warnings (depending on what they are for) this user may be permanently banned.</span>
-                        {% else %}
-                            <h2 style="color: #080; text-shadow: 0 0 7px #080; margin-top: 0;">Good</h2>
-                        {% endif %}
+                        <h2 style="color: #080; text-shadow: 0 0 7px #080; margin-top: 0;">Good</h2>
+                    {% endif %}
+                    {% if profile.getWarnings %}
+                        <table class="panelTable">
+                            <tr>
+                                <th>Action</th>
+                                <th>Duration</th>
+                                <th>Reason</th>
+                            </tr>
+                            {% for warning in profile.getWarnings %}
+                            <tr class="{{ warning.warning_action_text|lower }}">
+                                <td>{{ warning.warning_action_text }}</td>
+                                <td>{{ warning.warning_length }} minute{% if warning.warning_length != 1 %}s{% endif %}</td>
+                                <td>{{ warning.warning_reason }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
                     {% endif %}
                 </div>
             </div>

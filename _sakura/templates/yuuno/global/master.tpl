@@ -302,8 +302,7 @@
 
                     // Create changelog table
                     var changelogTable = document.createElement('table');
-                    changelogTable.style.fontSize = '.8em';
-                    changelogTable.style.lineHeight = '1.5em';
+                    changelogTable.className = 'panelTable';
 
                     // Create and append all changelog entries
                     for (var i in changelog) {
@@ -314,8 +313,6 @@
 
                         // Set data
                         changelogColumnAction.appendChild(document.createTextNode(changelog[i]['change_action']['action_name']));
-                        changelogColumnAction.style.textAlign = 'center';
-                        changelogColumnAction.style.padding = '0 2px';
                         changelogColumnAction.style.background = changelogColours[changelog[i]['change_action']['action_id']];
                         changelogColumnMessage.appendChild(document.createTextNode(changelog[i]['change_message']));
 

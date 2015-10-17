@@ -1238,6 +1238,50 @@ a.default:active {
 }
 
 /*
+ * Panel table
+ */
+.panelTable {
+    width: 100%;
+    font-size: .8em;
+    line-height: 1.5em;
+    border-spacing: 1px;
+}
+
+.panelTable th {
+    background: #9475B2;
+    color: #306;
+}
+
+.panelTable td:first-child {
+    padding: 0 2px;
+    text-align: center;
+}
+
+.panelTable .warning td {
+    background: #A22;
+    color: #FFF;
+}
+
+.panelTable .silence td {
+    background: #A22;
+    color: #FFF;
+}
+
+.panelTable .restriction td {
+    background: #822;
+    color: #FFF;
+}
+
+.panelTable .ban td {
+    background: #444;
+    color: #FFF;
+}
+
+.panelTable .abyss td {
+    background: #888;
+}
+
+/*
  * User Background
  */
 #userBackground {
@@ -1509,7 +1553,7 @@ a.default:active {
     color: #503170;
 }
 
-@media (min-width: 840px) {
+@media (min-width: 1024px) {
 
     .support .featureBox.final {
         width: 818px;
@@ -1523,8 +1567,17 @@ a.default:active {
 
 @media (max-width: 840px) {
 
+    .support .featureBox,
+    .support .featureBox.final {
+        width: 380px;
+    }
+
     .support .featureBox.final .featureBoxDesc {
         line-height: 25px;
+    }
+
+    .support .featureBox .right {
+        display: none;
     }
 
 }

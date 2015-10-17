@@ -73,9 +73,26 @@ function convertParallaxPositionValue(pos, dir, neg) {
     }
 
     // Subtract another 2.5 to make the element not go all over the place
-    position = position - 2.5; 
+    position = position - 2.5;
 
     // Return the proper position value
     return position;
 
 }
+
+// Menu bar
+window.addEventListener("scroll", function(e) {
+    if(e.pageY > 123) {
+        var content = document.getElementById('content');
+        var navigation = document.getElementById('navigation');
+        navigation.style.position = 'fixed';
+        navigation.style.top = '0';
+        content.style.paddingTop = '37px';
+    } else {
+        var content = document.getElementById('content');
+        var navigation = document.getElementById('navigation');
+        navigation.style.position = null;
+        navigation.style.top = null;
+        content.style.paddingTop = null;
+    }
+});

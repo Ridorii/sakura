@@ -410,9 +410,47 @@ class User
     {
 
         // Do the database query
-        $warnings = Database::fetch('warnings', true, [
+        $getWarnings = Database::fetch('warnings', true, [
             'user_id' => [$this->data['user_id'], '='],
         ]);
+
+        // Storage array
+        $warnings = [];
+
+        // Add special stuff
+        foreach ($getWarnings as $warning) {
+            // Check if it hasn't expired
+            if ($warning['warning_expires'] < time()) {
+                Database::delete('warnings', ['warning_id' => [$warning['warning_id'], '=']]);
+                continue;
+            }
+
+            // Text action
+            switch ($warning['warning_action']) {
+                default:
+                case '0':
+                    $warning['warning_action_text'] = 'Warning';
+                    break;
+                case '1':
+                    $warning['warning_action_text'] = 'Silence';
+                    break;
+                case '2':
+                    $warning['warning_action_text'] = 'Restriction';
+                    break;
+                case '3':
+                    $warning['warning_action_text'] = 'Ban';
+                    break;
+                case '4':
+                    $warning['warning_action_text'] = 'Abyss';
+                    break;
+            }
+
+            // Text expiration
+            $warning['warning_length'] = round(($warning['warning_expires'] - $warning['warning_issued']) / 60);
+
+            // Add to array
+            $warnings[$warning['warning_id']] = $warning;
+        }
 
         // Return all the warnings
         return $warnings;

@@ -45,31 +45,22 @@ class Users
     ];
 
     // Check if a user is logged in
-    public static function checkLogin($uid = null, $sid = null, $bypassCookies = false)
+    public static function checkLogin($uid = null, $sid = null)
     {
 
-        // Set $uid and $sid if they're null
-        if ($uid == null) {
-            $uid = Session::$userId;
-        }
+        // Assign $uid and $sid
+        $uid = $uid ? $uid : (isset($_COOKIE[Configuration::getConfig('cookie_prefix') . 'id'])
+            ? $_COOKIE[Configuration::getConfig('cookie_prefix') . 'id']
+            : 0);
+        $sid = $sid ? $sid : (isset($_COOKIE[Configuration::getConfig('cookie_prefix') . 'session'])
+            ? $_COOKIE[Configuration::getConfig('cookie_prefix') . 'session']
+            : 0);
 
-        // ^
-        if ($sid == null) {
-            $sid = Session::$sessionId;
-        }
-
-        // Check if cookie bypass is false
-        if (!$bypassCookies) {
-            // Check if the cookies are set
-            if (!isset($_COOKIE[Configuration::getConfig('cookie_prefix') . 'id']) ||
-                !isset($_COOKIE[Configuration::getConfig('cookie_prefix') . 'session'])) {
-                return false;
-            }
-        }
+        // Get session
+        $session = Session::checkSession($uid, $sid);
 
         // Check if the session exists and check if the user is activated
-        if (!$session = Session::checkSession($uid, $sid)
-            || Permissions::check('SITE', 'DEACTIVATED', $uid, 1)) {
+        if ($session == 0 || Permissions::check('SITE', 'DEACTIVATED', $uid, 1)) {
             // Unset User ID
             setcookie(
                 Configuration::getConfig('cookie_prefix') . 'id',
@@ -92,7 +83,7 @@ class Users
         }
 
         // Extend the cookie times if the remember flag is set
-        if ($session == 2 && !$bypassCookies) {
+        if ($session == 2) {
             // User ID cookie
             setcookie(
                 Configuration::getConfig('cookie_prefix') . 'id',

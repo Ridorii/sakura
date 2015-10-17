@@ -66,7 +66,7 @@ class Session
 
         // Check if we actually got something in return
         if (!count($session)) {
-            return false;
+            return 0;
         }
 
         $session = $session[0];
@@ -77,7 +77,7 @@ class Session
             self::deleteSession($session['session_id']);
 
             // ...and return false
-            return false;
+            return 0;
         }
 
         // Origin checking
@@ -94,14 +94,14 @@ class Session
                 // 000.xxx.xxx.xxx
                 case 3:
                     if ($userIP[3] !== $sessionIP[3]) {
-                        return false;
+                        return 0;
                     }
 
                 // xxx.000.xxx.xxx
                 case 2:
                 case 3:
                     if ($userIP[2] !== $sessionIP[2]) {
-                        return false;
+                        return 0;
                     }
 
                 // xxx.xxx.000.xxx
@@ -109,7 +109,7 @@ class Session
                 case 2:
                 case 3:
                     if ($userIP[1] !== $sessionIP[1]) {
-                        return false;
+                        return 0;
                     }
 
                 // xxx.xxx.xxx.000
@@ -118,7 +118,7 @@ class Session
                 case 2:
                 case 3:
                     if ($userIP[0] !== $sessionIP[0]) {
-                        return false;
+                        return 0;
                     }
             }
         }

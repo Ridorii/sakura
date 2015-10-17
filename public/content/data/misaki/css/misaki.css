@@ -23,6 +23,18 @@
 @import url('markdown.css');
 
 /*
+ * Keyframe definitions
+ */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/*
  * Reset margin and padding
  */
 * {
@@ -200,6 +212,12 @@ a:active {
     margin: auto;
 }
 
+#header .logo.loading {
+    transform-origin: 50% 50.5%;
+    animation: spin 2s infinite linear;
+    background-image: url('../images/spinner.svg');
+}
+
 #header .social {
     z-index: 1;
     font-size: 2.5em;
@@ -273,6 +291,7 @@ a:active {
     margin-bottom: 5px;
     position: relative;
     z-index: 900;
+    max-width: 1018px;
 }
 
 #content > #navigation > ul > li {
@@ -281,7 +300,8 @@ a:active {
 }
 
 #content > #navigation > ul > li > a:not(.ignore) {
-    min-width: 80px;
+    height: 30px;
+    line-height: 30px;
     display: inline-block;
     text-align: center;
     color: inherit;
