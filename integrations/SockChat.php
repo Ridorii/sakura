@@ -40,7 +40,7 @@ if (Auth::getPageType() == AUTH_FETCH) {
     $sid = $_REQUEST['arg2'];
 
     // Check if session is active else deny
-    if (Session::checkSession($uid, $sid)) {
+    if (new Session($uid, $sid)) {
         // Check if they can access the chat
         if (Permissions::check('SITE', 'DEACTIVATED', $uid, 1) || Permissions::check('SITE', 'RESTRICTED', $uid, 1)) {
             Auth::Deny();

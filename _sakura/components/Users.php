@@ -57,10 +57,13 @@ class Users
             : 0);
 
         // Get session
-        $session = Session::checkSession($uid, $sid);
+        $session = new Session($uid, $sid);
+
+        // Validate the session
+        $sessionValid = $session->validate();
 
         // Check if the session exists and check if the user is activated
-        if ($session == 0 || Permissions::check('SITE', 'DEACTIVATED', $uid, 1)) {
+        if ($sessionValid == 0 || Permissions::check('SITE', 'DEACTIVATED', $uid, 1)) {
             // Unset User ID
             setcookie(
                 Configuration::getConfig('cookie_prefix') . 'id',
@@ -83,7 +86,7 @@ class Users
         }
 
         // Extend the cookie times if the remember flag is set
-        if ($session == 2) {
+        if ($sessionValid == 2) {
             // User ID cookie
             setcookie(
                 Configuration::getConfig('cookie_prefix') . 'id',
@@ -117,7 +120,7 @@ class Users
         self::updatePremiumMeta($uid);
 
         // If everything went through return true
-        return true;
+        return [$uid, $sid];
 
     }
 
@@ -163,7 +166,10 @@ class Users
         }
 
         // Create a new session
-        $sessionKey = Session::newSession($user['user_id'], $remember);
+        $session = new Session($user['user_id']);
+
+        // Generate a session key
+        $sessionKey = $session->create($remember);
 
         // Set cookies
         if ($cookies) {
@@ -201,7 +207,7 @@ class Users
         }
 
         // Remove the active session from the database
-        if (!Session::deleteSession(Session::$sessionId, true)) {
+        if (!(new Session)->destroy()) {
             return false;
         }
 
@@ -665,7 +671,7 @@ class Users
     }
 
     // Create new registration code
-    public static function createRegistrationCode()
+    public static function createRegistrationCode($userId)
     {
 
         // Check if we're logged in
@@ -677,18 +683,18 @@ class Users
         if (Database::count(
             'regcodes',
             true,
-            ['uid' => [Session::$userId, '=']]
+            ['uid' => [$userId, '=']]
         )[0] >= Configuration::getConfig('max_reg_keys')) {
             return false;
         }
 
         // Generate a code by MD5'ing some random bullshit
-        $code = md5('SAKURA' . rand(0, 99999999) . Session::$userId . 'NOOKLSISGOD');
+        $code = md5('SAKURA' . rand(0, 99999999) . $userId . 'NOOKLSISGOD');
 
         // Insert the key into the database
         Database::insert('regcodes', [
             'code' => $code,
-            'created_by' => Session::$userId,
+            'created_by' => $userId,
             'used_by' => 0,
             'key_used' => 0,
         ]);
@@ -867,7 +873,7 @@ class Users
 
         // Iterate over the fields and clean them up
         foreach ($optionFields as $field) {
-            if (!Permissions::check('SITE', $field['option_permission'], Session::$userId, 1)) {
+            if (!Permissions::check('SITE', $field['option_permission'], self::checkLogin()[0], 1)) {
                 continue;
             }
 
@@ -1241,7 +1247,7 @@ class Users
 
         // Prepare conditions
         $conditions = array();
-        $conditions['user_id'] = [($uid ? $uid : Session::$userId), '='];
+        $conditions['user_id'] = [($uid ? $uid : self::checkLogin()[0]), '='];
 
         if ($timediff) {
             $conditions['alert_timestamp'] = [time() - $timediff, '>'];
@@ -1317,7 +1323,7 @@ class Users
 
         // Get all messages from the database
         $messages = Database::fetch('messages', true, [
-            ($from ? 'from_user' : 'to_user') => [Session::$userId, '='],
+            ($from ? 'from_user' : 'to_user') => [self::checkLogin()[0], '='],
         ]);
 
         // Prepare a storage array
@@ -1346,7 +1352,7 @@ class Users
 
         // Assign $uid
         if (!$uid) {
-            $uid = Session::$userId;
+            $uid = Users::checkLogin()[0];
         }
 
         // Get all friends
@@ -1389,7 +1395,7 @@ class Users
 
         // Assign $of automatically if it's not set
         if (!$uid) {
-            $uid = Session::$userId;
+            $uid = self::checkLogin()[0];
         }
 
         // Get all friend entries from other people involved the current user

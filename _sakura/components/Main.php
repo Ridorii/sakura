@@ -23,9 +23,6 @@ class Main
         // "Dynamic" Configuration
         Configuration::initDB();
 
-        // Create new session
-        Session::init();
-
     }
 
     // Parse markdown

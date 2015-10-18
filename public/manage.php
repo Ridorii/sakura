@@ -13,7 +13,7 @@ define('SAKURA_MANAGE', true);
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
 // Make sure user has the permissions to view this
-if (!Permissions::check('MANAGE', 'USE_MANAGE', Session::$userId, 1)) {
+if (!Permissions::check('MANAGE', 'USE_MANAGE', $currentUser->data['user_id'], 1)) {
     header('Location: /');
     exit;
 }

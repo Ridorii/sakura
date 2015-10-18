@@ -258,7 +258,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     }
 
     // Compare time and session so we know the link isn't forged
-    if ($continue && $_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')] == Session::$userId) {
+    if ($continue && $_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')] == $currentUser->data['user_id']) {
         $renderData['page'] = [
 
             'redirect' => $redirect,
@@ -339,7 +339,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
         // Create a notification
         if (array_key_exists($action[1], $notifStrings)) {
             // Get the current user's profile data
-            $user = new User(Session::$userId);
+            $user = new User($currentUser->data['user_id']);
 
             Users::createNotification(
                 $_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')],
@@ -442,7 +442,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 
                 // Set path variables
                 $filepath = ROOT . Configuration::getConfig('user_uploads') . '/';
-                $filename = $filepath . $mode . '_' . Session::$userId;
+                $filename = $filepath . $mode . '_' . $currentUser->data['user_id'];
                 $currfile = isset($currentUser->data['user_data'][$userDataKey])
                 && !empty($_OLDFILE = $currentUser->data['user_data'][$userDataKey]) ? $_OLDFILE : null;
 
@@ -602,7 +602,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update database
-                Users::updateUserDataField(Session::$userId, $updated);
+                Users::updateUserDataField($currentUser->data['user_id'], $updated);
 
                 // Set render data
                 $renderData['page'] = [
@@ -641,7 +641,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update database
-                Users::updateUserDataField(Session::$userId, ['profileFields' => $store]);
+                Users::updateUserDataField($currentUser->data['user_id'], ['profileFields' => $store]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -707,7 +707,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                             'user_birthday' => $birthdate,
                         ],
                         [
-                            'user_id' => [Session::$userId, '='],
+                            'user_id' => [$currentUser->data['user_id'], '='],
                         ],
                     ]);
 
@@ -735,7 +735,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update database
-                Users::updateUserDataField(Session::$userId, ['userOptions' => $store]);
+                Users::updateUserDataField($currentUser->data['user_id'], ['userOptions' => $store]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -781,7 +781,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                             'user_title' => (isset($_POST['usertitle']) ? $_POST['usertitle'] : null),
                         ],
                         [
-                            'user_id' => [Session::$userId, '='],
+                            'user_id' => [$currentUser->data['user_id'], '='],
                         ],
                     ]
                 );
@@ -936,7 +936,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 $userPage = base64_encode($_POST['userpage']);
 
                 // Update database
-                Users::updateUserDataField(Session::$userId, ['userPage' => $userPage]);
+                Users::updateUserDataField($currentUser->data['user_id'], ['userPage' => $userPage]);
 
                 // Set render data
                 $renderData['page'] = [

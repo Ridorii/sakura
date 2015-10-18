@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151017');
+define('SAKURA_VERSION', '20151018');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 define('SAKURA_STABLE', false);
@@ -36,7 +36,7 @@ require_once ROOT . '_sakura/components/Database.php';
 require_once ROOT . '_sakura/components/Urls.php';
 require_once ROOT . '_sakura/components/Templates.php';
 require_once ROOT . '_sakura/components/Permissions.php';
-require_once ROOT . '_sakura/components/Sessions.php';
+require_once ROOT . '_sakura/components/Session.php';
 require_once ROOT . '_sakura/components/User.php';
 require_once ROOT . '_sakura/components/Rank.php';
 require_once ROOT . '_sakura/components/Users.php';
@@ -94,8 +94,11 @@ if (Configuration::getConfig('no_cron_service')) {
 // Start output buffering
 ob_start(Configuration::getConfig('use_gzip') ? 'ob_gzhandler' : null);
 
+// Auth check
+$authCheck = Users::checkLogin();
+
 // Create a user object for the current logged in user
-$currentUser = new User(Session::$userId);
+$currentUser = new User($authCheck[0]);
 
 // Create the Urls object
 $urls = new Urls();
@@ -186,9 +189,9 @@ if (!defined('SAKURA_NO_TPL')) {
 
         'session' => [
 
-            'checkLogin' => Users::checkLogin(),
-            'sessionId' => Session::$sessionId,
-            'userId' => Session::$userId,
+            'checkLogin' => $authCheck,
+            'sessionId' => $authCheck[1],
+            'userId' => $authCheck[0],
 
         ],
 
@@ -213,7 +216,7 @@ if (!defined('SAKURA_NO_TPL')) {
     }
 
     // Ban checking
-    if (Users::checkLogin() && $ban = Bans::checkBan(Session::$userId)) {
+    if ($authCheck && $ban = Bans::checkBan($currentUser->data['user_id'])) {
         // Additional render data
         $renderData = array_merge($renderData, [
 

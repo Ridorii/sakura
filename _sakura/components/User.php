@@ -148,7 +148,7 @@ class User
 
         // Add friend
         Database::insert('friends', [
-            'user_id' => Session::$userId,
+            'user_id' => $this->data['user_id'],
             'friend_id' => $uid,
             'friend_timestamp' => time(),
         ]);
@@ -177,14 +177,14 @@ class User
 
         // Remove friend
         Database::delete('friends', [
-            'user_id' => [Session::$userId, '='],
+            'user_id' => [$this->data['user_id'], '='],
             'friend_id' => [$uid, '='],
         ]);
 
         // Attempt to remove the request
         if ($deleteRequest) {
             Database::delete('friends', [
-                'friend_id' => [Session::$userId, '='],
+                'friend_id' => [$this->data['user_id'], '='],
                 'user_id' => [$uid, '='],
             ]);
         }

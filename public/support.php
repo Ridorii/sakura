@@ -12,7 +12,7 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sa
 // Switch between modes (we only allow this to be used by logged in user)
 if (isset($_REQUEST['mode'])
     && Users::checkLogin()
-    && Permissions::check('SITE', 'OBTAIN_PREMIUM', Session::$userId, 1)) {
+    && Permissions::check('SITE', 'OBTAIN_PREMIUM', $currentUser->data['user_id'], 1)) {
     // Initialise Payments class
     if (!Payments::init()) {
         header('Location: ' . $urls->format('SITE_PREMIUM') . '?fail=true');
@@ -89,10 +89,10 @@ if (isset($_REQUEST['mode'])
                     // Attempt to complete the transaction
                     if ($finalise) {
                         // Make the user premium
-                        $expiration = Users::addUserPremium(Session::$userId, (2628000 * $_SESSION['premiumMonths']));
-                        Users::updatePremiumMeta(Session::$userId);
+                        $expiration = Users::addUserPremium($currentUser->data['user_id'], (2628000 * $_SESSION['premiumMonths']));
+                        Users::updatePremiumMeta($currentUser->data['user_id']);
                         Main::updatePremiumTracker(
-                            Session::$userId,
+                            $currentUser->data['user_id'],
                             ((float) Configuration::getConfig('premium_price_per_month') * $_SESSION['premiumMonths']),
                             $currentUser->data['username']
                             . ' bought premium for '
@@ -116,7 +116,7 @@ if (isset($_REQUEST['mode'])
 
                     'page' => [
 
-                        'expiration' => ($prem = Users::checkUserPremium(Session::$userId)[2]) !== null ? $prem : 0,
+                        'expiration' => ($prem = Users::checkUserPremium($currentUser->data['user_id'])[2]) !== null ? $prem : 0,
 
                     ],
 
