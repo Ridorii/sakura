@@ -17,7 +17,7 @@
                             <a class="username">[deleted user]</a>
                             {% endif %}
                             <div class="userdata">
-                                <div class="usertitle">{% if not post.user.usertitle %}{{ post.rank.title }}{% else %}{{ post.user.user_title }}{% endif %}</div>
+                                <div class="usertitle">{% if not post.user.userTitle %}{{ post.rank.title }}{% else %}{{ post.user.userTitle }}{% endif %}</div>
                                 <img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi"{% if not post.user.checkPremium[0] %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.contentPath }}/images/flags/{{ post.user.country.short|lower }}.png" alt="{{ post.user.country.long }}" />
                                 {% if session.checkLogin %}
                                 <div class="actions">
