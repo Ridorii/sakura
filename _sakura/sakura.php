@@ -54,7 +54,7 @@ foreach (glob(ROOT . '_sakura/components/database/*.php') as $driver) {
 }
 
 // Set Error handler
-set_error_handler(array('Sakura\Main', 'errorHandler'));
+set_error_handler(['Sakura\Main', 'errorHandler']);
 
 // Initialise Main Class
 Main::init(ROOT . '_sakura/config/config.ini');

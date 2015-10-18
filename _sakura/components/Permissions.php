@@ -5,6 +5,10 @@
 
 namespace Sakura;
 
+/**
+ * Class Permissions
+ * @package Sakura
+ */
 class Permissions
 {
     // Fallback permission data

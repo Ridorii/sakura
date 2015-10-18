@@ -5,6 +5,10 @@
 
 namespace Sakura;
 
+/**
+ * Class Forum
+ * @package Sakura
+ */
 class Forum
 {
     // Empty forum template

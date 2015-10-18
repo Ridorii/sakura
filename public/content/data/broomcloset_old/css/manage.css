@@ -85,7 +85,7 @@ a:active {
 .header > .nav > div > a {
     color: #DDD;
     text-decoration: none !important;
-    padding: 0px 5px 2px;
+    padding: 0 5px 2px;
     transition: .2s;
 }
 .header > .nav > div > a:hover {

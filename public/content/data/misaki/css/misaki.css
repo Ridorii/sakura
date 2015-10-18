@@ -286,7 +286,7 @@ a:active {
     font-family: "Exo2-0-LightItalic", sans-serif;
     font-size: 2em;
     line-height: 30px;
-    letter-spacing: 0px;
+    letter-spacing: 0;
     text-shadow: 1px 1px 3px #111;
     margin-bottom: 5px;
     position: relative;
@@ -353,8 +353,8 @@ a:active {
     z-index: 900;
     background: rgba(69, 56, 81, .5);
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 0;
+    right: 0;
     list-style: none;
     padding: 35px 4px 5px;
 }

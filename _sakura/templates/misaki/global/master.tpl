@@ -128,14 +128,15 @@
 {% block content %}
     <h1>{{ php.self }} is now printing!</h1>
 {% endblock %}
+                </div>
             </div>
-        </div>
-        <div id="footer">
-            <div class="inner">
-                <div class="ft-logo"></div>
-                <div class="ft-text">
-                    <div>Copyright &copy; 2013-2015 <a href="http://flash.moe/" target="_blank">Flashwave</a>, <a href="http://circlestorm.net/" target="_blank">et al</a>.</div>
-                    <div><a href="{{ urls.format('INFO_PAGE', ['terms']) }}">Terms of Service</a> | <a href="{{ urls.format('INFO_PAGE', ['contact']) }}">Contact</a> | <a href="{{ urls.format('SITE_FAQ') }}">FAQ</a> | <a href="{{ urls.format('INFO_PAGE', ['rules']) }}">Rules</a> | <a href="{{ urls.format('CHANGELOG') }}">Changelog</a> | <a href="https://fiistat.us/">Status</a></div>
+            <div id="footer">
+                <div class="inner">
+                    <div class="ft-logo"></div>
+                    <div class="ft-text">
+                        <div>Copyright &copy; 2013-2015 <a href="http://flash.moe/" target="_blank">Flashwave</a>, <a href="http://circlestorm.net/" target="_blank">et al</a>.</div>
+                        <div><a href="{{ urls.format('INFO_PAGE', ['terms']) }}">Terms of Service</a> | <a href="{{ urls.format('INFO_PAGE', ['contact']) }}">Contact</a> | <a href="{{ urls.format('SITE_FAQ') }}">FAQ</a> | <a href="{{ urls.format('INFO_PAGE', ['rules']) }}">Rules</a> | <a href="{{ urls.format('CHANGELOG') }}">Changelog</a> | <a href="https://fiistat.us/">Status</a></div>
+                    </div>
                 </div>
             </div>
         </div>

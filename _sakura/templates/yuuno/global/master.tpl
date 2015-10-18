@@ -213,15 +213,15 @@
                     </form>
                 {% endif %}
                 {% if user.checkPermission('SITE', 'RESTRICTED') %}
-                    <div class="headerNotify" style="background: repeating-linear-gradient(-45deg, #B33, #B33 10px, #B00 10px, #B00 20px); color: #FFF; border: 1px solid #C00; box-shadow: 0px 0px 3px #C00;">
-                        <h1>Your account is current in <span style="font-width: 700 !important;">restricted mode</span>!</h1>
+                    <div class="headerNotify" style="background: repeating-linear-gradient(-45deg, #B33, #B33 10px, #B00 10px, #B00 20px); color: #FFF; border: 1px solid #C00; box-shadow: 0 0 3px #C00;">
+                        <h1>Your account is currently in <span style="font-weight: 700 !important;">restricted mode</span>!</h1>
                         <div>A staff member has set your account to restricted mode most likely due to violation of the rules. While restricted you won't be able to use most public features of the site. If you think this is a mistake please <a href="{{ urls.format('INFO_PAGE', ['contact']) }}" style="color: inherit;">get in touch with one of our staff members</a>.</div>
                     </div>
                 {% endif %}
                 <noscript>
                     <div class="headerNotify">
                         <h1>You have JavaScript disabled!</h1>
-                        <p style="padding: 0 10px;">A lot of things on this site require JavaScript to be enabled (e.g. the chat), we try to keep both sides happy but it is highly recommended that you enable it (you'll also have to deal with this message being here if you don't enable it).</p>
+                        <div>A lot of things on this site require JavaScript to be enabled (e.g. the chat), we try to keep both sides happy but it is highly recommended that you enable it (you'll also have to deal with this message being here if you don't enable it).</div>
                     </div>
                 </noscript>
 
@@ -272,7 +272,7 @@
                 '#2AA', // Updated
                 '#2AA', // Fixed
                 '#A22', // Removed
-                '#62C', // Exported
+                '#62C' // Exported
             ];
 
             window.addEventListener("load", function() {

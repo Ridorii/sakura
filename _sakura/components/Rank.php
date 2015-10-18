@@ -5,6 +5,10 @@
 
 namespace Sakura;
 
+/**
+ * Class Rank
+ * @package Sakura
+ */
 class Rank
 {
     // Rank data

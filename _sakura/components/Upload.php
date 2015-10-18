@@ -5,6 +5,10 @@
 
 namespace Sakura;
 
+/**
+ * Class Upload
+ * @package Sakura
+ */
 class Upload
 {
 

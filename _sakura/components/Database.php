@@ -5,6 +5,10 @@
 
 namespace Sakura;
 
+/**
+ * Class Database
+ * @package Sakura
+ */
 class Database
 {
     // Database container

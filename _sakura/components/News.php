@@ -5,6 +5,10 @@
 
 namespace Sakura;
 
+/**
+ * Class News
+ * @package Sakura
+ */
 class News
 {
     private $posts = []; // Posts array

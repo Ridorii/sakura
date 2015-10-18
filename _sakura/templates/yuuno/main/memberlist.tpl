@@ -12,11 +12,11 @@
 
 {% block content %}
     <div class="headerNotify" style="margin-bottom: 1px;">
-        <h1 style="{% if page.active %}text-shadow: 0px 0px 5px {{ page.ranks[page.active].colour }}; color: {{ page.ranks[page.active].colour }};{% else %}text-shadow: 0px 0px 5px #555;{% endif %}">{{ rankTitle }}</h1>
+        <h1 style="{% if page.active %}text-shadow: 0 0 5px {{ page.ranks[page.active].colour }}; color: {{ page.ranks[page.active].colour }};{% else %}text-shadow: 0 0 5px #555;{% endif %}">{{ rankTitle }}</h1>
         <h3>{{ rankDescription }}</h3>
     </div>
     <div class="membersPage" style="min-height: 500px;">
-        <div class="dropDown" style="margin: 0px auto; font-size: 1.5em; line-height: 1.5em; height: 30px;">
+        <div class="dropDown" style="margin: 0 auto; font-size: 1.5em; line-height: 1.5em; height: 30px;">
             <div class="dropDownInner" style="float: left; color: #FFF;">
                 <a class="dropDownDesc">Rank:</a>
                 <a href="{% if page.page and page.sort %}{{ urls.format('MEMBERLIST_SORT_PAGE', [page.sort, (page.page + 1)]) }}{% elseif page.sort %}{{ urls.format('MEMBERLIST_SORT', [page.sort]) }}{% elseif page.page %}{{ urls.format('MEMBERLIST_PAGE', [(page.page + 1)]) }}{% else %}{{ urls.format('MEMBERLIST_INDEX') }}{% endif %}"{% if not page.active %} class="dropDownSelected"{% endif %}>All members</a>

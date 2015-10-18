@@ -66,7 +66,7 @@ function hideYourMind(conflictions) {
 function twoThousandSixteenIsTheYearWePhysicallyMergeWithCats() {
 
     var diff = (new Date()).getTime() - startTime;
-    var vals = [-7 * 1 / Math.cos((diff / 500) * (.85 * Math.PI)), -7 * Math.tan((diff / 250) * (.85 * Math.PI))];
+    var vals = [-7 / Math.cos((diff / 500) * (.85 * Math.PI)), -7 * Math.tan((diff / 250) * (.85 * Math.PI))];
 
     document.body.style.position    = 'absolute';
     document.body.style.left        = vals[0] + 'px';

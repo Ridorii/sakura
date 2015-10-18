@@ -5,6 +5,10 @@
 
 namespace Sakura;
 
+/**
+ * Class Session
+ * @package Sakura
+ */
 class Session
 {
     // Current user data
@@ -91,8 +95,11 @@ class Session
             return 0;
         }
 
+        // IP Check
+        $ipCheck = Configuration::getConfig('session_check');
+
         // Origin checking
-        if ($ipCheck = Configuration::getConfig('session_check')) {
+        if ($ipCheck) {
             // Split both IPs up
             $sessionIP = explode('.', $session['user_ip']);
             $userIP = explode('.', Main::getRemoteIP());

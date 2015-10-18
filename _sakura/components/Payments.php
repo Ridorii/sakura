@@ -15,6 +15,10 @@ use \PayPal\Api\PaymentExecution;
 use \PayPal\Api\RedirectUrls;
 use \PayPal\Api\Transaction;
 
+/**
+ * Class Payments
+ * @package Sakura
+ */
 class Payments
 {
     // Container for PayPal API
@@ -32,7 +36,7 @@ class Payments
                     Configuration::getConfig('paypal_secret')
                 )
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
 
@@ -107,7 +111,7 @@ class Payments
         // Try to create payment
         try {
             $payment->create(self::$paypal);
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             return false;
         }
 
@@ -132,7 +136,7 @@ class Payments
         // Attempt to charge the fucker
         try {
             $payment->execute($execute, self::$paypal);
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             return false;
         }
 

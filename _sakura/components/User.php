@@ -5,6 +5,10 @@
 
 namespace Sakura;
 
+/**
+ * Class User
+ * @package Sakura
+ */
 class User
 {
     // User data
@@ -296,7 +300,7 @@ class User
             }
 
             // Assign field to output with value
-            $profile[$fieldName] = array();
+            $profile[$fieldName] = [];
             $profile[$fieldName]['name'] = $field['field_name'];
             $profile[$fieldName]['value'] = $this->data['user_data']['profileFields'][$fieldName];
             $profile[$fieldName]['islink'] = $field['field_link'];

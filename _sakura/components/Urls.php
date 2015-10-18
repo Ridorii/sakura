@@ -5,6 +5,10 @@
 
 namespace Sakura;
 
+/**
+ * Class Urls
+ * @package Sakura
+ */
 class Urls
 {
     // Unformatted links [0] = no mod_rewrite, [1] = mod_rewrite

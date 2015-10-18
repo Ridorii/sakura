@@ -9,6 +9,10 @@ use PDO;
 use PDOException;
 use \Sakura\Configuration;
 
+/**
+ * Class MySQL
+ * @package Sakura\DBWrapper
+ */
 class MySQL
 {
     // Variable that will contain the SQL connection

@@ -5,6 +5,10 @@
 
 namespace Sakura;
 
+/**
+ * Class Manage
+ * @package Sakura
+ */
 class Manage
 {
 

@@ -12,7 +12,7 @@
                     <tr class="post" id="p{{ post.post_id }}">
                         <td class="userpanel">
                             {% if not post.user.checkPermission('SITE', 'DEACTIVATED') or post.user.checkPermission('SITE', 'RESTRICTED') %}<a href="{{ urls.format('USER_PROFILE', [post.user.data.user_id]) }}" class="default username" style="color: {{ post.user.colour }}; text-shadow: 0 0 5px {% if post.user.colour != 'inherit' %}{{ post.user.colour }}{% else %}#222{% endif %};" title="Go to {{ post.user.data.username }}'s profile">{{ post.user.data.username }}</a>
-                            <img src="{{ urls.format('IMAGE_AVATAR', [post.user.data.user_id]) }}" alt="{{ post.user.data.username }}" class="avatar" style="box-shadow: 0 3px 7px #{% if post.is_online %}484{% else %}844{% endif %};" />
+                            <img src="{{ urls.format('IMAGE_AVATAR', [post.user.data.user_id]) }}" alt="{{ post.user.data.username }}" class="avatar" style="box-shadow: 0 3px 7px #{% if post.user.checkOnline %}484{% else %}844{% endif %};" />
                             {% else %}
                             <a class="username">[deleted user]</a>
                             {% endif %}

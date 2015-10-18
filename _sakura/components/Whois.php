@@ -29,6 +29,10 @@
 
 namespace Sakura;
 
+/**
+ * Class Whois
+ * @package Sakura
+ */
 class Whois
 {
     // Variables
@@ -161,7 +165,7 @@ class Whois
         $servers = self::$servers['ip'];
 
         // Set variable to keep results in
-        $results = array();
+        $results = [];
 
         // Query servers
         foreach ($servers as $server) {

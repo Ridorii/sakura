@@ -5,6 +5,10 @@
 
 namespace Sakura;
 
+/**
+ * Class Comments
+ * @package Sakura
+ */
 class Comments
 {
     public $comments = []; // Array containing comments

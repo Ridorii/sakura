@@ -17,7 +17,7 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sa
 // Notifications
 if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications']) {
     // Create the notification container array
-    $notifications = array();
+    $notifications = [];
 
     // Check if the user is logged in
     if (Users::checkLogin()

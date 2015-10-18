@@ -5,6 +5,10 @@
 
 namespace Sakura;
 
+/**
+ * Class Users
+ * @package Sakura
+ */
 class Users
 {
 
@@ -202,14 +206,12 @@ class Users
     {
 
         // Check if user is logged in
-        if (!self::checkLogin()) {
+        if (!$check = self::checkLogin()) {
             return false;
         }
 
-        // Remove the active session from the database
-        if (!(new Session)->destroy()) {
-            return false;
-        }
+        // Destroy the active session
+        (new Session($check[0], $check[1]))->destroy();
 
         // Unset User ID
         setcookie(
@@ -922,7 +924,7 @@ class Users
             }
 
             // Assign field to output with value
-            $profile[$fieldName] = array();
+            $profile[$fieldName] = [];
             $profile[$fieldName]['name'] = $field['name'];
             $profile[$fieldName]['value'] = $profileData[$fieldName];
             $profile[$fieldName]['islink'] = $field['islink'];
@@ -1161,7 +1163,7 @@ class Users
         }
 
         // Make output array
-        $rank = array();
+        $rank = [];
 
         // Go over all users and check if they have the rank id
         foreach ($users as $user) {
@@ -1246,7 +1248,7 @@ class Users
     {
 
         // Prepare conditions
-        $conditions = array();
+        $conditions = [];
         $conditions['user_id'] = [($uid ? $uid : self::checkLogin()[0]), '='];
 
         if ($timediff) {
@@ -1327,7 +1329,7 @@ class Users
         ]);
 
         // Prepare a storage array
-        $store = array();
+        $store = [];
 
         // Go over each message and check if they are for the current user
         foreach ($messages as $message) {

@@ -31,6 +31,10 @@
 
 namespace Sakura;
 
+/**
+ * Class Hashing
+ * @package Sakura
+ */
 class Hashing
 {
     // These variables can be changed without break the existing hashes
@@ -61,12 +65,12 @@ class Hashing
             )
         );
 
-        $passwordData = array(
+        $passwordData = [
             self::$hashAlgorithm,
             self::$iterations,
             $salt,
             $hash,
-        );
+        ];
 
         return $passwordData;
 

@@ -30,7 +30,7 @@ if (Users::checkLogin()) {
         $_MEMBERLIST_SORTS[0],
         'page' => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
         'users' => array_chunk($_MEMBERLIST_ACTIVE && !$_MEMBERLIST_NFOUND ?
-            Users::getUsersInRank($_MEMBERLIST_ACTIVE, null, true, true) :
+            Users::getUsersInRank($_MEMBERLIST_ACTIVE, null, true) :
             Users::getAllUsers(), Configuration::getConfig('members_per_page'), true),
 
     ];

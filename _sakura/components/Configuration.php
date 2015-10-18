@@ -5,6 +5,10 @@
 
 namespace Sakura;
 
+/**
+ * Class Configuration
+ * @package Sakura
+ */
 class Configuration
 {
     // Configuration data
@@ -49,7 +53,7 @@ class Configuration
         $_DATA = Database::fetch('config', true);
 
         // Create variable to temporarily store values in
-        $_DBCN = array();
+        $_DBCN = [];
 
         // Properly sort the values
         foreach ($_DATA as $_CONF) {
@@ -92,7 +96,7 @@ class Configuration
         if ($subkey) {
             // If we do we make sure that the parent key is an array
             if (!isset(self::$local[$key])) {
-                self::$local[$key] = array();
+                self::$local[$key] = [];
             }
 
             // And then assign the value

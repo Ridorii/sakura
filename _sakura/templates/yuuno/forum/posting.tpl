@@ -46,7 +46,7 @@
                     <label for="parseMode">Parsing Mode:</label>
                     <select id="parseMode" name="parseMode">
                         <option value="0">None</option>
-                        <option value="1" selected="selected">BBCodes</option>
+                        <option value="1" selected="selected">BBCode</option>
                         <option value="2">Markdown</option>
                     </select>
                 </div>

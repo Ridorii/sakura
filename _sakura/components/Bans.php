@@ -5,6 +5,10 @@
 
 namespace Sakura;
 
+/**
+ * Class Bans
+ * @package Sakura
+ */
 class Bans
 {
     // Check if a user is banned

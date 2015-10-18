@@ -8,6 +8,10 @@ namespace Sakura;
 use Parsedown;
 use PHPMailer;
 
+/**
+ * Class Main
+ * @package Sakura
+ */
 class Main
 {
     // Constructor
@@ -210,11 +214,11 @@ class Main
             h2 { margin: 0 -10px; }
             .container { border: 1px solid #CAA; margin: 10px auto; background: #FFF;
                 box-shadow: 2px 2px 1em #888; max-width: 1024px; border-radius: 10px; }
-            .container .inner { padding: 0px 10px; }
+            .container .inner { padding: 0 10px; }
             .container .inner .error { background: #555; color: #EEE; border-left: 5px solid #C22;
-                padding: 4px 6px; text-shadow: 0px 1px 1px #888; white-space: pre-wrap;
+                padding: 4px 6px; text-shadow: 0 1px 1px #888; white-space: pre-wrap;
                 word-wrap: break-word; margin: 12px 0; border-radius: 5px; box-shadow: inset 0 0 1em #333; }
-            .container .footer { border-top: 1px solid #CAA; font-size: x-small; padding: 0px 5px 1px; }
+            .container .footer { border-top: 1px solid #CAA; font-size: x-small; padding: 0 5px 1px; }
             a { color: #77E; text-decoration: none; }
             a:hover { text-decoration: underline; }
             a:active { color: #E77; }
@@ -283,7 +287,7 @@ class Main
         $mail = new PHPMailer();
 
         // Set to SMTP
-        $mail->IsSMTP();
+        $mail->isSMTP();
 
         // Set the SMTP server host
         $mail->Host = Configuration::getConfig('smtp_server');
@@ -304,14 +308,14 @@ class Main
         }
 
         // Add a reply-to header
-        $mail->AddReplyTo(Configuration::getConfig('smtp_replyto_mail'), Configuration::getConfig('smtp_replyto_name'));
+        $mail->addReplyTo(Configuration::getConfig('smtp_replyto_mail'), Configuration::getConfig('smtp_replyto_name'));
 
         // Set a from address as well
-        $mail->SetFrom(Configuration::getConfig('smtp_from_email'), Configuration::getConfig('smtp_from_name'));
+        $mail->setFrom(Configuration::getConfig('smtp_from_email'), Configuration::getConfig('smtp_from_name'));
 
         // Set the addressee
         foreach ($to as $email => $name) {
-            $mail->AddBCC($email, $name);
+            $mail->addBCC($email, $name);
         }
 
         // Subject line
@@ -335,10 +339,10 @@ class Main
         $mail->AltBody = $body;
 
         // Send the message
-        $send = $mail->Send();
+        $send = $mail->send();
 
         // Clear the addressee list
-        $mail->ClearAddresses();
+        $mail->clearAddresses();
 
         // If we got an error return the error
         if (!$send) {
@@ -695,7 +699,7 @@ class Main
         $logsDB = Database::fetch('logs', true, $conditions, ['id', true]);
 
         // Storage array
-        $logs = array();
+        $logs = [];
 
         // Iterate over entries
         foreach ($logsDB as $log) {

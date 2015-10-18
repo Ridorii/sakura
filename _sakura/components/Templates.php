@@ -9,6 +9,10 @@ use Twig_Environment;
 use Twig_Extension_StringLoader;
 use Twig_Loader_Filesystem;
 
+/**
+ * Class Templates
+ * @package Sakura
+ */
 class Templates
 {
     // Engine container, template folder name and options

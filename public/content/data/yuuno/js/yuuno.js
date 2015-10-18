@@ -422,7 +422,7 @@ function ajaxPost(url, data, callback) {
 
         }
 
-    }
+    };
 
     // Set headers
     request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -504,7 +504,7 @@ function formToObject(formId) {
     var form = document.getElementById(formId);
 
     // Make an object for the request parts
-    var requestParts = new Object();
+    var requestParts = {};
 
     // Get all children with a name attribute
     var children = form.querySelectorAll('[name]');
@@ -622,8 +622,6 @@ function submitPostHandler(result, busyView, resetCaptchaOnFailure) {
 
     }, 2000);
 
-    return;
-
 }
 
 // Encode UTF-8
@@ -644,7 +642,7 @@ function utf8_decode(str) {
 function uniqueChars(str) {
 
     // Create storage array and count var
-    var usedChars   = new Array();
+    var usedChars   = [];
     var count       = 0;
 
     // Count the amount of unique characters

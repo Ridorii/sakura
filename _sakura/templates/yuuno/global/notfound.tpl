@@ -29,7 +29,7 @@
 					home page, and then look for links to the information you want.
 				</li>
 				<li>
-					Click the <img src="{{ sakura.resources }}/images/404-back.gif" /><a href="javascript:;" onclick="history.go(-1);">Back</a>
+					Click the <img src="{{ sakura.resources }}/images/404-back.gif" /><a href="javascript:void(0);" onclick="history.go(-1);">Back</a>
 					button to try another link.
 				</li>
 				<li>
