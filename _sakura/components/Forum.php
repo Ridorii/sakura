@@ -277,6 +277,25 @@ class Forum
 
     }
 
+    // Get a forum ID from a topic ID
+    public static function getForumIdFromTopicId($id)
+    {
+
+        // Get the topic
+        $topic = Database::fetch('topics', false, [
+            'topic_id' => [$id, '='],
+        ]);
+
+        // Return false if nothing was returned
+        if (empty($topic)) {
+            return false;
+        }
+
+        // Return the forum id
+        return $topic['forum_id'];
+
+    }
+
     // Get a topic ID from a post ID
     public static function getTopicIdFromPostId($id)
     {
@@ -346,8 +365,55 @@ class Forum
     }
 
     // Creating a new post
-    public static function createPost($subject, $text, $enableMD, $enableSig, $forum, $type = 0, $status = 0, $topic = 0)
+    public static function createPost($poster, $title, $text, $forum, $topic = 0, $parse = 0, $signature = 0, $emotes = 0, $type = 0, $status = 0)
     {
+
+        // Check if we're replying to a thread
+        $getThread = Database::fetch('topics', false, ['topic_id' => [$topic, '=']]);
+
+        // If nothing was returned create a new thread
+        if (!$getThread) {
+            // Insert the required data
+            Database::insert('topics', [
+                'forum_id' => $forum,
+                'topic_title' => $title,
+                'topic_time' => time(),
+                'topic_status' => $status,
+                'topic_type' => $type,
+            ]);
+
+            // Fetch the last insert
+            $getThread = Database::fetch('topics', false, null, ['topic_id', true]);
+        }
+
+        // Insert the post
+        Database::insert('posts', [
+            'topic_id' => $getThread['topic_id'],
+            'forum_id' => $getThread['forum_id'],
+            'poster_id' => $poster,
+            'post_time' => time(),
+            'post_parse' => $parse,
+            'post_signature' => $signature,
+            'post_emotes' => $emotes,
+            'post_subject' => $title,
+            'post_text' => $text,
+        ]);
+
+        // Fetch the last insert
+        $getPost = Database::fetch('posts', false, null, ['post_id', true]);
+
+        // Update the topic with the last details
+        Database::update('topics', [
+            [
+                'topic_last_reply' => time(),
+            ],
+            [
+                'topic_id' => [$getPost['topic_id'], '='],
+            ],
+        ]);
+
+        // Return success
+        return [1, 'SUCCESS', $getPost['forum_id'], $getPost['topic_id'], $getPost['post_id']];
 
     }
 }

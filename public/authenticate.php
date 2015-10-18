@@ -281,7 +281,6 @@ if (isset($_REQUEST['mode'])) {
     ) :
     Templates::render('global/information.tpl', $renderData);
     exit;
-
 }
 
 // Add page specific things

@@ -54,8 +54,6 @@
 </form>
 <script type="text/javascript">
 window.addEventListener("load", function() {
-
     prepareAjaxForm('editProfileForm', 'Updating Profile...');
-
 });
 </script>

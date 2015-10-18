@@ -1704,6 +1704,15 @@ button.inputStyling:active {
     transition: text-shadow .2s, box-shadow .2s;
 }
 
+input[type="submit"][disabled=disabled].inputStyling,
+input[type="button"][disabled=disabled].inputStyling,
+input[type="reset"][disabled=disabled].inputStyling,
+button[disabled=disabled].inputStyling {
+    background: linear-gradient(180deg, #858585 0%, #858585 50%, #787878 50%) #858585 !important;
+    box-shadow: inset #222 0 0 1px !important;
+    text-shadow: #888 0 0 2px !important;
+}
+
 input[type="text"].inputStyling,
 input[type="password"].inputStyling,
 input[type="date"].inputStyling,
