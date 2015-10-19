@@ -8,7 +8,7 @@
         <form id="forumPostingForm" method="post" action="{{ sakura.currentPage }}">
             <div class="head">Forum / Posting</div>
             <div class="posting-subject">
-                <input type="text" class="inputStyling" name="subject" placeholder="Subject" />
+                <input type="text" class="inputStyling" name="subject" placeholder="Subject" value="{{ posting.subject }}" />
             </div>
             <hr class="default" />
             <div class="posting-bbcodes">
@@ -24,7 +24,7 @@
             </div>
             <hr class="default" />
             <div class="posting-text">
-                <textarea class="inputStyling" name="text" id="postingText"></textarea>
+                <textarea class="inputStyling" name="text" id="postingText">{{ posting.text }}</textarea>
             </div>
             <hr class="default" />
             <div class="posting-emotes">
@@ -36,7 +36,7 @@
             <div class="posting-options">
                 <div>
                     <div>
-                        <input type="checkbox" id="enableSig" checked="checked" /> <label for="enableSig">Attach Signature</label>
+                        <input type="checkbox" id="enableSig" {% if posting.enabledSig %}checked="checked"{% endif %}/> <label for="enableSig">Attach Signature</label>
                     </div>
                     <div>
                         <input type="checkbox" id="enableEmotes" checked="checked" /> <label for="enableEmotes">Parse emoticons</label>

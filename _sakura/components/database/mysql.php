@@ -388,4 +388,12 @@ class MySQL
         return $query->fetch(PDO::FETCH_BOTH);
 
     }
+
+    // Get the ID of the last inserted item
+    public function lastInsertID($name = null)
+    {
+
+        return $this->sql->lastInsertID($name);;
+
+    }
 }

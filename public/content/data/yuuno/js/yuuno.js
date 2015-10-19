@@ -218,7 +218,7 @@ function notifyRequest(session) {
 
                 }
 
-            } else {
+            } else if((notificationWatcher.status + '').substring(0, 1) == '5') {
 
                 // ELse tell the user there was an internal server error...
                 notifyUI({

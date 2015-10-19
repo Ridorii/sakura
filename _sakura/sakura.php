@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151018');
+define('SAKURA_VERSION', '20151019');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 define('SAKURA_STABLE', false);
@@ -76,14 +76,10 @@ if (Configuration::getConfig('no_cron_service')) {
         // Update last execution time
         Database::update('config', [
             [
-
                 'config_value' => time(),
-
             ],
             [
-
                 'config_name' => ['no_cron_last', '='],
-
             ],
         ]);
 

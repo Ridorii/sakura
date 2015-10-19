@@ -21,7 +21,7 @@
             <a href="{{ urls.format('USER_PROFILE', [topic.last_poster.data.user_id]) }}" class="default" style="color: {{ topic.last_poster.colour }}; text-shadow: 0 0 5px {% if topic.last_poster.colour != 'inherit' %}{{ topic.last_poster.colour }}{% else %}#222{% endif %};">{{ topic.last_poster.data.username }}</a>
         {% else %}
             [deleted user]
-        {% endif %} <a href="{{ urls.format('FORUM_POST', [topic.last_post.post.post_id]) }}#p{{ topic.last_post.post.post_id }}" class="default fa fa-tag"></a><br />
+        {% endif %} <a href="{{ urls.format('FORUM_POST', [topic.last_post.post_id]) }}#p{{ topic.last_post.post_id }}" class="default fa fa-tag"></a><br />
         <span title="{{ topic.last_post.post.post_time|date(sakura.dateFormat) }}">{{ topic.last_post.elapsed }}</span>
     </td>
 </tr>

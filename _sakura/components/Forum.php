@@ -387,7 +387,9 @@ class Forum
             ]);
 
             // Fetch the last insert
-            $getThread = Database::fetch('topics', false, null, ['topic_id', true]);
+            $getThread = Database::fetch('topics', false, [
+                'topic_id' => [Database::lastInsertID(), '='],
+            ]);
         }
 
         // Insert the post
@@ -404,12 +406,14 @@ class Forum
         ]);
 
         // Fetch the last insert
-        $getPost = Database::fetch('posts', false, null, ['post_id', true]);
+        $getPost = Database::fetch('posts', false, [
+            'post_id' => [Database::lastInsertID(), '='],
+        ]);
 
         // Update the topic with the last details
         Database::update('topics', [
             [
-                'topic_last_reply' => time(),
+                'topic_last_reply' => $getPost['post_id'],
             ],
             [
                 'topic_id' => [$getPost['topic_id'], '='],

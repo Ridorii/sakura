@@ -78,4 +78,12 @@ class Database
         return self::$database->count($table, $data, $prefix);
 
     }
+
+    // Get the ID of the last inserted item
+    public static function lastInsertID($name = null)
+    {
+
+        return self::$database->lastInsertID($name);
+
+    }
 }
