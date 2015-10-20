@@ -904,7 +904,6 @@ a.default:active {
     min-height: 80px;
     background: rgba(113, 74, 150, .9);
     border: 1px solid #507;
-    border-right-width: 5px;
     color: #FFF;
     padding: 2px 0 2px 2px;
     margin: 5px;
@@ -966,19 +965,18 @@ a.default:active {
 }
 
 #notifications > div > .notification-close {
-    font-size: 2em;
-    width: 20px;
+    font-size: 0;
+    width: 3px;
     line-height: 100%;
     background: #507;
     margin-top: -3px;
     margin-bottom: -3px;
-    padding-left: 2px;
-    padding-bottom: 3px;
-    border-left: 3px solid #507;
+    padding: 0 1px;
     text-align: center;
-    visibility: hidden;
     display: flex;
     align-items: center;
+    justify-content: center;
+    transition: .1s;
 }
 
 #notifications > div > .notification-close > div {
@@ -986,7 +984,9 @@ a.default:active {
 }
 
 #notifications > div:hover > .notification-close {
-    visibility: visible;
+    font-size: 2em;
+    width: 20px;
+    padding: 0 3px;
 }
 
 #notifications > div > .notification-close > div:before {
