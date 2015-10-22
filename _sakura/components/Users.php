@@ -137,6 +137,17 @@ class Users
             return [0, 'AUTH_LOCKED'];
         }
 
+        // Check if we haven't hit the rate limit
+        $rates = Database::fetch('login_attempts', true, [
+            'attempt_ip' => [Main::getRemoteIP(), '='],
+            'attempt_timestamp' => [time() - 1800, '>'],
+            'attempt_success' => [0, '='],
+        ]);
+
+        if (count($rates) > 4) {
+            return [0, 'RATE_LIMIT'];
+        }
+
         // Check if the user that's trying to log in actually exists
         if (!$uid = self::userExists($username, false)) {
             return [0, 'USER_NOT_EXIST'];
@@ -159,14 +170,14 @@ class Users
                     $user['password_salt'],
                     $user['password_hash'],
                 ])) {
-                    return [0, 'INCORRECT_PASSWORD', $user['password_chan']];
+                    return [0, 'INCORRECT_PASSWORD', $user['user_id'], $user['password_chan']];
                 }
 
         }
 
         // Check if the user has the required privs to log in
         if (Permissions::check('SITE', 'DEACTIVATED', $user['user_id'], 1)) {
-            return [0, 'NOT_ALLOWED'];
+            return [0, 'NOT_ALLOWED', $user['user_id']];
         }
 
         // Create a new session

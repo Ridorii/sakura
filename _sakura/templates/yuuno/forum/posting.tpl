@@ -58,6 +58,11 @@
                 <input class="inputStyling" type="submit" name="post" value="Post" />
                 <input class="inputStyling" type="button" onclick="history.go(-1);" value="Cancel" />
             </div>
+            {% if posting.id %}
+                <input type="hidden" name="id" value="posting.id" />
+            {% endif %}
+            <input type="hidden" name="sessionid" value="{{ php.sessionid }}" />
+            <input type="hidden" name="timestamp" value="{{ php.time }}" />
         </form>
     </div>
 </div>

@@ -40,7 +40,7 @@ if ($mode != 'f') {
         // Add page specific things
         $renderData['page'] = [
             'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
-            'message' => 'The requested thread does not exist.',
+            'message' => 'The requested post does not exist.',
         ];
 
         // Render information page
@@ -55,10 +55,98 @@ if ($mode != 'f') {
 
         // Add subject to render data
         $posting['text'] = '[quote]' . $post['post_text'] . '[/quote]';
+
+    // Post editing
+    } elseif ($mode == 'p' && isset($_GET['edit']) && $_GET['edit'] == $_GET['p'] && array_key_exists($_GET['p'], $topic['posts'])) {
+        // Checks
+        if ($topic['posts'][$_GET['p']]['poster_id'] != $currentUser->data['user_id']) {
+            // Add page specific things
+            $renderData['page'] = [
+                'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
+                'message' => 'You can only edit your own posts!',
+            ];
+
+            // Render information page
+            print Templates::render('global/information.tpl', $renderData);
+            exit;
+        }
+
+        // Reassign post for ease
+        $post = $topic['posts'][$_GET['p']];
+
+        // Set variables
+        $posting = array_merge($posting, [
+            'subject' => $post['post_subject'],
+            'text' => $post['post_text'],
+            'id' => $post['post_id']
+        ]);
+    // Post deletion
+    } elseif ($mode == 'p' && isset($_GET['delete']) && $_GET['delete'] == $_GET['p'] && array_key_exists($_GET['p'], $topic['posts'])) {
+        // Checks
+        if ($topic['posts'][$_GET['p']]['poster_id'] != $currentUser->data['user_id']) {
+            // Add page specific things
+            $renderData['page'] = [
+                'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
+                'message' => 'You can only delete your own posts!',
+            ];
+
+            // Render information page
+            print Templates::render('global/information.tpl', $renderData);
+            exit;
+        }
+
+        // Submit mode
+        if (isset($_POST['timestamp'], $_POST['sessionid'], $_POST['post_id'])) {
+            // Post deletion code
+            if (isset($_POST['yes'])) {
+                // Delete the post
+                Database::delete('posts', [
+                    'post_id' => [$_POST['post_id'], '='],
+                ]);
+
+                // Reload the topic
+                $topic = Forum::getTopic($topicId, true);
+
+                // If there's no more posts left in the topic delete it as well
+                if (!count($topic['posts'])) {
+                    Database::delete('topics', [
+                        'topic_id' => [$topic['topic']['topic_id'], '='],
+                    ]);
+                }
+
+                // Add page specific things
+                $renderData['page'] = [
+                    'redirect' => (count($topic['posts']) ? $urls->format('FORUM_THREAD', [$topic['topic']['topic_id']]) : $urls->format('FORUM_INDEX')),
+                    'message' => 'Your post has been deleted!',
+                ];
+
+                // Render information page
+                print Templates::render('global/information.tpl', $renderData);
+                exit;
+            // Return to previous page
+            } else {
+                header('Location: '. $urls->format('FORUM_POST', [$_POST['post_id']]));
+                exit;
+            }
+        }
+
+        // Form mode
+        $renderData = array_merge($renderData, [
+            'message' => 'Are you sure you want to delete your reply to ' . $topic['topic']['topic_title'] . '?',
+            'conditions' => [
+                'post_id' => $topic['posts'][$_GET['p']]['post_id']
+            ]
+        ]);
+
+        // Render confirmation form
+        print Templates::render('global/confirm.tpl', $renderData);
+        exit;
     }
 
     // Add subject to render data
-    $posting['subject'] = 'Re: '. $topic['topic']['topic_title'];
+    if(!isset($posting['subject'])) {
+        $posting['subject'] = 'Re: ' . $topic['topic']['topic_title'];
+    }
 }
 
 // Check if a post is being made

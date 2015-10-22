@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151020');
+define('SAKURA_VERSION', '20151022');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 define('SAKURA_STABLE', false);
@@ -161,6 +161,7 @@ if (!defined('SAKURA_NO_TPL')) {
             'siteTags' => implode(", ", json_decode(Configuration::getConfig('sitetags'), true)),
             'dateFormat' => Configuration::getConfig('date_format'),
             'currentPage' => '//' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
+            'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null),
 
             'recaptchaPublic' => Configuration::getConfig('recaptcha_public'),
             'recaptchaEnabled' => Configuration::getConfig('recaptcha'),

@@ -178,9 +178,21 @@ if (isset($_REQUEST['mode'])) {
                     'INCORRECT_PASSWORD' => 'The password you entered was invalid.',
                     'NOT_ALLOWED' => 'Your account does not have the required permissions to log in.',
                     'NO_LOGIN' => 'Logging into this account is disabled.',
+                    'RATE_LIMIT' => 'Your IP has hit the login rate limit, try again later.',
                     'LOGIN_SUCCESS' => 'Login successful!',
 
                 ];
+
+                // Check if we're not RATE_LIMIT
+                if ($login[1] != 'RATE_LIMIT') {
+                    // Add to database
+                    Database::insert('login_attempts', [
+                        'attempt_success' => $login[0],
+                        'attempt_timestamp' => time(),
+                        'attempt_ip' => Main::getRemoteIP(),
+                        'user_id' => isset($login[2]) ? $login[2] : 0,
+                    ]);
+                }
 
                 // Add page specific things
                 $renderData['page'] = [
