@@ -52,7 +52,7 @@
                             {% if post.user.signature and post.post_signature %}
                             <div class="clear"></div>
                             <div class="signature">
-                                {{ post.user.signature|raw }}
+                                {{ post.user.signature|raw|nl2br }}
                             </div>
                             {% endif %}
                         </td>
