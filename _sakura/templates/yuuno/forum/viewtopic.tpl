@@ -49,10 +49,10 @@
                             <div class="post-text markdown">
                                 {{ post.parsed_post|raw }}
                             </div>
-                            {% if post.post_signature and post.signature %}
+                            {% if post.user.signature and post.post_signature %}
                             <div class="clear"></div>
                             <div class="signature">
-                                {{ post.signature|raw }}
+                                {{ post.user.signature|raw }}
                             </div>
                             {% endif %}
                         </td>

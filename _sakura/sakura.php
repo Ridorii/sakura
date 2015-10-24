@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151022');
+define('SAKURA_VERSION', '20151024');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 define('SAKURA_STABLE', false);
@@ -47,6 +47,7 @@ require_once ROOT . '_sakura/components/Manage.php';
 require_once ROOT . '_sakura/components/Bans.php';
 require_once ROOT . '_sakura/components/Whois.php';
 require_once ROOT . '_sakura/components/Payments.php';
+require_once ROOT . '_sakura/components/Trick.php';
 
 // Include database extensions
 foreach (glob(ROOT . '_sakura/components/database/*.php') as $driver) {

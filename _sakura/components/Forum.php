@@ -264,12 +264,6 @@ class Forum
                 'elapsed' => Main::timeElapsed($post['post_time']),
                 'is_op' => ($post['poster_id'] == $firstPost['poster_id'] ? '1' : '0'),
                 'parsed_post' => self::parseMarkUp($post['post_text'], $post['post_parse'], $post['post_emotes']),
-                'signature' => empty($_POSTER['userData']['signature']) ?
-                '' :
-                self::parseMarkUp(
-                    $_POSTER['userData']['signature']['text'],
-                    $_POSTER['userData']['signature']['mode']
-                ),
             ]);
 
             // Just in case

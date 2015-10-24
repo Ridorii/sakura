@@ -461,7 +461,7 @@ class User
 
     }
 
-    // Get all warnings issued to the user
+    // Get a user's userpage
     public function userPage()
     {
 
@@ -471,6 +471,22 @@ class User
                 $this->data['user_data']['userPage']
             ),
             true
+        ) :
+        null;
+
+    }
+
+    // Get a user's signature
+    public function signature()
+    {
+
+        return isset($this->data['user_data']['signature']) ?
+        Main::bbParse(
+            Main::parseEmotes(
+                base64_decode(
+                    $this->data['user_data']['signature']
+                )
+            )
         ) :
         null;
 

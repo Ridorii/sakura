@@ -36,7 +36,7 @@ if ($mode != 'f') {
     $topic = Forum::getTopic($topicId, true);
 
     // Prompt an error if the topic doesn't exist
-    if(!$topic) {
+    if (!$topic) {
         // Add page specific things
         $renderData['page'] = [
             'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
@@ -56,7 +56,7 @@ if ($mode != 'f') {
         // Add subject to render data
         $posting['text'] = '[quote]' . $post['post_text'] . '[/quote]';
 
-    // Post editing
+        // Post editing
     } elseif ($mode == 'p' && isset($_GET['edit']) && $_GET['edit'] == $_GET['p'] && array_key_exists($_GET['p'], $topic['posts'])) {
         // Checks
         if ($topic['posts'][$_GET['p']]['poster_id'] != $currentUser->data['user_id']) {
@@ -78,9 +78,9 @@ if ($mode != 'f') {
         $posting = array_merge($posting, [
             'subject' => $post['post_subject'],
             'text' => $post['post_text'],
-            'id' => $post['post_id']
+            'id' => $post['post_id'],
         ]);
-    // Post deletion
+        // Post deletion
     } elseif ($mode == 'p' && isset($_GET['delete']) && $_GET['delete'] == $_GET['p'] && array_key_exists($_GET['p'], $topic['posts'])) {
         // Checks
         if ($topic['posts'][$_GET['p']]['poster_id'] != $currentUser->data['user_id']) {
@@ -123,9 +123,9 @@ if ($mode != 'f') {
                 // Render information page
                 print Templates::render('global/information.tpl', $renderData);
                 exit;
-            // Return to previous page
+                // Return to previous page
             } else {
-                header('Location: '. $urls->format('FORUM_POST', [$_POST['post_id']]));
+                header('Location: ' . $urls->format('FORUM_POST', [$_POST['post_id']]));
                 exit;
             }
         }
@@ -134,8 +134,8 @@ if ($mode != 'f') {
         $renderData = array_merge($renderData, [
             'message' => 'Are you sure you want to delete your reply to ' . $topic['topic']['topic_title'] . '?',
             'conditions' => [
-                'post_id' => $topic['posts'][$_GET['p']]['post_id']
-            ]
+                'post_id' => $topic['posts'][$_GET['p']]['post_id'],
+            ],
         ]);
 
         // Render confirmation form
@@ -144,7 +144,7 @@ if ($mode != 'f') {
     }
 
     // Add subject to render data
-    if(!isset($posting['subject'])) {
+    if (!isset($posting['subject'])) {
         $posting['subject'] = 'Re: ' . $topic['topic']['topic_title'];
     }
 }
@@ -152,7 +152,7 @@ if ($mode != 'f') {
 // Check if a post is being made
 if (isset($_POST['post'])) {
     // Set post mode
-    switch($_POST['parseMode']) {
+    switch ($_POST['parseMode']) {
         // BBcode
         case '1':
             $parse = '1';
@@ -167,7 +167,7 @@ if (isset($_POST['post'])) {
     }
 
     // Attempt to make the post
-    $makePost = Forum::createPost($currentUser->data['user_id'], $_POST['subject'], $_POST['text'], $forumId, $topicId, $parse);
+    $makePost = Forum::createPost($currentUser->data['user_id'], $_POST['subject'], $_POST['text'], $forumId, $topicId, $parse, 1, 1);
 
     // Add page specific things
     $renderData['page'] = [
@@ -178,12 +178,12 @@ if (isset($_POST['post'])) {
 
     // Print page contents or if the AJAX request is set only display the render data
     print isset($_REQUEST['ajax']) ?
-        (
-            $renderData['page']['message'] . '|' .
-            $renderData['page']['success'] . '|' .
-            $renderData['page']['redirect']
-        ) :
-        Templates::render('global/information.tpl', $renderData);
+    (
+        $renderData['page']['message'] . '|' .
+        $renderData['page']['success'] . '|' .
+        $renderData['page']['redirect']
+    ) :
+    Templates::render('global/information.tpl', $renderData);
     exit;
 }
 

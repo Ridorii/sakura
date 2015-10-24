@@ -15,8 +15,8 @@ class Users
     // Empty user template
     public static $emptyUser = [
         'user_id' => 0,
-        'username' => 'Sakura User',
-        'username_clean' => 'sakura user',
+        'username' => 'User',
+        'username_clean' => 'user',
         'password_hash' => '',
         'password_salt' => '',
         'password_algo' => 'nologin',
@@ -29,7 +29,7 @@ class Users
         'user_colour' => '',
         'register_ip' => '127.0.0.1',
         'last_ip' => '127.0.0.1',
-        'user_title' => 'Internal fallback account',
+        'user_title' => '',
         'user_registered' => 0,
         'user_last_online' => 0,
         'user_birthday' => '',
@@ -40,11 +40,12 @@ class Users
     // Empty rank template
     public static $emptyRank = [
         'rank_id' => 0,
-        'rank_name' => 'Sakura Rank',
+        'rank_name' => 'Rank',
+        'rank_hierarchy' => 0,
         'rank_multiple' => null,
         'rank_hidden' => 1,
         'rank_colour' => '#444',
-        'rank_description' => 'A hardcoded dummy rank for fallback.',
+        'rank_description' => '',
         'rank_title' => '',
     ];
 

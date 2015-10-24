@@ -948,6 +948,24 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 ];
                 break;
 
+            // Signature
+            case 'signature':
+                // Base64 encode the signature
+                $signature = base64_encode($_POST['signature']);
+
+                // Update database
+                Users::updateUserDataField($currentUser->data['user_id'], ['signature' => $signature]);
+
+                // Set render data
+                $renderData['page'] = [
+
+                    'redirect' => $redirect,
+                    'message' => 'Your signature has been updated!',
+                    'success' => 1,
+
+                ];
+                break;
+
             // Fallback
             default:
                 // Set render data
@@ -1465,9 +1483,14 @@ if (Users::checkLogin()) {
             ];
             break;
 
-        // Profile
+        // User page
         case 'appearance.userpage':
             $renderData['userPage'] = isset($currentUser->data['user_data']['userPage']) ? base64_decode($currentUser->data['user_data']['userPage']) : '';
+            break;
+
+        // Signature
+        case 'appearance.signature':
+            $renderData['signature'] = isset($currentUser->data['user_data']['signature']) ? base64_decode($currentUser->data['user_data']['signature']) : '';
             break;
 
         // Username changing
