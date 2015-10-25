@@ -701,6 +701,50 @@ a.default:active {
 }
 
 /*
+ * Advertisement container
+ */
+.ad-container {
+    font-size: .8em;
+}
+
+.ad-container a {
+    color: #22E;
+    text-decoration: none;
+}
+
+.ad-container a:hover {
+    text-decoration: underline;
+}
+
+.ad-container a:active {
+    color: #E22;
+}
+
+.ad-container img {
+    vertical-align: middle;
+}
+
+.ad-container.ad-sidebar > .ad-box {
+    text-align: center;
+    padding: 2px;
+}
+
+.ad-container.ad-footer {
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+}
+
+.ad-container.ad-footer > .ad-box {
+    display: inline-block;
+    padding: 2px;
+    border: 1px solid #9475B2;
+    box-shadow: 0 0 3px #9475B2;
+    border-radius: 3px;
+    background: #D3BFFF;
+}
+
+/*
  * Authentication page Styling
  */
 .loginPage {

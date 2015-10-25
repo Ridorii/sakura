@@ -36,4 +36,11 @@
     {% else %}
         There were no online users in the past 5 minutes.
     {% endif %}
+    {#<div class="ad-container ad-sidebar" id="footerAd">
+        <div class="head">Advertisment</div>
+        <div class="ad-box">
+            <img src="http://i.flash.moe/1445793369-523-9238.png" />
+            <div><a href="#">Click here to meow!</a></div>
+        </div>
+    </div>#}
 </div>

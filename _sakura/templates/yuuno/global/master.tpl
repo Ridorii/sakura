@@ -230,6 +230,12 @@
                 {% endblock %}
 
                 {# include 'global/chat.tpl' #}
+
+                {#<div class="ad-container ad-footer" id="footerAd">
+                    <div class="ad-box">
+                        <img src="http://i.flash.moe/1445792838-522-8610.png" />
+                    </div>
+                </div>#}
             </div>
             <div class="footer">
                 <div class="ftsections">
