@@ -429,14 +429,14 @@ a:active {
     color: inherit;
 }
 
-.profile > .profileHeader {
+#profileHeader {
     height: 250px;
     width: 100%;
     display: flex;
     align-items: flex-end;
 }
 
-.profile > .profileHeader > .userAvatar {
+#userAvatar {
     font-size: 0;
     background: transparent no-repeat scroll left center / cover;
     height: 200px;
@@ -448,7 +448,7 @@ a:active {
     flex-shrink: 0;
 }
 
-.profile > .profileHeader > .userData {
+#profileHeader > .userData {
     display: flex;
     align-items: center;
     position: relative;
@@ -456,41 +456,41 @@ a:active {
     width: 100%;
 }
 
-.profile > .profileHeader > .userData > .headerLeft {
+#profileHeader > .userData > .headerLeft {
     flex-grow: 1;
 }
 
-.profile > .profileHeader > .userData > .headerLeft > .profileUsername {
+#profileHeader > .userData > .headerLeft > .profileUsername {
     font-size: 3em;
     line-height: .8em;
 }
 
-.profile > .profileHeader > .userData > .headerLeft > .profileUserTitle {
+#profileHeader > .userData > .headerLeft > .profileUserTitle {
     padding-left: 12px;
 }
 
-.profile > .profileHeader > .userData > .headerRight {
+#profileHeader > .userData > .headerRight {
     text-align: right;
     padding-right: 12px;
 }
 
-.profile > .profileContent {
+#profileContent {
     margin: 10px 10px 0 0;
 }
 
-.profile > .profileContent > .userDataBar {
+#profileContent > .userDataBar {
     width: 210px;
     margin-top: 10px;
     flex-shrink: 0;
 }
 
-.profile > .profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies {
+#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies {
     list-style: none;
     font-size: 2.5em;
     line-height: 1.2em;
 }
 
-.profile > .profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > li:before {
+#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > li:before {
     font-family: "FontAwesome";
     width: 36px;
     padding-right: 3px;
@@ -500,83 +500,83 @@ a:active {
     text-shadow: 0 0 3px #fcfcfc;
 }
 
-.profile > .profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .tenshi {
+#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .tenshi {
     color: #ee9400;
 }
 
-.profile > .profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .tenshi:before {
+#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .tenshi:before {
     content: "\f004";
 }
 
-.profile > .profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .staff {
+#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .staff {
     color: #09f;
 }
 
-.profile > .profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .staff:before {
+#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .staff:before {
     content: "\f0e3";
 }
 
-.profile > .profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .developer {
+#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .developer {
     color: #824ca0;
 }
 
-.profile > .profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .developer:before {
+#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .developer:before {
     content: "\f121";
 }
 
-.profile > .profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .alumnii {
+#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .alumnii {
     color: #ff69b4;
 }
 
-.profile > .profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .alumnii:before {
+#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .alumnii:before {
     content: "\f005";
 }
 
-.profile > .profileContent > .userDataBar > .userAccounts a {
+#profileContent > .userDataBar > .userAccounts a {
     color: inherit;
 }
 
-.profile > .profileContent > .userDataBar > .userAccounts > .inner > .field > div:nth-child(1) {
+#profileContent > .userDataBar > .userAccounts > .inner > .field > div:nth-child(1) {
     float: left;
     font-weight: bold;
 }
 
-.profile > .profileContent > .userDataBar > .userAccounts > .inner > .field > div:nth-child(2) {
+#profileContent > .userDataBar > .userAccounts > .inner > .field > div:nth-child(2) {
     float: right;
 }
 
-.profile > .profileContent > .userDataBar > .userAccounts > .inner > .noAccounts > .fa {
+#profileContent > .userDataBar > .userAccounts > .inner > .noAccounts > .fa {
     font-size: 3em;
 }
 
-.profile > .profileContent > .userDataBar > .userAccounts > .inner > .noAccounts {
+#profileContent > .userDataBar > .userAccounts > .inner > .noAccounts {
     font-size: 1.5em;
     line-height: 1em;
     text-align: center;
 }
 
-.profile > .profileContent > .userDataBar > .accountStanding > .inner > .title {
+#profileContent > .userDataBar > .accountStanding > .inner > .title {
     font-size: 1.5em;
     line-height: 1em;
     font-weight: bold;
 }
 
-.profile > .profileContent > .userDataBar > .accountStanding > .inner > .standing {
+#profileContent > .userDataBar > .accountStanding > .inner > .standing {
     font-size: 2.5em;
     line-height: 1.5em;
     text-align: center;
 }
 
-.profile > .profileContent > .profileMain {
+#profileContent > .profileMain {
     width: 100%;
 }
 
-.profile > .profileContent > .profileMain > .statsRow {
+#profileContent > .profileMain > .statsRow {
     width: 100%;
     display: flex;
 }
 
-.profile > .profileContent > .profileMain > .statsRow > div {
+#profileContent > .profileMain > .statsRow > div {
     font-size: 2.5em;
     line-height: 1em;
     flex-basis: 0;
@@ -584,11 +584,11 @@ a:active {
     flex-shrink: 0;
 }
 
-.profile > .profileContent > .profileMain > .statsRow .inner > .count {
+#profileContent > .profileMain > .statsRow .inner > .count {
     float: right;
 }
 
-.profile > .profileContent > .profileMain > .statsRow .inner a {
+#profileContent > .profileMain > .statsRow .inner a {
     text-decoration: none;
     color: inherit;
 }

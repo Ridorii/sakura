@@ -10,17 +10,53 @@
 
 {% block css %}
     <style type="text/css">
-        .profileHeader {
+        #profileHeader {
             background-image: linear-gradient(0deg, transparent 0%, transparent 12%, rgba(0, 0, 0, .7) 30%,
                 transparent 76%, transparent 100%), url('{{ urls.format('IMAGE_HEADER', [profile.data.user_id]) }}');
         }
     </style>
 {% endblock %}
 
+{# block js %}
+    <script type="text/javascript">
+        // Header
+        window.addEventListener("scroll", function(e) {
+            if(e.pageY > 244) {
+                var profileHeader = document.getElementById('profileHeader');
+                var profileContent = document.getElementById('profileContent');
+                var userAvatar = document.getElementById('userAvatar');
+                profileHeader.style.position = 'fixed';
+                profileHeader.style.paddingTop = '30px';
+                profileHeader.style.top = '0';
+                profileHeader.style.maxWidth = '1018px';
+                profileHeader.style.height = '100px';
+                profileContent.style.marginTop = '264px';
+                userAvatar.style.height = '80px';
+                userAvatar.style.width = '80px';
+                userAvatar.style.margin = '10px';
+                userAvatar.style.transition = '.2s';
+            } else {
+                var profileHeader = document.getElementById('profileHeader');
+                var profileContent = document.getElementById('profileContent');
+                var userAvatar = document.getElementById('userAvatar');
+                profileHeader.style.position = null;
+                profileHeader.style.paddingTop = null;
+                profileHeader.style.top = null;
+                profileHeader.style.maxWidth = null;
+                profileHeader.style.height = null;
+                profileContent.style.marginTop = null;
+                userAvatar.style.height = null;
+                userAvatar.style.width = null;
+                userAvatar.style.margin = null;
+            }
+        });
+    </script>
+{% endblock #}
+
 {% block content %}
     <div class="profile" id="u{{ profile.data.user_id }}">
-        <div class="profileHeaderContent profileHeader">
-            <div class="userAvatar" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [profile.data.user_id]) }}');">{{ profile.data.username }}'s Avatar</div>
+        <div class="profileHeaderContent" id="profileHeader">
+            <div id="userAvatar" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [profile.data.user_id]) }}');">{{ profile.data.username }}'s Avatar</div>
             <div class="userData">
                 <div class="headerLeft">
                     <div class="profileUsername" style="color: {{ profile.colour }};"{% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0]['username_old'] }} before {{ profile.getUsernameHistory[0]['change_time']|date(sakura.dateFormat) }}."{% endif %}>
@@ -38,7 +74,7 @@
                 </div>
             </div>
         </div>
-        <div class="profileContainer profileContent">
+        <div class="profileContainer" id="profileContent">
             <div class="userDataBar">
             {% if not profileHidden and (profile.checkPremium[0] or profile.checkPermission('MANAGE', 'USE_MANAGE')) %}
                 <div class="profilePlatform hierarchyContainer">
