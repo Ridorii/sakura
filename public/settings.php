@@ -710,7 +710,6 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                             'user_id' => [$currentUser->data['user_id'], '='],
                         ],
                     ]);
-
                 }
                 break;
 
@@ -979,7 +978,6 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 break;
 
         }
-
     }
 
     // Print page contents or if the AJAX request is set only display the render data
@@ -991,7 +989,6 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     ) :
     Templates::render('global/information.tpl', $renderData);
     exit;
-
 }
 
 if (Users::checkLogin()) {

@@ -46,7 +46,6 @@ class Hashing
     // Returns an array formatted like: [algorithm, iterations, salt, hash]
     public static function createHash($pass)
     {
-
         $salt = base64_encode(
             \mcrypt_create_iv(
                 self::$saltBytes,
@@ -73,13 +72,11 @@ class Hashing
         ];
 
         return $passwordData;
-
     }
 
     // Validates hashed password
     public static function validatePassword($password, $params)
     {
-
         if (count($params) < 4) {
             return false;
         }
@@ -99,13 +96,11 @@ class Hashing
         );
 
         return $validate;
-
     }
 
     // Compares two strings $a and $b in length-constant time.
     public static function slowEquals($a, $b)
     {
-
         $diff = strlen($a) ^ strlen($b);
 
         for ($i = 0; $i < strlen($a) && $i < strlen($b); $i++) {
@@ -113,7 +108,6 @@ class Hashing
         }
 
         return $diff === 0;
-
     }
 
     /*
@@ -134,7 +128,6 @@ class Hashing
 
     private static function pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output = false)
     {
-
         $algorithm = strtolower($algorithm);
 
         if (!in_array($algorithm, hash_algos(), true)) {
@@ -185,6 +178,5 @@ class Hashing
 
             return bin2hex(substr($output, 0, $key_length));
         }
-
     }
 }

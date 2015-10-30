@@ -26,27 +26,22 @@ class Main
 
         // "Dynamic" Configuration
         Configuration::initDB();
-
     }
 
     // Parse markdown
     public static function mdParse($text, $escape = false)
     {
-
         $pd = new Parsedown();
 
         return $escape ?
         $pd->setMarkupEscaped(true)->text($text) :
         $pd->text($text);
-
     }
 
     // Get bbcodes
     public static function getBBcodes()
     {
-
         return Database::fetch('bbcodes');
-
     }
 
     // Parse bbcodes
@@ -71,15 +66,12 @@ class Main
 
         // Return the parsed text
         return $text;
-
     }
 
     // Get emoticons
     public static function getEmotes()
     {
-
         return Database::fetch('emoticons');
-
     }
 
     // Parsing emoticons
@@ -100,7 +92,6 @@ class Main
 
         // Return the parsed text
         return $text;
-
     }
 
     // Verify ReCAPTCHA
@@ -125,7 +116,6 @@ class Main
 
         // Return shit
         return $resp;
-
     }
 
     // Error Handler
@@ -171,7 +161,6 @@ class Main
 
                 ]);
             }
-
         }
 
         switch ($errno) {
@@ -263,7 +252,6 @@ class Main
 
                 $errorPage .= '</pre>';
             }
-
         }
 
         $errorPage .= '</div>
@@ -276,7 +264,6 @@ class Main
 
         // Die and display error message
         die($errorPage);
-
     }
 
     // Send emails
@@ -351,7 +338,6 @@ class Main
 
         // Else just return whatever
         return $send;
-
     }
 
     // Cleaning strings
@@ -375,7 +361,6 @@ class Main
 
         // Return clean string
         return $string;
-
     }
 
     // Loading info pages
@@ -387,7 +372,6 @@ class Main
 
         // Return the data if there is any else just return false
         return count($infopage) ? $infopage : false;
-
     }
 
     // Validate MX records
@@ -402,7 +386,6 @@ class Main
 
         // Return the record data
         return $record;
-
     }
 
     // Check IP version
@@ -424,7 +407,6 @@ class Main
 
         // Not an IP or unknown type
         return 0;
-
     }
 
     // Convert inet_pton to string with bits
@@ -447,7 +429,6 @@ class Main
 
         // Return IP
         return $binaryIP;
-
     }
 
     // Match IP subnets
@@ -493,7 +474,6 @@ class Main
                 return 0;
 
         }
-
     }
 
     // Check if IP is a CloudFlare IP
@@ -526,7 +506,6 @@ class Main
 
         // Return false if fails
         return false;
-
     }
 
     // Gets IP of current visitor
@@ -546,7 +525,6 @@ class Main
 
         // Return the correct IP
         return $ip;
-
     }
 
     // Get country code from CloudFlare header (which just returns XX if not found)
@@ -560,7 +538,6 @@ class Main
 
         // Return XX as a fallback
         return 'XX';
-
     }
 
     // Create a new action code
@@ -588,7 +565,6 @@ class Main
 
         // Return the key
         return $key;
-
     }
 
     // Use an action code
@@ -620,7 +596,6 @@ class Main
 
         // Return success
         return [1, 'SUCCESS', $keyRow['instruction']];
-
     }
 
     // Calculate password entropy
@@ -632,7 +607,6 @@ class Main
 
         // Count the amount of unique characters in the password string and calculate the entropy
         return count(count_chars($pw, 1)) * log(256, 2);
-
     }
 
     // Get country name from ISO 3166 code
@@ -656,7 +630,6 @@ class Main
 
         // Else return unknown
         return 'Unknown';
-
     }
 
     // Get FAQ data
@@ -668,7 +641,6 @@ class Main
 
         // Return FAQ data
         return $faq;
-
     }
 
     // Get log type string
@@ -685,7 +657,6 @@ class Main
 
         // Return the string
         return $return['string'];
-
     }
 
     // Get formatted logs
@@ -713,7 +684,6 @@ class Main
 
         // Return new logs
         return $logs;
-
     }
 
     // Time elapsed
@@ -750,7 +720,6 @@ class Main
                 return $round . ' ' . $times[$secs] . ($round == 1 ? '' : 's') . $append;
             }
         }
-
     }
 
     // Get the byte symbol from a value
@@ -773,7 +742,6 @@ class Main
 
         // Return the formatted string
         return $bytes;
-
     }
 
     // Get Premium tracker data
@@ -808,13 +776,11 @@ class Main
 
         // Return the data
         return $data;
-
     }
 
     // Update donation tracker
     public static function updatePremiumTracker($id, $amount, $comment)
     {
-
         Database::insert('premium_log', [
 
             'user_id' => $id,
@@ -823,6 +789,5 @@ class Main
             'transaction_comment' => $comment,
 
         ]);
-
     }
 }

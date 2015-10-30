@@ -281,7 +281,6 @@ if (isset($_REQUEST['mode'])) {
                 break;
 
         }
-
     }
 
     // Print page contents or if the AJAX request is set only display the render data

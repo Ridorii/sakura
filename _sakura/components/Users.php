@@ -11,7 +11,6 @@ namespace Sakura;
  */
 class Users
 {
-
     // Empty user template
     public static $emptyUser = [
         'user_id' => 0,
@@ -126,7 +125,6 @@ class Users
 
         // If everything went through return true
         return [$uid, $sid];
-
     }
 
     // Log a user in
@@ -210,7 +208,6 @@ class Users
 
         // Successful login! (also has a thing for the legacy password system)
         return [1, 'LOGIN_SUCCESS', $user['user_id']];
-
     }
 
     // Logout and kill the session
@@ -245,7 +242,6 @@ class Users
 
         // Return true indicating a successful logout
         return true;
-
     }
 
     // Register user
@@ -361,7 +357,6 @@ class Users
 
         // Return true with a specific message if needed
         return [1, ($requireActive ? 'EMAILSENT' : 'SUCCESS')];
-
     }
 
     // Check if a user exists and then send the password forgot email
@@ -419,7 +414,6 @@ class Users
 
         // Return success
         return [1, 'SUCCESS'];
-
     }
 
     // Reset password with key
@@ -469,7 +463,6 @@ class Users
 
         // Return success
         return [1, 'SUCCESS'];
-
     }
 
     // Check if a user exists and then resend the activation e-mail
@@ -506,7 +499,6 @@ class Users
 
         // Return success
         return [1, 'SUCCESS'];
-
     }
 
     // Send the activation e-mail and do other required stuff
@@ -557,7 +549,6 @@ class Users
 
         // Return true indicating that the things have been sent
         return true;
-
     }
 
     // Activating a user
@@ -611,7 +602,6 @@ class Users
 
         // Return success
         return [1, 'SUCCESS'];
-
     }
 
     // Deactivating a user
@@ -644,7 +634,6 @@ class Users
 
         // Return success
         return [1, 'SUCCESS'];
-
     }
 
     // Check if registration code is valid
@@ -656,7 +645,6 @@ class Users
 
         // Check if it exists and return it
         return count($keyRow) ? $keyRow[0]['id'] : false;
-
     }
 
     // Mark registration code as used
@@ -681,7 +669,6 @@ class Users
 
         // Return true because yeah
         return true;
-
     }
 
     // Create new registration code
@@ -715,7 +702,6 @@ class Users
 
         // Return the code
         return $code;
-
     }
 
     // Set the default rank of a user
@@ -745,7 +731,6 @@ class Users
 
         // Return true if everything was successful
         return true;
-
     }
 
     // Add a rank to a user
@@ -781,7 +766,6 @@ class Users
 
         // Return true because
         return true;
-
     }
 
     // Removing ranks from a user
@@ -817,15 +801,12 @@ class Users
 
         // Return true
         return true;
-
     }
 
     // Check if a user has these ranks
     public static function checkIfUserHasRanks($ranks, $userid, $userIdIsUserData = false)
     {
-
         return $userIdIsUserData ? $userid->checkIfUserHasRanks($ranks) : (new User($userid))->checkIfUserHasRanks($ranks);
-
     }
 
     // Check if a user exists
@@ -840,7 +821,6 @@ class Users
 
         // Return count (which would return 0, aka false, if nothing was found)
         return count($user) ? $user[0]['user_id'] : false;
-
     }
 
     // Get the available profile fields
@@ -867,7 +847,6 @@ class Users
 
         // Return the yeahs
         return $fields;
-
     }
 
     // Get the available option fields
@@ -896,7 +875,6 @@ class Users
 
         // Return the yeahs
         return $fields;
-
     }
 
     // Get user's profile fields
@@ -966,7 +944,6 @@ class Users
 
         // Return appropiate profile data
         return $profile;
-
     }
 
     // Updating the profile data of a user
@@ -991,7 +968,6 @@ class Users
                 'user_id' => [$id, '='],
             ],
         ]);
-
     }
 
     // Check if a user is online
@@ -1008,7 +984,6 @@ class Users
 
         // Return true if the user was online in the last 5 minutes
         return ($user['user_last_online'] > (time() - 500));
-
     }
 
     // Get all online users
@@ -1023,7 +998,6 @@ class Users
 
         // Return all the online users
         return $getAll;
-
     }
 
     // Add premium to a user
@@ -1059,17 +1033,14 @@ class Users
 
         // Return the expiration timestamp
         return $expire;
-
     }
 
     // Remove the premium status of a user
     public static function removeUserPremium($id)
     {
-
         Database::delete('premium', [
             'user_id' => [$id, '='],
         ]);
-
     }
 
     // Check if user has Premium
@@ -1100,7 +1071,6 @@ class Users
 
         // Else return the start and expiration date
         return [1, $getRecord['premium_start'], $getRecord['premium_expire']];
-
     }
 
     // Update the premium data
@@ -1126,7 +1096,6 @@ class Users
             // Else remove the rank from them
             self::removeRanksFromUser([$premiumRank], $id);
         }
-
     }
 
     // Get user data by id
@@ -1135,7 +1104,6 @@ class Users
 
         // If user was found return user data
         return (new User($id))->data;
-
     }
 
     // Get rank data by id
@@ -1144,7 +1112,6 @@ class Users
 
         // If rank was found return rank data
         return (new Rank($id))->data;
-
     }
 
     // Get user(s) by IP
@@ -1162,7 +1129,6 @@ class Users
 
         // Return the array with users
         return $users;
-
     }
 
     // Get users in rank
@@ -1188,7 +1154,6 @@ class Users
 
         // Then return the array with the user rows
         return $rank;
-
     }
 
     // Get all users
@@ -1218,7 +1183,6 @@ class Users
 
         // and return an array with the users
         return $users;
-
     }
 
     // Get all ranks
@@ -1238,7 +1202,6 @@ class Users
 
         // and return an array with the ranks
         return $ranks;
-
     }
 
     // Get all warnings issued to a user (or all warnings a user issued)
@@ -1252,7 +1215,6 @@ class Users
 
         // Return all the warnings
         return $warnings;
-
     }
 
     // Get a user's notifications
@@ -1290,7 +1252,6 @@ class Users
 
         // Return the notifications
         return $notifications;
-
     }
 
     // Marking notifications as read
@@ -1306,7 +1267,6 @@ class Users
                 'alert_id' => [$id, '='],
             ],
         ]);
-
     }
 
     // Adding a new notification
@@ -1328,7 +1288,6 @@ class Users
             'alert_img' => $img,
             'alert_timeout' => $timeout,
         ]);
-
     }
 
     // Getting a user's PMs
@@ -1357,7 +1316,6 @@ class Users
 
         // Return store array
         return $store;
-
     }
 
     // Get friends
@@ -1400,7 +1358,6 @@ class Users
 
         // Return formatted array
         return $friends;
-
     }
 
     // Get non-mutual friends
@@ -1438,14 +1395,11 @@ class Users
 
         // Return the pending friends
         return $pending;
-
     }
 
     // Get the ID of the newest user
     public static function getNewestUserId()
     {
-
         return Database::fetch('users', false, ['password_algo' => ['nologin', '!=']], ['user_id', true], ['1'])['user_id'];
-
     }
 }

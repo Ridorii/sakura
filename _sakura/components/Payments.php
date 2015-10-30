@@ -41,7 +41,6 @@ class Payments
         }
 
         return true;
-
     }
 
     // Create transaction
@@ -117,7 +116,6 @@ class Payments
 
         // Return the approval link if everything is gucci
         return $payment->getApprovalLink();
-
     }
 
     // Complete the PayPal transaction
@@ -142,6 +140,5 @@ class Payments
 
         // If everything was cute return true
         return true;
-
     }
 }

@@ -67,7 +67,6 @@ if (isset($_REQUEST['mode'])
                     } else {
                         header('Location: ' . $urls->format('SITE_PREMIUM') . '?fail=true');
                     }
-
                 }
 
                 break;
@@ -128,11 +127,9 @@ if (isset($_REQUEST['mode'])
                 break;
 
         }
-
     }
 
     exit;
-
 }
 
 // Premium tracker

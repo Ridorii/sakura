@@ -45,7 +45,6 @@ class Templates
 
         // Start Twig
         self::twigLoader();
-
     }
 
     // Twig Loader
@@ -68,18 +67,15 @@ class Templates
 
         // Load String template loader
         self::$engine->addExtension(new Twig_Extension_StringLoader());
-
     }
 
     // Render template
     public static function render($file, $tags)
     {
-
         try {
             return self::$engine->render($file, $tags);
         } catch (\Exception $e) {
             trigger_error($e->getMessage(), E_USER_ERROR);
         }
-
     }
 }

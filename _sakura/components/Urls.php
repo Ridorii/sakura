@@ -291,6 +291,5 @@ class Urls
 
         // Return the formatted url
         return $formatted;
-
     }
 }

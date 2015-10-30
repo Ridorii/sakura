@@ -83,9 +83,7 @@ if (Configuration::getConfig('no_cron_service')) {
                 'config_name' => ['no_cron_last', '='],
             ],
         ]);
-
     }
-
 }
 
 // Start output buffering

@@ -38,7 +38,6 @@ class Configuration
                 E_USER_ERROR
             );
         }
-
     }
 
     /*
@@ -62,7 +61,6 @@ class Configuration
 
         // Assign the temporary array to the static one
         self::$database = $_DBCN;
-
     }
 
     // Get values from the configuration on the file system
@@ -85,7 +83,6 @@ class Configuration
             'Unable to get local configuration value "' . $key . '"',
             E_USER_ERROR
         );
-
     }
 
     // Dynamically set local configuration values, does not update the configuration file
@@ -105,7 +102,6 @@ class Configuration
 
         // Otherwise we just straight up assign it
         self::$local[$key] = $value;
-
     }
 
     // Get values from the configuration in the database
@@ -126,6 +122,5 @@ class Configuration
             'Unable to get configuration value "' . $key . '"',
             E_USER_ERROR
         );
-
     }
 }

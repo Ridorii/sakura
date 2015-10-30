@@ -40,11 +40,9 @@ class Bans
                 'reason' => $ban['ban_reason'],
 
             ];
-
         }
 
         // Else just return false
         return false;
-
     }
 }
