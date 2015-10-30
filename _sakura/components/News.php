@@ -41,31 +41,24 @@ class News
             // Add post to posts array
             $this->posts[$post['news_id']] = $post;
         }
-
     }
 
     // Get the amount of posts
     public function getCount()
     {
-
         return count($this->posts);
-
     }
 
     // Get the amount of posts
     public function postExists($pid)
     {
-
         return array_key_exists($pid, $this->posts) ? $pid : 0;
-
     }
 
     // Get a single post
     public function getPost($pid)
     {
-
         return array_key_exists($pid, $this->posts) ? $this->posts[$pid] : 0;
-
     }
 
     // Getting posts
@@ -85,6 +78,5 @@ class News
         }
 
         return $posts;
-
     }
 }

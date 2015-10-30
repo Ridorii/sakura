@@ -103,7 +103,6 @@ class Permissions
 
         // Else just return false
         return false;
-
     }
 
     // Get permission data of a rank from the database
@@ -150,7 +149,6 @@ class Permissions
 
         // Return the compiled permission strings
         return $perms;
-
     }
 
     // Get permission data for a user
@@ -191,6 +189,5 @@ class Permissions
 
         // Return permissions
         return $rankPerms;
-
     }
 }

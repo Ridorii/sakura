@@ -35,7 +35,6 @@ class Comments
 
         // Feed them into the sorter
         $this->comments = $this->sortComments($comments);
-
     }
 
     // Sorting
@@ -91,7 +90,6 @@ class Comments
         }
 
         return $layer;
-
     }
 
     // Getting a single comment
@@ -102,7 +100,6 @@ class Comments
         return Database::fetch('comments', false, [
             'comment_id' => [$cid, '='],
         ]);
-
     }
 
     // Getting comment votes
@@ -113,7 +110,6 @@ class Comments
         return Database::fetch('comment_votes', true, [
             'vote_comment' => [$cid, '='],
         ]);
-
     }
 
     // Creating
@@ -141,7 +137,6 @@ class Comments
 
         // Return success
         return [1, 'SUCCESS'];
-
     }
 
     // Voting
@@ -185,7 +180,6 @@ class Comments
         }
 
         return true;
-
     }
 
     // Deleting
@@ -196,6 +190,5 @@ class Comments
         return Database::delete('comments', [
             'comment_id' => [$cid, '='],
         ]);
-
     }
 }

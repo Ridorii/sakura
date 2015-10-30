@@ -60,7 +60,6 @@ class User
             $this->data['rank_main'] :
             array_keys($this->ranks)[0]
         ];
-
     }
 
     // Check if the user has the specified ranks
@@ -82,52 +81,41 @@ class User
 
         // If all fails return false
         return false;
-
     }
 
     // Get the user's colour
     public function colour()
     {
-
         return empty($this->data['user_colour']) ? $this->mainRank->colour() : $this->data['user_colour'];
-
     }
 
     // Get the user's title
     public function userTitle()
     {
-
         return empty($this->data['user_title']) ? $this->mainRank->title() : $this->data['user_title'];
-
     }
 
     // Get the user's long and short country names
     public function country()
     {
-
         return [
 
             'long' => Main::getCountryName($this->data['user_country']),
             'short' => $this->data['user_country'],
 
         ];
-
     }
 
     // Check if a user is online
     public function checkOnline()
     {
-
         return $this->data['user_last_online'] > (time() - Configuration::getConfig('max_online_time'));
-
     }
 
     // Get user's forum statistics
     public function forumStats()
     {
-
         return Forum::getUserStats($this->data['user_id']);
-
     }
 
     // Add a new friend
@@ -159,7 +147,6 @@ class User
 
         // Return true because yay
         return [1, $check == 2 ? 'FRIENDS' : 'NOT_MUTUAL'];
-
     }
 
     // Remove a friend
@@ -195,7 +182,6 @@ class User
 
         // Return true because yay
         return [1, 'REMOVED'];
-
     }
 
     // Check if the user is friends with the currently authenticated
@@ -220,45 +206,35 @@ class User
 
         // Return true if all went through
         return 0;
-
     }
 
     // Get all the friend of this user
     public function getFriends($timestamps = false, $getData = false, $checkOnline = false)
     {
-
         return Users::getFriends($this->data['user_id'], $timestamps, $getData, $checkOnline);
-
     }
 
     // Check if the user is banned
     public function checkBan()
     {
-
         return Bans::checkBan($this->data['user_id']);
-
     }
 
     // Check if the user has the proper permissions
     public function checkPermission($layer, $action)
     {
-
         return Permissions::check($layer, $action, $this->data['user_id'], 1);
-
     }
 
     // Get a user's profile comments
     public function profileComments()
     {
-
         return new Comments('profile-' . $this->data['user_id']);
-
     }
 
     // Get amount of time since user events
     public function elapsed($append = ' ago', $none = 'Just now')
     {
-
         return [
 
             'joined' => Main::timeElapsed($this->data['user_registered'], $append, $none),
@@ -266,7 +242,6 @@ class User
             'birth' => Main::timeElapsed(strtotime($this->data['user_birthday']), $append, $none),
 
         ];
-
     }
 
     // Get the user's profile fields
@@ -334,7 +309,6 @@ class User
 
         // Return appropiate profile data
         return $profile;
-
     }
 
     // Get the user's option fields
@@ -375,7 +349,6 @@ class User
 
         // Return appropiate profile data
         return $options;
-
     }
 
     // Check if user has Premium
@@ -406,7 +379,6 @@ class User
 
         // Else return the start and expiration date
         return [1, $getRecord['premium_start'], $getRecord['premium_expire']];
-
     }
 
     // Get all warnings issued to the user
@@ -458,13 +430,11 @@ class User
 
         // Return all the warnings
         return $warnings;
-
     }
 
     // Get a user's userpage
     public function userPage()
     {
-
         return isset($this->data['user_data']['userPage']) ?
         Main::mdParse(
             base64_decode(
@@ -473,13 +443,11 @@ class User
             true
         ) :
         null;
-
     }
 
     // Get a user's signature
     public function signature()
     {
-
         return isset($this->data['user_data']['signature']) ?
         Main::bbParse(
             Main::parseEmotes(
@@ -489,7 +457,6 @@ class User
             )
         ) :
         null;
-
     }
 
     // Get username change history
@@ -503,7 +470,6 @@ class User
 
         // Return all the warnings
         return $changes;
-
     }
 
     // Set a new username
@@ -567,7 +533,6 @@ class User
 
         // Return success
         return [1, 'SUCCESS', $username];
-
     }
 
     // Set a new e-mail address
@@ -601,7 +566,6 @@ class User
 
         // Return success
         return [1, 'SUCCESS', $email];
-
     }
 
     // Set a new password
@@ -655,6 +619,5 @@ class User
 
         // Return success
         return [1, 'SUCCESS'];
-
     }
 }

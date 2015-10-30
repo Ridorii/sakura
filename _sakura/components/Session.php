@@ -27,7 +27,6 @@ class Session
         if (session_status() != PHP_SESSION_ACTIVE) {
             session_start();
         }
-
     }
 
     // Destroy this session
@@ -48,7 +47,6 @@ class Session
         if (session_status() == PHP_SESSION_ACTIVE) {
             session_destroy();
         }
-
     }
 
     // Create a new session
@@ -71,7 +69,6 @@ class Session
 
         // Return the session key
         return $session;
-
     }
 
     // Validate an apparently existing session
@@ -155,6 +152,5 @@ class Session
 
         // Return 2 if the remember flag is set and return 1 if not
         return $session['session_remember'] ? 2 : 1;
-
     }
 }

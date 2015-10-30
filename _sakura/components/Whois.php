@@ -64,7 +64,6 @@ class Whois
 
         // If everything is gucci set self::$servers
         self::$servers = $servers;
-
     }
 
     // Query the whois servers
@@ -83,7 +82,6 @@ class Whois
             default: // ...a false is returned by this function
                 return false;
         }
-
     }
 
     // Validates an address
@@ -102,7 +100,6 @@ class Whois
 
         // If unsuccessful return 0
         return 0;
-
     }
 
     // Look up a domain
@@ -154,7 +151,6 @@ class Whois
 
         // If all is good return the return variable
         return $return;
-
     }
 
     // Look up an IP
@@ -194,7 +190,6 @@ class Whois
 
         // Return results
         return $return;
-
     }
 
     // Query whois server
@@ -230,6 +225,5 @@ class Whois
 
         // Return results
         return $out;
-
     }
 }

@@ -77,7 +77,6 @@ class Forum
 
         // Return the resorted data
         return $return;
-
     }
 
     // Get a forum or category
@@ -137,7 +136,6 @@ class Forum
 
         // Return the forum/category
         return $forum;
-
     }
 
     // Getting all topics from a forum
@@ -182,7 +180,6 @@ class Forum
         }
 
         return $topics;
-
     }
 
     // Get posts of a thread
@@ -272,7 +269,6 @@ class Forum
 
         // Return the compiled topic data
         return $topic;
-
     }
 
     // Get a forum ID from a topic ID
@@ -291,7 +287,6 @@ class Forum
 
         // Return the forum id
         return $topic['forum_id'];
-
     }
 
     // Get a topic ID from a post ID
@@ -310,7 +305,6 @@ class Forum
 
         // Return the topic id
         return $post['topic_id'];
-
     }
 
     // Parse different markup flavours
@@ -337,7 +331,6 @@ class Forum
             default:
                 return $text;
         }
-
     }
 
     // Get forum statistics of a user
@@ -359,7 +352,6 @@ class Forum
                 ['topic_id']
             )),
         ];
-
     }
 
     // Creating a new post
@@ -416,6 +408,5 @@ class Forum
 
         // Return success
         return [1, 'SUCCESS', $getPost['forum_id'], $getPost['topic_id'], $getPost['post_id']];
-
     }
 }

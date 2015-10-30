@@ -13,7 +13,7 @@ use \Sakura\Configuration;
  * Class MySQL
  * @package Sakura\DBWrapper
  */
-class MySQL
+class mysql
 {
     // Variable that will contain the SQL connection
     // Please refrain from referring to this, unless it's for your personal branch/purpose, despite it being public
@@ -23,7 +23,6 @@ class MySQL
     // Constructor
     public function __construct()
     {
-
         if (!extension_loaded('PDO')) {
             // Return error and die
             trigger_error('PDO extension not loaded.', E_USER_ERROR);
@@ -50,33 +49,27 @@ class MySQL
             Configuration::getLocalConfig('database', 'username'),
             Configuration::getLocalConfig('database', 'password')
         );
-
     }
 
     // Regular IP/Hostname connection method prepare function
     private function prepareHost($dbHost, $dbName, $dbPort = 3306)
     {
-
         $dsn = 'mysql:host=' . $dbHost . ';port=' . $dbPort . ';dbname=' . $dbName;
 
         return $dsn;
-
     }
 
     // Unix Socket connection method prepare function
     private function prepareSock($dbHost, $dbName)
     {
-
         $dsn = 'mysql:unix_socket=' . $dbHost . ';dbname=' . $dbName;
 
         return $dsn;
-
     }
 
     // Initialise connection using default PDO stuff
     private function initConnect($dsn, $dbUname, $dbPword)
     {
-
         try {
             // Connect to SQL server using PDO
             $this->sql = new PDO($dsn, $dbUname, $dbPword, [
@@ -89,7 +82,6 @@ class MySQL
         }
 
         return true;
-
     }
 
     public function select($table, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*', $prefix = null)
@@ -121,9 +113,7 @@ class MySQL
                 // Unset variables to be safe
                 unset($key);
                 unset($value);
-
             }
-
         }
 
         // If $group is set and is an array continue
@@ -192,7 +182,6 @@ class MySQL
 
         // Return the query
         return $query;
-
     }
 
     // Fetch array from database
@@ -204,7 +193,6 @@ class MySQL
 
         // Return the output
         return $fetchAll ? $query->fetchAll(PDO::FETCH_ASSOC) : $query->fetch(PDO::FETCH_ASSOC);
-
     }
 
     // Insert data to database
@@ -222,7 +210,6 @@ class MySQL
                 if (strlen($value)) {
                     $prepare .= ($i ? ':' : '`') . $key . ($i ? '' : '`') . ($key == key(array_slice($data, -1, 1, true)) ? '' : ', ');
                 }
-
             }
 
             $prepare .= ')' . ($i ? ';' : ' VALUES ');
@@ -247,7 +234,6 @@ class MySQL
 
         // Return whatever can be returned
         return $result;
-
     }
 
     // Update data in the database
@@ -301,7 +287,6 @@ class MySQL
 
         // Return whatever can be returned
         return $result;
-
     }
 
     // Delete data from the database
@@ -341,7 +326,6 @@ class MySQL
 
         // Return whatever can be returned
         return $result;
-
     }
 
     // Count data from the database
@@ -386,14 +370,12 @@ class MySQL
 
         // Return the output
         return $query->fetch(PDO::FETCH_BOTH);
-
     }
 
     // Get the ID of the last inserted item
     public function lastInsertID($name = null)
     {
-
-        return $this->sql->lastInsertID($name);;
-
+        return $this->sql->lastInsertID($name);
+        ;
     }
 }
