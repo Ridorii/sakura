@@ -74,5 +74,14 @@ $renderData['stats'] = [
     'onlineUsers' => Users::checkAllOnline(),
 ];
 
+// Initialise templating engine
+$template = new Template();
+
+// Change templating engine
+$template->setTemplate($templateName);
+
+// Set parse variables
+$template->setVariables($renderData);
+
 // Print page contents
-print Templates::render(($forumMode ? 'forum' : 'main') . '/index.tpl', $renderData);
+echo $template->render(($forumMode ? 'forum' : 'main') . '/index.tpl');

@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151024');
+define('SAKURA_VERSION', '20151031');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 define('SAKURA_STABLE', false);
@@ -34,6 +34,7 @@ require_once ROOT . '_sakura/components/Hashing.php';
 require_once ROOT . '_sakura/components/Configuration.php';
 require_once ROOT . '_sakura/components/Database.php';
 require_once ROOT . '_sakura/components/Urls.php';
+require_once ROOT . '_sakura/components/Template.php';
 require_once ROOT . '_sakura/components/Templates.php';
 require_once ROOT . '_sakura/components/Permissions.php';
 require_once ROOT . '_sakura/components/Session.php';

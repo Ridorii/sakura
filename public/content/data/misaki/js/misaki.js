@@ -84,15 +84,9 @@ function convertParallaxPositionValue(pos, dir, neg) {
 window.addEventListener("scroll", function(e) {
     if(e.pageY > 123) {
         var content = document.getElementById('content');
-        var navigation = document.getElementById('navigation');
-        navigation.style.position = 'fixed';
-        navigation.style.top = '0';
-        content.style.paddingTop = '37px';
+        content.className = 'floatingNavigation';
     } else {
         var content = document.getElementById('content');
-        var navigation = document.getElementById('navigation');
-        navigation.style.position = null;
-        navigation.style.top = null;
-        content.style.paddingTop = null;
+        content.className = null;
     }
 });
