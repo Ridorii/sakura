@@ -25,7 +25,7 @@ class Template
     private $fallbackOptions;
 
     // Initialise templating engine and data
-    function __construct()
+    public function __construct()
     {
         // Set template to default
         $this->setTemplate(Configuration::getConfig('site_style'));
@@ -35,7 +35,8 @@ class Template
     }
 
     // Set a template name
-    public function setTemplate($name) {
+    public function setTemplate($name)
+    {
         // Assign config path to a variable so we don't have to type it out twice
         $confPath = ROOT . '_sakura/templates/' . $name . '/template.ini';
 
@@ -60,7 +61,8 @@ class Template
     }
 
     // Initialise main template engine
-    public function initTemplate() {
+    public function initTemplate()
+    {
         // Initialise Twig Filesystem Loader
         $twigLoader = new Twig_Loader_Filesystem(ROOT . '_sakura/templates/' . $this->templateName);
 
@@ -80,7 +82,8 @@ class Template
     }
 
     // Set a fallback
-    private function setFallback($name) {
+    private function setFallback($name)
+    {
         // Assign config path to a variable so we don't have to type it out twice
         $confPath = ROOT . '_sakura/templates/' . $name . '/template.ini';
 
@@ -105,7 +108,8 @@ class Template
     }
 
     // Initialise main fallback engine
-    public function initFallback() {
+    public function initFallback()
+    {
         // Initialise Twig Filesystem Loader
         $twigLoader = new Twig_Loader_Filesystem(ROOT . '_sakura/templates/' . $this->fallbackName);
 
@@ -125,7 +129,8 @@ class Template
     }
 
     // Set variables
-    public function setVariables($vars) {
+    public function setVariables($vars)
+    {
         $this->vars = array_merge($this->vars, $vars);
     }
 
