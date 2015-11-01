@@ -8,7 +8,7 @@
             <div class="head">{{ forum.forum.forum_name }} / {{ topic.topic_title }}</div>
             {% include 'forum/forumBtns.tpl' %}
             <table class="posts">
-                {% for post in posts %}
+                {% for post in posts[currentPage] %}
                     <tr class="post" id="p{{ post.post_id }}">
                         <td class="userpanel">
                             {% if not post.user.checkPermission('SITE', 'DEACTIVATED') or post.user.checkPermission('SITE', 'RESTRICTED') %}<a href="{{ urls.format('USER_PROFILE', [post.user.data.user_id]) }}" class="default username" style="color: {{ post.user.colour }}; text-shadow: 0 0 5px {% if post.user.colour != 'inherit' %}{{ post.user.colour }}{% else %}#222{% endif %};" title="Go to {{ post.user.data.username }}'s profile">{{ post.user.data.username }}</a>

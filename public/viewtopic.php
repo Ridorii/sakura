@@ -20,9 +20,7 @@ $topic = Forum::getTopic(
 if (!$topic) {
     // Set render data
     $renderData['page'] = [
-
         'message' => 'The topic you tried to access does not exist.',
-
     ];
 
     // Print template
@@ -32,14 +30,12 @@ if (!$topic) {
 
 // Set additional render data
 $renderData = array_merge($renderData, $topic, [
-
     'board' => [
-
         'viewforum' => false,
         'viewtopic' => true,
-
     ],
-
+    'posts' => array_chunk($topic['posts'], 10, true),
+    'currentPage' => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
 ]);
 
 // Print page contents

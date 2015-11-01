@@ -29,7 +29,7 @@
                 </tr>
             </tfoot>
             <tbody>
-                {% for topic in board.topics %}
+                {% for topic in board.topics[currentPage] %}
                     {% include 'forum/topicEntry.tpl' %}
                 {% endfor %}
             </tbody>

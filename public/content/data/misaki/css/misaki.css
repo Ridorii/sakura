@@ -189,6 +189,10 @@ a:active {
     text-align: right;
 }
 
+#footer > .inner a {
+    color: inherit;
+}
+
 /*
  * Site header
  */
@@ -660,7 +664,7 @@ a:active {
     flex-shrink: 1;
     background: rgba(148, 117, 178, .2);
     box-shadow: 0 2px 6px rgba(0, 0, 0, .75);
-    margin: 5px;
+    margin: 0 10px;
 }
 
 .homepage .frontStats > div > div {
@@ -710,4 +714,127 @@ a:active {
 
 .news-post > .news-content > .news-text {
     padding: 3px 4px;
+}
+
+/*
+ * Forums
+ */
+.forums .forumListing .forumCategory {
+    margin: 10px;
+    padding: 5px;
+    background: #3A2E44;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .75);
+}
+
+.forums .forumListing .forumCategory .forumCategoryHead {
+    color: #FFF;
+    padding: 5px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, .75);
+}
+
+.forums .forumListing .forumCategory .forumCategoryHead .forumCategoryTitle {
+    font-size: 2em;
+    line-height: .8em;
+    padding-bottom: 5px;
+    font-family: "Exo2-0-LightItalic", sans-serif;
+}
+
+.forums .forumListing .forumCategory .forumCategoryHead .forumCategoryDescription {
+    font-size: .8em;
+    line-height: 1.2em;
+}
+
+.forums .forumListing .forumCategory .forumCategoryHead a {
+    color: inherit !important;
+}
+
+.forums .forumListing .forumCategory .forumSubEntry {
+    border-top: 1px solid #231C29;
+    padding: 5px;
+    display: flex;
+    transition: .2s;
+}
+
+.forums .forumListing .forumCategory .forumSubEntry:hover {
+    background: #231C29;
+}
+
+.forums .forumListing .forumCategory .forumSubEntry .forumSubIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 50px;
+}
+
+.forums .forumListing .forumCategory .forumSubEntry .forumSubIcon .forumIcon {
+    transition: .1s;
+}
+
+.forums .forumListing .forumCategory .forumSubEntry:hover .forumSubIcon .forumIcon {
+    font-size: 3.5em;
+}
+
+.forums .forumListing .forumCategory .forumSubEntry a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.forums .forumListing .forumCategory .forumSubTitle {
+    flex-grow: 2;
+    border-right: 1px solid #231C29;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, .75);
+}
+
+.forums .forumListing .forumCategory .forumSubEntry:hover .forumSubTitle {
+    border-right: 1px solid #3A2E44;
+}
+
+.forums .forumListing .forumCategory .forumSubTitle .forumSubName {
+    font-size: 1.5em;
+}
+
+.forums .forumListing .forumCategory .forumSubStats {
+    flex-shrink: 0;
+    font-family: "Exo2-0-LightItalic", sans-serif;
+    padding: 0 10px;
+    min-width: 70px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, .75);
+    line-height: .5em;
+    border-right: 1px solid #231C29;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.forums .forumListing .forumCategory .forumSubEntry:hover .forumSubStats {
+    border-right: 1px solid #3A2E44;
+}
+
+.forums .forumListing .forumCategory .forumSubStats div {
+    display: inline-block;
+}
+
+.forums .forumListing .forumCategory .forumSubStats .forumSubTopics {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.forums .forumListing .forumCategory .forumSubStats .forumSubStatsSeperator {
+    font-size: 1.2em;
+}
+
+.forums .forumListing .forumCategory .forumSubStats .forumSubPosts {
+    font-size: .8em;
+    margin-top: 14px;
+}
+
+.forums .forumListing .forumCategory .forumSubReplies {
+    padding: 0 5px;
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.2em;
+    min-width: 200px;
 }

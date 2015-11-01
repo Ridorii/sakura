@@ -16,10 +16,8 @@ $forum = Forum::getForum(isset($_GET['f']) ? $_GET['f'] : 0);
 if (!$forum) {
     // Set render data
     $renderData['page'] = [
-
         'title' => 'Information',
         'message' => 'The subforum you tried to access does not exist.',
-
     ];
 
     // Print template
@@ -31,11 +29,9 @@ if (!$forum) {
 if ($forum['forum']['forum_type'] === 2) {
     // Set render data
     $renderData['page'] = [
-
         'title' => 'Information',
         'message' => 'The forum you tried to access is a link. You\'re being redirected.',
         'redirect' => $forum['forum']['forum_link'],
-
     ];
 
     // Print template
@@ -44,17 +40,14 @@ if ($forum['forum']['forum_type'] === 2) {
 }
 
 $renderData['board'] = [
-
     'forums' => [
-
         $forum,
-
     ],
-    'topics' => Forum::getTopics($forum['forum']['forum_id']),
+    'topics' => array_chunk($forum['topics'], 25, true),
     'viewforum' => true,
     'viewtopic' => false,
-
 ];
+$renderData['currentPage'] = isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0;
 
 // Print page contents
 print Templates::render('forum/viewforum.tpl', $renderData);

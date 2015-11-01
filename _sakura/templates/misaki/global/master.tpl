@@ -85,8 +85,6 @@
                         <li><a target="_blank" title="Flashii on Twitter" class="fa fa-twitter" href="https://twitter.com/_flashii"></a></li>
                         <li><a target="_blank" title="Flashii on YouTube" class="fa fa-youtube-play" href="https://youtube.com/user/flashiinet"></a></li>
                         <li><a target="_blank" title="Flashii on Steam" class="fa fa-steam" href="https://steamcommunity.com/groups/flashiinet"></a></li>
-                        <li><a target="_blank" title="Circlestorm on BitBucket" class="fa fa-bitbucket" href="https://bitbucket.org/circlestorm"></a></li>
-                        <li><a target="_blank" title="Flashii on osu!" class="fa fa-dot-circle-o" href="https://osu.ppy.sh/#"></a></li>
                         <li><a title="Subscribe to the news page feed" class="fa fa-rss" href="/news.xml"></a></li>
                     </ul>
                     <div class="clear"></div>
@@ -126,7 +124,7 @@
                         </ul>
                     </div>
 {% block content %}
-    <h1>{{ php.self }} is now printing!</h1>
+    <div style="text-align: center; font-family: 'Exo2-0-LightItalic', sans-serif; font-size: 3em; line-height: 1.5em; margin: 10px auto">This template doesn't exist (yet)!<br />Switch back to Yuuno via the User Settings to view this page!</div>
 {% endblock %}
                 </div>
             </div>
@@ -135,7 +133,7 @@
                     <div class="ft-logo"></div>
                     <div class="ft-text">
                         <div>Copyright &copy; 2013-2015 <a href="http://flash.moe/" target="_blank">Flashwave</a>, <a href="http://circlestorm.net/" target="_blank">et al</a>.</div>
-                        <div><a href="{{ urls.format('INFO_PAGE', ['terms']) }}">Terms of Service</a> | <a href="{{ urls.format('INFO_PAGE', ['contact']) }}">Contact</a> | <a href="{{ urls.format('SITE_FAQ') }}">FAQ</a> | <a href="{{ urls.format('INFO_PAGE', ['rules']) }}">Rules</a> | <a href="{{ urls.format('CHANGELOG') }}">Changelog</a> | <a href="https://fiistat.us/">Status</a></div>
+                        <div><a href="{{ urls.format('INFO_PAGE', ['terms']) }}">Terms of Service</a> | <a href="{{ urls.format('INFO_PAGE', ['contact']) }}">Contact</a> | <a href="{{ urls.format('SITE_FAQ') }}">FAQ</a> | <a href="{{ urls.format('INFO_PAGE', ['rules']) }}">Rules</a> | <a href="https://sakura.flash.moe/">Changelog</a> | <a href="https://fiistat.us/">Status</a></div>
                     </div>
                 </div>
             </div>
