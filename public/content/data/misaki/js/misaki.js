@@ -4,9 +4,7 @@
 
 // Get or set cookies
 function cookieData(action, name, data) {
-
     switch(action) {
-
         case 'get':
             return (result = new RegExp('(^|; )' + encodeURIComponent(name) + '=([^;]*)').exec(document.cookie)) ? result[2] : '';
 
@@ -16,14 +14,11 @@ function cookieData(action, name, data) {
 
         default:
             return null;
-
     }
-
 }
 
 // Initialising the element parallax functionality
 function initialiseParallax(id) {
-
     // Assign the element to a variable
     var parallax = document.getElementById(id);
 
@@ -35,20 +30,16 @@ function initialiseParallax(id) {
 
     // Add the event listener to the body element
     document.addEventListener("mousemove", function(e) {
-
         // Alter the position of the parallaxed element
         parallax.style.top      = convertParallaxPositionValue(e.clientY, true, false)  + 'px';
         parallax.style.bottom   = convertParallaxPositionValue(e.clientY, true, true)   + 'px';
         parallax.style.left     = convertParallaxPositionValue(e.clientX, false, false) + 'px';
         parallax.style.right    = convertParallaxPositionValue(e.clientX, false, true)  + 'px';
-
     });
-
 }
 
 // Converting the position value of the mouseover to a pixel value
 function convertParallaxPositionValue(pos, dir, neg) {
-
     // Get the body element
     var body = document.getElementsByTagName('body')[0];
 
@@ -57,9 +48,7 @@ function convertParallaxPositionValue(pos, dir, neg) {
 
     // If someone decided to fuck with the inputs reset it to 0%
     if(position < 0 || position > 100) {
-
         position = 0;
-
     }
 
     // Do the first maths
@@ -67,9 +56,7 @@ function convertParallaxPositionValue(pos, dir, neg) {
 
     // If the negative flag is set inverse the number
     if(neg) {
-
         position = -position;
-
     }
 
     // Subtract another 2.5 to make the element not go all over the place
@@ -77,16 +64,19 @@ function convertParallaxPositionValue(pos, dir, neg) {
 
     // Return the proper position value
     return position;
-
 }
 
 // Menu bar
 window.addEventListener("scroll", function(e) {
-    if(e.pageY > 123) {
-        var content = document.getElementById('content');
-        content.className = 'floatingNavigation';
+    if(e.pageY > 6) {
+        var wrapper = document.getElementById('wrapper');
+        var navbar = document.getElementById('navigation');
+        wrapper.className = 'navFloat';
+        navbar.className = 'floating';
     } else {
-        var content = document.getElementById('content');
-        content.className = null;
+        var wrapper = document.getElementById('wrapper');
+        var navbar = document.getElementById('navigation');
+        wrapper.className = null;
+        navbar.className = null;
     }
 });

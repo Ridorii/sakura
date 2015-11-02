@@ -3,7 +3,7 @@
 {% block title %}{% if page.title %}{{ page.title }}{% else %}Not found!{% endif %}{% endblock %}
 
 {% block content %}
-    <div class="markdown">
+    <div class="markdown platform">
         <div>
             {{ page.content|raw }}
         </div>

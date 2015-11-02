@@ -76,55 +76,43 @@
             <span id="top"></span>
             <div class="header-fade"></div>
             <div id="notifications"></div>
-            <div id="header">
-                <a href="/" title="{{ sakura.siteName }}">
-                    <div class="logo"{% if sakura.siteLogo %} style="background-image: url('{{ sakura.siteLogo }}');"{% endif %}></div>
-                </a>
-                <div class="social">
-                    <ul>
-                        <li><a target="_blank" title="Flashii on Twitter" class="fa fa-twitter" href="https://twitter.com/_flashii"></a></li>
-                        <li><a target="_blank" title="Flashii on YouTube" class="fa fa-youtube-play" href="https://youtube.com/user/flashiinet"></a></li>
-                        <li><a target="_blank" title="Flashii on Steam" class="fa fa-steam" href="https://steamcommunity.com/groups/flashiinet"></a></li>
-                        <li><a title="Subscribe to the news page feed" class="fa fa-rss" href="/news.xml"></a></li>
-                    </ul>
-                    <div class="clear"></div>
-                </div>
-            </div>
             <div id="wrapper">
                 {% if php.self == '/profile.php' ? profile.data.user_data.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.user_data.userOptions.profileBackgroundSiteWide and user.data.user_data.profileBackground) %}
                     <div id="userBackground" style="background-image: url('{{ urls.format('IMAGE_BACKGROUND', [(php.self == '/profile.php' ? profile : user).data.user_id]) }}');"></div>
                 {% endif %}
+                <div id="navigation">
+                    <ul class="nav-left floatLeft">
+                        <li class="logo"><a href="{{ urls.format('SITE_HOME') }}"><div {% if sakura.siteLogo %} style="background-image: url('{{ sakura.siteLogo }}');"{% endif %}></div><div>Home</div></a></li>
+                        <li><a href="{{ urls.format('SITE_NEWS') }}"><div class="fa fa-newspaper-o"></div><div>News</div></a></li>
+                        <li><a href="//chat.{{ sakura.urlMain }}/"><div class="fa fa-commenting"></div><div>Chat</div></a></li>
+                        <li><a href="{{ urls.format('FORUM_INDEX') }}"><div class="fa fa-comments"></div><div>Forum</div></a></li>
+                        <li><a href="{{ urls.format('MEMBERLIST_INDEX') }}"><div class="fa fa-users"></div><div>Members</div></a></li>
+                        <li><a href="{{ urls.format('SITE_SEARCH') }}"><div class="fa fa-search"></div><div>Search</div></a></li>
+                        <li><a href="{{ urls.format('SITE_PREMIUM') }}"><div class="fa fa-heart"></div><div>Support us</div></a></li>
+                    </ul>
+                    <ul class="nav-right floatRight">
+                        <li class="nav-usermenu">
+                            <a href="#"{% if session.checkLogin %} style="color: {{ user.colour }};"{% endif %}>{% if session.checkLogin %}{{ user.data.username }}{% else %}Guest{% endif %}</a>
+                            <ul>
+                            {% if session.checkLogin %}
+                                <li><a href="{{ urls.format('USER_PROFILE', [user.data.user_id]) }}">My Profile</a></li>
+                                <li><a href="{{ urls.format('SETTING_CAT', ['messages']) }}">Private Messages</a></li>
+                                <li><a href="{{ urls.format('SETTINGS_INDEX') }}">User Settings</a></li>
+                                <li><a href="{{ urls.format('MANAGE_INDEX') }}">Site Management</a></li>
+                                <li><a href="{{ urls.format('USER_LOGOUT', [php.time, php.sessionid, sakura.currentPage]) }}">Logout</a></li>
+                            {% else %}
+                                <li><a href="{{ urls.format('SITE_LOGIN') }}">Login or Register</a></li>
+                            {% endif %}
+                            </ul>
+                        </li>
+                        <li><a href="{{ urls.format('USER_PROFILE', [user.data.user_id]) }}" class="ignore"><img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.data.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.data.user_id]) }}');" class="nav-avatar" /></a></li>
+                    </ul>
+                </div>
                 <div id="content">
-                    <div id="navigation">
-                        <ul class="nav-left floatLeft">
-                            <li><a href="{{ urls.format('SITE_HOME') }}">Home</a></li>
-                            <li><a href="{{ urls.format('SITE_NEWS') }}">News</a></li>
-                            <li><a href="//chat.{{ sakura.urlMain }}/">Chat</a></li>
-                            <li><a href="{{ urls.format('FORUM_INDEX') }}">Forum</a></li>
-                            <li><a href="{{ urls.format('MEMBERLIST_INDEX') }}">Members</a></li>
-                            <li><a href="{{ urls.format('SITE_SEARCH') }}">Search</a></li>
-                            <li><a href="{{ urls.format('SITE_PREMIUM') }}">Support us</a></li>
-                        </ul>
-                        <ul class="nav-right floatRight">
-                            <li class="nav-usermenu">
-                                <a href="#"{% if session.checkLogin %} style="color: {{ user.colour }};"{% endif %}>{% if session.checkLogin %}{{ user.data.username }}{% else %}Guest{% endif %}</a>
-                                <ul>
-                                {% if session.checkLogin %}
-                                    <li><a href="{{ urls.format('USER_PROFILE', [user.data.user_id]) }}">My Profile</a></li>
-                                    <li><a href="{{ urls.format('SETTING_CAT', ['messages']) }}">Private Messages</a></li>
-                                    <li><a href="{{ urls.format('SETTINGS_INDEX') }}">User Settings</a></li>
-                                    <li><a href="{{ urls.format('MANAGE_INDEX') }}">Site Management</a></li>
-                                    <li><a href="{{ urls.format('USER_LOGOUT', [php.time, php.sessionid, sakura.currentPage]) }}">Logout</a></li>
-                                {% else %}
-                                    <li><a href="{{ urls.format('SITE_LOGIN') }}">Login or Register</a></li>
-                                {% endif %}
-                                </ul>
-                            </li>
-                            <li><a href="{{ urls.format('USER_PROFILE', [user.data.user_id]) }}" class="ignore"><img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.data.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.data.user_id]) }}');" class="nav-avatar" /></a></li>
-                        </ul>
-                    </div>
 {% block content %}
-    <div style="text-align: center; font-family: 'Exo2-0-LightItalic', sans-serif; font-size: 3em; line-height: 1.5em; margin: 10px auto">This template doesn't exist (yet)!<br />Switch back to Yuuno via the User Settings to view this page!</div>
+                    <div class="platform">
+                        <div style="text-align: center; font-family: 'Exo2-0-LightItalic', sans-serif; font-size: 3em; line-height: 1.5em; margin: 10px auto">This template doesn't exist (yet)!<br />Switch back to Yuuno via the User Settings to view this page!</div>
+                    </div>
 {% endblock %}
                 </div>
             </div>

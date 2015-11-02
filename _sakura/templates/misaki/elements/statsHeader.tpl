@@ -1,4 +1,4 @@
-<div class="frontStats">
+<div class="platform frontStats">
     <div title="We have {{ stats.userCount }} user{% if stats.userCount != 1 %}s{% endif %}">
         <div>
             <span class="fa fa-line-chart"></span>
