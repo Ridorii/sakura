@@ -68,7 +68,7 @@ function convertParallaxPositionValue(pos, dir, neg) {
 
 // Menu bar
 window.addEventListener("scroll", function(e) {
-    if(e.pageY > 6) {
+    if(window.scrollY > 11) {
         var wrapper = document.getElementById('wrapper');
         var navbar = document.getElementById('navigation');
         wrapper.className = 'navFloat';

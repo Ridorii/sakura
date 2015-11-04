@@ -81,31 +81,38 @@
                     <div id="userBackground" style="background-image: url('{{ urls.format('IMAGE_BACKGROUND', [(php.self == '/profile.php' ? profile : user).data.user_id]) }}');"></div>
                 {% endif %}
                 <div id="navigation">
-                    <ul class="nav-left floatLeft">
-                        <li class="logo"><a href="{{ urls.format('SITE_HOME') }}"><div {% if sakura.siteLogo %} style="background-image: url('{{ sakura.siteLogo }}');"{% endif %}></div><div>Home</div></a></li>
-                        <li><a href="{{ urls.format('SITE_NEWS') }}"><div class="fa fa-newspaper-o"></div><div>News</div></a></li>
-                        <li><a href="//chat.{{ sakura.urlMain }}/"><div class="fa fa-commenting"></div><div>Chat</div></a></li>
-                        <li><a href="{{ urls.format('FORUM_INDEX') }}"><div class="fa fa-comments"></div><div>Forum</div></a></li>
-                        <li><a href="{{ urls.format('MEMBERLIST_INDEX') }}"><div class="fa fa-users"></div><div>Members</div></a></li>
-                        <li><a href="{{ urls.format('SITE_SEARCH') }}"><div class="fa fa-search"></div><div>Search</div></a></li>
-                        <li><a href="{{ urls.format('SITE_PREMIUM') }}"><div class="fa fa-heart"></div><div>Support us</div></a></li>
+                    <ul class="site-menu">
+                        <li title="Home" class="logo"><a href="{{ urls.format('SITE_HOME') }}" {% if sakura.siteLogo %} style="background-image: url('{{ sakura.siteLogo }}');"{% endif %}></a></li>
+                        <li title="News"><a href="{{ urls.format('SITE_NEWS') }}" class="fa fa-newspaper-o"></a></li>
+                        <li title="Chat"><a href="//chat.{{ sakura.urlMain }}/" class="fa fa-commenting"></a></li>
+                        <li title="Forums"><a href="{{ urls.format('FORUM_INDEX') }}" class="fa fa-comments"></a></li>
+                        <li title="Members"><a href="{{ urls.format('MEMBERLIST_INDEX') }}" class="fa fa-users"></a></li>
+                        <li title="Search"><a href="{{ urls.format('SITE_SEARCH') }}" class="fa fa-search"></a></li>
+                        <li title="Support us"><a href="{{ urls.format('SITE_PREMIUM') }}" class="fa fa-heart"></a></li>
                     </ul>
-                    <ul class="nav-right floatRight">
+                    <ul class="user-menu">
                         <li class="nav-usermenu">
-                            <a href="#"{% if session.checkLogin %} style="color: {{ user.colour }};"{% endif %}>{% if session.checkLogin %}{{ user.data.username }}{% else %}Guest{% endif %}</a>
-                            <ul>
+                            <a href="{% if session.checkLogin %}javascript:void(0);{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}">
+                                <div>
+                                    <div class="nav-username"{% if session.checkLogin %} style="color: {{ user.colour }};"{% endif %}>
+                                        {% if session.checkLogin %}{{ user.data.username }} <span class="nav-user-dropdown"></span>{% else %}Guest{% endif %}
+                                    </div>
+                                    <div class="nav-userstats">
+                                        {% if session.checkLogin %}<span class="fa fa-envelope"></span> 0 / <span class="fa fa-user-plus"></span> 0 / <span class="fa fa-warning"></span> 0 / <span class="fa fa-reply"></span> 0{% else %}Please log in to proceed!{% endif %}
+                                    </div>
+                                </div>
+                            </a>
                             {% if session.checkLogin %}
-                                <li><a href="{{ urls.format('USER_PROFILE', [user.data.user_id]) }}">My Profile</a></li>
-                                <li><a href="{{ urls.format('SETTING_CAT', ['messages']) }}">Private Messages</a></li>
-                                <li><a href="{{ urls.format('SETTINGS_INDEX') }}">User Settings</a></li>
-                                <li><a href="{{ urls.format('MANAGE_INDEX') }}">Site Management</a></li>
-                                <li><a href="{{ urls.format('USER_LOGOUT', [php.time, php.sessionid, sakura.currentPage]) }}">Logout</a></li>
-                            {% else %}
-                                <li><a href="{{ urls.format('SITE_LOGIN') }}">Login or Register</a></li>
+                                <ul>
+                                    <li><a href="{{ urls.format('USER_PROFILE', [user.data.user_id]) }}">My Profile</a></li>
+                                    <li><a href="{{ urls.format('SETTING_CAT', ['messages']) }}">Private Messages</a></li>
+                                    <li><a href="{{ urls.format('SETTINGS_INDEX') }}">User Settings</a></li>
+                                    <li><a href="{{ urls.format('MANAGE_INDEX') }}">Site Management</a></li>
+                                    <li><a href="{{ urls.format('USER_LOGOUT', [php.time, php.sessionid, sakura.currentPage]) }}">Logout</a></li>
+                                </ul>
                             {% endif %}
-                            </ul>
                         </li>
-                        <li><a href="{{ urls.format('USER_PROFILE', [user.data.user_id]) }}" class="ignore"><img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.data.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.data.user_id]) }}');" class="nav-avatar" /></a></li>
+                        <li><a href="{% if session.checkLogin %}{{ urls.format('USER_PROFILE', [user.data.user_id]) }}{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}"><img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.data.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.data.user_id]) }}');" class="nav-avatar" /></a></li>
                     </ul>
                 </div>
                 <div id="content">

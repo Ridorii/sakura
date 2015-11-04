@@ -47,12 +47,26 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     // Set header, convert the array to json, print it and exit
     print json_encode($notifications);
     exit;
-} elseif (isset($_REQUEST['comment-action']) && $_REQUEST['comment-action'] && Users::checkLogin()) {
+} elseif (isset($_REQUEST['comment-action']) && $_REQUEST['comment-action']) {
     // Referrer
     $redirect = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('SITE_INDEX'));
 
     // Continue
     $continue = true;
+
+    // Match session ids for the same reason
+    if (!Users::checkLogin()) {
+        $renderData['page'] = [
+
+            'redirect' => $redirect,
+            'message' => 'You must be logged in to do that!',
+            'success' => 0,
+
+        ];
+
+        // Prevent
+        $continue = false;
+    }
 
     // Match session ids for the same reason
     if (!isset($_REQUEST['session']) || $_REQUEST['session'] != session_id()) {

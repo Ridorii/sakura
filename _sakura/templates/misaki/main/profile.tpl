@@ -28,7 +28,7 @@
     <script type="text/javascript">
         // Header
         window.addEventListener("scroll", function(e) {
-            if(e.pageY > 165) {
+            if(window.scrollY > 170) {
                 var profileHeader = document.getElementById('profileHeader');
                 var profileContent = document.getElementById('profileContent');
                 profileHeader.className = 'profileHeaderContent floating';

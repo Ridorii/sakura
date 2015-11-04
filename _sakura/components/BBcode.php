@@ -11,4 +11,6 @@ namespace Sakura;
  */
 class BBcode
 {
+    // Array containing bbcodes
+    private static $bbcodes = [];
 }
