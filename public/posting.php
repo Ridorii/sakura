@@ -14,13 +14,13 @@ $topicId = isset($_GET['t']) ?
 $_GET['t'] :
 (
     isset($_GET['p']) ?
-    Forum::getTopicIdFromPostId($_GET['p']) :
+    Forums::getTopicIdFromPostId($_GET['p']) :
     0
 );
 
 $forumId = isset($_GET['f']) ?
 $_GET['f'] :
-Forum::getForumIdFromTopicId($topicId);
+Forums::getForumIdFromTopicId($topicId);
 
 $mode = isset($_GET['f']) ? 'f' : (isset($_GET['t']) ? 't' : (isset($_GET['p']) ? 'p' : null));
 
@@ -105,7 +105,7 @@ if ($mode != 'f') {
                 ]);
 
                 // Reload the topic
-                $topic = Forum::getTopic($topicId, true);
+                $topic = Forums::getTopic($topicId, true);
 
                 // If there's no more posts left in the topic delete it as well
                 if (!count($topic['posts'])) {
@@ -167,7 +167,7 @@ if (isset($_POST['post'])) {
     }
 
     // Attempt to make the post
-    $makePost = Forum::createPost($currentUser->data['user_id'], $_POST['subject'], $_POST['text'], $forumId, $topicId, $parse, 1, 1);
+    $makePost = Forums::createPost($currentUser->data['user_id'], $_POST['subject'], $_POST['text'], $forumId, $topicId, $parse, 1, 1);
 
     // Add page specific things
     $renderData['page'] = [

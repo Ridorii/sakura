@@ -50,7 +50,7 @@ $renderData['page'] = [
 ];
 
 $renderData['board'] = [
-    'forums' => ($forumMode ? Forum::getForumList() : null),
+    'forums' => ($forumMode ? Forums::getForumList() : null),
     'viewforum' => false,
     'viewtopic' => false,
 ];

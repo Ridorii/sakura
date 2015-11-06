@@ -10,7 +10,7 @@ namespace Sakura;
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
 // Get the forum's data
-$forum = Forum::getForum(isset($_GET['f']) ? $_GET['f'] : 0);
+$forum = Forums::getForum(isset($_GET['f']) ? $_GET['f'] : 0);
 
 // Check if the forum exists
 if (!$forum) {

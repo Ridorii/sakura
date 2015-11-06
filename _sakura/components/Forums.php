@@ -9,7 +9,7 @@ namespace Sakura;
  * Class Forum
  * @package Sakura
  */
-class Forum
+class Forums
 {
     // Empty forum template
     public static $emptyForum = [

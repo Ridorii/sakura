@@ -41,7 +41,7 @@ require_once ROOT . '_sakura/components/Session.php';
 require_once ROOT . '_sakura/components/User.php';
 require_once ROOT . '_sakura/components/Rank.php';
 require_once ROOT . '_sakura/components/Users.php';
-require_once ROOT . '_sakura/components/Forum.php';
+require_once ROOT . '_sakura/components/Forums.php';
 require_once ROOT . '_sakura/components/News.php';
 require_once ROOT . '_sakura/components/Comments.php';
 require_once ROOT . '_sakura/components/Manage.php';

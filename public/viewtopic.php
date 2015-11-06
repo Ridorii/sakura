@@ -10,9 +10,9 @@ namespace Sakura;
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
 // Attempt to get a topic
-$topic = Forum::getTopic(
+$topic = Forums::getTopic(
     isset($_GET['p'])
-    ? Forum::getTopicIdFromPostId($_GET['p'])
+    ? Forums::getTopicIdFromPostId($_GET['p'])
     : (isset($_GET['t']) ? $_GET['t'] : 0)
 );
 
