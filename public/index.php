@@ -9,6 +9,12 @@ namespace Sakura;
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
+// Initialise templating engine
+$template = new Template();
+
+// Change templating engine
+$template->setTemplate($templateName);
+
 // Info pages
 if (isset($_GET['p'])) {
     // Set default variables
@@ -33,17 +39,20 @@ if (isset($_GET['p'])) {
         ];
     }
 
+    // Set parse variables
+    $template->setVariables($renderData);
+
     // Print page contents
-    print Templates::render('main/infopage.tpl', $renderData);
+    echo $template->render('main/infopage.tpl');
     exit;
 }
 
 // Are we in forum mode?
 $forumMode = isset($_GET['forum']) ? ($_GET['forum'] == true) : false;
 
-$renderData['news'] = ($forumMode ? null : (new News(Configuration::getConfig('site_news_category'))));
+$renderData['news'] = ($forumMode ? null : (new News(Config::getConfig('site_news_category'))));
 
-$renderData['newsCount'] = Configuration::getConfig('front_page_news_posts');
+$renderData['newsCount'] = Config::getConfig('front_page_news_posts');
 
 $renderData['page'] = [
     'friend_req' => Users::getPendingFriends(),
@@ -73,12 +82,6 @@ $renderData['stats'] = [
     'postCount' => Database::count('posts')[0],
     'onlineUsers' => Users::checkAllOnline(),
 ];
-
-// Initialise templating engine
-$template = new Template();
-
-// Change templating engine
-$template->setTemplate($templateName);
 
 // Set parse variables
 $template->setVariables($renderData);

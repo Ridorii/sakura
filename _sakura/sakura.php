@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151104');
+define('SAKURA_VERSION', '20151106');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 define('SAKURA_STABLE', false);
@@ -31,17 +31,16 @@ if (version_compare(phpversion(), '5.4.0', '<')) {
 require_once ROOT . '_sakura/vendor/autoload.php';
 require_once ROOT . '_sakura/components/Main.php';
 require_once ROOT . '_sakura/components/Hashing.php';
-require_once ROOT . '_sakura/components/Configuration.php';
+require_once ROOT . '_sakura/components/Config.php';
 require_once ROOT . '_sakura/components/Database.php';
 require_once ROOT . '_sakura/components/Urls.php';
 require_once ROOT . '_sakura/components/Template.php';
-require_once ROOT . '_sakura/components/Templates.php';
 require_once ROOT . '_sakura/components/Permissions.php';
 require_once ROOT . '_sakura/components/Session.php';
 require_once ROOT . '_sakura/components/User.php';
 require_once ROOT . '_sakura/components/Rank.php';
-require_once ROOT . '_sakura/components/Users.php';
-require_once ROOT . '_sakura/components/Forums.php';
+require_once ROOT . '_sakura/components/Users.php'; //<
+require_once ROOT . '_sakura/components/Forums.php'; //<
 require_once ROOT . '_sakura/components/News.php';
 require_once ROOT . '_sakura/components/Comments.php';
 require_once ROOT . '_sakura/components/Manage.php';
@@ -62,12 +61,12 @@ set_error_handler(['Sakura\Main', 'errorHandler']);
 Main::init(ROOT . '_sakura/config/config.ini');
 
 // Assign servers file to whois class
-Whois::setServers(ROOT . '_sakura/' . Configuration::getLocalConfig('data', 'whoisservers'));
+Whois::setServers(ROOT . '_sakura/' . Config::getLocalConfig('data', 'whoisservers'));
 
 // Check if we the system has a cron service
-if (Configuration::getConfig('no_cron_service')) {
+if (Config::getConfig('no_cron_service')) {
     // If not do an "asynchronous" call to the cron.php script
-    if (Configuration::getConfig('no_cron_last') < (time() - Configuration::getConfig('no_cron_interval'))) {
+    if (Config::getConfig('no_cron_last') < (time() - Config::getConfig('no_cron_interval'))) {
         // Check OS
         if (substr(strtolower(PHP_OS), 0, 3) == 'win') {
             pclose(popen('start /B ' . PHP_BINDIR . '\php.exe ' . addslashes(ROOT . '_sakura\cron.php'), 'r'));
@@ -88,7 +87,7 @@ if (Configuration::getConfig('no_cron_service')) {
 }
 
 // Start output buffering
-ob_start(Configuration::getConfig('use_gzip') ? 'ob_gzhandler' : null);
+ob_start(Config::getConfig('use_gzip') ? 'ob_gzhandler' : null);
 
 // Auth check
 $authCheck = Users::checkLogin();
@@ -102,7 +101,7 @@ $urls = new Urls();
 // Prepare the name of the template to load (outside of SAKURA_NO_TPL because it's used in imageserve.php)
 $templateName =
 defined('SAKURA_MANAGE') ?
-Configuration::getConfig('manage_style') :
+Config::getConfig('manage_style') :
 (
     (
         isset($currentUser->data['user_data']['userOptions']['useMisaki']) &&
@@ -110,105 +109,90 @@ Configuration::getConfig('manage_style') :
         $currentUser->checkPermission('SITE', 'ALTER_PROFILE')
     ) ?
     'misaki' :
-    Configuration::getConfig('site_style')
+    Config::getConfig('site_style')
 );
 
 if (!defined('SAKURA_NO_TPL')) {
-    // Initialise templating engine
-    Templates::init($templateName);
-
     // Set base page rendering data
     $renderData = [
-
-        /*
-         * Idea for flexibility in templates and to reduce redundancy;
-         * Attempt to use a class instead of an assoc. array for the
-         *  template variables since twig supports this to make accessing
-         *  certain functions, like the time elapsed function easier.
-         * Update 2015-09-08: Apparently this will be added in PHP 7 so
-         *  we'll be looking out for that.
-         */
-
         'sakura' => [
-
             'versionInfo' => [
-
                 'version' => SAKURA_VERSION,
                 'label' => SAKURA_VLABEL,
                 'colour' => SAKURA_COLOUR,
                 'stable' => SAKURA_STABLE,
-
             ],
 
             'cookie' => [
-
-                'prefix' => Configuration::getConfig('cookie_prefix'),
-                'domain' => Configuration::getConfig('cookie_domain'),
-                'path' => Configuration::getConfig('cookie_path'),
-
+                'prefix' => Config::getConfig('cookie_prefix'),
+                'domain' => Config::getConfig('cookie_domain'),
+                'path' => Config::getConfig('cookie_path'),
             ],
 
-            'urlMain' => Configuration::getConfig('url_main'),
-            'urlApi' => Configuration::getConfig('url_api'),
+            'urlMain' => Config::getConfig('url_main'),
+            'urlApi' => Config::getConfig('url_api'),
 
-            'contentPath' => Configuration::getConfig('content_path'),
-            'resources' => Configuration::getConfig('content_path') . '/data/' . strtolower(Templates::$template),
+            'contentPath' => Config::getConfig('content_path'),
+            'resources' => Config::getConfig('content_path') . '/data/' . $templateName,
 
-            'charset' => Configuration::getConfig('charset'),
-            'siteName' => Configuration::getConfig('sitename'),
-            'siteLogo' => Configuration::getConfig('sitelogo'),
-            'siteDesc' => Configuration::getConfig('sitedesc'),
-            'siteTags' => implode(", ", json_decode(Configuration::getConfig('sitetags'), true)),
-            'dateFormat' => Configuration::getConfig('date_format'),
+            'charset' => Config::getConfig('charset'),
+            'siteName' => Config::getConfig('sitename'),
+            'siteLogo' => Config::getConfig('sitelogo'),
+            'siteDesc' => Config::getConfig('sitedesc'),
+            'siteTags' => implode(", ", json_decode(Config::getConfig('sitetags'), true)),
+            'dateFormat' => Config::getConfig('date_format'),
             'currentPage' => '//' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
             'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null),
 
-            'recaptchaPublic' => Configuration::getConfig('recaptcha_public'),
-            'recaptchaEnabled' => Configuration::getConfig('recaptcha'),
+            'recaptchaPublic' => Config::getConfig('recaptcha_public'),
+            'recaptchaEnabled' => Config::getConfig('recaptcha'),
 
-            'disableRegistration' => Configuration::getConfig('disable_registration'),
-            'lockAuth' => Configuration::getConfig('lock_authentication'),
-            'requireRegCodes' => Configuration::getConfig('require_registration_code'),
-            'requireActivation' => Configuration::getConfig('require_activation'),
-            'minPwdEntropy' => Configuration::getConfig('min_entropy'),
-            'minUsernameLength' => Configuration::getConfig('username_min_length'),
-            'maxUsernameLength' => Configuration::getConfig('username_max_length'),
-
+            'disableRegistration' => Config::getConfig('disable_registration'),
+            'lockAuth' => Config::getConfig('lock_authentication'),
+            'requireRegCodes' => Config::getConfig('require_registration_code'),
+            'requireActivation' => Config::getConfig('require_activation'),
+            'minPwdEntropy' => Config::getConfig('min_entropy'),
+            'minUsernameLength' => Config::getConfig('username_min_length'),
+            'maxUsernameLength' => Config::getConfig('username_max_length'),
         ],
-
         'php' => [
-
             'sessionid' => \session_id(),
             'time' => \time(),
             'self' => $_SERVER['PHP_SELF'],
-
         ],
 
         'session' => [
-
             'checkLogin' => $authCheck,
             'sessionId' => $authCheck[1],
             'userId' => $authCheck[0],
-
         ],
 
         'user' => $currentUser,
         'urls' => $urls,
-
     ];
 
     // Site closing
-    if (Configuration::getConfig('site_closed')) {
+    if (Config::getConfig('site_closed')) {
         // Additional render data
         $renderData = array_merge($renderData, [
 
             'page' => [
-                'message' => Configuration::getConfig('site_closed_reason'),
+                'message' => Config::getConfig('site_closed_reason'),
             ],
 
         ]);
 
-        print Templates::render('global/information.tpl', $renderData);
+        // Initialise templating engine
+        $template = new Template();
+
+        // Change templating engine
+        $template->setTemplate($templateName);
+
+        // Set parse variables
+        $template->setVariables($renderData);
+
+        // Print page contents
+        echo $template->render('global/information.tpl');
         exit;
     }
 
@@ -227,7 +211,18 @@ if (!defined('SAKURA_NO_TPL')) {
         ]);
 
         Users::logout();
-        print Templates::render('main/banned.tpl', $renderData);
+
+        // Initialise templating engine
+        $template = new Template();
+
+        // Change templating engine
+        $template->setTemplate($templateName);
+
+        // Set parse variables
+        $template->setVariables($renderData);
+
+        // Print page contents
+        echo $template->render('main/banned.tpl');
         exit;
     }
 }

@@ -16,5 +16,14 @@ $renderData['page'] = [
 
 ];
 
+// Initialise templating engine
+$template = new Template();
+
+// Change templating engine
+$template->setTemplate($templateName);
+
+// Set parse variables
+$template->setVariables($renderData);
+
 // Print page contents
-print Templates::render('main/search.tpl', $renderData);
+echo $template->render('main/search.tpl');

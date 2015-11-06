@@ -6,10 +6,10 @@
 namespace Sakura;
 
 /**
- * Class Configuration
+ * Class Config
  * @package Sakura
  */
-class Configuration
+class Config
 {
     // Configuration data
     private static $local = [];

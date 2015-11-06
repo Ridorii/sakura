@@ -12,6 +12,12 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sa
 // Get the forum's data
 $forum = Forums::getForum(isset($_GET['f']) ? $_GET['f'] : 0);
 
+// Initialise templating engine
+$template = new Template();
+
+// Change templating engine
+$template->setTemplate($templateName);
+
 // Check if the forum exists
 if (!$forum) {
     // Set render data
@@ -20,8 +26,11 @@ if (!$forum) {
         'message' => 'The subforum you tried to access does not exist.',
     ];
 
-    // Print template
-    print Templates::render('global/information.tpl', $renderData);
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/information.tpl');
     exit;
 }
 
@@ -34,8 +43,11 @@ if ($forum['forum']['forum_type'] === 2) {
         'redirect' => $forum['forum']['forum_link'],
     ];
 
-    // Print template
-    print Templates::render('global/information.tpl', $renderData);
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/information.tpl');
     exit;
 }
 
@@ -49,5 +61,8 @@ $renderData['board'] = [
 ];
 $renderData['currentPage'] = isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0;
 
+// Set parse variables
+$template->setVariables($renderData);
+
 // Print page contents
-print Templates::render('forum/viewforum.tpl', $renderData);
+echo $template->render('forum/viewforum.tpl');

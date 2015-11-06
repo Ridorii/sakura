@@ -6,7 +6,7 @@
 namespace Sakura;
 
 /**
- * Class Forum
+ * Class Forums
  * @package Sakura
  */
 class Forums

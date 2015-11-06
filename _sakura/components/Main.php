@@ -19,13 +19,13 @@ class Main
     {
 
         // Configuration Management and local configuration
-        Configuration::init($config);
+        Config::init($config);
 
         // Database
-        Database::init(Configuration::getLocalConfig('database', 'driver'));
+        Database::init(Config::getLocalConfig('database', 'driver'));
 
         // "Dynamic" Configuration
-        Configuration::initDB();
+        Config::initDB();
     }
 
     // Parse markdown
@@ -101,7 +101,7 @@ class Main
         // Attempt to get the response
         $resp = @file_get_contents(
             'https://www.google.com/recaptcha/api/siteverify?secret='
-            . Configuration::getConfig('recaptcha_private')
+            . Config::getConfig('recaptcha_private')
             . '&response='
             . $response
         );
@@ -277,28 +277,28 @@ class Main
         $mail->isSMTP();
 
         // Set the SMTP server host
-        $mail->Host = Configuration::getConfig('smtp_server');
+        $mail->Host = Config::getConfig('smtp_server');
 
         // Do we require authentication?
-        $mail->SMTPAuth = Configuration::getConfig('smtp_auth');
+        $mail->SMTPAuth = Config::getConfig('smtp_auth');
 
         // Do we encrypt as well?
-        $mail->SMTPSecure = Configuration::getConfig('smtp_secure');
+        $mail->SMTPSecure = Config::getConfig('smtp_secure');
 
         // Set the port to the SMTP server
-        $mail->Port = Configuration::getConfig('smtp_port');
+        $mail->Port = Config::getConfig('smtp_port');
 
         // If authentication is required log in as well
-        if (Configuration::getConfig('smtp_auth')) {
-            $mail->Username = Configuration::getConfig('smtp_username');
-            $mail->Password = base64_decode(Configuration::getConfig('smtp_password'));
+        if (Config::getConfig('smtp_auth')) {
+            $mail->Username = Config::getConfig('smtp_username');
+            $mail->Password = base64_decode(Config::getConfig('smtp_password'));
         }
 
         // Add a reply-to header
-        $mail->addReplyTo(Configuration::getConfig('smtp_replyto_mail'), Configuration::getConfig('smtp_replyto_name'));
+        $mail->addReplyTo(Config::getConfig('smtp_replyto_mail'), Config::getConfig('smtp_replyto_name'));
 
         // Set a from address as well
-        $mail->setFrom(Configuration::getConfig('smtp_from_email'), Configuration::getConfig('smtp_from_name'));
+        $mail->setFrom(Config::getConfig('smtp_from_email'), Config::getConfig('smtp_from_name'));
 
         // Set the addressee
         foreach ($to as $email => $name) {
@@ -315,8 +315,8 @@ class Main
         $htmlMail = file_get_contents(ROOT . '_sakura/templates/htmlEmail.tpl');
 
         // Replace template tags
-        $htmlMail = str_replace('{{ sitename }}', Configuration::getConfig('sitename'), $htmlMail);
-        $htmlMail = str_replace('{{ siteurl }}', '//' . Configuration::getConfig('url_main'), $htmlMail);
+        $htmlMail = str_replace('{{ sitename }}', Config::getConfig('sitename'), $htmlMail);
+        $htmlMail = str_replace('{{ siteurl }}', '//' . Config::getConfig('url_main'), $htmlMail);
         $htmlMail = str_replace('{{ contents }}', self::mdParse($body), $htmlMail);
 
         // Set HTML body
@@ -345,7 +345,7 @@ class Main
     {
 
         // Run common sanitisation function over string
-        $string = htmlentities($string, ENT_NOQUOTES | ENT_HTML401, Configuration::getConfig('charset'));
+        $string = htmlentities($string, ENT_NOQUOTES | ENT_HTML401, Config::getConfig('charset'));
         $string = stripslashes($string);
         $string = strip_tags($string);
 
@@ -482,7 +482,7 @@ class Main
 
         // Get CloudFlare Subnet list
         $cfhosts = file_get_contents(
-            ROOT . '_sakura/' . Configuration::getLocalConfig('data', 'cfipv' . (self::ipVersion($ip)))
+            ROOT . '_sakura/' . Config::getLocalConfig('data', 'cfipv' . (self::ipVersion($ip)))
         );
 
         // Replace \r\n with \n
@@ -617,7 +617,7 @@ class Main
         $iso3166 = json_decode(
             utf8_encode(
                 file_get_contents(
-                    ROOT . '_sakura/' . Configuration::getLocalConfig('data', 'iso3166')
+                    ROOT . '_sakura/' . Config::getLocalConfig('data', 'iso3166')
                 )
             ),
             true

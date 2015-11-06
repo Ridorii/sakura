@@ -19,7 +19,6 @@ class User
     // Initialise the user object
     public function __construct($uid)
     {
-
         // Get the user database row
         $this->data = Database::fetch(
             'users',
@@ -65,7 +64,6 @@ class User
     // Check if the user has the specified ranks
     public function checkIfUserHasRanks($ranks)
     {
-
         // Check if the main rank is the specified rank
         if ($this->mainRank->id() === $ranks) {
             return true;
@@ -99,29 +97,26 @@ class User
     public function country()
     {
         return [
-
             'long' => Main::getCountryName($this->data['user_country']),
             'short' => $this->data['user_country'],
-
         ];
     }
 
     // Check if a user is online
     public function checkOnline()
     {
-        return $this->data['user_last_online'] > (time() - Configuration::getConfig('max_online_time'));
+        return $this->data['user_last_online'] > (time() - Config::getConfig('max_online_time'));
     }
 
     // Get user's forum statistics
     public function forumStats()
     {
-        return Forum::getUserStats($this->data['user_id']);
+        return Forums::getUserStats($this->data['user_id']);
     }
 
     // Add a new friend
     public function addFriend($uid)
     {
-
         // Create the foreign object
         $user = new User($uid);
 
@@ -152,7 +147,6 @@ class User
     // Remove a friend
     public function removeFriend($uid, $deleteRequest = false)
     {
-
         // Create the foreign object
         $user = new User($uid);
 
@@ -187,7 +181,6 @@ class User
     // Check if the user is friends with the currently authenticated
     public function checkFriends($with)
     {
-
         // Get the friend's friends
         $friend = in_array($this->data['user_id'], (new User($with))->getFriends());
 
@@ -236,18 +229,15 @@ class User
     public function elapsed($append = ' ago', $none = 'Just now')
     {
         return [
-
             'joined' => Main::timeElapsed($this->data['user_registered'], $append, $none),
             'lastOnline' => Main::timeElapsed($this->data['user_last_online'], $append, $none),
             'birth' => Main::timeElapsed(strtotime($this->data['user_birthday']), $append, $none),
-
         ];
     }
 
     // Get the user's profile fields
     public function profileFields()
     {
-
         // Get profile fields
         $profileFields = Database::fetch('profilefields');
 
@@ -314,7 +304,6 @@ class User
     // Get the user's option fields
     public function optionFields()
     {
-
         // Get option fields
         $optionFields = Database::fetch('optionfields');
 
@@ -384,7 +373,6 @@ class User
     // Get all warnings issued to the user
     public function getWarnings()
     {
-
         // Do the database query
         $getWarnings = Database::fetch('warnings', true, [
             'user_id' => [$this->data['user_id'], '='],
@@ -462,7 +450,6 @@ class User
     // Get username change history
     public function getUsernameHistory()
     {
-
         // Do the database query
         $changes = Database::fetch('username_history', true, [
             'user_id' => [$this->data['user_id'], '='],
@@ -475,24 +462,23 @@ class User
     // Set a new username
     public function setUsername($username)
     {
-
         // Create a cleaned version
         $username_clean = Main::cleanString($username, true);
 
         // Check if the username is too short
-        if (strlen($username_clean) < Configuration::getConfig('username_min_length')) {
+        if (strlen($username_clean) < Config::getConfig('username_min_length')) {
             return [0, 'TOO_SHORT'];
         }
 
         // Check if the username is too long
-        if (strlen($username_clean) > Configuration::getConfig('username_max_length')) {
+        if (strlen($username_clean) > Config::getConfig('username_max_length')) {
             return [0, 'TOO_LONG'];
         }
 
         // Check if this username hasn't been used in the last amount of days set in the config
         $getOld = Database::fetch('username_history', false, [
             'username_old_clean' => [$username_clean, '='],
-            'change_time' => [(Configuration::getConfig('old_username_reserve') * 24 * 60 * 60), '>'],
+            'change_time' => [(Config::getConfig('old_username_reserve') * 24 * 60 * 60), '>'],
         ], ['change_id', true]);
 
         // Check if anything was returned
@@ -538,7 +524,6 @@ class User
     // Set a new e-mail address
     public function setEMailAddress($email)
     {
-
         // Validate e-mail address
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return [0, 'INVALID'];
@@ -591,7 +576,7 @@ class User
         }
 
         // Check password entropy
-        if (Main::pwdEntropy($new) < Configuration::getConfig('min_entropy')) {
+        if (Main::pwdEntropy($new) < Config::getConfig('min_entropy')) {
             return [0, 'PASS_TOO_SHIT'];
         }
 

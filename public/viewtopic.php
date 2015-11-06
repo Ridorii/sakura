@@ -16,6 +16,12 @@ $topic = Forums::getTopic(
     : (isset($_GET['t']) ? $_GET['t'] : 0)
 );
 
+// Initialise templating engine
+$template = new Template();
+
+// Change templating engine
+$template->setTemplate($templateName);
+
 // Check if the forum exists
 if (!$topic) {
     // Set render data
@@ -23,8 +29,11 @@ if (!$topic) {
         'message' => 'The topic you tried to access does not exist.',
     ];
 
-    // Print template
-    print Templates::render('global/information.tpl', $renderData);
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/information.tpl');
     exit;
 }
 
@@ -38,5 +47,8 @@ $renderData = array_merge($renderData, $topic, [
     'currentPage' => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
 ]);
 
+// Set parse variables
+$template->setVariables($renderData);
+
 // Print page contents
-print Templates::render('forum/viewtopic.tpl', $renderData);
+echo $template->render('forum/viewtopic.tpl');

@@ -7,7 +7,7 @@ namespace Sakura\DBWrapper;
 
 use PDO;
 use PDOException;
-use \Sakura\Configuration;
+use \Sakura\Config;
 
 /**
  * Class MySQL
@@ -31,23 +31,23 @@ class mysql
         // Initialise connection
         $this->initConnect(
             (
-                Configuration::getLocalConfig('database', 'unixsocket') ?
+                Config::getLocalConfig('database', 'unixsocket') ?
                 $this->prepareSock(
-                    Configuration::getLocalConfig('database', 'host'),
-                    Configuration::getLocalConfig('database', 'database')
+                    Config::getLocalConfig('database', 'host'),
+                    Config::getLocalConfig('database', 'database')
                 ) :
                 $this->prepareHost(
-                    Configuration::getLocalConfig('database', 'host'),
-                    Configuration::getLocalConfig('database', 'database'),
+                    Config::getLocalConfig('database', 'host'),
+                    Config::getLocalConfig('database', 'database'),
                     (
-                        Configuration::getLocalConfig('database', 'port') !== null ?
-                        Configuration::getLocalConfig('database', 'port') :
+                        Config::getLocalConfig('database', 'port') !== null ?
+                        Config::getLocalConfig('database', 'port') :
                         3306
                     )
                 )
             ),
-            Configuration::getLocalConfig('database', 'username'),
-            Configuration::getLocalConfig('database', 'password')
+            Config::getLocalConfig('database', 'username'),
+            Config::getLocalConfig('database', 'password')
         );
     }
 
@@ -88,7 +88,7 @@ class mysql
     {
 
         // Begin preparation of the statement
-        $prepare = 'SELECT ' . ($distinct ? 'DISTINCT ' : '') . ($column == '*' ? '' : '`') . $column . ($column == '*' ? '' : '`') . ' FROM `' . ($prefix ? $prefix : Configuration::getLocalConfig('database', 'prefix')) . $table . '`';
+        $prepare = 'SELECT ' . ($distinct ? 'DISTINCT ' : '') . ($column == '*' ? '' : '`') . $column . ($column == '*' ? '' : '`') . ' FROM `' . ($prefix ? $prefix : Config::getLocalConfig('database', 'prefix')) . $table . '`';
 
         // If $data is set and is an array continue
         if (is_array($data)) {
@@ -200,7 +200,7 @@ class mysql
     {
 
         // Begin preparation of the statement
-        $prepare = 'INSERT INTO `' . ($prefix ? $prefix : Configuration::getLocalConfig('database', 'prefix')) . $table . '` ';
+        $prepare = 'INSERT INTO `' . ($prefix ? $prefix : Config::getLocalConfig('database', 'prefix')) . $table . '` ';
 
         // Run the foreach statement twice for (`stuff`) VALUES (:stuff)
         for ($i = 0; $i < 2; $i++) {
@@ -241,7 +241,7 @@ class mysql
     {
 
         // Begin preparation of the statement
-        $prepare = 'UPDATE `' . ($prefix ? $prefix : Configuration::getLocalConfig('database', 'prefix')) . $table . '`';
+        $prepare = 'UPDATE `' . ($prefix ? $prefix : Config::getLocalConfig('database', 'prefix')) . $table . '`';
 
         // Run a foreach on $data and complete the statement
         foreach ($data as $key => $values) {
@@ -294,7 +294,7 @@ class mysql
     {
 
         // Begin preparation of the statement
-        $prepare = 'DELETE FROM `' . ($prefix ? $prefix : Configuration::getLocalConfig('database', 'prefix')) . $table . '`';
+        $prepare = 'DELETE FROM `' . ($prefix ? $prefix : Config::getLocalConfig('database', 'prefix')) . $table . '`';
 
         // If $data is set and is an array continue
         if (is_array($data)) {
@@ -333,7 +333,7 @@ class mysql
     {
 
         // Begin preparation of the statement
-        $prepare = 'SELECT COUNT(*) FROM `' . ($prefix ? $prefix : Configuration::getLocalConfig('database', 'prefix')) . $table . '`';
+        $prepare = 'SELECT COUNT(*) FROM `' . ($prefix ? $prefix : Config::getLocalConfig('database', 'prefix')) . $table . '`';
 
         // If $data is set and is an array continue
         if (is_array($data)) {

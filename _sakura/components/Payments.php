@@ -32,8 +32,8 @@ class Payments
         try {
             self::$paypal = new \PayPal\Rest\ApiContext(
                 new \PayPal\Auth\OAuthTokenCredential(
-                    Configuration::getConfig('paypal_client_id'),
-                    Configuration::getConfig('paypal_secret')
+                    Config::getConfig('paypal_client_id'),
+                    Config::getConfig('paypal_secret')
                 )
             );
         } catch (\Exception $e) {

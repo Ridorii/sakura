@@ -14,6 +14,14 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
+if (!defined('SAKURA_NO_TPL')) {
+    // Initialise templating engine
+    $template = new Template();
+
+    // Change templating engine
+    $template->setTemplate($templateName);
+}
+
 // Notifications
 if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications']) {
     // Create the notification container array
@@ -57,11 +65,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     // Match session ids for the same reason
     if (!Users::checkLogin()) {
         $renderData['page'] = [
-
             'redirect' => $redirect,
             'message' => 'You must be logged in to do that!',
             'success' => 0,
-
         ];
 
         // Prevent
@@ -71,11 +77,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     // Match session ids for the same reason
     if (!isset($_REQUEST['session']) || $_REQUEST['session'] != session_id()) {
         $renderData['page'] = [
-
             'redirect' => $redirect,
             'message' => 'Invalid session, please try again.',
             'success' => 0,
-
         ];
 
         // Prevent
@@ -85,11 +89,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     // Match session ids for the same reason
     if (!isset($_REQUEST['category'])) {
         $renderData['page'] = [
-
             'redirect' => $redirect,
             'message' => 'No category was set.',
             'success' => 0,
-
         ];
 
         // Prevent
@@ -107,11 +109,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 // Check if the comment was actually made by the current user
                 if (!$comment) {
                     $renderData['page'] = [
-
                         'redirect' => $redirect,
                         'message' => 'The requested comment does not exist.',
                         'success' => 0,
-
                     ];
                     break;
                 }
@@ -119,11 +119,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 // Check if the user can delete comments
                 if (!$currentUser->checkPermission('SITE', 'VOTE_COMMENTS')) {
                     $renderData['page'] = [
-
                         'redirect' => $redirect,
                         'message' => 'You aren\'t allowed to vote on comments.',
                         'success' => 0,
-
                     ];
                     break;
                 }
@@ -135,11 +133,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 );
 
                 $renderData['page'] = [
-
                     'redirect' => $redirect,
                     'message' => 'Your vote has been cast!',
                     'success' => 1,
-
                 ];
                 break;
 
@@ -149,11 +145,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 // Check if the comment was actually made by the current user
                 if (!$comment) {
                     $renderData['page'] = [
-
                         'redirect' => $redirect,
                         'message' => 'The requested comment does not exist.',
                         'success' => 0,
-
                     ];
                     break;
                 }
@@ -161,11 +155,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 // Check if the user can delete comments
                 if (!$currentUser->checkPermission('SITE', 'DELETE_COMMENTS')) {
                     $renderData['page'] = [
-
                         'redirect' => $redirect,
                         'message' => 'You aren\'t allowed to delete comments.',
                         'success' => 0,
-
                     ];
                     break;
                 }
@@ -173,11 +165,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 // Check if the comment was actually made by the current user
                 if ($comment['comment_poster'] !== $currentUser->data['id']) {
                     $renderData['page'] = [
-
                         'redirect' => $redirect,
                         'message' => 'You can\'t delete the comments of others.',
                         'success' => 0,
-
                     ];
                     break;
                 }
@@ -185,11 +175,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 $comments->removeComment(isset($_REQUEST['id']) ? $_REQUEST['id'] : 0);
 
                 $renderData['page'] = [
-
                     'redirect' => $redirect,
                     'message' => 'The comment has been deleted!',
                     'success' => 1,
-
                 ];
                 break;
 
@@ -197,11 +185,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 // Check if the user can delete comments
                 if (!$currentUser->checkPermission('SITE', 'CREATE_COMMENTS')) {
                     $renderData['page'] = [
-
                         'redirect' => $redirect,
                         'message' => 'You aren\'t allowed to comment.',
                         'success' => 0,
-
                     ];
                     break;
                 }
@@ -217,21 +203,17 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 ];
 
                 $renderData['page'] = [
-
                     'redirect' => $redirect,
                     'message' => $messages[$comment[1]],
                     'success' => $comment[0],
-
                 ];
                 break;
 
             default:
                 $renderData['page'] = [
-
                     'redirect' => $redirect,
                     'message' => 'Unknown action.',
                     'success' => 0,
-
                 ];
         }
     }
@@ -360,8 +342,8 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 sprintf($notifStrings[$action[1]][0], $user->data['username']),
                 $notifStrings[$action[1]][1],
                 60000,
-                '//' . Configuration::getConfig('url_main') . '/a/' . $user->data['user_id'],
-                '//' . Configuration::getConfig('url_main') . '/u/' . $user->data['user_id'],
+                '//' . Config::getConfig('url_main') . '/a/' . $user->data['user_id'],
+                '//' . Config::getConfig('url_main') . '/u/' . $user->data['user_id'],
                 '1'
             );
         }
@@ -455,7 +437,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Set path variables
-                $filepath = ROOT . Configuration::getConfig('user_uploads') . '/';
+                $filepath = ROOT . Config::getConfig('user_uploads') . '/';
                 $filename = $filepath . $mode . '_' . $currentUser->data['user_id'];
                 $currfile = isset($currentUser->data['user_data'][$userDataKey])
                 && !empty($_OLDFILE = $currentUser->data['user_data'][$userDataKey]) ? $_OLDFILE : null;
@@ -544,8 +526,8 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     }
 
                     // Check if the image is too large
-                    if (($metadata[0] > Configuration::getConfig($mode . '_max_width')
-                        || $metadata[1] > Configuration::getConfig($mode . '_max_height'))) {
+                    if (($metadata[0] > Config::getConfig($mode . '_max_width')
+                        || $metadata[1] > Config::getConfig($mode . '_max_height'))) {
                         // Set render data
                         $renderData['page'] = [
 
@@ -559,8 +541,8 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     }
 
                     // Check if the image is too small
-                    if (($metadata[0] < Configuration::getConfig($mode . '_min_width')
-                        || $metadata[1] < Configuration::getConfig($mode . '_min_height'))) {
+                    if (($metadata[0] < Config::getConfig($mode . '_min_width')
+                        || $metadata[1] < Config::getConfig($mode . '_min_height'))) {
                         // Set render data
                         $renderData['page'] = [
 
@@ -574,7 +556,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     }
 
                     // Check if the file is too large
-                    if ((filesize($_FILES[$mode]['tmp_name']) > Configuration::getConfig($mode . '_max_fsize'))) {
+                    if ((filesize($_FILES[$mode]['tmp_name']) > Config::getConfig($mode . '_max_fsize'))) {
                         // Set render data
                         $renderData['page'] = [
 
@@ -1403,7 +1385,12 @@ if (Users::checkLogin()) {
         || empty($mode)
         || !$pages[$category]['modes'][$mode]['access']) {
         header('HTTP/1.0 404 Not Found');
-        print Templates::render('global/notfound.tpl', $renderData);
+
+        // Set parse variables
+        $template->setVariables($renderData);
+
+        // Print page contents
+        echo $template->render('global/notfound.tpl');
         exit;
     }
 
@@ -1484,12 +1471,12 @@ if (Users::checkLogin()) {
         case 'appearance.background':
             $renderData[$mode] = [
 
-                'max_width' => Configuration::getConfig($mode . '_max_width'),
-                'max_height' => Configuration::getConfig($mode . '_max_height'),
-                'min_width' => Configuration::getConfig($mode . '_min_width'),
-                'min_height' => Configuration::getConfig($mode . '_min_height'),
-                'max_size' => Configuration::getConfig($mode . '_max_fsize'),
-                'max_size_view' => Main::getByteSymbol(Configuration::getConfig($mode . '_max_fsize')),
+                'max_width' => Config::getConfig($mode . '_max_width'),
+                'max_height' => Config::getConfig($mode . '_max_height'),
+                'min_width' => Config::getConfig($mode . '_min_width'),
+                'min_height' => Config::getConfig($mode . '_min_height'),
+                'max_size' => Config::getConfig($mode . '_max_fsize'),
+                'max_size_view' => Main::getByteSymbol(Config::getConfig($mode . '_max_fsize')),
 
             ];
             break;
@@ -1510,9 +1497,15 @@ if (Users::checkLogin()) {
             break;
     }
 
+    // Set parse variables
+    $template->setVariables($renderData);
+
     // Print page contents
-    print Templates::render('main/settings.tpl', $renderData);
+    echo $template->render('main/settings.tpl');
 } else {
     // If not allowed print the restricted page
-    print Templates::render('global/restricted.tpl', $renderData);
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/restricted.tpl');
 }

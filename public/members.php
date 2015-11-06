@@ -9,6 +9,12 @@ namespace Sakura;
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
+// Initialise templating engine
+$template = new Template();
+
+// Change templating engine
+$template->setTemplate($templateName);
+
 // CHeck if the user is logged in
 if (Users::checkLogin()) {
     // Add page specific things
@@ -31,13 +37,19 @@ if (Users::checkLogin()) {
         'page' => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
         'users' => array_chunk($_MEMBERLIST_ACTIVE && !$_MEMBERLIST_NFOUND ?
             Users::getUsersInRank($_MEMBERLIST_ACTIVE, null, true) :
-            Users::getAllUsers(), Configuration::getConfig('members_per_page'), true),
+            Users::getAllUsers(), Config::getConfig('members_per_page'), true),
 
     ];
 
+    // Set parse variables
+    $template->setVariables($renderData);
+
     // Print page contents
-    print Templates::render('main/memberlist.tpl', $renderData);
+    echo $template->render('main/memberlist.tpl');
 } else {
-    // Else return the restricted page
-    print Templates::render('global/restricted.tpl', $renderData);
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/restricted.tpl');
 }

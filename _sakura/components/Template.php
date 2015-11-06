@@ -25,7 +25,7 @@ class Template
     public function __construct()
     {
         // Set template to default
-        $this->setTemplate(Configuration::getConfig('site_style'));
+        $this->setTemplate(Config::getConfig('site_style'));
     }
 
     // Set a template name
@@ -41,11 +41,6 @@ class Template
 
         // Parse and store the configuration
         $this->templateOptions = parse_ini_file($confPath, true);
-
-        // Make sure we're not using a manage template for the main site or the other way around
-        if (defined('SAKURA_MANAGE') && (bool) $this->templateOptions['manage']['mode'] != (bool) SAKURA_MANAGE) {
-            trigger_error('Incorrect template type', E_USER_ERROR);
-        }
 
         // Set variables
         $this->templateName = $name;
@@ -64,7 +59,7 @@ class Template
         $twigEnv = [];
 
         // Enable caching
-        if (Configuration::getConfig('enable_tpl_cache')) {
+        if (Config::getConfig('enable_tpl_cache')) {
             $twigEnv['cache'] = ROOT . 'cache';
         }
 

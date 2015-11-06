@@ -9,6 +9,12 @@ namespace Sakura;
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
+// Initialise templating engine
+$template = new Template();
+
+// Change templating engine
+$template->setTemplate($templateName);
+
 // Set location
 $topicId = isset($_GET['t']) ?
 $_GET['t'] :
@@ -33,7 +39,7 @@ $posting = [
 // Check if we're in reply mode
 if ($mode != 'f') {
     // Attempt to get the topic
-    $topic = Forum::getTopic($topicId, true);
+    $topic = Forums::getTopic($topicId, true);
 
     // Prompt an error if the topic doesn't exist
     if (!$topic) {
@@ -43,8 +49,11 @@ if ($mode != 'f') {
             'message' => 'The requested post does not exist.',
         ];
 
-        // Render information page
-        print Templates::render('global/information.tpl', $renderData);
+        // Set parse variables
+        $template->setVariables($renderData);
+
+        // Print page contents
+        echo $template->render('global/information.tpl');
         exit;
     }
 
@@ -66,8 +75,11 @@ if ($mode != 'f') {
                 'message' => 'You can only edit your own posts!',
             ];
 
-            // Render information page
-            print Templates::render('global/information.tpl', $renderData);
+            // Set parse variables
+            $template->setVariables($renderData);
+
+            // Print page contents
+            echo $template->render('global/information.tpl');
             exit;
         }
 
@@ -90,8 +102,11 @@ if ($mode != 'f') {
                 'message' => 'You can only delete your own posts!',
             ];
 
-            // Render information page
-            print Templates::render('global/information.tpl', $renderData);
+            // Set parse variables
+            $template->setVariables($renderData);
+
+            // Print page contents
+            echo $template->render('global/information.tpl');
             exit;
         }
 
@@ -120,8 +135,11 @@ if ($mode != 'f') {
                     'message' => 'Your post has been deleted!',
                 ];
 
-                // Render information page
-                print Templates::render('global/information.tpl', $renderData);
+                // Set parse variables
+                $template->setVariables($renderData);
+
+                // Print page contents
+                echo $template->render('global/information.tpl');
                 exit;
                 // Return to previous page
             } else {
@@ -138,8 +156,11 @@ if ($mode != 'f') {
             ],
         ]);
 
-        // Render confirmation form
-        print Templates::render('global/confirm.tpl', $renderData);
+        // Set parse variables
+        $template->setVariables($renderData);
+
+        // Print page contents
+        echo $template->render('global/confirm.tpl');
         exit;
     }
 
@@ -177,13 +198,17 @@ if (isset($_POST['post'])) {
     ];
 
     // Print page contents or if the AJAX request is set only display the render data
-    print isset($_REQUEST['ajax']) ?
-    (
-        $renderData['page']['message'] . '|' .
-        $renderData['page']['success'] . '|' .
-        $renderData['page']['redirect']
-    ) :
-    Templates::render('global/information.tpl', $renderData);
+    if (isset($_REQUEST['ajax'])) {
+        echo $renderData['page']['message'] . '|' .
+            $renderData['page']['success'] . '|' .
+            $renderData['page']['redirect'];
+    } else {
+        // Set parse variables
+        $template->setVariables($renderData);
+
+        // Print page contents
+        echo $template->render('global/information.tpl');
+    }
     exit;
 }
 
@@ -192,4 +217,8 @@ $renderData = array_merge($renderData, [
     'posting' => $posting,
 ]);
 
-print Templates::render('forum/posting.tpl', $renderData);
+// Set parse variables
+$template->setVariables($renderData);
+
+// Print page contents
+echo $template->render('forum/posting.tpl');

@@ -117,12 +117,12 @@ class Comments
     {
 
         // Check if the comment is long enough
-        if (strlen($content) < Configuration::getConfig('comment_min_length')) {
+        if (strlen($content) < Config::getConfig('comment_min_length')) {
             return [0, 'TOO_SHORT'];
         }
 
         // Check if the comment isn't too long
-        if (strlen($content) > Configuration::getConfig('comment_max_length')) {
+        if (strlen($content) > Config::getConfig('comment_max_length')) {
             return [0, 'TOO_LONG'];
         }
 

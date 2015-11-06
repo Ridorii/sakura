@@ -9,6 +9,12 @@ namespace Sakura;
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
+// Initialise templating engine
+$template = new Template();
+
+// Change templating engine
+$template->setTemplate($templateName);
+
 // Switch between modes (we only allow this to be used by logged in user)
 if (isset($_REQUEST['mode'])
     && Users::checkLogin()
@@ -38,26 +44,26 @@ if (isset($_REQUEST['mode'])
                 if (!isset($_POST['months'])
                     || !is_numeric($_POST['months'])
                     || (int) $_POST['months'] < 1
-                    || (int) $_POST['months'] > Configuration::getConfig('premium_amount_max')) {
+                    || (int) $_POST['months'] > Config::getConfig('premium_amount_max')) {
                     header('Location: ' . $urls->format('SITE_PREMIUM') . '?fail=true');
                 } else {
                     // Calculate the total
-                    $total = (float) Configuration::getConfig('premium_price_per_month') * (int) $_POST['months'];
+                    $total = (float) Config::getConfig('premium_price_per_month') * (int) $_POST['months'];
                     $total = number_format($total, 2, '.', '');
 
                     // Generate item name
-                    $itemName = Configuration::getConfig('sitename')
+                    $itemName = Config::getConfig('sitename')
                     . ' Premium - '
                     . (string) $_POST['months']
-                    . ' month'
-                    . ((int) $_POST['months'] == 1 ? '' : 's');
+                        . ' month'
+                        . ((int) $_POST['months'] == 1 ? '' : 's');
 
                     // Attempt to create a transaction
                     if ($transaction = Payments::createTransaction(
                         $total,
                         $itemName,
-                        Configuration::getConfig('sitename') . ' Premium Purchase',
-                        'http://' . Configuration::getConfig('url_main') . $urls->format('SITE_PREMIUM')
+                        Config::getConfig('sitename') . ' Premium Purchase',
+                        'http://' . Config::getConfig('url_main') . $urls->format('SITE_PREMIUM')
                     )) {
                         // Store the amount of months in the global session array
                         $_SESSION['premiumMonths'] = (int) $_POST['months'];
@@ -92,7 +98,7 @@ if (isset($_REQUEST['mode'])
                         Users::updatePremiumMeta($currentUser->data['user_id']);
                         Main::updatePremiumTracker(
                             $currentUser->data['user_id'],
-                            ((float) Configuration::getConfig('premium_price_per_month') * $_SESSION['premiumMonths']),
+                            ((float) Config::getConfig('premium_price_per_month') * $_SESSION['premiumMonths']),
                             $currentUser->data['username']
                             . ' bought premium for '
                             . $_SESSION['premiumMonths']
@@ -111,15 +117,17 @@ if (isset($_REQUEST['mode'])
                 break;
 
             case 'complete':
-                print Templates::render('main/premiumcomplete.tpl', array_merge([
-
+                $renderData = array_merge([
                     'page' => [
-
                         'expiration' => ($prem = Users::checkUserPremium($currentUser->data['user_id'])[2]) !== null ? $prem : 0,
-
                     ],
+                ], $renderData);
 
-                ], $renderData));
+                // Set parse variables
+                $template->setVariables($renderData);
+
+                // Print page contents
+                echo $template->render('main/premiumcomplete.tpl');
                 break;
 
             default:
@@ -142,7 +150,11 @@ if (isset($_GET['tracker'])) {
 
     ];
 
-    print Templates::render('main/supporttracker.tpl', $renderData);
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('main/supporttracker.tpl');
     exit;
 }
 
@@ -150,11 +162,14 @@ if (isset($_GET['tracker'])) {
 $renderData['page'] = [
 
     'fail' => isset($_GET['fail']),
-    'price' => Configuration::getConfig('premium_price_per_month'),
+    'price' => Config::getConfig('premium_price_per_month'),
     'current' => $currentUser->checkPremium(),
-    'amount_max' => Configuration::getConfig('premium_amount_max'),
+    'amount_max' => Config::getConfig('premium_amount_max'),
 
 ];
 
+// Set parse variables
+$template->setVariables($renderData);
+
 // Print page contents
-print Templates::render('main/support.tpl', $renderData);
+echo $template->render('main/support.tpl');

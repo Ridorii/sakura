@@ -13,7 +13,7 @@ use DOMDocument;
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
 // Create a new News object
-$news = new News(isset($_GET['cat']) ? $_GET['cat'] : Configuration::getConfig('site_news_category'));
+$news = new News(isset($_GET['cat']) ? $_GET['cat'] : Config::getConfig('site_news_category'));
 
 // News XML feed
 if (isset($_GET['xml'])) {
@@ -22,27 +22,23 @@ if (isset($_GET['xml'])) {
 
     // Meta data attributes
     $metaData = [
-
-        'title' => ($_FEED_TITLE = Configuration::getConfig('sitename')) . ' News',
-        'link' => ($_FEED_URL = 'http://' . Configuration::getConfig('url_main')),
+        'title' => ($_FEED_TITLE = Config::getConfig('sitename')) . ' News',
+        'link' => ($_FEED_URL = 'http://' . Config::getConfig('url_main')),
         'description' => 'News about ' . $_FEED_TITLE,
         'language' => 'en-gb',
-        'webMaster' => Configuration::getConfig('admin_email') . ' (' . $_FEED_TITLE . ' Webmaster)',
+        'webMaster' => Config::getConfig('admin_email') . ' (' . $_FEED_TITLE . ' Webmaster)',
         'pubDate' => ($_FEED_DATE = date('r', $posts[array_keys($posts)[0]]['news_timestamp'])),
         'lastBuildDate' => $_FEED_DATE,
-
     ];
 
     // Item attributes
     $itemData = [
-
         'title' => ['text' => '0', 'eval' => '$post["news_title"]'],
         'link' => ['text' => $_FEED_URL . (new Urls())->format('SITE_NEWS_POST', ['0']), 'eval' => '$post["news_id"]'],
         'guid' => ['text' => $_FEED_URL . (new Urls())->format('SITE_NEWS_POST', ['0']), 'eval' => '$post["news_id"]'],
         'pubDate' => ['text' => '{EVAL}', 'eval' => 'date("D, d M Y G:i:s O", $post["news_timestamp"])'],
         'dc:publisher' => ['text' => '0', 'eval' => '$post["news_poster"]->data["username"]'],
         'description' => ['cdata' => '0', 'eval' => '$post["news_content_parsed"]'],
-
     ];
 
     // Create a new DOM document
@@ -123,14 +119,21 @@ if (isset($_GET['xml'])) {
 }
 
 $renderData = array_merge($renderData, [
-
     'news' => $news,
-    'postsPerPage' => Configuration::getConfig('news_posts_per_page'),
+    'postsPerPage' => Config::getConfig('news_posts_per_page'),
     'viewPost' => isset($_GET['id']),
     'postExists' => $news->postExists(isset($_GET['id']) ? $_GET['id'] : 0),
     'currentPage' => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
-
 ]);
 
+// Initialise templating engine
+$template = new Template();
+
+// Change templating engine
+$template->setTemplate($templateName);
+
+// Set parse variables
+$template->setVariables($renderData);
+
 // Print page contents
-print Templates::render('main/news.tpl', $renderData);
+echo $template->render('main/news.tpl');

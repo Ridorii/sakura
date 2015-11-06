@@ -81,5 +81,14 @@ switch ($category . '.' . $mode) {
         break;
 }
 
+// Initialise templating engine
+$template = new Template();
+
+// Change templating engine
+$template->setTemplate($templateName);
+
+// Set parse variables
+$template->setVariables($renderData);
+
 // Print page contents
-print Templates::render('pages/' . $mode . '.' . $category . '.tpl', $renderData);
+echo $template->render('pages/' . $mode . '.' . $category . '.tpl');

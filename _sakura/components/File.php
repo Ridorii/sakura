@@ -1,14 +1,14 @@
 <?php
 /*
- * File uploads handler
+ * File handler
  */
 
 namespace Sakura;
 
 /**
- * Class Upload
+ * Class File
  * @package Sakura
  */
-class Upload
+class File
 {
 }
