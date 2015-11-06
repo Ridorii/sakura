@@ -219,13 +219,17 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     }
 
     // Print page contents or if the AJAX request is set only display the render data
-    print isset($_REQUEST['ajax']) ?
-    (
-        $renderData['page']['message'] . '|' .
-        $renderData['page']['success'] . '|' .
-        $renderData['page']['redirect']
-    ) :
-    Templates::render('global/information.tpl', $renderData);
+    if (isset($_REQUEST['ajax'])) {
+        echo $renderData['page']['message'] . '|' .
+            $renderData['page']['success'] . '|' .
+            $renderData['page']['redirect'];
+    } else {
+        // If not allowed print the restricted page
+        $template->setVariables($renderData);
+
+        // Print page contents
+        echo $template->render('global/information.tpl');
+    }
     exit;
 } elseif (isset($_REQUEST['friend-action']) && $_REQUEST['friend-action'] && Users::checkLogin()) {
     // Continue
@@ -350,13 +354,17 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     }
 
     // Print page contents or if the AJAX request is set only display the render data
-    print isset($_REQUEST['ajax']) ?
-    (
-        $renderData['page']['message'] . '|' .
-        $renderData['page']['success'] . '|' .
-        $renderData['page']['redirect']
-    ) :
-    Templates::render('global/information.tpl', $renderData);
+    if (isset($_REQUEST['ajax'])) {
+        echo $renderData['page']['message'] . '|' .
+            $renderData['page']['success'] . '|' .
+            $renderData['page']['redirect'];
+    } else {
+        // If not allowed print the restricted page
+        $template->setVariables($renderData);
+
+        // Print page contents
+        echo $template->render('global/information.tpl');
+    }
     exit;
 } elseif (isset($_POST['submit']) && isset($_POST['submit'])) {
     $continue = true;
@@ -977,13 +985,17 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     }
 
     // Print page contents or if the AJAX request is set only display the render data
-    print isset($_REQUEST['ajax']) ?
-    (
-        $renderData['page']['message'] . '|' .
-        $renderData['page']['success'] . '|' .
-        $renderData['page']['redirect']
-    ) :
-    Templates::render('global/information.tpl', $renderData);
+    if (isset($_REQUEST['ajax'])) {
+        echo $renderData['page']['message'] . '|' .
+            $renderData['page']['success'] . '|' .
+            $renderData['page']['redirect'];
+    } else {
+        // If not allowed print the restricted page
+        $template->setVariables($renderData);
+
+        // Print page contents
+        echo $template->render('global/information.tpl');
+    }
     exit;
 }
 
