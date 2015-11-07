@@ -723,6 +723,9 @@ class Users
         // Get the specified user
         $user = new User($uid);
 
+        // Define $current
+        $current = [];
+
         // Go over all the new ranks
         foreach ($ranks as $rank) {
             // Check if the user already has this rank and set it if not
