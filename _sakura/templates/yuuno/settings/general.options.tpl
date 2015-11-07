@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div style="padding: 8px 0;">
-                    <input type="{{ field.option_type }}" name="option_{{ field.option_id }}" class="inputStyling"{% if user.data.user_data.userOptions[field.option_id] %}{% if field.option_type == 'checkbox' and user.data.user_data.userOptions[field.option_id] %} checked="checked" value="option_{{ field.option_id }}"{% else %} value="{{ user.data.user_data.userOptions[field.option_id] }}"{% endif %}{% endif %} />
+                    <input type="{{ field.option_type }}" name="option_{{ field.option_id }}" class="inputStyling"{% if user.optionFields[field.option_id] %}{% if field.option_type == 'checkbox' and user.optionFields[field.option_id] %} checked="checked" value="option_{{ field.option_id }}"{% else %} value="{{ user.optionFields[field.option_id] }}"{% endif %}{% endif %} />
                 </div>
             </div>
         {% endfor %}
@@ -23,9 +23,7 @@
     </form>
     <script type="text/javascript">
     window.addEventListener("load", function() {
-
         prepareAjaxForm('optionsForm', 'Changing Options...');
-
     });
     </script>
 {% else %}

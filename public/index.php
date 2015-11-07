@@ -71,7 +71,7 @@ $renderData['stats'] = [
         date_create(
             date(
                 'Y-m-d',
-                $_INDEX_NEWEST_USER->data['user_registered']
+                $_INDEX_NEWEST_USER->dates()['joined']
             )
         ),
         date_create(

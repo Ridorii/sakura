@@ -11,9 +11,7 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sa
 
 // Add page specific things
 $renderData['page'] = [
-
     'title' => 'Search',
-
 ];
 
 // Initialise templating engine

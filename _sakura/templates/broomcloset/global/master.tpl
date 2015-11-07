@@ -85,9 +85,9 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: {{ user.colour }};">{{ user.data.username }} <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color: {{ user.colour }};">{{ user.username }} <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ urls.format('USER_PROFILE', [user.data.user_id]) }}">View Profile</a></li>
+                                <li><a href="{{ urls.format('USER_PROFILE', [user.id]) }}">View Profile</a></li>
                                 <li><a href="{{ urls.format('SETTINGS_INDEX') }}">Site settings</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{{ urls.format('SITE_HOME') }}">Back to site</a></li>

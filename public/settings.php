@@ -127,7 +127,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 $comments->makeVote(
-                    $currentUser->data['user_id'],
+                    $currentUser->id(),
                     isset($_REQUEST['id']) ? $_REQUEST['id'] : 0,
                     isset($_REQUEST['state']) && $_REQUEST['state'] ? '1' : '0'
                 );
@@ -163,7 +163,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Check if the comment was actually made by the current user
-                if ($comment['comment_poster'] !== $currentUser->data['id']) {
+                if ($comment['comment_poster'] !== $currentUser->id()) {
                     $renderData['page'] = [
                         'redirect' => $redirect,
                         'message' => 'You can\'t delete the comments of others.',
@@ -193,7 +193,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Attempt to make a new comment
-                $comment = $comments->makeComment($currentUser->data['user_id'], $_POST['replyto'], $_POST['comment']);
+                $comment = $comments->makeComment($currentUser->id(), $_POST['replyto'], $_POST['comment']);
 
                 // Messages
                 $messages = [
@@ -258,7 +258,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     }
 
     // Compare time and session so we know the link isn't forged
-    if ($continue && $_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')] == $currentUser->data['user_id']) {
+    if ($continue && $_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')] == $currentUser->id()) {
         $renderData['page'] = [
 
             'redirect' => $redirect,
@@ -339,15 +339,15 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
         // Create a notification
         if (array_key_exists($action[1], $notifStrings)) {
             // Get the current user's profile data
-            $user = new User($currentUser->data['user_id']);
+            $user = new User($currentUser->id());
 
             Users::createNotification(
                 $_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')],
-                sprintf($notifStrings[$action[1]][0], $user->data['username']),
+                sprintf($notifStrings[$action[1]][0], $user->username()),
                 $notifStrings[$action[1]][1],
                 60000,
-                '//' . Config::getConfig('url_main') . '/a/' . $user->data['user_id'],
-                '//' . Config::getConfig('url_main') . '/u/' . $user->data['user_id'],
+                '//' . Config::getConfig('url_main') . '/a/' . $user->id(),
+                '//' . Config::getConfig('url_main') . '/u/' . $user->id(),
                 '1'
             );
         }
@@ -418,7 +418,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         $userDataKey = 'profileBackground';
                         $msgTitle = 'Background';
                         $permission = (
-                            !empty($currentUser->data['user_data'][$userDataKey])
+                            !empty($currentUser->userData()[$userDataKey])
                             && $currentUser->checkPermission('SITE', 'CHANGE_BACKGROUND')
                         ) || $currentUser->checkPermission('SITE', 'CREATE_BACKGROUND');
                         break;
@@ -446,9 +446,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 
                 // Set path variables
                 $filepath = ROOT . Config::getConfig('user_uploads') . '/';
-                $filename = $filepath . $mode . '_' . $currentUser->data['user_id'];
-                $currfile = isset($currentUser->data['user_data'][$userDataKey])
-                && !empty($_OLDFILE = $currentUser->data['user_data'][$userDataKey]) ? $_OLDFILE : null;
+                $filename = $filepath . $mode . '_' . $currentUser->id();
+                $currfile = isset($currentUser->userData()[$userDataKey])
+                && !empty($_OLDFILE = $currentUser->userData()[$userDataKey]) ? $_OLDFILE : null;
 
                 // Check if $_FILES is set
                 if (!isset($_FILES[$mode]) && empty($_FILES[$mode])) {
@@ -606,7 +606,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update database
-                Users::updateUserDataField($currentUser->data['user_id'], $updated);
+                Users::updateUserDataField($currentUser->id(), $updated);
 
                 // Set render data
                 $renderData['page'] = [
@@ -645,7 +645,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update database
-                Users::updateUserDataField($currentUser->data['user_id'], ['profileFields' => $store]);
+                Users::updateUserDataField($currentUser->id(), ['profileFields' => $store]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -711,7 +711,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                             'user_birthday' => $birthdate,
                         ],
                         [
-                            'user_id' => [$currentUser->data['user_id'], '='],
+                            'user_id' => [$currentUser->id(), '='],
                         ],
                     ]);
                 }
@@ -738,7 +738,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update database
-                Users::updateUserDataField($currentUser->data['user_id'], ['userOptions' => $store]);
+                Users::updateUserDataField($currentUser->id(), ['userOptions' => $store]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -784,7 +784,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                             'user_title' => (isset($_POST['usertitle']) ? $_POST['usertitle'] : null),
                         ],
                         [
-                            'user_id' => [$currentUser->data['user_id'], '='],
+                            'user_id' => [$currentUser->id(), '='],
                         ],
                     ]
                 );
@@ -939,7 +939,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 $userPage = base64_encode($_POST['userpage']);
 
                 // Update database
-                Users::updateUserDataField($currentUser->data['user_id'], ['userPage' => $userPage]);
+                Users::updateUserDataField($currentUser->id(), ['userPage' => $userPage]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -957,7 +957,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 $signature = base64_encode($_POST['signature']);
 
                 // Update database
-                Users::updateUserDataField($currentUser->data['user_id'], ['signature' => $signature]);
+                Users::updateUserDataField($currentUser->id(), ['signature' => $signature]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -1210,7 +1210,7 @@ if (Users::checkLogin()) {
 
                     ],
                     'access' => (
-                        isset($currentUser->data['user_data']['profileBackground'])
+                        isset($currentUser->userData()['profileBackground'])
                         && $currentUser->checkPermission('SITE', 'CHANGE_BACKGROUND')
                     ) || $currentUser->checkPermission('SITE', 'CREATE_BACKGROUND'),
                     'menu' => true,
@@ -1225,7 +1225,7 @@ if (Users::checkLogin()) {
 
                     ],
                     'access' => (
-                        isset($currentUser->data['user_data']['userPage'])
+                        isset($currentUser->userData()['userPage'])
                         && $currentUser->checkPermission('SITE', 'CHANGE_USERPAGE')
                     ) || $currentUser->checkPermission('SITE', 'CREATE_USERPAGE'),
                     'menu' => true,
@@ -1495,12 +1495,12 @@ if (Users::checkLogin()) {
 
         // User page
         case 'appearance.userpage':
-            $renderData['userPage'] = isset($currentUser->data['user_data']['userPage']) ? base64_decode($currentUser->data['user_data']['userPage']) : '';
+            $renderData['userPage'] = isset($currentUser->userData()['userPage']) ? base64_decode($currentUser->userData()['userPage']) : '';
             break;
 
         // Signature
         case 'appearance.signature':
-            $renderData['signature'] = isset($currentUser->data['user_data']['signature']) ? base64_decode($currentUser->data['user_data']['signature']) : '';
+            $renderData['signature'] = isset($currentUser->userData()['signature']) ? base64_decode($currentUser->userData()['signature']) : '';
             break;
 
         // Username changing

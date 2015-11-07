@@ -51,7 +51,6 @@ class Users
     // Check if a user is logged in
     public static function checkLogin($uid = null, $sid = null)
     {
-
         // Assign $uid and $sid
         $uid = $uid ? $uid : (isset($_COOKIE[Config::getConfig('cookie_prefix') . 'id'])
             ? $_COOKIE[Config::getConfig('cookie_prefix') . 'id']
@@ -130,7 +129,6 @@ class Users
     // Log a user in
     public static function login($username, $password, $remember = false, $cookies = true)
     {
-
         // Check if authentication is disallowed
         if (Config::getConfig('lock_authentication')) {
             return [0, 'AUTH_LOCKED'];
@@ -153,10 +151,10 @@ class Users
         }
 
         // Get account data
-        $user = self::getUser($uid);
+        $user = new User($uid);
 
         // Validate password
-        switch ($user['password_algo']) {
+        switch ($user->password()['password_algo']) {
             // Abyssing
             case 'nologin':
                 return [0, 'NO_LOGIN'];
@@ -164,12 +162,12 @@ class Users
             // Default hashing method
             default:
                 if (!Hashing::validatePassword($password, [
-                    $user['password_algo'],
-                    $user['password_iter'],
-                    $user['password_salt'],
-                    $user['password_hash'],
+                    $user->password()['password_algo'],
+                    $user->password()['password_iter'],
+                    $user->password()['password_salt'],
+                    $user->password()['password_hash'],
                 ])) {
-                    return [0, 'INCORRECT_PASSWORD', $user['user_id'], $user['password_chan']];
+                    return [0, 'INCORRECT_PASSWORD', $user->id(), $user->password()['password_chan']];
                 }
 
         }
@@ -213,7 +211,6 @@ class Users
     // Logout and kill the session
     public static function logout()
     {
-
         // Check if user is logged in
         if (!$check = self::checkLogin()) {
             return false;
@@ -247,7 +244,6 @@ class Users
     // Register user
     public static function register($username, $password, $confirmpass, $email, $tos, $captcha = null, $regkey = null)
     {
-
         // Check if authentication is disallowed
         if (Config::getConfig('lock_authentication')) {
             return [0, 'AUTH_LOCKED'];
@@ -362,7 +358,6 @@ class Users
     // Check if a user exists and then send the password forgot email
     public static function sendPasswordForgot($username, $email)
     {
-
         // Check if authentication is disallowed
         if (Config::getConfig('lock_authentication')) {
             return [0, 'AUTH_LOCKED'];
@@ -419,7 +414,6 @@ class Users
     // Reset password with key
     public static function resetPassword($verk, $uid, $newpass, $verpass)
     {
-
         // Check if authentication is disallowed
         if (Config::getConfig('lock_authentication')) {
             return [0, 'AUTH_LOCKED'];
@@ -468,7 +462,6 @@ class Users
     // Check if a user exists and then resend the activation e-mail
     public static function resendActivationMail($username, $email)
     {
-
         // Check if authentication is disallowed
         if (Config::getConfig('lock_authentication')) {
             return [0, 'AUTH_LOCKED'];
@@ -554,7 +547,6 @@ class Users
     // Activating a user
     public static function activateUser($uid, $requireKey = false, $key = null)
     {
-
         // Get the user data
         $user = Database::fetch('users', false, ['user_id' => [$uid, '=']]);
 
@@ -607,7 +599,6 @@ class Users
     // Deactivating a user
     public static function deactivateUser($uid)
     {
-
         // Get the user data
         $user = Database::fetch('users', false, ['user_id' => [$uid, '=']]);
 
@@ -639,7 +630,6 @@ class Users
     // Check if registration code is valid
     public static function checkRegistrationCode($code)
     {
-
         // Get registration key
         $keyRow = Database::fetch('regcodes', true, ['code' => [$code, '='], 'key_used' => [0, '=']]);
 
@@ -650,7 +640,6 @@ class Users
     // Mark registration code as used
     public static function markRegistrationCodeUsed($code, $uid = 0)
     {
-
         // Check if the code exists
         if (!$id = self::checkRegistrationCode($code)) {
             return false;
@@ -674,7 +663,6 @@ class Users
     // Create new registration code
     public static function createRegistrationCode($userId)
     {
-
         // Check if we're logged in
         if (!self::checkLogin()) {
             return false;
@@ -707,15 +695,11 @@ class Users
     // Set the default rank of a user
     public static function setDefaultRank($uid, $rid, $userIdIsUserData = false)
     {
-
         // Get the specified user
-        $user = $userIdIsUserData ? $uid : self::getUser($uid);
-
-        // Decode the json
-        $ranks = json_decode($user['user_ranks'], true);
+        $user = new User($uid);
 
         // Check if the rank we're trying to set is actually there
-        if (!in_array($rid, $ranks)) {
+        if (!in_array($rid, $user->ranks())) {
             return false;
         }
 
@@ -736,15 +720,11 @@ class Users
     // Add a rank to a user
     public static function addRanksToUser($ranks, $uid, $userIdIsUserData = false)
     {
-
         // Get the specified user
-        $user = $userIdIsUserData ? $uid : self::getUser($uid);
-
-        // Decode the array
-        $current = json_decode($user['user_ranks'], true);
+        $user = new User($uid);
 
         // Go over all the new ranks
-        foreach ($ranks as $rank) {
+        foreach ($user->ranks() as $rank) {
             // Check if the user already has this rank and set it if not
             if (!in_array($rank, $current)) {
                 $current[] = (int) $rank;
@@ -771,17 +751,13 @@ class Users
     // Removing ranks from a user
     public static function removeRanksFromUser($ranks, $uid, $userIdIsUserData = false)
     {
-
         // Get the specified user
-        $user = $userIdIsUserData ? $uid : self::getUser($uid);
-
-        // Get the ranks
-        $current = json_decode($user['user_ranks'], true);
+        $user = new User($uid);
 
         // Check the current ranks for ranks in the set array
         foreach ($current as $key => $rank) {
             // Unset the rank
-            if (in_array($rank, $ranks)) {
+            if (in_array($rank, $user->ranks())) {
                 unset($current[$key]);
             }
         }
@@ -806,13 +782,12 @@ class Users
     // Check if a user has these ranks
     public static function checkIfUserHasRanks($ranks, $userid, $userIdIsUserData = false)
     {
-        return $userIdIsUserData ? $userid->checkIfUserHasRanks($ranks) : (new User($userid))->checkIfUserHasRanks($ranks);
+        return (new User($userid))->checkIfUserHasRanks($ranks);
     }
 
     // Check if a user exists
     public static function userExists($user, $id = true)
     {
-
         // Clean string
         $user = Main::cleanString($user, true);
 
@@ -826,7 +801,6 @@ class Users
     // Get the available profile fields
     public static function getProfileFields()
     {
-
         // Get profile fields
         $profileFields = Database::fetch('profilefields');
 
@@ -852,7 +826,6 @@ class Users
     // Get the available option fields
     public static function getOptionFields()
     {
-
         // Get option fields
         $optionFields = Database::fetch('optionfields');
 
@@ -880,7 +853,6 @@ class Users
     // Get user's profile fields
     public static function getUserProfileFields($id, $inputIsData = false)
     {
-
         // Get profile fields
         $profileFields = Database::fetch('profilefields');
 
@@ -890,7 +862,7 @@ class Users
         }
 
         // Assign the profileData variable
-        $profileData = ($inputIsData ? $id : self::getUser($id)['user_data']);
+        $profileData = ($inputIsData ? $id : (new User($id))->userData());
 
         // Once again if nothing was returned just return null
         if (count($profileData) < 1 || $profileData == null || empty($profileData['profileFields'])) {
@@ -949,9 +921,8 @@ class Users
     // Updating the profile data of a user
     public static function updateUserDataField($id, $data)
     {
-
         // We retrieve the current content from the database
-        $current = self::getUser($id)['user_data'];
+        $current = (new User($id))->userData();
 
         // Merge the arrays
         $data = array_merge($current, $data);
@@ -973,37 +944,31 @@ class Users
     // Check if a user is online
     public static function checkUserOnline($id)
     {
-
-        // Get user
-        $user = self::getUser($id);
-
-        // Return false if the user doesn't exist because a user that doesn't exist can't be online
-        if (empty($user)) {
-            return false;
-        }
-
-        // Return true if the user was online in the last 5 minutes
-        return ($user['user_last_online'] > (time() - 500));
+        return (new User($id))->checkOnline();
     }
 
     // Get all online users
     public static function checkAllOnline()
     {
-
         // Assign time - 500 to a variable
-        $time = time() - 500;
+        $time = time() - Config::getConfig('max_online_time');
+
+        $return = [];
 
         // Get all online users in the past 5 minutes
         $getAll = Database::fetch('users', true, ['user_last_online' => [$time, '>']]);
 
+        foreach ($getAll as $user) {
+            $return[] = new User($user['user_id']);
+        }
+
         // Return all the online users
-        return $getAll;
+        return $return;
     }
 
     // Add premium to a user
     public static function addUserPremium($id, $seconds)
     {
-
         // Check if there's already a record of premium for this user in the database
         $getUser = Database::fetch('premium', false, [
             'user_id' => [$id, '='],
@@ -1046,7 +1011,6 @@ class Users
     // Check if user has Premium
     public static function checkUserPremium($id)
     {
-
         // Check if the user has static premium
         if (Permissions::check('SITE', 'STATIC_PREMIUM', $id, 1)) {
             return [2, 0, time() + 1];
@@ -1076,7 +1040,6 @@ class Users
     // Update the premium data
     public static function updatePremiumMeta($id)
     {
-
         // Get the ID for the premium user rank from the database
         $premiumRank = Config::getConfig('premium_rank_id');
 
@@ -1089,7 +1052,7 @@ class Users
             self::addRanksToUser([$premiumRank], $id);
 
             // Check if the user's default rank is standard user and update it to premium
-            if (self::getUser($id)['rank_main'] == 2) {
+            if (((new User($id))->mainRank()) == 2) {
                 self::setDefaultRank($id, $premiumRank);
             }
         } elseif ($check[0] == 0 && count($check) > 1) {
@@ -1098,26 +1061,9 @@ class Users
         }
     }
 
-    // Get user data by id
-    public static function getUser($id)
-    {
-
-        // If user was found return user data
-        return (new User($id))->data;
-    }
-
-    // Get rank data by id
-    public static function getRank($id)
-    {
-
-        // If rank was found return rank data
-        return (new Rank($id))->data;
-    }
-
     // Get user(s) by IP
     public static function getUsersByIP($ip)
     {
-
         // Get users by registration IP
         $registeredFrom = Database::fetch('users', true, ['register_ip' => [$ip, '=']]);
 
@@ -1134,7 +1080,6 @@ class Users
     // Get users in rank
     public static function getUsersInRank($rankId, $users = null, $excludeAbyss = true)
     {
-
         // Get all users (or use the supplied user list to keep server load down)
         if (!$users) {
             $users = self::getAllUsers();
@@ -1147,7 +1092,7 @@ class Users
         foreach ($users as $user) {
             // If so store the user's row in the array
             if (self::checkIfUserHasRanks([$rankId], $user, true)
-                && ($excludeAbyss ? $user->data['password_algo'] != 'nologin' : true)) {
+                && ($excludeAbyss ? $user->password()['password_algo'] != 'nologin' : true)) {
                 $rank[] = $user;
             }
         }
@@ -1159,7 +1104,6 @@ class Users
     // Get all users
     public static function getAllUsers($includeInactive = true, $includeAbyss = false)
     {
-
         // Execute query
         $getUsers = Database::fetch('users', true);
 
@@ -1188,7 +1132,6 @@ class Users
     // Get all ranks
     public static function getAllRanks()
     {
-
         // Execute query
         $getRanks = Database::fetch('ranks', true);
 
@@ -1207,7 +1150,6 @@ class Users
     // Get all warnings issued to a user (or all warnings a user issued)
     public static function getWarnings($uid = 0, $iid = false)
     {
-
         // Do the database query
         $warnings = Database::fetch('warnings', true, ($uid ? [
             ($iid ? 'moderator_id' : 'user_id') => [$uid, '='],
@@ -1220,7 +1162,6 @@ class Users
     // Get a user's notifications
     public static function getNotifications($uid = null, $timediff = 0, $excludeRead = true, $markRead = false)
     {
-
         // Prepare conditions
         $conditions = [];
         $conditions['user_id'] = [($uid ? $uid : self::checkLogin()[0]), '='];
@@ -1257,7 +1198,6 @@ class Users
     // Marking notifications as read
     public static function markNotificationRead($id, $mode = true)
     {
-
         // Execute an update statement
         Database::update('notifications', [
             [
@@ -1272,7 +1212,6 @@ class Users
     // Adding a new notification
     public static function createNotification($user, $title, $text, $timeout = 60000, $img = 'FONT:fa-info-circle', $link = '', $sound = 0)
     {
-
         // Get current timestamp
         $time = time();
 
@@ -1293,35 +1232,12 @@ class Users
     // Getting a user's PMs
     public static function getPrivateMessages($from = false)
     {
-
-        // Get all messages from the database
-        $messages = Database::fetch('messages', true, [
-            ($from ? 'from_user' : 'to_user') => [self::checkLogin()[0], '='],
-        ]);
-
-        // Prepare a storage array
-        $store = [];
-
-        // Go over each message and check if they are for the current user
-        foreach ($messages as $message) {
-            // Store the message
-            $store[$message['id']] = $message;
-
-            // Store user data as well
-            $store[$message['id']]['data']['from']['user'] = ($_MSG_USR = self::getUser($message['from_user']));
-            $store[$message['id']]['data']['from']['rank'] = self::getRank($_MSG_USR['rank_main']);
-            $store[$message['id']]['data']['to']['user'] = ($_MSG_USR = self::getUser($message['to_user']));
-            $store[$message['id']]['data']['to']['rank'] = self::getRank($_MSG_USR['rank_main']);
-        }
-
-        // Return store array
-        return $store;
+        return [];
     }
 
     // Get friends
     public static function getFriends($uid = null, $timestamps = false, $getData = false, $checkOnline = false)
     {
-
         // Assign $uid
         if (!$uid) {
             $uid = Users::checkLogin()[0];
@@ -1340,8 +1256,8 @@ class Users
             // Add friend to array
             $friends[($timestamps ? $friend['friend_id'] : $key)] = $getData ? ([
 
-                'user' => ($_UDATA = self::getUser($friend['friend_id'])),
-                'rank' => self::getRank($_UDATA['rank_main']),
+                'user' => ($_UDATA = new User($friend['friend_id'])),
+                'rank' => new Rank($_UDATA->mainRank()),
 
             ]) : $friend[($timestamps ? 'friend_timestamp' : 'friend_id')];
         }
@@ -1351,7 +1267,7 @@ class Users
             // Check each user
             foreach ($friends as $key => $friend) {
                 $friends[
-                    self::checkUserOnline($getData ? $friend['user']['user_id'] : $friend) ? 'online' : 'offline'
+                    self::checkUserOnline($getData ? $friend['user']->id() : $friend) ? 'online' : 'offline'
                 ][] = $friend;
             }
         }
@@ -1363,7 +1279,6 @@ class Users
     // Get non-mutual friends
     public static function getPendingFriends($uid = null, $getData = false)
     {
-
         // Assign $of automatically if it's not set
         if (!$uid) {
             $uid = self::checkLogin()[0];
@@ -1386,8 +1301,8 @@ class Users
             if (!$user->checkFriends($friend['user_id'])) {
                 $pending[] = $getData ? ([
 
-                    'user' => ($_UDATA = self::getUser($friend['user_id'])),
-                    'rank' => self::getRank($_UDATA['rank_main']),
+                    'user' => ($_UDATA = new User($friend['user_id'])),
+                    'rank' => new Rank($_UDATA->mainRank()),
 
                 ]) : $friend;
             }

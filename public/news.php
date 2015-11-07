@@ -37,7 +37,7 @@ if (isset($_GET['xml'])) {
         'link' => ['text' => $_FEED_URL . (new Urls())->format('SITE_NEWS_POST', ['0']), 'eval' => '$post["news_id"]'],
         'guid' => ['text' => $_FEED_URL . (new Urls())->format('SITE_NEWS_POST', ['0']), 'eval' => '$post["news_id"]'],
         'pubDate' => ['text' => '{EVAL}', 'eval' => 'date("D, d M Y G:i:s O", $post["news_timestamp"])'],
-        'dc:publisher' => ['text' => '0', 'eval' => '$post["news_poster"]->data["username"]'],
+        'dc:publisher' => ['text' => '0', 'eval' => '$post["news_poster"]->username()'],
         'description' => ['cdata' => '0', 'eval' => '$post["news_content_parsed"]'],
     ];
 

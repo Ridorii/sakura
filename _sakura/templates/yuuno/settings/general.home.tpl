@@ -20,7 +20,7 @@
 <br />
 <h1 class="stylised">Personal Statistics</h1>
 <ul>
-    <li>You joined on <b>{{ user.data.user_registered|date(sakura.dateFormat) }}</b>.</li>
+    <li>You joined on <b>{{ user.dates.joined|date(sakura.dateFormat) }}</b>.</li>
     <li>You have made <b>{{ user.forumStats.posts }} forum post{% if user.forumStats.posts != 1 %}s{% endif %}</b> and started <b>{{ user.forumStats.topics }} forum thread{% if user.forumStats.topics != 1 %}s{% endif %}</b>.</li>
     <li>You have <b>x</b> warnings.</li>
     <li>You have <b>{{ user.getFriends|length }} friend{% if user.getFriends|length != 1 %}s{% endif %}</b>.</li>
@@ -30,7 +30,7 @@
 <h2 style="color: #080;">Online</h2>
 {% if user.getFriends(true, true, true).online %}
     {% for key,friend in user.getFriends(true, true, true).online %}
-        <a href="/u/{{ friend.user.user_id }}" class="default" style="color: {% if friend.user.user_colour %}{{ friend.user.user_colour }}{% else %}{{ friend.rank.rank_colour }}{% endif %}">{{ friend.user.username }}</a>{% if key + 1 != user.getFriends(true, true, true).online|length %},{% endif %}
+        <a href="/u/{{ friend.user.id }}" class="default" style="color: {{ friend.user.colour }};">{{ friend.user.username }}</a>{% if key + 1 != user.getFriends(true, true, true).online|length %},{% endif %}
     {% endfor %}
 {% else %}
     <h4>No friends are online.</h4>
@@ -38,7 +38,7 @@
 <h2 style="color: #800;">Offline</h2>
 {% if user.getFriends(true, true, true).offline %}
     {% for key,friend in user.getFriends(true, true, true).offline %}
-        <a href="/u/{{ friend.user.user_id }}" class="default" style="color: {% if friend.user.user_colour %}{{ friend.user.user_colour }}{% else %}{{ friend.rank.rank_colour }}{% endif %}">{{ friend.user.username }}</a>{% if key + 1 != user.getFriends(true, true, true).offline|length %},{% endif %}
+        <a href="/u/{{ friend.user.id }}" class="default" style="color: {{ friend.user.colour }};">{{ friend.user.username }}</a>{% if key + 1 != user.getFriends(true, true, true).offline|length %},{% endif %}
     {% endfor %}
 {% else %}
     <h4>No friends are offline.</h4>

@@ -23,9 +23,7 @@
     </form>
     <script type="text/javascript">
     window.addEventListener("load", function() {
-
         prepareAjaxForm('optionsForm', 'Changing Options...');
-
     });
     </script>
 {% else %}

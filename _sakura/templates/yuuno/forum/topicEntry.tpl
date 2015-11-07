@@ -6,8 +6,8 @@
         <a href="{{ urls.format('FORUM_THREAD', [topic.topic_id]) }}" class="default">{{ topic.topic_title }}</a>
     </td>
     <td class="topicAuthor">
-        {% if topic.first_poster.data.user_id %}
-            <a href="{{ urls.format('USER_PROFILE', [topic.first_poster.data.user_id]) }}" class="default" style="color: {{ topic.first_poster.colour }}; text-shadow: 0 0 5px {% if topic.first_poster.colour != 'inherit' %}{{ topic.first_poster.colour }}{% else %}#222{% endif %};">{{ topic.first_poster.data.username }}</a>
+        {% if topic.first_poster.id %}
+            <a href="{{ urls.format('USER_PROFILE', [topic.first_poster.id]) }}" class="default" style="color: {{ topic.first_poster.colour }}; text-shadow: 0 0 5px {% if topic.first_poster.colour != 'inherit' %}{{ topic.first_poster.colour }}{% else %}#222{% endif %};">{{ topic.first_poster.username }}</a>
         {% else %}
             [deleted user]
         {% endif %}
@@ -17,8 +17,8 @@
         <div class="views" title="Amount of times this topic has been viewed.">{{ topic.topic_views }}</div>
     </td>
     <td class="topicLast">
-        {% if topic.last_poster.data.user_id %}
-            <a href="{{ urls.format('USER_PROFILE', [topic.last_poster.data.user_id]) }}" class="default" style="color: {{ topic.last_poster.colour }}; text-shadow: 0 0 5px {% if topic.last_poster.colour != 'inherit' %}{{ topic.last_poster.colour }}{% else %}#222{% endif %};">{{ topic.last_poster.data.username }}</a>
+        {% if topic.last_poster.id %}
+            <a href="{{ urls.format('USER_PROFILE', [topic.last_poster.id]) }}" class="default" style="color: {{ topic.last_poster.colour }}; text-shadow: 0 0 5px {% if topic.last_poster.colour != 'inherit' %}{{ topic.last_poster.colour }}{% else %}#222{% endif %};">{{ topic.last_poster.username }}</a>
         {% else %}
             [deleted user]
         {% endif %} <a href="{{ urls.format('FORUM_POST', [topic.last_post.post_id]) }}#p{{ topic.last_post.post_id }}" class="default fa fa-tag"></a><br />

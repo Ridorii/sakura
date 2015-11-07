@@ -1,4 +1,4 @@
-{% set birthday = user.data.user_birthday|split('-') %}
+{% set birthday = user.dates.birth|split('-') %}
 
 <form enctype="multipart/form-data" method="post" action="{{ sakura.currentPage }}" id="editProfileForm">
     <input type="hidden" name="sessid" value="{{ php.sessionid }}" />

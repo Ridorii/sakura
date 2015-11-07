@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151106');
+define('SAKURA_VERSION', '20151107');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 define('SAKURA_STABLE', false);
@@ -103,11 +103,7 @@ $templateName =
 defined('SAKURA_MANAGE') ?
 Config::getConfig('manage_style') :
 (
-    (
-        isset($currentUser->data['user_data']['userOptions']['useMisaki']) &&
-        $currentUser->data['user_data']['userOptions']['useMisaki'] &&
-        $currentUser->checkPermission('SITE', 'ALTER_PROFILE')
-    ) ?
+    $currentUser->optionFields()['useMisaki'] ?
     'misaki' :
     Config::getConfig('site_style')
 );
@@ -197,7 +193,7 @@ if (!defined('SAKURA_NO_TPL')) {
     }
 
     // Ban checking
-    if ($authCheck && $ban = Bans::checkBan($currentUser->data['user_id'])) {
+    if ($authCheck && $ban = Bans::checkBan($currentUser->id())) {
         // Additional render data
         $renderData = array_merge($renderData, [
 

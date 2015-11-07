@@ -62,7 +62,7 @@
             // Space for things that need to happen onload
             window.addEventListener("load", function() {
 
-                {% if php.self == '/profile.php' ? (profile.data.user_data.profileBackground and not profile.data.user_data.userOptions.disableProfileParallax) : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.user_data.userOptions.profileBackgroundSiteWide and user.data.user_data.profileBackground and not user.data.user_data.userOptions.disableProfileParallax) %}
+                {% if php.self == '/profile.php' ? (profile.userData.profileBackground and not profile.optionFields.disableProfileParallax) : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.optionFields.profileBackgroundSiteWide and user.userData.profileBackground and not user.optionFields.disableProfileParallax) %}
                     initialiseParallax('userBackground');
                 {% endif %}
 
@@ -77,8 +77,8 @@
             <div class="header-fade"></div>
             <div id="notifications"></div>
             <div id="wrapper">
-                {% if php.self == '/profile.php' ? profile.data.user_data.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.user_data.userOptions.profileBackgroundSiteWide and user.data.user_data.profileBackground) %}
-                    <div id="userBackground" style="background-image: url('{{ urls.format('IMAGE_BACKGROUND', [(php.self == '/profile.php' ? profile : user).data.user_id]) }}');"></div>
+                {% if php.self == '/profile.php' ? profile.userData.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.optionFields.profileBackgroundSiteWide and user.userData.profileBackground) %}
+                    <div id="userBackground" style="background-image: url('{{ urls.format('IMAGE_BACKGROUND', [(php.self == '/profile.php' ? profile : user).id]) }}');"></div>
                 {% endif %}
                 <div id="navigation">
                     <ul class="site-menu">
@@ -95,7 +95,7 @@
                             <a href="{% if session.checkLogin %}javascript:void(0);{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}">
                                 <div>
                                     <div class="nav-username"{% if session.checkLogin %} style="color: {{ user.colour }};"{% endif %}>
-                                        {% if session.checkLogin %}{{ user.data.username }} <span class="nav-user-dropdown"></span>{% else %}Guest{% endif %}
+                                        {% if session.checkLogin %}{{ user.username }} <span class="nav-user-dropdown"></span>{% else %}Guest{% endif %}
                                     </div>
                                     <div class="nav-userstats">
                                         {% if session.checkLogin %}<span class="fa fa-envelope"></span> 0 / <span class="fa fa-user-plus"></span> 0 / <span class="fa fa-warning"></span> 0 / <span class="fa fa-reply"></span> 0{% else %}Please log in to proceed!{% endif %}
@@ -104,7 +104,7 @@
                             </a>
                             {% if session.checkLogin %}
                                 <ul>
-                                    <li><a href="{{ urls.format('USER_PROFILE', [user.data.user_id]) }}">My Profile</a></li>
+                                    <li><a href="{{ urls.format('USER_PROFILE', [user.id]) }}">My Profile</a></li>
                                     <li><a href="{{ urls.format('SETTING_CAT', ['messages']) }}">Private Messages</a></li>
                                     <li><a href="{{ urls.format('SETTINGS_INDEX') }}">User Settings</a></li>
                                     <li><a href="{{ urls.format('MANAGE_INDEX') }}">Site Management</a></li>
@@ -112,7 +112,7 @@
                                 </ul>
                             {% endif %}
                         </li>
-                        <li><a href="{% if session.checkLogin %}{{ urls.format('USER_PROFILE', [user.data.user_id]) }}{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}"><img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.data.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.data.user_id]) }}');" class="nav-avatar" /></a></li>
+                        <li><a href="{% if session.checkLogin %}{{ urls.format('USER_PROFILE', [user.id]) }}{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}"><img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.user_id]) }}');" class="nav-avatar" /></a></li>
                     </ul>
                 </div>
                 <div id="content">

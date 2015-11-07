@@ -66,13 +66,13 @@
                                 #{{ page.active ? count + 1 : count }}
                             </td>
                             <td>
-                                <a href="{{ urls.format('USER_PROFILE', [user.data.user_id]) }}" class="default" style="font-weight: bold; color: {{ user.colour }}; text-shadow: 0 0 5px {{ user.colour }};">{{ user.data.username }}</a>
+                                <a href="{{ urls.format('USER_PROFILE', [user.id]) }}" class="default" style="font-weight: bold; color: {{ user.colour }}; text-shadow: 0 0 5px {{ user.colour }};">{{ user.username }}</a>
                             </td>
-                            <td title="{{ user.data.user_registered|date(sakura.dateFormat) }}">
+                            <td title="{{ user.dates.joined|date(sakura.dateFormat) }}">
                                 {{ user.elapsed.joined }}
                             </td>
-                            <td title="{% if user.data.user_last_online == 0 %}Never logged in.{% else %}{{ user.data.user_last_online|date(sakura.dateFormat) }}{% endif %}">
-                                {% if user.data.user_last_online == 0 %}<i>Never logged in.</i>{% else %}{{ user.elapsed.lastOnline }}{% endif %}
+                            <td title="{% if user.dates.lastOnline == 0 %}Never logged in.{% else %}{{ user.dates.lastOnline|date(sakura.dateFormat) }}{% endif %}">
+                                {% if user.dates.lastOnline == 0 %}<i>Never logged in.</i>{% else %}{{ user.elapsed.lastOnline }}{% endif %}
                             </td>
                             <td>
                                 {{ user.userTitle }}
@@ -86,11 +86,11 @@
                 </table>
                 {% else %}
                     {% for user in page.users[page.page] %}
-                        <a href="{{ urls.format('USER_PROFILE', [user.data.user_id]) }}">{# These comment tags are here to prevent the link extending too far
-                            #}<div class="userBox" id="u{{ user.data.user_id }}">{#
-                                #}<img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.data.username }}"  style="background: url('{{ urls.format('IMAGE_AVATAR', [user.data.user_id]) }}') no-repeat center / contain;" />{#
+                        <a href="{{ urls.format('USER_PROFILE', [user.id]) }}">{# These comment tags are here to prevent the link extending too far
+                            #}<div class="userBox" id="u{{ user.id }}">{#
+                                #}<img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.username }}"  style="background: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}') no-repeat center / contain;" />{#
                                 #}<span class="userBoxUserName" style="color: {{ user.colour }};">{#
-                                    #}{{ user.data.username }}{#
+                                    #}{{ user.username }}{#
                                 #}</span>{#
                             #}</div>{#
                         #}</a>

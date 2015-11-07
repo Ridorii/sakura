@@ -11,10 +11,10 @@
             <span>{{ stats.onlineUsers|length }}</span>
         </div>
     </div>
-    <div title="Our newest user is {{ stats.newestUser.data.username }}">
+    <div title="Our newest user is {{ stats.newestUser.username }}">
         <div>
             <span class="fa fa-user-plus"></span>
-            <span><a href="/u/{{ stats.newestUser.data.user_id }}" style="color: {{ stats.newestUser.colour }}">{{ stats.newestUser.data.username }}</a></span>
+            <span><a href="/u/{{ stats.newestUser.id }}" style="color: {{ stats.newestUser.colour }}">{{ stats.newestUser.username }}</a></span>
         </div>
     </div>
     <div title="It has been {{ stats.lastRegDate }} since the last user registered">

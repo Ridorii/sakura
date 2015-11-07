@@ -68,7 +68,7 @@ if ($mode != 'f') {
         // Post editing
     } elseif ($mode == 'p' && isset($_GET['edit']) && $_GET['edit'] == $_GET['p'] && array_key_exists($_GET['p'], $topic['posts'])) {
         // Checks
-        if ($topic['posts'][$_GET['p']]['poster_id'] != $currentUser->data['user_id']) {
+        if ($topic['posts'][$_GET['p']]['poster_id'] != $currentUser->id()) {
             // Add page specific things
             $renderData['page'] = [
                 'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
@@ -95,7 +95,7 @@ if ($mode != 'f') {
         // Post deletion
     } elseif ($mode == 'p' && isset($_GET['delete']) && $_GET['delete'] == $_GET['p'] && array_key_exists($_GET['p'], $topic['posts'])) {
         // Checks
-        if ($topic['posts'][$_GET['p']]['poster_id'] != $currentUser->data['user_id']) {
+        if ($topic['posts'][$_GET['p']]['poster_id'] != $currentUser->id()) {
             // Add page specific things
             $renderData['page'] = [
                 'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
@@ -188,7 +188,7 @@ if (isset($_POST['post'])) {
     }
 
     // Attempt to make the post
-    $makePost = Forums::createPost($currentUser->data['user_id'], $_POST['subject'], $_POST['text'], $forumId, $topicId, $parse, 1, 1);
+    $makePost = Forums::createPost($currentUser->id(), $_POST['subject'], $_POST['text'], $forumId, $topicId, $parse, 1, 1);
 
     // Add page specific things
     $renderData['page'] = [

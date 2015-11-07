@@ -28,8 +28,6 @@
 </form>
 <script type="text/javascript">
 window.addEventListener("load", function() {
-
     prepareAjaxForm('changePasswordForm', 'Changing password...');
-
 });
 </script>

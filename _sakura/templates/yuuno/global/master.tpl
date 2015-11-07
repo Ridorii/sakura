@@ -80,7 +80,7 @@
                 }, 60000);
             {% endif %}
 
-            {% if php.self == '/profile.php' and session.checkLogin and user.data.user_id != profile.user.user_id %}
+            {% if php.self == '/profile.php' and session.checkLogin and user.id != profile.id %}
                 // Make friend button dynamic
                 prepareAjaxLink('profileFriendToggle', 'submitPost', ', true, "{% if profile.friend == 0 %}Adding{% else %}Removing{% endif %} friend..."');
             {% endif %}
@@ -117,7 +117,7 @@
 
             {% endif %}
 
-            {% if php.self == '/profile.php' ? (profile.data.user_data.profileBackground and not profile.data.user_data.userOptions.disableProfileParallax) : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.user_data.userOptions.profileBackgroundSiteWide and user.data.user_data.profileBackground and not user.data.user_data.userOptions.disableProfileParallax) %}
+            {% if php.self == '/profile.php' ? (profile.userData.profileBackground and not profile.optionFields.disableProfileParallax) : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.optionFields.profileBackgroundSiteWide and user.userData.profileBackground and not user.optionFields.disableProfileParallax) %}
 
                 initialiseParallax('userBackground');
 
@@ -129,7 +129,7 @@
                         "title":    sakuraVars.siteName + " uses cookies!",
                         "text":     "Click this if you're OK with that and want to hide this message.",
                         "img":      "FONT:fa-asterisk",
-                        "link":     "javascript:cookieData('set', '"+ sakuraVars.cookie.prefix +"accept_cookies', 'true; expires="+ (new Date(2147483647000)).toUTCString() +"');notifyClose(this.parentNode.id);"
+                        "link":     "javascript:cookieData('set', '" + sakuraVars.cookie.prefix + "accept_cookies', 'true; expires=" + (new Date(2147483647000)).toUTCString() + "');notifyClose(this.parentNode.id);"
                     });
 
                 }
@@ -169,7 +169,7 @@
                     <div class="menu-ucp" id="navMenuUser">
                         <!-- User menu, displayed on right side of the bar. -->
                         {% if session.checkLogin %}
-                            <a class="menu-item avatar" href="{{ urls.format('USER_PROFILE', [user.data.user_id]) }}" title="Logged in as {{ user.data.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.data.user_id]) }}'); width: auto; color: {{ user.colour }}; border-color: {{ user.colour }}; font-weight: 700;"></a>
+                            <a class="menu-item avatar" href="{{ urls.format('USER_PROFILE', [user.id]) }}" title="Logged in as {{ user.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}'); width: auto; color: {{ user.colour }}; border-color: {{ user.colour }}; font-weight: 700;"></a>
                             <a class="menu-item fa-envelope" href="{{ urls.format('SETTING_CAT', ['messages']) }}" title="Messages"></a>
                             <a class="menu-item fa-gavel" href="{{ urls.format('MANAGE_INDEX') }}" title="Manage"></a>
                             <a class="menu-item fa-cogs" href="{{ urls.format('SETTINGS_INDEX') }}" title="Settings"></a>
@@ -186,7 +186,7 @@
             </div>
             <div id="contentwrapper">
                 <div id="notifications"></div>
-                {% if php.self == '/profile.php' ? profile.data.user_data.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.data.user_data.userOptions.profileBackgroundSiteWide and user.data.user_data.profileBackground) %}
+                {% if php.self == '/profile.php' ? profile.userData.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.optionFields.profileBackgroundSiteWide and user.userData.profileBackground) %}
                     <div id="userBackground" style="background-image: url('{{ urls.format('IMAGE_BACKGROUND', [(php.self == '/profile.php' ? profile : user).data.user_id]) }}');"></div>
                 {% endif %}
                 {% if not session.checkLogin and php.self != '/authenticate.php' %}

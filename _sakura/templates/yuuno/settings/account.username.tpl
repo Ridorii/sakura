@@ -19,8 +19,6 @@
 </form>
 <script type="text/javascript">
 window.addEventListener("load", function() {
-
     prepareAjaxForm('changeUsernameForm', 'Changing username...');
-
 });
 </script>

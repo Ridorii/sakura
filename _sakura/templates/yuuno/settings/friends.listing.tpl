@@ -13,13 +13,13 @@ window.addEventListener("load", function() {
 {% if friends|length %}
     <div class="friends-list">
         {% for friend in friends[page.currentPage] %}
-            <div class="friend-container" id="friendslist-friend-{{ friend.user.user_id }}">
-                <a class="friends-list-data clean" href="/u/{{ friend.user.user_id }}">
-                    <img src="/a/{{ friend.user.user_id }}" alt="{{ friend.user.username }}" class="friends-list-avatar default-avatar-setting" style="width: 150px; height: 150px;" />
-                    <div class="friends-list-name" style="color: {% if friend.user.user_colour %}{{ friend.user.user_colour }}{% else %}{{ friend.rank.rank_colour }}{% endif %};">{{ friend.user.username }}</div>
+            <div class="friend-container" id="friendslist-friend-{{ friend.user.id }}">
+                <a class="friends-list-data clean" href="/u/{{ friend.user.id }}">
+                    <img src="/a/{{ friend.user.id }}" alt="{{ friend.user.username }}" class="friends-list-avatar default-avatar-setting" style="width: 150px; height: 150px;" />
+                    <div class="friends-list-name" style="color: {{ friend.user.colour }};">{{ friend.user.username }}</div>
                 </a>
                 <div class="friends-list-actions">
-                    <a class="remove fill fa fa-remove" title="Remove friend" href="/friends?remove={{ friend.user.user_id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}" id="friendslist-friend-action-remove-{{ friend.user.id }}"></a>
+                    <a class="remove fill fa fa-remove" title="Remove friend" href="/friends?remove={{ friend.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}" id="friendslist-friend-action-remove-{{ friend.user.id }}"></a>
                     <div class="clear"></div>
                 </div>
             </div>

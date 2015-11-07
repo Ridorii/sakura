@@ -18,7 +18,7 @@ $template->setTemplate($templateName);
 // Switch between modes (we only allow this to be used by logged in user)
 if (isset($_REQUEST['mode'])
     && Users::checkLogin()
-    && Permissions::check('SITE', 'OBTAIN_PREMIUM', $currentUser->data['user_id'], 1)) {
+    && Permissions::check('SITE', 'OBTAIN_PREMIUM', $currentUser->id(), 1)) {
     // Initialise Payments class
     if (!Payments::init()) {
         header('Location: ' . $urls->format('SITE_PREMIUM') . '?fail=true');
@@ -94,12 +94,12 @@ if (isset($_REQUEST['mode'])
                     // Attempt to complete the transaction
                     if ($finalise) {
                         // Make the user premium
-                        $expiration = Users::addUserPremium($currentUser->data['user_id'], (2628000 * $_SESSION['premiumMonths']));
-                        Users::updatePremiumMeta($currentUser->data['user_id']);
+                        $expiration = Users::addUserPremium($currentUser->id(), (2628000 * $_SESSION['premiumMonths']));
+                        Users::updatePremiumMeta($currentUser->id());
                         Main::updatePremiumTracker(
-                            $currentUser->data['user_id'],
+                            $currentUser->id(),
                             ((float) Config::getConfig('premium_price_per_month') * $_SESSION['premiumMonths']),
-                            $currentUser->data['username']
+                            $currentUser->username()
                             . ' bought premium for '
                             . $_SESSION['premiumMonths']
                             . ' month'
@@ -119,7 +119,7 @@ if (isset($_REQUEST['mode'])
             case 'complete':
                 $renderData = array_merge([
                     'page' => [
-                        'expiration' => ($prem = Users::checkUserPremium($currentUser->data['user_id'])[2]) !== null ? $prem : 0,
+                        'expiration' => ($prem = Users::checkUserPremium($currentUser->id())[2]) !== null ? $prem : 0,
                     ],
                 ], $renderData);
 

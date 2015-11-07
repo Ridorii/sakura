@@ -12,9 +12,9 @@ namespace Sakura;
 class User
 {
     // User data
-    public $data = [];
-    public $ranks = [];
-    public $mainRank = [];
+    private $data = [];
+    private $ranks = [];
+    private $mainRank = [];
 
     // Initialise the user object
     public function __construct($uid)
@@ -37,12 +37,10 @@ class User
 
         // Decode the json in the user_data column
         $this->data['user_data'] = json_decode(!empty($this->data['user_data']) ? $this->data['user_data'] : '[]', true);
-
-        // Decode the ranks json array
-        $ranks = json_decode($this->data['user_ranks'], true);
+        $this->data['ranks'] = json_decode($this->data['user_ranks'], true);
 
         // Get the rows for all the ranks
-        foreach ($ranks as $rank) {
+        foreach ($this->data['ranks'] as $rank) {
             // Store the database row in the array
             $this->ranks[$rank] = new Rank($rank);
         }
@@ -59,6 +57,116 @@ class User
             $this->data['rank_main'] :
             array_keys($this->ranks)[0]
         ];
+    }
+
+    // Get user id
+    public function id()
+    {
+        return $this->data['user_id'];
+    }
+
+    // Get username (or clean variant)
+    public function username($clean = false)
+    {
+        return $this->data['username' . ($clean ? '_clean' : '')];
+    }
+
+    // Get password data
+    public function password()
+    {
+        return [
+            'password_hash' => $this->data['password_hash'],
+            'password_salt' => $this->data['password_salt'],
+            'password_algo' => $this->data['password_algo'],
+            'password_iter' => $this->data['password_iter'],
+            'password_chan' => $this->data['password_chan'],
+            'password_new' => $this->data['password_new'],
+        ];
+    }
+
+    // Get email
+    public function email()
+    {
+        return $this->data['email'];
+    }
+
+    // Get main rank id
+    public function mainRank()
+    {
+        return $this->data['rank_main'];
+    }
+
+    // Get all rank ids
+    public function ranks()
+    {
+        return $this->data['user_ranks'];
+    }
+
+    // Get the user's colour
+    public function colour()
+    {
+        return empty($this->data['user_colour']) ? $this->mainRank->colour() : $this->data['user_colour'];
+    }
+
+    // Get the user's ip
+    public function ip($last = false)
+    {
+        return $this->data[($last ? 'last' : 'register') . '_ip'];
+    }
+
+    // Get the user's title
+    public function userTitle()
+    {
+        return empty($this->data['user_title']) ? $this->mainRank->title() : $this->data['user_title'];
+    }
+
+    // Get user event times
+    public function dates()
+    {
+        return [
+            'joined' => $this->data['user_registered'],
+            'lastOnline' => $this->data['user_last_online'],
+            'birth' => $this->data['user_birthday'],
+        ];
+    }
+
+    // Get the user's long and short country names
+    public function country()
+    {
+        return [
+            'long' => Main::getCountryName($this->data['user_country']),
+            'short' => $this->data['user_country'],
+        ];
+    }
+
+    // Get the user's raw additional settings
+    public function userData()
+    {
+        return $this->data['user_data'];
+    }
+
+    // Check if a user is online
+    public function checkOnline()
+    {
+        return $this->data['user_last_online'] > (time() - Config::getConfig('max_online_time'));
+    }
+
+    // Get user's forum statistics
+    public function forumStats()
+    {
+        return Forums::getUserStats($this->data['user_id']);
+    }
+
+    // Get amount of time since user events using the same format as dates()
+    public function elapsed($append = ' ago', $none = 'Just now')
+    {
+        $times = [];
+
+        foreach ($this->dates() as $key => $val) {
+            $times[$key] = Main::timeElapsed(is_string($val) ? strtotime($val) : $val, $append, $none);
+        }
+
+        return $times;
     }
 
     // Check if the user has the specified ranks
@@ -79,39 +187,6 @@ class User
 
         // If all fails return false
         return false;
-    }
-
-    // Get the user's colour
-    public function colour()
-    {
-        return empty($this->data['user_colour']) ? $this->mainRank->colour() : $this->data['user_colour'];
-    }
-
-    // Get the user's title
-    public function userTitle()
-    {
-        return empty($this->data['user_title']) ? $this->mainRank->title() : $this->data['user_title'];
-    }
-
-    // Get the user's long and short country names
-    public function country()
-    {
-        return [
-            'long' => Main::getCountryName($this->data['user_country']),
-            'short' => $this->data['user_country'],
-        ];
-    }
-
-    // Check if a user is online
-    public function checkOnline()
-    {
-        return $this->data['user_last_online'] > (time() - Config::getConfig('max_online_time'));
-    }
-
-    // Get user's forum statistics
-    public function forumStats()
-    {
-        return Forums::getUserStats($this->data['user_id']);
     }
 
     // Add a new friend
@@ -223,16 +298,6 @@ class User
     public function profileComments()
     {
         return new Comments('profile-' . $this->data['user_id']);
-    }
-
-    // Get amount of time since user events
-    public function elapsed($append = ' ago', $none = 'Just now')
-    {
-        return [
-            'joined' => Main::timeElapsed($this->data['user_registered'], $append, $none),
-            'lastOnline' => Main::timeElapsed($this->data['user_last_online'], $append, $none),
-            'birth' => Main::timeElapsed(strtotime($this->data['user_birthday']), $append, $none),
-        ];
     }
 
     // Get the user's profile fields

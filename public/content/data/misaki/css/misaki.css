@@ -740,6 +740,33 @@ a:active {
     float: right;
 }
 
+.homepage .onlineUsers {
+    display: flex;
+    text-align: center;
+}
+
+.homepage .onlineUsers a {
+    flex-grow: 1;
+    flex-shrink: 1;
+    color: #fff;
+    font-size: 0;
+    transition: .2s;
+    text-decoration: none !important;
+}
+
+.homepage .onlineUsers a:hover {
+    font-size: 1em;
+}
+
+.homepage .onlineUsers a:not(:last-child) {
+    border-right: 1px solid #9475b2;
+}
+
+.homepage .onlineUsers div {
+    flex-shrink: 0;
+    flex-grow: 1;
+}
+
 /*
  * News
  */

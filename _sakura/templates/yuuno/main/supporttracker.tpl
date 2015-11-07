@@ -40,7 +40,7 @@
                 {% for supporter in page.premiumTable[page.currentPage] %}
                     <tr>
                         <td>
-                            <a href="{{ urls.format('USER_PROFILE', [page.premiumData.users[supporter.user_id].data.user_id]) }}" class="default" style="color: {{ page.premiumData.users[supporter.user_id].colour }}; text-shadow: 0 0 7px {% if page.premiumData.users[supporter.user_id].colour != 'inherit' %}{{ page.premiumData.users[supporter.user_id].colour }}{% else %}#222{% endif %};">{{ page.premiumData.users[supporter.user_id].data.username }}</a>
+                            <a href="{{ urls.format('USER_PROFILE', [page.premiumData.users[supporter.user_id].id]) }}" class="default" style="color: {{ page.premiumData.users[supporter.user_id].colour }}; text-shadow: 0 0 7px {% if page.premiumData.users[supporter.user_id].colour != 'inherit' %}{{ page.premiumData.users[supporter.user_id].colour }}{% else %}#222{% endif %};">{{ page.premiumData.users[supporter.user_id].username }}</a>
                         </td>
                         <td style="color: {% if supporter.transaction_amount > 0 %}#0A0{% else %}#A00{% endif %};">
                             &#8364;{{ supporter.transaction_amount|number_format(2) }}

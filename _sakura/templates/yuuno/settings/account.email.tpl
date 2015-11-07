@@ -2,7 +2,7 @@
     <input type="hidden" name="sessid" value="{{ php.sessionid }}" />
     <input type="hidden" name="timestamp" value="{{ php.time }}" />
     <input type="hidden" name="mode" value="email" />
-    <h3 style="text-align: center;">Your e-mail address is currently set to <span style="font-weight: 700;">{{ user.data.email }}</span>.</h3>
+    <h3 style="text-align: center;">Your e-mail address is currently set to <span style="font-weight: 700;">{{ user.email }}</span>.</h3>
     <div class="profile-field">
         <div><h2>E-mail address</h2></div>
         <div><input type="text" name="email" placeholder="Enter your new e-mail address" class="inputStyling" /></div>
@@ -14,8 +14,6 @@
 </form>
 <script type="text/javascript">
 window.addEventListener("load", function() {
-
     prepareAjaxForm('emailAddressChangeForm', 'Changing E-mail address...');
-
 });
 </script>
