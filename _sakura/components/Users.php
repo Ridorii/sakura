@@ -174,7 +174,7 @@ class Users
 
         // Check if the user has the required privs to log in
         if (Permissions::check('SITE', 'DEACTIVATED', $user->id(), 1)) {
-            return [0, 'NOT_ALLOWED', $user['user_id']];
+            return [0, 'NOT_ALLOWED', $user->id()];
         }
 
         // Create a new session
@@ -188,7 +188,7 @@ class Users
             // User ID cookie
             setcookie(
                 Config::getConfig('cookie_prefix') . 'id',
-                $user['user_id'],
+                $user->id(),
                 time() + 604800,
                 Config::getConfig('cookie_path'),
                 Config::getConfig('cookie_domain')
@@ -205,7 +205,7 @@ class Users
         }
 
         // Successful login! (also has a thing for the legacy password system)
-        return [1, 'LOGIN_SUCCESS', $user['user_id']];
+        return [1, 'LOGIN_SUCCESS', $user->id()];
     }
 
     // Logout and kill the session
