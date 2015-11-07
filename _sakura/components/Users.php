@@ -173,12 +173,12 @@ class Users
         }
 
         // Check if the user has the required privs to log in
-        if (Permissions::check('SITE', 'DEACTIVATED', $user['user_id'], 1)) {
+        if (Permissions::check('SITE', 'DEACTIVATED', $user->id(), 1)) {
             return [0, 'NOT_ALLOWED', $user['user_id']];
         }
 
         // Create a new session
-        $session = new Session($user['user_id']);
+        $session = new Session($user->id());
 
         // Generate a session key
         $sessionKey = $session->create($remember);
