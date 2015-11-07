@@ -376,10 +376,15 @@ a:active {
     top: 0;
     right: 0;
     list-style: none;
-    padding: 30px 4px 5px;
+    padding: 35px 4px 5px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, .75);
     font-size: .8em;
     line-height: 1.5em;
+    transition: .2s;
+}
+
+#navigation.floating > ul > li:hover > ul {
+    padding-top: 30px;
 }
 
 #navigation > ul > li > ul > li > a {
