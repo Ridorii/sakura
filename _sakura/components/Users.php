@@ -724,7 +724,7 @@ class Users
         $user = new User($uid);
 
         // Go over all the new ranks
-        foreach ($user->ranks() as $rank) {
+        foreach ($ranks as $rank) {
             // Check if the user already has this rank and set it if not
             if (!in_array($rank, $current)) {
                 $current[] = (int) $rank;
