@@ -538,13 +538,15 @@ a:active {
     flex-shrink: 0;
 }
 
-#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies {
+#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies,
+#profileContent > .userDataBar > .userActions > .inner > .actions {
     list-style: none;
     font-size: 2.5em;
     line-height: 1.2em;
 }
 
-#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > li:before {
+#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > li:before,
+#profileContent > .userDataBar > .userActions > .inner > .actions > li > a:before {
     font-family: "FontAwesome";
     width: 36px;
     padding-right: 3px;
@@ -552,6 +554,19 @@ a:active {
     display: inline-block;
     color: #FFF;
     text-shadow: 0 0 3px #fcfcfc;
+}
+
+#profileContent > .userDataBar > .userActions > .inner > .actions > li > a {
+    display: block;
+    color: inherit;
+}
+
+#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .owner {
+    color: #824ca0;
+}
+
+#profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .owner:before {
+    content: "\f0ad";
 }
 
 #profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .tenshi {
@@ -563,7 +578,7 @@ a:active {
 }
 
 #profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .staff {
-    color: #09f;
+    color: #fa3703;
 }
 
 #profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .staff:before {
@@ -571,7 +586,7 @@ a:active {
 }
 
 #profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .developer {
-    color: #824ca0;
+    color: #6eac0a;
 }
 
 #profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .developer:before {
@@ -584,6 +599,39 @@ a:active {
 
 #profileContent > .userDataBar > .hierarchyContainer > .inner > .hierarchies > .alumnii:before {
     content: "\f005";
+}
+
+#profileContent > .userDataBar > .userActions > .inner > .actions > .edit > a:before {
+    content: "\f044";
+}
+
+#profileContent > .userDataBar > .userActions > .inner > .actions > .settings > a:before {
+    content: "\f013";
+}
+
+#profileContent > .userDataBar > .userActions > .inner > .actions > .addFriend > a:before {
+    content: "\f234";
+}
+
+#profileContent > .userDataBar > .userActions > .inner > .actions > .mutualFriend > a:before {
+    content: "\f004";
+}
+
+#profileContent > .userDataBar > .userActions > .inner > .actions > .pendingFriend > a:before {
+    content: "\f006";
+}
+
+#profileContent > .userDataBar > .userActions > .inner > .actions > .mutualFriend:hover > a:before,
+#profileContent > .userDataBar > .userActions > .inner > .actions > .pendingFriend:hover > a:before {
+    content: "\f235";
+}
+
+#profileContent > .userDataBar > .userActions > .inner > .actions > .message > a:before {
+    content: "\f0e0";
+}
+
+#profileContent > .userDataBar > .userActions > .inner > .actions > .report > a:before {
+    content: "\f06a";
 }
 
 #profileContent > .userDataBar > .userAccounts a {

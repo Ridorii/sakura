@@ -66,63 +66,80 @@
         </div>
         <div class="profileContainer" id="profileContent">
             <div class="userDataBar">
-            {% if not profileHidden and (profile.checkPremium[0] or profile.checkPermission('MANAGE', 'USE_MANAGE')) %}
-                <div class="profilePlatform hierarchyContainer">
-                    <div class="inner">
-                        <ul class="hierarchies">
-                            {% if profile.checkPremium[0] %}
-                                <li class="tenshi">Tenshi</li>
-                            {% endif %}
-                            {% if profile.checkPermission('MANAGE', 'USE_MANAGE') %}
-                                <li class="staff">Staff</li>
-                            {% endif %}
-                            {% if false %}
-                                <li class="developer">Developer</li>
-                            {% endif %}
-                            {% if false %}
-                                <li class="alumnii">Alumnii</li>
-                            {% endif %}
-                        </ul>
+            {% if not profileHidden %}
+                {% if (profile.checkPremium[0] or profile.checkPermission('MANAGE', 'USE_MANAGE')) %}
+                    <div class="profilePlatform hierarchyContainer">
+                        <div class="inner">
+                            <ul class="hierarchies">
+                                {% if profile.checkPremium[0] %}
+                                    <li class="tenshi">Tenshi</li>
+                                {% endif %}
+                                {% if profile.checkPermission('MANAGE', 'USE_MANAGE') %}
+                                    <li class="staff">Staff</li>
+                                {% endif %}
+                                {% if false %}
+                                    <li class="developer">Developer</li>
+                                {% endif %}
+                                {% if false %}
+                                    <li class="alumnii">Alumnii</li>
+                                {% endif %}
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <div class="profilePlatform userAccounts">
-                    <div class="inner">
-                        {% if session.checkLogin %}
-                            {% if profile.profileFields %}
-                                {% for name,field in profile.profileFields %}
-                                <div class="field">
-                                    <div>{{ field.name }}</div>
-                                    <div>
-                                    {% if name == 'youtube' %}
-                                        <a href="https://youtube.com/{% if field.youtubetype == 'true' %}channel{% else %}user{% endif %}/{{ field.value }}" class="default">{% if field.youtubetype == 'true' %}{{ profile.data.username }}'s Channel{% else %}{{ field.value }}{% endif %}</a>
+                    {% endif %}
+                    {% if session.checkLogin %}
+                        <div class="profilePlatform userActions">
+                            <div class="inner">
+                                <ul class="actions">
+                                    {% if user.data.user_id == profile.data.user_id %}
+                                        <li class="edit"><a title="Edit your profile" href="{{ urls.format('SETTING_MODE', ['general', 'profile']) }}">Edit</a></li>
+                                        <li class="settings"><a title="Change your settings" href="{{ urls.format('SETTINGS_INDEX') }}">Settings</a></li>
                                     {% else %}
-                                        {% if field.islink %}
-                                            <a href="{{ field.link }}">
-                                        {% endif %}
-                                        {{ field.value }}
-                                        {% if field.islink %}
-                                            </a>
-                                        {% endif %}
+                                        <li class="{% if user.checkFriends(profile.data.user_id) == 2 %}mutualFriend{% elseif user.checkFriends(profile.data.user_id) == 1 %}pendingFriend{% else %}addFriend{% endif %}"><a href="{% if user.checkFriends(profile.data.user_id) == 0 %}{{ urls.format('FRIEND_ADD', [profile.data.user_id, php.sessionid, php.time, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [profile.data.user_id, php.sessionid, php.time, sakura.currentPage]) }}{% endif %}">{% if user.checkFriends(profile.data.user_id) == 0 %}Add friend{% else %}Friends{% endif %}</a></li>
+                                        <li class="report"><a href="{{ urls.format('USER_REPORT', [profile.data.user_id]) }}">Report</a></li>
                                     {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="profilePlatform userAccounts">
+                        <div class="inner">
+                            {% if session.checkLogin %}
+                                {% if profile.profileFields %}
+                                    {% for name,field in profile.profileFields %}
+                                    <div class="field">
+                                        <div>{{ field.name }}</div>
+                                        <div>
+                                        {% if name == 'youtube' %}
+                                            <a href="https://youtube.com/{% if field.youtubetype == 'true' %}channel{% else %}user{% endif %}/{{ field.value }}" class="default">{% if field.youtubetype == 'true' %}{{ profile.data.username }}'s Channel{% else %}{{ field.value }}{% endif %}</a>
+                                        {% else %}
+                                            {% if field.islink %}
+                                                <a href="{{ field.link }}">
+                                            {% endif %}
+                                            {{ field.value }}
+                                            {% if field.islink %}
+                                                </a>
+                                            {% endif %}
+                                        {% endif %}
+                                        </div>
+                                        <div class="clear"></div>
                                     </div>
-                                    <div class="clear"></div>
-                                </div>
-                                {% endfor %}
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="noAccounts">
+                                        <div class="fa fa-question"></div>
+                                        <div class="notif">This user has not set any links yet.</div>
+                                    </div>
+                                {% endif %}
                             {% else %}
                                 <div class="noAccounts">
-                                    <div class="fa fa-question"></div>
-                                    <div class="notif">This user has not set any links yet.</div>
+                                    <div class="fa fa-exclamation-circle"></div>
+                                    <div class="notif">Log in to view the full profile.</div>
                                 </div>
                             {% endif %}
-                        {% else %}
-                            <div class="noAccounts">
-                                <div class="fa fa-exclamation-circle"></div>
-                                <div class="notif">Log in to view the full profile.</div>
-                            </div>
-                        {% endif %}
+                        </div>
                     </div>
-                </div>
-            {% endif %}
+                {% endif %}
                 <div class="profilePlatform accountStanding">
                     <div class="inner">
                         <div class="title">Account Standing</div>
