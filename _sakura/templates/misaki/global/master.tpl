@@ -112,7 +112,7 @@
                                 </ul>
                             {% endif %}
                         </li>
-                        <li><a href="{% if session.checkLogin %}{{ urls.format('USER_PROFILE', [user.id]) }}{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}"><img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.user_id]) }}');" class="nav-avatar" /></a></li>
+                        <li><a href="{% if session.checkLogin %}{{ urls.format('USER_PROFILE', [user.id]) }}{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}"><img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}');" class="nav-avatar" /></a></li>
                     </ul>
                 </div>
                 <div id="content">

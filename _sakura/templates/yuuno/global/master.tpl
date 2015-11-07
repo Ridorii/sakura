@@ -187,7 +187,7 @@
             <div id="contentwrapper">
                 <div id="notifications"></div>
                 {% if php.self == '/profile.php' ? profile.userData.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.optionFields.profileBackgroundSiteWide and user.userData.profileBackground) %}
-                    <div id="userBackground" style="background-image: url('{{ urls.format('IMAGE_BACKGROUND', [(php.self == '/profile.php' ? profile : user).data.user_id]) }}');"></div>
+                    <div id="userBackground" style="background-image: url('{{ urls.format('IMAGE_BACKGROUND', [(php.self == '/profile.php' ? profile : user).id]) }}');"></div>
                 {% endif %}
                 {% if not session.checkLogin and php.self != '/authenticate.php' %}
                     <form method="post" action="{{ urls.format('AUTH_ACTION') }}" id="headerLoginForm">
