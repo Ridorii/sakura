@@ -1,3 +1,3 @@
 {% set comments = profile.profileComments.comments %}
-{% set commentsCategory = 'profile-' ~ profile.data.user_id %}
+{% set commentsCategory = 'profile-' ~ profile.id %}
 {% include 'elements/comments.tpl' %}

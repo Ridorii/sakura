@@ -25,7 +25,7 @@
     {% endif %}
     <div class="head">Stats</div>
     We have <b>{{ stats.userCount }} user{% if stats.userCount != 1 %}s{% endif %}</b>,
-    <b><a href="{{ urls.format('USER_PROFILE', [stats.newestUser.id]) }}" class="default">{{ stats.newestUser.username }}</a></b> is the newest user,
+    <b><a href="{{ urls.format('USER_PROFILE', [stats.newestUser.id]) }}" style="color: {{ stats.newestUser.colour }};" class="default">{{ stats.newestUser.username }}</a></b> is the newest user,
     it has been <b>{{ stats.lastRegDate }}</b> since the last user registered and the forum has <b>{{ stats.topicCount }} thread{% if stats.topicCount != 1 %}s{% endif %}</b> and <b>{{ stats.postCount }} post{% if stats.postCount != 1 %}s{% endif %}</b>.
     <div class="head">Online Users</div>
     {% if stats.onlineUsers %}
@@ -36,7 +36,7 @@
     {% else %}
         There were no online users in the past 5 minutes.
     {% endif %}
-    {#<div class="ad-container ad-sidebar" id="footerAd">
+    {#<div class="ad-container ad-sidebar" id="sideAd">
         <div class="head">Advertisment</div>
         <div class="ad-box">
             <img src="http://i.flash.moe/1445793369-523-9238.png" />

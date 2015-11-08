@@ -162,7 +162,7 @@ class Permissions
         $userPerms = Database::fetch('permissions', false, ['rank_id' => [0, '='], 'user_id' => [$user->id(), '=']]);
 
         // Get their rank permissions
-        $rankPerms = self::getRankPermissions(json_decode($user->ranks(), true));
+        $rankPerms = self::getRankPermissions($user->ranks());
 
         // Just return the rank permissions if no special ones are set
         if (empty($userPerms)) {

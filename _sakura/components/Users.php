@@ -11,31 +11,6 @@ namespace Sakura;
  */
 class Users
 {
-    // Empty user template
-    public static $emptyUser = [
-        'user_id' => 0,
-        'username' => 'User',
-        'username_clean' => 'user',
-        'password_hash' => '',
-        'password_salt' => '',
-        'password_algo' => 'nologin',
-        'password_iter' => 1000,
-        'password_chan' => 0,
-        'password_new' => '',
-        'email' => 'sakura@localhost',
-        'rank_main' => 0,
-        'user_ranks' => '[0]',
-        'user_colour' => '',
-        'register_ip' => '127.0.0.1',
-        'last_ip' => '127.0.0.1',
-        'user_title' => '',
-        'user_registered' => 0,
-        'user_last_online' => 0,
-        'user_birthday' => '',
-        'user_country' => 'XX',
-        'user_data' => '[]',
-    ];
-
     // Empty rank template
     public static $emptyRank = [
         'rank_id' => 0,
@@ -695,34 +670,12 @@ class Users
     // Set the default rank of a user
     public static function setDefaultRank($uid, $rid, $userIdIsUserData = false)
     {
-        // Get the specified user
-        $user = new User($uid);
-
-        // Check if the rank we're trying to set is actually there
-        if (!in_array($rid, $user->ranks())) {
-            return false;
-        }
-
-        // Update the row
-        Database::update('users', [
-            [
-                'rank_main' => $rid,
-            ],
-            [
-                'user_id' => [$uid, '='],
-            ],
-        ]);
-
-        // Return true if everything was successful
-        return true;
+        return (new User($uid))->setMainRank($rid);
     }
 
     // Add a rank to a user
     public static function addRanksToUser($ranks, $uid, $userIdIsUserData = false)
     {
-        // Get the specified user
-        $user = new User($uid);
-
         // Define $current
         $current = [];
 
@@ -756,6 +709,8 @@ class Users
     {
         // Get the specified user
         $user = new User($uid);
+
+		$current = $user->ranks();
 
         // Check the current ranks for ranks in the set array
         foreach ($current as $key => $rank) {
@@ -851,103 +806,6 @@ class Users
 
         // Return the yeahs
         return $fields;
-    }
-
-    // Get user's profile fields
-    public static function getUserProfileFields($id, $inputIsData = false)
-    {
-        // Get profile fields
-        $profileFields = Database::fetch('profilefields');
-
-        // If there's nothing just return null
-        if (!count($profileFields)) {
-            return null;
-        }
-
-        // Assign the profileData variable
-        $profileData = ($inputIsData ? $id : (new User($id))->userData());
-
-        // Once again if nothing was returned just return null
-        if (count($profileData) < 1 || $profileData == null || empty($profileData['profileFields'])) {
-            return null;
-        }
-
-        // Redeclare profileData
-        $profileData = $profileData['profileFields'];
-
-        // Create output array
-        $profile = [];
-
-        // Check if profile fields aren't fake
-        foreach ($profileFields as $field) {
-            // Completely strip all special characters from the field name
-            $fieldName = Main::cleanString($field['name'], true, true);
-
-            // Check if the user has the current field set otherwise continue
-            if (!array_key_exists($fieldName, $profileData)) {
-                continue;
-            }
-
-            // Assign field to output with value
-            $profile[$fieldName] = [];
-            $profile[$fieldName]['name'] = $field['name'];
-            $profile[$fieldName]['value'] = $profileData[$fieldName];
-            $profile[$fieldName]['islink'] = $field['islink'];
-
-            // If the field is set to be a link add a value for that as well
-            if ($field['islink']) {
-                $profile[$fieldName]['link'] = str_replace('{{ VAL }}', $profileData[$fieldName], $field['linkformat']);
-            }
-
-            // Check if we have additional options as well
-            if ($field['additional'] != null) {
-                // Decode the json of the additional stuff
-                $additional = json_decode($field['additional'], true);
-
-                // Go over all additional forms
-                foreach ($additional as $subName => $subField) {
-                    // Check if the user has the current field set otherwise continue
-                    if (!array_key_exists($subName, $profileData)) {
-                        continue;
-                    }
-
-                    // Assign field to output with value
-                    $profile[$fieldName][$subName] = $profileData[$subName];
-                }
-            }
-        }
-
-        // Return appropiate profile data
-        return $profile;
-    }
-
-    // Updating the profile data of a user
-    public static function updateUserDataField($id, $data)
-    {
-        // We retrieve the current content from the database
-        $current = (new User($id))->userData();
-
-        // Merge the arrays
-        $data = array_merge($current, $data);
-
-        // Encode the json
-        $data = json_encode($data);
-
-        // Store it in the database
-        Database::update('users', [
-            [
-                'user_data' => $data,
-            ],
-            [
-                'user_id' => [$id, '='],
-            ],
-        ]);
-    }
-
-    // Check if a user is online
-    public static function checkUserOnline($id)
-    {
-        return (new User($id))->checkOnline();
     }
 
     // Get all online users
@@ -1094,7 +952,7 @@ class Users
         // Go over all users and check if they have the rank id
         foreach ($users as $user) {
             // If so store the user's row in the array
-            if (self::checkIfUserHasRanks([$rankId], $user, true)
+            if (self::checkIfUserHasRanks([$rankId], $user->id())
                 && ($excludeAbyss ? $user->password()['password_algo'] != 'nologin' : true)) {
                 $rank[] = $user;
             }
@@ -1270,7 +1128,7 @@ class Users
             // Check each user
             foreach ($friends as $key => $friend) {
                 $friends[
-                    self::checkUserOnline($getData ? $friend['user']->id() : $friend) ? 'online' : 'offline'
+                    (new User($getData ? $friend['user']->id() : $friend))->checkOnline() ? 'online' : 'offline'
                 ][] = $friend;
             }
         }

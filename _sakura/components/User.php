@@ -12,7 +12,29 @@ namespace Sakura;
 class User
 {
     // User data
-    private $data = [];
+    private $data = [
+        'user_id' => 0,
+        'username' => 'User',
+        'username_clean' => 'user',
+        'password_hash' => '',
+        'password_salt' => '',
+        'password_algo' => 'nologin',
+        'password_iter' => 0,
+        'password_chan' => 0,
+        'password_new' => '',
+        'email' => 'sakura@localhost',
+        'rank_main' => 0,
+        'user_ranks' => '[0]',
+        'user_colour' => '',
+        'register_ip' => '127.0.0.1',
+        'last_ip' => '127.0.0.1',
+        'user_title' => '',
+        'user_registered' => 0,
+        'user_last_online' => 0,
+        'user_birthday' => '',
+        'user_country' => 'XX',
+        'user_data' => '[]',
+    ];
     private $ranks = [];
     private $mainRank = [];
 
@@ -20,7 +42,7 @@ class User
     public function __construct($uid)
     {
         // Get the user database row
-        $this->data = Database::fetch(
+        $getUser = Database::fetch(
             'users',
             false,
             [
@@ -30,17 +52,17 @@ class User
         );
 
         // Check if the user actually exists
-        if (empty($this->data)) {
+        if (!empty($getUser)) {
             // If not assign as the fallback user
-            $this->data = Users::$emptyUser;
+            $this->data = $getUser;
         }
 
         // Decode the json in the user_data column
         $this->data['user_data'] = json_decode(!empty($this->data['user_data']) ? $this->data['user_data'] : '[]', true);
-        $this->data['ranks'] = json_decode($this->data['user_ranks'], true);
+        $this->data['user_ranks'] = json_decode($this->data['user_ranks'], true);
 
         // Get the rows for all the ranks
-        foreach ($this->data['ranks'] as $rank) {
+        foreach ($this->data['user_ranks'] as $rank) {
             // Store the database row in the array
             $this->ranks[$rank] = new Rank($rank);
         }
@@ -169,11 +191,33 @@ class User
         return $times;
     }
 
-    // Check if the user has the specified ranks
-    public function checkIfUserHasRanks($ranks)
-    {
+	// Set the main rank of this user
+	public function setMainRank($rank)
+	{
+		// Only allow this if this rank is actually present in their set of ranks
+		if (!in_array($rank, $this->ranks())) {
+			return false;
+		}
+
+		// If it does exist update their row
+		Database::update('user', [
+			[
+				'rank_main' => $rank,
+			],
+			[
+				'user_id' => [$this->id(), '='],
+			],
+		]);
+
+        // Return true if everything was successful
+		return true;
+	}
+
+	// Check if this user has the specified ranks
+	public function hasRanks($ranks)
+	{
         // Check if the main rank is the specified rank
-        if ($this->mainRank->id() === $ranks) {
+        if (in_array($this->mainRank->id(), $ranks)) {
             return true;
         }
 
@@ -187,6 +231,12 @@ class User
 
         // If all fails return false
         return false;
+	}
+
+    // For compatibility, too lazy to update the references right now!
+    public function checkIfUserHasRanks($ranks)
+    {
+		return $this->hasRanks($ranks);
     }
 
     // Add a new friend
@@ -308,12 +358,12 @@ class User
 
         // If there's nothing just return null
         if (!count($profileFields)) {
-            return;
+            return [];
         }
 
         // Once again if nothing was returned just return null
         if (empty($this->data['user_data']['profileFields'])) {
-            return;
+            return [];
         }
 
         // Create output array
@@ -374,12 +424,12 @@ class User
 
         // If there's nothing just return null
         if (!count($optionFields)) {
-            return;
+            return [];
         }
 
         // Once again if nothing was returned just return null
         if (empty($this->data['user_data']['userOptions'])) {
-            return;
+            return [];
         }
 
         // Create output array
@@ -670,4 +720,23 @@ class User
         // Return success
         return [1, 'SUCCESS'];
     }
+
+	// Update a user's userData
+	public function setUserData($data) {
+		// Merge the arrays
+		$data = array_merge($this->userData(), $data);
+
+		// Encode it
+		$data = json_encode($data);
+
+		// Save it in the database
+		Database::update('users', [
+            [
+                'user_data' => $data,
+            ],
+            [
+                'user_id' => [$this->id(), '='],
+            ],
+        ]);
+	}
 }

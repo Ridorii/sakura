@@ -448,7 +448,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 $filepath = ROOT . Config::getConfig('user_uploads') . '/';
                 $filename = $filepath . $mode . '_' . $currentUser->id();
                 $currfile = isset($currentUser->userData()[$userDataKey])
-                && !empty($_OLDFILE = $currentUser->userData()[$userDataKey]) ? $_OLDFILE : null;
+                && !empty($currentUser->userData()[$userDataKey]) ? $currentUser->userData()[$userDataKey] : null;
 
                 // Check if $_FILES is set
                 if (!isset($_FILES[$mode]) && empty($_FILES[$mode])) {
@@ -606,7 +606,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update database
-                Users::updateUserDataField($currentUser->id(), $updated);
+                $currentUser->setUserData($updated);
 
                 // Set render data
                 $renderData['page'] = [
@@ -645,7 +645,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update database
-                Users::updateUserDataField($currentUser->id(), ['profileFields' => $store]);
+                $currentUser->setUserData(['profileFields' => $store]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -738,7 +738,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update database
-                Users::updateUserDataField($currentUser->id(), ['userOptions' => $store]);
+                $currentUser->setUserData(['userOptions' => $store]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -939,7 +939,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 $userPage = base64_encode($_POST['userpage']);
 
                 // Update database
-                Users::updateUserDataField($currentUser->id(), ['userPage' => $userPage]);
+				$currentUser->setUserData(['userPage' => $userPage]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -957,7 +957,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 $signature = base64_encode($_POST['signature']);
 
                 // Update database
-                Users::updateUserDataField($currentUser->id(), ['signature' => $signature]);
+				$currentUser->setUserData(['signature' => $signature]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -1427,10 +1427,8 @@ if (Users::checkLogin()) {
         // Profile
         case 'general.profile':
             $renderData['profile'] = [
-
                 'fields' => Users::getProfileFields(),
                 'months' => [
-
                     1 => 'January',
                     2 => 'February',
                     3 => 'March',
@@ -1443,18 +1441,14 @@ if (Users::checkLogin()) {
                     10 => 'October',
                     11 => 'November',
                     12 => 'December',
-
                 ],
-
             ];
             break;
 
         // Options
         case 'general.options':
             $renderData['options'] = [
-
                 'fields' => Users::getOptionFields(),
-
             ];
             break;
 
@@ -1482,14 +1476,12 @@ if (Users::checkLogin()) {
         case 'appearance.avatar':
         case 'appearance.background':
             $renderData[$mode] = [
-
                 'max_width' => Config::getConfig($mode . '_max_width'),
                 'max_height' => Config::getConfig($mode . '_max_height'),
                 'min_width' => Config::getConfig($mode . '_min_width'),
                 'min_height' => Config::getConfig($mode . '_min_height'),
                 'max_size' => Config::getConfig($mode . '_max_fsize'),
                 'max_size_view' => Main::getByteSymbol(Config::getConfig($mode . '_max_fsize')),
-
             ];
             break;
 

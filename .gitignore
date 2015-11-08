@@ -1,4 +1,5 @@
 .idea/
+.vs/
 errors.log
 _sakura/config/config.ini
 BingSiteAuth.xml
@@ -12,3 +13,4 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 .DS_Store
+*.phpproj

@@ -42,7 +42,7 @@
                             <a class="fa fa-file-text-o" title="View {{ profile.username }}'s user page" href="{{ urls.format('USER_PROFILE', [profile.id]) }}"></a>
                             <a class="fa fa-list" title="View {{ profile.username }}'s threads" href="{{ urls.format('USER_THREADS', [profile.id]) }}"></a>
                             <a class="fa fa-reply" title="View {{ profile.username }}'s posts" href="{{ urls.format('USER_POSTS', [profile.id]) }}"></a>
-                            <a class="fa fa-user-plus" title="View {{ profile.username }}'s friends" href="{{ urls.format('USER_FRIENDS', [profile.id]) }}"></a>
+                            <a class="fa fa-star" title="View {{ profile.username }}'s friends" href="{{ urls.format('USER_FRIENDS', [profile.id]) }}"></a>
                             {#<a class="fa fa-users" title="View {{ profile.username }}'s groups" href="{{ urls.format('USER_GROUPS', [profile.id]) }}"></a>#}
                             {% if not noUserpage %}
                                 <a class="fa fa-comments-o" title="View {{ profile.username }}'s profile comments" href="{{ urls.format('USER_COMMENTS', [profile.id]) }}"></a>
