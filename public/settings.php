@@ -939,7 +939,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 $userPage = base64_encode($_POST['userpage']);
 
                 // Update database
-				$currentUser->setUserData(['userPage' => $userPage]);
+                $currentUser->setUserData(['userPage' => $userPage]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -957,7 +957,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 $signature = base64_encode($_POST['signature']);
 
                 // Update database
-				$currentUser->setUserData(['signature' => $signature]);
+                $currentUser->setUserData(['signature' => $signature]);
 
                 // Set render data
                 $renderData['page'] = [

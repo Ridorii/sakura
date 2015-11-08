@@ -191,31 +191,31 @@ class User
         return $times;
     }
 
-	// Set the main rank of this user
-	public function setMainRank($rank)
-	{
-		// Only allow this if this rank is actually present in their set of ranks
-		if (!in_array($rank, $this->ranks())) {
-			return false;
-		}
+    // Set the main rank of this user
+    public function setMainRank($rank)
+    {
+        // Only allow this if this rank is actually present in their set of ranks
+        if (!in_array($rank, $this->ranks())) {
+            return false;
+        }
 
-		// If it does exist update their row
-		Database::update('user', [
-			[
-				'rank_main' => $rank,
-			],
-			[
-				'user_id' => [$this->id(), '='],
-			],
-		]);
+        // If it does exist update their row
+        Database::update('user', [
+            [
+                'rank_main' => $rank,
+            ],
+            [
+                'user_id' => [$this->id(), '='],
+            ],
+        ]);
 
         // Return true if everything was successful
-		return true;
-	}
+        return true;
+    }
 
-	// Check if this user has the specified ranks
-	public function hasRanks($ranks)
-	{
+    // Check if this user has the specified ranks
+    public function hasRanks($ranks)
+    {
         // Check if the main rank is the specified rank
         if (in_array($this->mainRank->id(), $ranks)) {
             return true;
@@ -231,12 +231,12 @@ class User
 
         // If all fails return false
         return false;
-	}
+    }
 
     // For compatibility, too lazy to update the references right now!
     public function checkIfUserHasRanks($ranks)
     {
-		return $this->hasRanks($ranks);
+        return $this->hasRanks($ranks);
     }
 
     // Add a new friend
@@ -721,16 +721,17 @@ class User
         return [1, 'SUCCESS'];
     }
 
-	// Update a user's userData
-	public function setUserData($data) {
-		// Merge the arrays
-		$data = array_merge($this->userData(), $data);
+    // Update a user's userData
+    public function setUserData($data)
+    {
+        // Merge the arrays
+        $data = array_merge($this->userData(), $data);
 
-		// Encode it
-		$data = json_encode($data);
+        // Encode it
+        $data = json_encode($data);
 
-		// Save it in the database
-		Database::update('users', [
+        // Save it in the database
+        Database::update('users', [
             [
                 'user_data' => $data,
             ],
@@ -738,5 +739,5 @@ class User
                 'user_id' => [$this->id(), '='],
             ],
         ]);
-	}
+    }
 }
