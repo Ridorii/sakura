@@ -710,7 +710,7 @@ class Users
         // Get the specified user
         $user = new User($uid);
 
-		$current = $user->ranks();
+        $current = $user->ranks();
 
         // Check the current ranks for ranks in the set array
         foreach ($current as $key => $rank) {
