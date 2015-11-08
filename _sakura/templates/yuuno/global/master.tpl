@@ -268,7 +268,7 @@
                 </div>
             </div>
         </div>
-        {% if not sakura.versionInfo.stable and php.self == '/index.php' and not page.id %}
+        {% if not sakura.versionInfo.stable and php.self == '/index.php' and stats %}
         <script type="text/javascript" src="https://sakura.flash.moe/?get={{ sakura.versionInfo.version|slice(0, 4) }}-{{ sakura.versionInfo.version|slice(4, 2) }}-{{ sakura.versionInfo.version|slice(6, 2) }}&amp;variable=true"></script>
         <script type="text/javascript">
             // Column colours for actions

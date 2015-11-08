@@ -91,7 +91,7 @@
                         <div class="profilePlatform userActions">
                             <div class="inner">
                                 <ul class="actions">
-                                    {% if user.user_id == profile.user_id %}
+                                    {% if user.id == profile.id %}
                                         <li class="edit"><a title="Edit your profile" href="{{ urls.format('SETTING_MODE', ['general', 'profile']) }}">Edit</a></li>
                                         <li class="settings"><a title="Change your settings" href="{{ urls.format('SETTINGS_INDEX') }}">Settings</a></li>
                                     {% else %}
