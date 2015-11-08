@@ -12,7 +12,7 @@ namespace Sakura;
 class Rank
 {
     // Rank data
-    public $data = [];
+    private $data = [];
 
     // Initialise the rank object
     public function __construct($rid)
