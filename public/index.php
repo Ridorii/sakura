@@ -19,9 +19,7 @@ $template->setTemplate($templateName);
 if (isset($_GET['p'])) {
     // Set default variables
     $renderData['page'] = [
-
         'content' => Main::mdParse("# Unable to load the requested info page.\r\n\r\nCheck the URL and try again."),
-
     ];
 
     // Set page id
@@ -31,11 +29,9 @@ if (isset($_GET['p'])) {
     if ($ipData = Main::loadInfoPage($pageId)) {
         // Assign new proper variable
         $renderData['page'] = [
-
             'id' => $pageId,
             'title' => $ipData['page_title'],
             'content' => Main::mdParse($ipData['page_content']),
-
         ];
     }
 

@@ -168,9 +168,15 @@ class User
     }
 
     // Check if a user is online
-    public function checkOnline()
+    public function isOnline()
     {
         return $this->data['user_last_online'] > (time() - Config::getConfig('max_online_time'));
+    }
+
+    // Compatibility
+    public function checkOnline()
+    {
+        return $this->isOnline();
     }
 
     // Get user's forum statistics
@@ -304,32 +310,94 @@ class User
     }
 
     // Check if the user is friends with the currently authenticated
-    public function checkFriends($with)
+    public function isFriends($with)
     {
-        // Get the friend's friends
-        $friend = in_array($this->data['user_id'], (new User($with))->getFriends());
+        // Accepted from this user
+        $user = Database::count('friends', [
+            'user_id' => [$this->id(), '='],
+            'friend_id' => [$with, '='],
+        ])[0];
 
-        // Get the user's friends
-        $self = in_array($with, $this->getFriends());
+        // And the other user
+        $friend = Database::count('friends', [
+            'user_id' => [$with, '='],
+            'friend_id' => [$this->id(), '='],
+        ])[0];
 
-        // Check if the friend is actually in the user's array
-        if ($friend && $self) {
-            return 2;
+        if ($user && $friend) {
+            return 2; // Mutual friends
+        } elseif ($user) {
+            return 1; // Pending request
         }
 
-        // Check if the friend is actually in the user's array
-        if ($self) {
-            return 1;
-        }
-
-        // Return true if all went through
+        // Else return 0
         return 0;
     }
 
-    // Get all the friend of this user
-    public function getFriends($timestamps = false, $getData = false, $checkOnline = false)
+    // Compat.
+    public function checkFriends($with)
     {
-        return Users::getFriends($this->data['user_id'], $timestamps, $getData, $checkOnline);
+        return $this->isFriends($with);
+    }
+
+    // Get all the friend of this user
+    public function friends($level = 0)
+    {
+        // User ID container
+        $users = [];
+
+        // Select the correct level
+        switch ($level) {
+            case 2:
+                // Get all the current user's friends
+                $self = array_column(Database::fetch('friends', true, ['user_id' => [$this->id(), '=']]), 'friend_id');
+                // Get all the people that added this user as a friend
+                $others = array_column(Database::fetch('friends', true, ['friend_id' => [$this->id(), '=']]), 'user_id');
+                // Create a difference map
+                $users = array_intersect($self, $others);
+                break;
+
+            case 1:
+                $users = array_column(Database::fetch('friends', true, ['user_id' => [$this->id(), '=']]), 'friend_id');
+                break;
+
+            case 0:
+            default:
+                // Get all the current user's friends
+                $self = array_column(Database::fetch('friends', true, ['user_id' => [$this->id(), '=']]), 'friend_id');
+                // Get all the people that added this user as a friend
+                $others = array_column(Database::fetch('friends', true, ['friend_id' => [$this->id(), '=']]), 'user_id');
+                // Create a difference map
+                $users = array_merge($others, $self);
+                break;
+
+            case -1:
+                // Get all the current user's friends
+                $self = array_column(Database::fetch('friends', true, ['user_id' => [$this->id(), '=']]), 'friend_id');
+                // Get all the people that added this user as a friend
+                $others = array_column(Database::fetch('friends', true, ['friend_id' => [$this->id(), '=']]), 'user_id');
+                // Create a difference map
+                $users = array_diff($others, $self);
+                break;
+        }
+
+        // Create the storage array
+        $objects = [];
+
+        // Get all users
+        foreach ($users as $user) {
+            // Create new object
+            $objects[$user] = new User($user);
+        }
+
+        // Return the objects
+        return $objects;
+    }
+
+    // Compatibility
+    public function getFriends()
+    {
+        return $this->friends();
     }
 
     // Check if the user is banned
