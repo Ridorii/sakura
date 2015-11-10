@@ -63,7 +63,7 @@ if (isset($_REQUEST['mode'])
                         $total,
                         $itemName,
                         Config::getConfig('sitename') . ' Premium Purchase',
-                        'http://' . Config::getConfig('url_main') . $urls->format('SITE_PREMIUM')
+                        'https://' . Config::getConfig('url_main') . $urls->format('SITE_PREMIUM')
                     )) {
                         // Store the amount of months in the global session array
                         $_SESSION['premiumMonths'] = (int) $_POST['months'];

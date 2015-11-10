@@ -27,5 +27,5 @@
             </div>
         </div>
     </div>
-	<iframe src="https://www.youtube.com/embed/Tao67Idz3Uc?autoplay=1&loop=1&playlist=Tao67Idz3Uc" style="display: none;"></iframe>
+    <iframe src="https://www.youtube.com/embed/Tao67Idz3Uc?autoplay=1&amp;loop=1&amp;playlist=Tao67Idz3Uc" style="display: none;"></iframe>
 {% endblock %}

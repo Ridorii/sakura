@@ -571,37 +571,6 @@ class Users
         return [1, 'SUCCESS'];
     }
 
-    // Deactivating a user
-    public static function deactivateUser($uid)
-    {
-        // Get the user data
-        $user = Database::fetch('users', false, ['user_id' => [$uid, '=']]);
-
-        // Check if user exists
-        if (!count($user) > 1) {
-            return [0, 'USER_NOT_EXIST'];
-        }
-
-        // Check if user is already deactivated
-        if (Permissions::check('SITE', 'DEACTIVATED', $user['user_id'], 1)) {
-            return [0, 'USER_ALREADY_DEACTIVE'];
-        }
-
-        // Deactivate the account
-        Database::update('users', [
-            [
-                'rank_main' => 2,
-                'user_ranks' => json_encode([2]),
-            ],
-            [
-                'user_id' => [$uid, '='],
-            ],
-        ]);
-
-        // Return success
-        return [1, 'SUCCESS'];
-    }
-
     // Check if registration code is valid
     public static function checkRegistrationCode($code)
     {
@@ -1008,18 +977,6 @@ class Users
         return $ranks;
     }
 
-    // Get all warnings issued to a user (or all warnings a user issued)
-    public static function getWarnings($uid = 0, $iid = false)
-    {
-        // Do the database query
-        $warnings = Database::fetch('warnings', true, ($uid ? [
-            ($iid ? 'moderator_id' : 'user_id') => [$uid, '='],
-        ] : null));
-
-        // Return all the warnings
-        return $warnings;
-    }
-
     // Get a user's notifications
     public static function getNotifications($uid = null, $timediff = 0, $excludeRead = true, $markRead = false)
     {
@@ -1088,12 +1045,6 @@ class Users
             'alert_img' => $img,
             'alert_timeout' => $timeout,
         ]);
-    }
-
-    // Getting a user's PMs
-    public static function getPrivateMessages($from = false)
-    {
-        return [];
     }
 
     // Get friends

@@ -39,7 +39,6 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
         foreach ($userNotifs as $notif) {
             // Add the notification to the display array
             $notifications[$notif['alert_timestamp']] = [
-
                 'read' => $notif['alert_read'],
                 'title' => $notif['alert_title'],
                 'text' => $notif['alert_text'],
@@ -47,7 +46,6 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 'img' => $notif['alert_img'],
                 'timeout' => $notif['alert_timeout'],
                 'sound' => $notif['alert_sound'],
-
             ];
         }
     }
@@ -1464,7 +1462,7 @@ if (Users::checkLogin()) {
 
         // PM inbox
         case 'messages.inbox':
-            $renderData['messages'] = Users::getPrivateMessages();
+            $renderData['messages'] = [];
             break;
 
         // Notification history
