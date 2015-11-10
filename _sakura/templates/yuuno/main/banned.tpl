@@ -6,7 +6,7 @@
     <div class="content">
         <div class="content-column news banned">
             <div style="padding: 20px;">
-                <h1>You are banned!</h1>
+                <h1>You got dunked on!</h1>
                 {% if ban.reason %}
                 <h3>The following reason was supplied:</h3>
                 <p>
@@ -27,4 +27,5 @@
             </div>
         </div>
     </div>
+	<iframe src="https://www.youtube.com/embed/Tao67Idz3Uc?autoplay=1&loop=1&playlist=Tao67Idz3Uc" style="display: none;"></iframe>
 {% endblock %}

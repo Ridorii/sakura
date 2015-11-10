@@ -103,7 +103,7 @@ $templateName =
 defined('SAKURA_MANAGE') ?
 Config::getConfig('manage_style') :
 (
-    $currentUser->optionFields()['useMisaki'] ?
+    isset($currentUser->optionFields()['useMisaki']) && $currentUser->optionFields()['useMisaki'] ?
     'misaki' :
     Config::getConfig('site_style')
 );
@@ -201,7 +201,7 @@ if (!defined('SAKURA_NO_TPL')) {
                 'reason' => $ban['reason'],
                 'issued' => $ban['issued'],
                 'expires' => $ban['expires'],
-                'issuer' => Users::getUser($ban['issuer']),
+                'issuer' => (new User($ban['issuer'])),
             ],
 
         ]);
