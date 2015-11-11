@@ -193,20 +193,16 @@ if (!defined('SAKURA_NO_TPL')) {
     }
 
     // Ban checking
-    if ($authCheck && $ban = Bans::checkBan($currentUser->id())) {
+    if ($authCheck && !in_array($_SERVER['PHP_SELF'], ['/authenticate.php']) && $ban = Bans::checkBan($currentUser->id())) {
         // Additional render data
         $renderData = array_merge($renderData, [
-
             'ban' => [
                 'reason' => $ban['reason'],
                 'issued' => $ban['issued'],
                 'expires' => $ban['expires'],
                 'issuer' => (new User($ban['issuer'])),
             ],
-
         ]);
-
-        Users::logout();
 
         // Initialise templating engine
         $template = new Template();
