@@ -3,7 +3,7 @@
         <div class="head">Hi, {{ user.username }}!</div>
         <a href="{{ urls.format('SETTING_MODE', ['appearance', 'avatar']) }}"><img src="{{ urls.format('IMAGE_AVATAR', [user.id]) }}" class="default-avatar-setting homepage-menu-avatar" /></a>
         <ul class="panelQuickLinks">
-            <li><a href="{{ urls.format('SETTING_MODE', ['friends', 'requests']) }}" title="Pending friend requests"><span class="fa fa-user-plus"></span><span class="count">{{ page.friend_req|length }}</span></a></li>
+            <li><a href="{{ urls.format('SETTING_MODE', ['friends', 'requests']) }}" title="Pending friend requests"><span class="fa fa-user-plus"></span><span class="count">{{ user.friends(-1, true)|length }}</span></a></li>
             <li><a href="{{ urls.format('MESSAGES_INDEX') }}" title="View private messages"><span class="fa fa-envelope"></span><span class="count">0</span></a></li>
         </ul>
         <div class="clear"></div>
@@ -29,12 +29,12 @@
     it has been <b>{{ stats.lastRegDate }}</b> since the last user registered and the forum has <b>{{ stats.topicCount }} thread{% if stats.topicCount != 1 %}s{% endif %}</b> and <b>{{ stats.postCount }} post{% if stats.postCount != 1 %}s{% endif %}</b>.
     <div class="head">Online Users</div>
     {% if stats.onlineUsers %}
-        All active users in the past 5 minutes:<br />
+        All active users in the past {{ sakura.onlineTimeout / 60 }} minute{% if sakura.onlineTimeout != 60 %}s{% endif %}:<br />
         {% for amount,onlineUser in stats.onlineUsers %}
             <a href="{{ urls.format('USER_PROFILE', [onlineUser.id]) }}" style="font-weight: bold; color: {{ onlineUser.colour }};" class="default">{{ onlineUser.username }}</a>{% if amount != (stats.onlineUsers|length - 1) %}, {% endif %}
         {% endfor %}
     {% else %}
-        There were no online users in the past 5 minutes.
+        There were no online users in the past {{ sakura.onlineTimeout / 60 }} minute{% if sakura.onlineTimeout != 60 %}s{% endif %}.
     {% endif %}
     {#<div class="ad-container ad-sidebar" id="sideAd">
         <div class="head">Advertisment</div>

@@ -139,6 +139,7 @@ if (!defined('SAKURA_NO_TPL')) {
             'dateFormat' => Config::getConfig('date_format'),
             'currentPage' => '//' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
             'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null),
+            'onlineTimeout' => Config::getConfig('max_online_time'),
 
             'recaptchaPublic' => Config::getConfig('recaptcha_public'),
             'recaptchaEnabled' => Config::getConfig('recaptcha'),

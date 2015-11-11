@@ -170,6 +170,15 @@ class User
     // Check if a user is online
     public function isOnline()
     {
+        // Get all sessions
+        $sessions = Database::fetch('sessions', true, ['user_id' => [$this->id(), '=']]);
+
+        // If there's no entries just straight up return false
+        if(!$sessions) {
+            return false;
+        }
+
+        // Otherwise use the standard method
         return $this->data['user_last_online'] > (time() - Config::getConfig('max_online_time'));
     }
 
@@ -197,6 +206,52 @@ class User
         return $times;
     }
 
+    // Add ranks to a user
+    public function addRanks($ranks) {
+        // Update the ranks array
+        $ranks = array_map('intval', array_unique(array_merge($this->ranks(), $ranks)));
+
+        // Save to the database
+        Database::update('users', [
+            [
+                'user_ranks' => json_encode($ranks),
+            ],
+            [
+                'user_id' => [$this->id(), '='],
+            ],
+        ]);
+    }
+
+    // Remove ranks from a user
+    public function removeRanks($ranks)
+    {
+        // Current ranks
+        $currRanks = $this->ranks();
+
+        // Iterate over the ranks
+        foreach ($ranks as $rank) {
+            // Try to find the value
+            if($key = array_search($rank, $currRanks)) {
+                unset($currRanks[$key]);
+
+                // Change the main rank if it's set to the rank that's currently being remove
+                if ($this->mainRank() == $rank) {
+                    $this->setMainRank($this->ranks()[0]);
+                }
+            }
+        }
+
+        // Save to the database
+        Database::update('users', [
+            [
+                'user_ranks' => json_encode($currRanks),
+            ],
+            [
+                'user_id' => [$this->id(), '='],
+            ],
+        ]);
+    }
+
     // Set the main rank of this user
     public function setMainRank($rank)
     {
@@ -206,7 +261,7 @@ class User
         }
 
         // If it does exist update their row
-        Database::update('user', [
+        Database::update('users', [
             [
                 'rank_main' => $rank,
             ],
@@ -239,12 +294,6 @@ class User
         return false;
     }
 
-    // For compatibility, too lazy to update the references right now!
-    public function checkIfUserHasRanks($ranks)
-    {
-        return $this->hasRanks($ranks);
-    }
-
     // Add a new friend
     public function addFriend($uid)
     {
@@ -256,11 +305,8 @@ class User
             return [0, 'USER_NOT_EXIST'];
         }
 
-        // Get check
-        $check = $this->checkFriends($uid);
-
         // Check if the user already has this user a friend
-        if ($check) {
+        if ($this->isFriends($uid)) {
             return [0, 'ALREADY_FRIENDS'];
         }
 
@@ -272,7 +318,7 @@ class User
         ]);
 
         // Return true because yay
-        return [1, $check == 2 ? 'FRIENDS' : 'NOT_MUTUAL'];
+        return [1, $user->isFriends($this->id()) ? 'FRIENDS' : 'NOT_MUTUAL'];
     }
 
     // Remove a friend
@@ -287,7 +333,7 @@ class User
         }
 
         // Check if the user has this user a friend
-        if (!$this->checkFriends($uid)) {
+        if (!$this->isFriends($uid)) {
             return [0, 'ALREADY_REMOVED'];
         }
 
@@ -332,12 +378,6 @@ class User
 
         // Else return 0
         return 0;
-    }
-
-    // Compat.
-    public function checkFriends($with)
-    {
-        return $this->isFriends($with);
     }
 
     // Get all the friend of this user
@@ -398,12 +438,6 @@ class User
 
         // Return the objects
         return $objects;
-    }
-
-    // Compatibility
-    public function getFriends()
-    {
-        return $this->friends();
     }
 
     // Check if the user is banned
@@ -530,11 +564,11 @@ class User
     }
 
     // Check if user has Premium
-    public function checkPremium()
+    public function isPremium()
     {
 
         // Check if the user has static premium
-        if (Permissions::check('SITE', 'STATIC_PREMIUM', $this->data['user_id'], 1)) {
+        if ($this->checkPermission('SITE', 'STATIC_PREMIUM')) {
             return [2, 0, time() + 1];
         }
 
@@ -550,8 +584,6 @@ class User
 
         // Check if the Tenshi hasn't expired
         if ($getRecord['premium_expire'] < time()) {
-            Users::removeUserPremium($this->data['user_id']);
-            Users::updatePremiumMeta($this->data['user_id']);
             return [0, $getRecord['premium_start'], $getRecord['premium_expire']];
         }
 

@@ -26,25 +26,19 @@ set_time_limit(0);
 
 // Clean expired sessions
 Database::delete('sessions', [
-
     'session_expire' => [time(), '<'],
     'session_remember' => ['1', '!='],
-
 ]);
 
 // Delete notifications that are older than a month but not unread
 Database::delete('notifications', [
-
     'alert_timestamp' => [(time() - 109500), '<'],
     'alert_read' => ['1', '='],
-
 ]);
 
 // Get expired premium accounts
 $expiredPremium = Database::fetch('premium', true, [
-
     'premium_expire' => [time(), '<'],
-
 ]);
 
 // Process expired premium accounts

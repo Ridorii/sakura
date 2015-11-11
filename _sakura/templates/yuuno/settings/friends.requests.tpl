@@ -13,14 +13,14 @@ window.addEventListener("load", function() {
 {% if friends|length %}
     <div class="friends-list">
         {% for friend in friends[page.currentPage] %}
-            <div class="friend-container" id="friend-{{ friend.user.id }}">
-                <a class="friends-list-data clean" href="/u/{{ friend.user.id }}">
-                    <img src="/a/{{ friend.user.id }}" alt="{{ friend.user.username }}" class="friends-list-avatar default-avatar-setting" style="width: 150px; height: 150px;" />
-                    <div class="friends-list-name" style="color: {{ friend.user.colour }};">{{ friend.user.username }}</div>
+            <div class="friend-container" id="friend-{{ friend.id }}">
+                <a class="friends-list-data clean" href="/u/{{ friend.id }}">
+                    <img src="/a/{{ friend.id }}" alt="{{ friend.username }}" class="friends-list-avatar default-avatar-setting" style="width: 150px; height: 150px;" />
+                    <div class="friends-list-name" style="color: {{ friend.colour }};">{{ friend.username }}</div>
                 </a>
                 <div class="friends-list-actions">
-                    <a class="add fa fa-check" title="Add friend" href="/friends?add={{ friend.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}" id="friendslist-friend-action-add-{{ friend.user.id }}"></a>
-                    <a class="remove fa fa-remove" title="Remove friend" href="/friends?remove={{ friend.user.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}" id="friendslist-friend-action-remove-{{ friend.user.id }}"></a>
+                    <a class="add fa fa-check" title="Add friend" href="/friends?add={{ friend.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}" id="friendslist-friend-action-add-{{ friend.id }}"></a>
+                    <a class="remove fa fa-remove" title="Remove friend" href="/friends?remove={{ friend.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}" id="friendslist-friend-action-remove-{{ friend.id }}"></a>
                     <div class="clear"></div>
                 </div>
             </div>

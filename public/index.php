@@ -50,10 +50,6 @@ $renderData['news'] = ($forumMode ? null : (new News(Config::getConfig('site_new
 
 $renderData['newsCount'] = Config::getConfig('front_page_news_posts');
 
-$renderData['page'] = [
-    'friend_req' => Users::getPendingFriends(),
-];
-
 $renderData['board'] = [
     'forums' => ($forumMode ? Forums::getForumList() : null),
     'viewforum' => false,

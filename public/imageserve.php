@@ -49,7 +49,7 @@ if (isset($_GET['m'])) {
             $user = new User($_GET['u']);
 
             // If user is deactivated use deactive avatar
-            if ($user->checkIfUserHasRanks([0, 1])) {
+            if ($user->hasRanks([0, 1])) {
                 $serveImage = $deactiveAvatar;
                 break;
             }
@@ -84,7 +84,7 @@ if (isset($_GET['m'])) {
             $user = new User($_GET['u']);
 
             // If user is deactivated use deactive avatar
-            if ($user->checkIfUserHasRanks([0, 1])) {
+            if ($user->hasRanks([0, 1])) {
                 $serveImage = $noBackground;
                 break;
             }
@@ -120,7 +120,7 @@ if (isset($_GET['m'])) {
             $user = new User($_GET['u']);
 
             // If user is deactivated use deactive avatar
-            if ($user->checkIfUserHasRanks([0, 1])) {
+            if ($user->hasRanks([0, 1])) {
                 $serveImage = $noHeader;
                 break;
             }

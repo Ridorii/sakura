@@ -636,82 +636,6 @@ class Users
         return $code;
     }
 
-    // Set the default rank of a user
-    public static function setDefaultRank($uid, $rid, $userIdIsUserData = false)
-    {
-        return (new User($uid))->setMainRank($rid);
-    }
-
-    // Add a rank to a user
-    public static function addRanksToUser($ranks, $uid, $userIdIsUserData = false)
-    {
-        // Define $current
-        $current = [];
-
-        // Go over all the new ranks
-        foreach ($ranks as $rank) {
-            // Check if the user already has this rank and set it if not
-            if (!in_array($rank, $current)) {
-                $current[] = (int) $rank;
-            }
-        }
-
-        // Encode the array
-        $current = json_encode($current);
-
-        // Update the row
-        Database::update('users', [
-            [
-                'user_ranks' => $current,
-            ],
-            [
-                'user_id' => [$uid, '='],
-            ],
-        ]);
-
-        // Return true because
-        return true;
-    }
-
-    // Removing ranks from a user
-    public static function removeRanksFromUser($ranks, $uid, $userIdIsUserData = false)
-    {
-        // Get the specified user
-        $user = new User($uid);
-
-        $current = $user->ranks();
-
-        // Check the current ranks for ranks in the set array
-        foreach ($current as $key => $rank) {
-            // Unset the rank
-            if (in_array($rank, $user->ranks())) {
-                unset($current[$key]);
-            }
-        }
-
-        // Encode the array
-        $current = json_encode($current);
-
-        // Update the row
-        Database::update('users', [
-            [
-                'user_ranks' => $current,
-            ],
-            [
-                'user_id' => [$uid, '='],
-            ],
-        ]);
-
-        // Return true
-        return true;
-    }
-
-    // Check if a user has these ranks
-    public static function checkIfUserHasRanks($ranks, $userid, $userIdIsUserData = false)
-    {
-        return (new User($userid))->checkIfUserHasRanks($ranks);
-    }
-
     // Check if a user exists
     public static function userExists($user, $id = true)
     {
@@ -830,64 +754,35 @@ class Users
         return $expire;
     }
 
-    // Remove the premium status of a user
-    public static function removeUserPremium($id)
-    {
-        Database::delete('premium', [
-            'user_id' => [$id, '='],
-        ]);
-    }
-
-    // Check if user has Premium
-    public static function checkUserPremium($id)
-    {
-        // Check if the user has static premium
-        if (Permissions::check('SITE', 'STATIC_PREMIUM', $id, 1)) {
-            return [2, 0, time() + 1];
-        }
-
-        // Attempt to retrieve the premium record from the database
-        $getRecord = Database::fetch('premium', false, [
-            'user_id' => [$id, '='],
-        ]);
-
-        // If nothing was returned just return false
-        if (empty($getRecord)) {
-            return [0];
-        }
-
-        // Check if the Tenshi hasn't expired
-        if ($getRecord['premium_expire'] < time()) {
-            self::removeUserPremium($id);
-            self::updatePremiumMeta($id);
-            return [0, $getRecord['premium_start'], $getRecord['premium_expire']];
-        }
-
-        // Else return the start and expiration date
-        return [1, $getRecord['premium_start'], $getRecord['premium_expire']];
-    }
-
     // Update the premium data
     public static function updatePremiumMeta($id)
     {
         // Get the ID for the premium user rank from the database
         $premiumRank = Config::getConfig('premium_rank_id');
 
+        // Create user object
+        $user = new User($id);
+
         // Run the check
-        $check = self::checkUserPremium($id);
+        $check = $user->isPremium();
 
         // Check if the user has premium
-        if ($check[0] == 1) {
+        if ($check[0]) {
             // If so add the rank to them
-            self::addRanksToUser([$premiumRank], $id);
+            $user->addRanks([$premiumRank]);
 
             // Check if the user's default rank is standard user and update it to premium
-            if (((new User($id))->mainRank()) == 2) {
-                self::setDefaultRank($id, $premiumRank);
+            if ($user->mainRank() == 2) {
+                $user->setMainRank($premiumRank);
             }
-        } elseif ($check[0] == 0 && count($check) > 1) {
+        } elseif (!$check[0] && count($check) > 1) {
+            // Remove the expired entry
+            Database::delete('premium', [
+                'user_id' => [$user->id(), '='],
+            ]);
+
             // Else remove the rank from them
-            self::removeRanksFromUser([$premiumRank], $id);
+            $user->removeRanks([$premiumRank]);
         }
     }
 
@@ -921,7 +816,7 @@ class Users
         // Go over all users and check if they have the rank id
         foreach ($users as $user) {
             // If so store the user's row in the array
-            if (self::checkIfUserHasRanks([$rankId], $user->id())
+            if ($user->hasRanks([$rankId], $user->id())
                 && ($excludeAbyss ? $user->password()['password_algo'] != 'nologin' : true)) {
                 $rank[] = $user;
             }
@@ -1045,83 +940,6 @@ class Users
             'alert_img' => $img,
             'alert_timeout' => $timeout,
         ]);
-    }
-
-    // Get friends
-    public static function getFriends($uid = null, $timestamps = false, $getData = false, $checkOnline = false)
-    {
-        // Assign $uid
-        if (!$uid) {
-            $uid = Users::checkLogin()[0];
-        }
-
-        // Get all friends
-        $getFriends = Database::fetch('friends', true, [
-            'user_id' => [$uid, '='],
-        ]);
-
-        // Create the friends array
-        $friends = [];
-
-        // Iterate over the raw database return
-        foreach ($getFriends as $key => $friend) {
-            // Add friend to array
-            $friends[($timestamps ? $friend['friend_id'] : $key)] = $getData ? ([
-
-                'user' => ($_UDATA = new User($friend['friend_id'])),
-                'rank' => new Rank($_UDATA->mainRank()),
-
-            ]) : $friend[($timestamps ? 'friend_timestamp' : 'friend_id')];
-        }
-
-        // Check who is online and who isn't
-        if ($checkOnline) {
-            // Check each user
-            foreach ($friends as $key => $friend) {
-                $friends[
-                    (new User($getData ? $friend['user']->id() : $friend))->checkOnline() ? 'online' : 'offline'
-                ][] = $friend;
-            }
-        }
-
-        // Return formatted array
-        return $friends;
-    }
-
-    // Get non-mutual friends
-    public static function getPendingFriends($uid = null, $getData = false)
-    {
-        // Assign $of automatically if it's not set
-        if (!$uid) {
-            $uid = self::checkLogin()[0];
-        }
-
-        // Get all friend entries from other people involved the current user
-        $friends = Database::fetch('friends', true, [
-            'friend_id' => [$uid, '='],
-        ]);
-
-        // Create pending array
-        $pending = [];
-
-        // Check if the friends are mutual
-        foreach ($friends as $friend) {
-            // Create user object
-            $user = new User($uid);
-
-            // Check if the friend is mutual
-            if (!$user->checkFriends($friend['user_id'])) {
-                $pending[] = $getData ? ([
-
-                    'user' => ($_UDATA = new User($friend['user_id'])),
-                    'rank' => new Rank($_UDATA->mainRank()),
-
-                ]) : $friend;
-            }
-        }
-
-        // Return the pending friends
-        return $pending;
     }
 
     // Get the ID of the newest user

@@ -63,7 +63,7 @@ if (isset($_REQUEST['mode'])
                         $total,
                         $itemName,
                         Config::getConfig('sitename') . ' Premium Purchase',
-                        'https://' . Config::getConfig('url_main') . $urls->format('SITE_PREMIUM')
+                        'http://' . Config::getConfig('url_main') . $urls->format('SITE_PREMIUM')
                     )) {
                         // Store the amount of months in the global session array
                         $_SESSION['premiumMonths'] = (int) $_POST['months'];
@@ -119,7 +119,7 @@ if (isset($_REQUEST['mode'])
             case 'complete':
                 $renderData = array_merge([
                     'page' => [
-                        'expiration' => ($prem = Users::checkUserPremium($currentUser->id())[2]) !== null ? $prem : 0,
+                        'expiration' => ($prem = $currentUser->isPremium()[2]) !== null ? $prem : 0,
                     ],
                 ], $renderData);
 
@@ -163,7 +163,7 @@ $renderData['page'] = [
 
     'fail' => isset($_GET['fail']),
     'price' => Config::getConfig('premium_price_per_month'),
-    'current' => $currentUser->checkPremium(),
+    'current' => $currentUser->isPremium(),
     'amount_max' => Config::getConfig('premium_amount_max'),
 
 ];

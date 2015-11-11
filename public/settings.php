@@ -51,7 +51,8 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     }
 
     // Check if friendOnline is set (so it doesn't tell you all your friends all online on first visit)
-    $onlineNotify = isset($_SESSION['friendsOnline']) ? $_SESSION['friendsOnline'] : [];
+    $onlineFriends = isset($_SESSION['friendsOnline']) ? $_SESSION['friendsOnline'] : [];
+    $onlineNotify = isset($_SESSION['friendsOnline']);
 
     // Populate the array
     foreach ($currentUser->friends(1) as $friend) {
@@ -59,34 +60,38 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
         $online = $friend->isOnline();
 
         // If true check if they're already in the array
-        if($online && !in_array($friend->id(), $onlineNotify)) {
+        if ($online && !in_array($friend->id(), $onlineFriends)) {
             // Add user to the online array
             $_SESSION['friendsOnline'][$friend->id()] = $friend->id();
 
             // Add the notification to the display array
-            $notifications[time()] = [
-                'read' => 0,
-                'title' => $friend->username() . ' is online.',
-                'text' => '',
-                'link' => '',
-                'img' => '/a/' . $friend->id(),
-                'timeout' => 2000,
-                'sound' => false,
-            ];
-        } elseif(!$online && in_array($friend->id(), $onlineNotify)) {
+            if($onlineNotify) {
+                $notifications[] = [
+                    'read' => 0,
+                    'title' => $friend->username() . ' is online.',
+                    'text' => '',
+                    'link' => '',
+                    'img' => '/a/' . $friend->id(),
+                    'timeout' => 2000,
+                    'sound' => false,
+                ];
+            }
+        } elseif (!$online && in_array($friend->id(), $onlineFriends)) {
             // Remove the person from the array
             unset($_SESSION['friendsOnline'][$friend->id()]);
 
             // Add the notification to the display array
-            $notifications[time()] = [
-                'read' => 0,
-                'title' => $friend->username() . ' is offline.',
-                'text' => '',
-                'link' => '',
-                'img' => '/a/' . $friend->id(),
-                'timeout' => 2000,
-                'sound' => false,
-            ];
+            if($onlineNotify) {
+                $notifications[] = [
+                    'read' => 0,
+                    'title' => $friend->username() . ' is offline.',
+                    'text' => '',
+                    'link' => '',
+                    'img' => '/a/' . $friend->id(),
+                    'timeout' => 2000,
+                    'sound' => false,
+                ];
+            }
         }
     }
 
@@ -346,32 +351,26 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 
         // Set the messages
         $messages = [
-
             'USER_NOT_EXIST' => 'The user you tried to add doesn\'t exist.',
             'ALREADY_FRIENDS' => 'You are already friends with this person!',
             'FRIENDS' => 'You are now mutual friends!',
             'NOT_MUTUAL' => 'A friend request has been sent to this person.',
             'ALREADY_REMOVED' => 'You aren\'t friends with this person.',
             'REMOVED' => 'Removed this person from your friends list.',
-
         ];
 
         // Notification strings
         $notifStrings = [
-
             'FRIENDS' => ['%s accepted your friend request!', 'You can now do mutual friend things!'],
             'NOT_MUTUAL' => ['%s added you as a friend!', 'Click here to add them as well.'],
             'REMOVED' => ['%s removed you from their friends.', 'You can no longer do friend things now ;_;'],
-
         ];
 
         // Add page specific things
         $renderData['page'] = [
-
             'redirect' => $redirect,
             'message' => $messages[$action[1]],
             'success' => $action[0],
-
         ];
 
         // Create a notification
@@ -1492,12 +1491,12 @@ if (Users::checkLogin()) {
 
         // Friends
         case 'friends.listing':
-            $renderData['friends'] = array_chunk(array_reverse(Users::getFriends(null, true, true)), 12, true);
+            $renderData['friends'] = array_chunk(array_reverse($currentUser->friends(1)), 12, true);
             break;
 
         // Pending Friend Requests
         case 'friends.requests':
-            $renderData['friends'] = array_chunk(array_reverse(Users::getPendingFriends(null, true)), 12, true);
+            $renderData['friends'] = array_chunk(array_reverse($currentUser->friends(-1)), 12, true);
             break;
 
         // PM inbox

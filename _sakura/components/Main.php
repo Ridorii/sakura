@@ -142,14 +142,13 @@ class Main
                 ]
             )) {
                 // If so assign the errid
-                $errid = $past['id'];
+                $errid = $past['error_id'];
             } else {
                 // Create an error ID
                 $errid = substr(md5(microtime()), rand(0, 22), 10);
 
                 // Log the error
                 Database::insert('error_log', [
-
                     'error_id' => $errid,
                     'error_timestamp' => date("r"),
                     'error_revision' => SAKURA_VERSION,
@@ -158,7 +157,6 @@ class Main
                     'error_string' => $errstr,
                     'error_file' => $errfile,
                     'error_backtrace' => $backtrace,
-
                 ]);
             }
         }
@@ -187,6 +185,11 @@ class Main
         // Truncate all previous outputs
         ob_clean();
         ob_end_clean();
+
+        // Check if this request was made through the ajax thing
+        if (isset($_REQUEST['ajax'])) {
+            die('An error occurred while executing the script.|1|javascript:alert("' . (isset($errid) ? 'Error Log ID: '. $errid : 'Failed to log.') . '");');
+        }
 
         // Build page
         $errorPage = '<!DOCTYPE html>

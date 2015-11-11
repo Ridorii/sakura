@@ -34,8 +34,8 @@
                             {% if user.id == profile.id %}
                                 <a class="fa fa-pencil-square-o" title="Edit your profile" href="{{ urls.format('SETTING_MODE', ['general', 'profile']) }}"></a>
                             {% else %}
-                                {% if user.checkFriends(profile.id) != 0 %}<a class="fa fa-{% if user.checkFriends(profile.id) == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
-                                <a class="fa fa-user-{% if user.checkFriends(profile.id) == 0 %}plus{% else %}times{% endif %}" title="{% if user.checkFriends(profile.id) == 0 %}Add {{ profile.username }} as a friend{% else %}Remove friend{% endif %}" href="{% if user.checkFriends(profile.id) == 0 %}{{ urls.format('FRIEND_ADD', [profile.id, php.sessionid, php.time, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [profile.id, php.sessionid, php.time, sakura.currentPage]) }}{% endif %}" id="profileFriendToggle"></a>
+                                {% if user.isFriends(profile.id) != 0 %}<a class="fa fa-{% if user.isFriends(profile.id) == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
+                                <a class="fa fa-user-{% if user.isFriends(profile.id) == 0 %}plus{% else %}times{% endif %}" title="{% if user.isFriends(profile.id) == 0 %}Add {{ profile.username }} as a friend{% else %}Remove friend{% endif %}" href="{% if user.isFriends(profile.id) == 0 %}{{ urls.format('FRIEND_ADD', [profile.id, php.sessionid, php.time, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [profile.id, php.sessionid, php.time, sakura.currentPage]) }}{% endif %}" id="profileFriendToggle"></a>
                                 <a class="fa fa-exclamation-circle" title="Report {{ profile.username }}" href="{{ urls.format('USER_REPORT', [profile.id]) }}"></a>
                             {% endif %}
                             <hr class="default" />
