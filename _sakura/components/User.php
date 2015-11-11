@@ -341,7 +341,7 @@ class User
     }
 
     // Get all the friend of this user
-    public function friends($level = 0)
+    public function friends($level = 0, $noObj = false)
     {
         // User ID container
         $users = [];
@@ -381,10 +381,16 @@ class User
                 break;
         }
 
+        // Check if we only requested the IDs
+        if ($noObj) {
+            // If so just return $users
+            return $users;
+        }
+
         // Create the storage array
         $objects = [];
 
-        // Get all users
+        // Create the user objects
         foreach ($users as $user) {
             // Create new object
             $objects[$user] = new User($user);

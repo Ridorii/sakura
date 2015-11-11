@@ -50,6 +50,46 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
         }
     }
 
+    // Check if friendOnline is set (so it doesn't tell you all your friends all online on first visit)
+    $onlineNotify = isset($_SESSION['friendsOnline']) ? $_SESSION['friendsOnline'] : [];
+
+    // Populate the array
+    foreach ($currentUser->friends(1) as $friend) {
+        // Online status
+        $online = $friend->isOnline();
+
+        // If true check if they're already in the array
+        if($online && !in_array($friend->id(), $onlineNotify)) {
+            // Add user to the online array
+            $_SESSION['friendsOnline'][$friend->id()] = $friend->id();
+
+            // Add the notification to the display array
+            $notifications[time()] = [
+                'read' => 0,
+                'title' => $friend->username() . ' is online.',
+                'text' => '',
+                'link' => '',
+                'img' => '/a/' . $friend->id(),
+                'timeout' => 2000,
+                'sound' => false,
+            ];
+        } elseif(!$online && in_array($friend->id(), $onlineNotify)) {
+            // Remove the person from the array
+            unset($_SESSION['friendsOnline'][$friend->id()]);
+
+            // Add the notification to the display array
+            $notifications[time()] = [
+                'read' => 0,
+                'title' => $friend->username() . ' is offline.',
+                'text' => '',
+                'link' => '',
+                'img' => '/a/' . $friend->id(),
+                'timeout' => 2000,
+                'sound' => false,
+            ];
+        }
+    }
+
     // Set header, convert the array to json, print it and exit
     print json_encode($notifications);
     exit;
