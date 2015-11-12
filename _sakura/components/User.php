@@ -174,7 +174,7 @@ class User
         $sessions = Database::fetch('sessions', true, ['user_id' => [$this->id(), '=']]);
 
         // If there's no entries just straight up return false
-        if(!$sessions) {
+        if (!$sessions) {
             return false;
         }
 
@@ -207,7 +207,8 @@ class User
     }
 
     // Add ranks to a user
-    public function addRanks($ranks) {
+    public function addRanks($ranks)
+    {
         // Update the ranks array
         $ranks = array_map('intval', array_unique(array_merge($this->ranks(), $ranks)));
 
@@ -231,7 +232,7 @@ class User
         // Iterate over the ranks
         foreach ($ranks as $rank) {
             // Try to find the value
-            if($key = array_search($rank, $currRanks)) {
+            if ($key = array_search($rank, $currRanks)) {
                 unset($currRanks[$key]);
 
                 // Change the main rank if it's set to the rank that's currently being remove

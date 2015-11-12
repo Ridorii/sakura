@@ -70,7 +70,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
             $_SESSION['friendsOnline'][$friend->id()] = $friend->id();
 
             // Add the notification to the display array
-            if($onlineNotify) {
+            if ($onlineNotify) {
                 $notifications[] = [
                     'read' => 0,
                     'title' => $friend->username() . ' is online.',
@@ -86,7 +86,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
             unset($_SESSION['friendsOnline'][$friend->id()]);
 
             // Add the notification to the display array
-            if($onlineNotify) {
+            if ($onlineNotify) {
                 $notifications[] = [
                     'read' => 0,
                     'title' => $friend->username() . ' is offline.',
