@@ -18,17 +18,17 @@
                             {% endif %}
                             <div class="userdata">
                                 <div class="usertitle">{% if not post.user.userTitle %}{{ post.rank.title }}{% else %}{{ post.user.userTitle }}{% endif %}</div>
-                                <img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi"{% if not post.user.checkPremium[0] %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.contentPath }}/images/flags/{{ post.user.country.short|lower }}.png" alt="{{ post.user.country.long }}" />
+                                <img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi"{% if not post.user.isPremium[0] %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.contentPath }}/images/flags/{{ post.user.country.short|lower }}.png" alt="{{ post.user.country.long }}" />
                                 {% if session.checkLogin %}
                                 <div class="actions">
                                     {% if user.id == post.user.id %}
                                         <a class="fa fa-pencil-square-o" title="Edit this post" href="{{ urls.format('FORUM_EDIT_POST', [post.post_id]) }}"></a>
                                         <a class="fa fa-trash" title="Delete this post" href="{{ urls.format('FORUM_DELETE_POST', [post.post_id]) }}"></a>
                                     {% elseif not post.user.checkPermission('SITE', 'DEACTIVATED') or post.user.checkPermission('SITE', 'RESTRICTED') %}
-                                    {% if post.user.checkFriends(user.id) != 0 %}
-                                        <a class="fa fa-{% if post.user.checkFriends(user.id) == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>
+                                    {% if user.isFriends(post.user.id) != 0 %}
+                                        <a class="fa fa-{% if user.isFriends(post.user.id) == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>
                                     {% endif %}
-                                    <a class="fa fa-user-{% if post.user.checkFriends(user.id) == 0 %}plus{% else %}times{% endif %} forum-friend-toggle" title="{% if post.user.checkFriends(user.id) == 0 %}Add {{ post.user.username }} as a friend{% else %}Remove friend{% endif %}" href="{% if post.user.checkFriends(user.id) == 0 %}{{ urls.format('FRIEND_ADD', [post.user.id, php.sessionid, php.time, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [post.user.id, php.sessionid, php.time, sakura.currentPage]) }}{% endif %}"></a>
+                                    <a class="fa fa-user-{% if user.isFriends(post.user.id) == 0 %}plus{% else %}times{% endif %} forum-friend-toggle" title="{% if user.isFriends(post.user.id) == 0 %}Add {{ post.user.username }} as a friend{% else %}Remove friend{% endif %}" href="{% if user.isFriends(post.user.id) == 0 %}{{ urls.format('FRIEND_ADD', [post.user.id, php.sessionid, php.time, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [post.user.id, php.sessionid, php.time, sakura.currentPage]) }}{% endif %}"></a>
                                     <a class="fa fa-flag" title="Report {{ post.user.username }}" href="{{ urls.format('USER_REPORT', [post.user.id]) }}"></a>
                                     {% endif %}
                                     <a class="fa fa-reply" title="Quote this post" href="{{ urls.format('FORUM_QUOTE_POST', [post.post_id]) }}"></a>

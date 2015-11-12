@@ -11,18 +11,6 @@ namespace Sakura;
  */
 class Users
 {
-    // Empty rank template
-    public static $emptyRank = [
-        'rank_id' => 0,
-        'rank_name' => 'Rank',
-        'rank_hierarchy' => 0,
-        'rank_multiple' => null,
-        'rank_hidden' => 1,
-        'rank_colour' => '#444',
-        'rank_description' => '',
-        'rank_title' => '',
-    ];
-
     // Check if a user is logged in
     public static function checkLogin($uid = null, $sid = null)
     {

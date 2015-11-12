@@ -690,7 +690,7 @@ class Main
     }
 
     // Time elapsed
-    public static function timeElapsed($timestamp, $append = ' ago', $none = 'Just now')
+    public static function timeElapsed($timestamp, $append = ' ago', $none = 'Just now', $floor = false)
     {
 
         // Subtract the entered timestamp from the current timestamp
@@ -717,7 +717,7 @@ class Main
 
             if ($calc >= 1) {
                 // Round the number
-                $round = round($calc);
+                $round = floor($calc);
 
                 // Return the string
                 return $round . ' ' . $times[$secs] . ($round == 1 ? '' : 's') . $append;

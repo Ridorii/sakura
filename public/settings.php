@@ -54,6 +54,11 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     $onlineFriends = isset($_SESSION['friendsOnline']) ? $_SESSION['friendsOnline'] : [];
     $onlineNotify = isset($_SESSION['friendsOnline']);
 
+    // Set friendsOnline
+    if (!$onlineNotify) {
+        $_SESSION['friendsOnline'] = [];
+    }
+
     // Populate the array
     foreach ($currentUser->friends(1) as $friend) {
         // Online status

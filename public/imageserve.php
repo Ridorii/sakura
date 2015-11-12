@@ -12,9 +12,6 @@ define('SAKURA_NO_TPL', true);
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
-// Set Content type
-header('Content-Type: application/octet-stream');
-
 // Path to user uploads
 $userDirPath = ROOT . Config::getConfig('user_uploads') . '/';
 
@@ -150,8 +147,12 @@ if (isset($_GET['m'])) {
     $serveImage = ROOT . Config::getConfig('pixel_img');
 }
 
+// Add original filename
+header('Content-Disposition: inline; filename="' . basename($serveImage) . '"');
+
 $serveImage = file_get_contents($serveImage);
 
+// Set content type
 header('Content-Type: ' . getimagesizefromstring($serveImage)['mime']);
 
 print $serveImage;

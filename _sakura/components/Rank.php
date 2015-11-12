@@ -12,14 +12,23 @@ namespace Sakura;
 class Rank
 {
     // Rank data
-    private $data = [];
+    private $data = [
+        'rank_id' => 0,
+        'rank_name' => 'Rank',
+        'rank_hierarchy' => 0,
+        'rank_multiple' => null,
+        'rank_hidden' => 1,
+        'rank_colour' => '#444',
+        'rank_description' => '',
+        'rank_title' => '',
+    ];
 
     // Initialise the rank object
     public function __construct($rid)
     {
 
         // Get the rank database row
-        $this->data = Database::fetch(
+        $getRank = Database::fetch(
             'ranks',
             false,
             [
@@ -28,9 +37,9 @@ class Rank
         );
 
         // Check if the rank actually exists
-        if (empty($this->data)) {
+        if (!empty($getRank)) {
             // If not assign as the fallback rank
-            $this->data = Users::$emptyRank;
+            $this->data = $getRank;
         }
     }
 
