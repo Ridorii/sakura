@@ -396,16 +396,6 @@ class Forums
             'post_id' => [Database::lastInsertID(), '='],
         ]);
 
-        // Update the topic with the last details
-        Database::update('topics', [
-            [
-                'topic_last_reply' => $getPost['post_id'],
-            ],
-            [
-                'topic_id' => [$getPost['topic_id'], '='],
-            ],
-        ]);
-
         // Return success
         return [1, 'SUCCESS', $getPost['forum_id'], $getPost['topic_id'], $getPost['post_id']];
     }
