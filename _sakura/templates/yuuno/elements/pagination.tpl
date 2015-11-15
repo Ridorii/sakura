@@ -1,11 +1,14 @@
-<div class="pagination">
-    {% if pagination.page > 0 %}
-        <a href="{{ urls.format(pagination.urlPattern, [pagination.page]) }}"><span class="fa fa-step-backward"></span></a>
+{% set paginationSeparator %}{% if '?' in pagination.page %}&amp;{% else %}?{% endif %}{% endset %}
+{% set paginationPage = get.page|default(1) %}
+
+<div class="pagination{% if paginationClass %} {{ paginationClass }}{% endif %}">
+    {% if paginationPage > 1 %}
+        <a href="{{ paginationUrl }}{{ paginationSeparator }}page={{ paginationPage - 1 }}"><span class="fa fa-step-backward"></span></a>
     {% endif %}
-    {% for id,page in pagination.pages %}
-        <a href="{{ urls.format(pagination.urlPattern, [(id + 1)]) }}"{% if id == pagination.page %} class="current"{% endif %}>{{ id + 1 }}</a>
+    {% for id,page in paginationPages %}
+        <a href="{{ paginationUrl }}{{ paginationSeparator }}page={{ id + 1 }}"{% if id == paginationPage - 1 %} class="current"{% endif %}>{{ id + 1 }}</a>
     {% endfor %}
-    {% if pagination.page + 1 < pagination.pages|length %}
-        <a href="{{ urls.format(pagination.urlPattern, [(pagination.page + 2)]) }}"><span class="fa fa-step-forward"></span></a>
+    {% if paginationPage < paginationPages|length %}
+        <a href="{{ paginationUrl }}{{ paginationSeparator }}page={{ paginationPage + 1 }}"><span class="fa fa-step-forward"></span></a>
     {% endif %}
 </div>

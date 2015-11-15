@@ -11,7 +11,7 @@ namespace Sakura;
  */
 class News
 {
-    private $posts = []; // Posts array
+    public $posts = []; // Posts array
     private $posters = []; // Posters array (so we don't create a new user object every time)
 
     // Initialise the news object
@@ -53,30 +53,5 @@ class News
     public function postExists($pid)
     {
         return array_key_exists($pid, $this->posts) ? $pid : 0;
-    }
-
-    // Get a single post
-    public function getPost($pid)
-    {
-        return array_key_exists($pid, $this->posts) ? $this->posts[$pid] : 0;
-    }
-
-    // Getting posts
-    public function getPosts($start = null, $end = null)
-    {
-
-        // Get posts
-        $posts = $this->posts;
-
-        // Only return requested posts
-        if ($start !== null && $end !== null) {
-            // Slice the array
-            $posts = array_slice($posts, $start, $end, true);
-        } elseif ($start !== null) {
-            // Devide the array in parts (pages)
-            $posts = array_chunk($posts, $start, true);
-        }
-
-        return $posts;
     }
 }

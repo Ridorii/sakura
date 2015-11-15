@@ -16,8 +16,13 @@
     {% endfor %}
 </div>
 {% if not forum.type and forum.id > 0 %}
+    {% set threads = forum.threads|batch(25) %}
+
+    {% set paginationPages = threads %}
+    {% set paginationUrl %}{{ urls.format('FORUM_SUB', [forum.id]) }}{% endset %}
+
     {% include 'forum/forumBtns.tpl' %}
-    {% if board.threads|length %}
+    {% if forum.threads %}
         <table class="topicList">
             <thead>
                 <tr>
@@ -38,7 +43,7 @@
                 </tr>
             </tfoot>
             <tbody>
-                {% for thread in board.threads[currentPage] %}
+                {% for thread in threads[get.page|default(1) - 1] %}
                     {% include 'forum/topicEntry.tpl' %}
                 {% endfor %}
             </tbody>

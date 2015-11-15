@@ -1,5 +1,13 @@
 {% extends 'global/master.tpl' %}
 
+{% set forumBackLink %}{{ urls.format('FORUM_SUB', [forum.id]) }}{% endset %}
+{% set forumReplyLink %}{{ urls.format('FORUM_REPLY', [thread.id]) }}{% endset %}
+
+{% set posts = thread.posts|batch(10) %}
+
+{% set paginationPages = posts %}
+{% set paginationUrl %}{{ urls.format('FORUM_THREAD', [thread.id]) }}{% endset %}
+
 {% block title %}{{ thread.title }}{% endblock %}
 
 {% block content %}
@@ -8,7 +16,7 @@
             <div class="head">{{ forum.name }} / {{ thread.title }}</div>
             {% include 'forum/forumBtns.tpl' %}
             <table class="posts">
-                {% for post in posts[currentPage] %}
+                {% for post in posts[get.page|default(1) - 1] %}
                     <tr class="post" id="p{{ post.id }}">
                         <td class="userpanel">
                             {% if not post.poster.checkPermission('SITE', 'DEACTIVATED') or post.poster.checkPermission('SITE', 'RESTRICTED') %}<a href="{{ urls.format('USER_PROFILE', [post.poster.id]) }}" class="default username" style="color: {{ post.poster.colour }}; text-shadow: 0 0 5px {% if post.poster.colour != 'inherit' %}{{ post.poster.colour }}{% else %}#222{% endif %};" title="Go to {{ post.poster.username }}'s profile">{{ post.poster.username }}</a>

@@ -23,10 +23,6 @@ class Urls
             '/news.php',
             '/news',
         ],
-        'SITE_NEWS_PAGE' => [
-            '/news.php?page=%u',
-            '/news/p%u',
-        ],
         'SITE_NEWS_POST' => [
             '/news.php?id=%u',
             '/news/%u',
@@ -46,10 +42,6 @@ class Urls
         'SITE_DONATE_TRACK' => [
             '/support.php?tracker=true',
             '/support/tracker',
-        ],
-        'SITE_DONATE_TRACK_PAGE' => [
-            '/support.php?tracker=true&page=%u',
-            '/support/tracker/%u',
         ],
         'SITE_FAQ' => [
             '/faq.php',
@@ -99,23 +91,11 @@ class Urls
         ],
         'MEMBERLIST_PAGE' => [
             '/members.php?page=%u',
-            '/members/p%u',
-        ],
-        'MEMBERLIST_SORT_RANK' => [
-            '/members.php?sort=%s&rank=%u',
-            '/members/%s/%u',
-        ],
-        'MEMBERLIST_RANK_PAGE' => [
-            '/members.php?rank=%u&page=%u',
-            '/members/%u/p%u',
-        ],
-        'MEMBERLIST_SORT_PAGE' => [
-            '/members.php?sort=%s&page=%u',
-            '/members/%s/p%u',
+            '/members?page=%u',
         ],
         'MEMBERLIST_ALL' => [
-            '/members.php?sort=%s&rank=%u&page=%u',
-            '/members/%s/%u/p%u',
+            '/members.php?sort=%s&rank=%u',
+            '/members/%s/%u',
         ],
 
         // Forums
@@ -220,10 +200,6 @@ class Urls
         'SETTING_MODE' => [
             '/settings.php?cat=%s&mode=%s',
             '/settings/%s/%s',
-        ],
-        'SETTING_PAGE' => [
-            '/settings.php?cat=%s&mode=%s&page=%u',
-            '/settings/%s/%s/p%u',
         ],
         'REQUEST_NOTIFICATIONS' => [
             '/settings.php?request-notifications=true',

@@ -44,8 +44,6 @@ if (!$thread) {
 $renderData = array_merge($renderData, [
     'thread' => $thread,
     'forum' => $forum,
-    'posts' => array_chunk($thread->posts, 10, true),
-    'currentPage' => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
 ]);
 
 // Set parse variables

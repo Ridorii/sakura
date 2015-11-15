@@ -12,7 +12,6 @@ Options +FollowSymLinks -Indexes
 RewriteRule ^login/?$|^logout/?$|^activate/?$|^register/?$|^forgotpassword/?|^authenticate/?$ authenticate.php [L,QSA]
 RewriteRule ^support/?$ support.php [L,QSA]
 RewriteRule ^support/tracker/?$ support.php?tracker=true [L,QSA]
-RewriteRule ^support/tracker/([0-9]+)/?$ support.php?tracker=true&page=$1 [L,QSA]
 RewriteRule ^faq/?$ faq.php [L,QSA]
 RewriteRule ^search/?$ search.php [L,QSA]
 
@@ -21,10 +20,8 @@ RewriteRule ^p/([a-z]+)/?$ index.php?p=$1 [L,QSA]
 
 # News
 RewriteRule ^news/?$ news.php [L,QSA]
-RewriteRule ^news/p([0-9]+)/?$ news.php?page=$1 [L,QSA]
 RewriteRule ^news/([0-9]+)/?$ news.php?id=$1 [L,QSA]
 RewriteRule ^news/([a-z\-]+)/?$ news.php?cat=$1 [L,QSA]
-RewriteRule ^news/([a-z\-]+)/p([0-9]+)/?$ news.php?cat=$1&page=$2 [L,QSA]
 RewriteRule ^news/([a-z\-]+)/([0-9]+)/?$ news.php?cat=$1&id=$2 [L,QSA]
 RewriteRule ^news.xml$ news.php?xml [L,QSA]
 
@@ -32,7 +29,6 @@ RewriteRule ^news.xml$ news.php?xml [L,QSA]
 RewriteRule ^settings/?$ settings.php [L,QSA]
 RewriteRule ^settings/([a-z]+)/?$ settings.php?cat=$1 [L,QSA]
 RewriteRule ^settings/([a-z]+)/([a-z]+)/?$ settings.php?cat=$1&mode=$2 [L,QSA]
-RewriteRule ^settings/([a-z]+)/([a-z]+)/p([0-9]+)/?$ settings.php?cat=$1&mode=$2&page=$3 [L,QSA]
 RewriteRule ^friends/?$ settings.php?friend-action=true [L,QSA]
 RewriteRule ^notifications/?$ settings.php?request-notifications=true [L,QSA]
 RewriteRule ^comments/?$ settings.php?comment-action=true [L,QSA]
@@ -41,11 +37,8 @@ RewriteRule ^comments/?$ settings.php?comment-action=true [L,QSA]
 RewriteRule ^members/?$ members.php [L,QSA]
 RewriteRule ^members/([a-z]+)/?$ members.php?sort=$1 [L,QSA]
 RewriteRule ^members/([0-9]+)/?$ members.php?rank=$1 [L,QSA]
-RewriteRule ^members/p([0-9]+)/?$ members.php?page=$1 [L,QSA]
 RewriteRule ^members/([a-z]+)/([0-9]+)/?$ members.php?sort=$1&rank=$2 [L,QSA]
 RewriteRule ^members/([0-9]+)/p([0-9]+)/?$ members.php?rank=$1&page=$2 [L,QSA]
-RewriteRule ^members/([a-z]+)/p([0-9]+)/?$ members.php?sort=$1&page=$2 [L,QSA]
-RewriteRule ^members/([a-z]+)/([0-9]+)/p([0-9]+)/?$ members.php?sort=$1&rank=$2&page=$3 [L,QSA]
 
 # Profiles
 RewriteRule ^u/?$ profile.php [L,QSA]

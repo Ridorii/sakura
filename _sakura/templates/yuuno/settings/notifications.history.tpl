@@ -1,6 +1,19 @@
+{% set alerts = alerts|batch(10) %}
+
+{% set paginationPages = alerts %}
+{% set paginationUrl %}{{ urls.format('SETTING_MODE', ['notifications', 'history']) }}{% endset %}
+
+{% block css %}
+<style type="text/css">
+    .pagination {
+        float: right;
+    }
+</style>
+{% endblock %}
+
 {% if alerts %}
     <div class="notification-history">
-        {% for alert in alerts[page.currentPage] %}
+        {% for alert in alerts[get.page|default(1) - 1] %}
         <a id="notif-hist-{{ alert.id }}" class="clean {% if alert.alert_read %}read{% endif %}"{% if alert.alert_link %} href="{{ alert.alert_link }}"{% endif %}>
             <div class="notif-hist-icon">
             {% if 'FONT:' in alert.alert_img %}
@@ -28,18 +41,7 @@
     </div>
     {% if alerts|length > 1 %}
         <div>
-            <div class="pagination" style="float: right;">
-                {% if page.currentPage > 0 %}
-                    <a href="{{ urls.format('SETTING_PAGE', ['notifications', 'history', page.currentPage]) }}"><span class="fa fa-step-backward"></span></a>
-                {% endif %}
-                {% for id,npage in alerts %}
-                    <a href="{{ urls.format('SETTING_PAGE', ['notifications', 'history', id + 1]) }}"{% if id == page.currentPage %} class="current"{% endif %}>{{ id + 1 }}</a>
-                {% endfor %}
-                {% if page.currentPage + 1 < alerts|length %}
-                    <a href="{{ urls.format('SETTING_PAGE', ['notifications', 'history', page.currentPage + 2]) }}"><span class="fa fa-step-forward"></span></a>
-                {% endif %}
-            </div>
-            <div class="clear"></div>
+            {% include 'elements/pagination.tpl' %}
         </div>
     {% endif %}
 {% else %}

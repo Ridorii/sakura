@@ -142,13 +142,7 @@ if (isset($_REQUEST['mode'])
 
 // Premium tracker
 if (isset($_GET['tracker'])) {
-    $renderData['page'] = [
-
-        'currentPage' => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
-        'premiumData' => ($_PREMIUM = Main::getPremiumTrackerData()),
-        'premiumTable' => array_chunk($_PREMIUM['table'], 20, true),
-
-    ];
+    $renderData['tracker'] =  Main::getPremiumTrackerData();
 
     // Set parse variables
     $template->setVariables($renderData);

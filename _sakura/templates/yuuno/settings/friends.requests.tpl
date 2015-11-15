@@ -1,3 +1,8 @@
+{% set friends = user.friends(-1)|batch(12) %}
+
+{% set paginationPages = friends %}
+{% set paginationUrl %}{{ urls.format('SETTING_MODE', ['friends', 'requests']) }}{% endset %}
+
 {% block js %}
 <script type="text/javascript">
 window.addEventListener("load", function() {
@@ -10,9 +15,17 @@ window.addEventListener("load", function() {
 </script>
 {% endblock %}
 
+{% block css %}
+<style type="text/css">
+    .pagination {
+        float: right;
+    }
+</style>
+{% endblock %}
+
 {% if friends|length %}
     <div class="friends-list">
-        {% for friend in friends[page.currentPage] %}
+        {% for friend in friends[get.page|default(1) - 1] %}
             <div class="friend-container" id="friend-{{ friend.id }}">
                 <a class="friends-list-data clean" href="/u/{{ friend.id }}">
                     <img src="/a/{{ friend.id }}" alt="{{ friend.username }}" class="friends-list-avatar default-avatar-setting" style="width: 150px; height: 150px;" />
@@ -29,18 +42,7 @@ window.addEventListener("load", function() {
     </div>
     {% if friends|length > 1 %}
         <div>
-            <div class="pagination" style="float: right;">
-                {% if page.currentPage > 0 %}
-                    <a href="{{ urls.format('SETTING_PAGE', ['friends', 'requests', page.currentPage]) }}"><span class="fa fa-step-backward"></span></a>
-                {% endif %}
-                {% for id,npage in friends %}
-                    <a href="{{ urls.format('SETTING_PAGE', ['friends', 'requests', id + 1]) }}"{% if id == page.currentPage %} class="current"{% endif %}>{{ id + 1 }}</a>
-                {% endfor %}
-                {% if page.currentPage + 1 < friends|length %}
-                    <a href="{{ urls.format('SETTING_PAGE', ['friends', 'requests', page.currentPage + 2]) }}"><span class="fa fa-step-forward"></span></a>
-                {% endif %}
-            </div>
-            <div class="clear"></div>
+            {% include 'elements/pagination.tpl' %}
         </div>
     {% endif %}
 {% else %}

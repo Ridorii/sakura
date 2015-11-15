@@ -7,7 +7,7 @@
         </div>
         <div class="content-left content-column">
             <div class="head">News <a href="{{ urls.format('SITE_NEWS_RSS') }}" class="fa fa-rss news-rss default"></a></div>
-            {% for post in news.getPosts(0, newsCount) %}
+            {% for post in news.posts|batch(newsCount)[0] %}
                 {% include 'elements/newsPost.tpl' %}
             {% endfor %}
         </div>

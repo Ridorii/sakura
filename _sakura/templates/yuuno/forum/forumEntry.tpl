@@ -22,7 +22,7 @@
     <div class="forumLastPost">
         <div>
             {% if forum.lastPost.id %}
-                <a href="{{ urls.format('FORUM_THREAD', [forum.lastPost.id]) }}" class="default">{{ forum.lastPost.subject }}</a><br />
+                <a href="{{ urls.format('FORUM_THREAD', [forum.lastPost.thread]) }}" class="default">{{ forum.lastPost.subject }}</a><br />
                 <span title="{{ forum.lastPost.time|date(sakura.dateFormat) }}">{{ forum.lastPost.timeElapsed }}</span> by {% if forum.lastPost.poster.id %}<a href="{{ urls.format('USER_PROFILE', [forum.lastPost.poster.id]) }}" class="default" style="color: {{ forum.lastPost.poster.colour }}; text-shadow: 0 0 5px {% if forumlastPost.poster.colour != 'inherit' %}{{ forum.lastPost.poster.colour }}{% else %}#222{% endif %};">{{ forum.lastPost.poster.username }}</a>{% else %}[deleted user]{% endif %} <a href="{{ urls.format('FORUM_POST', [forum.lastPost.id]) }}#p{{ forum.lastPost.id }}" class="default fa fa-tag"></a>
             {% else %}
                 There are no posts in this forum.<br />&nbsp;

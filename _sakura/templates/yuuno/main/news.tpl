@@ -1,12 +1,13 @@
 {% extends 'global/master.tpl' %}
 
-{% set newsPosts = viewPost and postExists ? [news.getPost(postExists)] : news.getPosts(postsPerPage)[currentPage] %}
-
-{% set pagination = {'page': currentPage, 'pages': news.getPosts(postsPerPage), 'urlPattern': 'SITE_NEWS_PAGE'} %}
+{% set newsPosts = viewPost and postExists ? [news.posts[postExists]] : news.posts|batch(postsPerPage)[get.page|default(1) - 1] %}
 
 {% if viewPost and postExists %}
-{% set commentsCategory = 'news-' ~ newsPosts[0].news_category ~ '-' ~ newsPosts[0].news_id %}
-{% set comments = newsPosts[0].news_comments.comments %}
+    {% set commentsCategory = 'news-' ~ newsPosts[0].news_category ~ '-' ~ newsPosts[0].news_id %}
+    {% set comments = newsPosts[0].news_comments.comments %}
+{% else %}
+    {% set paginationPages = news.posts|batch(postsPerPage) %}
+    {% set paginationUrl %}{{ urls.format('SITE_NEWS') }}{% endset %}
 {% endif %}
 
 {% set title %}
@@ -34,7 +35,7 @@
                         {% include 'elements/comments.tpl' %}
                     {% endif %}
                 {% endfor %}
-                {% if not (viewPost and postExists) and news.getPosts(postsPerPage)|length > 1 %}
+                {% if not (viewPost and postExists) and news.posts|batch(postsPerPage)|length > 1 %}
                     <div>
                         {% include 'elements/pagination.tpl' %}
                         <div class="clear"></div>

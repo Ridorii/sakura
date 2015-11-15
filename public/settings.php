@@ -1456,12 +1456,9 @@ if (Users::checkLogin()) {
 
     // Page data
     $renderData['page'] = [
-
         'category' => $pages[$category]['title'],
         'mode' => $pages[$category]['modes'][$mode]['title'],
-        'currentPage' => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
         'description' => $pages[$category]['modes'][$mode]['description'],
-
     ];
 
     // Section specific
@@ -1494,16 +1491,6 @@ if (Users::checkLogin()) {
             ];
             break;
 
-        // Friends
-        case 'friends.listing':
-            $renderData['friends'] = array_chunk(array_reverse($currentUser->friends(1)), 12, true);
-            break;
-
-        // Pending Friend Requests
-        case 'friends.requests':
-            $renderData['friends'] = array_chunk(array_reverse($currentUser->friends(-1)), 12, true);
-            break;
-
         // PM inbox
         case 'messages.inbox':
             $renderData['messages'] = [];
@@ -1511,7 +1498,7 @@ if (Users::checkLogin()) {
 
         // Notification history
         case 'notifications.history':
-            $renderData['alerts'] = array_chunk(array_reverse(Users::getNotifications(null, 0, false, true)), 10, true);
+            $renderData['alerts'] = array_reverse(Users::getNotifications(null, 0, false, true));
             break;
 
         // Avatar and background sizes

@@ -53,11 +53,6 @@ if ($forum->type === 2) {
 
 $renderData['forum'] = $forum;
 
-$renderData['board'] = [
-    'threads' => array_chunk($forum->threads, 25, true),
-];
-$renderData['currentPage'] = isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0;
-
 // Set parse variables
 $template->setVariables($renderData);
 

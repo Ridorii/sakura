@@ -8,6 +8,13 @@
 {% if page.notfound %}The requested rank could not be found!{% else %}{% if not page.active %}The entire user list.{% else %}{{ page.ranks[page.active].description }}{% endif %}{% endif %}
 {% endset %}
 
+{% set users = users|batch(membersPerPage) %}
+
+{% set currPage = get.page|default(1) - 1 %}
+
+{% set paginationPages = users %}
+{% set paginationUrl %}{% if page.sort and page.active %}{{ urls.format('MEMBERLIST_ALL', [page.sort, page.active]) }}{% elseif page.sort %}{{ urls.format('MEMBERLIST_SORT', [page.sort]) }}{% elseif page.active %}{{ urls.format('MEMBERLIST_RANK', [page.active]) }}{% else %}{{ urls.format('MEMBERLIST_INDEX') }}{% endif %}{% endset %}
+
 {% block title %}{{ rankTitle }}{% endblock %}
 
 {% block content %}
@@ -19,21 +26,21 @@
         <div class="dropDown" style="margin: 0 auto; font-size: 1.5em; line-height: 1.5em; height: 30px;">
             <div class="dropDownInner" style="float: left; color: #FFF;">
                 <a class="dropDownDesc">Rank:</a>
-                <a href="{% if page.page and page.sort %}{{ urls.format('MEMBERLIST_SORT_PAGE', [page.sort, (page.page + 1)]) }}{% elseif page.sort %}{{ urls.format('MEMBERLIST_SORT', [page.sort]) }}{% elseif page.page %}{{ urls.format('MEMBERLIST_PAGE', [(page.page + 1)]) }}{% else %}{{ urls.format('MEMBERLIST_INDEX') }}{% endif %}"{% if not page.active %} class="dropDownSelected"{% endif %}>All members</a>
+                <a href="{% if page.sort %}{{ urls.format('MEMBERLIST_SORT', [page.sort]) }}{% else %}{{ urls.format('MEMBERLIST_INDEX') }}{% endif %}"{% if not page.active %} class="dropDownSelected"{% endif %}>All members</a>
                 {% for rank in page.ranks %}
                     {% if not rank.hidden or (rank.hidden and page.active == rank.id) %}
-                        <a href="{% if page.sort %}{{ urls.format('MEMBERLIST_SORT_RANK', [page.sort, rank.id]) }}{% else %}{{ urls.format('MEMBERLIST_RANK', [rank.id]) }}{% endif %}" style="color: {{ rank.colour }};"{% if page.active == rank.id %} class="dropDownSelected"{% endif %}>{{ rank.name(true) }}</a>
+                        <a href="{% if page.sort %}{{ urls.format('MEMBERLIST_ALL', [page.sort, rank.id]) }}{% else %}{{ urls.format('MEMBERLIST_RANK', [rank.id]) }}{% endif %}" style="color: {{ rank.colour }};"{% if page.active == rank.id %} class="dropDownSelected"{% endif %}>{{ rank.name(true) }}</a>
                     {% endif %}
                 {% endfor %}
             </div>
             <div class="dropDownInner" style="float: left;">
                 <a class="dropDownDesc">View:</a>
                 {% for sort in page.sorts %}
-                <a href="{% if page.active and page.page %}{{ urls.format('MEMBERLIST_ALL', [sort, page.active, (page.page + 1)]) }}{% elseif page.active %}{{ urls.format('MEMBERLIST_SORT_RANK', [sort, page.active]) }}{% elseif page.page %}{{ urls.format('MEMBERLIST_SORT_PAGE', [sort, (page.page + 1)]) }}{% else %}{{ urls.format('MEMBERLIST_SORT', [sort]) }}{% endif %}"{% if page.sort == sort %} class="dropDownSelected"{% endif %}>{{ sort|capitalize }}</a>
+                <a href="{% if page.active %}{{ urls.format('MEMBERLIST_ALL', [sort, page.active]) }}{% else %}{{ urls.format('MEMBERLIST_SORT', [sort]) }}{% endif %}"{% if page.sort == sort %} class="dropDownSelected"{% endif %}>{{ sort|capitalize }}</a>
                 {% endfor %}
             </div>
         </div>
-        {% if not page.users|length %}
+        {% if not users|length %}
             <h1 class="stylised" style="margin: 2em 0;">This rank has no members!</h1>
         {% elseif not page.notfound %}
             <div class="membersPageList {{ page.sort }}">
@@ -59,7 +66,7 @@
                             <th>Country</th>
                         </tr>
                     </tfoot>
-                    {% for count,user in page.users[page.page] %}
+                    {% for count,user in users[currPage] %}
                     <tbody>
                         <tr>
                             <td>
@@ -85,7 +92,7 @@
                     {% endfor %}
                 </table>
                 {% else %}
-                    {% for user in page.users[page.page] %}
+                    {% for user in users[currPage] %}
                         <a href="{{ urls.format('USER_PROFILE', [user.id]) }}">{# These comment tags are here to prevent the link extending too far
                             #}<div class="userBox" id="u{{ user.id }}">{#
                                 #}<img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.username }}"  style="background: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}') no-repeat center / contain;" />{#
@@ -98,18 +105,8 @@
                 {% endif %}
             </div>
         {% endif %}
-        {% if page.users|length > 1 %}
-            <div class="pagination">
-                {% if page.page > 0 %}
-                    <a href="{% if page.sort and page.active %}{{ urls.format('MEMBERLIST_ALL', [page.sort, page.active, page.page]) }}{% elseif page.sort %}{{ urls.format('MEMBERLIST_SORT_PAGE', [page.sort, page.page]) }}{% elseif page.active %}{{ urls.format('MEMBERLIST_RANK_PAGE', [page.active, page.page]) }}{% else %}{{ urls.format('MEMBERLIST_PAGE', [page.page]) }}{% endif %}"><span class="fa fa-step-backward"></span></a>
-                {% endif %}
-                {% for count,navpage in page.users %}
-                    <a href="{% if page.sort and page.active %}{{ urls.format('MEMBERLIST_ALL', [page.sort, page.active, (count + 1)]) }}{% elseif page.sort %}{{ urls.format('MEMBERLIST_SORT_PAGE', [page.sort, (count + 1)]) }}{% elseif page.active %}{{ urls.format('MEMBERLIST_RANK_PAGE', [page.active, (count + 1)]) }}{% else %}{{ urls.format('MEMBERLIST_PAGE', [(count + 1)]) }}{% endif %}"{% if count == page.page %} class="current"{% endif %}>{{ count + 1 }}</a>
-                {% endfor %}
-                {% if page.page + 1 < page.users|length %}
-                    <a href="{% if page.sort and page.active %}{{ urls.format('MEMBERLIST_ALL', [page.sort, page.active, (page.page + 2)]) }}{% elseif page.sort %}{{ urls.format('MEMBERLIST_SORT_PAGE', [page.sort, (page.page + 2)]) }}{% elseif page.active %}{{ urls.format('MEMBERLIST_RANK_PAGE', [page.active, (page.page + 2)]) }}{% else %}{{ urls.format('MEMBERLIST_PAGE', [(page.page + 2)]) }}{% endif %}"><span class="fa fa-step-forward"></span></a>
-                {% endif %}
-            </div>
+        {% if users|length > 1 %}
+            {% include 'elements/pagination.tpl' %}
         {% endif %}
     </div>
 {% endblock %}

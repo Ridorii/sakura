@@ -18,7 +18,7 @@ $news = new News(isset($_GET['cat']) ? $_GET['cat'] : Config::getConfig('site_ne
 // News XML feed
 if (isset($_GET['xml'])) {
     // Get the news posts
-    $posts = $news->getPosts();
+    $posts = $news->posts;
 
     // Meta data attributes
     $metaData = [
@@ -123,7 +123,6 @@ $renderData = array_merge($renderData, [
     'postsPerPage' => Config::getConfig('news_posts_per_page'),
     'viewPost' => isset($_GET['id']),
     'postExists' => $news->postExists(isset($_GET['id']) ? $_GET['id'] : 0),
-    'currentPage' => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
 ]);
 
 // Initialise templating engine

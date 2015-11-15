@@ -34,12 +34,12 @@ if (Users::checkLogin()) {
         'sort' => isset($_GET['sort']) && $_GET['sort'] && in_array($_GET['sort'], $_MEMBERLIST_SORTS) ?
         $_GET['sort'] :
         $_MEMBERLIST_SORTS[0],
-        'page' => isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0,
-        'users' => array_chunk($_MEMBERLIST_ACTIVE && !$_MEMBERLIST_NFOUND ?
-            Users::getUsersInRank($_MEMBERLIST_ACTIVE, null, true) :
-            Users::getAllUsers(), Config::getConfig('members_per_page'), true),
 
     ];
+
+    $renderData['users'] = ($_MEMBERLIST_ACTIVE && !$_MEMBERLIST_NFOUND ? Users::getUsersInRank($_MEMBERLIST_ACTIVE) : Users::getAllUsers());
+
+    $renderData['membersPerPage'] = Config::getConfig('members_per_page');
 
     // Set parse variables
     $template->setVariables($renderData);

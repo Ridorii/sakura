@@ -82,6 +82,50 @@ class Forums
         return $forum;
     }
 
+    // Getting all topics from a forum
+    public static function getTopics($id)
+    {
+
+        // Get the topics from the database
+        $topics = Database::fetch('topics', true, [
+            'forum_id' => [$id, '='],
+        ]);
+
+        // Get the userdata related to last posts
+        foreach ($topics as $key => $topic) {
+            // Get the reply count
+            $topics[$key]['reply_count'] = Database::count('posts', [
+                'topic_id' => [$topic['topic_id'], '='],
+            ])[0];
+
+            // Get first post in topics
+            $firstPost = Database::fetch('posts', false, [
+                'topic_id' => [$topic['topic_id'], '='],
+            ]);
+
+            $topics[$key]['first_poster'] = new User($firstPost['poster_id']);
+
+            $topics[$key]['first_post'] = array_merge(
+                empty($firstPost) ? [] : $firstPost,
+                ['elapsed' => Main::timeElapsed($firstPost['post_time'])]
+            );
+
+            // Get last post in topics
+            $lastPost = Database::fetch('posts', false, [
+                'topic_id' => [$topic['topic_id'], '='],
+            ], ['post_id', true]);
+
+            $topics[$key]['last_poster'] = new User($lastPost['poster_id']);
+
+            $topics[$key]['last_post'] = array_merge(
+                empty($lastPost) ? [] : $lastPost,
+                ['elapsed' => Main::timeElapsed($lastPost['post_time'])]
+            );
+        }
+
+        return $topics;
+    }
+
     // Get posts of a thread
     public static function getTopic($id, $ignoreView = false)
     {
