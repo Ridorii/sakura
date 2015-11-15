@@ -1,7 +1,7 @@
 <div id="indexPanel">
     {% if session.checkLogin %}
         <div class="head">Hi, {{ user.username }}!</div>
-        <a href="{{ urls.format('SETTING_MODE', ['appearance', 'avatar']) }}"><img src="{{ urls.format('IMAGE_AVATAR', [user.id]) }}" class="default-avatar-setting homepage-menu-avatar" /></a>
+        <a href="{{ urls.format('SETTING_MODE', ['appearance', 'avatar']) }}"><img src="{{ urls.format('IMAGE_AVATAR', [user.id]) }}" alt="{{ user.username }}" class="default-avatar-setting homepage-menu-avatar" /></a>
         <ul class="panelQuickLinks">
             <li><a href="{{ urls.format('SETTING_MODE', ['friends', 'requests']) }}" title="Pending friend requests"><span class="fa fa-user-plus"></span><span class="count">{{ user.friends(-1, true)|length }}</span></a></li>
             <li><a href="{{ urls.format('MESSAGES_INDEX') }}" title="View private messages"><span class="fa fa-envelope"></span><span class="count">0</span></a></li>

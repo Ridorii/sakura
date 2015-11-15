@@ -1,14 +1,23 @@
-<div class="head">Forums{% if board.viewforum %} / {{ board.forums[0].forum.forum_name }}{% endif %}</div>
-<table class="forumList">
-    <tbody>
-        {% for category in board.forums %}
+<div class="head">{{ title }}</div>
+<div class="forumList">
+    {% for forum in forum.forums %}
+        {% if forum.type == 1 %}
+            {% if forum.forums|length %}
+            <div class="forumCategory">
+                {% if forum.type != 1 %}Subforums{% else %}<a href="{{ urls.format('FORUM_SUB', [forum.id]) }}" class="clean">{{ forum.name }}</a>{% endif %}
+            </div>
+            {% for forum in forum.forums %}
+                {% include 'forum/forumEntry.tpl' %}
+            {% endfor %}
+            {% endif %}
+        {% else %}
             {% include 'forum/forumEntry.tpl' %}
-        {% endfor %}
-    </tbody>
-</table>
-{% if board.viewforum and not board.forums[0].forum.forum_type %}
+        {% endif %}
+    {% endfor %}
+</div>
+{% if not forum.type and forum.id > 0 %}
     {% include 'forum/forumBtns.tpl' %}
-    {% if board.topics|length %}
+    {% if board.threads|length %}
         <table class="topicList">
             <thead>
                 <tr>
@@ -29,7 +38,7 @@
                 </tr>
             </tfoot>
             <tbody>
-                {% for topic in board.topics[currentPage] %}
+                {% for thread in board.threads[currentPage] %}
                     {% include 'forum/topicEntry.tpl' %}
                 {% endfor %}
             </tbody>

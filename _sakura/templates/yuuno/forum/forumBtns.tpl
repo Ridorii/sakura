@@ -1,11 +1,11 @@
 <div class="buttonRow pagination">
     <div class="leftSide">
-        <a href="{% if board.viewtopic %}{{ urls.format('FORUM_SUB', [topic.forum_id]) }}{% else %}{{ urls.format('FORUM_INDEX') }}{% endif %}" class="forumbtn"><span class="fa fa-backward"></span> Back</a>
-        {% if board.viewtopic %}
-        <a href="{{ urls.format('FORUM_REPLY', [topic.topic_id]) }}" class="forumbtn"><span class="fa fa-reply-all"></span> Reply</a>
+        <a href="{% if thread %}{{ urls.format('FORUM_SUB', [forum.id]) }}{% else %}{{ urls.format('FORUM_INDEX') }}{% endif %}" class="forumbtn"><span class="fa fa-backward"></span> Back</a>
+        {% if thread.id %}
+        <a href="{{ urls.format('FORUM_REPLY', [thread.id]) }}" class="forumbtn"><span class="fa fa-reply-all"></span> Reply</a>
         {% endif %}
-        {% if board.viewforum %}
-        <a href="{{ urls.format('FORUM_NEW_THREAD', [board.forums[0].forum.forum_id]) }}" class="forumbtn"><span class="fa fa-pencil-square-o"></span> New Thread</a>
+        {% if forum.id and not thread %}
+        <a href="{{ urls.format('FORUM_NEW_THREAD', [forum.id]) }}" class="forumbtn"><span class="fa fa-pencil-square-o"></span> New Thread</a>
         {% endif %}
     </div>
     <div class="rightSide">

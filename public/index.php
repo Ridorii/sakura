@@ -50,11 +50,7 @@ $renderData['news'] = ($forumMode ? null : (new News(Config::getConfig('site_new
 
 $renderData['newsCount'] = Config::getConfig('front_page_news_posts');
 
-$renderData['board'] = [
-    'forums' => ($forumMode ? Forums::getForumList() : null),
-    'viewforum' => false,
-    'viewtopic' => false,
-];
+$renderData['forum'] = ($forumMode ? (new Forum()) : null);
 
 $renderData['stats'] = [
     'userCount' => Database::count('users', ['password_algo' => ['nologin', '!='], 'rank_main' => ['1', '!=']])[0],

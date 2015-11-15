@@ -22,6 +22,9 @@ class Thread
     public $status = 0;
     public $statusChange = 0;
     public $type = 0;
+    public $firstPost = null;
+    public $lastPost = null;
+    public $posts = [];
 
     // Constructor
     public function __construct($threadId)
@@ -42,11 +45,50 @@ class Thread
             $this->statusChange = $threadRow['topic_status_change'];
             $this->type = $threadRow['topic_type'];
         }
+
+        // Populate the posts array
+        $this->posts = $this->getPosts();
+
+        // Get first post
+        $this->firstPost = $this->posts ? array_values($this->posts)[0] : (new Thread(0));
+
+        // And the last post
+        $this->lastPost = $this->posts ? end($this->posts) : (new Thread(0));
+    }
+
+    // Posts
+    public function getPosts()
+    {
+        // Get all rows with the thread id
+        $postRows = Database::fetch('posts', true, ['topic_id' => [$this->id, '=']]);
+
+        // Create a storage array
+        $posts = [];
+
+        // Create new post objects for each post
+        foreach ($postRows as $post) {
+            $posts[$post['post_id']] = new Post($post['post_id']);
+        }
+
+        // Return the post objects
+        return $posts;
     }
 
     // Reply count
     public function replyCount()
     {
-        return Database::count('posts', ['topic_id', [$this->id, '=']])[0];
+        return Database::count('posts', ['topic_id' => [$this->id, '=']])[0];
+    }
+
+    // Time elapsed since creation
+    public function timeElapsed()
+    {
+        return Main::timeElapsed($this->time);
+    }
+
+    // Time elapsed since status change
+    public function statusChangeElapsed()
+    {
+        return Main::timeElapsed($this->statusChange);
     }
 }

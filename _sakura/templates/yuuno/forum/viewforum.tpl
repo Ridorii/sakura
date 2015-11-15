@@ -1,6 +1,8 @@
 {% extends 'global/master.tpl' %}
 
-{% block title %}Forums / {{ board.forums[0].forum.forum_name }}{% endblock %}
+{% set title %}Forums / {{ forum.name }}{% endset %}
+
+{% block title %}{{ title }}{% endblock %}
 
 {% block content %}
     <div class="content homepage forum viewforum">

@@ -690,7 +690,7 @@ class Main
     }
 
     // Time elapsed
-    public static function timeElapsed($timestamp, $append = ' ago', $none = 'Just now', $floor = false)
+    public static function timeElapsed($timestamp, $append = ' ago', $none = 'Just now')
     {
 
         // Subtract the entered timestamp from the current timestamp

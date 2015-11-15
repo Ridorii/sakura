@@ -10,7 +10,7 @@ namespace Sakura;
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
 // Get the forum's data
-$forum = Forums::getForum(isset($_GET['f']) ? $_GET['f'] : 0);
+$forum = new Forum(isset($_GET['f']) ? $_GET['f'] : -1);
 
 // Initialise templating engine
 $template = new Template();
@@ -35,12 +35,12 @@ if (!$forum) {
 }
 
 // Check if the forum isn't a link
-if ($forum['forum']['forum_type'] === 2) {
+if ($forum->type === 2) {
     // Set render data
     $renderData['page'] = [
         'title' => 'Information',
         'message' => 'The forum you tried to access is a link. You\'re being redirected.',
-        'redirect' => $forum['forum']['forum_link'],
+        'redirect' => $forum->link,
     ];
 
     // Set parse variables
@@ -51,13 +51,10 @@ if ($forum['forum']['forum_type'] === 2) {
     exit;
 }
 
+$renderData['forum'] = $forum;
+
 $renderData['board'] = [
-    'forums' => [
-        $forum,
-    ],
-    'topics' => array_chunk($forum['topics'], 25, true),
-    'viewforum' => true,
-    'viewtopic' => false,
+    'threads' => array_chunk($forum->threads, 25, true),
 ];
 $renderData['currentPage'] = isset($_GET['page']) && ($_GET['page'] - 1) >= 0 ? $_GET['page'] - 1 : 0;
 

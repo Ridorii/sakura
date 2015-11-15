@@ -23,6 +23,7 @@ class Post
     public $emotes = 0;
     public $subject = "";
     public $text = "";
+    public $parsed = "";
     public $editTime = 0;
     public $editReason = "";
     public $editUser = [];
@@ -50,5 +51,20 @@ class Post
             $this->editReason = $postRow['post_edit_reason'];
             $this->editUser = new User($postRow['post_edit_user']);
         }
+
+        // Parse the markup
+        $this->parsed = Forums::parseMarkUp($this->text, $this->parse, $this->emotes);
+    }
+
+    // Time elapsed since creation
+    public function timeElapsed()
+    {
+        return Main::timeElapsed($this->time);
+    }
+
+    // Time elapsed since last edit
+    public function editTimeElapsed()
+    {
+        return Main::timeElapsed($this->editTime);
     }
 }

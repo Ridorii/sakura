@@ -39,10 +39,10 @@ $posting = [
 // Check if we're in reply mode
 if ($mode != 'f') {
     // Attempt to get the topic
-    $topic = Forums::getTopic($topicId, true);
+    $thread = Forums::getTopic($topicId, true);
 
     // Prompt an error if the topic doesn't exist
-    if (!$topic) {
+    if (!$thread) {
         // Add page specific things
         $renderData['page'] = [
             'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
@@ -58,17 +58,17 @@ if ($mode != 'f') {
     }
 
     // Check if we're in quote mode
-    if ($mode == 'p' && isset($_GET['quote']) && $_GET['quote'] == $_GET['p'] && array_key_exists($_GET['p'], $topic['posts'])) {
+    if ($mode == 'p' && isset($_GET['quote']) && $_GET['quote'] == $_GET['p'] && array_key_exists($_GET['p'], $thread['posts'])) {
         // Reassign post for ease
-        $post = $topic['posts'][$_GET['p']];
+        $post = $thread['posts'][$_GET['p']];
 
         // Add subject to render data
         $posting['text'] = '[quote]' . $post['post_text'] . '[/quote]';
 
         // Post editing
-    } elseif ($mode == 'p' && isset($_GET['edit']) && $_GET['edit'] == $_GET['p'] && array_key_exists($_GET['p'], $topic['posts'])) {
+    } elseif ($mode == 'p' && isset($_GET['edit']) && $_GET['edit'] == $_GET['p'] && array_key_exists($_GET['p'], $thread['posts'])) {
         // Checks
-        if ($topic['posts'][$_GET['p']]['poster_id'] != $currentUser->id()) {
+        if ($thread['posts'][$_GET['p']]['poster_id'] != $currentUser->id()) {
             // Add page specific things
             $renderData['page'] = [
                 'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
@@ -84,7 +84,7 @@ if ($mode != 'f') {
         }
 
         // Reassign post for ease
-        $post = $topic['posts'][$_GET['p']];
+        $post = $thread['posts'][$_GET['p']];
 
         // Set variables
         $posting = array_merge($posting, [
@@ -93,9 +93,9 @@ if ($mode != 'f') {
             'id' => $post['post_id'],
         ]);
         // Post deletion
-    } elseif ($mode == 'p' && isset($_GET['delete']) && $_GET['delete'] == $_GET['p'] && array_key_exists($_GET['p'], $topic['posts'])) {
+    } elseif ($mode == 'p' && isset($_GET['delete']) && $_GET['delete'] == $_GET['p'] && array_key_exists($_GET['p'], $thread['posts'])) {
         // Checks
-        if ($topic['posts'][$_GET['p']]['poster_id'] != $currentUser->id()) {
+        if ($thread['posts'][$_GET['p']]['poster_id'] != $currentUser->id()) {
             // Add page specific things
             $renderData['page'] = [
                 'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
@@ -120,18 +120,18 @@ if ($mode != 'f') {
                 ]);
 
                 // Reload the topic
-                $topic = Forums::getTopic($topicId, true);
+                $thread = Forums::getTopic($topicId, true);
 
                 // If there's no more posts left in the topic delete it as well
-                if (!count($topic['posts'])) {
+                if (!count($thread['posts'])) {
                     Database::delete('topics', [
-                        'topic_id' => [$topic['topic']['topic_id'], '='],
+                        'topic_id' => [$thread['topic']['topic_id'], '='],
                     ]);
                 }
 
                 // Add page specific things
                 $renderData['page'] = [
-                    'redirect' => (count($topic['posts']) ? $urls->format('FORUM_THREAD', [$topic['topic']['topic_id']]) : $urls->format('FORUM_INDEX')),
+                    'redirect' => (count($thread['posts']) ? $urls->format('FORUM_THREAD', [$thread['topic']['topic_id']]) : $urls->format('FORUM_INDEX')),
                     'message' => 'Your post has been deleted!',
                 ];
 
@@ -150,9 +150,9 @@ if ($mode != 'f') {
 
         // Form mode
         $renderData = array_merge($renderData, [
-            'message' => 'Are you sure you want to delete your reply to ' . $topic['topic']['topic_title'] . '?',
+            'message' => 'Are you sure you want to delete your reply to ' . $thread['topic']['topic_title'] . '?',
             'conditions' => [
-                'post_id' => $topic['posts'][$_GET['p']]['post_id'],
+                'post_id' => $thread['posts'][$_GET['p']]['post_id'],
             ],
         ]);
 
@@ -166,7 +166,7 @@ if ($mode != 'f') {
 
     // Add subject to render data
     if (!isset($posting['subject'])) {
-        $posting['subject'] = 'Re: ' . $topic['topic']['topic_title'];
+        $posting['subject'] = 'Re: ' . $thread['topic']['topic_title'];
     }
 }
 

@@ -1,6 +1,8 @@
 {% extends 'global/master.tpl' %}
 
-{% block title %}Forum Listing{% endblock %}
+{% set title = 'Forums' %}
+
+{% block title %}{{ title }}{% endblock %}
 
 {% block content %}
     <div class="content homepage forum">
@@ -12,5 +14,8 @@
         </div>
         <div class="clear"></div>
     </div>
-    <script type="text/javascript" src="{{ sakura.resources }}/js/ybabstat.js"></script>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{{ sakura.resources }}/js/ybabstat.js"></script>
 {% endblock %}

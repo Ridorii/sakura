@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151113');
+define('SAKURA_VERSION', '20151115');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 define('SAKURA_STABLE', false);
@@ -152,6 +152,9 @@ if (!defined('SAKURA_NO_TPL')) {
 
         'user' => $currentUser,
         'urls' => $urls,
+
+        'get' => $_GET,
+        'post' => $_POST,
     ];
 
     // Site closing

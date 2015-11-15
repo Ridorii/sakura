@@ -19,17 +19,19 @@ class Forum
     public $category = 0;
     public $type = 0;
     public $icon = "";
-    public $firstReply = [];
-    public $lastReply = [];
+    public $firstPost = null;
+    public $lastPost = null;
+    public $forums = [];
+    public $threads = [];
 
     // Constructor
-    public function __construct($forumId)
+    public function __construct($forumId = 0)
     {
         // Get the row from the database
         $forumRow = Database::fetch('forums', false, ['forum_id' => [$forumId, '=']]);
 
         // Populate the variables
-        if (!$forumRow) {
+        if ($forumRow) {
             $this->id = $forumRow['forum_id'];
             $this->name = $forumRow['forum_name'];
             $this->description = $forumRow['forum_desc'];
@@ -37,19 +39,30 @@ class Forum
             $this->category = $forumRow['forum_category'];
             $this->type = $forumRow['forum_type'];
             $this->icon = $forumRow['forum_icon'];
-        } else {
-            // Else just set the ID to $forumId and imitate an blank forum
-            $this->id = $forumId;
+        } elseif ($forumId != 0) {
+            $this->id = -1;
         }
+
+        // Populate the forums array
+        $this->forums = $this->getForums();
+
+        // and the threads array
+        $this->threads = $this->getThreads();
+
+        // and the first post
+        $this->firstPost = $this->getFirstPost();
+
+        // and finally the last post
+        $this->lastPost = $this->getLastPost();
     }
 
     // Subforums
-    public function forums()
+    public function getForums()
     {
         // Get all rows with the category id set to the forum id
         $forumRows = Database::fetch('forums', true, ['forum_category' => [$this->id, '=']]);
 
-        // Get a storage array
+        // Create a storage array
         $forums = [];
 
         // Create new objects for each forum
@@ -61,23 +74,59 @@ class Forum
         return $forums;
     }
 
-    // Last post
-    public function lastPost()
+    // Threads
+    public function getThreads()
     {
-        // Return a post
-        $postRow = Database::fetch('posts', false, ['forum_id' => [$this->id, '=']], ['post_id', true]);
+        // Get all rows with the forum id for this forum
+        $threadRows = Database::fetch('topics', true, ['forum_id' => [$this->id, '=']]);
 
+        // Create a storage array
+        $threads = [];
+
+        // Create new objects for each thread
+        foreach ($threadRows as $thread) {
+            $threads[$thread['topic_id']] = new Thread($thread['topic_id']);
+        }
+
+        // Return the thread objects
+        return $threads;
+    }
+
+    // First post
+    public function getFirstPost()
+    {
+        // Get the row
+        $firstPost = Database::fetch('posts', false, ['forum_id' => [$this->id, '=']], ['post_id'], [1]);
+
+        // Create the post object
+        $post = new Post(empty($firstPost) ? 0 : $firstPost['post_id']);
+
+        // Return the post object
+        return $post;
+    }
+
+    // Last post
+    public function getLastPost()
+    {
+        // Get the row
+        $lastPost = Database::fetch('posts', false, ['forum_id' => [$this->id, '=']], ['post_id', true], [1]);
+
+        // Create the post object
+        $post = new Post(empty($lastPost) ? 0 : $lastPost['post_id']);
+
+        // Return the post object
+        return $post;
     }
 
     // Thread count
     public function threadCount()
     {
-        return Database::count('topics', ['forum_id', [$this->id, '=']])[0];
+        return Database::count('topics', ['forum_id' => [$this->id, '=']])[0];
     }
 
     // Post count
     public function postCount()
     {
-        return Database::count('posts', ['forum_id', [$this->id, '=']])[0];
+        return Database::count('posts', ['forum_id' => [$this->id, '=']])[0];
     }
 }

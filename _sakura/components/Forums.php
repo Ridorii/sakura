@@ -23,62 +23,6 @@ class Forums
         'forum_topics' => 0,
     ];
 
-    // Getting the forum list
-    public static function getForumList()
-    {
-
-        // Get the content from the database
-        $forums = Database::fetch('forums');
-
-        // Create return array
-        $return = [
-            0 => [
-                'forum' => self::$emptyForum,
-                'forums' => [],
-            ],
-        ];
-
-        // Resort the forums
-        foreach ($forums as $forum) {
-            // If the forum type is a category create a new one
-            if ($forum['forum_type'] == 1) {
-                $return[$forum['forum_id']]['forum'] = $forum;
-            } else {
-                // For link and reg. forum add it to the category
-                $return[$forum['forum_category']]['forums'][$forum['forum_id']] = $forum;
-
-                // Get the topic count
-                $return[$forum['forum_category']]['forums'][$forum['forum_id']]['topic_count'] =
-                Database::count('topics', [
-                    'forum_id' => [$forum['forum_id'], '='],
-                ])[0];
-
-                // Get the post count
-                $return[$forum['forum_category']]['forums'][$forum['forum_id']]['post_count'] =
-                Database::count('posts', [
-                    'forum_id' => [$forum['forum_id'], '='],
-                ])[0];
-
-                // Get last post in forum
-                $lastPost = Database::fetch('posts', false, [
-                    'forum_id' => [$forum['forum_id'], '='],
-                ], ['post_id', true]);
-
-                // Add last poster data and the details about the post as well
-                $return[$forum['forum_category']]['forums'][$forum['forum_id']]['last_poster'] = new User($lastPost['poster_id']);
-
-                // Add last poster data and the details about the post as well
-                $return[$forum['forum_category']]['forums'][$forum['forum_id']]['last_post'] = array_merge(
-                    empty($lastPost) ? [] : $lastPost,
-                    ['elapsed' => Main::timeElapsed($lastPost['post_time'])]
-                );
-            }
-        }
-
-        // Return the resorted data
-        return $return;
-    }
-
     // Get a forum or category
     public static function getForum($id)
     {
@@ -136,50 +80,6 @@ class Forums
 
         // Return the forum/category
         return $forum;
-    }
-
-    // Getting all topics from a forum
-    public static function getTopics($id)
-    {
-
-        // Get the topics from the database
-        $topics = Database::fetch('topics', true, [
-            'forum_id' => [$id, '='],
-        ]);
-
-        // Get the userdata related to last posts
-        foreach ($topics as $key => $topic) {
-            // Get the reply count
-            $topics[$key]['reply_count'] = Database::count('posts', [
-                'topic_id' => [$topic['topic_id'], '='],
-            ])[0];
-
-            // Get first post in topics
-            $firstPost = Database::fetch('posts', false, [
-                'topic_id' => [$topic['topic_id'], '='],
-            ]);
-
-            $topics[$key]['first_poster'] = new User($firstPost['poster_id']);
-
-            $topics[$key]['first_post'] = array_merge(
-                empty($firstPost) ? [] : $firstPost,
-                ['elapsed' => Main::timeElapsed($firstPost['post_time'])]
-            );
-
-            // Get last post in topics
-            $lastPost = Database::fetch('posts', false, [
-                'topic_id' => [$topic['topic_id'], '='],
-            ], ['post_id', true]);
-
-            $topics[$key]['last_poster'] = new User($lastPost['poster_id']);
-
-            $topics[$key]['last_post'] = array_merge(
-                empty($lastPost) ? [] : $lastPost,
-                ['elapsed' => Main::timeElapsed($lastPost['post_time'])]
-            );
-        }
-
-        return $topics;
     }
 
     // Get posts of a thread
