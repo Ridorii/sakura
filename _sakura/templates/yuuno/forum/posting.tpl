@@ -41,14 +41,9 @@
                     <div>
                         <input type="checkbox" id="enableEmotes" checked="checked" /> <label for="enableEmotes">Parse emoticons</label>
                     </div>
-                </div>
-                <div>
-                    <label for="parseMode">Parsing Mode:</label>
-                    <select id="parseMode" name="parseMode">
-                        <option value="0">None</option>
-                        <option value="1" selected="selected">BBCode</option>
-                        <option value="2">Markdown</option>
-                    </select>
+                    <div>
+                        <input type="checkbox" id="enableBBcode" checked="checked" /> <label for="enableBBcode">Parse BBcodes</label>
+                    </div>
                 </div>
                 <div class="clear"></div>
             </div>

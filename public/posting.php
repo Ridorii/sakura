@@ -172,23 +172,8 @@ if ($mode != 'f') {
 
 // Check if a post is being made
 if (isset($_POST['post'])) {
-    // Set post mode
-    switch ($_POST['parseMode']) {
-        // BBcode
-        case '1':
-            $parse = '1';
-            break;
-        // Markdown
-        case '2':
-            $parse = '2';
-            break;
-        // Raw
-        default:
-            $parse = '0';
-    }
-
     // Attempt to make the post
-    $makePost = Forums::createPost($currentUser->id(), $_POST['subject'], $_POST['text'], $forumId, $topicId, $parse, 1, 1);
+    $makePost = Forums::createPost($currentUser->id(), $_POST['subject'], $_POST['text'], $forumId, $topicId, 1, 1, 1);
 
     // Add page specific things
     $renderData['page'] = [

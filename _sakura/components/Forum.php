@@ -78,7 +78,7 @@ class Forum
     public function getThreads()
     {
         // Get all rows with the forum id for this forum
-        $threadRows = Database::fetch('topics', true, ['forum_id' => [$this->id, '=']]);
+        $threadRows = Database::fetch('topics', true, ['forum_id' => [$this->id, '=']], ['topic_last_reply', true]);
 
         // Create a storage array
         $threads = [];
@@ -128,5 +128,19 @@ class Forum
     public function postCount()
     {
         return Database::count('posts', ['forum_id' => [$this->id, '=']])[0];
+    }
+
+    // Read status
+    public function unread($user)
+    {
+        // Check each thread
+        foreach ($this->threads as $thread) {
+            if ($thread->unread($user)) {
+                return true;
+            }
+        }
+
+        // Return false if negative
+        return false;
     }
 }

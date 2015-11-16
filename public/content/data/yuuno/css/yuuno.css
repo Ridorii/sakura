@@ -1902,9 +1902,6 @@ textarea.inputStyling {
 .forum .topicList tbody .topicIcon {
     width: 40px;
     text-align: center;
-}
-
-.forum .topicList tbody .topicIcon.read {
     color: #444;
     text-shadow: 0 0 5px #444;
 }

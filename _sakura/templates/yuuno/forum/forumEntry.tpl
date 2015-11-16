@@ -1,5 +1,5 @@
 <div class="forumForum">
-    <div class="forumIcon read fa fa-3x {% if forum.icon %}{{ forum.icon }}{% else %}{% if forum.type == 2 %}fa-chevron-circle-right{% elseif forum.type == 1 %}fa-folder{% else %}fa-comments{% endif %}{% endif %}"></div>
+    <div class="forumIcon {% if forum.unread(user.id) %}unread {% endif %}fa fa-3x {% if forum.icon %}{{ forum.icon }}{% else %}{% if forum.type == 2 %}fa-chevron-circle-right{% elseif forum.type == 1 %}fa-folder{% else %}fa-comments{% endif %}{% endif %}"></div>
     <div class="forumTitle">
         <div class="name"><a href="{% if forum.type == 2 %}{{ forum.link }}{% else %}{{ urls.format('FORUM_SUB', [forum.id]) }}{% endif %}" class="default">{{ forum.name }}</a></div>
         <div class="desc">

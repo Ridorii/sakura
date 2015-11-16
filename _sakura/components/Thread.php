@@ -91,4 +91,65 @@ class Thread
     {
         return Main::timeElapsed($this->statusChange);
     }
+
+    // Read status
+    public function unread($user)
+    {
+        // Attempt to get track row from the database
+        $track = Database::fetch('topics_track', false, ['user_id' => [$user, '='], 'topic_id' => [$this->id, '=']]);
+
+        // If nothing was returned it's obvious that the status is unread
+        if (!$track) {
+            return true;
+        }
+
+        // Check if the last time the user has been here is less than the creation timestamp of the latest post
+        if ($track['mark_time'] < $this->lastPost->time) {
+            return true;
+        }
+
+        // Else just return false meaning everything is read
+        return false;
+    }
+
+    // Update read status
+    public function trackUpdate($user)
+    {
+        // Check if we already have a track record
+        $track = Database::fetch('topics_track', false, ['user_id' => [$user, '='], 'topic_id' => [$this->id, '='], 'forum_id' => [$this->forum, '=']]);
+
+        // If so update it
+        if ($track) {
+            Database::update('topics_track', [
+                [
+                    'mark_time' => time(),
+                ],
+                [
+                    'user_id' => [$user, '='],
+                    'topic_id' => [$this->id, '='],
+                ],
+            ]);
+        } else {
+            // If not create a new record
+            Database::insert('topics_track', [
+                'user_id' => $user,
+                'topic_id' => $this->id,
+                'forum_id' => $this->forum,
+                'mark_time' => time(),
+            ]);
+        }
+    }
+
+    // Update views
+    public function viewsUpdate()
+    {
+        Database::update('topics', [
+            [
+                'topic_views' => $this->views + 1,
+            ],
+            [
+                'topic_id' => [$this->id, '='],
+            ],
+        ]);
+    }
 }

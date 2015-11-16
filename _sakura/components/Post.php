@@ -53,7 +53,8 @@ class Post
         }
 
         // Parse the markup
-        $this->parsed = Forums::parseMarkUp($this->text, $this->parse, $this->emotes);
+        $this->parsed = $this->parse ? Main::bbParse($this->text) : $this->text;
+        $this->parsed = $this->emotes ? Main::parseEmotes($this->parsed) : $this->parsed;
     }
 
     // Time elapsed since creation

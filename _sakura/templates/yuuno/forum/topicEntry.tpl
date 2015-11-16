@@ -1,5 +1,5 @@
 <tr>
-    <td class="topicIcon read">
+    <td class="topicIcon{% if thread.unread(user.id) %} unread{% endif %}">
         <div class="fa fa-2x fa-{% if thread.status == 1 %}lock{% elseif thread.type == 2 %}exclamation{% elseif thread.type == 1 %}thumb-tack{% else %}navicon{% endif %}"></div>
     </td>
     <td class="topicTitle">

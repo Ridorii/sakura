@@ -40,6 +40,12 @@ if (!$thread) {
     exit;
 }
 
+// Update the tracking status
+$thread->trackUpdate($currentUser->id());
+
+// Update views
+$thread->viewsUpdate();
+
 // Set additional render data
 $renderData = array_merge($renderData, [
     'thread' => $thread,

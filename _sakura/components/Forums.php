@@ -266,10 +266,8 @@ class Forums
         // Switch between modes
         switch ($mode) {
             case 1:
-                return Main::bbParse($text);
-
             case 2:
-                return Main::mdParse($text);
+                return Main::bbParse($text);
 
             case 0:
             default:
@@ -338,6 +336,16 @@ class Forums
         // Fetch the last insert
         $getPost = Database::fetch('posts', false, [
             'post_id' => [Database::lastInsertID(), '='],
+        ]);
+
+        // Update the topic with the last details
+        Database::update('topics', [
+            [
+                'topic_last_reply' => time(),
+            ],
+            [
+                'topic_id' => [$getPost['topic_id'], '='],
+            ],
         ]);
 
         // Return success
