@@ -20,13 +20,13 @@ $topicId = isset($_GET['t']) ?
 $_GET['t'] :
 (
     isset($_GET['p']) ?
-    Forums::getTopicIdFromPostId($_GET['p']) :
+    Board\Forums::getTopicIdFromPostId($_GET['p']) :
     0
 );
 
 $forumId = isset($_GET['f']) ?
 $_GET['f'] :
-Forums::getForumIdFromTopicId($topicId);
+Board\Forums::getForumIdFromTopicId($topicId);
 
 $mode = isset($_GET['f']) ? 'f' : (isset($_GET['t']) ? 't' : (isset($_GET['p']) ? 'p' : null));
 
@@ -39,7 +39,7 @@ $posting = [
 // Check if we're in reply mode
 if ($mode != 'f') {
     // Attempt to get the topic
-    $thread = Forums::getTopic($topicId, true);
+    $thread = Board\Forums::getTopic($topicId, true);
 
     // Prompt an error if the topic doesn't exist
     if (!$thread) {
@@ -120,7 +120,7 @@ if ($mode != 'f') {
                 ]);
 
                 // Reload the topic
-                $thread = Forums::getTopic($topicId, true);
+                $thread = Board\Forums::getTopic($topicId, true);
 
                 // If there's no more posts left in the topic delete it as well
                 if (!count($thread['posts'])) {
@@ -173,7 +173,7 @@ if ($mode != 'f') {
 // Check if a post is being made
 if (isset($_POST['post'])) {
     // Attempt to make the post
-    $makePost = Forums::createPost($currentUser->id(), $_POST['subject'], $_POST['text'], $forumId, $topicId, 1, 1, 1);
+    $makePost = Board\Forums::createPost($currentUser->id(), $_POST['subject'], $_POST['text'], $forumId, $topicId, 1, 1, 1);
 
     // Add page specific things
     $renderData['page'] = [

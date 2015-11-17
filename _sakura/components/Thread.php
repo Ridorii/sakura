@@ -3,7 +3,9 @@
  * Thread class
  */
 
-namespace Sakura;
+namespace Sakura\Board;
+
+use Sakura\Database;
 
 /**
  * Class Thread

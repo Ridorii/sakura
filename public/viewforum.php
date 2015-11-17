@@ -10,7 +10,7 @@ namespace Sakura;
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
 // Get the forum's data
-$forum = new Forum(isset($_GET['f']) ? $_GET['f'] : -1);
+$forum = new Board\Forum(isset($_GET['f']) ? $_GET['f'] : -1);
 
 // Initialise templating engine
 $template = new Template();
