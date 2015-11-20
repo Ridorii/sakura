@@ -533,6 +533,14 @@ class Main
     // Get country code from CloudFlare header (which just returns XX if not found)
     public static function getCountryCode()
     {
+        // Attempt to get country code using PHP's built in geo thing
+        if (function_exists("geoip_country_code_by_name")) {
+            $code = geoip_country_code_by_name(self::getRemoteIP());
+            // Check if $code is anything
+            if ($code) {
+                return $code;
+            }
+        }
 
         // Check if the required header is set and return it
         if (isset($_SERVER['HTTP_CF_IPCOUNTRY'])) {
