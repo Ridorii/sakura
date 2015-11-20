@@ -18,7 +18,6 @@ class Session
     // Initialise new session
     public function __construct($userId, $sessionId = null)
     {
-
         // Set the supposed session data
         $this->userId = $userId;
         $this->sessionId = $sessionId;
@@ -32,7 +31,6 @@ class Session
     // Destroy this session
     public function destroy()
     {
-
         // Invalidate the session key
         Database::delete('sessions', [
             'session_key' => [$this->sessionId, '='],
@@ -49,10 +47,19 @@ class Session
         }
     }
 
+    // Destroy all sessions keys for this user
+    public function destroyAll()
+    {
+        // Delete all database entries with this user in it
+        Database::delete('sessions', ['user_id' => [$this->userId, '=']]);
+
+        // Destroy this session to finish it off
+        $this->destroy();
+    }
+
     // Create a new session
     public function create($permanent)
     {
-
         // Generate session key
         $session = hash('sha256', $this->userId . base64_encode('sakura' . mt_rand(0, 99999999)) . time());
 
@@ -74,7 +81,6 @@ class Session
     // Validate an apparently existing session
     public function validate()
     {
-
         // Get session from database
         $session = Database::fetch('sessions', false, [
             'user_id' => [$this->userId, '='],
