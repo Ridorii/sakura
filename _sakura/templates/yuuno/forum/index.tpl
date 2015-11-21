@@ -4,6 +4,8 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% set forumMarkRead %}{{ urls.format('FORUM_MARK_READ', [forum.id, php.sessionid]) }}{% endset %}
+
 {% block content %}
     <div class="content homepage forum">
         <div class="content-right content-column">
@@ -11,6 +13,7 @@
         </div>
         <div class="content-left content-column">
             {% include 'forum/forum.tpl' %}
+            {% include 'forum/forumBtns.tpl' %}
         </div>
         <div class="clear"></div>
     </div>

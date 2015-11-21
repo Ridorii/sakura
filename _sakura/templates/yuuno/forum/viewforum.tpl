@@ -4,6 +4,7 @@
 
 {% set forumBackLink %}{{ urls.format('FORUM_INDEX') }}{% endset %}
 {% set forumNewLink %}{{ urls.format('FORUM_NEW_THREAD', [forum.id]) }}{% endset %}
+{% set forumMarkRead %}{{ urls.format('FORUM_MARK_READ', [forum.id, php.sessionid]) }}{% endset %}
 
 {% block title %}{{ title }}{% endblock %}
 

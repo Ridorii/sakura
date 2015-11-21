@@ -27,7 +27,7 @@
 {% block content %}
     <div class="content">
         <div class="content-column news">
-            <div class="head">{{ title }}{% if not (viewPost and postExists) %}<a href="{{ urls.format('SITE_NEWS_RSS') }}" class="fa fa-rss news-rss default"></a>{% endif %}</div>
+            <div class="head">{{ title }}{% if not (viewPost and postExists) %}<div class="links"><a href="{{ urls.format('SITE_NEWS_RSS') }}" class="fa fa-rss news-rss default"></a></div>{% endif %}</div>
             {% if (viewPost ? postExists : newsPosts|length) %}
                 {% for post in newsPosts %}
                     {% include 'elements/newsPost.tpl' %}

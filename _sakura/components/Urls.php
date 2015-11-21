@@ -107,6 +107,10 @@ class Urls
             '/viewforum.php?f=%u',
             '/forum/%u',
         ],
+        'FORUM_MARK_READ' => [
+            '/viewforum.php?f=%u&read=true&session=%s',
+            '/forum/%u?read=true&session=%s',
+        ],
         'FORUM_THREAD' => [
             '/viewtopic.php?t=%u',
             '/forum/thread/%u',

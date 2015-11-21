@@ -19,11 +19,11 @@ $template = new Template();
 $template->setTemplate($templateName);
 
 // Check if the forum exists
-if (!$forum) {
+if ($forum->id < 0) {
     // Set render data
     $renderData['page'] = [
         'title' => 'Information',
-        'message' => 'The subforum you tried to access does not exist.',
+        'message' => 'The forum you tried to access does not exist.',
     ];
 
     // Set parse variables
@@ -48,6 +48,32 @@ if ($forum->type === 2) {
 
     // Print page contents
     echo $template->render('global/information.tpl');
+    exit;
+}
+
+// Check if we're marking as read
+if (isset($_GET['read']) && $_GET['read'] && isset($_GET['session']) && $_GET['session'] == session_id()) {
+    // Run the function
+    $forum->trackUpdateAll($currentUser->id());
+
+    // Set render data
+    $renderData['page'] = [
+        'title' => 'Information',
+        'message' => 'All threads have been marked as read.',
+        'redirect' => $urls->format('FORUM_SUB', [$forum->id]),
+    ];
+
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/information.tpl');
+    exit;
+}
+
+// Redirect forum id 0 to the main page
+if ($forum->id === 0) {
+    header('Location: ' . $urls->format('FORUM_INDEX'));
     exit;
 }
 

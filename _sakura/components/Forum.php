@@ -80,7 +80,12 @@ class Forum
     public function getThreads()
     {
         // Get all rows with the forum id for this forum
-        $threadRows = Database::fetch('topics', true, ['forum_id' => [$this->id, '=']], ['topic_last_reply', true]);
+        $announcements = Database::fetch('topics', true, ['forum_id' => [$this->id, '='], 'topic_type' => ['2', '=']], ['topic_last_reply', true]);
+        $sticky = Database::fetch('topics', true, ['forum_id' => [$this->id, '='], 'topic_type' => ['1', '=']], ['topic_last_reply', true]);
+        $regular = Database::fetch('topics', true, ['forum_id' => [$this->id, '='], 'topic_type' => ['0', '=']], ['topic_last_reply', true]);
+
+        // Combine them into one array
+        $threadRows = array_merge($announcements, $sticky, $regular);
 
         // Create a storage array
         $threads = [];
@@ -135,6 +140,18 @@ class Forum
     // Read status
     public function unread($user)
     {
+        // Return false if the user id is less than 1
+        if ($user < 1) {
+            return false;
+        }
+
+        // Check forums
+        foreach ($this->forums as $forum) {
+            if ($forum->unread($user)) {
+                return true;
+            }
+        }
+
         // Check each thread
         foreach ($this->threads as $thread) {
             if ($thread->unread($user)) {
@@ -144,5 +161,21 @@ class Forum
 
         // Return false if negative
         return false;
+    }
+
+    // Mark all threads as read
+    public function trackUpdateAll($user)
+    {
+        // Iterate over every forum
+        foreach ($this->forums as $forum) {
+            // Update every forum
+            $forum->trackUpdateAll($user);
+        }
+
+        // Iterate over every thread
+        foreach ($this->threads as $thread) {
+            // Update every thread
+            $thread->trackUpdate($user);
+        }
     }
 }
