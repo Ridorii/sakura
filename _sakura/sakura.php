@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151121');
+define('SAKURA_VERSION', '20151122');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 define('SAKURA_STABLE', false);
@@ -31,12 +31,32 @@ if (version_compare(phpversion(), '5.4.0', '<')) {
 require_once ROOT . '_sakura/vendor/autoload.php';
 
 // Include components
-foreach (glob(ROOT . '_sakura/components/*.php') as $component) {
-    require_once $component;
-}
+require_once ROOT . '_sakura/components/Bans.php';
+require_once ROOT . '_sakura/components/Comments.php';
+require_once ROOT . '_sakura/components/Config.php';
+require_once ROOT . '_sakura/components/Database.php';
+require_once ROOT . '_sakura/components/File.php';
+require_once ROOT . '_sakura/components/Hashing.php';
+require_once ROOT . '_sakura/components/Main.php';
+require_once ROOT . '_sakura/components/Manage.php';
+require_once ROOT . '_sakura/components/News.php';
+require_once ROOT . '_sakura/components/Payments.php';
+require_once ROOT . '_sakura/components/Permissions.php';
+require_once ROOT . '_sakura/components/Rank.php';
+require_once ROOT . '_sakura/components/Session.php';
+require_once ROOT . '_sakura/components/Template.php';
+require_once ROOT . '_sakura/components/Trick.php';
+require_once ROOT . '_sakura/components/Urls.php';
+require_once ROOT . '_sakura/components/User.php';
+require_once ROOT . '_sakura/components/Users.php';
+require_once ROOT . '_sakura/components/Whois.php';
+require_once ROOT . '_sakura/components/Forum/Forum.php';
+require_once ROOT . '_sakura/components/Forum/Forums.php';
+require_once ROOT . '_sakura/components/Forum/Post.php';
+require_once ROOT . '_sakura/components/Forum/Thread.php';
 
 // Include database extensions
-foreach (glob(ROOT . '_sakura/components/database/*.php') as $driver) {
+foreach (glob(ROOT . '_sakura/components/DBWrapper/*.php') as $driver) {
     require_once $driver;
 }
 

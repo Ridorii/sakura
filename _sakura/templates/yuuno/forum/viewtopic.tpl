@@ -26,7 +26,7 @@
                             {% endif %}
                             <div class="userdata">
                                 <div class="usertitle">{{ post.poster.userTitle }}</div>
-                                <img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi"{% if not post.poster.isPremium[0] %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.contentPath }}/images/flags/{{ post.poster.country.short|lower }}.png" alt="{{ post.poster.country.long }}" />
+                                <img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi"{% if not post.poster.isPremium[0] %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.contentPath }}/images/flags/{{ post.poster.country.short|lower }}.png" alt="{{ post.poster.country.long }}" />{% if post.poster.id == (thread.posts|first).poster.id %} <img src="{{ sakura.contentPath }}/images/op.png" alt="OP" title="Original Poster" />{% endif %}
                                 {% if session.checkLogin %}
                                 <div class="actions">
                                     {% if user.id == post.poster.id %}

@@ -3,7 +3,7 @@
  * Post class
  */
 
-namespace Sakura\Board;
+namespace Sakura\Forum;
 
 use Sakura\Main;
 use Sakura\Database;

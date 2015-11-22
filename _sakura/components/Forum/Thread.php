@@ -3,7 +3,7 @@
  * Thread class
  */
 
-namespace Sakura\Board;
+namespace Sakura\Forum;
 
 use Sakura\Database;
 

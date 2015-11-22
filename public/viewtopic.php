@@ -10,14 +10,14 @@ namespace Sakura;
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
 
 // Attempt to get the thread
-$thread = new Board\Thread(
+$thread = new Forum\Thread(
     isset($_GET['p'])
-    ? Board\Forums::getTopicIdFromPostId($_GET['p'])
+    ? Forum\Forums::getTopicIdFromPostId($_GET['p'])
     : (isset($_GET['t']) ? $_GET['t'] : 0)
 );
 
 // And attempt to get the forum
-$forum = new Board\Forum($thread->forum);
+$forum = new Forum\Forum($thread->forum);
 
 // Initialise templating engine
 $template = new Template();
