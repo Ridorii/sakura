@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151122');
+define('SAKURA_VERSION', '20151125');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 define('SAKURA_STABLE', false);
@@ -50,6 +50,9 @@ require_once ROOT . '_sakura/components/Urls.php';
 require_once ROOT . '_sakura/components/User.php';
 require_once ROOT . '_sakura/components/Users.php';
 require_once ROOT . '_sakura/components/Whois.php';
+require_once ROOT . '_sakura/components/BBcode/BBcode.php';
+require_once ROOT . '_sakura/components/BBcode/Parse.php';
+require_once ROOT . '_sakura/components/BBcode/Store.php';
 require_once ROOT . '_sakura/components/Forum/Forum.php';
 require_once ROOT . '_sakura/components/Forum/Forums.php';
 require_once ROOT . '_sakura/components/Forum/Post.php';

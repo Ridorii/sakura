@@ -8,6 +8,7 @@ namespace Sakura\Forum;
 use Sakura\Main;
 use Sakura\Database;
 use Sakura\User;
+use Sakura\BBcode\BBcode;
 
 /**
  * Class Post

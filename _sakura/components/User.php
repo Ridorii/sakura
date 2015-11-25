@@ -704,7 +704,7 @@ class User
         ], ['change_id', true]);
 
         // Check if anything was returned
-        if ($getOld) {
+        if ($getOld && $getOld['user_id'] != $this->id()) {
             return [0, 'TOO_RECENT', $getOld['change_time']];
         }
 
