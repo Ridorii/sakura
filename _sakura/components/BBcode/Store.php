@@ -5,6 +5,8 @@
 
 namespace Sakura\BBcode;
 
+use Sakura\Database;
+
 class Store
 {
     // Text
@@ -137,32 +139,6 @@ class Store
         return $text;
     }
 
-    public function parseEmotes($text)
-    {
-        $match = [];
-        $replace = [];
-
-        foreach ($this->emoticons as $emote) {
-            $match[] = '(?<=^|[\n .])' . preg_quote($emote['code'], '#') . '(?![^<>]*>)';
-            $replace[] = '<!-- s' . $emote['code'] . ' --><img src="' . $emote['url'] . '" alt="' . $emote['code'] . '" /><!-- s' . $emote['code'] . ' -->';
-        }
-
-        if (count($match)) {
-            $text = trim(
-                preg_replace(
-                    explode(
-                        chr(0),
-                        '#' . implode('#' . chr(0) . '#', $match) . '#'
-                    ),
-                    $replace,
-                    $text
-                )
-            );
-        }
-
-        return $text;
-    }
-
     public function parseUrl($text)
     {
         $urlPattern = '(?:https?|ftp)://.+?';
@@ -230,7 +206,6 @@ class Store
     // Generator
     public function generate()
     {
-        // Get the text
         $text = htmlentities($this->text);
 
         $text = $this->parseCode($text);

@@ -20,16 +20,15 @@ if (!isset($sockSakuraPath)) {
 require_once $sockSakuraPath . '/sakura.php';
 
 use Sakura\Permissions;
-use Sakura\Session;
 use Sakura\User;
 use Sakura\Users;
 use sockchat\Auth;
 
 if (Auth::getPageType() == AUTH_FETCH) {
     // Check if user is logged into the Sakura backend if not deny
-    if (Users::checkLogin()) {
+    if ($data = Users::checkLogin()) {
         // If so append the required arguments and accept
-        Auth::AppendArguments([Session::$userId, Session::$sessionId]);
+        Auth::AppendArguments([$data[0], $data[1]]);
         Auth::Accept();
     } else {
         Auth::Deny();
@@ -40,7 +39,7 @@ if (Auth::getPageType() == AUTH_FETCH) {
     $sid = $_REQUEST['arg2'];
 
     // Check if session is active else deny
-    if (new Session($uid, $sid)) {
+    if ($data = Users::checkLogin($uid, $sid)) {
         // Check if they can access the chat
         if (Permissions::check('SITE', 'DEACTIVATED', $uid, 1) || Permissions::check('SITE', 'RESTRICTED', $uid, 1)) {
             Auth::Deny();
@@ -53,14 +52,14 @@ if (Auth::getPageType() == AUTH_FETCH) {
 
         // Set the user's data
         Auth::SetUserData(
-            $user->data['user_id'],
-            $user->data['username'],
+            $user->id(),
+            $user->username(),
             $user->colour()
         );
 
         // Set the common permissions
         Auth::SetCommonPermissions(
-            $user->mainRank['hierarchy'],
+            $user->mainRank()['hierarchy'],
             Permissions::check('MANAGE', 'USE_MANAGE', $uid, 1) ? 1 : 0,
             Permissions::check('SITE', 'CREATE_BACKGROUND', $uid, 1) ? 1 : 0,
             Permissions::check('SITE', 'CHANGE_USERNAME', $uid, 1) ? 1 : 0,

@@ -37,7 +37,7 @@ class BBcode
         return $store;
     }
 
-    // Convert to storage format
+    // Convert to HTML
     public function toHTML()
     {
         // Create new Parse
@@ -45,6 +45,19 @@ class BBcode
 
         // Parse
         $parse = $parse->parse();
+
+        // And return
+        return $parse;
+    }
+
+    // Convert to plain text
+    public function toEditor()
+    {
+        // Create new Parse
+        $parse = new Parse($this->text, $this->seed);
+
+        // Parse
+        $parse = $parse->toEditor();
 
         // And return
         return $parse;

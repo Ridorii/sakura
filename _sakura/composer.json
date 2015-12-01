@@ -6,6 +6,7 @@
         "twig/twig": "*",
         "phpmailer/phpmailer": "*",
         "erusev/parsedown": "*",
-        "paypal/rest-api-sdk-php": "*"
+        "paypal/rest-api-sdk-php": "*",
+        "ezyang/htmlpurifier": "^4.7"
     }
 }

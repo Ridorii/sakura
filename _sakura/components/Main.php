@@ -17,7 +17,6 @@ class Main
     // Constructor
     public static function init($config)
     {
-
         // Configuration Management and local configuration
         Config::init($config);
 

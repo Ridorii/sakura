@@ -60,7 +60,7 @@ class Template
 
         // Enable caching
         if (Config::getConfig('enable_tpl_cache')) {
-            $twigEnv['cache'] = ROOT . 'cache';
+            $twigEnv['cache'] = ROOT . 'cache/twig';
         }
 
         // And now actually initialise the templating engine

@@ -47,9 +47,7 @@ class Post
             $this->poster = new User($postRow['poster_id']);
             $this->ip = $postRow['poster_ip'];
             $this->time = $postRow['post_time'];
-            $this->parse = $postRow['post_parse'];
             $this->signature = $postRow['post_signature'];
-            $this->emotes = $postRow['post_emotes'];
             $this->subject = $postRow['post_subject'];
             $this->text = $postRow['post_text'];
             $this->editTime = $postRow['post_edit_time'];
@@ -58,8 +56,9 @@ class Post
         }
 
         // Parse the markup
-        $this->parsed = $this->parse ? Main::bbParse($this->text) : $this->text;
-        $this->parsed = $this->emotes ? Main::parseEmotes($this->parsed) : $this->parsed;
+        $bbcode = new BBcode($this->text);
+
+        $this->parsed = $bbcode->toHTML();
     }
 
     // Time elapsed since creation

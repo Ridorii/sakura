@@ -8,6 +8,7 @@ namespace Sakura\Forum;
 use Sakura\Main;
 use Sakura\Database;
 use Sakura\User;
+use Sakura\BBcode\BBcode;
 
 /**
  * Class Forums
@@ -208,7 +209,7 @@ class Forums
                 'user' => (new User($post['poster_id'])),
                 'elapsed' => Main::timeElapsed($post['post_time']),
                 'is_op' => ($post['poster_id'] == $firstPost['poster_id'] ? '1' : '0'),
-                'parsed_post' => self::parseMarkUp($post['post_text'], $post['post_parse'], $post['post_emotes']),
+                'parsed_post' => self::parseMarkUp($post['post_text'], 1, 1),
             ]);
 
             // Just in case
@@ -307,6 +308,10 @@ class Forums
         // Check if we're replying to a thread
         $getThread = Database::fetch('topics', false, ['topic_id' => [$topic, '=']]);
 
+        // Convert the text to storage format
+        $bbcode = new BBcode($text);
+        $text = $bbcode->toStore();
+
         // If nothing was returned create a new thread
         if (!$getThread) {
             // Insert the required data
@@ -330,9 +335,7 @@ class Forums
             'forum_id' => $getThread['forum_id'],
             'poster_id' => $poster,
             'post_time' => time(),
-            'post_parse' => $parse,
             'post_signature' => $signature,
-            'post_emotes' => $emotes,
             'post_subject' => $title,
             'post_text' => $text,
         ]);

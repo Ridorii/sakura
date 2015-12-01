@@ -5,6 +5,10 @@
 
 namespace Sakura\BBcode;
 
+use \HTMLPurifier;
+use \HTMLPurifier_Config;
+use Sakura\Main;
+
 class Parse
 {
     // Text
@@ -72,7 +76,7 @@ class Parse
 
     public function parseQuote($text)
     {
-        $text = preg_replace("#\[quote=&quot;([^:]+)&quot;:{$this->seed}\]#", '<h4>\\1 wrote:</h4><blockquote>', $text);
+        $text = preg_replace("#\[quote=&quot;([^:]+)&quot;:{$this->seed}\]#", '<blockquote><h4>\\1 wrote:</h4>', $text);
         $text = str_replace("[quote:{$this->seed}]", '<blockquote>', $text);
         $text = str_replace("[/quote:{$this->seed}]", '</blockquote>', $text);
 
@@ -118,12 +122,26 @@ class Parse
         return $text;
     }
 
+    public function purify($text)
+    {
+        $config = HTMLPurifier_Config::createDefault();
+        $config->set('Cache.SerializerPath', ROOT . 'cache/htmlpurifier');
+        $config->set('Attr.AllowedRel', ['nofollow']);
+        $config->set('HTML.Trusted', true);
+
+        $def = $config->getHTMLDefinition(true);
+
+        $def->addAttribute('img', 'src', 'Text');
+
+        $purifier = new HTMLPurifier($config);
+
+        return $purifier->purify($text);
+    }
+
     public function parse()
     {
         // Get text
         $text = $this->text;
-
-        $text = str_replace("\n", '<br />', $text);
 
         $text = $this->parseCode($text);
         $text = $this->parseList($text);
@@ -135,6 +153,26 @@ class Parse
         $text = $this->parseSimple($text);
         $text = $this->parseUrl($text);
 
+        $text = Main::parseEmotes($text);
+        
+        $text = str_replace("\n", '<br />', $text);
+        //$text = $this->purify($text);
+
         return $text;
+    }
+    
+    public function toEditor()
+    {
+        $text = $this->text;
+
+        $text = str_replace("[/*:m:{$this->seed}]", '', $text);
+
+        $text = preg_replace("#\[/list:[ou]:{$this->seed}\]#", '[/list]', $text);
+
+        $text = str_replace(":{$this->seed}]", ']', $text);
+
+        $text = preg_replace('#<!-- ([emw]) --><a.*?>(.*?)</a><!-- \\1 -->#', '\\2', $text);
+
+        return html_entity_decode($text);
     }
 }

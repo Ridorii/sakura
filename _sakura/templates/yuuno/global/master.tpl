@@ -267,6 +267,7 @@
                 </div>
             </div>
         </div>
+        <script type="text/javascript" src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
         {% if not sakura.versionInfo.stable and php.self == '/index.php' and stats %}
         <script type="text/javascript" src="https://sakura.flash.moe/?get={{ sakura.versionInfo.version|slice(0, 4) }}-{{ sakura.versionInfo.version|slice(4, 2) }}-{{ sakura.versionInfo.version|slice(6, 2) }}&amp;variable=true"></script>
         <script type="text/javascript">
