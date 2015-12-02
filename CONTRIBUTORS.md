@@ -17,3 +17,4 @@ This is a list of people who have contributed to Sakura and also a list of the l
 - [Parsedown](http://parsedown.org/)
 - [PHPMailer](https://github.com/PHPMailer/PHPMailer)
 - [PayPal API](https://paypal.com/)
+- [jBBCode](http://jbbcode.com/)

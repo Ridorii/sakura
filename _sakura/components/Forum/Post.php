@@ -8,7 +8,7 @@ namespace Sakura\Forum;
 use Sakura\Main;
 use Sakura\Database;
 use Sakura\User;
-use Sakura\BBcode\BBcode;
+use Sakura\BBcode;
 
 /**
  * Class Post
@@ -56,9 +56,7 @@ class Post
         }
 
         // Parse the markup
-        $bbcode = new BBcode($this->text);
-
-        $this->parsed = $bbcode->toHTML();
+        $this->parsed = (new BBcode(htmlentities($this->text)))->toHTML();
     }
 
     // Time elapsed since creation

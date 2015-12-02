@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151125');
+define('SAKURA_VERSION', '20151202');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 define('SAKURA_STABLE', false);
@@ -32,6 +32,7 @@ require_once ROOT . '_sakura/vendor/autoload.php';
 
 // Include components
 require_once ROOT . '_sakura/components/Bans.php';
+require_once ROOT . '_sakura/components/BBcode.php';
 require_once ROOT . '_sakura/components/Comments.php';
 require_once ROOT . '_sakura/components/Config.php';
 require_once ROOT . '_sakura/components/Database.php';
@@ -50,9 +51,6 @@ require_once ROOT . '_sakura/components/Urls.php';
 require_once ROOT . '_sakura/components/User.php';
 require_once ROOT . '_sakura/components/Users.php';
 require_once ROOT . '_sakura/components/Whois.php';
-require_once ROOT . '_sakura/components/BBcode/BBcode.php';
-require_once ROOT . '_sakura/components/BBcode/Parse.php';
-require_once ROOT . '_sakura/components/BBcode/Store.php';
 require_once ROOT . '_sakura/components/Forum/Forum.php';
 require_once ROOT . '_sakura/components/Forum/Forums.php';
 require_once ROOT . '_sakura/components/Forum/Post.php';
@@ -184,11 +182,9 @@ if (!defined('SAKURA_NO_TPL')) {
     if (Config::getConfig('site_closed')) {
         // Additional render data
         $renderData = array_merge($renderData, [
-
             'page' => [
                 'message' => Config::getConfig('site_closed_reason'),
             ],
-
         ]);
 
         // Initialise templating engine

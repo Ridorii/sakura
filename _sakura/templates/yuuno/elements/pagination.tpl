@@ -1,4 +1,4 @@
-{% set paginationSeparator %}{% if '?' in paginationUrl %}&amp;{% else %}?{% endif %}{% endset %}
+{% set paginationSeparator %}{% if '%3F' in paginationUrl|url_encode %}&amp;{% else %}?{% endif %}{% endset %}
 {% set paginationPage = get.page|default(1) %}
 
 <div class="pagination{% if paginationClass %} {{ paginationClass }}{% endif %}">

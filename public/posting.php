@@ -33,7 +33,6 @@ $mode = isset($_GET['f']) ? 'f' : (isset($_GET['t']) ? 't' : (isset($_GET['p']) 
 // Include emotes and bbcodes
 $posting = [
     'emoticons' => Main::getEmotes(),
-    'bbcodes' => Main::getBBcodes(),
 ];
 
 // Check if we're in reply mode
@@ -63,7 +62,7 @@ if ($mode != 'f') {
         $post = $thread['posts'][$_GET['p']];
 
         // Add subject to render data
-        $posting['text'] = '[quote]' . (new BBcode\BBcode($post['post_text']))->toEditor() . '[/quote]';
+        $posting['text'] = '[quote]' . (new BBcode($post['post_text']))->toEditor() . '[/quote]';
 
         // Post editing
     } elseif ($mode == 'p' && isset($_GET['edit']) && $_GET['edit'] == $_GET['p'] && array_key_exists($_GET['p'], $thread['posts'])) {
@@ -89,7 +88,7 @@ if ($mode != 'f') {
         // Set variables
         $posting = array_merge($posting, [
             'subject' => $post['post_subject'],
-            'text' => (new BBcode\BBcode($post['post_text']))->toEditor(),
+            'text' => (new BBcode($post['post_text']))->toEditor(),
             'id' => $post['post_id'],
         ]);
         // Post deletion

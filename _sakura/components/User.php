@@ -659,13 +659,11 @@ class User
     public function signature()
     {
         return isset($this->data['user_data']['signature']) ?
-        Main::bbParse(
-            Main::parseEmotes(
-                base64_decode(
-                    $this->data['user_data']['signature']
-                )
+        (new BBcode(
+            base64_decode(
+                $this->data['user_data']['signature']
             )
-        ) :
+        ))->toHTML() :
         null;
     }
 

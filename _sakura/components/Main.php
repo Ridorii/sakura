@@ -37,36 +37,6 @@ class Main
         $pd->text($text);
     }
 
-    // Get bbcodes
-    public static function getBBcodes()
-    {
-        return Database::fetch('bbcodes');
-    }
-
-    // Parse bbcodes
-    public static function bbParse($text)
-    {
-
-        // Get bbcode regex from the database
-        $bbcodes = Database::fetch('bbcodes');
-
-        // Split the regex
-        $regex = array_map(function ($arr) {
-            return $arr['bbcode_regex'];
-        }, $bbcodes);
-
-        // Split the replacement
-        $replace = array_map(function ($arr) {
-            return $arr['bbcode_replace'];
-        }, $bbcodes);
-
-        // Do the replacement
-        $text = preg_replace($regex, $replace, $text);
-
-        // Return the parsed text
-        return $text;
-    }
-
     // Get emoticons
     public static function getEmotes()
     {
@@ -78,7 +48,7 @@ class Main
     {
 
         // Get emoticons from the database
-        $emotes = Database::fetch('emoticons');
+        $emotes = self::getEmotes();
 
         // Do the replacements
         foreach ($emotes as $emote) {

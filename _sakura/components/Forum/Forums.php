@@ -8,7 +8,7 @@ namespace Sakura\Forum;
 use Sakura\Main;
 use Sakura\Database;
 use Sakura\User;
-use Sakura\BBcode\BBcode;
+use Sakura\BBcode;
 
 /**
  * Class Forums
@@ -209,7 +209,7 @@ class Forums
                 'user' => (new User($post['poster_id'])),
                 'elapsed' => Main::timeElapsed($post['post_time']),
                 'is_op' => ($post['poster_id'] == $firstPost['poster_id'] ? '1' : '0'),
-                'parsed_post' => self::parseMarkUp($post['post_text'], 1, 1),
+                'parsed_post' => (new BBcode($post['post_text']))->toHTML(),
             ]);
 
             // Just in case
@@ -256,30 +256,6 @@ class Forums
         return $post['topic_id'];
     }
 
-    // Parse different markup flavours
-    public static function parseMarkUp($text, $mode, $emotes = 1)
-    {
-
-        // Clean string
-        $text = Main::cleanString($text);
-
-        // Parse emotes
-        if ($emotes) {
-            $text = Main::parseEmotes($text);
-        }
-
-        // Switch between modes
-        switch ($mode) {
-            case 1:
-            case 2:
-                return Main::bbParse($text);
-
-            case 0:
-            default:
-                return $text;
-        }
-    }
-
     // Get forum statistics of a user
     public static function getUserStats($uid)
     {
@@ -307,10 +283,6 @@ class Forums
 
         // Check if we're replying to a thread
         $getThread = Database::fetch('topics', false, ['topic_id' => [$topic, '=']]);
-
-        // Convert the text to storage format
-        $bbcode = new BBcode($text);
-        $text = $bbcode->toStore();
 
         // If nothing was returned create a new thread
         if (!$getThread) {
