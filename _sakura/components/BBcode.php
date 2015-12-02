@@ -19,7 +19,8 @@ class BBcode
     private $bbcode;
 
     // Constructor
-    public function __construct($text = null) {
+    public function __construct($text = null)
+    {
         // Create new parser class
         $this->bbcode = new Parser();
 
@@ -33,7 +34,8 @@ class BBcode
     }
 
     // Add basic bbcodes
-    public function loadStandardCodes() {
+    public function loadStandardCodes()
+    {
         // Add the standard definitions
         $this->bbcode->addCodeDefinitionSet(new DefaultCodeDefinitionSet());
 
@@ -86,22 +88,26 @@ class BBcode
     }
 
     // Set text
-    public function text($text) {
+    public function text($text)
+    {
         $this->bbcode->parse($text);
     }
 
     // Get as HTML
-    public function toHTML() {
+    public function toHTML()
+    {
         return nl2br($this->bbcode->getAsHtml());
     }
 
     // Get as BBmarkup
-    public function toEditor() {
+    public function toEditor()
+    {
         return $this->bbcode->getAsBBCode();
     }
 
     // Get as plaintext
-    public function toPlain() {
+    public function toPlain()
+    {
         return $this->bbcode->getAsText();
     }
 }

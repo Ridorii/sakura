@@ -9,7 +9,8 @@ use JBBCode\Parser;
 use JBBCode\CodeDefinition;
 use JBBCode\ElementNode;
 
-class Code extends CodeDefinition {
+class Code extends CodeDefinition
+{
     public function __construct()
     {
         parent::__construct();
