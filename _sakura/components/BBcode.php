@@ -40,7 +40,7 @@ class BBcode
         $this->bbcode->addCodeDefinitionSet(new DefaultCodeDefinitionSet());
 
         // Header tag
-        $builder = new CodeDefinitionBuilder('header', '<h2>{param}</h2>');
+        $builder = new CodeDefinitionBuilder('header', '<h1>{param}</h1>');
         $this->bbcode->addCodeDefinition($builder->build());
 
         // Strike tag
@@ -48,24 +48,24 @@ class BBcode
         $this->bbcode->addCodeDefinition($builder->build());
 
         // Spoiler tag
-        $builder = new CodeDefinitionBuilder('spoiler', '<div class="spoiler">{param}</div>');
+        $builder = new CodeDefinitionBuilder('spoiler', '<span class="spoiler">{param}</span>');
         $this->bbcode->addCodeDefinition($builder->build());
 
         // Box tag
-        $builder = new CodeDefinitionBuilder('box', '<div class="spoiler-box-container"><div class="spoiler-box-title">Click to open.</div><div class="spoiler-box-content">{param}</div></div>');
+        $builder = new CodeDefinitionBuilder('box', '<div class="spoiler-box-container"><div class="spoiler-box-title" onclick="toggleClass(this.parentNode.children[1], \'hidden\');">Click to open</div><div class="spoiler-box-content hidden">{param}</div></div>');
         $this->bbcode->addCodeDefinition($builder->build());
 
         // Box tag
-        $builder = new CodeDefinitionBuilder('box', '<div class="spoiler-box-container"><div class="spoiler-box-title">{option}</div><div class="spoiler-box-content">{param}</div></div>');
+        $builder = new CodeDefinitionBuilder('box', '<div class="spoiler-box-container"><div class="spoiler-box-title" onclick="toggleClass(this.parentNode.children[1], \'hidden\');">{option}</div><div class="spoiler-box-content hidden">{param}</div></div>');
         $builder->setUseOption(true);
         $this->bbcode->addCodeDefinition($builder->build());
 
         // Quote tag
-        $builder = new CodeDefinitionBuilder('quote', '<blockquote>{param}</blockquote>');
+        $builder = new CodeDefinitionBuilder('quote', '<blockquote><div class="quote">{param}</div></blockquote>');
         $this->bbcode->addCodeDefinition($builder->build());
 
         // Quote tag
-        $builder = new CodeDefinitionBuilder('quote', '<h4>{option} wrote:</h4><blockquote>{param}</blockquote>');
+        $builder = new CodeDefinitionBuilder('quote', '<blockquote><div class="quotee">{option} wrote:</div><div class="quote">{param}</div></blockquote>');
         $builder->setUseOption(true);
         $this->bbcode->addCodeDefinition($builder->build());
 
@@ -96,7 +96,12 @@ class BBcode
     // Get as HTML
     public function toHTML()
     {
-        return nl2br($this->bbcode->getAsHtml());
+        $parsed = nl2br($this->bbcode->getAsHtml());
+
+        $parsed = Main::fixCodeTags($parsed);
+        $parsed = Main::parseEmotes($parsed);
+
+        return $parsed;
     }
 
     // Get as BBmarkup

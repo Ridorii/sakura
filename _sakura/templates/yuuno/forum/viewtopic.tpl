@@ -10,6 +10,15 @@
 
 {% block title %}{{ thread.title }}{% endblock %}
 
+{% block css %}
+<link rel="stylesheet" href="/content/libraries/highlight.css" />
+{% endblock %}
+
+{% block js %}
+<script src="/content/libraries/highlight.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+{% endblock %}
+
 {% block content %}
     <div class="content homepage forum viewtopic">
         <div class="content-column">
@@ -54,12 +63,12 @@
                                 </div>
                                 <div class="clear"></div>
                             </div>
-                            <div class="post-text markdown">
+                            <div class="post-text bbcode">
                                 {{ post.parsed|raw }}
                             </div>
                             {% if post.poster.signature and post.signature %}
                             <div class="clear"></div>
-                            <div class="signature">
+                            <div class="signature bbcode">
                                 {{ post.poster.signature|raw|nl2br }}
                             </div>
                             {% endif %}

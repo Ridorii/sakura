@@ -13,7 +13,8 @@
 @import url('/content/fonts/segoeui/font.css');
 @import url('/content/fonts/segoeui-light/font.css');
 
-/* Import markdown specific style */
+/* Import bbcode and markdown specific style */
+@import url('bbcode.css');
 @import url('markdown.css');
 
 /*

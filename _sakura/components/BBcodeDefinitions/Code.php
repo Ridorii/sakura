@@ -19,6 +19,6 @@ class Code extends CodeDefinition
 
     public function asHtml(ElementNode $el)
     {
-        return preg_replace("#\n*\[code\]\n*(.*?)\n*\[/code\]\n*#s", '<pre class="code prettyprint linenums">\\1</pre>', $el->getAsBBCode());
+        return preg_replace("#\n*\[code\]\n*(.*?)\n*\[/code\]\n*#s", '<pre class="code"><code>\\1</code></pre>', $el->getAsBBCode());
     }
 }

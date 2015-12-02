@@ -203,6 +203,18 @@ function notifyRequest(session) {
     notificationWatcher.send();
 }
 
+// Toggle a class on an element
+function toggleClass(element, name) {
+    // Attempt to get the index
+    var indexOf = element.className.indexOf(name);
+
+    if (indexOf < 0) {
+        element.className += ' ' + name;
+    } else {
+        element.className = element.className.replace(name, '').trim();
+    }
+}
+
 // Removing all elements with a certain class
 function removeClass(className) {
     // Get the elements

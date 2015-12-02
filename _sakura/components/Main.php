@@ -770,4 +770,31 @@ class Main
 
         ]);
     }
+
+    // Cleaning up the contents of code tags
+    public static function fixCodeTags($text)
+    {
+        $parts = explode('<code>', $text);
+        $newStr = '';
+
+        if(count($parts) > 1) {
+            foreach ($parts as $p) {
+                $parts2 = explode('</code>', $p);
+                if(count($parts2) > 1) {
+                    $code = str_replace('<br />', '', $parts2[0]);
+                    $code = str_replace('<br/>', '', $code);
+                    $code = str_replace('<br>', '', $code);
+                    $code = str_replace('<', '&lt;', $code);
+                    $newStr .= '<code>'.$code.'</code>';
+                    $newStr .= $parts2[1];
+                } else {
+                    $newStr .= $p;
+                }
+            }
+        } else {
+            $newStr = $text;
+        }
+        
+        return $newStr;
+    }
 }

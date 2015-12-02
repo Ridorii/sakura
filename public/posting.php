@@ -62,7 +62,7 @@ if ($mode != 'f') {
         $post = $thread['posts'][$_GET['p']];
 
         // Add subject to render data
-        $posting['text'] = '[quote]' . (new BBcode($post['post_text']))->toEditor() . '[/quote]';
+        $posting['text'] = '[quote=' . (new User($post['poster_id']))->username() . ']' . (new BBcode($post['post_text']))->toEditor() . '[/quote]';
 
         // Post editing
     } elseif ($mode == 'p' && isset($_GET['edit']) && $_GET['edit'] == $_GET['p'] && array_key_exists($_GET['p'], $thread['posts'])) {
