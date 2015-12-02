@@ -39,7 +39,7 @@ class Lists extends CodeDefinition
 
         $listPieces = explode('[*]', $bodyHtml);
         unset($listPieces[0]);
-        $listPieces = array_map(function($li) {
+        $listPieces = array_map(function ($li) {
             return '<li>'.$li.'</li>';
         }, $listPieces);
         return '<ul>'.implode('', $listPieces).'</ul>';

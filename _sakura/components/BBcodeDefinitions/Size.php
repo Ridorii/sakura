@@ -9,7 +9,8 @@ use JBBCode\Parser;
 use JBBCode\CodeDefinition;
 use JBBCode\ElementNode;
 
-class Size extends CodeDefinition {
+class Size extends CodeDefinition
+{
     public function __construct()
     {
         parent::__construct();
@@ -24,7 +25,7 @@ class Size extends CodeDefinition {
 
         $content = "";
 
-        foreach($el->getChildren() as $child) {
+        foreach ($el->getChildren() as $child) {
             $content .= $child->getAsHTML();
         }
 

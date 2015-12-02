@@ -9,7 +9,8 @@ use JBBCode\Parser;
 use JBBCode\CodeDefinition;
 use JBBCode\ElementNode;
 
-class Align extends CodeDefinition {
+class Align extends CodeDefinition
+{
     public function __construct()
     {
         parent::__construct();
@@ -27,7 +28,7 @@ class Align extends CodeDefinition {
 
         $content = "";
 
-        foreach($el->getChildren() as $child) {
+        foreach ($el->getChildren() as $child) {
             $content .= $child->getAsHTML();
         }
 
