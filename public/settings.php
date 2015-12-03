@@ -12,7 +12,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 }
 
 // Include components
-require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
+require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
 
 if (!defined('SAKURA_NO_TPL')) {
     // Initialise templating engine

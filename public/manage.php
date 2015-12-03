@@ -10,7 +10,7 @@ namespace Sakura;
 define('SAKURA_MANAGE', true);
 
 // Include components
-require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
+require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
 
 // Make sure user has the permissions to view this
 if (!$currentUser->checkPermission('MANAGE', 'USE_MANAGE')) {

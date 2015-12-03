@@ -4,7 +4,7 @@
  * By Flashwave
  */
 
-// Filesystem path to the _sakura folder WITHOUT an ending /
+// Filesystem path to the sakura root directory WITHOUT an ending /
 // This can also be set before an include of this file in case
 //  you're using git to keep in sync and don't want conflicts
 // You can also create a PHP file including this SockChat.php
