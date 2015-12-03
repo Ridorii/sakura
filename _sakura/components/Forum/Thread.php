@@ -6,6 +6,7 @@
 namespace Sakura\Forum;
 
 use Sakura\Database;
+use Sakura\Main;
 
 /**
  * Class Thread
@@ -24,9 +25,7 @@ class Thread
     public $status = 0;
     public $statusChange = 0;
     public $type = 0;
-    public $firstPost = null;
-    public $lastPost = null;
-    public $posts = [];
+    private $_posts = [];
 
     // Constructor
     public function __construct($threadId)
@@ -47,33 +46,42 @@ class Thread
             $this->statusChange = $threadRow['topic_status_change'];
             $this->type = $threadRow['topic_type'];
         }
-
-        // Populate the posts array
-        $this->posts = $this->getPosts();
-
-        // Get first post
-        $this->firstPost = $this->posts ? array_values($this->posts)[0] : (new Thread(0));
-
-        // And the last post
-        $this->lastPost = $this->posts ? end($this->posts) : (new Thread(0));
     }
 
     // Posts
-    public function getPosts()
+    public function posts()
     {
-        // Get all rows with the thread id
-        $postRows = Database::fetch('posts', true, ['topic_id' => [$this->id, '=']]);
+        // Check if _posts is something
+        if (!count($this->_posts)) {
 
-        // Create a storage array
-        $posts = [];
+            // Get all rows with the thread id
+            $postRows = Database::fetch('posts', true, ['topic_id' => [$this->id, '=']]);
 
-        // Create new post objects for each post
-        foreach ($postRows as $post) {
-            $posts[$post['post_id']] = new Post($post['post_id']);
+            // Create a storage array
+            $posts = [];
+
+            // Create new post objects for each post
+            foreach ($postRows as $post) {
+                $posts[$post['post_id']] = new Post($post['post_id']);
+            }
+
+            $this->_posts = $posts;
+        } else {
+            $posts = $this->_posts;
         }
 
         // Return the post objects
         return $posts;
+    }
+
+    // Get the opening post
+    public function firstPost() {
+        return $this->posts() ? array_values($this->_posts)[0] : (new Post(0));
+    }
+
+    // Get the last reply
+    public function lastPost() {
+        return $this->posts() ? end($this->_posts) : (new Post(0));
     }
 
     // Reply count
@@ -106,7 +114,7 @@ class Thread
         }
 
         // Check if the last time the user has been here is less than the creation timestamp of the latest post
-        if ($track['mark_time'] < $this->lastPost->time) {
+        if ($track['mark_time'] < $this->lastPost()->time) {
             return true;
         }
 

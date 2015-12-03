@@ -5,18 +5,32 @@
 
 {% set posts = thread.posts|batch(10) %}
 
+{% if get.p and not get.page %}
+    {% set num = 0 %}
+
+    {% for k,v in thread.posts %}
+        {% if k < get.p %}
+            {% set num = num + 1 %}
+        {% endif %}
+    {% endfor %}
+
+    {% set num = (num / 10)|round + 1 %}
+
+    {% set get = get|merge({'page': num}) %}
+{% endif %}
+
 {% set paginationPages = posts %}
 {% set paginationUrl %}{{ urls.format('FORUM_THREAD', [thread.id]) }}{% endset %}
 
 {% block title %}{{ thread.title }}{% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="/content/libraries/highlight.css" />
+    <link rel="stylesheet" href="/content/libraries/highlight.css" />
 {% endblock %}
 
 {% block js %}
-<script src="/content/libraries/highlight.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
+    <script src="/content/libraries/highlight.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 {% endblock %}
 
 {% block content %}
@@ -56,7 +70,7 @@
                         <td class="post-content">
                             <div class="details">
                                 <div class="subject">
-                                    <a href="#p{{ post.id }}" class="clean">{{ post.subject }}</a>
+                                    <a href="#p{{ post.id }}" class="clean">{{ post.subject|slice(0, 50) }}{% if post.subject|length > 50 %}...{% endif %}</a>
                                 </div>
                                 <div class="date">
                                     <a href="{{ urls.format('FORUM_POST', [post.id]) }}#p{{ post.id }}" class="clean" title="{{ post.time|date(sakura.dateFormat) }}">{{ post.timeElapsed }}</a>

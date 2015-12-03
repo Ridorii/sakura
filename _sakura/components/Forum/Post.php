@@ -56,7 +56,7 @@ class Post
         }
 
         // Parse the markup
-        $this->parsed = (new BBcode(htmlentities($this->text)))->toHTML();
+        $this->parsed = BBcode::toHTML(htmlentities($this->text));
     }
 
     // Time elapsed since creation

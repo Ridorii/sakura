@@ -1950,7 +1950,7 @@ textarea.inputStyling {
     width: 100%;
     border-spacing: 0;
     table-layout: fixed;
-    word-break: break-all;
+    word-break: break-word;
 }
 
 .forum.viewtopic .posts td {
@@ -2027,10 +2027,6 @@ textarea.inputStyling {
 
 .forum.viewtopic .posts .post-content .details .date {
     float: right;
-}
-
-.forum.viewtopic .posts .post-content img {
-    max-width: 850px;
 }
 
 .forum.viewtopic .posts .post-content .signature {

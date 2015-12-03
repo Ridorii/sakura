@@ -376,6 +376,5 @@ class mysql
     public function lastInsertID($name = null)
     {
         return $this->sql->lastInsertID($name);
-        ;
     }
 }

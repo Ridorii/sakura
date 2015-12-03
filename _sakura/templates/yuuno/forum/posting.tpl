@@ -12,15 +12,17 @@
             </div>
             <hr class="default" />
             <div class="posting-bbcodes">
-                {% for bbcode in posting.bbcodes %}
-                    {% if bbcode.bbcode_display %}
-                        <button type="button" class="inputStyling small">{{ bbcode.bbcode_title }}</button>
-                    {% endif %}
-                {% endfor %}
-            </div>
-            <hr class="default" />
-            <div class="posting-bbcode-description" id="bbcodedescr">
-                Hover over a styling button to view a short description of what it does.
+                <button onclick="insertBBcode('postingText', 'b');" type="button" title="Bold" class="inputStyling fa fa-bold" style="min-width: 0;"></button>
+                <button onclick="insertBBcode('postingText', 'i');" type="button" title="Italic" class="inputStyling fa fa-italic" style="min-width: 0;"></button>
+                <button onclick="insertBBcode('postingText', 'u');" type="button" title="Underline" class="inputStyling fa fa-underline" style="min-width: 0;"></button>
+                <button onclick="insertBBcode('postingText', 's');" type="button" title="Strikethrough" class="inputStyling fa fa-strikethrough" style="min-width: 0;"></button>
+                <button onclick="insertBBcode('postingText', 'header');" type="button" title="Header" class="inputStyling fa fa-header" style="min-width: 0;"></button>
+                <button onclick="insertBBcode('postingText', 'url');" type="button" title="Link" class="inputStyling fa fa-chain" style="min-width: 0;"></button>
+                <button onclick="insertBBcode('postingText', 'spoiler');" type="button" title="Spoiler text" class="inputStyling fa fa-minus" style="min-width: 0;"></button>
+                <button onclick="insertBBcode('postingText', 'box', true);" type="button" title="Spoiler box" class="inputStyling fa fa-square-o" style="min-width: 0;"></button>
+                <button onclick="insertBBcode('postingText', 'list');" type="button" title="List (use [*] for entries)" class="inputStyling fa fa-list" style="min-width: 0;"></button>
+                <button onclick="insertBBcode('postingText', 'img');" type="button" title="Image" class="inputStyling fa fa-picture-o" style="min-width: 0;"></button>
+                <button onclick="insertBBcode('postingText', 'youtube');" type="button" title="YouTube video" class="inputStyling fa fa-youtube-play" style="min-width: 0;"></button>
             </div>
             <hr class="default" />
             <div class="posting-text">
@@ -29,27 +31,11 @@
             <hr class="default" />
             <div class="posting-emotes">
                 {% for emoticon in posting.emoticons %}
-                    <img src="{{ emoticon.emote_path }}" alt="{{ emoticon.emote_string }}" title="{{ emoticon.emote_string }}" />
+                    <img src="{{ emoticon.emote_path }}" alt="{{ emoticon.emote_string }}" title="{{ emoticon.emote_string }}" onclick="insertText('postingText', '{{ emoticon.emote_string }}')" />
                 {% endfor %}
             </div>
             <hr class="default" />
-            <div class="posting-options">
-                <div>
-                    <div>
-                        <input type="checkbox" id="enableSig" {% if posting.enabledSig %}checked="checked"{% endif %}/> <label for="enableSig">Attach Signature</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="enableEmotes" checked="checked" /> <label for="enableEmotes">Parse emoticons</label>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="enableBBcode" checked="checked" /> <label for="enableBBcode">Parse BBcodes</label>
-                    </div>
-                </div>
-                <div class="clear"></div>
-            </div>
-            <hr class="default" />
             <div class="posting-buttons">
-                <input class="inputStyling" type="submit" name="preview" value="Preview" disabled="disabled" />
                 <input class="inputStyling" type="submit" name="post" value="Post" />
                 <input class="inputStyling" type="button" onclick="history.go(-1);" value="Cancel" />
             </div>

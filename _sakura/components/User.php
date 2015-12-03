@@ -659,11 +659,11 @@ class User
     public function signature()
     {
         return isset($this->data['user_data']['signature']) ?
-        (new BBcode(
+        BBcode::toHTML(
             base64_decode(
                 $this->data['user_data']['signature']
             )
-        ))->toHTML() :
+        ) :
         null;
     }
 

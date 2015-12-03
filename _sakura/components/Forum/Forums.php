@@ -209,7 +209,7 @@ class Forums
                 'user' => (new User($post['poster_id'])),
                 'elapsed' => Main::timeElapsed($post['post_time']),
                 'is_op' => ($post['poster_id'] == $firstPost['poster_id'] ? '1' : '0'),
-                'parsed_post' => (new BBcode($post['post_text']))->toHTML(),
+                'parsed_post' => BBcode::toHTML($post['post_text']),
             ]);
 
             // Just in case

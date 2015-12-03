@@ -810,6 +810,68 @@ function commentReply(id, session, category, action, avatar) {
     prepareAjaxForm(replyForm.id, 'Replying...');
 }
 
+// Inserting text into text box
+// Borrowed from http://stackoverflow.com/questions/1064089/inserting-a-text-where-cursor-is-using-javascript-jquery
+function insertText(areaId, text) {
+    var txtarea = document.getElementById(areaId);
+    var scrollPos = txtarea.scrollTop;
+    var strPos = 0;
+    var br = ((txtarea.selectionStart || txtarea.selectionStart == '0') ?
+        "ff" : (document.selection ? "ie" : false));
+    if (br == "ie") {
+        txtarea.focus();
+        var range = document.selection.createRange();
+        range.moveStart('character', -txtarea.value.length);
+        strPos = range.text.length;
+    }
+    else if (br == "ff") strPos = txtarea.selectionStart;
+
+    var front = (txtarea.value).substring(0, strPos);
+    var back = (txtarea.value).substring(strPos, txtarea.value.length);
+    txtarea.value = front + text + back;
+    strPos = strPos + text.length;
+    if (br == "ie") {
+        txtarea.focus();
+        var range = document.selection.createRange();
+        range.moveStart('character', -txtarea.value.length);
+        range.moveStart('character', strPos);
+        range.moveEnd('character', 0);
+        range.select();
+    }
+    else if (br == "ff") {
+        txtarea.selectionStart = strPos;
+        txtarea.selectionEnd = strPos;
+        txtarea.focus();
+    }
+    txtarea.scrollTop = scrollPos;
+}
+
+// Inserting a bbcode
+function insertBBcode(textarea, tag, arg) {
+    var element = document.getElementById(textarea);
+    var before = "[" + tag + (arg ? "=" : "") + "]";
+    var after = "[/" + tag  + "]";
+
+    if (document.selection) {
+        element.focus();
+        var sel = document.selection.createRange();
+        sel.text = before + sel.text + after;
+        element.focus();
+    } else if (element.selectionStart || element.selectionStart === 0) {
+        var startPos = element.selectionStart;
+        var endPos = element.selectionEnd;
+        var scrollTop = element.scrollTop;
+        element.value = element.value.substring(0, startPos) + before + element.value.substring(startPos, endPos) + after + element.value.substring(endPos, element.value.length);
+        element.focus();
+        element.selectionStart = startPos + before.length;
+        element.selectionEnd = endPos + before.length;
+        element.scrollTop = scrollTop;
+    } else {
+        element.value += before + after;
+        element.focus();
+    }
+}
+
 // Formatting money
 Number.prototype.formatMoney = function(u, c, k) {
     var f = this,

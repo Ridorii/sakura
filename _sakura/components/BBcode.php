@@ -16,58 +16,53 @@ use JBBCode\CodeDefinitionBuilder;
 class BBcode
 {
     // Parser container
-    private $bbcode;
+    private static $bbcode = null;
 
     // Constructor
-    public function __construct($text = null)
+    public static function init()
     {
         // Create new parser class
-        $this->bbcode = new Parser();
+        self::$bbcode = new Parser();
 
         // Add the standard definitions
-        $this->loadStandardCodes();
-
-        // Immediately parse the text if set
-        if ($text != null) {
-            $this->bbcode->parse($text);
-        }
+        self::loadStandardCodes();
     }
 
     // Add basic bbcodes
-    public function loadStandardCodes()
+    public static function loadStandardCodes()
     {
         // Add the standard definitions
-        $this->bbcode->addCodeDefinitionSet(new DefaultCodeDefinitionSet());
+        self::$bbcode->addCodeDefinitionSet(new DefaultCodeDefinitionSet());
 
         // Header tag
         $builder = new CodeDefinitionBuilder('header', '<h1>{param}</h1>');
-        $this->bbcode->addCodeDefinition($builder->build());
+        self::$bbcode->addCodeDefinition($builder->build());
 
         // Strike tag
         $builder = new CodeDefinitionBuilder('s', '<del>{param}</del>');
-        $this->bbcode->addCodeDefinition($builder->build());
+        self::$bbcode->addCodeDefinition($builder->build());
 
         // Spoiler tag
         $builder = new CodeDefinitionBuilder('spoiler', '<span class="spoiler">{param}</span>');
-        $this->bbcode->addCodeDefinition($builder->build());
+        self::$bbcode->addCodeDefinition($builder->build());
 
         // Box tag
         $builder = new CodeDefinitionBuilder('box', '<div class="spoiler-box-container"><div class="spoiler-box-title" onclick="toggleClass(this.parentNode.children[1], \'hidden\');">Click to open</div><div class="spoiler-box-content hidden">{param}</div></div>');
-        $this->bbcode->addCodeDefinition($builder->build());
+        self::$bbcode->addCodeDefinition($builder->build());
 
         // Box tag
         $builder = new CodeDefinitionBuilder('box', '<div class="spoiler-box-container"><div class="spoiler-box-title" onclick="toggleClass(this.parentNode.children[1], \'hidden\');">{option}</div><div class="spoiler-box-content hidden">{param}</div></div>');
         $builder->setUseOption(true);
-        $this->bbcode->addCodeDefinition($builder->build());
+        self::$bbcode->addCodeDefinition($builder->build());
 
         // Quote tag
-        $builder = new CodeDefinitionBuilder('quote', '<blockquote><div class="quote">{param}</div></blockquote>');
-        $this->bbcode->addCodeDefinition($builder->build());
+        $builder = new CodeDefinitionBuilder('quote', '<blockquote><div class="quotee">Quote</div><div class="quote">{param}</div></blockquote>');
+        self::$bbcode->addCodeDefinition($builder->build());
 
         // Quote tag
-        $builder = new CodeDefinitionBuilder('quote', '<blockquote><div class="quotee">{option} wrote:</div><div class="quote">{param}</div></blockquote>');
+        $builder = new CodeDefinitionBuilder('quote', '<blockquote><div class="quotee">{option} wrote</div><div class="quote">{param}</div></blockquote>');
         $builder->setUseOption(true);
-        $this->bbcode->addCodeDefinition($builder->build());
+        self::$bbcode->addCodeDefinition($builder->build());
 
         // Add special definitions (PHP files MUST have the same name as the definition class
         foreach (glob(ROOT . '_sakura/components/BBcodeDefinitions/*.php') as $ext) {
@@ -83,20 +78,30 @@ class BBcode
             $className = __NAMESPACE__ . '\\' . $ext;
 
             // Add the BBcode definition
-            $this->bbcode->addCodeDefinition(new $className);
+            self::$bbcode->addCodeDefinition(new $className);
         }
     }
 
     // Set text
-    public function text($text)
+    public static function text($text)
     {
-        $this->bbcode->parse($text);
+        // Check if $bbcode is still null
+        if (self::$bbcode == null) {
+            self::init();
+        }
+
+        self::$bbcode->parse($text);
     }
 
     // Get as HTML
-    public function toHTML()
+    public static function toHTML($text = null)
     {
-        $parsed = nl2br($this->bbcode->getAsHtml());
+        // Check if text isn't null
+        if ($text !== null) {
+            self::text($text);
+        }
+
+        $parsed = nl2br(self::$bbcode->getAsHtml());
 
         $parsed = Main::fixCodeTags($parsed);
         $parsed = Main::parseEmotes($parsed);
@@ -105,14 +110,24 @@ class BBcode
     }
 
     // Get as BBmarkup
-    public function toEditor()
+    public static function toEditor($text = null)
     {
-        return $this->bbcode->getAsBBCode();
+        // Check if text isn't null
+        if ($text !== null) {
+            self::text($text);
+        }
+
+        return self::$bbcode->getAsBBCode();
     }
 
     // Get as plaintext
-    public function toPlain()
+    public static function toPlain($text = null)
     {
-        return $this->bbcode->getAsText();
+        // Check if text isn't null
+        if ($text !== null) {
+            self::text($text);
+        }
+
+        return self::$bbcode->getAsText();
     }
 }

@@ -3,6 +3,11 @@
  */
 @charset "utf-8";
 
+.bbcode {
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
 .bbcode h1 {
     text-shadow: 0 0 5px #8364A1;
     color: #614390;
@@ -32,7 +37,9 @@
 .bbcode blockquote > .quotee {
     font-weight: bold;
     border-bottom: 1px solid #9475b2;
+    border-right: 1px solid #9475b2;
     background: #B697d4;
+    padding-left: .5em;
 }
 
 .bbcode blockquote > .quote {
@@ -71,3 +78,15 @@
 .bbcode .spoiler-box-container > .spoiler-box-content {
     border-top: 1px solid #9475b2;
 }
+
+.bbcode img {
+    width: auto;
+    height: auto;
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.bbcode code {
+    font-size: 1.1em;
+}
+
