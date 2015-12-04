@@ -31,23 +31,23 @@ class mysql
         // Initialise connection
         $this->initConnect(
             (
-                Config::getLocalConfig('database', 'unixsocket') ?
+                Config::local('database', 'unixsocket') ?
                 $this->prepareSock(
-                    Config::getLocalConfig('database', 'host'),
-                    Config::getLocalConfig('database', 'database')
+                    Config::local('database', 'host'),
+                    Config::local('database', 'database')
                 ) :
                 $this->prepareHost(
-                    Config::getLocalConfig('database', 'host'),
-                    Config::getLocalConfig('database', 'database'),
+                    Config::local('database', 'host'),
+                    Config::local('database', 'database'),
                     (
-                        Config::getLocalConfig('database', 'port') !== null ?
-                        Config::getLocalConfig('database', 'port') :
+                        Config::local('database', 'port') !== null ?
+                        Config::local('database', 'port') :
                         3306
                     )
                 )
             ),
-            Config::getLocalConfig('database', 'username'),
-            Config::getLocalConfig('database', 'password')
+            Config::local('database', 'username'),
+            Config::local('database', 'password')
         );
     }
 
@@ -88,7 +88,7 @@ class mysql
     {
 
         // Begin preparation of the statement
-        $prepare = 'SELECT ' . ($distinct ? 'DISTINCT ' : '') . ($column == '*' ? '' : '`') . $column . ($column == '*' ? '' : '`') . ' FROM `' . ($prefix ? $prefix : Config::getLocalConfig('database', 'prefix')) . $table . '`';
+        $prepare = 'SELECT ' . ($distinct ? 'DISTINCT ' : '') . ($column == '*' ? '' : '`') . $column . ($column == '*' ? '' : '`') . ' FROM `' . ($prefix ? $prefix : Config::local('database', 'prefix')) . $table . '`';
 
         // If $data is set and is an array continue
         if (is_array($data)) {
@@ -200,7 +200,7 @@ class mysql
     {
 
         // Begin preparation of the statement
-        $prepare = 'INSERT INTO `' . ($prefix ? $prefix : Config::getLocalConfig('database', 'prefix')) . $table . '` ';
+        $prepare = 'INSERT INTO `' . ($prefix ? $prefix : Config::local('database', 'prefix')) . $table . '` ';
 
         // Run the foreach statement twice for (`stuff`) VALUES (:stuff)
         for ($i = 0; $i < 2; $i++) {
@@ -241,7 +241,7 @@ class mysql
     {
 
         // Begin preparation of the statement
-        $prepare = 'UPDATE `' . ($prefix ? $prefix : Config::getLocalConfig('database', 'prefix')) . $table . '`';
+        $prepare = 'UPDATE `' . ($prefix ? $prefix : Config::local('database', 'prefix')) . $table . '`';
 
         // Run a foreach on $data and complete the statement
         foreach ($data as $key => $values) {
@@ -294,7 +294,7 @@ class mysql
     {
 
         // Begin preparation of the statement
-        $prepare = 'DELETE FROM `' . ($prefix ? $prefix : Config::getLocalConfig('database', 'prefix')) . $table . '`';
+        $prepare = 'DELETE FROM `' . ($prefix ? $prefix : Config::local('database', 'prefix')) . $table . '`';
 
         // If $data is set and is an array continue
         if (is_array($data)) {
@@ -333,7 +333,7 @@ class mysql
     {
 
         // Begin preparation of the statement
-        $prepare = 'SELECT COUNT(*) FROM `' . ($prefix ? $prefix : Config::getLocalConfig('database', 'prefix')) . $table . '`';
+        $prepare = 'SELECT COUNT(*) FROM `' . ($prefix ? $prefix : Config::local('database', 'prefix')) . $table . '`';
 
         // If $data is set and is an array continue
         if (is_array($data)) {

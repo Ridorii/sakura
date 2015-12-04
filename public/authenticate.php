@@ -220,12 +220,12 @@ if (isset($_REQUEST['mode'])) {
                     $_REQUEST['email'],
                     isset($_REQUEST['tos']),
                     (
-                        Config::getConfig('recaptcha') ?
+                        Config::get('recaptcha') ?
                         $_REQUEST['g-recaptcha-response'] :
                         null
                     ),
                     (
-                        Config::getConfig('require_registration_code') ?
+                        Config::get('require_registration_code') ?
                         $_REQUEST['registercode'] :
                         null
                     )
@@ -247,7 +247,7 @@ if (isset($_REQUEST['mode'])) {
                     'INVALID_EMAIL' => 'Your e-mail address is formatted incorrectly.',
                     'INVALID_MX' => 'No valid MX-Record found on the e-mail address you supplied.',
                     'EMAILSENT' => 'Your registration went through! An activation e-mail has been sent.',
-                    'SUCCESS' => 'Your registration went through! Welcome to ' . Config::getConfig('sitename') . '!',
+                    'SUCCESS' => 'Your registration went through! Welcome to ' . Config::get('sitename') . '!',
 
                 ];
 

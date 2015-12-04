@@ -44,15 +44,15 @@ if (isset($_REQUEST['mode'])
                 if (!isset($_POST['months'])
                     || !is_numeric($_POST['months'])
                     || (int) $_POST['months'] < 1
-                    || (int) $_POST['months'] > Config::getConfig('premium_amount_max')) {
+                    || (int) $_POST['months'] > Config::get('premium_amount_max')) {
                     header('Location: ' . $urls->format('SITE_PREMIUM') . '?fail=true');
                 } else {
                     // Calculate the total
-                    $total = (float) Config::getConfig('premium_price_per_month') * (int) $_POST['months'];
+                    $total = (float) Config::get('premium_price_per_month') * (int) $_POST['months'];
                     $total = number_format($total, 2, '.', '');
 
                     // Generate item name
-                    $itemName = Config::getConfig('sitename')
+                    $itemName = Config::get('sitename')
                     . ' Premium - '
                     . (string) $_POST['months']
                         . ' month'
@@ -62,8 +62,8 @@ if (isset($_REQUEST['mode'])
                     if ($transaction = Payments::createTransaction(
                         $total,
                         $itemName,
-                        Config::getConfig('sitename') . ' Premium Purchase',
-                        'http://' . Config::getConfig('url_main') . $urls->format('SITE_PREMIUM')
+                        Config::get('sitename') . ' Premium Purchase',
+                        'http://' . Config::get('url_main') . $urls->format('SITE_PREMIUM')
                     )) {
                         // Store the amount of months in the global session array
                         $_SESSION['premiumMonths'] = (int) $_POST['months'];
@@ -98,7 +98,7 @@ if (isset($_REQUEST['mode'])
                         Users::updatePremiumMeta($currentUser->id());
                         Main::updatePremiumTracker(
                             $currentUser->id(),
-                            ((float) Config::getConfig('premium_price_per_month') * $_SESSION['premiumMonths']),
+                            ((float) Config::get('premium_price_per_month') * $_SESSION['premiumMonths']),
                             $currentUser->username()
                             . ' bought premium for '
                             . $_SESSION['premiumMonths']
@@ -156,9 +156,9 @@ if (isset($_GET['tracker'])) {
 $renderData['page'] = [
 
     'fail' => isset($_GET['fail']),
-    'price' => Config::getConfig('premium_price_per_month'),
+    'price' => Config::get('premium_price_per_month'),
     'current' => $currentUser->isPremium(),
-    'amount_max' => Config::getConfig('premium_amount_max'),
+    'amount_max' => Config::get('premium_amount_max'),
 
 ];
 

@@ -39,7 +39,7 @@ if (Users::checkLogin()) {
 
     $renderData['users'] = ($_MEMBERLIST_ACTIVE && !$_MEMBERLIST_NFOUND ? Users::getUsersInRank($_MEMBERLIST_ACTIVE) : Users::getAllUsers());
 
-    $renderData['membersPerPage'] = Config::getConfig('members_per_page');
+    $renderData['membersPerPage'] = Config::get('members_per_page');
 
     // Set parse variables
     $template->setVariables($renderData);

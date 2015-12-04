@@ -38,7 +38,6 @@ RewriteRule ^members/?$ members.php [L,QSA]
 RewriteRule ^members/([a-z]+)/?$ members.php?sort=$1 [L,QSA]
 RewriteRule ^members/([0-9]+)/?$ members.php?rank=$1 [L,QSA]
 RewriteRule ^members/([a-z]+)/([0-9]+)/?$ members.php?sort=$1&rank=$2 [L,QSA]
-RewriteRule ^members/([0-9]+)/p([0-9]+)/?$ members.php?rank=$1&page=$2 [L,QSA]
 
 # Profiles
 RewriteRule ^u/?$ profile.php [L,QSA]

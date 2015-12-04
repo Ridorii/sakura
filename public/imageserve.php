@@ -13,7 +13,7 @@ define('SAKURA_NO_TPL', true);
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
 
 // Path to user uploads
-$userDirPath = ROOT . Config::getConfig('user_uploads') . '/';
+$userDirPath = ROOT . Config::get('user_uploads') . '/';
 
 // Check if the m(ode) GET request is set
 if (isset($_GET['m'])) {
@@ -23,17 +23,17 @@ if (isset($_GET['m'])) {
             $noAvatar = ROOT . str_replace(
                 '{{ TPL }}',
                 $templateName,
-                Config::getConfig('no_avatar_img')
+                Config::get('no_avatar_img')
             );
             $deactiveAvatar = ROOT . str_replace(
                 '{{ TPL }}',
                 $templateName,
-                Config::getConfig('deactivated_avatar_img')
+                Config::get('deactivated_avatar_img')
             );
             $bannedAvatar = ROOT . str_replace(
                 '{{ TPL }}',
                 $templateName,
-                Config::getConfig('banned_avatar_img')
+                Config::get('banned_avatar_img')
             );
 
             // If ?u= isn't set or if it isn't numeric
@@ -69,7 +69,7 @@ if (isset($_GET['m'])) {
 
         case 'background':
             // Set paths
-            $noBackground = ROOT . Config::getConfig('no_background_img');
+            $noBackground = ROOT . Config::get('no_background_img');
 
             // If ?u= isn't set or if it isn't numeric
             if (!isset($_GET['u']) || !is_numeric($_GET['u'])) {
@@ -105,7 +105,7 @@ if (isset($_GET['m'])) {
 
         case 'header':
             // Set paths
-            $noHeader = ROOT . Config::getConfig('no_header_img');
+            $noHeader = ROOT . Config::get('no_header_img');
 
             // If ?u= isn't set or if it isn't numeric
             if (!isset($_GET['u']) || !is_numeric($_GET['u'])) {
@@ -140,11 +140,11 @@ if (isset($_GET['m'])) {
             break;
 
         default:
-            $serveImage = ROOT . Config::getConfig('pixel_img');
+            $serveImage = ROOT . Config::get('pixel_img');
 
     }
 } else {
-    $serveImage = ROOT . Config::getConfig('pixel_img');
+    $serveImage = ROOT . Config::get('pixel_img');
 }
 
 // Add original filename

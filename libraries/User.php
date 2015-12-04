@@ -179,7 +179,7 @@ class User
         }
 
         // Otherwise use the standard method
-        return $this->data['user_last_online'] > (time() - Config::getConfig('max_online_time'));
+        return $this->data['user_last_online'] > (time() - Config::get('max_online_time'));
     }
 
     // Compatibility
@@ -686,19 +686,19 @@ class User
         $username_clean = Main::cleanString($username, true);
 
         // Check if the username is too short
-        if (strlen($username_clean) < Config::getConfig('username_min_length')) {
+        if (strlen($username_clean) < Config::get('username_min_length')) {
             return [0, 'TOO_SHORT'];
         }
 
         // Check if the username is too long
-        if (strlen($username_clean) > Config::getConfig('username_max_length')) {
+        if (strlen($username_clean) > Config::get('username_max_length')) {
             return [0, 'TOO_LONG'];
         }
 
         // Check if this username hasn't been used in the last amount of days set in the config
         $getOld = Database::fetch('username_history', false, [
             'username_old_clean' => [$username_clean, '='],
-            'change_time' => [(Config::getConfig('old_username_reserve') * 24 * 60 * 60), '>'],
+            'change_time' => [(Config::get('old_username_reserve') * 24 * 60 * 60), '>'],
         ], ['change_id', true]);
 
         // Check if anything was returned
@@ -796,7 +796,7 @@ class User
         }
 
         // Check password entropy
-        if (Main::pwdEntropy($new) < Config::getConfig('min_entropy')) {
+        if (Main::pwdEntropy($new) < Config::get('min_entropy')) {
             return [0, 'PASS_TOO_SHIT'];
         }
 

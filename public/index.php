@@ -46,9 +46,9 @@ if (isset($_GET['p'])) {
 // Are we in forum mode?
 $forumMode = isset($_GET['forum']) ? ($_GET['forum'] == true) : false;
 
-$renderData['news'] = ($forumMode ? null : (new News(Config::getConfig('site_news_category'))));
+$renderData['news'] = ($forumMode ? null : (new News(Config::get('site_news_category'))));
 
-$renderData['newsCount'] = Config::getConfig('front_page_news_posts');
+$renderData['newsCount'] = Config::get('front_page_news_posts');
 
 $renderData['forum'] = ($forumMode ? (new Forum\Forum()) : null);
 

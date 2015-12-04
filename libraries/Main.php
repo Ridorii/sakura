@@ -21,7 +21,7 @@ class Main
         Config::init($config);
 
         // Database
-        Database::init(Config::getLocalConfig('database', 'driver'));
+        Database::init(Config::local('database', 'driver'));
 
         // "Dynamic" Configuration
         Config::initDB();
@@ -70,7 +70,7 @@ class Main
         // Attempt to get the response
         $resp = @file_get_contents(
             'https://www.google.com/recaptcha/api/siteverify?secret='
-            . Config::getConfig('recaptcha_private')
+            . Config::get('recaptcha_private')
             . '&response='
             . $response
         );
@@ -160,6 +160,9 @@ class Main
             die('An error occurred while executing the script.|1|javascript:alert("' . (isset($errid) ? 'Error Log ID: '. $errid : 'Failed to log.') . '");');
         }
 
+        // Check for dev mode
+        $detailed = Config::local('dev', 'enable');
+
         // Build page
         $errorPage = '<!DOCTYPE html>
 <html>
@@ -193,7 +196,7 @@ class Main
 
         if (isset($errid)) {
             $errorPage .= '<p>The error and surrounding data has been logged.</p>
-    <h2>' . (SAKURA_STABLE ? 'Report the following text to a staff member' : 'Logged as') . '</h2>
+    <h2>' . ($detailed ? 'Report the following text to a staff member' : 'Logged as') . '</h2>
     <pre class="error">' . $errid . '</pre>';
         } else {
             $errorPage .= '<p>Sakura was not able to log this error which could mean that there was an error
@@ -202,7 +205,7 @@ class Main
                know about this error if it occurs again.</p>';
         }
 
-        if (!SAKURA_STABLE) {
+        if (!$detailed) {
             $errorPage .= '                <h2>Summary</h2>
                 <pre class="error">' . $error . '</pre>
                 <h2>Backtraces</h2>';
@@ -249,28 +252,28 @@ class Main
         $mail->isSMTP();
 
         // Set the SMTP server host
-        $mail->Host = Config::getConfig('smtp_server');
+        $mail->Host = Config::get('smtp_server');
 
         // Do we require authentication?
-        $mail->SMTPAuth = Config::getConfig('smtp_auth');
+        $mail->SMTPAuth = Config::get('smtp_auth');
 
         // Do we encrypt as well?
-        $mail->SMTPSecure = Config::getConfig('smtp_secure');
+        $mail->SMTPSecure = Config::get('smtp_secure');
 
         // Set the port to the SMTP server
-        $mail->Port = Config::getConfig('smtp_port');
+        $mail->Port = Config::get('smtp_port');
 
         // If authentication is required log in as well
-        if (Config::getConfig('smtp_auth')) {
-            $mail->Username = Config::getConfig('smtp_username');
-            $mail->Password = base64_decode(Config::getConfig('smtp_password'));
+        if (Config::get('smtp_auth')) {
+            $mail->Username = Config::get('smtp_username');
+            $mail->Password = base64_decode(Config::get('smtp_password'));
         }
 
         // Add a reply-to header
-        $mail->addReplyTo(Config::getConfig('smtp_replyto_mail'), Config::getConfig('smtp_replyto_name'));
+        $mail->addReplyTo(Config::get('smtp_replyto_mail'), Config::get('smtp_replyto_name'));
 
         // Set a from address as well
-        $mail->setFrom(Config::getConfig('smtp_from_email'), Config::getConfig('smtp_from_name'));
+        $mail->setFrom(Config::get('smtp_from_email'), Config::get('smtp_from_name'));
 
         // Set the addressee
         foreach ($to as $email => $name) {
@@ -287,8 +290,8 @@ class Main
         $htmlMail = file_get_contents(ROOT . 'templates/htmlEmail.tpl');
 
         // Replace template tags
-        $htmlMail = str_replace('{{ sitename }}', Config::getConfig('sitename'), $htmlMail);
-        $htmlMail = str_replace('{{ siteurl }}', '//' . Config::getConfig('url_main'), $htmlMail);
+        $htmlMail = str_replace('{{ sitename }}', Config::get('sitename'), $htmlMail);
+        $htmlMail = str_replace('{{ siteurl }}', '//' . Config::get('url_main'), $htmlMail);
         $htmlMail = str_replace('{{ contents }}', self::mdParse($body), $htmlMail);
 
         // Set HTML body
@@ -317,7 +320,7 @@ class Main
     {
 
         // Run common sanitisation function over string
-        $string = htmlentities($string, ENT_NOQUOTES | ENT_HTML401, Config::getConfig('charset'));
+        $string = htmlentities($string, ENT_NOQUOTES | ENT_HTML401, Config::get('charset'));
         $string = stripslashes($string);
         $string = strip_tags($string);
 
@@ -454,7 +457,7 @@ class Main
 
         // Get CloudFlare Subnet list
         $cfhosts = file_get_contents(
-            ROOT . Config::getLocalConfig('data', 'cfipv' . (self::ipVersion($ip)))
+            ROOT . Config::local('data', 'cfipv' . (self::ipVersion($ip)))
         );
 
         // Replace \r\n with \n
@@ -597,7 +600,7 @@ class Main
         $iso3166 = json_decode(
             utf8_encode(
                 file_get_contents(
-                    ROOT . Config::getLocalConfig('data', 'iso3166')
+                    ROOT . Config::local('data', 'iso3166')
                 )
             ),
             true

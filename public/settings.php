@@ -388,8 +388,8 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 sprintf($notifStrings[$action[1]][0], $user->username()),
                 $notifStrings[$action[1]][1],
                 60000,
-                '//' . Config::getConfig('url_main') . '/a/' . $user->id(),
-                '//' . Config::getConfig('url_main') . '/u/' . $user->id(),
+                '//' . Config::get('url_main') . '/a/' . $user->id(),
+                '//' . Config::get('url_main') . '/u/' . $user->id(),
                 '1'
             );
         }
@@ -487,7 +487,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Set path variables
-                $filepath = ROOT . Config::getConfig('user_uploads') . '/';
+                $filepath = ROOT . Config::get('user_uploads') . '/';
                 $filename = $filepath . $mode . '_' . $currentUser->id();
                 $currfile = isset($currentUser->userData()[$userDataKey])
                 && !empty($currentUser->userData()[$userDataKey]) ? $currentUser->userData()[$userDataKey] : null;
@@ -576,8 +576,8 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     }
 
                     // Check if the image is too large
-                    if (($metadata[0] > Config::getConfig($mode . '_max_width')
-                        || $metadata[1] > Config::getConfig($mode . '_max_height'))) {
+                    if (($metadata[0] > Config::get($mode . '_max_width')
+                        || $metadata[1] > Config::get($mode . '_max_height'))) {
                         // Set render data
                         $renderData['page'] = [
 
@@ -591,8 +591,8 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     }
 
                     // Check if the image is too small
-                    if (($metadata[0] < Config::getConfig($mode . '_min_width')
-                        || $metadata[1] < Config::getConfig($mode . '_min_height'))) {
+                    if (($metadata[0] < Config::get($mode . '_min_width')
+                        || $metadata[1] < Config::get($mode . '_min_height'))) {
                         // Set render data
                         $renderData['page'] = [
 
@@ -606,7 +606,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     }
 
                     // Check if the file is too large
-                    if ((filesize($_FILES[$mode]['tmp_name']) > Config::getConfig($mode . '_max_fsize'))) {
+                    if ((filesize($_FILES[$mode]['tmp_name']) > Config::get($mode . '_max_fsize'))) {
                         // Set render data
                         $renderData['page'] = [
 
@@ -1505,12 +1505,12 @@ if (Users::checkLogin()) {
         case 'appearance.avatar':
         case 'appearance.background':
             $renderData[$mode] = [
-                'max_width' => Config::getConfig($mode . '_max_width'),
-                'max_height' => Config::getConfig($mode . '_max_height'),
-                'min_width' => Config::getConfig($mode . '_min_width'),
-                'min_height' => Config::getConfig($mode . '_min_height'),
-                'max_size' => Config::getConfig($mode . '_max_fsize'),
-                'max_size_view' => Main::getByteSymbol(Config::getConfig($mode . '_max_fsize')),
+                'max_width' => Config::get($mode . '_max_width'),
+                'max_height' => Config::get($mode . '_max_height'),
+                'min_width' => Config::get($mode . '_min_width'),
+                'min_height' => Config::get($mode . '_min_height'),
+                'max_size' => Config::get($mode . '_max_fsize'),
+                'max_size_view' => Main::getByteSymbol(Config::get($mode . '_max_fsize')),
             ];
             break;
 

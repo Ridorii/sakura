@@ -8,16 +8,15 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151203');
+define('SAKURA_VERSION', '20151204');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
-define('SAKURA_STABLE', false);
 
 // Define Sakura Path
 define('ROOT', __DIR__ . '/');
 
-// Error Reporting: 0 for production and -1 for testing
-error_reporting(SAKURA_STABLE ? 0 : -1);
+// Turn error reporting on for the initial startup sequence
+error_reporting(-1);
 
 // Set internal encoding method
 mb_internal_encoding('utf-8');
@@ -69,13 +68,16 @@ set_error_handler(['Sakura\Main', 'errorHandler']);
 // Initialise Main Class
 Main::init(ROOT . 'config/config.ini');
 
+// Change error reporting according to the dev configuration
+error_reporting(Config::local('dev', 'enable') ? -1 : 0);
+
 // Assign servers file to whois class
-Whois::setServers(ROOT . Config::getLocalConfig('data', 'whoisservers'));
+Whois::setServers(ROOT . Config::local('data', 'whoisservers'));
 
 // Check if we the system has a cron service
-if (Config::getConfig('no_cron_service')) {
+if (Config::get('no_cron_service')) {
     // If not do an "asynchronous" call to the cron.php script
-    if (Config::getConfig('no_cron_last') < (time() - Config::getConfig('no_cron_interval'))) {
+    if (Config::get('no_cron_last') < (time() - Config::get('no_cron_interval'))) {
         // Check OS
         if (substr(strtolower(PHP_OS), 0, 3) == 'win') {
             pclose(popen('start /B ' . PHP_BINDIR . '\php.exe ' . addslashes(ROOT . 'cron.php'), 'r'));
@@ -96,7 +98,7 @@ if (Config::getConfig('no_cron_service')) {
 }
 
 // Start output buffering
-ob_start(Config::getConfig('use_gzip') ? 'ob_gzhandler' : null);
+ob_start(Config::get('use_gzip') ? 'ob_gzhandler' : null);
 
 // Auth check
 $authCheck = Users::checkLogin();
@@ -110,11 +112,11 @@ $urls = new Urls();
 // Prepare the name of the template to load (outside of SAKURA_NO_TPL because it's used in imageserve.php)
 $templateName =
 defined('SAKURA_MANAGE') ?
-Config::getConfig('manage_style') :
+Config::get('manage_style') :
 (
     isset($currentUser->optionFields()['useMisaki']) && $currentUser->optionFields()['useMisaki'] ?
     'misaki' :
-    Config::getConfig('site_style')
+    Config::get('site_style')
 );
 
 if (!defined('SAKURA_NO_TPL')) {
@@ -125,41 +127,44 @@ if (!defined('SAKURA_NO_TPL')) {
                 'version' => SAKURA_VERSION,
                 'label' => SAKURA_VLABEL,
                 'colour' => SAKURA_COLOUR,
-                'stable' => SAKURA_STABLE,
+            ],
+
+            'dev' => [
+                'enable' => Config::local('dev', 'enable'),
             ],
 
             'cookie' => [
-                'prefix' => Config::getConfig('cookie_prefix'),
-                'domain' => Config::getConfig('cookie_domain'),
-                'path' => Config::getConfig('cookie_path'),
+                'prefix' => Config::get('cookie_prefix'),
+                'domain' => Config::get('cookie_domain'),
+                'path' => Config::get('cookie_path'),
             ],
 
-            'urlMain' => Config::getConfig('url_main'),
-            'urlApi' => Config::getConfig('url_api'),
+            'urlMain' => Config::get('url_main'),
+            'urlApi' => Config::get('url_api'),
 
-            'contentPath' => Config::getConfig('content_path'),
-            'resources' => Config::getConfig('content_path') . '/data/' . $templateName,
+            'contentPath' => Config::get('content_path'),
+            'resources' => Config::get('content_path') . '/data/' . $templateName,
 
-            'charset' => Config::getConfig('charset'),
-            'siteName' => Config::getConfig('sitename'),
-            'siteLogo' => Config::getConfig('sitelogo'),
-            'siteDesc' => Config::getConfig('sitedesc'),
-            'siteTags' => implode(", ", json_decode(Config::getConfig('sitetags'), true)),
-            'dateFormat' => Config::getConfig('date_format'),
+            'charset' => Config::get('charset'),
+            'siteName' => Config::get('sitename'),
+            'siteLogo' => Config::get('sitelogo'),
+            'siteDesc' => Config::get('sitedesc'),
+            'siteTags' => implode(", ", json_decode(Config::get('sitetags'), true)),
+            'dateFormat' => Config::get('date_format'),
             'currentPage' => '//' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
             'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null),
-            'onlineTimeout' => Config::getConfig('max_online_time'),
+            'onlineTimeout' => Config::get('max_online_time'),
 
-            'recaptchaPublic' => Config::getConfig('recaptcha_public'),
-            'recaptchaEnabled' => Config::getConfig('recaptcha'),
+            'recaptchaPublic' => Config::get('recaptcha_public'),
+            'recaptchaEnabled' => Config::get('recaptcha'),
 
-            'disableRegistration' => Config::getConfig('disable_registration'),
-            'lockAuth' => Config::getConfig('lock_authentication'),
-            'requireRegCodes' => Config::getConfig('require_registration_code'),
-            'requireActivation' => Config::getConfig('require_activation'),
-            'minPwdEntropy' => Config::getConfig('min_entropy'),
-            'minUsernameLength' => Config::getConfig('username_min_length'),
-            'maxUsernameLength' => Config::getConfig('username_max_length'),
+            'disableRegistration' => Config::get('disable_registration'),
+            'lockAuth' => Config::get('lock_authentication'),
+            'requireRegCodes' => Config::get('require_registration_code'),
+            'requireActivation' => Config::get('require_activation'),
+            'minPwdEntropy' => Config::get('min_entropy'),
+            'minUsernameLength' => Config::get('username_min_length'),
+            'maxUsernameLength' => Config::get('username_max_length'),
         ],
         'php' => [
             'sessionid' => \session_id(),
@@ -181,11 +186,11 @@ if (!defined('SAKURA_NO_TPL')) {
     ];
 
     // Site closing
-    if (Config::getConfig('site_closed')) {
+    if (Config::get('site_closed')) {
         // Additional render data
         $renderData = array_merge($renderData, [
             'page' => [
-                'message' => Config::getConfig('site_closed_reason'),
+                'message' => Config::get('site_closed_reason'),
             ],
         ]);
 

@@ -264,7 +264,7 @@ class Urls
         }
 
         // Check if mod_rewrite is enabled
-        $rewrite = ($rewrite === null ? Config::getConfig('url_rewrite') : $rewrite) ? 1 : 0;
+        $rewrite = ($rewrite === null ? Config::get('url_rewrite') : $rewrite) ? 1 : 0;
 
         // Format urls
         $formatted = vsprintf($this->urls[$lid][$rewrite], $args);

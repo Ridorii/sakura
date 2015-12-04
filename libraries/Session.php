@@ -99,7 +99,7 @@ class Session
         }
 
         // IP Check
-        $ipCheck = Config::getConfig('session_check');
+        $ipCheck = Config::get('session_check');
 
         // Origin checking
         if ($ipCheck) {

@@ -64,7 +64,7 @@ class Config
     }
 
     // Get values from the configuration on the file system
-    public static function getLocalConfig($key, $subkey = null)
+    public static function local($key, $subkey = null)
     {
 
         // Check if the key that we're looking for exists
@@ -83,38 +83,17 @@ class Config
             'Unable to get local configuration value "' . $key . '"',
             E_USER_ERROR
         );
-    }
-
-    // Dynamically set local configuration values, does not update the configuration file
-    public static function setLocalConfig($key, $subkey, $value)
-    {
-
-        // Check if we also do a subkey
-        if ($subkey) {
-            // If we do we make sure that the parent key is an array
-            if (!isset(self::$local[$key])) {
-                self::$local[$key] = [];
-            }
-
-            // And then assign the value
-            self::$local[$key][$subkey] = $value;
-        }
-
-        // Otherwise we just straight up assign it
-        self::$local[$key] = $value;
+        return null;
     }
 
     // Get values from the configuration in the database
-    public static function getConfig($key, $returnNull = false)
+    public static function get($key, $returnNull = false)
     {
 
         // Check if the key that we're looking for exists
         if (array_key_exists($key, self::$database)) {
             // Then return the value
             return self::$database[$key];
-        } elseif ($returnNull) {
-            // Avoid the error trigger if requested
-            return null;
         }
 
         // Then return the value
@@ -122,5 +101,6 @@ class Config
             'Unable to get configuration value "' . $key . '"',
             E_USER_ERROR
         );
+        return null;
     }
 }

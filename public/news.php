@@ -13,7 +13,7 @@ use DOMDocument;
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
 
 // Create a new News object
-$news = new News(isset($_GET['cat']) ? $_GET['cat'] : Config::getConfig('site_news_category'));
+$news = new News(isset($_GET['cat']) ? $_GET['cat'] : Config::get('site_news_category'));
 
 // News XML feed
 if (isset($_GET['xml'])) {
@@ -22,11 +22,11 @@ if (isset($_GET['xml'])) {
 
     // Meta data attributes
     $metaData = [
-        'title' => ($_FEED_TITLE = Config::getConfig('sitename')) . ' News',
-        'link' => ($_FEED_URL = 'http://' . Config::getConfig('url_main')),
+        'title' => ($_FEED_TITLE = Config::get('sitename')) . ' News',
+        'link' => ($_FEED_URL = 'http://' . Config::get('url_main')),
         'description' => 'News about ' . $_FEED_TITLE,
         'language' => 'en-gb',
-        'webMaster' => Config::getConfig('admin_email') . ' (' . $_FEED_TITLE . ' Webmaster)',
+        'webMaster' => Config::get('admin_email') . ' (' . $_FEED_TITLE . ' Webmaster)',
         'pubDate' => ($_FEED_DATE = date('r', $posts[array_keys($posts)[0]]['news_timestamp'])),
         'lastBuildDate' => $_FEED_DATE,
     ];
@@ -120,7 +120,7 @@ if (isset($_GET['xml'])) {
 
 $renderData = array_merge($renderData, [
     'news' => $news,
-    'postsPerPage' => Config::getConfig('news_posts_per_page'),
+    'postsPerPage' => Config::get('news_posts_per_page'),
     'viewPost' => isset($_GET['id']),
     'postExists' => $news->postExists(isset($_GET['id']) ? $_GET['id'] : 0),
 ]);

@@ -239,7 +239,7 @@
             </div>
             <div class="footer">
                 <div class="ftsections">
-                    <div class="copycentre">{% if not sakura.versionInfo.stable %}<a href="https://sakura.flash.moe/#r{{ sakura.versionInfo.version }}" target="_blank">Sakura Revision {{ sakura.versionInfo.version }} Development</a>{% endif %} &copy; 2013-2015 <a href="https://flash.moe/" target="_blank">Flashwave</a>, <a href="https://circlestorm.net/">et al</a>. </div>
+                    <div class="copycentre">Powered by <a href="https://github.com/flashwave/sakura/" target="_blank">Sakura</a>{% if sakura.dev.enable %} <a href="https://sakura.flash.moe/#r{{ sakura.versionInfo.version }}" target="_blank">r{{ sakura.versionInfo.version }}</a>{% endif %} &copy; 2013-2015 <a href="http://flash.moe/" target="_blank">Flashwave</a></div>
                     <ul class="ftsection">
                         <li class="fthead">General</li>
                         <li><a href="{{ urls.format('SITE_HOME') }}" title="Flashii Frontpage">Home</a></li>
@@ -267,7 +267,7 @@
                 </div>
             </div>
         </div>
-        {% if not sakura.versionInfo.stable and php.self == '/index.php' and stats %}
+        {% if sakura.dev.enable and php.self == '/index.php' and stats %}
         <script type="text/javascript" src="https://sakura.flash.moe/?get={{ sakura.versionInfo.version|slice(0, 4) }}-{{ sakura.versionInfo.version|slice(4, 2) }}-{{ sakura.versionInfo.version|slice(6, 2) }}&amp;variable=true"></script>
         <script type="text/javascript">
             // Column colours for actions

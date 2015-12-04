@@ -25,7 +25,7 @@ class Template
     public function __construct()
     {
         // Set template to default
-        $this->setTemplate(Config::getConfig('site_style'));
+        $this->setTemplate(Config::get('site_style'));
     }
 
     // Set a template name
@@ -59,7 +59,7 @@ class Template
         $twigEnv = [];
 
         // Enable caching
-        if (Config::getConfig('enable_tpl_cache')) {
+        if (Config::get('enable_tpl_cache')) {
             $twigEnv['cache'] = ROOT . 'cache/twig';
         }
 
