@@ -17,7 +17,7 @@ use Sakura\BBcode;
 class Posting
 {
     // Construct a new post action
-    public function __construct($forum, $thread = null) {
-        
+    public function __construct($forum, $thread = null)
+    {
     }
 }

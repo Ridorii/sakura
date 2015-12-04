@@ -28,7 +28,7 @@ if (version_compare(phpversion(), '5.4.0', '<')) {
 }
 
 // Include third-party libraries
-if(!@include_once ROOT . 'vendor/autoload.php') {
+if (!@include_once ROOT . 'vendor/autoload.php') {
     die('<h3>Autoloader not found, did you run composer?</h3>');
 }
 
