@@ -75,12 +75,14 @@ class Thread
     }
 
     // Get the opening post
-    public function firstPost() {
+    public function firstPost()
+    {
         return $this->posts() ? array_values($this->_posts)[0] : (new Post(0));
     }
 
     // Get the last reply
-    public function lastPost() {
+    public function lastPost()
+    {
         return $this->posts() ? end($this->_posts) : (new Post(0));
     }
 
