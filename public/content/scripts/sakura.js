@@ -124,3 +124,113 @@ var utf8 = (function () {
     };
     return utf8;
 })();
+// HTTP methods
+var HTTPMethods;
+(function (HTTPMethods) {
+    HTTPMethods[HTTPMethods["GET"] = 0] = "GET";
+    HTTPMethods[HTTPMethods["HEAD"] = 1] = "HEAD";
+    HTTPMethods[HTTPMethods["POST"] = 2] = "POST";
+    HTTPMethods[HTTPMethods["PUT"] = 3] = "PUT";
+    HTTPMethods[HTTPMethods["DELETE"] = 4] = "DELETE";
+})(HTTPMethods || (HTTPMethods = {}));
+// AJAX functions
+var AJAX = (function () {
+    // Prepares the XMLHttpRequest and stuff
+    function AJAX() {
+        this.send = null;
+        this.request = new XMLHttpRequest();
+        this.callbacks = new Object();
+        this.headers = new Object();
+    }
+    // Start
+    AJAX.prototype.start = function (method) {
+        var _this = this;
+        // Open the connection
+        this.request.open(HTTPMethods[method], this.url, true);
+        // Set headers
+        this.prepareHeaders();
+        // Watch the ready state
+        this.request.onreadystatechange = function () {
+            // Only invoke when complete
+            if (_this.request.readyState === 4) {
+                // Check if a callback if present
+                if ((typeof _this.callbacks[_this.request.status]).toLowerCase() === 'function') {
+                    _this.callbacks[_this.request.status]();
+                }
+                else {
+                    if ((typeof _this.callbacks['0']).toLowerCase() === 'function') {
+                        // Call that
+                        _this.callbacks['0']();
+                    }
+                }
+            }
+        };
+        this.request.send(this.send);
+    };
+    // Stop
+    AJAX.prototype.stop = function () {
+        this.request = null;
+    };
+    // Add post data
+    AJAX.prototype.setSend = function (data) {
+        // Storage array
+        var store = new Array();
+        // Iterate over the object and them in the array with an equals sign inbetween
+        for (var item in data) {
+            store.push(encodeURIComponent(item) + "=" + encodeURIComponent(data[item]));
+        }
+        // Assign to send
+        this.send = store.join('&');
+    };
+    // Set raw post
+    AJAX.prototype.setRawSend = function (data) {
+        this.send = data;
+    };
+    // Get response
+    AJAX.prototype.response = function () {
+        return this.request.responseText;
+    };
+    // Set charset
+    AJAX.prototype.contentType = function (type, charset) {
+        if (charset === void 0) { charset = null; }
+        this.addHeader('Content-Type', type + ';charset=' + (charset ? charset : 'utf-8'));
+    };
+    // Add a header
+    AJAX.prototype.addHeader = function (name, value) {
+        // Attempt to remove a previous instance
+        this.removeHeader(name);
+        // Add the new header
+        this.headers[name] = value;
+    };
+    // Remove a header
+    AJAX.prototype.removeHeader = function (name) {
+        if ((typeof this.headers[name]).toLowerCase() !== 'undefined') {
+            delete this.headers[name];
+        }
+    };
+    // Prepare request headers
+    AJAX.prototype.prepareHeaders = function () {
+        for (var header in this.headers) {
+            this.request.setRequestHeader(header, this.headers[header]);
+        }
+    };
+    // Adds a callback
+    AJAX.prototype.addCallback = function (status, callback) {
+        // Attempt to remove previous instances
+        this.removeCallback(status);
+        // Add the new callback
+        this.callbacks[status] = callback;
+    };
+    // Delete a callback
+    AJAX.prototype.removeCallback = function (status) {
+        // Delete the callback if present
+        if ((typeof this.callbacks[status]).toLowerCase() === 'function') {
+            delete this.callbacks[status];
+        }
+    };
+    // Sets the URL
+    AJAX.prototype.setUrl = function (url) {
+        this.url = url;
+    };
+    return AJAX;
+})();

@@ -26,16 +26,12 @@ function notifyUI(content) {
     // Add icon
     notifIcon   .className = 'notification-icon';
     if(content.img.substring(0, 5) == "FONT:") {
-
         iconCont = document.createElement('div');
         iconCont.className = 'font-icon fa ' + content.img.replace('FONT:', '') + ' fa-4x';
-
     } else {
-
         iconCont = document.createElement('img');
         iconCont.setAttribute('alt', identifier);
         iconCont.setAttribute('src', content.img);
-
     }
     notifIcon   .appendChild(iconCont);
     notif       .appendChild(notifIcon);
@@ -49,10 +45,8 @@ function notifyUI(content) {
     notifTitle      .appendChild(notifTitleNode);
     notifText       .appendChild(notifTextNode);
     if(content.link) {
-
         notif       .setAttribute('sakurahref', content.link);
         notifContent.setAttribute('onclick',    content.link.substring(0, 11) == 'javascript:' ? content.link.substring(11) : 'notifyOpen(this.parentNode.id);');
-
     }
     notifContent    .appendChild(notifTitle);
     notifContent    .appendChild(notifText);
@@ -133,54 +127,35 @@ function notifyRequest(session) {
         return;
     }
 
-    // Create XMLHttpRequest and notifyURL
-    var notificationWatcher = new XMLHttpRequest();
-    var notifyURL           = '//' + sakuraVars.urlMain + '/settings.php?request-notifications=true&time=' + Sakura.epoch() + '&session=' + session;
+    // Create AJAX
+    var alertGet = new AJAX();
+    alertGet.setUrl('/settings.php?request-notifications=true&time=' + Sakura.epoch() + '&session=' + session);
+    
+    alertGet.addCallback(200, function () {
+        // Assign the JSON parsed content to a variable
+        var data = JSON.parse(alertGet.response());
 
-    // Wait for the ready state to change
-    notificationWatcher.onreadystatechange = function() {
-        // Wait for it to reach the "complete" stage
-        if(notificationWatcher.readyState === 4) {
-            // Continue if the HTTP return was 200
-            if(notificationWatcher.status === 200) {
-                // Assign the JSON parsed content to a variable
-                var notifyGet = JSON.parse(notificationWatcher.responseText);
+        // If nothing was set stop
+        if (typeof data == 'undefined') {
+            // Tell the user something went wrong...
+            throw "No data returned";
 
-                // If nothing was set stop
-                if(typeof notifyGet == 'undefined') {
-                    // Tell the user something went wrong...
-                    notifyUI({
-                        "title":    "An error occurred!",
-                        "text":     "If this problem persists please report this to the administrator.",
-                        "img":      "FONT:fa-exclamation-triangle",
-                        "timeout":  60000,
-                        "sound":    false
-                    });
-
-                    // ...then prevent the function from contiuing
-                    return;
-                }
-
-                // Go over every return notification and pass the object to it
-                for(var notifyID in notifyGet) {
-                    notifyUI(notifyGet[notifyID]);
-                }
-            } else if((notificationWatcher.status + '').substring(0, 1) == '5') {
-                // ELse tell the user there was an internal server error...
-                notifyUI({
-                    "title":    "An internal server error occurred!",
-                    "text":     "If this problem persists please report this to the administrator.",
-                    "img":      "FONT:fa-chain-broken",
-                    "timeout":  60000,
-                    "sound":    false
-                });
-            }
+            // ...then prevent the function from contiuing
+            return;
         }
-    };
 
-    // Make the request
-    notificationWatcher.open('GET', notifyURL, true);
-    notificationWatcher.send();
+        // Go over every return notification and pass the object to it
+        for (var id in data) {
+            notifyUI(data[id]);
+        }
+    });
+
+    alertGet.addCallback(0, function () {
+        // Tell the user something went wrong...
+        throw "Notification request failed";
+    });
+
+    alertGet.start(HTTPMethods.GET);
 }
 
 // Show the full-page busy window
@@ -268,48 +243,30 @@ function ajaxBusyView(show, message, type) {
 
 // Making a post request using AJAX
 function ajaxPost(url, data, callback) {
-    // Combine name and value with an = inbetween
-    var query = [];
-    for(var i in data) {
-        query.push(encodeURIComponent(i) +"="+ encodeURIComponent(data[i]));
-    }
+    // Create AJAX
+    var request = new AJAX();
 
-    // Join the array
-    query = query.join("&");
+    // Set url
+    request.setUrl(url);
 
-    // Create XMLHttpRequest
-    var request = new XMLHttpRequest();
+    // Add callbacks
+    request.addCallback(200, function () {
+        callback.call(request.response())
+    });
+    request.addCallback(0, function () {
+        ajaxBusyView(false);
 
-    // Open a post request
-    request.open('POST', url, true);
+        throw "POST Request failed";
+    });
 
-    // Wait for the readiness to change
-    request.onreadystatechange = function() {
-        // Wait for completion
-        if(request.readyState === 4) {
-            if(request.status === 200) {
-                callback.call(request.responseText);
-            } else {
-                ajaxBusyView(false);
+    // Add header
+    request.addHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-                notifyUI({
-                    "title":    "An internal server error occurred!",
-                    "text":     "If this problem persists please report this to the administrator.",
-                    "img":      "FONT:fa-chain-broken",
-                    "timeout":  60000,
-                    "sound":    false
-                });
+    // Set the post data
+    request.setSend(data);
 
-                return null;
-            }
-        }
-    };
-
-    // Set headers
-    request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-    // Submit the request
-    request.send(query);
+    // Make the request
+    request.start(HTTPMethods.POST);
 }
 
 // Convert href attribute to an object

@@ -142,3 +142,135 @@ class utf8 {
         return decodeURIComponent(escape(string));
     }
 }
+
+// HTTP methods
+enum HTTPMethods {
+    GET,
+    HEAD,
+    POST,
+    PUT,
+    DELETE
+}
+
+// AJAX functions
+class AJAX {
+    // XMLHTTPRequest container
+    private request: XMLHttpRequest;
+    private callbacks: Object;
+    private headers: Object;
+    private url: string;
+    private send: string = null;
+
+    // Prepares the XMLHttpRequest and stuff
+    constructor() {
+        this.request = new XMLHttpRequest();
+        this.callbacks = new Object();
+        this.headers = new Object();
+    }
+
+    // Start
+    public start(method: HTTPMethods): void {
+        // Open the connection
+        this.request.open(HTTPMethods[method], this.url, true);
+
+        // Set headers
+        this.prepareHeaders();
+
+        // Watch the ready state
+        this.request.onreadystatechange = () => {
+            // Only invoke when complete
+            if (this.request.readyState === 4) {
+                // Check if a callback if present
+                if ((typeof this.callbacks[this.request.status]).toLowerCase() === 'function') {
+                    this.callbacks[this.request.status]();
+                } else { // Else check if there's a generic fallback present
+                    if ((typeof this.callbacks['0']).toLowerCase() === 'function') {
+                        // Call that
+                        this.callbacks['0']();
+                    }
+                }
+            }
+        }
+
+        this.request.send(this.send);
+    }
+
+    // Stop
+    public stop(): void {
+        this.request = null;
+    }
+
+    // Add post data
+    public setSend(data: Object): void {
+        // Storage array
+        var store: Array<string> = new Array<string>();
+
+        // Iterate over the object and them in the array with an equals sign inbetween
+        for (var item in data) {
+            store.push(encodeURIComponent(item) + "=" + encodeURIComponent(data[item]));
+        }
+
+        // Assign to send
+        this.send = store.join('&');
+    }
+
+    // Set raw post
+    public setRawSend(data: string) {
+        this.send = data;
+    }
+
+    // Get response
+    public response(): string {
+        return this.request.responseText;
+    }
+
+    // Set charset
+    public contentType(type: string, charset: string = null): void {
+        this.addHeader('Content-Type', type + ';charset=' + (charset ? charset : 'utf-8'));
+    }
+
+    // Add a header
+    public addHeader(name: string, value: string): void {
+        // Attempt to remove a previous instance
+        this.removeHeader(name);
+
+        // Add the new header
+        this.headers[name] = value;
+    }
+
+    // Remove a header
+    public removeHeader(name: string): void {
+        if ((typeof this.headers[name]).toLowerCase() !== 'undefined') {
+            delete this.headers[name];
+        }
+    }
+
+    // Prepare request headers
+    public prepareHeaders(): void {
+        for (var header in this.headers) {
+            this.request.setRequestHeader(header, this.headers[header]);
+        }
+    }
+
+    // Adds a callback
+    public addCallback(status: number, callback: Function): void {
+        // Attempt to remove previous instances
+        this.removeCallback(status);
+
+        // Add the new callback
+        this.callbacks[status] = callback;
+    }
+
+    // Delete a callback
+    public removeCallback(status: number): void {
+        // Delete the callback if present
+        if ((typeof this.callbacks[status]).toLowerCase() === 'function') {
+            delete this.callbacks[status];
+        }
+    }
+
+    // Sets the URL
+    public setUrl(url: string): void {
+        this.url = url;
+    }
+}
