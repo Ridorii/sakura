@@ -2,26 +2,6 @@
  * Sakura Yuuno JavaScript
  */
 
-// Get or set cookies
-function cookieData(action, name, data) {
-    switch(action) {
-        case 'get':
-            return (result = new RegExp('(^|; )' + encodeURIComponent(name) + '=([^;]*)').exec(document.cookie)) ? result[2] : '';
-
-        case 'set':
-            document.cookie = name + '=' + data + '; path=/';
-            return null;
-
-        default:
-            return null;
-    }
-}
-
-// Get the current unix/epoch timestamp
-function epochTime() {
-    return Math.floor(Date.now() / 1000);
-}
-
 // Create a notification box
 function notifyUI(content) {
     // Grab the container and create an ID
@@ -133,7 +113,7 @@ function notifyClose(id) {
     // Remove the element after 500 milliseconds (animation takes 400)
     setTimeout(function() {
         // Use the later defined removeId function
-        removeId(id);
+        Sakura.removeId(id);
     }, 410);
 }
 
@@ -155,7 +135,7 @@ function notifyRequest(session) {
 
     // Create XMLHttpRequest and notifyURL
     var notificationWatcher = new XMLHttpRequest();
-    var notifyURL           = '//' + sakuraVars.urlMain + '/settings.php?request-notifications=true&time=' + epochTime() + '&session=' + session;
+    var notifyURL           = '//' + sakuraVars.urlMain + '/settings.php?request-notifications=true&time=' + Sakura.epoch() + '&session=' + session;
 
     // Wait for the ready state to change
     notificationWatcher.onreadystatechange = function() {
@@ -201,40 +181,6 @@ function notifyRequest(session) {
     // Make the request
     notificationWatcher.open('GET', notifyURL, true);
     notificationWatcher.send();
-}
-
-// Toggle a class on an element
-function toggleClass(element, name) {
-    // Attempt to get the index
-    var indexOf = element.className.indexOf(name);
-
-    if (indexOf < 0) {
-        element.className += ' ' + name;
-    } else {
-        element.className = element.className.replace(name, '').trim();
-    }
-}
-
-// Removing all elements with a certain class
-function removeClass(className) {
-    // Get the elements
-    var objectCont = document.getElementsByClassName(className);
-
-    // Use a while loop instead of a for loop (Array keys change) to remove each element
-    while(objectCont.length > 0) {
-        objectCont[0].parentNode.removeChild(objectCont[0]);
-    }
-}
-
-// Removing an element by ID
-function removeId(id) {
-    // Get the element
-    var objectCont = document.getElementById(id);
-
-    // If the element exists use the parent node to remove it
-    if(typeof(objectCont) != "undefined" && objectCont !== null) {
-        objectCont.parentNode.removeChild(objectCont);
-    }
 }
 
 // Show the full-page busy window
@@ -312,7 +258,7 @@ function ajaxBusyView(show, message, type) {
                 if(busyCont.style.opacity > 0) {
                     busyCont.style.opacity = busyCont.style.opacity - 0.1;
                 } else { // When we've reached 0 remove the container element and clear the fadeout interval
-                    removeId('ajaxBusy');
+                    Sakura.removeId('ajaxBusy');
                     clearInterval(fadeOut);
                 }
             }, 10);
@@ -519,84 +465,9 @@ function submitPostHandler(result, busyView, resetCaptchaOnFailure) {
 
 }
 
-// Encode UTF-8
-function utf8_encode(str) {
-    return unescape(encodeURIComponent(str));
-}
-
-// Decode UTF-8
-function utf8_decode(str) {
-    return decodeURIComponent(escape(str));
-}
-
-// Calculate the amount of unique characters in a string
-function uniqueChars(str) {
-    // Create storage array and count var
-    var usedChars   = [];
-    var count       = 0;
-
-    // Count the amount of unique characters
-    for(var i = 0; i < str.length; i++) {
-        // Check if we already counted this character
-        if(usedChars.indexOf(str[i]) == -1) {
-            // Push the character into the used array
-            usedChars.push(str[i]);
-
-            // Up the count
-            count++;
-        }
-    }
-
-    // Return the count
-    return count;
-}
-
-// Alternative for Math.log2() since it's still experimental
-function log2(num) {
-    return Math.log(num) / Math.log(2);
-}
-
-// Calculate password entropy
-function pwdEntropy(pwd) {
-    // Decode utf-8 chars
-    pwd = utf8_decode(pwd);
-
-    // Count the amount of unique characters in the password and calculate the entropy
-    return uniqueChars(pwd) * log2(256);
-}
-
 // Check if password is within the minimum entropy value
 function checkPwdEntropy(pwd) {
-    return (pwdEntropy(pwd) >= sakuraVars.minPwdEntropy);
-}
-
-// Check the length of a string
-function checkStringLength(str, min, max) {
-    // Get length of string
-    var len = str.length;
-
-    // Check if it meets the minimum
-    if(len < min) {
-        return false;
-    }
-
-    // Check if it meets the maximum
-    if(len > max) {
-        return false;
-    }
-
-    // If it passes both return true
-    return true;
-}
-
-// Validate email address formats
-function validateEmail(email) {
-    // The regex
-    var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,48})+$/;
-    // is of fix
-
-    // Test it (which returns true or false)
-    return re.test(email);
+    return (Sakura.pwdEntropy(pwd) >= sakuraVars.minPwdEntropy);
 }
 
 // Check registration variables
@@ -617,12 +488,12 @@ function registerVarCheck(id, mode, option) {
             break;
 
         case 'email':
-            check = validateEmail(input.value);
+            check = Sakura.validateEmail(input.value);
             break;
 
         case 'username':
         default:
-            check = checkStringLength(input.value, sakuraVars.minUserLen, sakuraVars.maxUserLen);
+            check = Sakura.stringLength(input.value, sakuraVars.minUserLen, sakuraVars.maxUserLen);
             break;
     }
 
@@ -722,7 +593,7 @@ function commentReply(id, session, category, action, avatar) {
 
     // Remove it if it already exists
     if(replyBox) {
-        removeId('comment-reply-container-' + id);
+        Sakura.removeId('comment-reply-container-' + id);
         return false;
     }
 

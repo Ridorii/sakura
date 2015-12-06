@@ -32,18 +32,15 @@
         <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/yuuno.css" />
 {{ block('css') }}
         <!-- JS -->
+        <script type="text/javascript" src="{{ sakura.contentPath }}/scripts/sakura.js"></script>
         <script type="text/javascript" src="{{ sakura.resources }}/js/yuuno.js"></script>
         <script type="text/javascript">
-
             // Create an object so we can access certain settings from remote JavaScript files
             var sakuraVars = {
-
                 "cookie": {
-
                     "prefix":   "{{ sakura.cookie.prefix }}",
                     "domain":   "{{ sakura.cookie.domain }}",
                     "path":     "{{ sakura.cookie.path }}"
-
                 },
 
                 "siteName":         "{{ sakura.siteName }}",
@@ -56,8 +53,11 @@
                 "maxUserLen":       {{ sakura.maxUsernameLength }},
                 "minPwdEntropy":    {{ sakura.minPwdEntropy }},
                 "checkLogin":       {% if session.checkLogin %}true{% else %}false{% endif %}
-
             };
+
+            // Set cookie prefix and path
+            Sakura.cookiePrefix = "{{ sakura.cookie.prefix }}";
+            Sakura.cookiePath = "{{ sakura.cookie.path }}";
 
             // Space for things that need to happen onload
             window.addEventListener("load", function() {
@@ -123,13 +123,13 @@
 
             {% endif %}
 
-                if(!cookieData('get', sakuraVars.cookie.prefix +'accept_cookies')) {
+                if(!Sakura.cookie('accept_cookies')) {
 
                     notifyUI({
                         "title":    sakuraVars.siteName + " uses cookies!",
                         "text":     "Click this if you're OK with that and want to hide this message.",
                         "img":      "FONT:fa-asterisk",
-                        "link":     "javascript:cookieData('set', '" + sakuraVars.cookie.prefix + "accept_cookies', 'true; expires=" + (new Date(2147483647000)).toUTCString() + "');notifyClose(this.parentNode.id);"
+                        "link":     "javascript:Sakura.cookie('accept_cookies', 'true; expires=" + (new Date(2147483647000)).toUTCString() + "');notifyClose(this.parentNode.id);"
                     });
 
                 }
