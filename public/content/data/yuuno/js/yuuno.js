@@ -113,7 +113,7 @@ function notifyClose(id) {
     // Remove the element after 500 milliseconds (animation takes 400)
     setTimeout(function() {
         // Use the later defined removeId function
-        Sakura.removeId(id);
+        Sakura.removeById(id);
     }, 410);
 }
 
@@ -258,7 +258,7 @@ function ajaxBusyView(show, message, type) {
                 if(busyCont.style.opacity > 0) {
                     busyCont.style.opacity = busyCont.style.opacity - 0.1;
                 } else { // When we've reached 0 remove the container element and clear the fadeout interval
-                    Sakura.removeId('ajaxBusy');
+                    Sakura.removeById('ajaxBusy');
                     clearInterval(fadeOut);
                 }
             }, 10);
@@ -593,7 +593,7 @@ function commentReply(id, session, category, action, avatar) {
 
     // Remove it if it already exists
     if(replyBox) {
-        Sakura.removeId('comment-reply-container-' + id);
+        Sakura.removeById('comment-reply-container-' + id);
         return false;
     }
 
