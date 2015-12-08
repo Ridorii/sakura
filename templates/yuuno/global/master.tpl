@@ -228,9 +228,7 @@
                 {% block content %}
                     <h1 class="stylised" style="text-align: center; margin: 2em auto;">{{ php.self }} is now printing!</h1>
                 {% endblock %}
-
-                {# include 'global/chat.tpl' #}
-
+                
                 {#<div class="ad-container ad-footer" id="footerAd">
                     <div class="ad-box">
                         <img src="http://i.flash.moe/1445792838-522-8610.png" />

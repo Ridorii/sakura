@@ -101,7 +101,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     }
 
     // Set header, convert the array to json, print it and exit
-    print json_encode($notifications);
+    echo json_encode($notifications, JSON_NUMERIC_CHECK);
     exit;
 } elseif (isset($_REQUEST['comment-action']) && $_REQUEST['comment-action']) {
     // Referrer
