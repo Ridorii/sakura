@@ -124,14 +124,12 @@
             {% endif %}
 
                 if(!Sakura.cookie('accept_cookies')) {
-
                     notifyUI({
                         "title":    sakuraVars.siteName + " uses cookies!",
                         "text":     "Click this if you're OK with that and want to hide this message.",
                         "img":      "FONT:fa-asterisk",
                         "link":     "javascript:Sakura.cookie('accept_cookies', 'true; expires=" + (new Date(2147483647000)).toUTCString() + "');notifyClose(this.parentNode.id);"
                     });
-
                 }
 
             });
@@ -144,7 +142,6 @@
                     "img":      "FONT:fa-warning"
                 });
             }
-
         </script>
 {{ block('js') }}
     </head>

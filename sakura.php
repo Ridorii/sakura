@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151208');
+define('SAKURA_VERSION', '20151209');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 
@@ -32,6 +32,7 @@ if (!@include_once ROOT . 'vendor/autoload.php') {
 }
 
 // Include components
+require_once ROOT . 'libraries/ActionCode.php';
 require_once ROOT . 'libraries/Bans.php';
 require_once ROOT . 'libraries/BBcode.php';
 require_once ROOT . 'libraries/Comments.php';

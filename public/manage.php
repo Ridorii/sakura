@@ -30,6 +30,9 @@ $modes = [
         'appearance',
         'performance',
     ],
+    'logs' => [
+        'errors',
+    ],
     'error' => [
         'index',
     ],
@@ -67,17 +70,9 @@ $renderData = array_merge($renderData, [
 
 // Add special variables
 switch ($category . '.' . $mode) {
-    case 'system.index':
-        $renderData = array_merge($renderData, [
-            'uname' => [
-                'osn' => php_uname('s'),
-                'osv' => php_uname('v'),
-                'host' => php_uname('n'),
-                'arch' => php_uname('m'),
-            ],
-        ]);
-        break;
-    case 'config.index':
+    case 'logs.errors':
+        $errorLog = Database::fetch('error_log', true, null, ['error_id', true]);
+        $renderData = array_merge($renderData, ['errors' => $errorLog]);
         break;
 }
 
@@ -91,4 +86,4 @@ $template->setTemplate($templateName);
 $template->setVariables($renderData);
 
 // Print page contents
-echo $template->render('pages/' . $mode . '.' . $category . '.tpl');
+echo $template->render('pages/' . $category . '/' . $mode . '.tpl');

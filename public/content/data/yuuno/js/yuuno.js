@@ -1,618 +1,503 @@
 /*
- * Sakura Yuuno JavaScript
+ * Sakura Yuuno
  */
-
-// Create a notification box
+// Spawns a notification
 function notifyUI(content) {
     // Grab the container and create an ID
-    var container   = document.getElementById('notifications');
-    var identifier  = 'sakura-notification-' + Date.now();
-
-    // Create the notification element and children
-    var notif           = document.createElement('div');
-    var notifIcon       = document.createElement('div');
-    var notifContent    = document.createElement('div');
-    var notifTitle      = document.createElement('div');
-    var notifText       = document.createElement('div');
-    var notifClose      = document.createElement('div');
-    var notifCloseIcon  = document.createElement('div');
-    var notifClear      = document.createElement('div');
-    var iconCont;
-
-    // Add ID and class on notification container
-    notif.className = 'notification-enter';
-    notif.setAttribute('id', identifier);
-
-    // Add icon
-    notifIcon   .className = 'notification-icon';
-    if(content.img.substring(0, 5) == "FONT:") {
-        iconCont = document.createElement('div');
-        iconCont.className = 'font-icon fa ' + content.img.replace('FONT:', '') + ' fa-4x';
-    } else {
-        iconCont = document.createElement('img');
-        iconCont.setAttribute('alt', identifier);
-        iconCont.setAttribute('src', content.img);
+    var cont = document.getElementById('notifications');
+    var id = 'sakura-notification-' + Date.now();
+    // Create the elements
+    var alert = document.createElement('div');
+    var aIcon = document.createElement('div');
+    var aCont = document.createElement('div');
+    var aTitle = document.createElement('div');
+    var aText = document.createElement('div');
+    var aClose = document.createElement('div');
+    var aCIcon = document.createElement('div');
+    var aClear = document.createElement('div');
+    var aIconCont;
+    // Add attributes to the main element
+    alert.className = 'notification-enter';
+    alert.id = id;
+    // Add the icon
+    if ((typeof content.img).toLowerCase() === 'undefined' && content.img == null && !(content.img.length > 1)) {
+        aIconCont = document.createElement('div');
+        aIconCont.className = 'font-icon fa fa-info fa-4x';
     }
-    notifIcon   .appendChild(iconCont);
-    notif       .appendChild(notifIcon);
-
-    // Add content
-    var notifTitleNode  = document.createTextNode(content.title);
-    var notifTextNode   = document.createTextNode(content.text);
-    notifContent    .className = 'notification-content';
-    notifTitle      .className = 'notification-title';
-    notifText       .className = 'notification-text';
-    notifTitle      .appendChild(notifTitleNode);
-    notifText       .appendChild(notifTextNode);
-    if(content.link) {
-        notif       .setAttribute('sakurahref', content.link);
-        notifContent.setAttribute('onclick',    content.link.substring(0, 11) == 'javascript:' ? content.link.substring(11) : 'notifyOpen(this.parentNode.id);');
+    else if (content.img.substr(0, 5) == 'FONT:') {
+        aIconCont = document.createElement('div');
+        aIconCont.className = 'font-icon fa ' + content.img.replace('FONT:', '') + ' fa-4x';
     }
-    notifContent    .appendChild(notifTitle);
-    notifContent    .appendChild(notifText);
-    notif           .appendChild(notifContent);
-
-    // Add close button
-    notifClose  .className = 'notification-close';
-    notifClose  .setAttribute('onclick', 'notifyClose(this.parentNode.id);');
-    notifClose  .appendChild(notifCloseIcon);
-    notif       .appendChild(notifClose);
-
-    // Add .clear
-    notifClear  .className = 'clear';
-    notif       .appendChild(notifClear);
-
-    // Append the notification to the document so it actually shows up to the user also add the link
-    container.appendChild(notif);
-
-    // Play sound if requested
-    if(content.sound > 0) {
-        // Create sound element and mp3 and ogg sources
-        var sound       = document.createElement('audio');
-        var soundMP3    = document.createElement('source');
-        var soundOGG    = document.createElement('source');
-
-        // Assign the proper attributes to the sources
-        soundMP3.setAttribute('src',    '//' + sakuraVars.content_path + '/sounds/notify.mp3');
-        soundMP3.setAttribute('type',   'audio/mp3');
-        soundOGG.setAttribute('src',    '//' + sakuraVars.content_path + '/sounds/notify.ogg');
-        soundOGG.setAttribute('type',   'audio/ogg');
-
-        // Append the children
-        sound.appendChild(soundMP3);
-        sound.appendChild(soundOGG);
-
-        // Play the sound
+    else {
+        aIconCont = document.createElement('img');
+        aIconCont.alt = id;
+        aIconCont.img = content.img;
+    }
+    aIcon.appendChild(aIconCont);
+    aIcon.className = 'notification-icon';
+    alert.appendChild(aIcon);
+    // Add the content
+    aCont.className = 'notification-content';
+    aTitle.className = 'notification-title';
+    aText.className = 'notifcation-text';
+    aTitle.textContent = content.title;
+    aText.textContent = content.text;
+    // Check if a link exists and add if it does
+    if ((typeof content.link).toLowerCase() !== 'undefined' && content.link !== null && content.link.length > 1) {
+        alert.setAttribute('sakurahref', content.link);
+        aCont.setAttribute('onclick', content.link.substr(0, 11) == 'javascript:' ? content.link.substring(11) : 'notifyOpen(this.parentNode.id);');
+    }
+    // Append stuff
+    aCont.appendChild(aTitle);
+    aCont.appendChild(aText);
+    alert.appendChild(aCont);
+    // Add the close button
+    aClose.className = 'notification-close';
+    aClose.setAttribute('onclick', 'notifyClose(this.parentNode.id);');
+    aClose.appendChild(aCIcon);
+    alert.appendChild(aClose);
+    // Append the notification to the document
+    cont.appendChild(alert);
+    // Play sound if request
+    if (content.sound) {
+        // Create the elements
+        var sound = document.createElement('audio');
+        var mp3 = document.createElement('source');
+        var ogg = document.createElement('source');
+        // Assign attribs
+        mp3.type = 'audio/mp3';
+        ogg.type = 'audio/ogg';
+        mp3.src = sakuraVars.content_path + '/sounds/notify.mp3';
+        ogg.src = sakuraVars.content_path + '/sounds/notify.ogg';
+        // Append
+        sound.appendChild(mp3);
+        sound.appendChild(ogg);
+        // And play
         sound.play();
     }
-
-    // If keepalive is 0 keep the notification open "forever" (until the user closes it or changes the page)
-    if(content.timeout > 0) {
-        // Set set a timeout and execute notifyClose() after amount of milliseconds specified
-        setTimeout(function() {
-            // Use the later defined notifyClose function
-            notifyClose(identifier);
+    // If keepalive is 0 keep the notification open forever
+    if (content.timeout > 0) {
+        // Set a timeout and close after an amount
+        setTimeout(function () {
+            notifyClose(id);
         }, content.timeout);
     }
 }
-
-// Closing a notification box
+// Closing a notification
 function notifyClose(id) {
-    // Get the element and assign it to a variable
-    var element = document.getElementById(id);
-
-    // Do the animation
-    element.className = 'notification-exit';
-
-    // Remove the element after 500 milliseconds (animation takes 400)
-    setTimeout(function() {
-        // Use the later defined removeId function
+    // Get the element
+    var e = document.getElementById(id);
+    // Add the animation
+    e.className = 'notification-exit';
+    // Remove after 410 ms
+    setTimeout(function () {
         Sakura.removeById(id);
     }, 410);
 }
-
-// Opening a link to a notifcated thing (what even)
+// Opening an alerted link
 function notifyOpen(id) {
     var sakuraHref = document.getElementById(id).getAttribute('sakurahref');
-
-    if(typeof sakuraHref !== 'undefined') {
-        window.location = sakuraHref;
+    if ((typeof sakuraHref).toLowerCase() !== 'undefined') {
+        window.location.assign(sakuraHref);
     }
 }
-
 // Request notifications
 function notifyRequest(session) {
     // Check if the document isn't hidden
-    if(document.hidden) {
+    if (document.hidden) {
         return;
     }
-
-    // Create AJAX
-    var alertGet = new AJAX();
-    alertGet.setUrl('/settings.php?request-notifications=true&time=' + Sakura.epoch() + '&session=' + session);
-    
-    alertGet.addCallback(200, function () {
-        // Assign the JSON parsed content to a variable
-        var data = JSON.parse(alertGet.response());
-
-        // If nothing was set stop
-        if (typeof data == 'undefined') {
-            // Tell the user something went wrong...
-            throw "No data returned";
-
-            // ...then prevent the function from contiuing
+    // Create AJAX object
+    var get = new AJAX();
+    get.setUrl('/settings.php?request-notifications=true&time=' + Sakura.epoch() + '&session=' + session);
+    // Add callbacks
+    get.addCallback(200, function () {
+        // Assign the parsed JSON
+        var data = JSON.parse(get.response());
+        // Check if nothing went wrong
+        if ((typeof data).toLowerCase() === 'undefined') {
+            // Inform the user
+            throw "No or invalid data was returned";
+            // Stop
             return;
         }
-
-        // Go over every return notification and pass the object to it
+        // Create an object for every notification
         for (var id in data) {
             notifyUI(data[id]);
         }
     });
-
-    alertGet.addCallback(0, function () {
-        // Tell the user something went wrong...
-        throw "Notification request failed";
-    });
-
-    alertGet.start(HTTPMethods.GET);
+    get.start(HTTPMethods.GET);
 }
-
-// Show the full-page busy window
+// Show the full page busy window
 function ajaxBusyView(show, message, type) {
+    if (message === void 0) { message = null; }
+    if (type === void 0) { type = null; }
     // Get elements
-    var busyCont    = document.getElementById('ajaxBusy');
-    var busyStat    = document.getElementById('ajaxStatus');
-    var busyAnim    = document.getElementById('ajaxAnimate');
-    var pageContent = document.getElementById('contentwrapper');
-    var busyAnimIco;
-
+    var cont = document.getElementById('ajaxBusy');
+    var stat = document.getElementById('ajaxStatus');
+    var anim = document.getElementById('ajaxAnimate');
+    var body = document.getElementById('contentwrapper');
+    var icon = 'fa fa-4x ';
     // Select the proper icon
-    switch(type) {
+    switch (type) {
         case 'ok':
-            busyAnimIco = 'fa fa-check fa-4x';
+            icon += 'fa-check';
             break;
         case 'fail':
-            busyAnimIco = 'fa fa-remove fa-4x';
+            icon += 'fa-remove';
             break;
         case 'busy':
         default:
-            busyAnimIco = 'fa fa-refresh fa-spin fa-4x';
+            icon += 'fa-refresh fa-spin';
             break;
     }
-
-    // If requested to show the window build it
-    if(show) {
-        // Make sure it doesn't exist already
-        if(busyCont === null) {
+    // If request to show the window, build it
+    if (show) {
+        if ((typeof cont).toLowerCase() === 'undefined' || cont === null) {
             // Container
-            var createBusyCont = document.createElement('div');
-            createBusyCont.className = 'ajax-busy';
-            createBusyCont.setAttribute('id', 'ajaxBusy');
-
-            // Inner box
-            var createBusyInner = document.createElement('div');
-            createBusyInner.className = 'ajax-inner';
-            createBusyCont.appendChild(createBusyInner);
-
-            // Action description
-            var createBusyMsg = document.createElement('h2');
-            createBusyMsg.setAttribute('id', 'ajaxStatus');
-            createBusyInner.appendChild(createBusyMsg);
-
-            // FontAwesome icon
-            var createBusySpin = document.createElement('div');
-            createBusySpin.setAttribute('id', 'ajaxAnimate');
-            createBusyInner.appendChild(createBusySpin);
-
-            // Append the element to the actual page
-            pageContent.appendChild(createBusyCont);
-
-            // Reassign the previously assigned variables
-            busyCont = document.getElementById('ajaxBusy');
-            busyStat = document.getElementById('ajaxStatus');
-            busyAnim = document.getElementById('ajaxAnimate');
-        } // If the container already exists just continue and update the elements
-
-        // Alter the icon
-        busyAnim.className = busyAnimIco;
-
-        // Change the message
-        busyStat.innerHTML = (message === null ? 'Unknown' : message);
-    } else { // If show is false remove the element...
-        // ...but just do nothing if the container doesn't exist
-        if(busyCont !== null) {
-            // Create the fadeout with a 10ms interval
-            var fadeOut = setInterval(function() {
-                // Set an opacity if it doesn't exist yet
-                if(busyCont.style.opacity === null || busyCont.style.opacity === "") {
-                    busyCont.style.opacity = 1;
+            var cCont = document.createElement('div');
+            cCont.className = 'ajax-busy';
+            cCont.id = 'ajaxBusy';
+            // Inner
+            var cInner = document.createElement('div');
+            cInner.className = 'ajax-inner';
+            cCont.appendChild(cInner);
+            // Desc
+            var cMsg = document.createElement('h2');
+            cMsg.id = 'ajaxStatus';
+            cInner.appendChild(cMsg);
+            // Icon
+            var cIco = document.createElement('div');
+            cIco.id = 'ajaxAnimate';
+            cInner.appendChild(cIco);
+            // Append to document
+            body.appendChild(cCont);
+            // Reassign
+            cont = document.getElementById('ajaxBusy');
+            stat = document.getElementById('ajaxStatus');
+            anim = document.getElementById('ajaxAnimate');
+        }
+        // Update the icon
+        anim.className = icon;
+        // Update the message
+        stat.textContent = (message === null ? '' : message);
+    }
+    else {
+        if (cont !== null) {
+            var out = setInterval(function () {
+                if (cont.style.opacity === null || cont.style.opacity === "") {
+                    cont.style.opacity = "1";
                 }
-
-                // If the value isn't 0 yet start subtract .1 from the opacity
-                if(busyCont.style.opacity > 0) {
-                    busyCont.style.opacity = busyCont.style.opacity - 0.1;
-                } else { // When we've reached 0 remove the container element and clear the fadeout interval
+                // If the value isn't 0 yet subtract by .1
+                if (parseInt(cont.style.opacity) > 0) {
+                    cont.style.opacity = (parseInt(cont.style.opacity) - 0.1).toString();
+                }
+                else {
                     Sakura.removeById('ajaxBusy');
-                    clearInterval(fadeOut);
+                    clearInterval(out);
                 }
             }, 10);
         }
     }
 }
-
 // Making a post request using AJAX
 function ajaxPost(url, data, callback) {
     // Create AJAX
     var request = new AJAX();
-
     // Set url
     request.setUrl(url);
-
     // Add callbacks
     request.addCallback(200, function () {
-        callback.call(request.response())
+        callback.call(request.response());
     });
     request.addCallback(0, function () {
         ajaxBusyView(false);
-
         throw "POST Request failed";
     });
-
     // Add header
     request.addHeader('Content-Type', 'application/x-www-form-urlencoded');
-
     // Set the post data
     request.setSend(data);
-
     // Make the request
     request.start(HTTPMethods.POST);
+    // Return the AJAX object
+    return request;
 }
-
-// Convert href attribute to an object
+// Convert a href attr to an object
 function prepareAjaxLink(linkId, callback, attrs) {
-    // Get the elements
-    var link = typeof linkId === 'object' ? linkId : document.getElementById(linkId);
-
+    if (attrs === void 0) { attrs = null; }
+    // Get element
+    var link = (typeof linkId).toLowerCase() === 'object' ? linkId : document.getElementById(linkId);
     // Catch null
-    if(link == null) {
+    if (link === null) {
         return;
     }
-
-    // Get the href value
-    var hrefRaw = link.attributes.href.value;
-
-    // Get the action path
-    var action = hrefRaw.split('?')[0];
-
+    // Get the raw HREF value
+    var href = link.getAttribute('href');
+    // Get the action
+    var action = href.split('?')[0];
     // Split the request variables
-    var variablesNotSplit = hrefRaw.split('?')[1].split('&');
-
-    // Create variables object
-    var variables = {};
-
-    // Split the name and values of the variables
-    for(var key in variablesNotSplit) {
-        // Split name and value
-        var newVar = variablesNotSplit[key].split('=');
-
-        // Push it into the object
+    var varEarly = href.split('?')[1].split('&');
+    // Create storage thing
+    var variables = new Object();
+    // Split them
+    for (var k in varEarly) {
+        // Split
+        var newVar = varEarly[k].split('=');
+        // Push
         variables[newVar[0]] = newVar[1];
     }
-
     // Add ajax=true
     variables['ajax'] = true;
-
     // Update link attributes
-    link.setAttribute('href',       'javascript:void(0);');
-    link.setAttribute('onclick',    callback +'(\''+ action +'\', JSON.parse(\''+ JSON.stringify(variables) +'\')'+ (typeof attrs != 'undefined' ? attrs : '') +');');
+    link.setAttribute('href', 'javascript:void(0);');
+    link.setAttribute('onclick', callback + '(\'' + action + '\', JSON.parse(\'' + JSON.stringify(variables) + '\')' + (typeof attrs != 'undefined' ? attrs : '') + ');');
 }
-
-function prepareAjaxForm(formId, message, resetCaptchaOnFailure) {
+// Prepare a form for an AJAX request
+function prepareAjaxForm(formId, message, resetCaptcha) {
+    if (resetCaptcha === void 0) { resetCaptcha = false; }
     // Get the form
     var form = document.getElementById(formId);
-
-    // Create the AJAX form input
-    var createHidden = document.createElement('input');
-
+    // Create hidden ajax input
+    var hide = document.createElement('input');
     // Set the attributes
-    createHidden.setAttribute('name', 'ajax');
-    createHidden.setAttribute('value', 'true');
-    createHidden.setAttribute('type', 'hidden');
-    form.appendChild(createHidden);
-
+    hide.name = 'ajax';
+    hide.value = 'true';
+    hide.type = 'hidden';
+    form.appendChild(hide);
     // Update form
-    form.setAttribute('onsubmit', 'submitPost(\''+ form.action +'\', formToObject(\''+ formId +'\'), true, \''+ (message ? message : 'Please wait...') +'\', '+ (resetCaptchaOnFailure ? 'true' : 'false') +');');
+    form.setAttribute('onsubmit', 'submitPost(\'' + form.getAttribute('action') + '\', formToObject(\'' + formId + '\'), true, \'' + (message ? message : 'Please wait...') + '\', ' + (resetCaptcha ? 'true' : 'false') + ');');
     form.setAttribute('action', 'javascript:void(0);');
 }
-
 // Convert form to an object
 function formToObject(formId) {
-    // Get form data
+    // Get the form
     var form = document.getElementById(formId);
-
     // Make an object for the request parts
-    var requestParts = {};
-
-    // Get all children with a name attribute
+    var requestParts = new Object();
+    // Get all the children with a name attr
     var children = form.querySelectorAll('[name]');
-
-    // Sort children and make them ready for submission
-    for(var i in children) {
-        if(typeof children[i] == 'object') {
+    // Sort the children and make them ready for submission
+    for (var i in children) {
+        if ((typeof children[i]).toLowerCase() === 'object') {
             requestParts[children[i].name] = ((typeof children[i].type !== "undefined" && children[i].type.toLowerCase() == "checkbox") ? (children[i].checked ? 1 : 0) : children[i].value);
         }
     }
-
-    // Return the object
+    // Return the request parts
     return requestParts;
 }
-
-// Quickly building a form for god knows what reason
+// Quickly building a form
 function generateForm(formId, formAttr, formData, appendTo) {
-    // Create form elements and assign ID
-    var i;
+    if (appendTo === void 0) { appendTo = null; }
+    // Create form element
     var form = document.createElement('form');
-    form.setAttribute('id', formId);
-
-    // Set additional attributes
-    if(formAttr !== null) {
-        for(i in formAttr) {
-            form.setAttribute(i, formAttr[i]);
-        }
+    form.id = formId;
+    // Set additional attrs
+    for (var c in formAttr) {
+        form.setAttribute(c, formAttr[c]);
     }
-
-    // Generate input elements
-    for(i in formData) {
-        var disposableVar = document.createElement('input');
-        disposableVar.setAttribute('type', 'hidden');
-        disposableVar.setAttribute('name', i);
-        disposableVar.setAttribute('value', formData[i]);
-        form.appendChild(disposableVar);
+    // Set data
+    for (var a in formData) {
+        var b = document.createElement('input');
+        b.type = 'hidden';
+        b.name = a;
+        b.value = formData[a];
+        form.appendChild(b);
     }
-
-    // Append to another element if requested
-    if(appendTo !== null) {
+    // Append to something if requested
+    if (appendTo !== null) {
         document.getElementById(appendTo).appendChild(form);
     }
-
-    // Return the completed form
     return form;
 }
-
-// Submitting a form using an AJAX POST request
-function submitPost(action, requestParts, busyView, msg, resetCaptchaOnFailure) {
+// Submitting a post using AJAX
+function submitPost(action, requestParts, busyView, msg, resetCaptcha) {
     // If requested display the busy thing
-    if(busyView) {
+    if (busyView) {
         ajaxBusyView(true, msg, 'busy');
     }
-
-    // Submit the AJAX request
-    var request = ajaxPost(action, requestParts, function() {
-        submitPostHandler(this, busyView, resetCaptchaOnFailure);
+    // Submit the AJAX
+    var request = ajaxPost(action, requestParts, function () {
+        submitPostHandler(request.response(), busyView, resetCaptcha);
     });
-
 }
-
-// Submitting a form using an AJAX POST request
-function submitPostHandler(result, busyView, resetCaptchaOnFailure) {
-
-    // Split result
-    result = result.split('|');
-
-    // If using the busy view thing update the text displayed to the return of the request
-    if(busyView) {
+// Handling a submitted form using AJAX
+function submitPostHandler(data, busyView, resetCaptcha) {
+    // Split the result
+    var result = data.split('|');
+    // If using the bust view thing update the text displayed to the return of the request
+    if (busyView) {
         ajaxBusyView(true, result[0], (result[1] == '1' ? 'ok' : 'fail'));
     }
-
-    // If request reset the recaptcha on failure
-    if(resetCaptchaOnFailure && result[1] != '1' && sakuraVars.recaptchaEnabled != '0') {
+    // Reset captcha
+    if (resetCaptcha && result[1] != '1' && sakuraVars.recaptchaEnabled != '0') {
         grecaptcha.reset();
     }
-
-    setTimeout(function(){
-        if(busyView) {
+    setTimeout(function () {
+        if (busyView) {
             ajaxBusyView(false);
         }
-
-        if(result[1] == '1') {
-            window.location = result[2];
+        if (result[1] == '1') {
+            window.location.assign(result[2]);
         }
     }, 2000);
-
 }
-
-// Check if password is within the minimum entropy value
+// Check if a password is within the minimum entropy value
 function checkPwdEntropy(pwd) {
-    return (Sakura.pwdEntropy(pwd) >= sakuraVars.minPwdEntropy);
+    return (Sakura.entropy(pwd) >= sakuraVars.minPwdEntropy);
 }
-
 // Check registration variables
 function registerVarCheck(id, mode, option) {
+    if (option === void 0) { option = null; }
     // Get the element we're working with
     var input = document.getElementById(id);
     var check = null;
-
     // Use the proper mode
-    switch(mode) {
+    switch (mode) {
         case 'confirmpw':
             option = document.getElementById(option);
-            check = input.value === option.value;
+            check = input.getAttribute('value') === option.value;
             break;
-
         case 'password':
-            check = checkPwdEntropy(input.value);
+            check = checkPwdEntropy(input.getAttribute('value'));
             break;
-
         case 'email':
-            check = Sakura.validateEmail(input.value);
+            check = Sakura.validateEmail(input.getAttribute('value'));
             break;
-
         case 'username':
         default:
-            check = Sakura.stringLength(input.value, sakuraVars.minUserLen, sakuraVars.maxUserLen);
+            check = Sakura.stringLength(input.getAttribute('value'), sakuraVars.minUserLen, sakuraVars.maxUserLen);
             break;
     }
-
-    if(input.className.indexOf(check ? 'green' : 'red') < 0) {
+    if (input.className.indexOf(check ? 'green' : 'red') < 0) {
         input.className = input.className + ' ' + (check ? 'green' : 'red');
     }
-
-    if(input.className.indexOf(check ? 'red' : 'green') > 0) {
+    if (input.className.indexOf(check ? 'red' : 'green') > 0) {
         input.className = input.className.replace(check ? 'red' : 'green', '');
     }
 }
-
 // Initialising the element parallax functionality
 function initialiseParallax(id) {
     // Assign the element to a variable
     var parallax = document.getElementById(id);
-
     // Set proper position values
-    parallax.style.top      = '-2.5px';
-    parallax.style.bottom   = '-2.5px';
-    parallax.style.left     = '-2.5px';
-    parallax.style.right    = '-2.5px';
-
+    parallax.style.top = '-2.5px';
+    parallax.style.bottom = '-2.5px';
+    parallax.style.left = '-2.5px';
+    parallax.style.right = '-2.5px';
     // Add the event listener to the body element
-    document.addEventListener("mousemove", function(e) {
-
+    document.addEventListener("mousemove", function (e) {
         // Alter the position of the parallaxed element
-        parallax.style.top      = convertParallaxPositionValue(e.clientY, true, false)  + 'px';
-        parallax.style.bottom   = convertParallaxPositionValue(e.clientY, true, true)   + 'px';
-        parallax.style.left     = convertParallaxPositionValue(e.clientX, false, false) + 'px';
-        parallax.style.right    = convertParallaxPositionValue(e.clientX, false, true)  + 'px';
-
+        parallax.style.top = convertParallaxPositionValue(e.clientY, true, false) + 'px';
+        parallax.style.bottom = convertParallaxPositionValue(e.clientY, true, true) + 'px';
+        parallax.style.left = convertParallaxPositionValue(e.clientX, false, false) + 'px';
+        parallax.style.right = convertParallaxPositionValue(e.clientX, false, true) + 'px';
     });
 }
-
 // Converting the position value of the mouseover to a pixel value
 function convertParallaxPositionValue(pos, dir, neg) {
     // Get the body element
     var body = document.getElementsByTagName('body')[0];
-
     // Get percentage of current position
     var position = (pos / (dir ? body.clientHeight : body.clientWidth)) * 100;
-
     // If someone decided to fuck with the inputs reset it to 0%
-    if(position < 0 || position > 100) {
+    if (position < 0 || position > 100) {
         position = 0;
     }
-
     // Do the first maths
     position = (position / (dir ? 25 : 20)) - 2.5;
-
     // If the negative flag is set inverse the number
-    if(neg) {
+    if (neg) {
         position = -position;
     }
-
     // Subtract another 2.5 to make the element not go all over the place
     position = position - 2.5;
-
     // Return the proper position value
     return position;
 }
-
-// Smooth scrolling
+// """"""""Smooth"""""""" scrolling
 function scrollToTop() {
     // Get the current position
     var windowY = window.pageYOffset - 100;
-
     // Move up
     window.scrollTo(0, windowY);
-
     // Keep executing this function till we're at the top
-    if(windowY + 1 > 0) {
-        setTimeout(function(){scrollToTop();}, 10);
+    if (windowY + 1 > 0) {
+        setTimeout(function () { scrollToTop(); }, 10);
     }
 }
-
+// Replace some special tags
 function replaceTag(tag) {
-    return {'&': '&amp;', '<': '&lt;', '>': '&gt;'}[tag] || tag;
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[tag] || tag;
 }
-
+// ^
 function safeTagsReplace(str) {
     return str.replace(/[&<>]/g, replaceTag);
 }
-
+// Open a comment reply field
 function commentReply(id, session, category, action, avatar) {
     // Find subject post
     var replyingTo = document.getElementById('comment-' + id);
-
     // Check if it actually exists
-    if(typeof replyingTo === 'undefined') {
-        return false;
+    if ((typeof replyingTo).toLowerCase() === 'undefined') {
+        return;
     }
-
     // Attempt to get previously created box
     var replyBox = document.getElementById('comment-reply-container-' + id);
-
     // Remove it if it already exists
-    if(replyBox) {
+    if (replyBox) {
         Sakura.removeById('comment-reply-container-' + id);
-        return false;
+        return;
     }
-
     // Container
     var replyContainer = document.createElement('li');
     replyContainer.id = 'comment-reply-container-' + id;
-
     // Form
     var replyForm = document.createElement('form');
     replyForm.id = 'comment-reply-' + id;
     replyForm.action = action;
     replyForm.method = 'post';
-
     // Session
     var replyInput = document.createElement('input');
     replyInput.type = 'hidden';
     replyInput.name = 'session';
     replyInput.value = session;
     replyForm.appendChild(replyInput);
-
     // Category
     var replyInput = document.createElement('input');
     replyInput.type = 'hidden';
     replyInput.name = 'category';
     replyInput.value = category;
     replyForm.appendChild(replyInput);
-
     // Reply ID
     var replyInput = document.createElement('input');
     replyInput.type = 'hidden';
     replyInput.name = 'replyto';
-    replyInput.value = id;
+    replyInput.value = id.toString();
     replyForm.appendChild(replyInput);
-
     // Mode
     var replyInput = document.createElement('input');
     replyInput.type = 'hidden';
     replyInput.name = 'mode';
     replyInput.value = 'comment';
     replyForm.appendChild(replyInput);
-
     // Comment container
     var replyDiv = document.createElement('div');
     replyDiv.className = 'comment';
-
     // Avatar
     var replyAvatar = document.createElement('div');
     replyAvatar.className = 'comment-avatar';
-    replyAvatar.style = 'background-image: url(' + avatar + ')';
+    replyAvatar.style.backgroundImage = 'url(' + avatar + ')';
     replyDiv.appendChild(replyAvatar);
-
     // Pointer
     var replyPoint = document.createElement('div');
     replyPoint.className = 'comment-pointer';
     replyDiv.appendChild(replyPoint);
-
     // Textarea
     var replyText = document.createElement('textarea');
     replyText.className = 'comment-content';
     replyText.name = 'comment';
     replyDiv.appendChild(replyText);
-
     // Submit
     var replySubmit = document.createElement('input');
     replySubmit.className = 'comment-submit';
@@ -620,26 +505,22 @@ function commentReply(id, session, category, action, avatar) {
     replySubmit.name = 'submit';
     replySubmit.value = "\uf1d8";
     replyDiv.appendChild(replySubmit);
-
     // Append to form
     replyForm.appendChild(replyDiv);
-
     // Append form to container
     replyContainer.appendChild(replyForm);
-
     // Insert the HTML
-    if(replyingTo.children[1].children.length > 0) {
+    if (replyingTo.children[1].children.length > 0) {
         replyingTo.children[1].insertBefore(replyContainer, replyingTo.children[1].firstChild);
-    } else {
+    }
+    else {
         replyingTo.children[1].appendChild(replyContainer);
     }
-
     // Prepare AJAX submission
     prepareAjaxForm(replyForm.id, 'Replying...');
 }
-
 // Inserting text into text box
-// Borrowed from http://stackoverflow.com/questions/1064089/inserting-a-text-where-cursor-is-using-javascript-jquery
+// Borrowed from http://stackoverflow.com/questions/1064089/inserting-a-text-where-cursor-is-using-javascript-jquery (therefore not in Typescript format, fix this later)
 function insertText(areaId, text) {
     var txtarea = document.getElementById(areaId);
     var scrollPos = txtarea.scrollTop;
@@ -652,8 +533,8 @@ function insertText(areaId, text) {
         range.moveStart('character', -txtarea.value.length);
         strPos = range.text.length;
     }
-    else if (br == "ff") strPos = txtarea.selectionStart;
-
+    else if (br == "ff")
+        strPos = txtarea.selectionStart;
     var front = (txtarea.value).substring(0, strPos);
     var back = (txtarea.value).substring(strPos, txtarea.value.length);
     txtarea.value = front + text + back;
@@ -673,19 +554,19 @@ function insertText(areaId, text) {
     }
     txtarea.scrollTop = scrollPos;
 }
-
 // Inserting a bbcode
 function insertBBcode(textarea, tag, arg) {
+    if (arg === void 0) { arg = false; }
     var element = document.getElementById(textarea);
     var before = "[" + tag + (arg ? "=" : "") + "]";
-    var after = "[/" + tag  + "]";
-
+    var after = "[/" + tag + "]";
     if (document.selection) {
         element.focus();
         var sel = document.selection.createRange();
         sel.text = before + sel.text + after;
         element.focus();
-    } else if (element.selectionStart || element.selectionStart === 0) {
+    }
+    else if (element.selectionStart || element.selectionStart === 0) {
         var startPos = element.selectionStart;
         var endPos = element.selectionEnd;
         var scrollTop = element.scrollTop;
@@ -694,21 +575,14 @@ function insertBBcode(textarea, tag, arg) {
         element.selectionStart = startPos + before.length;
         element.selectionEnd = endPos + before.length;
         element.scrollTop = scrollTop;
-    } else {
+    }
+    else {
         element.value += before + after;
         element.focus();
     }
 }
-
 // Formatting money
-Number.prototype.formatMoney = function(u, c, k) {
-    var f = this,
-        u = isNaN(u = Math.abs(u)) ? 2 : u,
-        c = c == undefined ? "." : c,
-        k = k == undefined ? "," : k,
-        i = f < 0 ? "-" : "",
-        n = parseInt(f = Math.abs(+f || 0).toFixed(u)) + "",
-        g = (g = n.length) > 3 ? g % 3 : 0;
-
+Number.prototype.formatMoney = function (u, c, k) {
+    var f = this, u = isNaN(u = Math.abs(u)) ? 2 : u, c = c == undefined ? "." : c, k = k == undefined ? "," : k, i = f < 0 ? "-" : "", n = parseInt(f = Math.abs(+f || 0).toFixed(u)) + "", g = (g = n.length) > 3 ? g % 3 : 0;
     return i + (g ? n.substr(0, g) + k : "") + n.substr(g).replace(/(\c{3})(?=\c)/g, "$1" + k) + (u ? c + Math.abs(f - n).toFixed(u).slice(2) : "");
 };

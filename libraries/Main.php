@@ -196,7 +196,7 @@ class Main
 
         if (isset($errid)) {
             $errorPage .= '<p>The error and surrounding data has been logged.</p>
-    <h2>' . ($detailed ? 'Report the following text to a staff member' : 'Logged as') . '</h2>
+    <h2>' . (!$detailed ? 'Report the following text to a staff member' : 'Logged as') . '</h2>
     <pre class="error">' . $errid . '</pre>';
         } else {
             $errorPage .= '<p>Sakura was not able to log this error which could mean that there was an error
@@ -205,7 +205,7 @@ class Main
                know about this error if it occurs again.</p>';
         }
 
-        if (!$detailed) {
+        if ($detailed) {
             $errorPage .= '                <h2>Summary</h2>
                 <pre class="error">' . $error . '</pre>
                 <h2>Backtraces</h2>';

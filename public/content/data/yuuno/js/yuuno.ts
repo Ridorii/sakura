@@ -127,9 +127,7 @@ function notifyOpen(id: string): void {
     var sakuraHref: string = document.getElementById(id).getAttribute('sakurahref');
     
     if ((typeof sakuraHref).toLowerCase() !== 'undefined') {
-        location = new Location();
-        location.assign(sakuraHref);
-        window.location = location;
+        window.location.assign(sakuraHref);
     }
 }
 
@@ -247,7 +245,7 @@ function ajaxBusyView(show: boolean, message: string = null, type: string = null
 }
 
 // Making a post request using AJAX
-function ajaxPost(url: string, data: Object, callback: Function): void {
+function ajaxPost(url: string, data: Object, callback: Function): AJAX {
     // Create AJAX
     var request = new AJAX();
 
@@ -272,6 +270,9 @@ function ajaxPost(url: string, data: Object, callback: Function): void {
 
     // Make the request
     request.start(HTTPMethods.POST);
+
+    // Return the AJAX object
+    return request;
 }
 
 // Convert a href attr to an object
@@ -391,14 +392,14 @@ function submitPost(action: string, requestParts: Object, busyView: boolean, msg
 
     // Submit the AJAX
     var request = ajaxPost(action, requestParts, () => {
-        submitPostHandler(this, busyView, resetCaptcha);
+        submitPostHandler(request.response(), busyView, resetCaptcha);
     });
 }
 
 // Handling a submitted form using AJAX
-function submitPostHandler(result: string, busyView: boolean, resetCaptcha: boolean): void {
+function submitPostHandler(data: string, busyView: boolean, resetCaptcha: boolean): void {
     // Split the result
-    var data: string[] = result.split('|');
+    var result: string[] = data.split('|');
 
     // If using the bust view thing update the text displayed to the return of the request
     if (busyView) {
@@ -416,9 +417,7 @@ function submitPostHandler(result: string, busyView: boolean, resetCaptcha: bool
         }
 
         if (result[1] == '1') {
-            location = new Location();
-            location.assign(result[2]);
-            window.location = location;
+            window.location.assign(result[2]);
         }
     }, 2000);
 }

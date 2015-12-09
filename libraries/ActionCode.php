@@ -6,10 +6,10 @@
 namespace Sakura;
 
 /**
- * Class Action
+ * Class ActionCode
  * @package Sakura
  */
-class Action
+class ActionCode
 {
     private $actions = []; // Contains the action methods
     private $code = null; // Contains the action code we're working with
