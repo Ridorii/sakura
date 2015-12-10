@@ -14,19 +14,6 @@ use PHPMailer;
  */
 class Main
 {
-    // Constructor
-    public static function init($config)
-    {
-        // Configuration Management and local configuration
-        Config::init($config);
-
-        // Database
-        Database::init(Config::local('database', 'driver'));
-
-        // "Dynamic" Configuration
-        Config::initDB();
-    }
-
     // Parse markdown
     public static function mdParse($text, $escape = false)
     {

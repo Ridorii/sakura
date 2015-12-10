@@ -20,6 +20,7 @@ class Template
     private $template;
     private $templateName;
     private $templateOptions;
+    protected $templateFileExtension = ".tpl";
 
     // Initialise templating engine and data
     public function __construct()
@@ -80,9 +81,9 @@ class Template
     public function render($file)
     {
         try {
-            return $this->template->render($file, $this->vars);
+            return $this->template->render($file . $this->templateFileExtension, $this->vars);
         } catch (\Exception $e) {
-            trigger_error($e->getMessage(), E_USER_ERROR);
+            return trigger_error($e->getMessage(), E_USER_ERROR);
         }
     }
 }

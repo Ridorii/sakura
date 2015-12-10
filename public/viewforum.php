@@ -30,7 +30,7 @@ if ($forum->id < 0) {
     $template->setVariables($renderData);
 
     // Print page contents
-    echo $template->render('global/information.tpl');
+    echo $template->render('global/information');
     exit;
 }
 
@@ -47,7 +47,7 @@ if ($forum->type === 2) {
     $template->setVariables($renderData);
 
     // Print page contents
-    echo $template->render('global/information.tpl');
+    echo $template->render('global/information');
     exit;
 }
 
@@ -67,7 +67,7 @@ if (isset($_GET['read']) && $_GET['read'] && isset($_GET['session']) && $_GET['s
     $template->setVariables($renderData);
 
     // Print page contents
-    echo $template->render('global/information.tpl');
+    echo $template->render('global/information');
     exit;
 }
 
@@ -83,4 +83,4 @@ $renderData['forum'] = $forum;
 $template->setVariables($renderData);
 
 // Print page contents
-echo $template->render('forum/viewforum.tpl');
+echo $template->render('forum/viewforum');

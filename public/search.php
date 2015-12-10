@@ -24,4 +24,4 @@ $template->setTemplate($templateName);
 $template->setVariables($renderData);
 
 // Print page contents
-echo $template->render('main/search.tpl');
+echo $template->render('main/search');

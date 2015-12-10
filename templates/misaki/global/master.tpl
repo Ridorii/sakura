@@ -115,6 +115,7 @@
                         <li><a href="{% if session.checkLogin %}{{ urls.format('USER_PROFILE', [user.id]) }}{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}"><img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}');" class="nav-avatar" /></a></li>
                     </ul>
                 </div>
+                {#<div id="banner" style="height: 120px; width: 1024px; background: url('http://i.flash.moe/headtest.png'); margin: 0 auto 5px; box-shadow: 0 2px 6px rgba(0, 0, 0, .75);"></div>#}
                 <div id="content">
 {% block content %}
                     <div class="platform">

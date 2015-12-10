@@ -45,11 +45,11 @@ if (Users::checkLogin()) {
     $template->setVariables($renderData);
 
     // Print page contents
-    echo $template->render('main/memberlist.tpl');
+    echo $template->render('main/memberlist');
 } else {
     // Set parse variables
     $template->setVariables($renderData);
 
     // Print page contents
-    echo $template->render('global/restricted.tpl');
+    echo $template->render('global/restricted');
 }

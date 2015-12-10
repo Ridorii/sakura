@@ -52,7 +52,7 @@ if ($mode != 'f') {
         $template->setVariables($renderData);
 
         // Print page contents
-        echo $template->render('global/information.tpl');
+        echo $template->render('global/information');
         exit;
     }
 
@@ -78,7 +78,7 @@ if ($mode != 'f') {
             $template->setVariables($renderData);
 
             // Print page contents
-            echo $template->render('global/information.tpl');
+            echo $template->render('global/information');
             exit;
         }
 
@@ -105,7 +105,7 @@ if ($mode != 'f') {
             $template->setVariables($renderData);
 
             // Print page contents
-            echo $template->render('global/information.tpl');
+            echo $template->render('global/information');
             exit;
         }
 
@@ -138,7 +138,7 @@ if ($mode != 'f') {
                 $template->setVariables($renderData);
 
                 // Print page contents
-                echo $template->render('global/information.tpl');
+                echo $template->render('global/information');
                 exit;
                 // Return to previous page
             } else {
@@ -159,7 +159,7 @@ if ($mode != 'f') {
         $template->setVariables($renderData);
 
         // Print page contents
-        echo $template->render('global/confirm.tpl');
+        echo $template->render('global/confirm');
         exit;
     }
 
@@ -191,7 +191,7 @@ if (isset($_POST['post'])) {
         $template->setVariables($renderData);
 
         // Print page contents
-        echo $template->render('global/information.tpl');
+        echo $template->render('global/information');
     }
     exit;
 }
@@ -205,4 +205,4 @@ $renderData = array_merge($renderData, [
 $template->setVariables($renderData);
 
 // Print page contents
-echo $template->render('forum/posting.tpl');
+echo $template->render('forum/posting');

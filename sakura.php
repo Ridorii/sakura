@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151209');
+define('SAKURA_VERSION', '20151210');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 
@@ -23,12 +23,12 @@ mb_internal_encoding('utf-8');
 
 // Stop the execution if the PHP Version is older than 5.4.0
 if (version_compare(phpversion(), '5.4.0', '<')) {
-    die('<h3>Sakura requires at least PHP 5.4.0, please upgrade to a newer PHP version.</h3>');
+    die('Sakura requires at least PHP 5.4.0, please upgrade to a newer PHP version.');
 }
 
 // Include third-party libraries
 if (!@include_once ROOT . 'vendor/autoload.php') {
-    die('<h3>Autoloader not found, did you run composer?</h3>');
+    die('Autoloader not found, did you run composer?');
 }
 
 // Include components
@@ -66,11 +66,17 @@ foreach (glob(ROOT . 'libraries/DBWrapper/*.php') as $driver) {
 // Set Error handler
 set_error_handler(['Sakura\Main', 'errorHandler']);
 
-// Initialise Main Class
-Main::init(ROOT . 'config/config.ini');
+// Load the local configuration
+Config::init(ROOT . 'config/config.ini');
 
 // Change error reporting according to the dev configuration
 error_reporting(Config::local('dev', 'enable') ? -1 : 0);
+
+// Make the database connection
+Database::init(Config::local('database', 'driver'));
+
+// Load the configuration stored in the database
+Config::initDB();
 
 // Assign servers file to whois class
 Whois::setServers(ROOT . Config::local('data', 'whoisservers'));
@@ -87,14 +93,7 @@ if (Config::get('no_cron_service')) {
         }
 
         // Update last execution time
-        Database::update('config', [
-            [
-                'config_value' => time(),
-            ],
-            [
-                'config_name' => ['no_cron_last', '='],
-            ],
-        ]);
+        Database::update('config', [['config_value' => time()], ['config_name' => ['no_cron_last', '=']]]);
     }
 }
 
@@ -205,12 +204,12 @@ if (!defined('SAKURA_NO_TPL')) {
         $template->setVariables($renderData);
 
         // Print page contents
-        echo $template->render('global/information.tpl');
+        echo $template->render('global/information');
         exit;
     }
 
     // Ban checking
-    if ($authCheck && !in_array($_SERVER['PHP_SELF'], ['/authenticate.php']) && $ban = Bans::checkBan($currentUser->id())) {
+    if ($authCheck && !in_array($_SERVER['PHP_SELF'], [$urls->format('AUTH_ACTION', [], false)]) && $ban = Bans::checkBan($currentUser->id())) {
         // Additional render data
         $renderData = array_merge($renderData, [
             'ban' => [
@@ -231,7 +230,7 @@ if (!defined('SAKURA_NO_TPL')) {
         $template->setVariables($renderData);
 
         // Print page contents
-        echo $template->render('main/banned.tpl');
+        echo $template->render('main/banned');
         exit;
     }
 }

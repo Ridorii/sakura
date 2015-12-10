@@ -22,4 +22,4 @@ $template->setTemplate($templateName);
 $template->setVariables($renderData);
 
 // Print page contents
-echo $template->render('global/notfound.tpl');
+echo $template->render('global/notfound');

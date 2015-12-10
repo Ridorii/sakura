@@ -36,7 +36,7 @@ if (!$thread) {
     $template->setVariables($renderData);
 
     // Print page contents
-    echo $template->render('global/information.tpl');
+    echo $template->render('global/information');
     exit;
 }
 
@@ -56,4 +56,4 @@ $renderData = array_merge($renderData, [
 $template->setVariables($renderData);
 
 // Print page contents
-echo $template->render('forum/viewtopic.tpl');
+echo $template->render('forum/viewtopic');

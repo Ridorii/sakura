@@ -86,4 +86,4 @@ $template->setTemplate($templateName);
 $template->setVariables($renderData);
 
 // Print page contents
-echo $template->render('pages/' . $category . '/' . $mode . '.tpl');
+echo $template->render('pages/' . $category . '/' . $mode);

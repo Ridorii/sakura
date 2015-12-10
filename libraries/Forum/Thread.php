@@ -26,6 +26,8 @@ class Thread
     public $statusChange = 0;
     public $type = 0;
     private $_posts = [];
+    private $_firstPost = null;
+    private $_lastPost = null;
 
     // Constructor
     public function __construct($threadId)
@@ -53,7 +55,6 @@ class Thread
     {
         // Check if _posts is something
         if (!count($this->_posts)) {
-
             // Get all rows with the thread id
             $postRows = Database::fetch('posts', true, ['topic_id' => [$this->id, '=']]);
 
@@ -77,13 +78,43 @@ class Thread
     // Get the opening post
     public function firstPost()
     {
-        return $this->posts() ? array_values($this->_posts)[0] : (new Post(0));
+        // Check if the cache var is set
+        if ($this->_firstPost !== null) {
+            return $this->_firstPost;
+        }
+
+        // Get the row from the database
+        $post = Database::fetch('posts', false, ['topic_id' => [$this->id, '=']], ['post_id'], [1]);
+
+        // Create the post class
+        $post = new Post($post ? $post['post_id'] : 0);
+
+        // Assign it to the cache var
+        $this->_firstPost = $post;
+
+        // Return
+        return $post;
     }
 
     // Get the last reply
     public function lastPost()
     {
-        return $this->posts() ? end($this->_posts) : (new Post(0));
+        // Check if the cache var is set
+        if ($this->_lastPost !== null) {
+            return $this->_firstPost;
+        }
+
+        // Get the row from the database
+        $post = Database::fetch('posts', false, ['topic_id' => [$this->id, '=']], ['post_id', true], [1]);
+
+        // Create the post class
+        $post = new Post($post ? $post['post_id'] : 0);
+
+        // Assign it to the cache var
+        $this->_lastPost = $post;
+
+        // Return
+        return $post;
     }
 
     // Reply count
@@ -108,15 +139,10 @@ class Thread
     public function unread($user)
     {
         // Attempt to get track row from the database
-        $track = Database::fetch('topics_track', false, ['user_id' => [$user, '='], 'topic_id' => [$this->id, '=']]);
+        $track = Database::fetch('topics_track', false, ['user_id' => [$user, '='], 'topic_id' => [$this->id, '='], 'mark_time' => [$this->lastPost()->time, '>']]);
 
         // If nothing was returned it's obvious that the status is unread
         if (!$track) {
-            return true;
-        }
-
-        // Check if the last time the user has been here is less than the creation timestamp of the latest post
-        if ($track['mark_time'] < $this->lastPost()->time) {
             return true;
         }
 

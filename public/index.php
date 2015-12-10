@@ -39,7 +39,7 @@ if (isset($_GET['p'])) {
     $template->setVariables($renderData);
 
     // Print page contents
-    echo $template->render('main/infopage.tpl');
+    echo $template->render('main/infopage');
     exit;
 }
 
@@ -75,4 +75,4 @@ $renderData['stats'] = [
 $template->setVariables($renderData);
 
 // Print page contents
-echo $template->render(($forumMode ? 'forum' : 'main') . '/index.tpl');
+echo $template->render(($forumMode ? 'forum' : 'main') . '/index');

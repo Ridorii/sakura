@@ -19,4 +19,4 @@ $template->setTemplate($templateName);
 $template->setVariables($renderData);
 
 // Print page contents
-echo $template->render('main/report.tpl');
+echo $template->render('main/report');

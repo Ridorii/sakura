@@ -135,4 +135,4 @@ $template->setTemplate($templateName);
 $template->setVariables($renderData);
 
 // Print page contents
-echo $template->render('main/news.tpl');
+echo $template->render('main/news');

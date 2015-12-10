@@ -35,4 +35,4 @@ $renderData['profileView'] = isset($_GET['view']) && in_array($_GET['view'], $vi
 $template->setVariables($renderData);
 
 // Print page contents
-echo $template->render('main/profile.tpl');
+echo $template->render('main/profile');

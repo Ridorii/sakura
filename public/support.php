@@ -127,7 +127,7 @@ if (isset($_REQUEST['mode'])
                 $template->setVariables($renderData);
 
                 // Print page contents
-                echo $template->render('main/premiumcomplete.tpl');
+                echo $template->render('main/premiumcomplete');
                 break;
 
             default:
@@ -148,7 +148,7 @@ if (isset($_GET['tracker'])) {
     $template->setVariables($renderData);
 
     // Print page contents
-    echo $template->render('main/supporttracker.tpl');
+    echo $template->render('main/supporttracker');
     exit;
 }
 
@@ -166,4 +166,4 @@ $renderData['page'] = [
 $template->setVariables($renderData);
 
 // Print page contents
-echo $template->render('main/support.tpl');
+echo $template->render('main/support');

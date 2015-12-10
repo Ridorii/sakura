@@ -27,4 +27,4 @@ $template->setTemplate($templateName);
 $template->setVariables($renderData);
 
 // Print page contents
-echo $template->render('main/faq.tpl');
+echo $template->render('main/faq');

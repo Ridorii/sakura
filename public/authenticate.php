@@ -296,7 +296,7 @@ if (isset($_REQUEST['mode'])) {
             $renderData['page']['redirect'];
     } else {
         $template->setVariables($renderData);
-        echo $template->render('global/information.tpl');
+        echo $template->render('global/information');
     }
     exit;
 }
@@ -324,7 +324,7 @@ if (Users::checkLogin()) {
     ];
 
     $template->setVariables($renderData);
-    echo $template->render('global/information.tpl');
+    echo $template->render('global/information');
     exit;
 }
 
@@ -348,10 +348,10 @@ if (isset($_REQUEST['pw']) && $_REQUEST['pw']) {
     }
 
     $template->setVariables($renderData);
-    echo $template->render('main/forgotpassword.tpl');
+    echo $template->render('main/forgotpassword');
     exit;
 }
 
 // Print page contents
 $template->setVariables($renderData);
-echo $template->render('main/authenticate.tpl');
+echo $template->render('main/authenticate');

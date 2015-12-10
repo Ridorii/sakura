@@ -21,10 +21,10 @@ class Forum
     public $category = 0;
     public $type = 0;
     public $icon = "";
-    public $firstPost = null;
-    public $lastPost = null;
-    public $forums = [];
-    public $threads = [];
+    private $_firstPost = null;
+    private $_lastPost = null;
+    private $_forums = [];
+    private $_threads = [];
 
     // Constructor
     public function __construct($forumId = 0)
@@ -44,32 +44,27 @@ class Forum
         } elseif ($forumId != 0) {
             $this->id = -1;
         }
-
-        // Populate the forums array
-        $this->forums = $this->getForums();
-
-        // and the threads array
-        $this->threads = $this->getThreads();
-
-        // and the first post
-        $this->firstPost = $this->getFirstPost();
-
-        // and finally the last post
-        $this->lastPost = $this->getLastPost();
     }
 
     // Subforums
-    public function getForums()
+    public function forums()
     {
-        // Get all rows with the category id set to the forum id
-        $forumRows = Database::fetch('forums', true, ['forum_category' => [$this->id, '=']]);
+        // Check if _forums is populated
+        if (!count($this->_forums)) {
+            // Get all rows with the category id set to the forum id
+            $forumRows = Database::fetch('forums', true, ['forum_category' => [$this->id, '=']]);
 
-        // Create a storage array
-        $forums = [];
+            // Create a storage array
+            $forums = [];
 
-        // Create new objects for each forum
-        foreach ($forumRows as $forum) {
-            $forums[$forum['forum_id']] = new Forum($forum['forum_id']);
+            // Create new objects for each forum
+            foreach ($forumRows as $forum) {
+                $forums[$forum['forum_id']] = new Forum($forum['forum_id']);
+            }
+
+            $this->_forums = $forums;
+        } else {
+            $forums = $this->_forums;
         }
 
         // Return the forum objects
@@ -77,22 +72,29 @@ class Forum
     }
 
     // Threads
-    public function getThreads()
+    public function threads()
     {
-        // Get all rows with the forum id for this forum
-        $announcements = Database::fetch('topics', true, ['forum_id' => [$this->id, '='], 'topic_type' => ['2', '=']], ['topic_last_reply', true]);
-        $sticky = Database::fetch('topics', true, ['forum_id' => [$this->id, '='], 'topic_type' => ['1', '=']], ['topic_last_reply', true]);
-        $regular = Database::fetch('topics', true, ['forum_id' => [$this->id, '='], 'topic_type' => ['0', '=']], ['topic_last_reply', true]);
+        // Check if _threads is populated
+        if (!count($this->_threads)) {
+            // Get all rows with the forum id for this forum
+            $announcements = Database::fetch('topics', true, ['forum_id' => [$this->id, '='], 'topic_type' => ['2', '=']], ['topic_last_reply', true]);
+            $sticky = Database::fetch('topics', true, ['forum_id' => [$this->id, '='], 'topic_type' => ['1', '=']], ['topic_last_reply', true]);
+            $regular = Database::fetch('topics', true, ['forum_id' => [$this->id, '='], 'topic_type' => ['0', '=']], ['topic_last_reply', true]);
 
-        // Combine them into one array
-        $threadRows = array_merge($announcements, $sticky, $regular);
+            // Combine them into one array
+            $threadRows = array_merge($announcements, $sticky, $regular);
 
-        // Create a storage array
-        $threads = [];
+            // Create a storage array
+            $threads = [];
 
-        // Create new objects for each thread
-        foreach ($threadRows as $thread) {
-            $threads[$thread['topic_id']] = new Thread($thread['topic_id']);
+            // Create new objects for each thread
+            foreach ($threadRows as $thread) {
+                $threads[$thread['topic_id']] = new Thread($thread['topic_id']);
+            }
+
+            $this->_threads = $threads;
+        } else {
+            $threads = $this->_threads;
         }
 
         // Return the thread objects
@@ -100,29 +102,45 @@ class Forum
     }
 
     // First post
-    public function getFirstPost()
+    public function firstPost()
     {
-        // Get the row
-        $firstPost = Database::fetch('posts', false, ['forum_id' => [$this->id, '=']], ['post_id'], [1]);
+        // Check if _firstPost is set
+        if ($this->_firstPost === null) {
+            // Get the row
+            $firstPost = Database::fetch('posts', false, ['forum_id' => [$this->id, '=']], ['post_id'], [1]);
 
-        // Create the post object
-        $post = new Post(empty($firstPost) ? 0 : $firstPost['post_id']);
+            // Create the post object
+            $post = new Post(empty($firstPost) ? 0 : $firstPost['post_id']);
 
-        // Return the post object
-        return $post;
+            // Assign it to a "cache" variable
+            $this->_firstPost = $post;
+
+            // Return the post object
+            return $post;
+        } else {
+            return $this->_firstPost;
+        }
     }
 
     // Last post
-    public function getLastPost()
+    public function lastPost()
     {
-        // Get the row
-        $lastPost = Database::fetch('posts', false, ['forum_id' => [$this->id, '=']], ['post_id', true], [1]);
+        // Check if _lastPost is set
+        if ($this->_lastPost === null) {
+            // Get the row
+            $lastPost = Database::fetch('posts', false, ['forum_id' => [$this->id, '=']], ['post_id', true], [1]);
 
-        // Create the post object
-        $post = new Post(empty($lastPost) ? 0 : $lastPost['post_id']);
+            // Create the post object
+            $post = new Post(empty($lastPost) ? 0 : $lastPost['post_id']);
+            
+            // Assign it to a "cache" variable
+            $this->_lastPost = $post;
 
-        // Return the post object
-        return $post;
+            // Return the post object
+            return $post;
+        } else {
+            return $this->_lastPost;
+        }
     }
 
     // Thread count
@@ -146,14 +164,14 @@ class Forum
         }
 
         // Check forums
-        foreach ($this->forums as $forum) {
+        foreach ($this->forums() as $forum) {
             if ($forum->unread($user)) {
                 return true;
             }
         }
 
         // Check each thread
-        foreach ($this->threads as $thread) {
+        foreach ($this->threads() as $thread) {
             if ($thread->unread($user)) {
                 return true;
             }
@@ -167,13 +185,13 @@ class Forum
     public function trackUpdateAll($user)
     {
         // Iterate over every forum
-        foreach ($this->forums as $forum) {
+        foreach ($this->forums() as $forum) {
             // Update every forum
             $forum->trackUpdateAll($user);
         }
 
         // Iterate over every thread
-        foreach ($this->threads as $thread) {
+        foreach ($this->threads() as $thread) {
             // Update every thread
             $thread->trackUpdate($user);
         }

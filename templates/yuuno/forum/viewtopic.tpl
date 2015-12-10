@@ -36,7 +36,7 @@
 {% block content %}
     <div class="content homepage forum viewtopic">
         <div class="content-column">
-            <div class="head">{{ forum.name }} / {{ thread.title }}</div>
+            <div class="head"><a href="{{ forumBackLink }}" class="clean">{{ forum.name }}</a> / <a href="{{ paginationUrl }}" class="clean">{{ thread.title }}</a></div>
             {% include 'forum/forumBtns.tpl' %}
             <table class="posts">
                 {% for post in posts[get.page|default(1) - 1] %}

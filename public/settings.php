@@ -276,7 +276,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
         $template->setVariables($renderData);
 
         // Print page contents
-        echo $template->render('global/information.tpl');
+        echo $template->render('global/information');
     }
     exit;
 } elseif (isset($_REQUEST['friend-action']) && $_REQUEST['friend-action'] && Users::checkLogin()) {
@@ -405,7 +405,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
         $template->setVariables($renderData);
 
         // Print page contents
-        echo $template->render('global/information.tpl');
+        echo $template->render('global/information');
     }
     exit;
 } elseif (isset($_POST['submit']) && isset($_POST['submit'])) {
@@ -1036,7 +1036,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
         $template->setVariables($renderData);
 
         // Print page contents
-        echo $template->render('global/information.tpl');
+        echo $template->render('global/information');
     }
     exit;
 }
@@ -1044,15 +1044,10 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 if (Users::checkLogin()) {
     // Settings page list
     $pages = [
-
         'general' => [
-
             'title' => 'General',
-
             'modes' => [
-
                 'home' => [
-
                     'title' => 'Home',
                     'description' => [
 
@@ -1062,317 +1057,200 @@ if (Users::checkLogin()) {
                     ],
                     'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
                     'menu' => true,
-
                 ],
                 'profile' => [
-
                     'title' => 'Edit Profile',
                     'description' => [
-
                         'These are the external account links etc.
                         on your profile, shouldn\'t need any additional explanation for this one.',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'ALTER_PROFILE'),
                     'menu' => true,
-
                 ],
                 'options' => [
-
                     'title' => 'Site Options',
                     'description' => [
-
                         'These are a few personalisation options for the site while you\'re logged in.',
-
                     ],
                     'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
                     'menu' => true,
-
-                ], /*,
-            'groups' => [
-
-            'title' => 'Groups',
-            'description' => [
-
-            '{{ user.colour }}'
-
+                ],
             ],
-            'access' => $currentUser->checkPermission('SITE', 'JOIN_GROUPS'),
-            'menu' => true
-
-            ]*/
-
-            ],
-
         ],
         'friends' => [
-
             'title' => 'Friends',
-
             'modes' => [
-
                 'listing' => [
-
                     'title' => 'Listing',
                     'description' => [
-
                         'Manage your friends.',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'MANAGE_FRIENDS'),
                     'menu' => true,
-
                 ],
                 'requests' => [
-
                     'title' => 'Requests',
                     'description' => [
-
                         'Handle friend requests.',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'MANAGE_FRIENDS'),
                     'menu' => true,
-
                 ],
-
             ],
-
         ],
         'messages' => [
-
             'title' => 'Messages',
-
             'modes' => [
-
                 'inbox' => [
-
                     'title' => 'Inbox',
                     'description' => [
-
                         'The list of messages you\'ve received.',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'USE_MESSAGES'),
                     'menu' => true,
-
                 ],
                 'sent' => [
-
                     'title' => 'Sent',
                     'description' => [
-
                         'The list of messages you\'ve sent to other users.',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'USE_MESSAGES'),
                     'menu' => true,
-
                 ],
                 'compose' => [
-
                     'title' => 'Compose',
                     'description' => [
-
                         'Write a new message.',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'SEND_MESSAGES'),
                     'menu' => true,
-
                 ],
                 'read' => [
-
                     'title' => 'Read',
                     'description' => [
-
                         'Read a message.',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'USE_MESSAGES'),
                     'menu' => false,
-
                 ],
-
             ],
-
         ],
         'notifications' => [
-
             'title' => 'Notifications',
-
             'modes' => [
-
                 'history' => [
-
                     'title' => 'History',
                     'description' => [
-
                         'The history of notifications that have been sent to you in the last month.',
-
                     ],
                     'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
                     'menu' => true,
-
                 ],
-
             ],
-
         ],
         'appearance' => [
-
             'title' => 'Appearance',
-
             'modes' => [
-
                 'avatar' => [
-
                     'title' => 'Avatar',
                     'description' => [
-
                         'Your avatar which is displayed all over the site and on your profile.',
                         'Maximum image size is {{ avatar.max_width }}x{{ avatar.max_height }},
                         minimum image size is {{ avatar.min_width }}x{{ avatar.min_height }},
                         maximum file size is {{ avatar.max_size_view }}.',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'CHANGE_AVATAR'),
                     'menu' => true,
-
                 ],
                 'background' => [
-
                     'title' => 'Background',
                     'description' => [
-
                         'The background that is displayed on your profile.',
                         'Maximum image size is {{ background.max_width }}x{{ background.max_height }},
                         minimum image size is {{ background.min_width }}x{{ background.min_height }},
                         maximum file size is {{ background.max_size_view }}.',
-
                     ],
                     'access' => (
                         isset($currentUser->userData()['profileBackground'])
                         && $currentUser->checkPermission('SITE', 'CHANGE_BACKGROUND')
                     ) || $currentUser->checkPermission('SITE', 'CREATE_BACKGROUND'),
                     'menu' => true,
-
                 ],
                 'userpage' => [
-
                     'title' => 'Userpage',
                     'description' => [
-
                         'The custom text that is displayed on your profile.',
-
                     ],
                     'access' => (
                         isset($currentUser->userData()['userPage'])
                         && $currentUser->checkPermission('SITE', 'CHANGE_USERPAGE')
                     ) || $currentUser->checkPermission('SITE', 'CREATE_USERPAGE'),
                     'menu' => true,
-
                 ],
                 'signature' => [
-
                     'title' => 'Signature',
                     'description' => [
-
                         'This signature is displayed at the end of all your posts (unless you choose not to show it).',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'CHANGE_SIGNATURE'),
                     'menu' => true,
-
                 ],
-
             ],
-
         ],
         'account' => [
-
             'title' => 'Account',
-
             'modes' => [
-
                 'email' => [
-
                     'title' => 'E-mail Address',
                     'description' => [
-
                         'You e-mail address is used for password recovery and stuff like that, we won\'t spam you ;).',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'CHANGE_EMAIL'),
                     'menu' => true,
-
                 ],
                 'username' => [
-
                     'title' => 'Username',
                     'description' => [
-
                         'Probably the biggest part of your identity on a site.',
                         '<b>You can only change this once every 30 days so choose wisely.</b>',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'CHANGE_USERNAME'),
                     'menu' => true,
-
                 ],
                 'usertitle' => [
-
                     'title' => 'Usertitle',
                     'description' => [
-
                         'That little piece of text displayed under your username on your profile.',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'CHANGE_USERTITLE'),
                     'menu' => true,
-
                 ],
                 'password' => [
-
                     'title' => 'Password',
                     'description' => [
-
                         'Used to authenticate with the site and certain related services.',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'CHANGE_PASSWORD'),
                     'menu' => true,
-
                 ],
                 'ranks' => [
-
                     'title' => 'Ranks',
                     'description' => [
-
                         'Manage what ranks you\'re in and what is set as your main rank.
                         Your main rank is highlighted.
                         You get the permissions of all of the ranks you\'re in combined.',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'ALTER_RANKS'),
                     'menu' => true,
-
                 ],
-
             ],
-
         ],
         'advanced' => [
-
             'title' => 'Advanced',
-
             'modes' => [
-
                 'sessions' => [
-
                     'title' => 'Sessions',
                     'description' => [
-
                         'Session keys are a way of identifying yourself with the system without keeping
                         your password in memory.',
                         'If someone finds one of your session keys they could possibly compromise your account,
@@ -1380,43 +1258,30 @@ if (Users::checkLogin()) {
                             selected session.',
                         'If you get logged out after clicking one you\'ve most likely killed your current session,
                         to make it easier to avoid this from happening your current session is highlighted.',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'MANAGE_SESSIONS'),
                     'menu' => true,
-
                 ],
                 'registrationkeys' => [
-
                     'title' => 'Registration Keys',
                     'description' => [
-
                         'Sometimes we activate the registration key system which means that users can only
                         register using your "referer" keys,this means we can keep unwanted people from registering.',
                         'Each user can generate 5 of these keys, bans and deactivates render these keys useless.',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'CREATE_REGKEYS'),
                     'menu' => true,
-
                 ],
                 'deactivate' => [
-
                     'title' => 'Deactivate Account',
                     'description' => [
-
                         'You can deactivate your account here if you want to leave :(.',
-
                     ],
                     'access' => $currentUser->checkPermission('SITE', 'DEACTIVATE_ACCOUNT'),
                     'menu' => true,
-
                 ],
-
             ],
-
         ],
-
     ];
 
     // Current settings page
@@ -1444,7 +1309,7 @@ if (Users::checkLogin()) {
         $template->setVariables($renderData);
 
         // Print page contents
-        echo $template->render('global/notfound.tpl');
+        echo $template->render('global/notfound');
         exit;
     }
 
@@ -1534,11 +1399,11 @@ if (Users::checkLogin()) {
     $template->setVariables($renderData);
 
     // Print page contents
-    echo $template->render('main/settings.tpl');
+    echo $template->render('main/settings');
 } else {
     // If not allowed print the restricted page
     $template->setVariables($renderData);
 
     // Print page contents
-    echo $template->render('global/restricted.tpl');
+    echo $template->render('global/restricted');
 }
