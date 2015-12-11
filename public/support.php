@@ -18,7 +18,7 @@ $template->setTemplate($templateName);
 // Switch between modes (we only allow this to be used by logged in user)
 if (isset($_REQUEST['mode'])
     && Users::checkLogin()
-    && Permissions::check('SITE', 'OBTAIN_PREMIUM', $currentUser->id(), 1)) {
+    && $currentUser->checkPermission('SITE', 'OBTAIN_PREMIUM')) {
     // Initialise Payments class
     if (!Payments::init()) {
         header('Location: ' . $urls->format('SITE_PREMIUM') . '?fail=true');

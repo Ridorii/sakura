@@ -13,22 +13,17 @@ class Permissions
 {
     // Fallback permission data
     private static $fallback = [
-
         'rank_id' => 0,
         'user_id' => 0,
         'permissions_site' => 1,
         'permissions_manage' => 0,
-        'permissions_forums' => 0,
-        'permissions_inherit' => 111,
-
+        'permissions_inherit' => 11,
     ];
 
     // Global permissions table
     protected static $permissions = [
-
         // Site permissions
         'SITE' => [
-
             'DEACTIVATED' => 1, // Is a user deactivated
             'RESTRICTED' => 2, // Is a user restricted
             'ALTER_PROFILE' => 4, // Can alter their profile data
@@ -61,29 +56,17 @@ class Permissions
             'DELETE_COMMENTS' => 536870912, // User can delete own comments
             'VOTE_COMMENTS' => 1073741824, // User can vote on comments
             'CHANGE_SIGNATURE' => 2147483648, // User can vote on comments
-
-        ],
-
-        // Forum permissions
-        'FORUM' => [
-
-            'USE_FORUM' => 1,
-
         ],
 
         // Site management permissions
         'MANAGE' => [
-
             'USE_MANAGE' => 1,
-
         ],
-
     ];
 
     // Checking if a user has the permissions to do a thing
     public static function check($layer, $action, $operator, $mode = 0)
     {
-
         // Check if the permission layer and the permission itself exists
         if (!array_key_exists($layer, self::$permissions) || !array_key_exists($action, self::$permissions[$layer])) {
             return false;
@@ -108,7 +91,6 @@ class Permissions
     // Get permission data of a rank from the database
     public static function getRankPermissions($ranks)
     {
-
         // Container array
         $getRanks = [];
         $perms = [];
@@ -129,20 +111,14 @@ class Permissions
             if (empty($perms)) {
                 // Store the data of the current rank in $perms
                 $perms = [
-
                     'SITE' => $rank['permissions_site'],
                     'MANAGE' => $rank['permissions_manage'],
-                    'FORUM' => $rank['permissions_forums'],
-
                 ];
             } else {
                 // Perform a bitwise OR on the ranks
                 $perms = [
-
                     'SITE' => $perms['SITE'] | $rank['permissions_site'],
                     'MANAGE' => $perms['MANAGE'] | $rank['permissions_manage'],
-                    'FORUM' => $perms['FORUM'] | $rank['permissions_forums'],
-
                 ];
             }
         }
@@ -154,7 +130,6 @@ class Permissions
     // Get permission data for a user
     public static function getUserPermissions($uid)
     {
-
         // Get user data
         $user = new User($uid);
 
@@ -180,11 +155,6 @@ class Permissions
         // Override management permissions
         if (!$inheritance[1]) {
             $rankPerms['MANAGE'] = $userPerms['permissions_manage'];
-        }
-
-        // Override forum permissions
-        if (!$inheritance[2]) {
-            $rankPerms['FORUM'] = $userPerms['permissions_forums'];
         }
 
         // Return permissions

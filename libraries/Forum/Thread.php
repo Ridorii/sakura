@@ -50,6 +50,22 @@ class Thread
         }
     }
 
+    // Create a new topic
+    public static function create($forum, $title, $status = 0, $type = 0)
+    {
+        // Create the database entry
+        Database::insert('topics', [
+            'forum_id' => $forum,
+            'topic_title' => $title,
+            'topic_time' => time(),
+            'topic_status' => $status,
+            'topic_type' => $type,
+        ]);
+
+        // Return the thread object
+        return new Thread(Database::lastInsertID());
+    }
+
     // Posts
     public function posts()
     {
@@ -184,6 +200,19 @@ class Thread
         Database::update('topics', [
             [
                 'topic_views' => $this->views + 1,
+            ],
+            [
+                'topic_id' => [$this->id, '='],
+            ],
+        ]);
+    }
+
+    // Update last post timestamp
+    public function lastUpdate()
+    {
+        Database::update('topics', [
+            [
+                'topic_last_reply' => time(),
             ],
             [
                 'topic_id' => [$this->id, '='],

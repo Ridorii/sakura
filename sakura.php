@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151210');
+define('SAKURA_VERSION', '20151211');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 
@@ -54,7 +54,7 @@ require_once ROOT . 'libraries/User.php';
 require_once ROOT . 'libraries/Users.php';
 require_once ROOT . 'libraries/Whois.php';
 require_once ROOT . 'libraries/Forum/Forum.php';
-require_once ROOT . 'libraries/Forum/Forums.php';
+require_once ROOT . 'libraries/Forum/Permissions.php';
 require_once ROOT . 'libraries/Forum/Post.php';
 require_once ROOT . 'libraries/Forum/Thread.php';
 
@@ -154,6 +154,8 @@ if (!defined('SAKURA_NO_TPL')) {
             'currentPage' => '//' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
             'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null),
             'onlineTimeout' => Config::get('max_online_time'),
+            'announcementImage' => Config::get('header_announcement_image'),
+            'announcementLink' => Config::get('header_announcement_link'),
 
             'recaptchaPublic' => Config::get('recaptcha_public'),
             'recaptchaEnabled' => Config::get('recaptcha'),

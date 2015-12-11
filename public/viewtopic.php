@@ -12,7 +12,7 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php
 // Attempt to get the thread
 $thread = new Forum\Thread(
     isset($_GET['p'])
-    ? Forum\Forums::getTopicIdFromPostId($_GET['p'])
+    ? (new Forum\Post($_GET['p']))->thread
     : (isset($_GET['t']) ? $_GET['t'] : 0)
 );
 

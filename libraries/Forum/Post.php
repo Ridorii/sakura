@@ -59,6 +59,43 @@ class Post
         $this->parsed = BBcode::toHTML(htmlentities($this->text));
     }
 
+    // Create a new post
+    public static function create($subject, $text, User $poster, $thread = 0, $forum = 0)
+    {
+        // If no thread is specified create a new one
+        if ($thread) {
+            $thread = new Thread($thread);
+        } else {
+            $thread = Thread::create($forum, $subject);
+        }
+
+        // Stop if the thread ID is 0
+        if ($thread->id == 0) {
+            return null;
+        }
+
+        // Insert the post
+        Database::insert('posts', [
+            'topic_id' => $thread->id,
+            'forum_id' => $thread->forum,
+            'poster_id' => $poster->id(),
+            'poster_ip' => Main::getRemoteIP(),
+            'post_time' => time(),
+            'post_signature' => '1',
+            'post_subject' => $subject,
+            'post_text' => $text,
+        ]);
+
+        // Get post id
+        $id = Database::lastInsertID();
+
+        // Update the last post date
+        $thread->lastUpdate();
+
+        // Return the object
+        return new Post($id);
+    }
+
     // Time elapsed since creation
     public function timeElapsed()
     {

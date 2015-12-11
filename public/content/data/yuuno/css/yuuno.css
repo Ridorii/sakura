@@ -640,6 +640,25 @@ a.default:active {
     text-align: center;
 }
 
+.headerAnnouncement {
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    padding: 2px;
+    border: 1px solid #9475B2;
+    box-shadow: 0 0 3px #9475B2;
+    border-radius: 3px;
+    max-width: 1024px;
+    height: 120px;
+    background: #D3BFFF no-repeat scroll center center;
+}
+
+.headerAnnouncement > a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
 /*
  * Site footer styling
  */

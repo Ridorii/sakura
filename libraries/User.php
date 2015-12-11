@@ -191,7 +191,20 @@ class User
     // Get user's forum statistics
     public function forumStats()
     {
-        return Forum\Forums::getUserStats($this->data['user_id']);
+        return [
+            'posts' => Database::count(
+                'posts',
+                ['poster_id' => [$this->id(), '=']]
+            )[0],
+            'topics' => count(Database::fetch(
+                'posts',
+                true,
+                ['poster_id' => [$this->id(), '=']],
+                ['post_time'],
+                null,
+                ['topic_id']
+            )),
+        ];
     }
 
     // Get amount of time since user events using the same format as dates()

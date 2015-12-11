@@ -25,6 +25,7 @@ class Forum
     private $_lastPost = null;
     private $_forums = [];
     private $_threads = [];
+    private $_permissions;
 
     // Constructor
     public function __construct($forumId = 0)

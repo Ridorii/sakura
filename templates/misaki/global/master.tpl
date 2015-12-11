@@ -82,7 +82,7 @@
                 {% endif %}
                 <div id="navigation">
                     <ul class="site-menu">
-                        <li title="Home" class="logo"><a href="{{ urls.format('SITE_HOME') }}" {% if sakura.siteLogo %} style="background-image: url('{{ sakura.siteLogo }}');"{% endif %}></a></li>
+                        <li title="Home" class="logo"><a href="{{ urls.format('SITE_HOME') }}"></a></li>
                         <li title="News"><a href="{{ urls.format('SITE_NEWS') }}" class="fa fa-newspaper-o"></a></li>
                         <li title="Chat"><a href="//chat.{{ sakura.urlMain }}/" class="fa fa-commenting"></a></li>
                         <li title="Forums"><a href="{{ urls.format('FORUM_INDEX') }}" class="fa fa-comments"></a></li>
@@ -115,7 +115,13 @@
                         <li><a href="{% if session.checkLogin %}{{ urls.format('USER_PROFILE', [user.id]) }}{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}"><img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}');" class="nav-avatar" /></a></li>
                     </ul>
                 </div>
-                {#<div id="banner" style="height: 120px; width: 1024px; background: url('http://i.flash.moe/headtest.png'); margin: 0 auto 5px; box-shadow: 0 2px 6px rgba(0, 0, 0, .75);"></div>#}
+
+                {% if sakura.siteLogo or sakura.announcementImage %}
+                <div id="banner" style="background: url('{% if sakura.announcementImage %}{{ sakura.announcementImage }}{% else %}{{ sakura.siteLogo }}{% endif %}');">
+                    <a href="{% if sakura.announcementImage and sakura.announcementLink %}{{ sakura.announcementLink }}{% else %}{{ urls.format('SITE_HOME') }}{% endif %}"></a>
+                </div>
+                {% endif %}
+
                 <div id="content">
 {% block content %}
                     <div class="platform">
@@ -128,7 +134,7 @@
                 <div class="inner">
                     <div class="ft-logo"></div>
                     <div class="ft-text">
-                        <div>Powered by <a href="https://github.com/flashwave/sakura/" target="_blank">Sakura</a>, <a href="http://flash.moe/" target="_blank">Flashwave</a> 2013-2015</div>
+                        <div>Powered by <a href="https://github.com/flashwave/sakura/" target="_blank">Sakura</a>, <a href="https://flash.moe/" target="_blank">Flashwave</a> 2013-2015</div>
                         <div><a href="{{ urls.format('INFO_PAGE', ['terms']) }}">Terms of Service</a> | <a href="{{ urls.format('INFO_PAGE', ['contact']) }}">Contact</a> | <a href="{{ urls.format('SITE_FAQ') }}">FAQ</a> | <a href="{{ urls.format('INFO_PAGE', ['rules']) }}">Rules</a> | <a href="https://sakura.flash.moe/">Changelog</a> | <a href="https://fiistat.us/">Status</a></div>
                     </div>
                 </div>

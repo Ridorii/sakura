@@ -222,6 +222,14 @@
                     </div>
                 </noscript>
 
+                {% if sakura.announcementImage %}
+                    <div class="headerAnnouncement" style="background-image: url('{{ sakura.announcementImage }}');">
+                        {% if sakura.announcementLink %}
+                            <a href="{{ sakura.announcementLink }}" class="clean"></a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
                 {% block content %}
                     <h1 class="stylised" style="text-align: center; margin: 2em auto;">{{ php.self }} is now printing!</h1>
                 {% endblock %}
@@ -268,11 +276,12 @@
             // Column colours for actions
             var changelogColours = [
                 'inherit', // Unknown
-                '#2A2', // Added
-                '#2AA', // Updated
-                '#2AA', // Fixed
-                '#A22', // Removed
-                '#62C' // Exported
+                '#2A2', // Add
+                '#2AA', // Update
+                '#2AA', // Fix
+                '#A22', // Remove
+                '#62C', // Export
+                '#C44' // Revert
             ];
 
             window.addEventListener("load", function() {
