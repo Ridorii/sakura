@@ -41,7 +41,7 @@ class Permissions
             'CHANGE_PASSWORD' => 16384, // Can change their password
             'ALTER_RANKS' => 32768, // Can change their ranks
             'MANAGE_SESSIONS' => 65536, // Can manage their sessions
-            'CREATE_REGKEYS' => 131072, // Can create registration keys
+            'CHANGE_SIGNATURE' => 131072, // User can change their signature
             'DEACTIVATE_ACCOUNT' => 262144, // Can deactivate their account
             'VIEW_PROFILE_DATA' => 524288, // Can view other's profile data
             'MANAGE_FRIENDS' => 1048576, // Can manage friends (add/remove)
@@ -55,7 +55,6 @@ class Permissions
             'CREATE_COMMENTS' => 268435456, // User can make comments
             'DELETE_COMMENTS' => 536870912, // User can delete own comments
             'VOTE_COMMENTS' => 1073741824, // User can vote on comments
-            'CHANGE_SIGNATURE' => 2147483648, // User can vote on comments
         ],
 
         // Site management permissions

@@ -1262,16 +1262,6 @@ if (Users::checkLogin()) {
                     'access' => $currentUser->checkPermission('SITE', 'MANAGE_SESSIONS'),
                     'menu' => true,
                 ],
-                'registrationkeys' => [
-                    'title' => 'Registration Keys',
-                    'description' => [
-                        'Sometimes we activate the registration key system which means that users can only
-                        register using your "referer" keys,this means we can keep unwanted people from registering.',
-                        'Each user can generate 5 of these keys, bans and deactivates render these keys useless.',
-                    ],
-                    'access' => $currentUser->checkPermission('SITE', 'CREATE_REGKEYS'),
-                    'menu' => true,
-                ],
                 'deactivate' => [
                     'title' => 'Deactivate Account',
                     'description' => [
@@ -1312,6 +1302,9 @@ if (Users::checkLogin()) {
         echo $template->render('global/notfound');
         exit;
     }
+
+    // Set templates directory
+    $renderData['templates'] = 'settings';
 
     // Render data
     $renderData['current'] = $category . '.' . $mode;

@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151211');
+define('SAKURA_VERSION', '20151212');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 
@@ -111,13 +111,10 @@ $urls = new Urls();
 
 // Prepare the name of the template to load (outside of SAKURA_NO_TPL because it's used in imageserve.php)
 $templateName =
-defined('SAKURA_MANAGE') ?
-Config::get('manage_style') :
-(
-    isset($currentUser->optionFields()['useMisaki']) && $currentUser->optionFields()['useMisaki'] ?
-    'misaki' :
-    Config::get('site_style')
-);
+!defined('SAKURA_MANAGE')
+&& isset($currentUser->optionFields()['useMisaki'])
+&& $currentUser->optionFields()['useMisaki'] ?
+'misaki' : Config::get('site_style');
 
 if (!defined('SAKURA_NO_TPL')) {
     // Set base page rendering data

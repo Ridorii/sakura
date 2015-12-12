@@ -20,7 +20,7 @@ function notifyUI(content) {
     alert.className = 'notification-enter';
     alert.id = id;
     // Add the icon
-    if ((typeof content.img).toLowerCase() === 'undefined' && content.img == null && !(content.img.length > 1)) {
+    if ((typeof content.img).toLowerCase() === 'undefined' || content.img == null || content.img.length < 2) {
         aIconCont = document.createElement('div');
         aIconCont.className = 'font-icon fa fa-info fa-4x';
     }
@@ -31,7 +31,7 @@ function notifyUI(content) {
     else {
         aIconCont = document.createElement('img');
         aIconCont.alt = id;
-        aIconCont.img = content.img;
+        aIconCont.src = content.img;
     }
     aIcon.appendChild(aIconCont);
     aIcon.className = 'notification-icon';
@@ -67,8 +67,8 @@ function notifyUI(content) {
         // Assign attribs
         mp3.type = 'audio/mp3';
         ogg.type = 'audio/ogg';
-        mp3.src = sakuraVars.content_path + '/sounds/notify.mp3';
-        ogg.src = sakuraVars.content_path + '/sounds/notify.ogg';
+        mp3.src = sakuraVars.content + '/sounds/notify.mp3';
+        ogg.src = sakuraVars.content + '/sounds/notify.ogg';
         // Append
         sound.appendChild(mp3);
         sound.appendChild(ogg);

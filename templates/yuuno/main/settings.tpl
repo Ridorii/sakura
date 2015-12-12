@@ -16,7 +16,7 @@
                 <div>{{ include(template_from_string(descline)) }}</div>
             {% endfor %}
             </div>
-            {% include 'settings/' ~ current ~ '.tpl' %}
+            {% include templates ~ '/' ~ current ~ '.tpl' %}
         </div>
         <div class="clear"></div>
     </div>
