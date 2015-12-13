@@ -24,9 +24,14 @@ $_GET['t'] :
     0
 );
 
+// Get the topic
+if ($topicId) {
+    $thread = new Forum\Thread($topicId);
+}
+
 $forumId = isset($_GET['f']) ?
 $_GET['f'] :
-($thread = new Forum\Thread($topicId))->forum;
+$thread->forum;
 
 $mode = isset($_GET['f']) ? 'f' : (isset($_GET['t']) ? 't' : (isset($_GET['p']) ? 'p' : null));
 
@@ -172,13 +177,13 @@ if ($mode != 'f') {
 // Check if a post is being made
 if (isset($_POST['post'])) {
     // Attempt to make the post
-    $post = Forum\Post::create($_POST['subject'], $_POST['text'], $currentUser, $topicId,  $forumId);
+    $post = Forum\Post::create($_POST['subject'], $_POST['text'], $currentUser, $topicId, $forumId);
 
     // Add page specific things
     $renderData['page'] = [
-        'redirect' => $urls->format('FORUM_POST', [$post->id]) . '#p' . $post->id,
-        'message' => 'Made the post!',
-        'success' => 1,
+        'redirect' => $post ? $urls->format('FORUM_POST', [$post->id]) . '#p' . $post->id : '',
+        'message' => $post ? 'Made the post!' : 'Something is wrong with your post!',
+        'success' => $post ? 1 : 0,
     ];
 
     // Print page contents or if the AJAX request is set only display the render data

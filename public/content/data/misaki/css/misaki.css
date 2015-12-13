@@ -72,16 +72,17 @@ h5,
 h6 {
     font-family: "Exo2-0-LightItalic", sans-serif;
     font-weight: 100;
+    color: #ab95bf;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, .75);
 }
 
-h1.sectionHead {
-    font-style: italic;
-    font-size: 5em;
-    color: rgb(148, 117, 178);
-    opacity: 0.5;
-    font-weight: 100;
-    line-height: 1.2em;
-    margin: 10px 20px;
+.box h1,
+.box h2,
+.box h3,
+.box h4,
+.box h5,
+.box h6 {
+    color: #fff;
 }
 
 a.clean,
@@ -233,11 +234,18 @@ a:active {
     background: #231C29;
     box-shadow: 0 2px 6px rgba(0, 0, 0, .75);
     padding: 2px;
-    border: 1px solid rgba(148, 117, 178, .6);
+    border: 1px solid #67517b;
 }
 
 .platform:not(:last-child) {
     margin-bottom: 5px;
+}
+
+.box {
+    margin: 10px;
+    padding: 5px;
+    background: #3A2E44;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .75);
 }
 
 /*

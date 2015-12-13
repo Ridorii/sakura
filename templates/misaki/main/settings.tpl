@@ -3,16 +3,15 @@
 {% block title %}{{ page.category }} / {{ page.mode }}{% endblock %}
 
 {% block content %}
-    {% include 'elements/settingsNavigation.tpl' %}
-    <div class="platform">
+    <div class="box">
         <h1 class="sectionHead">
-            {{ page.category }} / {{ page.mode }}
+            {{ page.category }} <div class="fa">&#xf105;</div> {{ page.mode }}
         </h1>
-        <div class="settings-explanation">
+        <h3>
         {% for descline in page.description %}
-            <div>{{ include(template_from_string(descline)) }}</div>
+            {{ include(template_from_string(descline)) }}
         {% endfor %}
-        </div>
-        {% include 'settings/' ~ current ~ '.tpl' %}
+        </h3>
     </div>
+    {% include 'settings/' ~ current ~ '.tpl' %}
 {% endblock %}

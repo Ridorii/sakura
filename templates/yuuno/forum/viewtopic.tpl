@@ -14,7 +14,7 @@
         {% endif %}
     {% endfor %}
 
-    {% set num = (num / 10)|round + 1 %}
+    {% set num = (num / 10)|round(0, 'floor') + 1 %}
 
     {% set get = get|merge({'page': num}) %}
 {% endif %}
