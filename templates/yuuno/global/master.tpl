@@ -44,7 +44,6 @@
                 },
 
                 "siteName":         "{{ sakura.siteName }}",
-                "urlMain":          "{{ sakura.urlMain }}",
                 "content":          "{{ sakura.contentPath }}",
                 "resources":        "{{ sakura.resources }}",
                 "recaptchaEnabled": "{{ sakura.recaptchaEnabled }}",
@@ -155,7 +154,7 @@
                         <!-- Navigation menu, displayed on left side of the bar. -->
                         <a class="menu-item fa-home" href="{{ urls.format('SITE_HOME') }}" title="Home"></a>
                         <a class="menu-item fa-newspaper-o" href="{{ urls.format('SITE_NEWS') }}" title="News"></a>
-                        <a class="menu-item fa-commenting" href="//chat.{{ sakura.urlMain }}/" title="Chat"></a>
+                        <a class="menu-item fa-commenting" href="{{ urls.format('INFO_PAGE', ['chat']) }}" title="Chat"></a>
                         <a class="menu-item fa-list" href="{{ urls.format('FORUM_INDEX') }}" title="Forums"></a>
                         <a class="menu-item fa-search" href="{{ urls.format('SITE_SEARCH') }}" title="Search"></a>
                         {% if session.checkLogin %}

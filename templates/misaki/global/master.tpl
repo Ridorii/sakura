@@ -47,7 +47,6 @@
                 },
 
                 "siteName":         "{{ sakura.siteName }}",
-                "urlMain":          "{{ sakura.urlMain }}",
                 "content":          "{{ sakura.contentPath }}",
                 "resources":        "{{ sakura.resources }}",
                 "recaptchaEnabled": "{{ sakura.recaptchaEnabled }}",
@@ -84,7 +83,7 @@
                     <ul class="site-menu">
                         <li title="Home" class="logo"><a href="{{ urls.format('SITE_HOME') }}"></a></li>
                         <li title="News"><a href="{{ urls.format('SITE_NEWS') }}" class="fa fa-newspaper-o"></a></li>
-                        <li title="Chat"><a href="//chat.{{ sakura.urlMain }}/" class="fa fa-commenting"></a></li>
+                        <li title="Chat"><a href="{{ urls.format('INFO_PAGE', ['chat']) }}" class="fa fa-commenting"></a></li>
                         <li title="Forums"><a href="{{ urls.format('FORUM_INDEX') }}" class="fa fa-comments"></a></li>
                         <li title="Members"><a href="{{ urls.format('MEMBERLIST_INDEX') }}" class="fa fa-users"></a></li>
                         <li title="Search"><a href="{{ urls.format('SITE_SEARCH') }}" class="fa fa-search"></a></li>

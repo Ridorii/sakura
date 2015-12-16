@@ -136,9 +136,6 @@ if (!defined('SAKURA_NO_TPL')) {
                 'path' => Config::get('cookie_path'),
             ],
 
-            'urlMain' => Config::get('url_main'),
-            'urlApi' => Config::get('url_api'),
-
             'contentPath' => Config::get('content_path'),
             'resources' => Config::get('content_path') . '/data/' . $templateName,
 
