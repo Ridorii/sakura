@@ -430,27 +430,27 @@ function checkPwdEntropy(pwd: string): boolean {
 // Check registration variables
 function registerVarCheck(id: string, mode: string, option: any = null): void {
     // Get the element we're working with
-    var input: HTMLElement = document.getElementById(id);
+    var input: any = document.getElementById(id);
     var check: boolean = null;
 
     // Use the proper mode
     switch (mode) {
         case 'confirmpw':
             option = document.getElementById(option);
-            check = input.getAttribute('value') === option.value;
+            check = input.value === option.value;
             break;
 
         case 'password':
-            check = checkPwdEntropy(input.getAttribute('value'));
+            check = checkPwdEntropy(input.value);
             break;
 
         case 'email':
-            check = Sakura.validateEmail(input.getAttribute('value'));
+            check = Sakura.validateEmail(input.value);
             break;
 
         case 'username':
         default:
-            check = Sakura.stringLength(input.getAttribute('value'), sakuraVars.minUserLen, sakuraVars.maxUserLen);
+            check = Sakura.stringLength(input.value, sakuraVars.minUserLen, sakuraVars.maxUserLen);
             break;
     }
 

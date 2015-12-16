@@ -356,17 +356,17 @@ function registerVarCheck(id, mode, option) {
     switch (mode) {
         case 'confirmpw':
             option = document.getElementById(option);
-            check = input.getAttribute('value') === option.value;
+            check = input.value === option.value;
             break;
         case 'password':
-            check = checkPwdEntropy(input.getAttribute('value'));
+            check = checkPwdEntropy(input.value);
             break;
         case 'email':
-            check = Sakura.validateEmail(input.getAttribute('value'));
+            check = Sakura.validateEmail(input.value);
             break;
         case 'username':
         default:
-            check = Sakura.stringLength(input.getAttribute('value'), sakuraVars.minUserLen, sakuraVars.maxUserLen);
+            check = Sakura.stringLength(input.value, sakuraVars.minUserLen, sakuraVars.maxUserLen);
             break;
     }
     if (input.className.indexOf(check ? 'green' : 'red') < 0) {
