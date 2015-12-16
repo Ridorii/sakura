@@ -117,7 +117,7 @@ class Thread
     {
         // Check if the cache var is set
         if ($this->_lastPost !== null) {
-            return $this->_firstPost;
+            return $this->_lastPost;
         }
 
         // Get the row from the database

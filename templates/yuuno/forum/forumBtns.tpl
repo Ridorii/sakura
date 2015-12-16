@@ -7,6 +7,7 @@
         {% endif %}
         {% if forumReplyLink %}
             <a href="{{ forumReplyLink }}" class="forumbtn"><span class="fa fa-reply-all"></span> Reply</a>
+            <a href="{{ sakura.currentPage }}" class="forumbtn" onclick="ajaxBusyView(true);"><span class="fa fa-refresh"></span> Refresh</a>
         {% endif %}
         {% if forumNewLink %}
             <a href="{{ forumNewLink }}" class="forumbtn"><span class="fa fa-pencil-square-o"></span> New Thread</a>
