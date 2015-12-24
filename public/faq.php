@@ -11,10 +11,8 @@ require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php
 
 // Add page specific things
 $renderData['page'] = [
-
     'title' => 'Frequently Asked Questions',
     'questions' => Main::getFaqData(),
-
 ];
 
 // Initialise templating engine

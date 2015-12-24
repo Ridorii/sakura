@@ -21,7 +21,6 @@ class User
         'password_algo' => 'nologin',
         'password_iter' => 0,
         'password_chan' => 0,
-        'password_new' => '',
         'email' => 'sakura@localhost',
         'rank_main' => 0,
         'user_ranks' => '[0]',
