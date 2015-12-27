@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151224');
+define('SAKURA_VERSION', '20151227');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 
@@ -70,7 +70,7 @@ set_error_handler(['Sakura\Main', 'errorHandler']);
 Config::init(ROOT . 'config/config.ini');
 
 // Change error reporting according to the dev configuration
-error_reporting(Config::local('dev', 'enable') ? -1 : 0);
+error_reporting(Config::local('dev', 'show_errors') ? -1 : 0);
 
 // Make the database connection
 Database::init(Config::local('database', 'driver'));
@@ -127,7 +127,7 @@ if (!defined('SAKURA_NO_TPL')) {
             ],
 
             'dev' => [
-                'enable' => Config::local('dev', 'enable'),
+                'showChangelog' => Config::local('dev', 'show_changelog'),
             ],
 
             'cookie' => [

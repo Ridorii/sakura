@@ -101,7 +101,6 @@ class User
             'password_algo' => $this->data['password_algo'],
             'password_iter' => $this->data['password_iter'],
             'password_chan' => $this->data['password_chan'],
-            'password_new' => $this->data['password_new'],
         ];
     }
 

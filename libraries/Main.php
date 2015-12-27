@@ -148,7 +148,7 @@ class Main
         }
 
         // Check for dev mode
-        $detailed = Config::local('dev', 'enable');
+        $detailed = Config::local('dev', 'show_errors');
 
         // Build page
         $errorPage = '<!DOCTYPE html>

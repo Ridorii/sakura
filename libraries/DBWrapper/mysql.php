@@ -76,8 +76,7 @@ class mysql
                 PDO::ATTR_EMULATE_PREPARES => false,
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING,
             ]);
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             // Catch connection errors
             trigger_error('SQL Driver: ' . $e->getMessage(), E_USER_ERROR);
         }

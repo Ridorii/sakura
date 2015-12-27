@@ -299,7 +299,7 @@ switch ($category . '.' . $mode) {
                 'userscount' => Database::count('users')[0],
                 'bancount' => Database::count('bans')[0],
                 'uploadcount' => count(glob(ROOT . Config::get('user_uploads') . '/*')) - 1,
-            ], 
+            ],
         ]);
         break;
 
