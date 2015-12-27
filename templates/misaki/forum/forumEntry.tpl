@@ -9,7 +9,7 @@
             {% if forum.forums|length %}
                 <ul class="forumSubSubforums">
                     {% for forum in forum.forums %}
-                        <li><a href="{% if forum.type == 2 %}{{ forum.link }}{% else %}{{ urls.format('FORUM_SUB', [forum.id]) }}{% endif %}" class="default">{{ forum.name }}</a></li>
+                        <li><a href="{% if forum.type == 2 %}{{ forum.link }}{% else %}{{ urls.format('FORUM_SUB', [forum.id]) }}{% endif %}" class="default"><span class="fa {% if forum.icon %}{{ forum.icon }}{% else %}fa-bars{% endif %}"></span> {{ forum.name }}</a></li>
                     {% endfor %}
                 </ul>
             {% endif %}

@@ -954,3 +954,8 @@ a:active {
     line-height: 1.2em;
     min-width: 200px;
 }
+
+.forums .forumListing .forumCategory .forumSubSubforums {
+    display: block;
+    list-style: none;
+}
