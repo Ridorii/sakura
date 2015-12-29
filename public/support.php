@@ -6,6 +6,8 @@
 // Declare Namespace
 namespace Sakura;
 
+use Sakura\Perms\Site;
+
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
 
@@ -18,7 +20,7 @@ $template->setTemplate($templateName);
 // Switch between modes (we only allow this to be used by logged in user)
 if (isset($_REQUEST['mode'])
     && Users::checkLogin()
-    && $currentUser->checkPermission('SITE', 'OBTAIN_PREMIUM')) {
+    && $currentUser->permission(Site::OBTAIN_PREMIUM)) {
     // Initialise Payments class
     if (!Payments::init()) {
         header('Location: ' . $urls->format('SITE_PREMIUM') . '?fail=true');

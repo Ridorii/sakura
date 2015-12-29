@@ -8,6 +8,7 @@ namespace Sakura\Forum;
 use Sakura\Database;
 use Sakura\Users;
 use Sakura\User;
+use Sakura\Perms;
 
 /**
  * Class Forum
@@ -35,6 +36,9 @@ class Forum
         // Get the row from the database
         $forumRow = Database::fetch('forums', false, ['forum_id' => [$forumId, '=']]);
 
+        // Create permissions object
+        $this->_permissions = new Perms(Perms::FORUM);
+
         // Populate the variables
         if ($forumRow) {
             $this->id = $forumRow['forum_id'];
@@ -47,6 +51,22 @@ class Forum
         } elseif ($forumId != 0) {
             $this->id = -1;
         }
+    }
+
+    // Checking a permission
+    public function permission($flag, $user) {
+        // Set default permission value
+        $perm = 0;
+
+        // Get the permissions of the parent forum if there is one
+        if ($this->category) {
+            $perm = $perm | $this->_permissions->user($user, ['forum_id' => [$this->category, '=']]);
+        }
+
+        // Bitwise OR it with the permissions for this forum
+        $perm = $perm | $this->_permissions->user($user, ['forum_id' => [$this->id, '=']]);
+
+        return $this->_permissions->check($flag, $perm);
     }
 
     // Subforums

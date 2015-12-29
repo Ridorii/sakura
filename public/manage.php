@@ -6,6 +6,9 @@
 // Declare Namespace
 namespace Sakura;
 
+use Sakura\Perms\Site;
+use Sakura\Perms\Manage;
+
 // Define that we are in Management mode
 define('SAKURA_MANAGE', true);
 
@@ -19,7 +22,7 @@ $template = new Template();
 $template->setTemplate($templateName);
 
 // Make sure user has the permissions to view this
-if (!$currentUser->checkPermission('MANAGE', 'USE_MANAGE')) {
+if (!$currentUser->permission(Manage::USE_MANAGE, Perms::MANAGE)) {
     // Set parse variables
     $template->setVariables($renderData);
 
@@ -38,7 +41,7 @@ $pages = [
                 'description' => [
                     'Welcome to the Broomcloset! Here\'s a quick overview of the site.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
             'info' => [
@@ -46,7 +49,7 @@ $pages = [
                 'description' => [
                     'Manage and edit the info pages.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
         ],
@@ -59,7 +62,7 @@ $pages = [
                 'description' => [
                     'Manages the appearance of the site and most other options that don\'t need their own category.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
             'uploads' => [
@@ -67,7 +70,7 @@ $pages = [
                 'description' => [
                     'Settings regarding uploads like avatars and backgrounds.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
             'premium' => [
@@ -75,7 +78,7 @@ $pages = [
                 'description' => [
                     'Alters the way the premium system works.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
             'user' => [
@@ -83,7 +86,7 @@ $pages = [
                 'description' => [
                     'Settings regarding users such as registration.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
             'mail' => [
@@ -91,7 +94,7 @@ $pages = [
                 'description' => [
                     'How will Sakura send e-mails.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
         ],
@@ -104,7 +107,7 @@ $pages = [
                 'description' => [
                     'Change the forums.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
             'settings' => [
@@ -112,7 +115,7 @@ $pages = [
                 'description' => [
                     'Alter settings specific to the forum.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
         ],
@@ -125,7 +128,7 @@ $pages = [
                 'description' => [
                     'View all the comment categories.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
         ],
@@ -138,7 +141,7 @@ $pages = [
                 'description' => [
                     'View and change users.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
             'manage-ranks' => [
@@ -146,7 +149,7 @@ $pages = [
                 'description' => [
                     'View and change ranks.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
             'profile-fields' => [
@@ -154,7 +157,7 @@ $pages = [
                 'description' => [
                     'Manage the custom profile fields.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
             'option-fields' => [
@@ -162,7 +165,7 @@ $pages = [
                 'description' => [
                     'Manage the custom option fields.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
             'bans' => [
@@ -170,7 +173,7 @@ $pages = [
                 'description' => [
                     'Banning users.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
             'warnings' => [
@@ -178,7 +181,7 @@ $pages = [
                 'description' => [
                     'Warn users.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
         ],
@@ -191,7 +194,7 @@ $pages = [
                 'description' => [
                     'Alter the global site perms.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
             'management' => [
@@ -199,7 +202,7 @@ $pages = [
                 'description' => [
                     'Alter the management/moderation perms.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
             'forum' => [
@@ -207,7 +210,7 @@ $pages = [
                 'description' => [
                     'Alter the perms of the forums.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
         ],
@@ -220,7 +223,7 @@ $pages = [
                 'description' => [
                     'Viewing the global action logs.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
             'management' => [
@@ -228,7 +231,7 @@ $pages = [
                 'description' => [
                     'Viewing the management actions taken by staff.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
             'errors' => [
@@ -236,7 +239,7 @@ $pages = [
                 'description' => [
                     'Viewing the PHP error logs Sakura was able to log.',
                 ],
-                'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                'access' => !$currentUser->permission(Site::DEACTIVATED),
                 'menu' => true,
             ],
         ],

@@ -1,4 +1,4 @@
-{% if (user.userData.profileBackground is defined and user.checkPermission('SITE', 'CHANGE_BACKGROUND')) or user.checkPermission('SITE', 'CREATE_BACKGROUND') %}
+{% if (user.userData.profileBackground is defined and user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND'))) or user.permission(constant('Sakura\\Perms\\Site::CREATE_BACKGROUND')) %}
     <form enctype="multipart/form-data" method="post" action="{{ setting.action }}">
         <input type="hidden" name="sessid" value="{{ php.sessionid }}" />
         <input type="hidden" name="timestamp" value="{{ php.time }}" />

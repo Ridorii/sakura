@@ -6,6 +6,8 @@
 // Declare Namespace
 namespace Sakura;
 
+use Sakura\Perms\Site;
+
 // If this we're requesting notifications this page won't require templating
 if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications']) {
     define('SAKURA_NO_TPL', true);
@@ -165,7 +167,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Check if the user can delete comments
-                if (!$currentUser->checkPermission('SITE', 'VOTE_COMMENTS')) {
+                if (!$currentUser->permission(Site::VOTE_COMMENTS)) {
                     $renderData['page'] = [
                         'redirect' => $redirect,
                         'message' => 'You aren\'t allowed to vote on comments.',
@@ -201,7 +203,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Check if the user can delete comments
-                if (!$currentUser->checkPermission('SITE', 'DELETE_COMMENTS')) {
+                if (!$currentUser->permission(Site::DELETE_COMMENTS)) {
                     $renderData['page'] = [
                         'redirect' => $redirect,
                         'message' => 'You aren\'t allowed to delete comments.',
@@ -231,7 +233,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 
             case 'comment':
                 // Check if the user can delete comments
-                if (!$currentUser->checkPermission('SITE', 'CREATE_COMMENTS')) {
+                if (!$currentUser->permission(Site::CREATE_COMMENTS)) {
                     $renderData['page'] = [
                         'redirect' => $redirect,
                         'message' => 'You aren\'t allowed to comment.',
@@ -461,15 +463,15 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         $msgTitle = 'Background';
                         $permission = (
                             !empty($currentUser->userData()[$userDataKey])
-                            && $currentUser->checkPermission('SITE', 'CHANGE_BACKGROUND')
-                        ) || $currentUser->checkPermission('SITE', 'CREATE_BACKGROUND');
+                            && $currentUser->permission(Site::CHANGE_BACKGROUND)
+                        ) || $currentUser->permission(Site::CREATE_BACKGROUND);
                         break;
 
                     case 'avatar':
                     default:
                         $userDataKey = 'userAvatar';
                         $msgTitle = 'Avatar';
-                        $permission = $currentUser->checkPermission('SITE', 'CHANGE_AVATAR');
+                        $permission = $currentUser->permission(Site::CHANGE_AVATAR);
                 }
 
                 // Check if the user has the permissions to go ahead
@@ -768,7 +770,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 // Go over each field
                 foreach ($fields as $field) {
                     // Make sure the user has sufficient permissions to complete this action
-                    if (!$currentUser->checkPermission('SITE', $field['option_permission'])) {
+                    if (!$currentUser->permission(constant('Sakura\Perms\Site::' . $field['option_permission']))) {
                         $store[$field['option_id']] = false;
                         continue;
                     }
@@ -795,7 +797,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
             // Usertitle
             case 'usertitle':
                 // Check permissions
-                if (!$currentUser->checkPermission('SITE', 'CHANGE_USERTITLE')) {
+                if (!$currentUser->permission(Site::CHANGE_USERTITLE)) {
                     $renderData['page'] = [
 
                         'redirect' => $redirect,
@@ -844,7 +846,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
             // Username changing
             case 'username':
                 // Check permissions
-                if (!$currentUser->checkPermission('SITE', 'CHANGE_USERNAME')) {
+                if (!$currentUser->permission(Site::CHANGE_USERNAME)) {
                     $renderData['page'] = [
 
                         'redirect' => $redirect,
@@ -881,7 +883,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
             // E-mail changing
             case 'email':
                 // Check permissions
-                if (!$currentUser->checkPermission('SITE', 'CHANGE_EMAIL')) {
+                if (!$currentUser->permission(Site::CHANGE_EMAIL)) {
                     $renderData['page'] = [
 
                         'redirect' => $redirect,
@@ -916,7 +918,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
             // Password changing
             case 'password':
                 // Check permissions
-                if (!$currentUser->checkPermission('SITE', 'CHANGE_PASSWORD')) {
+                if (!$currentUser->permission(Site::CHANGE_PASSWORD)) {
                     $renderData['page'] = [
 
                         'redirect' => $redirect,
@@ -953,7 +955,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
             // Deactivation
             case 'deactivate':
                 // Check permissions
-                if (!$currentUser->checkPermission('SITE', 'DEACTIVATE_ACCOUNT')) {
+                if (!$currentUser->permission(Site::DEACTIVATE_ACCOUNT)) {
                     $renderData['page'] = [
 
                         'redirect' => $redirect,
@@ -1055,7 +1057,7 @@ if (Users::checkLogin()) {
                         From here you can monitor, view and update your profile and preferences.',
 
                     ],
-                    'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                    'access' => !$currentUser->permission(Site::DEACTIVATED),
                     'menu' => true,
                 ],
                 'profile' => [
@@ -1064,7 +1066,7 @@ if (Users::checkLogin()) {
                         'These are the external account links etc.
                         on your profile, shouldn\'t need any additional explanation for this one.',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'ALTER_PROFILE'),
+                    'access' => $currentUser->permission(Site::ALTER_PROFILE),
                     'menu' => true,
                 ],
                 'options' => [
@@ -1072,7 +1074,7 @@ if (Users::checkLogin()) {
                     'description' => [
                         'These are a few personalisation options for the site while you\'re logged in.',
                     ],
-                    'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                    'access' => !$currentUser->permission(Site::DEACTIVATED),
                     'menu' => true,
                 ],
             ],
@@ -1085,7 +1087,7 @@ if (Users::checkLogin()) {
                     'description' => [
                         'Manage your friends.',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'MANAGE_FRIENDS'),
+                    'access' => $currentUser->permission(Site::MANAGE_FRIENDS),
                     'menu' => true,
                 ],
                 'requests' => [
@@ -1093,7 +1095,7 @@ if (Users::checkLogin()) {
                     'description' => [
                         'Handle friend requests.',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'MANAGE_FRIENDS'),
+                    'access' => $currentUser->permission(Site::MANAGE_FRIENDS),
                     'menu' => true,
                 ],
             ],
@@ -1106,7 +1108,7 @@ if (Users::checkLogin()) {
                     'description' => [
                         'The list of messages you\'ve received.',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'USE_MESSAGES'),
+                    'access' => $currentUser->permission(Site::USE_MESSAGES),
                     'menu' => true,
                 ],
                 'sent' => [
@@ -1114,7 +1116,7 @@ if (Users::checkLogin()) {
                     'description' => [
                         'The list of messages you\'ve sent to other users.',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'USE_MESSAGES'),
+                    'access' => $currentUser->permission(Site::USE_MESSAGES),
                     'menu' => true,
                 ],
                 'compose' => [
@@ -1122,7 +1124,7 @@ if (Users::checkLogin()) {
                     'description' => [
                         'Write a new message.',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'SEND_MESSAGES'),
+                    'access' => $currentUser->permission(Site::SEND_MESSAGES),
                     'menu' => true,
                 ],
                 'read' => [
@@ -1130,7 +1132,7 @@ if (Users::checkLogin()) {
                     'description' => [
                         'Read a message.',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'USE_MESSAGES'),
+                    'access' => $currentUser->permission(Site::USE_MESSAGES),
                     'menu' => false,
                 ],
             ],
@@ -1143,7 +1145,7 @@ if (Users::checkLogin()) {
                     'description' => [
                         'The history of notifications that have been sent to you in the last month.',
                     ],
-                    'access' => !$currentUser->checkPermission('SITE', 'DEACTIVATED'),
+                    'access' => !$currentUser->permission(Site::DEACTIVATED),
                     'menu' => true,
                 ],
             ],
@@ -1159,7 +1161,7 @@ if (Users::checkLogin()) {
                         minimum image size is {{ avatar.min_width }}x{{ avatar.min_height }},
                         maximum file size is {{ avatar.max_size_view }}.',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_AVATAR'),
+                    'access' => $currentUser->permission(Site::CHANGE_AVATAR),
                     'menu' => true,
                 ],
                 'background' => [
@@ -1172,8 +1174,8 @@ if (Users::checkLogin()) {
                     ],
                     'access' => (
                         isset($currentUser->userData()['profileBackground'])
-                        && $currentUser->checkPermission('SITE', 'CHANGE_BACKGROUND')
-                    ) || $currentUser->checkPermission('SITE', 'CREATE_BACKGROUND'),
+                        && $currentUser->permission(Site::CHANGE_BACKGROUND)
+                    ) || $currentUser->permission(Site::CREATE_BACKGROUND),
                     'menu' => true,
                 ],
                 'userpage' => [
@@ -1183,8 +1185,8 @@ if (Users::checkLogin()) {
                     ],
                     'access' => (
                         isset($currentUser->userData()['userPage'])
-                        && $currentUser->checkPermission('SITE', 'CHANGE_USERPAGE')
-                    ) || $currentUser->checkPermission('SITE', 'CREATE_USERPAGE'),
+                        && $currentUser->permission(Site::CHANGE_USERPAGE)
+                    ) || $currentUser->permission(Site::CREATE_USERPAGE),
                     'menu' => true,
                 ],
                 'signature' => [
@@ -1192,7 +1194,7 @@ if (Users::checkLogin()) {
                     'description' => [
                         'This signature is displayed at the end of all your posts (unless you choose not to show it).',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_SIGNATURE'),
+                    'access' => $currentUser->permission(Site::CHANGE_SIGNATURE),
                     'menu' => true,
                 ],
             ],
@@ -1205,7 +1207,7 @@ if (Users::checkLogin()) {
                     'description' => [
                         'You e-mail address is used for password recovery and stuff like that, we won\'t spam you ;).',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_EMAIL'),
+                    'access' => $currentUser->permission(Site::CHANGE_EMAIL),
                     'menu' => true,
                 ],
                 'username' => [
@@ -1214,7 +1216,7 @@ if (Users::checkLogin()) {
                         'Probably the biggest part of your identity on a site.',
                         '<b>You can only change this once every 30 days so choose wisely.</b>',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_USERNAME'),
+                    'access' => $currentUser->permission(Site::CHANGE_USERNAME),
                     'menu' => true,
                 ],
                 'usertitle' => [
@@ -1222,7 +1224,7 @@ if (Users::checkLogin()) {
                     'description' => [
                         'That little piece of text displayed under your username on your profile.',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_USERTITLE'),
+                    'access' => $currentUser->permission(Site::CHANGE_USERTITLE),
                     'menu' => true,
                 ],
                 'password' => [
@@ -1230,7 +1232,7 @@ if (Users::checkLogin()) {
                     'description' => [
                         'Used to authenticate with the site and certain related services.',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'CHANGE_PASSWORD'),
+                    'access' => $currentUser->permission(Site::CHANGE_PASSWORD),
                     'menu' => true,
                 ],
                 'ranks' => [
@@ -1240,7 +1242,7 @@ if (Users::checkLogin()) {
                         Your main rank is highlighted.
                         You get the permissions of all of the ranks you\'re in combined.',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'ALTER_RANKS'),
+                    'access' => $currentUser->permission(Site::ALTER_RANKS),
                     'menu' => true,
                 ],
             ],
@@ -1259,7 +1261,7 @@ if (Users::checkLogin()) {
                         'If you get logged out after clicking one you\'ve most likely killed your current session,
                         to make it easier to avoid this from happening your current session is highlighted.',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'MANAGE_SESSIONS'),
+                    'access' => $currentUser->permission(Site::MANAGE_SESSIONS),
                     'menu' => true,
                 ],
                 'deactivate' => [
@@ -1267,7 +1269,7 @@ if (Users::checkLogin()) {
                     'description' => [
                         'You can deactivate your account here if you want to leave :(.',
                     ],
-                    'access' => $currentUser->checkPermission('SITE', 'DEACTIVATE_ACCOUNT'),
+                    'access' => $currentUser->permission(Site::DEACTIVATE_ACCOUNT),
                     'menu' => true,
                 ],
             ],

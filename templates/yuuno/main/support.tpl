@@ -89,7 +89,7 @@
                 </div>
             </div>
         </div>
-        {% if session.checkLogin and user.checkPermission('SITE', 'OBTAIN_PREMIUM') %}
+        {% if session.checkLogin and user.permission(constant('Sakura\\Perms\\Site::OBTAIN_PREMIUM')) %}
             <div class="slider">
                 <input class="inputStyling" type="range" min="1" max="{{ page.amount_max }}" value="1" onchange="document.getElementById('monthsNo').value = this.value; document.getElementById('monthNoBtn').innerHTML = this.value; document.getElementById('monthsTrailingS').innerHTML = (this.value == 1 ? '' : 's'); document.getElementById('totalAmount').innerHTML = (this.value * {{ page.price }}).formatMoney(2);" />
             </div>
@@ -108,7 +108,7 @@
             <h1 style="text-align: center; margin: 1em auto;" class="stylised">You need to be logged in to get Tenshi!</h1>
         {% endif %}
     </div>
-    {% if session.checkLogin and user.checkPermission('SITE', 'OBTAIN_PREMIUM') %}
+    {% if session.checkLogin and user.permission(constant('Sakura\\Perms\\Site::OBTAIN_PREMIUM')) %}
         <form action="{{ urls.format('SITE_PREMIUM') }}" method="post" id="purchaseForm" class="hidden">
             <input type="hidden" name="mode" value="purchase" />
             <input type="hidden" name="time" value="{{ php.time }}" />

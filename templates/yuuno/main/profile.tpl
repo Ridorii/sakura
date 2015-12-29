@@ -1,6 +1,6 @@
 {% extends 'global/master.tpl' %}
 
-{% set profileHidden = profile.checkPermission('SITE', 'DEACTIVATED') or profile.password.password_algo == 'nologin' or (profile.checkPermission('SITE', 'RESTRICTED') and (user.id != profile.id and not user.checkPermission('MANAGE', 'USE_MANAGE'))) %}
+{% set profileHidden = profile.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) or profile.password.password_algo == 'nologin' or (profile.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) and (user.id != profile.id and not user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')))) %}
 
 {% set noUserpage = profile.userPage|length < 1 %}
 
@@ -96,11 +96,11 @@
                     {% endif %}
                     <hr class="default" />
                     <b>Account Standing</b>
-                    {% if profile.checkPermission('SITE', 'DEACTIVATED') %}
+                    {% if profile.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) %}
                         <h2 style="color: #888; text-shadow: 0 0 7px #888; margin-top: 0;">Deactivated</h2>
                     {% elseif profile.checkBan %}
                         <h2 style="color: #222; text-shadow: 0 0 7px #222; margin-top: 0;">Banned</h2>
-                    {% elseif profile.checkPermission('SITE', 'RESTRICTED') %}
+                    {% elseif profile.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}
                         <h2 style="color: #800; text-shadow: 0 0 7px #800; margin-top: 0;">Restricted</h2>
                     {% elseif profile.getWarnings %}
                         <h2 style="color: #A00; text-shadow: 0 0 7px #A00; margin-top: 0;">Bad</h2>

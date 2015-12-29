@@ -6,7 +6,7 @@
             {% include 'elements/indexPanel.tpl' %}
         </div>
         <div class="content-left content-column">
-            <div class="head">News <div class="links"><a href="{{ urls.format('SITE_NEWS_RSS') }}" class="fa fa-rss news-rss default"></a></div></div>
+            <div class="head">News</div>
             {% for post in news.posts|batch(newsCount)[0] %}
                 {% include 'elements/newsPost.tpl' %}
             {% endfor %}

@@ -1,6 +1,6 @@
 {% extends 'global/master.tpl' %}
 
-{% set profileHidden = profile.checkPermission('SITE', 'DEACTIVATED') or profile.password.password_algo == 'nologin' or (profile.checkPermission('SITE', 'RESTRICTED') and (user.id != profile.id and not user.checkPermission('MANAGE', 'USE_MANAGE'))) %}
+{% set profileHidden = profile.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) or profile.password.password_algo == 'nologin' or (profile.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) and (user.id != profile.id and not user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')))) %}
 
 {% set noUserpage = profile.userPage|length < 1 %}
 
@@ -67,14 +67,14 @@
         <div class="profileContainer" id="profileContent">
             <div class="userDataBar">
             {% if not profileHidden %}
-                {% if (profile.checkPremium[0] or profile.checkPermission('MANAGE', 'USE_MANAGE')) %}
+                {% if (profile.checkPremium[0] or profile.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE'))) %}
                     <div class="profilePlatform hierarchyContainer">
                         <div class="inner">
                             <ul class="hierarchies">
                                 {% if profile.checkPremium[0] %}
                                     <li class="tenshi">Tenshi</li>
                                 {% endif %}
-                                {% if profile.checkPermission('MANAGE', 'USE_MANAGE') %}
+                                {% if profile.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
                                     <li class="staff">Staff</li>
                                 {% endif %}
                                 {% if false %}

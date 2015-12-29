@@ -27,10 +27,6 @@ class Urls
             '/news.php?id=%u',
             '/news/%u',
         ],
-        'SITE_NEWS_RSS' => [
-            '/news.php?xml=true',
-            '/news.xml',
-        ],
         'SITE_SEARCH' => [
             '/search.php',
             '/search',

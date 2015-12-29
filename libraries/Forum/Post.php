@@ -33,6 +33,7 @@ class Post
     public $editTime = 0;
     public $editReason = "";
     public $editUser = [];
+    private $_permissions;
 
     // Constructor
     public function __construct($postId)

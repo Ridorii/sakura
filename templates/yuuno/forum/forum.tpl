@@ -2,13 +2,13 @@
 <div class="forumList">
     {% for forum in forum.forums %}
         {% if forum.type == 1 %}
-            {% if forum.forums|length %}
-            <div class="forumCategory">
-                {% if forum.type != 1 %}Subforums{% else %}<a href="{{ urls.format('FORUM_SUB', [forum.id]) }}" class="clean">{{ forum.name }}</a>{% endif %}
-            </div>
-            {% for forum in forum.forums %}
-                {% include 'forum/forumEntry.tpl' %}
-            {% endfor %}
+            {% if forum.forums|length and forum.permission(constant('Sakura\\Perms\\Forum::VIEW'), user.id) %}
+                <div class="forumCategory">
+                    {% if forum.type != 1 %}Subforums{% else %}<a href="{{ urls.format('FORUM_SUB', [forum.id]) }}" class="clean">{{ forum.name }}</a>{% endif %}
+                </div>
+                {% for forum in forum.forums %}
+                    {% include 'forum/forumEntry.tpl' %}
+                {% endfor %}
             {% endif %}
         {% else %}
             {% include 'forum/forumEntry.tpl' %}

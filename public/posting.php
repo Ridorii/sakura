@@ -1,10 +1,13 @@
 <?php
 /*
  * Sakura Forum Posting
+ * Needs to be thoroughly unfucked before permissions can be properly implemented
  */
 
 // Declare Namespace
 namespace Sakura;
+
+use Sakura\Perms\Forum as ForumPerms;
 
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
@@ -32,6 +35,25 @@ if ($topicId) {
 $forumId = isset($_GET['f']) ?
 $_GET['f'] :
 $thread->forum;
+
+// Creare forum class
+$forum = new Forum\Forum($forumId);
+
+// Check if the user has access to the forum
+if (!$forum->permission(ForumPerms::VIEW, $currentUser->id()) || !$forum->permission(ForumPerms::REPLY, $currentUser->id())) {
+    // Set render data
+    $renderData['page'] = [
+        'title' => 'Information',
+        'message' => 'You do not have access to this forum.',
+    ];
+
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/information');
+    exit;
+}
 
 $mode = isset($_GET['f']) ? 'f' : (isset($_GET['t']) ? 't' : (isset($_GET['p']) ? 'p' : null));
 

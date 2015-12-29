@@ -19,8 +19,11 @@ if (!isset($sockSakuraPath)) {
 // Include Sakura
 require_once $sockSakuraPath . '/sakura.php';
 
-use Sakura\Permissions;
+use Sakura\Perms;
+use Sakura\Perms\Site;
+use Sakura\Perms\Manage;
 use Sakura\User;
+use Sakura\Rank;
 use Sakura\Users;
 use sockchat\Auth;
 
@@ -40,15 +43,15 @@ if (Auth::getPageType() == AUTH_FETCH) {
 
     // Check if session is active else deny
     if ($data = Users::checkLogin($uid, $sid)) {
+        // Create a user object
+        $user = User::construct($uid);
+
         // Check if they can access the chat
-        if (Perms::check('SITE', 'DEACTIVATED', $uid, 1) || Perms::check('SITE', 'RESTRICTED', $uid, 1)) {
+        if ($user->permission(Site::DEACTIVATED) || $user->permission(Site::RESTRICTED)) {
             Auth::Deny();
             Auth::Serve();
             exit;
         }
-
-        // Create a user object
-        $user = User::construct($uid);
 
         // Set the user's data
         Auth::SetUserData(
@@ -59,12 +62,12 @@ if (Auth::getPageType() == AUTH_FETCH) {
 
         // Set the common permissions
         Auth::SetCommonPermissions(
-            $user->mainRank()['hierarchy'],
-            Perms::check('MANAGE', 'USE_MANAGE', $uid, 1) ? 1 : 0,
-            Perms::check('SITE', 'CREATE_BACKGROUND', $uid, 1) ? 1 : 0,
-            Perms::check('SITE', 'CHANGE_USERNAME', $uid, 1) ? 1 : 0,
-            Perms::check('SITE', 'MULTIPLE_GROUPS', $uid, 1) ? 2 : (
-                Perms::check('SITE', 'CREATE_GROUP', $uid, 1) ? 1 : 0
+            Rank::construct($user->mainRank())->hierarchy(),
+            $user->permission(Manage::USE_MANAGE, Perms::MANAGE) ? 1 : 0,
+            $user->permission(Site::CREATE_BACKGROUND) ? 1 : 0,
+            $user->permission(Site::CHANGE_USERNAME) ? 1 : 0,
+            $user->permission(Site::MULTIPLE_GROUPS) ? 2 : (
+                $user->permission(Site::CREATE_GROUP) ? 1 : 0
             )
         );
 

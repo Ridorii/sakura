@@ -5,6 +5,9 @@
 
 namespace Sakura;
 
+use Sakura\Perms;
+use Sakura\Perms\Site;
+
 /**
  * Class Rank
  * @package Sakura
@@ -22,9 +25,23 @@ class Rank
         'rank_description' => '',
         'rank_title' => '',
     ];
+    private $permissions;
+    protected static $_rankCache = [];
+    
+    // Static initialiser
+    public static function construct($rid, $forceRefresh = false) {
+        // Check if a rank object isn't present in cache
+        if ($forceRefresh || !array_key_exists($rid, self::$_rankCache)) {
+            // If not create a new object and cache it
+            self::$_rankCache[$rid] = new Rank($rid);
+        }
+
+        // Return the cached object
+        return self::$_rankCache[$rid];
+    }
 
     // Initialise the rank object
-    public function __construct($rid)
+    private function __construct($rid)
     {
 
         // Get the rank database row
@@ -41,6 +58,9 @@ class Rank
             // If not assign as the fallback rank
             $this->data = $getRank;
         }
+
+        // Init the permissions
+        $this->permissions = new Perms(Perms::SITE);
     }
 
     // Get the rank id
@@ -82,12 +102,18 @@ class Rank
     // Check if the rank is hidden
     public function hidden()
     {
-        return $this->data['rank_hidden'] || $this->checkPermission('SITE', 'DEACTIVATED') || $this->checkPermission('SITE', 'RESTRICTED');
+        return $this->data['rank_hidden'] || $this->permission(Site::DEACTIVATED) || $this->permission(Site::RESTRICTED);
     }
 
     // Check if the rank has the proper permissions
-    public function checkPermission($layer, $action)
+    public function permission($flag)
     {
-        return Permissions::check($layer, $action, [$this->id()], 2);
+        // Set default permission value
+        $perm = 0;
+
+        // Bitwise OR it with the permissions for this forum
+        $perm = $perm | $this->permissions->rank($this->id());
+        
+        return $this->permissions->check($flag, $perm);
     }
 }

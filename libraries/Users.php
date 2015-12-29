@@ -5,6 +5,8 @@
 
 namespace Sakura;
 
+use Sakura\Perms\Site;
+
 /**
  * Class Users
  * @package Sakura
@@ -28,8 +30,11 @@ class Users
         // Validate the session
         $sessionValid = $session->validate();
 
+        // Get user object
+        $user = User::construct($uid);
+
         // Check if the session exists and check if the user is activated
-        if ($sessionValid == 0 || Permissions::check('SITE', 'DEACTIVATED', $uid, 1)) {
+        if ($sessionValid == 0 || $user->permission(Site::DEACTIVATED)) {
             // Unset User ID
             setcookie(
                 Config::get('cookie_prefix') . 'id',
@@ -136,7 +141,7 @@ class Users
         }
 
         // Check if the user has the required privs to log in
-        if (Permissions::check('SITE', 'DEACTIVATED', $user->id(), 1)) {
+        if ($user->permission(Site::DEACTIVATED)) {
             return [0, 'NOT_ALLOWED', $user->id()];
         }
 
@@ -341,8 +346,11 @@ class Users
             return [0, 'USER_NOT_EXIST'];
         }
 
+        // Create user object
+        $userObj = User::construct($user['user_id']);
+
         // Check if the user has the required privs to log in
-        if (Permissions::check('SITE', 'DEACTIVATED', $user['user_id'], 1)) {
+        if ($userObj->permission(Site::DEACTIVATED)) {
             return [0, 'NOT_ALLOWED'];
         }
 
@@ -445,8 +453,10 @@ class Users
             return [0, 'USER_NOT_EXIST'];
         }
 
+        $userObj = User::construct($user['user_id']);
+
         // Check if a user is activated
-        if (!Permissions::check('SITE', 'DEACTIVATED', $user['user_id'], 1)) {
+        if (!$userObj->permission(Site::DEACTIVATED)) {
             return [0, 'USER_ALREADY_ACTIVE'];
         }
 
@@ -462,15 +472,15 @@ class Users
     {
 
         // Get the user data
-        $user = Database::fetch('users', false, ['user_id' => [$uid, '=']]);
+        $user = User::construct($uid);
 
         // User is already activated or doesn't even exist
-        if (count($user) < 2 || !Permissions::check('SITE', 'DEACTIVATED', $user['user_id'], 1)) {
+        if (!$user->id() || !$user->permission(Site::DEACTIVATED)) {
             return false;
         }
 
         // Generate activation key
-        $activate = ($customKey ? $customKey : Main::newActionCode('ACTIVATE', $uid, [
+        $activate = ($customKey ? $customKey : Main::newActionCode('ACTIVATE', $user->id(), [
             'user' => [
                 'rank_main' => 2,
                 'user_ranks' => json_encode([2]),
@@ -511,15 +521,15 @@ class Users
     public static function activateUser($uid, $requireKey = false, $key = null)
     {
         // Get the user data
-        $user = Database::fetch('users', false, ['user_id' => [$uid, '=']]);
+        $user = User::construct($uid);
 
         // Check if user exists
-        if (!count($user) > 1) {
+        if (!$user->id()) {
             return [0, 'USER_NOT_EXIST'];
         }
 
         // Check if user is already activated
-        if (!Permissions::check('SITE', 'DEACTIVATED', $user['user_id'], 1)) {
+        if (!$user->permission(Site::DEACTIVATED)) {
             return [0, 'USER_ALREADY_ACTIVE'];
         }
 
@@ -531,7 +541,7 @@ class Users
         management reasons but you can't really get around this anyway) */
         if ($requireKey) {
             // Check the action code
-            $action = Main::useActionCode('ACTIVATE', $key, $uid);
+            $action = Main::useActionCode('ACTIVATE', $key, $user->id());
 
             // Check if we got a negative return
             if (!$action[0]) {
@@ -551,7 +561,7 @@ class Users
                 'user_ranks' => $ranks,
             ],
             [
-                'user_id' => [$uid, '='],
+                'user_id' => [$user->id(), '='],
             ],
         ]);
 
@@ -676,9 +686,11 @@ class Users
         // Create output array
         $fields = [];
 
+        $user = User::construct(self::checkLogin()[0]);
+
         // Iterate over the fields and clean them up
         foreach ($optionFields as $field) {
-            if (!Permissions::check('SITE', $field['option_permission'], self::checkLogin()[0], 1)) {
+            if (!$user->permission(constant('Sakura\Perms\Site::' . $field['option_permission']))) {
                 continue;
             }
 
@@ -830,12 +842,14 @@ class Users
                 continue;
             }
 
+            $user = User::construct($user['user_id']);
+
             // Skip if inactive and not include deactivated users
-            if (!$includeInactive && Permissions::check('SITE', 'DEACTIVATED', $user['user_id'], 1)) {
+            if (!$includeInactive && $user->permission(Site::DEACTIVATED)) {
                 continue;
             }
 
-            $users[$user['user_id']] = User::construct($user['user_id']);
+            $users[$user->id()] = $user;
         }
 
         // and return an array with the users
@@ -853,7 +867,7 @@ class Users
 
         // Reorder shit
         foreach ($getRanks as $rank) {
-            $ranks[$rank['rank_id']] = new Rank($rank['rank_id']);
+            $ranks[$rank['rank_id']] = Rank::construct($rank['rank_id']);
         }
 
         // and return an array with the ranks

@@ -61,7 +61,7 @@
             // Space for things that need to happen onload
             window.addEventListener("load", function() {
 
-                {% if php.self == '/profile.php' ? (profile.userData.profileBackground and not profile.optionFields.disableProfileParallax) : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.optionFields.profileBackgroundSiteWide and user.userData.profileBackground and not user.optionFields.disableProfileParallax) %}
+                {% if php.self == '/profile.php' ? (profile.userData.profileBackground and not profile.optionFields.disableProfileParallax) : (user.permission(constant('Sakura\\Perms\\Site::CREATE_BACKGROUND')) and user.optionFields.profileBackgroundSiteWide and user.userData.profileBackground and not user.optionFields.disableProfileParallax) %}
                     initialiseParallax('userBackground');
                 {% endif %}
 
@@ -76,7 +76,7 @@
             <div class="header-fade"></div>
             <div id="notifications"></div>
             <div id="wrapper">
-                {% if php.self == '/profile.php' ? profile.userData.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.optionFields.profileBackgroundSiteWide and user.userData.profileBackground) %}
+                {% if php.self == '/profile.php' ? profile.userData.profileBackground : (user.permission(constant('Sakura\\Perms\\Site::CREATE_BACKGROUND')) and user.optionFields.profileBackgroundSiteWide and user.userData.profileBackground) %}
                     <div id="userBackground" style="background-image: url('{{ urls.format('IMAGE_BACKGROUND', [(php.self == '/profile.php' ? profile : user).id]) }}');"></div>
                 {% endif %}
                 <div id="navigation">

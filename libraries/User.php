@@ -5,6 +5,9 @@
 
 namespace Sakura;
 
+use Sakura\Perms;
+use Sakura\Perms\Site;
+
 /**
  * Class User
  * @package Sakura
@@ -22,8 +25,8 @@ class User
         'password_iter' => 0,
         'password_chan' => 0,
         'email' => 'sakura@localhost',
-        'rank_main' => 0,
-        'user_ranks' => '[0]',
+        'rank_main' => 1,
+        'user_ranks' => '[1]',
         'user_colour' => '',
         'register_ip' => '127.0.0.1',
         'last_ip' => '127.0.0.1',
@@ -36,6 +39,7 @@ class User
     ];
     private $ranks = [];
     private $mainRank = [];
+    private $permissions;
     protected static $_userCache = [];
 
     // Static initialiser
@@ -76,13 +80,13 @@ class User
         // Get the rows for all the ranks
         foreach ($this->data['user_ranks'] as $rank) {
             // Store the database row in the array
-            $this->ranks[$rank] = new Rank($rank);
+            $this->ranks[$rank] = Rank::construct($rank);
         }
 
         // Check if ranks were set
         if (empty($this->ranks)) {
             // If not assign the fallback rank
-            $this->ranks[0] = new Rank(0);
+            $this->ranks[0] = Rank::construct(0);
         }
 
         // Assign the user's main rank to a special variable since we'll use it a lot
@@ -91,6 +95,9 @@ class User
             $this->data['rank_main'] :
             array_keys($this->ranks)[0]
         ];
+
+        // Init the permissions
+        $this->permissions = new Perms(Perms::SITE);
     }
 
     // Get user id
@@ -326,7 +333,7 @@ class User
         $user = User::construct($uid);
 
         // Validate that the user exists
-        if ($user->checkPermission('SITE', 'DEACTIVATED')) {
+        if ($user->permission(Site::DEACTIVATED)) {
             return [0, 'USER_NOT_EXIST'];
         }
 
@@ -353,7 +360,7 @@ class User
         $user = User::construct($uid);
 
         // Validate that the user exists
-        if ($user->checkPermission('SITE', 'DEACTIVATED')) {
+        if ($user->permission(Site::DEACTIVATED)) {
             return [0, 'USER_NOT_EXIST'];
         }
 
@@ -472,9 +479,18 @@ class User
     }
 
     // Check if the user has the proper permissions
-    public function checkPermission($layer, $action)
+    public function permission($flag, $mode = null)
     {
-        return Permissions::check($layer, $action, $this->data['user_id'], 1);
+        // Set mode
+        $this->permissions->mode($mode ? $mode : Perms::SITE);
+
+        // Set default permission value
+        $perm = 0;
+
+        // Bitwise OR it with the permissions for this forum
+        $perm = $this->permissions->user($this->id());
+
+        return $this->permissions->check($flag, $perm);
     }
 
     // Get a user's profile comments
@@ -576,7 +592,7 @@ class User
             }
 
             // Make sure the user has the proper permissions to use this option
-            if (!$this->checkPermission('SITE', $field['option_permission'])) {
+            if (!$this->permission(constant('Sakura\Perms\Site::' . $field['option_permission']))) {
                 continue;
             }
 
@@ -593,7 +609,7 @@ class User
     {
 
         // Check if the user has static premium
-        if ($this->checkPermission('SITE', 'STATIC_PREMIUM')) {
+        if ($this->permission(Site::STATIC_PREMIUM)) {
             return [2, 0, time() + 1];
         }
 

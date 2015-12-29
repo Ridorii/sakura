@@ -18,7 +18,7 @@ if (function_exists('posix_getuid')) {
 define('SAKURA_NO_TPL', true);
 
 // Include components
-require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . '_sakura/sakura.php';
+require_once 'sakura.php';
 
 // Override expiration variables
 ignore_user_abort(true);
@@ -41,7 +41,7 @@ $expiredPremium = Database::fetch('premium', true, [
     'premium_expire' => [time(), '<'],
 ]);
 
-// Process expired premium accounts
+// Process expired premium accounts, make this not stupid in the future
 foreach ($expiredPremium as $expired) {
     Users::updatePremiumMeta($expired['user_id']);
 }

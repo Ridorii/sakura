@@ -6,6 +6,8 @@
 // Declare Namespace
 namespace Sakura;
 
+use Sakura\Perms\Forum as ForumPerms;
+
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
 
@@ -24,6 +26,22 @@ if ($forum->id < 0) {
     $renderData['page'] = [
         'title' => 'Information',
         'message' => 'The forum you tried to access does not exist.',
+    ];
+
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/information');
+    exit;
+}
+
+// Check if the user has access to the forum
+if (!$forum->permission(ForumPerms::VIEW, $currentUser->id())) {
+    // Set render data
+    $renderData['page'] = [
+        'title' => 'Information',
+        'message' => 'You do not have access to this forum.',
     ];
 
     // Set parse variables

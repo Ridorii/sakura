@@ -116,7 +116,7 @@
 
             {% endif %}
 
-            {% if php.self == '/profile.php' ? (profile.userData.profileBackground and not profile.optionFields.disableProfileParallax) : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.optionFields.profileBackgroundSiteWide and user.userData.profileBackground and not user.optionFields.disableProfileParallax) %}
+            {% if php.self == '/profile.php' ? (profile.userData.profileBackground and not profile.optionFields.disableProfileParallax) : (user.permission(constant('Sakura\\Perms\\Site::CREATE_BACKGROUND')) and user.optionFields.profileBackgroundSiteWide and user.userData.profileBackground and not user.optionFields.disableProfileParallax) %}
 
                 initialiseParallax('userBackground');
 
@@ -182,7 +182,7 @@
             </div>
             <div id="contentwrapper">
                 <div id="notifications"></div>
-                {% if php.self == '/profile.php' ? profile.userData.profileBackground : (user.checkPermission('SITE', 'CREATE_BACKGROUND') and user.optionFields.profileBackgroundSiteWide and user.userData.profileBackground) %}
+                {% if php.self == '/profile.php' ? profile.userData.profileBackground : (user.permission(constant('Sakura\\Perms\\Site::CREATE_BACKGROUND')) and user.optionFields.profileBackgroundSiteWide and user.userData.profileBackground) %}
                     <div id="userBackground" style="background-image: url('{{ urls.format('IMAGE_BACKGROUND', [(php.self == '/profile.php' ? profile : user).id]) }}');"></div>
                 {% endif %}
                 {% if not session.checkLogin and php.self != '/authenticate.php' %}
@@ -208,7 +208,7 @@
                         </div>
                     </form>
                 {% endif %}
-                {% if user.checkPermission('SITE', 'RESTRICTED') %}
+                {% if user.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}
                     <div class="headerNotify" style="background: repeating-linear-gradient(-45deg, #B33, #B33 10px, #B00 10px, #B00 20px); color: #FFF; border: 1px solid #C00; box-shadow: 0 0 3px #C00;">
                         <h1>Your account is currently in <span style="font-weight: 700 !important;">restricted mode</span>!</h1>
                         <div>A staff member has set your account to restricted mode most likely due to violation of the rules. While restricted you won't be able to use most public features of the site. If you think this is a mistake please <a href="{{ urls.format('INFO_PAGE', ['contact']) }}" style="color: inherit;">get in touch with one of our staff members</a>.</div>
