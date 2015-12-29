@@ -26,7 +26,7 @@ class News
             // Check if we already have an object for this user
             if (!array_key_exists($post['user_id'], $this->posters)) {
                 // Create new object
-                $this->posters[$post['user_id']] = new User($post['user_id']);
+                $this->posters[$post['user_id']] = User::construct($post['user_id']);
             }
 
             // Parse the news post

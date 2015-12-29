@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151227');
+define('SAKURA_VERSION', '20151228');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 
@@ -31,7 +31,7 @@ if (!@include_once ROOT . 'vendor/autoload.php') {
     die('Autoloader not found, did you run composer?');
 }
 
-// Include components
+// Include core libraries
 require_once ROOT . 'libraries/ActionCode.php';
 require_once ROOT . 'libraries/Bans.php';
 require_once ROOT . 'libraries/BBcode.php';
@@ -44,6 +44,7 @@ require_once ROOT . 'libraries/Main.php';
 require_once ROOT . 'libraries/Manage.php';
 require_once ROOT . 'libraries/News.php';
 require_once ROOT . 'libraries/Payments.php';
+require_once ROOT . 'libraries/Perms.php';
 require_once ROOT . 'libraries/Permissions.php';
 require_once ROOT . 'libraries/Rank.php';
 require_once ROOT . 'libraries/Session.php';
@@ -54,9 +55,11 @@ require_once ROOT . 'libraries/User.php';
 require_once ROOT . 'libraries/Users.php';
 require_once ROOT . 'libraries/Whois.php';
 require_once ROOT . 'libraries/Forum/Forum.php';
-require_once ROOT . 'libraries/Forum/Permissions.php';
+require_once ROOT . 'libraries/Forum/Perms.php';
 require_once ROOT . 'libraries/Forum/Post.php';
 require_once ROOT . 'libraries/Forum/Thread.php';
+require_once ROOT . 'libraries/Perms/Forum.php';
+require_once ROOT . 'libraries/Perms/Site.php';
 
 // Include database extensions
 foreach (glob(ROOT . 'libraries/DBWrapper/*.php') as $driver) {
@@ -104,7 +107,7 @@ ob_start(Config::get('use_gzip') ? 'ob_gzhandler' : null);
 $authCheck = Users::checkLogin();
 
 // Create a user object for the current logged in user
-$currentUser = new User($authCheck[0]);
+$currentUser = User::construct($authCheck[0]);
 
 // Create the Urls object
 $urls = new Urls();
@@ -212,7 +215,7 @@ if (!defined('SAKURA_NO_TPL')) {
                 'reason' => $ban['reason'],
                 'issued' => $ban['issued'],
                 'expires' => $ban['expires'],
-                'issuer' => (new User($ban['issuer'])),
+                'issuer' => (User::construct($ban['issuer'])),
             ],
         ]);
 

@@ -36,9 +36,22 @@ class User
     ];
     private $ranks = [];
     private $mainRank = [];
+    protected static $_userCache = [];
+
+    // Static initialiser
+    public static function construct($uid, $forceRefresh = false) {
+        // Check if a user object isn't present in cache
+        if ($forceRefresh || !array_key_exists($uid, self::$_userCache)) {
+            // If not create a new object and cache it
+            self::$_userCache[$uid] = new User($uid);
+        }
+
+        // Return the cached object
+        return self::$_userCache[$uid];
+    }
 
     // Initialise the user object
-    public function __construct($uid)
+    private function __construct($uid)
     {
         // Get the user database row
         $getUser = Database::fetch(
@@ -310,7 +323,7 @@ class User
     public function addFriend($uid)
     {
         // Create the foreign object
-        $user = new User($uid);
+        $user = User::construct($uid);
 
         // Validate that the user exists
         if ($user->checkPermission('SITE', 'DEACTIVATED')) {
@@ -337,7 +350,7 @@ class User
     public function removeFriend($uid, $deleteRequest = false)
     {
         // Create the foreign object
-        $user = new User($uid);
+        $user = User::construct($uid);
 
         // Validate that the user exists
         if ($user->checkPermission('SITE', 'DEACTIVATED')) {
@@ -445,7 +458,7 @@ class User
         // Create the user objects
         foreach ($users as $user) {
             // Create new object
-            $objects[$user] = new User($user);
+            $objects[$user] = User::construct($user);
         }
 
         // Return the objects

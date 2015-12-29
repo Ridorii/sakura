@@ -41,14 +41,14 @@ if (Auth::getPageType() == AUTH_FETCH) {
     // Check if session is active else deny
     if ($data = Users::checkLogin($uid, $sid)) {
         // Check if they can access the chat
-        if (Permissions::check('SITE', 'DEACTIVATED', $uid, 1) || Permissions::check('SITE', 'RESTRICTED', $uid, 1)) {
+        if (Perms::check('SITE', 'DEACTIVATED', $uid, 1) || Perms::check('SITE', 'RESTRICTED', $uid, 1)) {
             Auth::Deny();
             Auth::Serve();
             exit;
         }
 
         // Create a user object
-        $user = new User($uid);
+        $user = User::construct($uid);
 
         // Set the user's data
         Auth::SetUserData(
@@ -60,11 +60,11 @@ if (Auth::getPageType() == AUTH_FETCH) {
         // Set the common permissions
         Auth::SetCommonPermissions(
             $user->mainRank()['hierarchy'],
-            Permissions::check('MANAGE', 'USE_MANAGE', $uid, 1) ? 1 : 0,
-            Permissions::check('SITE', 'CREATE_BACKGROUND', $uid, 1) ? 1 : 0,
-            Permissions::check('SITE', 'CHANGE_USERNAME', $uid, 1) ? 1 : 0,
-            Permissions::check('SITE', 'MULTIPLE_GROUPS', $uid, 1) ? 2 : (
-                Permissions::check('SITE', 'CREATE_GROUP', $uid, 1) ? 1 : 0
+            Perms::check('MANAGE', 'USE_MANAGE', $uid, 1) ? 1 : 0,
+            Perms::check('SITE', 'CREATE_BACKGROUND', $uid, 1) ? 1 : 0,
+            Perms::check('SITE', 'CHANGE_USERNAME', $uid, 1) ? 1 : 0,
+            Perms::check('SITE', 'MULTIPLE_GROUPS', $uid, 1) ? 2 : (
+                Perms::check('SITE', 'CREATE_GROUP', $uid, 1) ? 1 : 0
             )
         );
 

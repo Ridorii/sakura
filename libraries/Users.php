@@ -114,7 +114,7 @@ class Users
         }
 
         // Get account data
-        $user = new User($uid);
+        $user = User::construct($uid);
 
         // Validate password
         switch ($user->password()['password_algo']) {
@@ -701,7 +701,7 @@ class Users
         $getAll = Database::fetch('users', true, ['user_last_online' => [$time, '>']]);
 
         foreach ($getAll as $user) {
-            $return[] = new User($user['user_id']);
+            $return[] = User::construct($user['user_id']);
         }
 
         // Return all the online users
@@ -749,7 +749,7 @@ class Users
         $premiumRank = Config::get('premium_rank_id');
 
         // Create user object
-        $user = new User($id);
+        $user = User::construct($id);
 
         // Run the check
         $check = $user->isPremium();
@@ -835,7 +835,7 @@ class Users
                 continue;
             }
 
-            $users[$user['user_id']] = new User($user['user_id']);
+            $users[$user['user_id']] = User::construct($user['user_id']);
         }
 
         // and return an array with the users

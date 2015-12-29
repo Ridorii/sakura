@@ -25,11 +25,11 @@
 {% block title %}{{ thread.title }}{% endblock %}
 
 {% block css %}
-    <link rel="stylesheet" href="/content/libraries/highlight.css" />
+    <link rel="stylesheet" href="{{ sakura.contentPath }}/libraries/highlight.css" />
 {% endblock %}
 
 {% block js %}
-    <script src="/content/libraries/highlight.js"></script>
+    <script src="{{ sakura.contentPath }}/libraries/highlight.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
 {% endblock %}
 

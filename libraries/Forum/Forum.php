@@ -6,6 +6,8 @@
 namespace Sakura\Forum;
 
 use Sakura\Database;
+use Sakura\Users;
+use Sakura\User;
 
 /**
  * Class Forum

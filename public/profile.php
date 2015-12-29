@@ -16,7 +16,7 @@ $template = new Template();
 $template->setTemplate($templateName);
 
 // Get the user's context
-$profile = new User(isset($_GET['u']) ? $_GET['u'] : 0);
+$profile = User::construct(isset($_GET['u']) ? $_GET['u'] : 0);
 
 // Views array
 $views = [

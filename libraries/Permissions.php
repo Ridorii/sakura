@@ -5,6 +5,8 @@
 
 namespace Sakura;
 
+use Sakura\Perms\Site;
+
 /**
  * Class Permissions
  * @package Sakura
@@ -24,37 +26,37 @@ class Permissions
     protected static $permissions = [
         // Site permissions
         'SITE' => [
-            'DEACTIVATED' => 1, // Is a user deactivated
-            'RESTRICTED' => 2, // Is a user restricted
-            'ALTER_PROFILE' => 4, // Can alter their profile data
-            'CHANGE_AVATAR' => 8, // Can change their avatar
-            'CREATE_BACKGROUND' => 16, // Can create a background (different from changing)
-            'CHANGE_BACKGROUND' => 32, // Can change their background
-            'VIEW_MEMBERLIST' => 64, // Can view the memberlist
-            'CREATE_USERPAGE' => 128, // Can create a userpage (different from changing)
-            'CHANGE_USERPAGE' => 256, // Can change their userpage
-            'USE_MESSAGES' => 512, // Can use the Private Messaging system
-            'SEND_MESSAGES' => 1024, // Can send Private Messages to other users
-            'CHANGE_EMAIL' => 2048, // Can change their account e-mail address
-            'CHANGE_USERNAME' => 4096, // Can change their username
-            'CHANGE_USERTITLE' => 8192, // Can change their usertitle
-            'CHANGE_PASSWORD' => 16384, // Can change their password
-            'ALTER_RANKS' => 32768, // Can change their ranks
-            'MANAGE_SESSIONS' => 65536, // Can manage their sessions
-            'CHANGE_SIGNATURE' => 131072, // User can change their signature
-            'DEACTIVATE_ACCOUNT' => 262144, // Can deactivate their account
-            'VIEW_PROFILE_DATA' => 524288, // Can view other's profile data
-            'MANAGE_FRIENDS' => 1048576, // Can manage friends (add/remove)
-            'REPORT_USERS' => 2097152, // Can report users to staff
-            'OBTAIN_PREMIUM' => 4194304, // Can obtain the premium rank
-            'JOIN_GROUPS' => 8388608, // Can join groups
-            'CREATE_GROUP' => 16777216, // Can create a group
-            'MULTIPLE_GROUPS' => 33554432, // Can create multiple groups (requires single group perm)
-            'CHANGE_NAMECOLOUR' => 67108864, // Can change their username colour
-            'STATIC_PREMIUM' => 134217728, // User has static premium status
-            'CREATE_COMMENTS' => 268435456, // User can make comments
-            'DELETE_COMMENTS' => 536870912, // User can delete own comments
-            'VOTE_COMMENTS' => 1073741824, // User can vote on comments
+            'DEACTIVATED' => Site::DEACTIVATED, // Is a user deactivated
+            'RESTRICTED' => Site::RESTRICTED, // Is a user restricted
+            'ALTER_PROFILE' => Site::ALTER_PROFILE, // Can alter their profile data
+            'CHANGE_AVATAR' => Site::CHANGE_AVATAR, // Can change their avatar
+            'CREATE_BACKGROUND' => Site::CREATE_BACKGROUND, // Can create a background (different from changing)
+            'CHANGE_BACKGROUND' => Site::CHANGE_BACKGROUND, // Can change their background
+            'VIEW_MEMBERLIST' => Site::VIEW_MEMBERLIST, // Can view the memberlist
+            'CREATE_USERPAGE' => Site::CREATE_USERPAGE, // Can create a userpage (different from changing)
+            'CHANGE_USERPAGE' => Site::CHANGE_USERPAGE, // Can change their userpage
+            'USE_MESSAGES' => Site::USE_MESSAGES, // Can use the Private Messaging system
+            'SEND_MESSAGES' => Site::SEND_MESSAGES, // Can send Private Messages to other users
+            'CHANGE_EMAIL' => Site::CHANGE_EMAIL, // Can change their account e-mail address
+            'CHANGE_USERNAME' => Site::CHANGE_USERNAME, // Can change their username
+            'CHANGE_USERTITLE' => Site::CHANGE_USERTITLE, // Can change their usertitle
+            'CHANGE_PASSWORD' => Site::CHANGE_PASSWORD, // Can change their password
+            'ALTER_RANKS' => Site::ALTER_RANKS, // Can change their ranks
+            'MANAGE_SESSIONS' => Site::MANAGE_SESSIONS, // Can manage their sessions
+            'CHANGE_SIGNATURE' => Site::CHANGE_SIGNATURE, // User can change their signature
+            'DEACTIVATE_ACCOUNT' => Site::DEACTIVATE_ACCOUNT, // Can deactivate their account
+            'VIEW_PROFILE_DATA' => Site::VIEW_PROFILE_DATA, // Can view other's profile data
+            'MANAGE_FRIENDS' => Site::MANAGE_FRIENDS, // Can manage friends (add/remove)
+            'REPORT_USERS' => Site::REPORT_USERS, // Can report users to staff
+            'OBTAIN_PREMIUM' => Site::OBTAIN_PREMIUM, // Can obtain the premium rank
+            'JOIN_GROUPS' => Site::JOIN_GROUPS, // Can join groups
+            'CREATE_GROUP' => Site::CREATE_GROUP, // Can create a group
+            'MULTIPLE_GROUPS' => Site::MULTIPLE_GROUPS, // Can create multiple groups (requires single group perm)
+            'CHANGE_NAMECOLOUR' => Site::CHANGE_NAMECOLOUR, // Can change their username colour
+            'STATIC_PREMIUM' => Site::STATIC_PREMIUM, // User has static premium status
+            'CREATE_COMMENTS' => Site::CREATE_COMMENTS, // User can make comments
+            'DELETE_COMMENTS' => Site::DELETE_COMMENTS, // User can delete own comments
+            'VOTE_COMMENTS' => Site::VOTE_COMMENTS, // User can vote on comments
         ],
 
         // Site management permissions
@@ -130,7 +132,7 @@ class Permissions
     public static function getUserPermissions($uid)
     {
         // Get user data
-        $user = new User($uid);
+        $user = User::construct($uid);
 
         // Attempt to get the permission row of a user
         $userPerms = Database::fetch('permissions', false, ['rank_id' => [0, '='], 'user_id' => [$user->id(), '=']]);

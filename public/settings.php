@@ -381,7 +381,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
         // Create a notification
         if (array_key_exists($action[1], $notifStrings)) {
             // Get the current user's profile data
-            $user = new User($currentUser->id());
+            $user = User::construct($currentUser->id());
 
             Users::createNotification(
                 $_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')],

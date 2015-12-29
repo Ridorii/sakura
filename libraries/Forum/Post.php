@@ -45,7 +45,7 @@ class Post
             $this->id = $postRow['post_id'];
             $this->thread = $postRow['topic_id'];
             $this->forum = $postRow['forum_id'];
-            $this->poster = new User($postRow['poster_id']);
+            $this->poster = User::construct($postRow['poster_id']);
             $this->ip = $postRow['poster_ip'];
             $this->time = $postRow['post_time'];
             $this->signature = $postRow['post_signature'];
@@ -53,7 +53,7 @@ class Post
             $this->text = $postRow['post_text'];
             $this->editTime = $postRow['post_edit_time'];
             $this->editReason = $postRow['post_edit_reason'];
-            $this->editUser = new User($postRow['post_edit_user']);
+            $this->editUser = User::construct($postRow['post_edit_user']);
         }
 
         // Parse the markup

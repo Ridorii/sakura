@@ -54,7 +54,7 @@ $renderData['forum'] = ($forumMode ? (new Forum\Forum()) : null);
 
 $renderData['stats'] = [
     'userCount' => Database::count('users', ['password_algo' => ['nologin', '!='], 'rank_main' => ['1', '!=']])[0],
-    'newestUser' => ($_INDEX_NEWEST_USER = new User(Users::getNewestUserId())),
+    'newestUser' => ($_INDEX_NEWEST_USER = User::construct(Users::getNewestUserId())),
     'lastRegDate' => ($_INDEX_LAST_REGDATE = date_diff(
         date_create(
             date(

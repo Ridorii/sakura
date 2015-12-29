@@ -740,7 +740,7 @@ class Main
 
             // Add userdata to table
             if (!array_key_exists($row['user_id'], $data['users'])) {
-                $data['users'][$row['user_id']] = new User($row['user_id']);
+                $data['users'][$row['user_id']] = User::construct($row['user_id']);
             }
         }
 

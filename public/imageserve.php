@@ -43,7 +43,7 @@ if (isset($_GET['m'])) {
             }
 
             // Get user data
-            $user = new User($_GET['u']);
+            $user = User::construct($_GET['u']);
 
             // If user is deactivated use deactive avatar
             if ($user->hasRanks([0, 1])) {
@@ -78,7 +78,7 @@ if (isset($_GET['m'])) {
             }
 
             // Get user data
-            $user = new User($_GET['u']);
+            $user = User::construct($_GET['u']);
 
             // If user is deactivated use deactive avatar
             if ($user->hasRanks([0, 1])) {
@@ -114,7 +114,7 @@ if (isset($_GET['m'])) {
             }
 
             // Get user data
-            $user = new User($_GET['u']);
+            $user = User::construct($_GET['u']);
 
             // If user is deactivated use deactive avatar
             if ($user->hasRanks([0, 1])) {

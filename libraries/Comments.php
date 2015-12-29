@@ -49,7 +49,7 @@ class Comments
             // Check if we already have an object for this user
             if (!array_key_exists($comment['comment_poster'], $this->commenters)) {
                 // Create new object
-                $this->commenters[$comment['comment_poster']] = new User($comment['comment_poster']);
+                $this->commenters[$comment['comment_poster']] = User::construct($comment['comment_poster']);
             }
 
             // Attach the poster
