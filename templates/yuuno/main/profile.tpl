@@ -1,6 +1,6 @@
 {% extends 'global/master.tpl' %}
 
-{% set profileHidden = profile.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) or profile.password.password_algo == 'nologin' or (profile.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) and (user.id != profile.id and not user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')))) %}
+{% set profileHidden = profile.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) or (profile.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) and (user.id != profile.id and not user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')))) %}
 
 {% set noUserpage = profile.userPage|length < 1 %}
 
@@ -10,15 +10,17 @@
 
 {% block content %}
     {% if profileHidden %}
-        <div class="content standalone" style="padding: 20px;">
-            <h1>The requested user does not exist!</h1>
-            There are a few possible reasons for this:
-            <ul style="padding-left: 40px;">
-                <li>They changed their username.</li>
-                <li>They may have been <a href="{{ urls.format('SITE_FAQ') }}#abyss" class="default">abyss'd</a>.</li>
-                <li>You made a typo.</li>
-                <li>They never existed.</li>
-            </ul>
+        <div class="content standalone">
+            <div style="padding: 20px;">
+                <h1>The requested user does not exist!</h1>
+                There are a few possible reasons for this:
+                <ul style="padding-left: 40px;">
+                    <li>They changed their username.</li>
+                    <li>They may have been <a href="{{ urls.format('SITE_FAQ') }}#abyss" class="default">abyss'd</a>.</li>
+                    <li>You made a typo.</li>
+                    <li>They never existed.</li>
+                </ul>
+            </div>
         </div>
     {% else %}
         <div class="content profile">

@@ -1,6 +1,6 @@
 {% extends 'global/master.tpl' %}
 
-{% set profileHidden = profile.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) or profile.password.password_algo == 'nologin' or (profile.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) and (user.id != profile.id and not user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')))) %}
+{% set profileHidden = profile.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) or (profile.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) and (user.id != profile.id and not user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')))) %}
 
 {% set noUserpage = profile.userPage|length < 1 %}
 
@@ -146,7 +146,9 @@
                         {% if profileHidden %}
                             <div class="standing" style="color: #444;">Unknown</div>
                         {% elseif profile.checkBan %}
-                            <h2 class="standing" style="color: #800;">Banned</h2>
+                            <h2 class="standing" style="color: #811;">Banned</h2>
+                        {% elseif profile.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}
+                            <h2 class="standing" style="color: #811;">Restricted</h2>
                         {% else %}
                             {% if profile.getWarnings %}
                                 <div class="standing" style="color: #A22;">Bad</div>

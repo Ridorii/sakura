@@ -133,7 +133,7 @@
                 <div class="inner">
                     <div class="ft-logo"></div>
                     <div class="ft-text">
-                        <div>Powered by <a href="https://github.com/flashwave/sakura/" target="_blank">Sakura</a>, <a href="https://flash.moe/" target="_blank">Flashwave</a> 2013-2015</div>
+                        <div>Powered by <a href="https://github.com/flashwave/sakura/" target="_blank">Sakura</a>, <a href="https://flash.moe/" target="_blank">Flashwave</a> 2013-2016</div>
                         <div><a href="{{ urls.format('INFO_PAGE', ['terms']) }}">Terms of Service</a> | <a href="{{ urls.format('INFO_PAGE', ['contact']) }}">Contact</a> | <a href="{{ urls.format('SITE_FAQ') }}">FAQ</a> | <a href="{{ urls.format('INFO_PAGE', ['rules']) }}">Rules</a> | <a href="https://sakura.flash.moe/">Changelog</a> | <a href="https://fiistat.us/">Status</a></div>
                     </div>
                 </div>

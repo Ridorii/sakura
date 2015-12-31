@@ -1,14 +1,14 @@
 <?php
 /*
  * Sakura Community Management System
- * (c) 2013-2015 Flashwave <http://flash.moe>
+ * (c) 2013-2016 Flashwave <http://flash.moe>
  */
 
 // Declare namespace
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151229');
+define('SAKURA_VERSION', '20151231');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 

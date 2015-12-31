@@ -21,7 +21,7 @@ class User
         'username_clean' => 'user',
         'password_hash' => '',
         'password_salt' => '',
-        'password_algo' => 'nologin',
+        'password_algo' => 'disabled',
         'password_iter' => 0,
         'password_chan' => 0,
         'email' => 'sakura@localhost',
@@ -818,8 +818,8 @@ class User
     {
         // Validate password
         switch ($this->data['password_algo']) {
-            // Abyssing
-            case 'nologin':
+            // Disabled account
+            case 'disabled':
                 return [0, 'NO_LOGIN'];
 
             // Default hashing method

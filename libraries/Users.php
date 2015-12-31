@@ -123,8 +123,8 @@ class Users
 
         // Validate password
         switch ($user->password()['password_algo']) {
-            // Abyssing
-            case 'nologin':
+            // Disabled
+            case 'disabled':
                 return [0, 'NO_LOGIN'];
 
             // Default hashing method
@@ -137,7 +137,6 @@ class Users
                 ])) {
                     return [0, 'INCORRECT_PASSWORD', $user->id(), $user->password()['password_chan']];
                 }
-
         }
 
         // Check if the user has the required privs to log in
@@ -759,6 +758,7 @@ class Users
     {
         // Get the ID for the premium user rank from the database
         $premiumRank = Config::get('premium_rank_id');
+        $excepted = Config::get('restricted_rank_id');
 
         // Create user object
         $user = User::construct($id);
@@ -767,7 +767,7 @@ class Users
         $check = $user->isPremium();
 
         // Check if the user has premium
-        if ($check[0]) {
+        if ($check[0] && !in_array($excepted, $user->ranks())) {
             // If so add the rank to them
             $user->addRanks([$premiumRank]);
 
@@ -816,8 +816,7 @@ class Users
         // Go over all users and check if they have the rank id
         foreach ($users as $user) {
             // If so store the user's row in the array
-            if ($user->hasRanks([$rankId], $user->id())
-                && ($excludeAbyss ? $user->password()['password_algo'] != 'nologin' : true)) {
+            if ($user->hasRanks([$rankId], $user->id())) {
                 $rank[] = $user;
             }
         }
@@ -837,11 +836,6 @@ class Users
 
         // Reorder shit
         foreach ($getUsers as $user) {
-            // Skip abyss
-            if (!$includeAbyss && $user['password_algo'] == 'nologin') {
-                continue;
-            }
-
             $user = User::construct($user['user_id']);
 
             // Skip if inactive and not include deactivated users
@@ -947,6 +941,6 @@ class Users
     // Get the ID of the newest user
     public static function getNewestUserId()
     {
-        return Database::fetch('users', false, ['password_algo' => ['nologin', '!=']], ['user_id', true], ['1'])['user_id'];
+        return Database::fetch('users', false, ['rank_main' => [Config::get('restricted_rank_id'), '!=']], ['user_id', true], ['1'])['user_id'];
     }
 }

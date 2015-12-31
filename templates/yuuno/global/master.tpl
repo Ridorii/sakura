@@ -167,7 +167,9 @@
                         {% if session.checkLogin %}
                             <a class="menu-item avatar" href="{{ urls.format('USER_PROFILE', [user.id]) }}" title="Logged in as {{ user.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}'); width: auto; color: {{ user.colour }}; border-color: {{ user.colour }}; font-weight: 700;"></a>
                             <a class="menu-item fa-envelope" href="{{ urls.format('SETTING_CAT', ['messages']) }}" title="Messages"></a>
-                            <a class="menu-item fa-gavel" href="{{ urls.format('MANAGE_INDEX') }}" title="Manage"></a>
+                            {% if user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
+                                <a class="menu-item fa-gavel" href="{{ urls.format('MANAGE_INDEX') }}" title="Manage"></a>
+                            {% endif %}
                             <a class="menu-item fa-cogs" href="{{ urls.format('SETTINGS_INDEX') }}" title="Settings"></a>
                             <a class="menu-item fa-sign-out" href="{{ urls.format('USER_LOGOUT', [php.time, php.sessionid, sakura.currentPage]) }}" title="Logout" id="headerLogoutLink"></a>
                         {% else %}
@@ -232,7 +234,7 @@
                 {% block content %}
                     <h1 class="stylised" style="text-align: center; margin: 2em auto;">{{ php.self }} is now printing!</h1>
                 {% endblock %}
-                
+
                 {#<div class="ad-container ad-footer" id="footerAd">
                     <div class="ad-box">
                         <img src="http://i.flash.moe/1445792838-522-8610.png" />
@@ -241,7 +243,7 @@
             </div>
             <div class="footer">
                 <div class="ftsections">
-                    <div class="copycentre">Powered by <a href="https://github.com/flashwave/sakura/" target="_blank">Sakura</a>{% if sakura.dev.showChangelog %} <a href="https://sakura.flash.moe/#r{{ sakura.versionInfo.version }}" target="_blank">r{{ sakura.versionInfo.version }}</a>{% endif %} &copy; 2013-2015 <a href="http://flash.moe/" target="_blank">Flashwave</a></div>
+                    <div class="copycentre">Powered by <a href="https://github.com/flashwave/sakura/" target="_blank">Sakura</a>{% if sakura.dev.showChangelog %} <a href="https://sakura.flash.moe/#r{{ sakura.versionInfo.version }}" target="_blank">r{{ sakura.versionInfo.version }}</a>{% endif %} &copy; 2013-2016 <a href="http://flash.moe/" target="_blank">Flashwave</a></div>
                     <ul class="ftsection">
                         <li class="fthead">General</li>
                         <li><a href="{{ urls.format('SITE_HOME') }}" title="Flashii Frontpage">Home</a></li>
