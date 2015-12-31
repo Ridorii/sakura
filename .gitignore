@@ -18,3 +18,4 @@ $RECYCLE.BIN/
 *.phpproj
 *.user
 *.sln
+composer.lock
