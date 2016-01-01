@@ -18,6 +18,7 @@ class Forum
 {
     // Variables
     public $id = 0;
+    public $order = 0;
     public $name = "Forum";
     public $description = "";
     public $link = "";
@@ -42,6 +43,7 @@ class Forum
         // Populate the variables
         if ($forumRow) {
             $this->id = $forumRow['forum_id'];
+            $this->order = $forumRow['forum_order'];
             $this->name = $forumRow['forum_name'];
             $this->description = $forumRow['forum_desc'];
             $this->link = $forumRow['forum_link'];
@@ -75,7 +77,7 @@ class Forum
         // Check if _forums is populated
         if (!count($this->_forums)) {
             // Get all rows with the category id set to the forum id
-            $forumRows = Database::fetch('forums', true, ['forum_category' => [$this->id, '=']]);
+            $forumRows = Database::fetch('forums', true, ['forum_category' => [$this->id, '=']], ['forum_order']);
 
             // Create a storage array
             $forums = [];
@@ -155,7 +157,7 @@ class Forum
 
             // Create the post object
             $post = new Post(empty($lastPost) ? 0 : $lastPost['post_id']);
-            
+
             // Assign it to a "cache" variable
             $this->_lastPost = $post;
 
