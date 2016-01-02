@@ -56,19 +56,20 @@ class Forum
     }
 
     // Checking a permission
-    public function permission($flag, $user) {
+    public function permission($flag, $user, $raw = false)
+    {
         // Set default permission value
         $perm = 0;
 
         // Get the permissions of the parent forum if there is one
         if ($this->category) {
-            $perm = $perm | $this->_permissions->user($user, ['forum_id' => [$this->category, '=']]);
+            $perm = $perm | (new Forum($this->category))->permission($flag, $user, true);
         }
 
         // Bitwise OR it with the permissions for this forum
         $perm = $perm | $this->_permissions->user($user, ['forum_id' => [$this->id, '=']]);
 
-        return $this->_permissions->check($flag, $perm);
+        return $raw ? $perm : $this->_permissions->check($flag, $perm);
     }
 
     // Subforums

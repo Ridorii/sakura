@@ -34,7 +34,7 @@ $renderData['profileView'] = isset($_GET['view']) && in_array($_GET['view'], $vi
 // If the user id is zero check if there was a namechange
 if ($profile->id() == 0) {
     // Fetch from username_history
-    $check = Database::fetch('username_history', false, ['username_old_clean' => [Main::cleanString(isset($_GET['u']) ? $_GET['u'] : 0, true ,true), '=']]);
+    $check = Database::fetch('username_history', false, ['username_old_clean' => [Main::cleanString(isset($_GET['u']) ? $_GET['u'] : 0, true, true), '=']]);
     
     // Redirect if so
     if ($check) {

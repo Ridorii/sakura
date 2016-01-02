@@ -29,7 +29,8 @@ class Rank
     protected static $_rankCache = [];
     
     // Static initialiser
-    public static function construct($rid, $forceRefresh = false) {
+    public static function construct($rid, $forceRefresh = false)
+    {
         // Check if a rank object isn't present in cache
         if ($forceRefresh || !array_key_exists($rid, self::$_rankCache)) {
             // If not create a new object and cache it

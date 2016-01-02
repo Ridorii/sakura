@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20151231');
+define('SAKURA_VERSION', '20160102');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 
@@ -37,6 +37,7 @@ require_once ROOT . 'libraries/Bans.php';
 require_once ROOT . 'libraries/BBcode.php';
 require_once ROOT . 'libraries/Comments.php';
 require_once ROOT . 'libraries/Config.php';
+require_once ROOT . 'libraries/CSRF.php';
 require_once ROOT . 'libraries/Database.php';
 require_once ROOT . 'libraries/File.php';
 require_once ROOT . 'libraries/Hashing.php';
@@ -145,7 +146,7 @@ if (!defined('SAKURA_NO_TPL')) {
             'siteName' => Config::get('sitename'),
             'siteLogo' => Config::get('sitelogo'),
             'siteDesc' => Config::get('sitedesc'),
-            'siteTags' => implode(", ", json_decode(Config::get('sitetags'), true)),
+            'siteTags' => json_decode(Config::get('sitetags'), true),
             'dateFormat' => Config::get('date_format'),
             'currentPage' => '//' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
             'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null),

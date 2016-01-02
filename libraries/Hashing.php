@@ -85,7 +85,7 @@ class Hashing
 
         $validate = self::slowEquals(
             $pbkdf2,
-            $dick = self::pbkdf2(
+            self::pbkdf2(
                 $params[0],
                 $password,
                 $params[2],

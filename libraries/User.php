@@ -43,7 +43,8 @@ class User
     protected static $_userCache = [];
 
     // Static initialiser
-    public static function construct($uid, $forceRefresh = false) {
+    public static function construct($uid, $forceRefresh = false)
+    {
         // Check if a user object isn't present in cache
         if ($forceRefresh || !array_key_exists($uid, self::$_userCache)) {
             // If not create a new object and cache it

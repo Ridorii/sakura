@@ -775,7 +775,7 @@ class Users
             if ($user->mainRank() == 2) {
                 $user->setMainRank($premiumRank);
             }
-        } elseif (!$check[0] && count($check) > 1) {
+        } elseif (!$check[0]) {
             // Remove the expired entry
             Database::delete('premium', [
                 'user_id' => [$user->id(), '='],

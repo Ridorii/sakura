@@ -27,7 +27,8 @@ class Perms
     }
 
     // Change the mode
-    public function mode($mode) {
+    public function mode($mode)
+    {
         // Split the mode variable
         $mode = explode('\\', $mode);
 
