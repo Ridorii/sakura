@@ -14,7 +14,7 @@ class Perms
     // Modes
     const SITE = 'permissions\permissions_site';
     const MANAGE = 'permissions\permissions_manage';
-    const FORUM = 'forums_permissions\forum_perms';
+    const FORUM = 'forum_permissions\forum_perms';
 
     // Variables
     protected $table = '';

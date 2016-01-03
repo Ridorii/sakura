@@ -26,7 +26,6 @@ class User
         'password_chan' => 0,
         'email' => 'sakura@localhost',
         'rank_main' => 1,
-        'user_ranks' => '[1]',
         'user_colour' => '',
         'register_ip' => '127.0.0.1',
         'last_ip' => '127.0.0.1',
@@ -76,10 +75,14 @@ class User
 
         // Decode the json in the user_data column
         $this->data['user_data'] = json_decode(!empty($this->data['user_data']) ? $this->data['user_data'] : '[]', true);
-        $this->data['user_ranks'] = json_decode($this->data['user_ranks'], true);
+
+        // Get all ranks
+        $ranks = array_map(function($a) {
+            return $a['rank_id'];
+        }, Database::fetch('user_ranks', true, ['user_id' => [$this->data['user_id'], '=']]));
 
         // Get the rows for all the ranks
-        foreach ($this->data['user_ranks'] as $rank) {
+        foreach ($ranks as $rank) {
             // Store the database row in the array
             $this->ranks[$rank] = Rank::construct($rank);
         }
@@ -138,9 +141,9 @@ class User
     }
 
     // Get all rank ids
-    public function ranks()
+    public function ranks($obj = false)
     {
-        return $this->data['user_ranks'];
+        return $obj ? $this->ranks : array_keys($this->ranks);
     }
 
     // Get the user's colour
@@ -242,47 +245,27 @@ class User
     public function addRanks($ranks)
     {
         // Update the ranks array
-        $ranks = array_map('intval', array_unique(array_merge($this->ranks(), $ranks)));
+        $ranks = array_diff(array_unique(array_merge($this->ranks(), $ranks)), $this->ranks());
 
         // Save to the database
-        Database::update('users', [
-            [
-                'user_ranks' => json_encode($ranks),
-            ],
-            [
-                'user_id' => [$this->id(), '='],
-            ],
-        ]);
+        foreach ($ranks as $rank) {
+            Database::insert('user_ranks', [
+                'rank_id' => $rank,
+                'user_id' => $this->id(),
+            ]);
+        }
     }
 
     // Remove ranks from a user
     public function removeRanks($ranks)
     {
         // Current ranks
-        $currRanks = $this->ranks();
+        $remove = array_intersect($this->ranks(), $ranks);
 
         // Iterate over the ranks
-        foreach ($ranks as $rank) {
-            // Try to find the value
-            if ($key = array_search($rank, $currRanks)) {
-                unset($currRanks[$key]);
-
-                // Change the main rank if it's set to the rank that's currently being remove
-                if ($this->mainRank() == $rank) {
-                    $this->setMainRank($this->ranks()[0]);
-                }
-            }
+        foreach ($remove as $rank) {
+            Database::delete('user_ranks', ['user_id' => [$this->id(), '='], 'rank_id' => [$rank, '=']]);
         }
-
-        // Save to the database
-        Database::update('users', [
-            [
-                'user_ranks' => json_encode($currRanks),
-            ],
-            [
-                'user_id' => [$this->id(), '='],
-            ],
-        ]);
     }
 
     // Set the main rank of this user
@@ -318,7 +301,7 @@ class User
         // If not go over all ranks and check if the user has them
         foreach ($ranks as $rank) {
             // We check if $rank is in $this->ranks and if yes return true
-            if (array_key_exists($rank, $this->ranks)) {
+            if (in_array($rank, $this->ranks())) {
                 return true;
             }
         }
