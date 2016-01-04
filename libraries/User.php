@@ -54,6 +54,48 @@ class User
         return self::$_userCache[$uid];
     }
 
+    // Creating a new user
+    public static function create($username, $password, $email, $ranks = [2])
+    {
+        // Set a few variables
+        $usernameClean = Main::cleanString($username, true);
+        $emailClean = Main::cleanString($email, true);
+        $password = Hashing::createHash($password);
+        
+        // Insert the user into the database
+        Database::insert('users', [
+            'username' => $username,
+            'username_clean' => $usernameClean,
+            'password_hash' => $password[3],
+            'password_salt' => $password[2],
+            'password_algo' => $password[0],
+            'password_iter' => $password[1],
+            'email' => $emailClean,
+            'rank_main' => 0,
+            'register_ip' => Main::getRemoteIP(),
+            'last_ip' => Main::getRemoteIP(),
+            'user_registered' => time(),
+            'user_last_online' => 0,
+            'user_country' => Main::getCountryCode(),
+            'user_data' => '[]',
+        ]);
+
+        // Get the last id
+        $userId = Database::lastInsertID();
+
+        // Create a user object
+        $user = self::construct($userId);
+
+        // Assign the default rank
+        $user->addRanks($ranks);
+
+        // Set the default rank
+        $user->setMainRank($ranks[0]);
+
+        // Return the user object
+        return $user;
+    }
+
     // Initialise the user object
     private function __construct($uid)
     {
@@ -90,7 +132,7 @@ class User
         // Check if ranks were set
         if (empty($this->ranks)) {
             // If not assign the fallback rank
-            $this->ranks[0] = Rank::construct(0);
+            $this->ranks[1] = Rank::construct(1);
         }
 
         // Assign the user's main rank to a special variable since we'll use it a lot
@@ -271,11 +313,6 @@ class User
     // Set the main rank of this user
     public function setMainRank($rank)
     {
-        // Only allow this if this rank is actually present in their set of ranks
-        if (!in_array($rank, $this->ranks())) {
-            return false;
-        }
-
         // If it does exist update their row
         Database::update('users', [
             [

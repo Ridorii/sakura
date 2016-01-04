@@ -274,7 +274,7 @@ class Main
         $mail->isHTML(true);
 
         // Set email contents
-        $htmlMail = file_get_contents(ROOT . 'templates/htmlEmail.tpl');
+        $htmlMail = file_get_contents(ROOT . 'templates/htmlEmail.html');
 
         // Replace template tags
         $htmlMail = str_replace('{{ sitename }}', Config::get('sitename'), $htmlMail);
@@ -303,7 +303,7 @@ class Main
     }
 
     // Cleaning strings
-    public static function cleanString($string, $lower = false, $noSpecial = false)
+    public static function cleanString($string, $lower = false, $noSpecial = false, $replaceSpecial = '')
     {
 
         // Run common sanitisation function over string
@@ -318,7 +318,7 @@ class Main
 
         // If set remove all characters that aren't a-z or 0-9
         if ($noSpecial) {
-            $string = preg_replace('/[^a-z0-9]/', '', $string);
+            $string = preg_replace('/[^a-z0-9]/', $replaceSpecial, $string);
         }
 
         // Return clean string

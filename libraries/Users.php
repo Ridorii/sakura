@@ -221,14 +221,6 @@ class Users
             return [0, 'DISABLED'];
         }
 
-        // Check if registration codes are required
-        if (Config::get('require_registration_code')) {
-            // Check if the code is valid
-            if (!self::checkRegistrationCode($regkey)) {
-                return [0, 'INVALID_REG_KEY'];
-            }
-        }
-
         // Check if the user agreed to the ToS
         if (!$tos) {
             return [0, 'TOS'];
@@ -277,45 +269,16 @@ class Users
         }
 
         // Set a few variables
-        $usernameClean = Main::cleanString($username, true);
-        $emailClean = Main::cleanString($email, true);
-        $password = Hashing::createHash($password);
         $requireActive = Config::get('require_activation');
-        $userRank = $requireActive ? [1] : [2];
-        $userRankJson = json_encode($userRank);
+        $ranks = $requireActive ? [1] : [2];
 
-        // Insert the user into the database
-        Database::insert('users', [
-            'username' => $username,
-            'username_clean' => $usernameClean,
-            'password_hash' => $password[3],
-            'password_salt' => $password[2],
-            'password_algo' => $password[0],
-            'password_iter' => $password[1],
-            'email' => $emailClean,
-            'rank_main' => $userRank[0],
-            'user_ranks' => $userRankJson,
-            'register_ip' => Main::getRemoteIP(),
-            'last_ip' => Main::getRemoteIP(),
-            'user_registered' => time(),
-            'user_last_online' => 0,
-            'user_country' => Main::getCountryCode(),
-            'user_data' => '[]',
-        ]);
-
-        // Get userid of the new user
-        $uid = Database::fetch('users', false, ['username_clean' => [$usernameClean, '=']])['user_id'];
+        // Create the user
+        $user = User::create($username, $password, $email, $ranks);
 
         // Check if we require e-mail activation
         if ($requireActive) {
             // Send activation e-mail to user
-            self::sendActivationMail($uid);
-        }
-
-        // Check if registration codes are required
-        if (Config::get('require_registration_code')) {
-            // If we do mark the registration code that was used as used
-            self::markRegistrationCodeUsed($regkey, $uid);
+            self::sendActivationMail($user->id());
         }
 
         // Return true with a specific message if needed
@@ -493,11 +456,11 @@ class Users
         $message = "Welcome to " . Config::get('sitename') . "!\r\n\r\n";
         $message .= "Please keep this e-mail for your records. Your account intormation is as follows:\r\n\r\n";
         $message .= "----------------------------\r\n\r\n";
-        $message .= "Username: " . $user['username'] . "\r\n\r\n";
-        $message .= "Your profile: http://" . Config::get('url_main') . $urls->format('USER_PROFILE', [$user['user_id']]) . "\r\n\r\n";
+        $message .= "Username: " . $user->username() . "\r\n\r\n";
+        $message .= "Your profile: http://" . Config::get('url_main') . $urls->format('USER_PROFILE', [$user->id()]) . "\r\n\r\n";
         $message .= "----------------------------\r\n\r\n";
         $message .= "Please visit the following link in order to activate your account:\r\n\r\n";
-        $message .= "http://" . Config::get('url_main') . $urls->format('SITE_ACTIVATE') . "?mode=activate&u=" . $user['user_id'] . "&k=" . $activate . "\r\n\r\n";
+        $message .= "http://" . Config::get('url_main') . $urls->format('SITE_ACTIVATE') . "?mode=activate&u=" . $user->id() . "&k=" . $activate . "\r\n\r\n";
         $message .= "Your password has been securely stored in our database and cannot be retrieved. ";
         $message .= "In the event that it is forgotten, you will be able to reset it using the email address associated with your account.\r\n\r\n";
         $message .= "Thank you for registering.\r\n\r\n";
@@ -506,7 +469,7 @@ class Users
         // Send the message
         Main::sendMail(
             [
-                $user['email'] => $user['username'],
+                $user->email() => $user->username(),
             ],
             Config::get('sitename') . ' Activation Mail',
             $message
@@ -566,71 +529,6 @@ class Users
 
         // Return success
         return [1, 'SUCCESS'];
-    }
-
-    // Check if registration code is valid
-    public static function checkRegistrationCode($code)
-    {
-        // Get registration key
-        $keyRow = Database::fetch('regcodes', true, ['code' => [$code, '='], 'key_used' => [0, '=']]);
-
-        // Check if it exists and return it
-        return count($keyRow) ? $keyRow[0]['id'] : false;
-    }
-
-    // Mark registration code as used
-    public static function markRegistrationCodeUsed($code, $uid = 0)
-    {
-        // Check if the code exists
-        if (!$id = self::checkRegistrationCode($code)) {
-            return false;
-        }
-
-        // Mark it as used
-        Database::update('regcodes', [
-            [
-                'used_by' => $uid,
-                'key_used' => 1,
-            ],
-            [
-                'id' => [$id, '='],
-            ],
-        ]);
-
-        // Return true because yeah
-        return true;
-    }
-
-    // Create new registration code
-    public static function createRegistrationCode($userId)
-    {
-        // Check if we're logged in
-        if (!self::checkLogin()) {
-            return false;
-        }
-
-        // Check if the user is not exceeding the maximum registration key amount
-        if (Database::count(
-            'regcodes',
-            true,
-            ['uid' => [$userId, '=']]
-        )[0] >= Config::get('max_reg_keys')) {
-            return false;
-        }
-
-        // Generate a code by MD5'ing some random bullshit
-        $code = md5('SAKURA' . rand(0, 99999999) . $userId . 'NOOKLSISGOD');
-
-        // Insert the key into the database
-        Database::insert('regcodes', [
-            'code' => $code,
-            'created_by' => $userId,
-            'used_by' => 0,
-            'key_used' => 0,
-        ]);
-
-        // Return the code
-        return $code;
     }
 
     // Check if a user exists

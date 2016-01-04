@@ -1,1 +1,0 @@
-{% extends 'global/master.tpl' %}

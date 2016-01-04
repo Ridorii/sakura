@@ -20,7 +20,7 @@ class Template
     private $template;
     private $templateName;
     private $templateOptions;
-    protected $templateFileExtension = ".tpl";
+    protected $templateFileExtension = ".twig";
 
     // Initialise templating engine and data
     public function __construct()

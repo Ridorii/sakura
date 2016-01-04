@@ -19,9 +19,9 @@ class Rank
         'rank_id' => 0,
         'rank_name' => 'Rank',
         'rank_hierarchy' => 0,
-        'rank_multiple' => null,
+        'rank_multiple' => '',
         'rank_hidden' => 1,
-        'rank_colour' => '#444',
+        'rank_colour' => 'inherit',
         'rank_description' => '',
         'rank_title' => '',
     ];

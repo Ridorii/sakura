@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160103');
+define('SAKURA_VERSION', '20160104');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 
@@ -159,7 +159,6 @@ if (!defined('SAKURA_NO_TPL')) {
 
             'disableRegistration' => Config::get('disable_registration'),
             'lockAuth' => Config::get('lock_authentication'),
-            'requireRegCodes' => Config::get('require_registration_code'),
             'requireActivation' => Config::get('require_activation'),
             'minPwdEntropy' => Config::get('min_entropy'),
             'minUsernameLength' => Config::get('username_min_length'),

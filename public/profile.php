@@ -43,14 +43,14 @@ if ($profile->id() == 0) {
             'message' => 'The user this profile belongs to changed their username, you are being redirected.',
         'redirect' => $urls->format('USER_PROFILE', [$check['user_id']]),
         ];
+
+        // Set parse variables
+        $template->setVariables($renderData);
+
+        // Print page contents
+        echo $template->render('global/information');
+        exit;
     }
-
-    // Set parse variables
-    $template->setVariables($renderData);
-
-    // Print page contents
-    echo $template->render('global/information');
-    exit;
 }
 
 // Set parse variables
