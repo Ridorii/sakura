@@ -61,6 +61,23 @@
             // Space for things that need to happen onload
             window.addEventListener("load", function() {
 
+                // Check if we can use SSL
+                if (window.location.protocol.toLowerCase() === "http:") {
+                    // Build check string
+                    var sslCheckDest = 'https://' + window.location.host + sakuraVars.content + '/pixel.png';
+
+                    // Create a new image
+                    var sslCheck = new Image();
+
+                    // Add an onload
+                    sslCheck.onload = function() {
+                        window.location.assign(window.location.href.toLowerCase().replace('http://', 'https://'));
+                    }
+
+                    // Set the source
+                    sslCheck.src = sslCheckDest;
+                }
+
             {% if session.checkLogin %}
                 // Convert href to object in logout link
                 prepareAjaxLink('headerLogoutLink', 'submitPost', ', true, "Logging out..."');
@@ -121,16 +138,6 @@
                 initialiseParallax('userBackground');
 
             {% endif %}
-
-                if(!Sakura.cookie('accept_cookies')) {
-                    notifyUI({
-                        "title":    sakuraVars.siteName + " uses cookies!",
-                        "text":     "Click this if you're OK with that and want to hide this message.",
-                        "img":      "FONT:fa-asterisk",
-                        "link":     "javascript:Sakura.cookie('accept_cookies', 'true; expires=" + (new Date(2147483647000)).toUTCString() + "');notifyClose(this.parentNode.id);"
-                    });
-                }
-
             });
 
             // Error reporter
