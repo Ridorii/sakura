@@ -5,7 +5,7 @@
         <meta charset="{{ sakura.charset }}" />
         <title>{% block title %}{{ sakura.siteName }}{% endblock %}</title>
         <meta name="description" content="{{ sakura.siteDesc }}" />
-        <meta name="keywords" content="{{ sakura.siteTags }}" />
+        <meta name="keywords" content="{{ sakura.siteTags|join(', ') }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="msapplication-TileColor" content="#9475b2" />
         <meta name="msapplication-TileImage" content="/content/images/icons/ms-icon-144x144.png" />

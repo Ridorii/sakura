@@ -25,7 +25,7 @@
         <input class="inputStyling" type="button" onclick="{{ cancelTarget }}" value="Cancel" />
     </div>
     {% if posting.id %}
-    <input type="hidden" name="id" value="posting.id" />
+        <input type="hidden" name="id" value="{{ posting.id }}" />
     {% endif %}
     <input type="hidden" name="sessionid" value="{{ php.sessionid }}" />
     <input type="hidden" name="timestamp" value="{{ php.time }}" />

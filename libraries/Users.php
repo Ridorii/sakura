@@ -258,6 +258,11 @@ class Users
             return [0, 'INVALID_MX'];
         }
 
+        // Check if the e-mail has already been used
+        if (Database::count('users', ['email' => [$email, '=']])[0] > 0) {
+            return [0, 'EMAIL_EXISTS'];
+        }
+
         // Check password entropy
         if (Main::pwdEntropy($password) < Config::get('min_entropy')) {
             return [0, 'PASS_TOO_SHIT'];
@@ -317,11 +322,7 @@ class Users
         }
 
         // Generate the verification key
-        $verk = Main::newActionCode('LOST_PASS', $user['user_id'], [
-            'meta' => [
-                'password_change' => 1,
-            ],
-        ]);
+        $verk = ActionCode::generate('LOST_PASS', $userObj->id());
 
         // Create new urls object
         $urls = new Urls();
@@ -363,11 +364,11 @@ class Users
         }
 
         // Check the verification key
-        $action = Main::useActionCode('LOST_PASS', $verk, $uid);
+        $action = ActionCode::validate('LOST_PASS', $verk, $uid);
 
         // Check if we got a negative return
-        if (!$action[0]) {
-            return [0, $action[1]];
+        if (!$action) {
+            return [0, 'INVALID_CODE'];
         }
 
         // Hash the password
@@ -442,12 +443,7 @@ class Users
         }
 
         // Generate activation key
-        $activate = ($customKey ? $customKey : Main::newActionCode('ACTIVATE', $user->id(), [
-            'user' => [
-                'rank_main' => 2,
-                'user_ranks' => json_encode([2]),
-            ],
-        ]));
+        $activate = ActionCode::generate('ACTIVATE', $user->id());
 
         // Create new urls object
         $urls = new Urls();
@@ -495,37 +491,21 @@ class Users
             return [0, 'USER_ALREADY_ACTIVE'];
         }
 
-        // Set default values for activation
-        $rank = 2;
-        $ranks = json_encode([2]);
-
-        /* Check if a key is set (there's an option to not set one for user
-        management reasons but you can't really get around this anyway) */
+        // Check if a key is set
         if ($requireKey) {
             // Check the action code
-            $action = Main::useActionCode('ACTIVATE', $key, $user->id());
+            $action = ActionCode::validate('ACTIVATE', $key, $user->id());
 
             // Check if we got a negative return
-            if (!$action[0]) {
-                return [0, $action[1]];
+            if (!$action) {
+                return [0, 'INVALID_CODE'];
             }
-
-            // Assign the special values
-            $instructionData = json_decode($action[2], true);
-            $rank = $instructionData['user']['rank_main'];
-            $ranks = $instructionData['user']['user_ranks'];
         }
-
-        // Activate the account
-        Database::update('users', [
-            [
-                'rank_main' => $rank,
-                'user_ranks' => $ranks,
-            ],
-            [
-                'user_id' => [$user->id(), '='],
-            ],
-        ]);
+        
+        // Add normal user, remove deactivated and set normal as default
+        $user->addRanks([2]);
+        $user->removeRanks([1]);
+        $user->setMainRank(2);
 
         // Return success
         return [1, 'SUCCESS'];

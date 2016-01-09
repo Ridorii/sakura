@@ -121,7 +121,23 @@ if ($mode != 'f') {
         // Post deletion
     } elseif ($mode == 'p' && isset($_GET['delete']) && $_GET['delete'] == $_GET['p'] && array_key_exists($_GET['p'], $thread->posts())) {
         // Checks
-        if ($thread->posts()[$_GET['p']]->poster->id() != $currentUser->id()) {
+        if ($thread->posts()[$_GET['p']]->poster->id() != $currentUser->id() || !$forum->permission(ForumPerms::DELETE_ANY, $currentUser->id())) {
+            // Add page specific things
+            $renderData['page'] = [
+                'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
+                'message' => 'You can only delete your own posts!',
+            ];
+
+            // Set parse variables
+            $template->setVariables($renderData);
+
+            // Print page contents
+            echo $template->render('global/information');
+            exit;
+        }
+
+        // Permissions
+        if ($currentUser->permission(ForumPerms::DELETE_OWN, Perms::FORUM)) {
             // Add page specific things
             $renderData['page'] = [
                 'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
@@ -198,8 +214,26 @@ if ($mode != 'f') {
 
 // Check if a post is being made
 if (isset($_POST['post'])) {
-    // Attempt to make the post
-    $post = Forum\Post::create($_POST['subject'], $_POST['text'], $currentUser, $topicId, $forumId);
+    // Check if an ID is set
+    if (isset($_POST['id'])) {
+        // Attempt to create a post object
+        $post = new Forum\Post($_POST['id']);
+        
+        // Check if the post israel
+        if ($post->id == $_POST['id']) {
+            $post->subject = $_POST['subject'];
+            $post->text = $_POST['text'];
+            $post->editTime = time();
+            $post->editReason = '';
+            $post->editUser = $currentUser;
+            $post->update();
+        } else {
+            $post = null;
+        }
+    } else {
+        // Attempt to make the post
+        $post = Forum\Post::create($_POST['subject'], $_POST['text'], $currentUser, $topicId, $forumId);
+    }
 
     // Add page specific things
     $renderData['page'] = [

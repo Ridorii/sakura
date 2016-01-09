@@ -33,7 +33,6 @@ class Post
     public $editTime = 0;
     public $editReason = "";
     public $editUser = [];
-    private $_permissions;
 
     // Constructor
     public function __construct($postId)
@@ -49,7 +48,6 @@ class Post
             $this->poster = User::construct($postRow['poster_id']);
             $this->ip = $postRow['poster_ip'];
             $this->time = $postRow['post_time'];
-            $this->signature = $postRow['post_signature'];
             $this->subject = $postRow['post_subject'];
             $this->text = $postRow['post_text'];
             $this->editTime = $postRow['post_edit_time'];
@@ -91,7 +89,6 @@ class Post
             'poster_id' => $poster->id(),
             'poster_ip' => Main::getRemoteIP(),
             'post_time' => time(),
-            'post_signature' => '1',
             'post_subject' => $subject,
             'post_text' => $text,
         ]);
@@ -104,6 +101,43 @@ class Post
 
         // Return the object
         return new Post($id);
+    }
+
+    // Update a post
+    public function update() {
+        // Check if the data meets the requirements
+        if (strlen($this->subject) < Config::get('forum_title_min')
+            || strlen($this->subject) > Config::get('forum_title_max')
+            || strlen($this->text) < Config::get('forum_text_min')
+            || strlen($this->text) > Config::get('forum_text_max')) {
+            return null;
+        }
+
+        // Create a thread object
+        $thread = new Thread($this->thread);
+
+        // Update the post
+        Database::update('posts', [
+            [
+                'post_id' => $this->id,
+                'topic_id' => $thread->id,
+                'forum_id' => $thread->forum,
+                'poster_id' => $this->poster->id(),
+                'poster_ip' => Main::getRemoteIP(),
+                'post_time' => $this->time,
+                'post_subject' => $this->subject,
+                'post_text' => $this->text,
+                'post_edit_time' => $this->editTime,
+                'post_edit_reason' => $this->editReason,
+                'post_edit_user' => $this->editUser->id(),
+            ],
+            [
+                'post_id' => [$this->id, '='],
+            ]
+        ]);
+
+        // Return a new post object
+        return new Post($this->id);
     }
 
     // Time elapsed since creation

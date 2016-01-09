@@ -118,7 +118,7 @@
                     {% if not sakura.disableRegistration %}
                         "registerForm": 'Processing registration...',
                     {% endif %}
-                    {% if not sakura.requireActivation %}
+                    {% if sakura.requireActivation %}
                         "resendForm": 'Attempting to resend activation...',
                     {% endif %}
                         "passwordForm": 'Sending password recovery mail...'

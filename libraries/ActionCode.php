@@ -11,49 +11,47 @@ namespace Sakura;
  */
 class ActionCode
 {
-    private $actions = []; // Contains the action methods
-    private $code = null; // Contains the action code we're working with
-
-    // Constructor
-    public function __construct($code = null)
-    {
-        // Populate $actions, sets $code (if not null)
-    }
-
     // Generating an action code
-    public function generate($action, $instructions, $user = 0)
+    public static function generate($action, $user = 0)
     {
-        // Takes an action, specifies instructions and optionally adds a target user
-        //  stores this code in the database and assigns it to $this->code
-        // This function should only work if $code is null
-    }
+        // Generate a code
+        $code = uniqid();
 
-    // Execute the procedure for this action code
-    public function execute()
-    {
-        // Looks for the code in the database and executes the procedure
-        // This and all functions below should only work if $this->code isn't null for obvious reasons
+        // Insert it
+        Database::insert('actioncodes', [
+            'code_action' => $action,
+            'user_id' => $user,
+            'action_code' => $code,
+        ]);
+
+        // Return the code
+        return $code;
     }
 
     // Checking if a code is still valid
-    public function validate()
+    public static function validate($action, $code, $user = 0, $invalidate = true)
     {
-        // Checks if $this->code is still valid
+        // Fetch the code from the db
+        $get = Database::count('actioncodes', [
+            'code_action' => [$action, '='],
+            'action_code' => [$code, '='],
+            'user_id' => [$user, '='],
+        ]);
+
+        // Invalidate the code if requested
+        if ($invalidate) {
+            self::invalidate($code);
+        }
+
+        // Return the result
+        return $get[0] > 0;
     }
 
     // Make a code invalid
-    public function invalidate()
+    public static function invalidate($code)
     {
-        // Invalidates the set action code
+        Database::delete('actioncodes', [
+            'code_action' => [$code, '='],    
+        ]);
     }
 }
-
-/*
- * Concept
- * =======
- *     Action codes are a thing to have the system or something related generate an
- * md5(?) hashed string that they can enter into a box and have the system respond
- * by doing something.
- *     Said actions are stored in a database table and can be added, removed and
- * changed if needed. These actions will probably be stored using JSON.
- */

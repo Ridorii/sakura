@@ -223,17 +223,11 @@ if (isset($_REQUEST['mode'])) {
                         Config::get('recaptcha') ?
                         $_REQUEST['g-recaptcha-response'] :
                         null
-                    ),
-                    (
-                        Config::get('require_registration_code') ?
-                        $_REQUEST['registercode'] :
-                        null
                     )
                 );
 
                 // Array containing "human understandable" messages
                 $messages = [
-
                     'AUTH_LOCKED' => 'Authentication is currently not allowed, try again later.',
                     'DISABLED' => 'Registration is currently disabled.',
                     'INVALID_REG_KEY' => 'The given registration code was invalid.',
@@ -244,11 +238,11 @@ if (isset($_REQUEST['mode'])) {
                     'NAME_TOO_LONG' => 'Your name can\'t be longer than 16 characters.',
                     'PASS_TOO_SHIT' => 'Your password is too weak, try adding some special characters.',
                     'PASS_NOT_MATCH' => 'Passwords do not match.',
+                    'EMAIL_EXISTS' => 'Someone already registered using this email!', // HOW DID I MISS THIS?!
                     'INVALID_EMAIL' => 'Your e-mail address is formatted incorrectly.',
                     'INVALID_MX' => 'No valid MX-Record found on the e-mail address you supplied.',
                     'EMAILSENT' => 'Your registration went through! An activation e-mail has been sent.',
                     'SUCCESS' => 'Your registration went through! Welcome to ' . Config::get('sitename') . '!',
-
                 ];
 
                 // Add page specific things

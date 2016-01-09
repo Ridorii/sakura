@@ -80,7 +80,7 @@
                             <div class="post-text bbcode">
                                 {{ post.parsed|raw }}
                             </div>
-                            {% if post.poster.signature and post.signature %}
+                            {% if post.poster.signature and post.poster.permission(constant('Sakura\\Perms\\Site::CHANGE_SIGNATURE')) %}
                             <div class="clear"></div>
                             <div class="signature bbcode">
                                 {{ post.poster.signature|raw|nl2br }}

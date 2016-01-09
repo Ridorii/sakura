@@ -27,6 +27,14 @@ class Urls
             '/news.php?id=%u',
             '/news/%u',
         ],
+        'SITE_NEWS_CAT' => [
+            '/news.php?cat=$s',
+            '/news/%s',
+        ],
+        'SITE_NEWS_CAT_POST' => [
+            '/news.php?cat=$s&id=%u',
+            '/news/%s/%u',
+        ],
         'SITE_SEARCH' => [
             '/search.php',
             '/search',
