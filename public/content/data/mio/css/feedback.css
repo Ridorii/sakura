@@ -1,0 +1,158 @@
+@charset "utf-8";
+hr {
+	color: #9475B2;
+	background: #9475B2;
+	height: 1px;
+	border: 0;
+}
+.hidden {
+	display: none;
+	visibility: hidden;
+}
+h1,h2,h3,h4,h5,h6 {
+	margin: 2px;
+	padding: 0;
+}
+h1 {
+	display: inline-block;
+}
+h1 a {
+	color: #609;
+}
+a {
+	text-decoration: none;
+}
+a:hover, a:active {
+	text-decoration: underline;
+}
+fieldset {
+	border: 1px #746677 solid;
+	margin: 5px;
+}
+legend {
+	border: 1px #746677 solid;
+	background: #9475B2;
+	color: #306;
+	padding: 1px 5px;
+}
+input[type="text"],table.postForm > tbody textarea, select {
+	width: 302px;
+}
+input[type="password"] {
+	width: 231px;
+}
+input[type="text"], input[type="password"], table.postForm > tbody textarea {
+	padding: 2px 4px 3px;
+	border: 1px solid #AAA;
+	outline: medium none;
+	font-family: arial,helvetica,sans-serif;
+	font-size: 10pt;
+}
+input[type="text"]:focus, input[type="password"]:focus, table.postForm > tbody textarea:focus {
+	border: 1px solid #746677;
+}
+#recaptcha_response_field {
+	margin: 0 2px 0 0;
+	padding: 2px 4px 3px;
+	border: 1px solid #AAA;
+	outline: medium none;
+	font-family: arial,helvetica,sans-serif;
+	font-size: 10pt;
+	width: 302px;
+}
+#recaptcha_widget img {
+	cursor: pointer;
+}
+div#recaptcha_image {
+	margin: 0 2px 0 0;
+	border: 1px solid #AAA;
+	outline: medium none;
+}
+#recaptcha_response_field {
+	margin-top: 4px !important;
+}
+.recaptcha_custom_buttons {
+	font-size: smaller;
+}
+table.postForm{
+	border-spacing: 1px;
+}
+table.postForm > tbody > tr > td {
+	margin: 0;
+	padding: 0;
+	font-size: 10pt;
+}
+table.postForm > tbody > tr > td:first-child {
+	background: #C9BBCC;
+	border: 1px #746677 solid;
+	color: #400070;
+	font-weight: bold;
+	padding: 0 5px 0 10px;
+	font-size: 10pt;
+	text-align: right;
+}
+.trip {
+	font-weight: normal !important;
+	color: #CC0066;
+}
+.ban {
+	color: #F00;
+	font-weight: 700;
+	margin-top: 10px;
+}
+.spoiler {
+	background: black;
+	color: black;
+}
+.spoiler:hover {
+	color: white !important;
+}
+.quote{
+	color: #789922 !important;
+}
+.admincap{
+	color: #AA0000 !important;
+}
+.modcap{
+	color: #00AA00 !important;
+}
+.feedbackheader {
+	padding: 5px;
+	text-align: center;
+}
+.boardindex {
+	margin: 5px;
+}
+.boardindex hr {
+	margin: 5px;
+}
+.boardindex h2, .boardindex h3 {
+	text-align: center;
+}
+.boardposting {
+	margin: 0 auto;
+	text-align: center;
+}
+.boardposting table {
+	margin: 0 auto;
+	text-align: left;
+}
+.copyright {
+	font-size: x-small !important;
+	font-weight: bold;
+	text-align: center;
+}
+fieldset .replylink {
+	text-align: right;
+	float: right;
+	border: 1px #746677 solid;
+	background: #9475B2;
+	color: #306;
+	padding: 1px 5px;
+	margin: -9px 0;
+	font-weight: bold;
+	overflow: hidden;
+}
+.header .logo {
+	background: url('//cdn.flashii.net/img/feedback-logo.png') no-repeat 
+}

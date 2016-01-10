@@ -2,12 +2,4 @@
 
 _A backend that doesn't suck_
 
-## What this will have
-
-- Code that doesn't suck dick.
-- All the (good) features of the old backend
-- Templating!
-- PDO!
-- Groups (different from ranks)
-
-Now with 100% more open source!
+I'll write a more descriptive readme once it's in a stable state.

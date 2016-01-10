@@ -1,0 +1,75 @@
+# Set Error documents
+ErrorDocument 404 /404.php
+ErrorDocument 403 /404.php
+ErrorDocument 401 /404.php
+
+# Rewrite Stuff
+RewriteEngine on
+RewriteBase /
+Options +FollowSymLinks -Indexes
+
+# Rewrite Rules
+RewriteRule ^login/?$|^logout/?$|^activate/?$|^register/?$|^forgotpassword/?|^authenticate/?$ authenticate.php [L,QSA]
+RewriteRule ^support/?$ support.php [L,QSA]
+RewriteRule ^support/tracker/?$ support.php?tracker=true [L,QSA]
+RewriteRule ^faq/?$ faq.php [L,QSA]
+RewriteRule ^search/?$ search.php [L,QSA]
+
+# Info pages
+RewriteRule ^p/([a-z]+)/?$ index.php?p=$1 [L,QSA]
+
+# News
+RewriteRule ^news/?$ news.php [L,QSA]
+RewriteRule ^news/([0-9]+)/?$ news.php?id=$1 [L,QSA]
+RewriteRule ^news/([a-z\-]+)/?$ news.php?cat=$1 [L,QSA]
+RewriteRule ^news/([a-z\-]+)/([0-9]+)/?$ news.php?cat=$1&id=$2 [L,QSA]
+RewriteRule ^news.xml$ news.php?xml [L,QSA]
+
+# Settings
+RewriteRule ^settings/?$ settings.php [L,QSA]
+RewriteRule ^settings/([a-z]+)/?$ settings.php?cat=$1 [L,QSA]
+RewriteRule ^settings/([a-z]+)/([a-z]+)/?$ settings.php?cat=$1&mode=$2 [L,QSA]
+RewriteRule ^friends/?$ settings.php?friend-action=true [L,QSA]
+RewriteRule ^notifications/?$ settings.php?request-notifications=true [L,QSA]
+RewriteRule ^comments/?$ settings.php?comment-action=true [L,QSA]
+
+# Members
+RewriteRule ^members/?$ members.php [L,QSA]
+RewriteRule ^members/([a-z]+)/?$ members.php?sort=$1 [L,QSA]
+RewriteRule ^members/([0-9]+)/?$ members.php?rank=$1 [L,QSA]
+RewriteRule ^members/([a-z]+)/([0-9]+)/?$ members.php?sort=$1&rank=$2 [L,QSA]
+
+# Profiles
+RewriteRule ^u/?$ profile.php [L,QSA]
+RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/?$ profile.php?u=$1 [L,QSA]
+RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/header/?$ imageserve.php?m=header&u=$1 [L,QSA]
+RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/comments/?$ profile.php?u=$1&view=comments [L,QSA]
+RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/groups/?$ profile.php?u=$1&view=groups [L,QSA]
+RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/friends/?$ profile.php?u=$1&view=friends [L,QSA]
+RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/threads/?$ profile.php?u=$1&view=threads [L,QSA]
+RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/posts/?$ profile.php?u=$1&view=posts [L,QSA]
+RewriteRule ^u/([A-Za-z0-9\_\-\s\.]+)/report/?$ report.php?mode=user&id=$1 [L,QSA]
+
+# Groups
+RewriteRule ^g/?$ group.php [L,QSA]
+RewriteRule ^g/([0-9]+)/?$ group.php?g=$1 [L,QSA]
+
+# Serving Images
+RewriteRule ^a/([0-9]+)$|a/([0-9]+).png$ imageserve.php?m=avatar&u=$1 [L,QSA]
+RewriteRule ^bg/([0-9]+)$|bg/([0-9]+).png$ imageserve.php?m=background&u=$1 [L,QSA]
+
+# Forum
+RewriteRule ^forum/?$ index.php?forum=true [L,QSA]
+RewriteRule ^forum/([0-9]+)/?$ viewforum.php?f=$1 [L,QSA]
+RewriteRule ^forum/([0-9]+)/new/?$ posting.php?f=$1 [L,QSA]
+RewriteRule ^forum/(thread|topic|[0-9+])/([0-9]+)/?$ viewtopic.php?t=$2 [L,QSA]
+RewriteRule ^forum/(thread|topic|[0-9+])/([0-9]+)/reply/?$ posting.php?t=$2 [L,QSA]
+RewriteRule ^forum/post/([0-9]+)/?$ viewtopic.php?p=$1 [L,QSA]
+RewriteRule ^forum/post/([0-9]+)/edit/?$ posting.php?p=$1&edit=$1 [L,QSA]
+RewriteRule ^forum/post/([0-9]+)/delete/?$ posting.php?p=$1&delete=$1 [L,QSA]
+RewriteRule ^forum/post/([0-9]+)/(quote|reply)/?$ posting.php?p=$1&quote=$1 [L,QSA]
+
+# Management
+RewriteRule ^manage/?$ manage.php [L,QSA]
+RewriteRule ^manage/([a-z\-]+)/?$ manage.php?cat=$1 [L,QSA]
+RewriteRule ^manage/([a-z\-]+)/([a-z\-]+)/?$ manage.php?cat=$1&mode=$2 [L,QSA]
