@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160109');
+define('SAKURA_VERSION', '20160110');
 define('SAKURA_VLABEL', 'Eminence');
 define('SAKURA_COLOUR', '#6C3082');
 
@@ -153,6 +153,7 @@ if (!defined('SAKURA_NO_TPL')) {
             'onlineTimeout' => Config::get('max_online_time'),
             'announcementImage' => Config::get('header_announcement_image'),
             'announcementLink' => Config::get('header_announcement_link'),
+            'trashForumId' => Config::get('forum_trash_id'),
 
             'recaptchaPublic' => Config::get('recaptcha_public'),
             'recaptchaEnabled' => Config::get('recaptcha'),

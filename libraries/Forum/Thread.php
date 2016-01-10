@@ -25,6 +25,7 @@ class Thread
     public $status = 0;
     public $statusChange = 0;
     public $type = 0;
+    public $oldForum = 0;
     private $_posts = [];
     private $_firstPost = null;
     private $_lastPost = null;
@@ -47,6 +48,7 @@ class Thread
             $this->status = $threadRow['topic_status'];
             $this->statusChange = $threadRow['topic_status_change'];
             $this->type = $threadRow['topic_type'];
+            $this->oldForum = $threadRow['topic_old_forum'];
         }
     }
 
@@ -64,6 +66,68 @@ class Thread
 
         // Return the thread object
         return new Thread(Database::lastInsertID());
+    }
+
+    // Delete the thread
+    public function delete()
+    {
+        // Delete all posts
+        Database::delete('posts', [
+            'topic_id' => [$this->id, '='],
+        ]);
+
+        // Delete thread meta
+        Database::delete('topics', [
+            'topic_id' => [$this->id, '='],
+        ]);
+    }
+
+    // Move the thread
+    public function move($forum, $setOld = true)
+    {
+        // Update all posts
+        Database::update('posts', [
+            [
+                'forum_id' => $forum,
+            ],
+            [
+                'topic_id' => [$this->id, '='],
+            ]
+        ]);
+
+        // Update thread meta
+        Database::update('topics', [
+            [
+                'forum_id' => $forum,
+                'topic_old_forum' => ($setOld ? $this->forum : 0),
+            ],
+            [
+                'topic_id' => [$this->id, '='],
+            ]
+        ]);
+    }
+
+    // Update the thread
+    public function update()
+    {
+        // Update row
+        Database::update('topics', [
+            [
+                'topic_hidden' => $this->hidden,
+                'topic_title' => $this->title,
+                'topic_time_limit' => $this->timeLimit,
+                'topic_status' => $this->status,
+                'topic_status_change' => $this->statusChange,
+                'topic_type' => $this->type,
+                'topic_old_forum' => $this->oldForum,
+            ],
+            [
+                'topic_id' => [$this->id, '='],
+            ]
+        ]);
+
+        // Return new object
+        return new Thread($this->id);
     }
 
     // Posts

@@ -51,7 +51,7 @@ class ActionCode
     public static function invalidate($code)
     {
         Database::delete('actioncodes', [
-            'code_action' => [$code, '='],    
+            'code_action' => [$code, '='],
         ]);
     }
 }

@@ -32,6 +32,7 @@ if (!$thread) {
     // Set render data
     $renderData['page'] = [
         'message' => 'The topic you tried to access does not exist.',
+        'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
     ];
 
     // Set parse variables
@@ -46,9 +47,167 @@ if (!$thread) {
 if (!$forum->permission(ForumPerms::VIEW, $currentUser->id())) {
     // Set render data
     $renderData['page'] = [
-        'title' => 'Information',
         'message' => 'You do not have access to this thread.',
+        'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
     ];
+
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/information');
+    exit;
+}
+
+// Sticky thread
+if (isset($_GET['sticky']) && $_GET['sticky'] == session_id() && $forum->permission(ForumPerms::STICKY, $currentUser->id())) {
+    // Check the status
+    if ($thread->type == 1) {
+        $thread->type = 0;
+    } else {
+        $thread->type = 1;
+    }
+
+    // Update the thread
+    $thread->update();
+
+    // Set render data
+    $renderData['page'] = [
+        'message' => 'Changed the thread type.',
+        'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+    ];
+
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/information');
+    exit;
+}
+
+// Announce thread
+if (isset($_GET['announce']) && $_GET['announce'] == session_id() && $forum->permission(ForumPerms::ANNOUNCEMENT, $currentUser->id())) {
+    // Check the status
+    if ($thread->type == 2) {
+        $thread->type = 0;
+    } else {
+        $thread->type = 2;
+    }
+
+    // Update the thread
+    $thread->update();
+    // Set render data
+    $renderData['page'] = [
+        'message' => 'Changed the thread type.',
+        'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+    ];
+
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/information');
+    exit;
+}
+
+// Lock thread
+if (isset($_GET['lock']) && $_GET['lock'] == session_id() && $forum->permission(ForumPerms::LOCK, $currentUser->id())) {
+    // Check the status
+    if ($thread->status == 1) {
+        $thread->status = 0;
+    } else {
+        $thread->status = 1;
+    }
+
+    // Update the thread
+    $thread->update();
+    // Set render data
+    $renderData['page'] = [
+        'message' => 'Changed the thread status.',
+        'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+    ];
+
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/information');
+    exit;
+}
+
+// Trash thread
+if (isset($_GET['trash']) && $_GET['trash'] == session_id() && $forum->permission(ForumPerms::MOVE, $currentUser->id())) {
+    // Check the status
+    if ($thread->forum != Config::get('forum_trash_id')) {
+        $thread->move(Config::get('forum_trash_id'));
+
+        // Set render data
+        $renderData['page'] = [
+            'message' => 'Moved thread to the trash.',
+            'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+        ];
+    } else {
+        // Set render data
+        $renderData['page'] = [
+            'message' => 'This thread is already trashed.',
+            'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+        ];
+    }
+
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/information');
+    exit;
+}
+
+// Restore thread
+if (isset($_GET['restore']) && $_GET['restore'] == session_id() && $forum->permission(ForumPerms::MOVE, $currentUser->id())) {
+    // Check the status
+    if ($thread->oldForum) {
+        // Move thread
+        $thread->move($thread->oldForum, false);
+
+        // Set render data
+        $renderData['page'] = [
+            'message' => 'Restored the thread to its previous location.',
+            'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+        ];
+    } else {
+        // Set render data
+        $renderData['page'] = [
+            'message' => 'This thread has never been moved.',
+            'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+        ];
+    }
+
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/information');
+    exit;
+}
+
+// Prune thread
+if (isset($_GET['prune']) && $_GET['prune'] == session_id() && $forum->permission(ForumPerms::DELETE_ANY, $currentUser->id())) {
+    // Check the status
+    if ($thread->forum == Config::get('forum_trash_id')) {
+        $thread->delete();
+
+        // Set render data
+        $renderData['page'] = [
+            'message' => 'The thread has been pruned.',
+            'redirect' => $urls->format('FORUM_SUB', [$thread->forum]),
+        ];
+    } else {
+        // Set render data
+        $renderData['page'] = [
+            'message' => 'You can only prune trashed threads.',
+            'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+        ];
+    }
 
     // Set parse variables
     $template->setVariables($renderData);

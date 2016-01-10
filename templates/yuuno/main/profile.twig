@@ -40,11 +40,14 @@
                                 <a class="fa fa-user-{% if user.isFriends(profile.id) == 0 %}plus{% else %}times{% endif %}" title="{% if user.isFriends(profile.id) == 0 %}Add {{ profile.username }} as a friend{% else %}Remove friend{% endif %}" href="{% if user.isFriends(profile.id) == 0 %}{{ urls.format('FRIEND_ADD', [profile.id, php.sessionid, php.time, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [profile.id, php.sessionid, php.time, sakura.currentPage]) }}{% endif %}" id="profileFriendToggle"></a>
                                 <a class="fa fa-exclamation-circle" title="Report {{ profile.username }}" href="{{ urls.format('USER_REPORT', [profile.id]) }}"></a>
                             {% endif %}
+                            {% if user.permission(constant('Sakura\\Perms\\Manage::CAN_RESTRICT_USERS'), constant('Sakura\\Perms::MANAGE')) %}
+                                <a class="fa fa-trash" title="Restrict {{ profile.username }}" href="?restrict={{ php.sessionid }}"></a>
+                            {% endif %}
                             <hr class="default" />
                             <a class="fa fa-file-text-o" title="View {{ profile.username }}'s user page" href="{{ urls.format('USER_PROFILE', [profile.id]) }}"></a>
-                            <a class="fa fa-list" title="View {{ profile.username }}'s threads" href="{{ urls.format('USER_THREADS', [profile.id]) }}"></a>
+                            {#<a class="fa fa-list" title="View {{ profile.username }}'s threads" href="{{ urls.format('USER_THREADS', [profile.id]) }}"></a>
                             <a class="fa fa-reply" title="View {{ profile.username }}'s posts" href="{{ urls.format('USER_POSTS', [profile.id]) }}"></a>
-                            <a class="fa fa-star" title="View {{ profile.username }}'s friends" href="{{ urls.format('USER_FRIENDS', [profile.id]) }}"></a>
+                            <a class="fa fa-star" title="View {{ profile.username }}'s friends" href="{{ urls.format('USER_FRIENDS', [profile.id]) }}"></a> shh #}
                             {#<a class="fa fa-users" title="View {{ profile.username }}'s groups" href="{{ urls.format('USER_GROUPS', [profile.id]) }}"></a>#}
                             {% if not noUserpage %}
                                 <a class="fa fa-comments-o" title="View {{ profile.username }}'s profile comments" href="{{ urls.format('USER_COMMENTS', [profile.id]) }}"></a>

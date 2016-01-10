@@ -21,9 +21,9 @@ $profile = User::construct(isset($_GET['u']) ? $_GET['u'] : 0);
 // Views array
 $views = [
     'index',
-    'friends',
+    /*'friends',
     'threads',
-    'posts',
+    'posts',*/
     'comments',
 ];
 
@@ -39,9 +39,8 @@ if ($profile->id() == 0) {
     // Redirect if so
     if ($check) {
         $renderData['page'] = [
-            'title' => 'Information',
             'message' => 'The user this profile belongs to changed their username, you are being redirected.',
-        'redirect' => $urls->format('USER_PROFILE', [$check['user_id']]),
+            'redirect' => $urls->format('USER_PROFILE', [$check['user_id']]),
         ];
 
         // Set parse variables
@@ -51,6 +50,31 @@ if ($profile->id() == 0) {
         echo $template->render('global/information');
         exit;
     }
+}
+
+// If the user id is zero check if there was a namechange
+if (isset($_GET['restrict']) && $_GET['restrict'] == session_id() && $currentUser->permission(Perms\Manage::CAN_RESTRICT_USERS, Perms::MANAGE)) {
+    // Check restricted status
+    $restricted = $profile->permission(Perms\Site::RESTRICTED);
+
+    if ($restricted) {
+        $profile->removeRanks([Config::get('restricted_rank_id')]);
+    } else {
+        $profile->addRanks([Config::get('restricted_rank_id')]);
+        $profile->removeRanks($profile->ranks());
+    }
+
+    $renderData['page'] = [
+        'message' => 'Toggled the restricted status of the user.',
+        'redirect' => $urls->format('USER_PROFILE', [$profile->id()]),
+    ];
+
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/information');
+    exit;
 }
 
 // Set parse variables

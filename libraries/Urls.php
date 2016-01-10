@@ -143,6 +143,30 @@ class Urls
             '/posting.php?p=%1$u&quote=%1$u',
             '/forum/post/%u/quote',
         ],
+        'FORUM_LOCK' => [
+            '/viewtopic.php?t=%u&lock=%s',
+            '/forum/thread/%u?lock=%s',
+        ],
+        'FORUM_STICKY' => [
+            '/viewtopic.php?t=%u&sticky=%s',
+            '/forum/thread/%u?sticky=%s',
+        ],
+        'FORUM_ANNOUNCE' => [
+            '/viewtopic.php?t=%u&announce=%s',
+            '/forum/thread/%u?announce=%s',
+        ],
+        'FORUM_RESTORE' => [
+            '/viewtopic.php?t=%u&restore=%s',
+            '/forum/thread/%u?restore=%s',
+        ],
+        'FORUM_TRASH' => [
+            '/viewtopic.php?t=%u&trash=%s',
+            '/forum/thread/%u?trash=%s',
+        ],
+        'FORUM_PRUNE' => [
+            '/viewtopic.php?t=%u&prune=%s',
+            '/forum/thread/%u?prune=%s',
+        ],
 
         // Image serve references
         'IMAGE_AVATAR' => [

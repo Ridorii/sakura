@@ -46,13 +46,13 @@ if (isset($_GET['m'])) {
             $user = User::construct($_GET['u']);
 
             // If user is deactivated use deactive avatar
-            if ($user->hasRanks([0, 1])) {
+            if ($user->permission(Perms\Site::DEACTIVATED)) {
                 $serveImage = $deactiveAvatar;
                 break;
             }
 
             // Check if user is banned
-            if ($user->checkBan()) {
+            if ($user->checkBan() || $user->permission(Perms\Site::RESTRICTED)) {
                 $serveImage = $bannedAvatar;
                 break;
             }
@@ -81,13 +81,13 @@ if (isset($_GET['m'])) {
             $user = User::construct($_GET['u']);
 
             // If user is deactivated use deactive avatar
-            if ($user->hasRanks([0, 1])) {
+            if ($user->permission(Perms\Site::DEACTIVATED)) {
                 $serveImage = $noBackground;
                 break;
             }
 
             // Check if user is banned
-            if (Bans::checkBan($_GET['u'])) {
+            if (Bans::checkBan($_GET['u']) || $user->permission(Perms\Site::RESTRICTED)) {
                 $serveImage = $noBackground;
                 break;
             }
@@ -117,13 +117,13 @@ if (isset($_GET['m'])) {
             $user = User::construct($_GET['u']);
 
             // If user is deactivated use deactive avatar
-            if ($user->hasRanks([0, 1])) {
+            if ($user->permission(Perms\Site::DEACTIVATED)) {
                 $serveImage = $noHeader;
                 break;
             }
 
             // Check if user is banned
-            if (Bans::checkBan($_GET['u'])) {
+            if (Bans::checkBan($_GET['u']) || $user->permission(Perms\Site::RESTRICTED)) {
                 $serveImage = $noHeader;
                 break;
             }

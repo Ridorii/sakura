@@ -119,7 +119,7 @@ class User
         $this->data['user_data'] = json_decode(!empty($this->data['user_data']) ? $this->data['user_data'] : '[]', true);
 
         // Get all ranks
-        $ranks = array_map(function($a) {
+        $ranks = array_map(function ($a) {
             return $a['rank_id'];
         }, Database::fetch('user_ranks', true, ['user_id' => [$this->data['user_id'], '=']]));
 

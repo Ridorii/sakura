@@ -1,6 +1,6 @@
 <tr>
     <td class="topicIcon{% if thread.unread(user.id) %} unread{% endif %}{% if thread.type == 2 %} topicAnnouncement{% endif %}">
-        <div class="fa fa-2x fa-{% if thread.type == 1 %}thumb-tack{% elseif thread.type == 2 %}exclamation{% elseif thread.status == 1 %}lock{% else %}navicon{% endif %}"></div>
+        <div class="fa fa-2x fa-{% if thread.type == 1 %}thumb-tack{% elseif thread.type == 2 %}bullhorn{% elseif thread.status == 1 %}lock{% else %}navicon{% endif %}"></div>
     </td>
     <td class="topicTitle{% if thread.type == 2 %} topicAnnouncement{% endif %}">
         <a href="{{ urls.format('FORUM_THREAD', [thread.id]) }}" class="default">{{ thread.title }}</a>

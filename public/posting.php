@@ -55,6 +55,22 @@ if (!$forum->permission(ForumPerms::VIEW, $currentUser->id()) || !$forum->permis
     exit;
 }
 
+// Check if the user has access to the forum
+if (!isset($thread) && !$forum->permission(ForumPerms::CREATE_THREADS, $currentUser->id())) {
+    // Set render data
+    $renderData['page'] = [
+        'title' => 'Information',
+        'message' => 'You are not allowed to create threads in this forum.',
+    ];
+
+    // Set parse variables
+    $template->setVariables($renderData);
+
+    // Print page contents
+    echo $template->render('global/information');
+    exit;
+}
+
 $mode = isset($_GET['f']) ? 'f' : (isset($_GET['t']) ? 't' : (isset($_GET['p']) ? 'p' : null));
 
 // Include emotes and bbcodes
@@ -83,6 +99,22 @@ if ($mode != 'f') {
         exit;
     }
 
+    // Prompt an error if the topic doesn't exist
+    if ($thread->status == 1 && !$forum->permission(ForumPerms::LOCK, $currentUser->id())) {
+        // Add page specific things
+        $renderData['page'] = [
+            'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
+            'message' => 'The thread you tried to reply to is locked.',
+        ];
+
+        // Set parse variables
+        $template->setVariables($renderData);
+
+        // Print page contents
+        echo $template->render('global/information');
+        exit;
+    }
+
     // Check if we're in quote mode
     if ($mode == 'p' && isset($_GET['quote']) && $_GET['quote'] == $_GET['p'] && array_key_exists($_GET['p'], $thread->posts())) {
         // Reassign post for ease
@@ -93,8 +125,23 @@ if ($mode != 'f') {
 
         // Post editing
     } elseif ($mode == 'p' && isset($_GET['edit']) && $_GET['edit'] == $_GET['p'] && array_key_exists($_GET['p'], $thread->posts())) {
+        // Permissions
+        if (!$currentUser->permission(ForumPerms::EDIT_OWN, Perms::FORUM)) {
+            // Add page specific things
+            $renderData['page'] = [
+                'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
+                'message' => 'You are not allowed to edit posts!',
+            ];
+
+            // Set parse variables
+            $template->setVariables($renderData);
+
+            // Print page contents
+            echo $template->render('global/information');
+            exit;
+        }
         // Checks
-        if ($thread->posts()[$_GET['p']]->poster->id() != $currentUser->id()) {
+        if ($thread->posts()[$_GET['p']]->poster->id() != $currentUser->id() && !$forum->permission(ForumPerms::EDIT_ANY, $currentUser->id())) {
             // Add page specific things
             $renderData['page'] = [
                 'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
@@ -120,12 +167,12 @@ if ($mode != 'f') {
         ]);
         // Post deletion
     } elseif ($mode == 'p' && isset($_GET['delete']) && $_GET['delete'] == $_GET['p'] && array_key_exists($_GET['p'], $thread->posts())) {
-        // Checks
-        if ($thread->posts()[$_GET['p']]->poster->id() != $currentUser->id() || !$forum->permission(ForumPerms::DELETE_ANY, $currentUser->id())) {
+        // Permissions
+        if (!$currentUser->permission(ForumPerms::DELETE_OWN, Perms::FORUM)) {
             // Add page specific things
             $renderData['page'] = [
                 'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
-                'message' => 'You can only delete your own posts!',
+                'message' => 'You are not allowed to delete posts!',
             ];
 
             // Set parse variables
@@ -136,8 +183,8 @@ if ($mode != 'f') {
             exit;
         }
 
-        // Permissions
-        if ($currentUser->permission(ForumPerms::DELETE_OWN, Perms::FORUM)) {
+        // Checks
+        if ($thread->posts()[$_GET['p']]->poster->id() != $currentUser->id() && !$forum->permission(ForumPerms::DELETE_ANY, $currentUser->id())) {
             // Add page specific things
             $renderData['page'] = [
                 'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
@@ -226,7 +273,7 @@ if (isset($_POST['post'])) {
             $post->editTime = time();
             $post->editReason = '';
             $post->editUser = $currentUser;
-            $post->update();
+            $post = $post->update();
         } else {
             $post = null;
         }

@@ -104,7 +104,8 @@ class Post
     }
 
     // Update a post
-    public function update() {
+    public function update()
+    {
         // Check if the data meets the requirements
         if (strlen($this->subject) < Config::get('forum_title_min')
             || strlen($this->subject) > Config::get('forum_title_max')
