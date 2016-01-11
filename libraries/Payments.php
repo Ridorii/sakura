@@ -40,6 +40,10 @@ class Payments
             return false;
         }
 
+        self::$paypal->setConfig([
+            'mode' => Config::get('paypal_mode'),
+        ]);
+
         return true;
     }
 
