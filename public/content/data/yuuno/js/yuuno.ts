@@ -95,6 +95,9 @@ function notifyUI(content: Notification): void {
         sound.appendChild(mp3);
         sound.appendChild(ogg);
 
+        // Less loud
+        sound.volume = 0.5;
+
         // And play
         sound.play();
     }

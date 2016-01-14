@@ -8,9 +8,9 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160110');
-define('SAKURA_VLABEL', 'Eminence');
-define('SAKURA_COLOUR', '#6C3082');
+define('SAKURA_VERSION', '20160114');
+define('SAKURA_VLABEL', 'Amethyst');
+define('SAKURA_COLOUR', '#9966CC');
 
 // Define Sakura Path
 define('ROOT', __DIR__ . '/');
@@ -125,8 +125,6 @@ if (!defined('SAKURA_NO_TPL')) {
         'sakura' => [
             'versionInfo' => [
                 'version' => SAKURA_VERSION,
-                'label' => SAKURA_VLABEL,
-                'colour' => SAKURA_COLOUR,
             ],
 
             'dev' => [
@@ -148,7 +146,7 @@ if (!defined('SAKURA_NO_TPL')) {
             'siteDesc' => Config::get('sitedesc'),
             'siteTags' => json_decode(Config::get('sitetags'), true),
             'dateFormat' => Config::get('date_format'),
-            'currentPage' => '//' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
+            'currentPage' => (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null),
             'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null),
             'onlineTimeout' => Config::get('max_online_time'),
             'announcementImage' => Config::get('header_announcement_image'),
