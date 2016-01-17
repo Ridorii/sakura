@@ -1,0 +1,22 @@
+<table class="settings-table">
+    <tbody>
+        {% for rank in user.ranks %}
+        <tr {% if rank.id == user.mainRankId %} class="current-session" {% endif %}>
+            <td style="font-weight: bold; color: {{ rank.colour }}; text-shadow: 0 0 7px {{ rank.colour }}; text-align: left;">
+                <a href="{{ urls.format('MEMBERLIST_RANK', [rank.id]) }}" class="clean">{{ rank.name }}</a>
+            </td>
+            <td style="width: 90px;">
+                <form method="post" action="{{ sakura.currentPage }}">
+                    <input type="hidden" name="sessid" value="{{ php.sessionid }}" />
+                    <input type="hidden" name="timestamp" value="{{ php.time }}" />
+                    <input type="hidden" name="rank" value="{{ rank.id }}" />
+                    <input type="hidden" name="mode" value="ranks" />
+                    <input type="hidden" name="submit" value="hello" />
+                    <button class="inputStyling small" name="default">Set as main</button>
+                    <button class="inputStyling small" name="remove" {% if rank.id <= 2 %}disabled="disabled"{% endif %}>Remove</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

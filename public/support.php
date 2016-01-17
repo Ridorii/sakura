@@ -96,12 +96,12 @@ if (isset($_REQUEST['mode'])
                     // Attempt to complete the transaction
                     if ($finalise) {
                         // Make the user premium
-                        $expiration = Users::addUserPremium($currentUser->id(), (2628000 * $_SESSION['premiumMonths']));
-                        Users::updatePremiumMeta($currentUser->id());
-                        Main::updatePremiumTracker(
-                            $currentUser->id(),
+                        $expiration = Users::addUserPremium($currentUser->id, (2628000 * $_SESSION['premiumMonths']));
+                        Users::updatePremiumMeta($currentUser->id);
+                        Utils::updatePremiumTracker(
+                            $currentUser->id,
                             ((float) Config::get('premium_price_per_month') * $_SESSION['premiumMonths']),
-                            $currentUser->username()
+                            $currentUser->username
                             . ' bought premium for '
                             . $_SESSION['premiumMonths']
                             . ' month'
@@ -144,7 +144,7 @@ if (isset($_REQUEST['mode'])
 
 // Premium tracker
 if (isset($_GET['tracker'])) {
-    $renderData['tracker'] =  Main::getPremiumTrackerData();
+    $renderData['tracker'] =  Utils::getPremiumTrackerData();
 
     // Set parse variables
     $template->setVariables($renderData);

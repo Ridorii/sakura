@@ -12,7 +12,7 @@
     <input type="hidden" name="sessid" value="{{ php.sessionid }}" />
     <input type="hidden" name="timestamp" value="{{ php.time }}" />
     <input type="hidden" name="mode" value="userpage" />
-    <div><textarea name="userpage" id="userPageEditor" placeholder="# Welcome to my user page!" class="inputStyling" style="width: calc(100% - 12px); height: 400px;">{% if userPage %}{{ userPage }}{% else %}# Welcome to my user page!{% endif %}</textarea></div>
+    <div><textarea name="userpage" id="userPageEditor" placeholder="# Welcome to my user page!" class="inputStyling" style="width: calc(100% - 12px); height: 400px;">{% if user.page %}{{ user.page }}{% else %}# Welcome to my user page!{% endif %}</textarea></div>
     <div class="profile-save">
         <input type="submit" value="Save" name="submit" class="inputStyling" />
         <input type="reset" value="Reset" name="reset" class="inputStyling" />

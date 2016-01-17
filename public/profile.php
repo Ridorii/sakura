@@ -32,9 +32,9 @@ $renderData['profile'] = $profile;
 $renderData['profileView'] = isset($_GET['view']) && in_array($_GET['view'], $views) ? $_GET['view'] : $views[0];
 
 // If the user id is zero check if there was a namechange
-if ($profile->id() == 0) {
+if ($profile->id == 0) {
     // Fetch from username_history
-    $check = Database::fetch('username_history', false, ['username_old_clean' => [Main::cleanString(isset($_GET['u']) ? $_GET['u'] : 0, true, true), '=']]);
+    $check = Database::fetch('username_history', false, ['username_old_clean' => [Utils::cleanString(isset($_GET['u']) ? $_GET['u'] : 0, true, true), '=']]);
     
     // Redirect if so
     if ($check) {
@@ -66,7 +66,7 @@ if (isset($_GET['restrict']) && $_GET['restrict'] == session_id() && $currentUse
 
     $renderData['page'] = [
         'message' => 'Toggled the restricted status of the user.',
-        'redirect' => $urls->format('USER_PROFILE', [$profile->id()]),
+        'redirect' => $urls->format('USER_PROFILE', [$profile->id]),
     ];
 
     // Set parse variables

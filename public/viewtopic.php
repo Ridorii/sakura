@@ -44,7 +44,7 @@ if (!$thread) {
 }
 
 // Check if the user has access to the forum
-if (!$forum->permission(ForumPerms::VIEW, $currentUser->id())) {
+if (!$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
     // Set render data
     $renderData['page'] = [
         'message' => 'You do not have access to this thread.',
@@ -60,7 +60,7 @@ if (!$forum->permission(ForumPerms::VIEW, $currentUser->id())) {
 }
 
 // Sticky thread
-if (isset($_GET['sticky']) && $_GET['sticky'] == session_id() && $forum->permission(ForumPerms::STICKY, $currentUser->id())) {
+if (isset($_GET['sticky']) && $_GET['sticky'] == session_id() && $forum->permission(ForumPerms::STICKY, $currentUser->id)) {
     // Check the status
     if ($thread->type == 1) {
         $thread->type = 0;
@@ -86,7 +86,7 @@ if (isset($_GET['sticky']) && $_GET['sticky'] == session_id() && $forum->permiss
 }
 
 // Announce thread
-if (isset($_GET['announce']) && $_GET['announce'] == session_id() && $forum->permission(ForumPerms::ANNOUNCEMENT, $currentUser->id())) {
+if (isset($_GET['announce']) && $_GET['announce'] == session_id() && $forum->permission(ForumPerms::ANNOUNCEMENT, $currentUser->id)) {
     // Check the status
     if ($thread->type == 2) {
         $thread->type = 0;
@@ -111,7 +111,7 @@ if (isset($_GET['announce']) && $_GET['announce'] == session_id() && $forum->per
 }
 
 // Lock thread
-if (isset($_GET['lock']) && $_GET['lock'] == session_id() && $forum->permission(ForumPerms::LOCK, $currentUser->id())) {
+if (isset($_GET['lock']) && $_GET['lock'] == session_id() && $forum->permission(ForumPerms::LOCK, $currentUser->id)) {
     // Check the status
     if ($thread->status == 1) {
         $thread->status = 0;
@@ -136,7 +136,7 @@ if (isset($_GET['lock']) && $_GET['lock'] == session_id() && $forum->permission(
 }
 
 // Trash thread
-if (isset($_GET['trash']) && $_GET['trash'] == session_id() && $forum->permission(ForumPerms::MOVE, $currentUser->id())) {
+if (isset($_GET['trash']) && $_GET['trash'] == session_id() && $forum->permission(ForumPerms::MOVE, $currentUser->id)) {
     // Check the status
     if ($thread->forum != Config::get('forum_trash_id')) {
         $thread->move(Config::get('forum_trash_id'));
@@ -163,7 +163,7 @@ if (isset($_GET['trash']) && $_GET['trash'] == session_id() && $forum->permissio
 }
 
 // Restore thread
-if (isset($_GET['restore']) && $_GET['restore'] == session_id() && $forum->permission(ForumPerms::MOVE, $currentUser->id())) {
+if (isset($_GET['restore']) && $_GET['restore'] == session_id() && $forum->permission(ForumPerms::MOVE, $currentUser->id)) {
     // Check the status
     if ($thread->oldForum) {
         // Move thread
@@ -191,7 +191,7 @@ if (isset($_GET['restore']) && $_GET['restore'] == session_id() && $forum->permi
 }
 
 // Prune thread
-if (isset($_GET['prune']) && $_GET['prune'] == session_id() && $forum->permission(ForumPerms::DELETE_ANY, $currentUser->id())) {
+if (isset($_GET['prune']) && $_GET['prune'] == session_id() && $forum->permission(ForumPerms::DELETE_ANY, $currentUser->id)) {
     // Check the status
     if ($thread->forum == Config::get('forum_trash_id')) {
         $thread->delete();
@@ -218,7 +218,7 @@ if (isset($_GET['prune']) && $_GET['prune'] == session_id() && $forum->permissio
 }
 
 // Update the tracking status
-$thread->trackUpdate($currentUser->id());
+$thread->trackUpdate($currentUser->id);
 
 // Update views
 $thread->viewsUpdate();

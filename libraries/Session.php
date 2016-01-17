@@ -66,8 +66,8 @@ class Session
         // Insert the session into the database
         Database::insert('sessions', [
             'user_id' => $this->userId,
-            'user_ip' => Main::getRemoteIP(),
-            'user_agent' => Main::cleanString(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'No user agent header.'),
+            'user_ip' => Utils::getRemoteIP(),
+            'user_agent' => Utils::cleanString(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'No user agent header.'),
             'session_key' => $session,
             'session_start' => time(),
             'session_expire' => time() + 604800,
@@ -105,7 +105,7 @@ class Session
         if ($ipCheck) {
             // Split both IPs up
             $sessionIP = explode('.', $session['user_ip']);
-            $userIP = explode('.', Main::getRemoteIP());
+            $userIP = explode('.', Utils::getRemoteIP());
 
             // Take 1 off the ipCheck variable so it's equal to the array keys
             $ipCheck = $ipCheck - 1;

@@ -67,34 +67,34 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
         $online = $friend->isOnline();
 
         // If true check if they're already in the array
-        if ($online && !in_array($friend->id(), $onlineFriends)) {
+        if ($online && !in_array($friend->id, $onlineFriends)) {
             // Add user to the online array
-            $_SESSION['friendsOnline'][$friend->id()] = $friend->id();
+            $_SESSION['friendsOnline'][$friend->id] = $friend->id;
 
             // Add the notification to the display array
             if ($onlineNotify) {
                 $notifications[] = [
                     'read' => 0,
-                    'title' => $friend->username() . ' is online.',
+                    'title' => $friend->username . ' is online.',
                     'text' => '',
                     'link' => '',
-                    'img' => '/a/' . $friend->id(),
+                    'img' => '/a/' . $friend->id,
                     'timeout' => 2000,
                     'sound' => false,
                 ];
             }
-        } elseif (!$online && in_array($friend->id(), $onlineFriends)) {
+        } elseif (!$online && in_array($friend->id, $onlineFriends)) {
             // Remove the person from the array
-            unset($_SESSION['friendsOnline'][$friend->id()]);
+            unset($_SESSION['friendsOnline'][$friend->id]);
 
             // Add the notification to the display array
             if ($onlineNotify) {
                 $notifications[] = [
                     'read' => 0,
-                    'title' => $friend->username() . ' is offline.',
+                    'title' => $friend->username . ' is offline.',
                     'text' => '',
                     'link' => '',
-                    'img' => '/a/' . $friend->id(),
+                    'img' => '/a/' . $friend->id,
                     'timeout' => 2000,
                     'sound' => false,
                 ];
@@ -177,7 +177,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 $comments->makeVote(
-                    $currentUser->id(),
+                    $currentUser->id,
                     isset($_REQUEST['id']) ? $_REQUEST['id'] : 0,
                     isset($_REQUEST['state']) && $_REQUEST['state'] ? '1' : '0'
                 );
@@ -213,7 +213,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Check if the comment was actually made by the current user
-                if ($comment['comment_poster'] !== $currentUser->id()) {
+                if ($comment['comment_poster'] !== $currentUser->id) {
                     $renderData['page'] = [
                         'redirect' => $redirect,
                         'message' => 'You can\'t delete the comments of others.',
@@ -243,7 +243,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Attempt to make a new comment
-                $comment = $comments->makeComment($currentUser->id(), $_POST['replyto'], $_POST['comment']);
+                $comment = $comments->makeComment($currentUser->id, $_POST['replyto'], $_POST['comment']);
 
                 // Messages
                 $messages = [
@@ -308,7 +308,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     }
 
     // Compare time and session so we know the link isn't forged
-    if ($continue && $_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')] == $currentUser->id()) {
+    if ($continue && $_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')] == $currentUser->id) {
         $renderData['page'] = [
 
             'redirect' => $redirect,
@@ -383,15 +383,15 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
         // Create a notification
         if (array_key_exists($action[1], $notifStrings)) {
             // Get the current user's profile data
-            $user = User::construct($currentUser->id());
+            $user = User::construct($currentUser->id);
 
             Users::createNotification(
                 $_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')],
-                sprintf($notifStrings[$action[1]][0], $user->username()),
+                sprintf($notifStrings[$action[1]][0], $user->username),
                 $notifStrings[$action[1]][1],
                 60000,
-                '//' . Config::get('url_main') . '/a/' . $user->id(),
-                '//' . Config::get('url_main') . '/u/' . $user->id(),
+                $urls->format('IMAGE_AVATAR', [$user->id]),
+                $urls->format('USER_PROFILE', [$user->id]),
                 '1'
             );
         }
@@ -430,17 +430,16 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     }
 
     // Check session variables
-    if (!isset($_REQUEST['timestamp'])
-        || $_REQUEST['timestamp'] < time() - 1000
-        || !isset($_REQUEST['sessid'])
-        || $_REQUEST['sessid'] != session_id()
+    if (!isset($_POST['timestamp'])
+        || !isset($_POST['mode'])
+        || $_POST['timestamp'] < time() - 1000
+        || !isset($_POST['sessid'])
+        || $_POST['sessid'] != session_id()
         || !$continue) {
         $renderData['page'] = [
-
             'redirect' => $redirect,
             'message' => 'Your session has expired, please refresh the page and try again.',
             'success' => 0,
-
         ];
 
         $continue = false;
@@ -453,24 +452,31 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
             // Avatar & Background
             case 'avatar':
             case 'background':
+            case 'header':
                 // Assign $_POST['mode'] to a $mode variable because I ain't typin that more than once
                 $mode = $_POST['mode'];
 
-                // Assign the correct userData key to a variable and correct title
+                // Assign the correct column and title to a variable
                 switch ($mode) {
                     case 'background':
-                        $userDataKey = 'profileBackground';
+                        $column = 'user_background';
                         $msgTitle = 'Background';
-                        $permission = (
-                            !empty($currentUser->userData()[$userDataKey])
-                            && $currentUser->permission(Site::CHANGE_BACKGROUND)
-                        ) || $currentUser->permission(Site::CREATE_BACKGROUND);
+                        $current = $currentUser->background;
+                        $permission = $currentUser->permission(Site::CHANGE_BACKGROUND);
+                        break;
+
+                    case 'header':
+                        $column = 'user_header';
+                        $msgTitle = 'Header';
+                        $current = $currentUser->header;
+                        $permission = $currentUser->permission(Site::CHANGE_HEADER);
                         break;
 
                     case 'avatar':
                     default:
-                        $userDataKey = 'userAvatar';
+                        $column = 'user_avatar';
                         $msgTitle = 'Avatar';
+                        $current = $currentUser->avatar;
                         $permission = $currentUser->permission(Site::CHANGE_AVATAR);
                 }
 
@@ -489,20 +495,15 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Set path variables
-                $filepath = ROOT . Config::get('user_uploads') . '/';
-                $filename = $filepath . $mode . '_' . $currentUser->id();
-                $currfile = isset($currentUser->userData()[$userDataKey])
-                && !empty($currentUser->userData()[$userDataKey]) ? $currentUser->userData()[$userDataKey] : null;
+                $filename = strtolower($msgTitle) . '_' . $currentUser->id;
 
                 // Check if $_FILES is set
                 if (!isset($_FILES[$mode]) && empty($_FILES[$mode])) {
                     // Set render data
                     $renderData['page'] = [
-
                         'redirect' => $redirect,
                         'message' => 'No file was uploaded.',
                         'success' => 0,
-
                     ];
                     break;
                 }
@@ -533,11 +534,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 
                     // Set render data
                     $renderData['page'] = [
-
                         'redirect' => $redirect,
                         'message' => $msg,
                         'success' => 0,
-
                     ];
                     break;
                 }
@@ -551,11 +550,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     if ($metadata == false) {
                         // Set render data
                         $renderData['page'] = [
-
                             'redirect' => $redirect,
                             'message' => 'Uploaded file is not an image.',
                             'success' => 0,
-
                         ];
 
                         break;
@@ -567,13 +564,10 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         && ($metadata[2] !== IMAGETYPE_PNG))) {
                         // Set render data
                         $renderData['page'] = [
-
                             'redirect' => $redirect,
                             'message' => 'This filetype is not allowed.',
                             'success' => 0,
-
                         ];
-
                         break;
                     }
 
@@ -582,13 +576,10 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         || $metadata[1] > Config::get($mode . '_max_height'))) {
                         // Set render data
                         $renderData['page'] = [
-
                             'redirect' => $redirect,
                             'message' => 'The resolution of this picture is too big.',
                             'success' => 0,
-
                         ];
-
                         break;
                     }
 
@@ -597,13 +588,10 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         || $metadata[1] < Config::get($mode . '_min_height'))) {
                         // Set render data
                         $renderData['page'] = [
-
                             'redirect' => $redirect,
                             'message' => 'The resolution of this picture is too small.',
                             'success' => 0,
-
                         ];
-
                         break;
                     }
 
@@ -611,54 +599,46 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     if ((filesize($_FILES[$mode]['tmp_name']) > Config::get($mode . '_max_fsize'))) {
                         // Set render data
                         $renderData['page'] = [
-
                             'redirect' => $redirect,
                             'message' => 'The filesize of this file is too large.',
                             'success' => 0,
-
                         ];
-
                         break;
                     }
                 }
 
-                // Delete old avatar
-                if ($currfile && file_exists($currfile)) {
-                    unlink($filepath . $currfile);
-                }
+                // Open the old file and remove it
+                $oldFile = new File($current);
+                $oldFile->delete();
+                unset($oldFile);
+                $fileId = 0;
 
                 if ($_FILES[$mode]['error'] != UPLOAD_ERR_NO_FILE) {
                     // Append extension to filename
                     $filename .= image_type_to_extension($metadata[2]);
 
-                    if (!move_uploaded_file($_FILES[$mode]['tmp_name'], $filename)) {
-                        // Set render data
-                        $renderData['page'] = [
+                    // Store the file
+                    $file = File::create(file_get_contents($_FILES[$mode]['tmp_name']), $filename, $currentUser);
 
-                            'redirect' => $redirect,
-                            'message' => 'Something went wrong, please try again.',
-                            'success' => 0,
-
-                        ];
-                    }
-
-                    // Create new array
-                    $updated = [$userDataKey => basename($filename)];
-                } else {
-                    // Remove entry
-                    $updated = [$userDataKey => null];
+                    // Assign the file id to a variable
+                    $fileId = $file->id;
                 }
 
-                // Update database
-                $currentUser->setUserData($updated);
+                // Update table
+                Database::update('users', [
+                    [
+                        $column => $fileId,
+                    ],
+                    [
+                        'user_id' => [$currentUser->id, '='],
+                    ],
+                ]);
 
                 // Set render data
                 $renderData['page'] = [
-
                     'redirect' => $redirect,
                     'message' => 'Updated your ' . strtolower($msgTitle) . '!',
                     'success' => 1,
-
                 ];
                 break;
 
@@ -666,13 +646,17 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
             case 'profile':
                 // Get profile fields and create storage var
                 $fields = Users::getProfileFields();
-                $store = [];
 
                 // Go over each field
                 foreach ($fields as $field) {
                     // Add to the store array
                     if (isset($_POST['profile_' . $field['field_identity']]) && !empty($_POST['profile_' . $field['field_identity']])) {
-                        $store[$field['field_identity']] = $_POST['profile_' . $field['field_identity']];
+                        Database::delete('user_profilefields', ['user_id' => [$currentUser->id, '='], 'field_name' => [$field['field_identity'], '=']]);
+                        Database::insert('user_profilefields', [
+                            'user_id' => $currentUser->id,
+                            'field_name' => $field['field_identity'],
+                            'field_value' => $_POST['profile_' . $field['field_identity']],
+                        ]);
                     }
 
                     // Check if there's additional values we should keep in mind
@@ -680,24 +664,22 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         // Go over each additional value
                         foreach ($field['field_additional'] as $addKey => $addVal) {
                             // Add to the array
-                            $store[$addKey] = (isset($_POST['profile_additional_' . $addKey])
-                                || !empty($_POST['profile_additional_' . $addKey])) ?
-                            $_POST['profile_additional_' . $addKey] :
-                            false;
+                            $store = (isset($_POST['profile_additional_' . $addKey]) || !empty($_POST['profile_additional_' . $addKey])) ? $_POST['profile_additional_' . $addKey] : false;
+                            Database::delete('user_profilefields', ['user_id' => [$currentUser->id, '='], 'field_name' => [$addKey, '=']]);
+                            Database::insert('user_profilefields', [
+                                'user_id' => $currentUser->id,
+                                'field_name' => $addKey,
+                                'field_value' => $store,
+                            ]);
                         }
                     }
                 }
 
-                // Update database
-                $currentUser->setUserData(['profileFields' => $store]);
-
                 // Set render data
                 $renderData['page'] = [
-
                     'redirect' => $redirect,
                     'message' => 'Your profile has been updated!',
                     'success' => 1,
-
                 ];
 
                 // Birthdays
@@ -755,7 +737,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                             'user_birthday' => $birthdate,
                         ],
                         [
-                            'user_id' => [$currentUser->id(), '='],
+                            'user_id' => [$currentUser->id, '='],
                         ],
                     ]);
                 }
@@ -765,32 +747,31 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
             case 'options':
                 // Get profile fields and create storage var
                 $fields = Users::getOptionFields();
-                $store = [];
 
                 // Go over each field
                 foreach ($fields as $field) {
+                    Database::delete('user_optionfields', ['user_id' => [$currentUser->id, '='], 'field_name' => [$field['option_id'], '=']]);
+
                     // Make sure the user has sufficient permissions to complete this action
                     if (!$currentUser->permission(constant('Sakura\Perms\Site::' . $field['option_permission']))) {
-                        $store[$field['option_id']] = false;
                         continue;
                     }
 
-                    $store[$field['option_id']] = isset($_POST['option_' . $field['option_id']])
-                    && !empty($_POST['option_' . $field['option_id']]) ?
-                    $_POST['option_' . $field['option_id']] :
-                    null;
+                    if (isset($_POST['option_' . $field['option_id']])
+                    && !empty($_POST['option_' . $field['option_id']])) {
+                        Database::insert('user_optionfields', [
+                            'user_id' => $currentUser->id,
+                            'field_name' => $field['option_id'],
+                            'field_value' => $_POST['option_' . $field['option_id']],
+                        ]);
+                    }
                 }
-
-                // Update database
-                $currentUser->setUserData(['userOptions' => $store]);
 
                 // Set render data
                 $renderData['page'] = [
-
                     'redirect' => $redirect,
                     'message' => 'Changed your options!',
                     'success' => 1,
-
                 ];
                 break;
 
@@ -799,11 +780,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 // Check permissions
                 if (!$currentUser->permission(Site::CHANGE_USERTITLE)) {
                     $renderData['page'] = [
-
                         'redirect' => $redirect,
                         'message' => 'You aren\'t allowed to change your usertitle.',
                         'success' => 0,
-
                     ];
                     break;
                 }
@@ -828,7 +807,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                             'user_title' => (isset($_POST['usertitle']) ? $_POST['usertitle'] : null),
                         ],
                         [
-                            'user_id' => [$currentUser->id(), '='],
+                            'user_id' => [$currentUser->id, '='],
                         ],
                     ]
                 );
@@ -952,64 +931,208 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 ];
                 break;
 
-            // Deactivation
-            case 'deactivate':
-                // Check permissions
-                if (!$currentUser->permission(Site::DEACTIVATE_ACCOUNT)) {
-                    $renderData['page'] = [
-
-                        'redirect' => $redirect,
-                        'message' => 'You aren\'t allowed to deactivate your own account.',
-                        'success' => 0,
-
-                    ];
-
-                    break;
-                }
-
-                // Set render data
-                $renderData['page'] = [
-
-                    'redirect' => $redirect,
-                    'message' => 'Nothing happened.',
-                    'success' => 1,
-
-                ];
-                break;
-
             // Userpage
             case 'userpage':
-                // Base64 encode the userpage
-                $userPage = base64_encode($_POST['userpage']);
+                if (!isset($_POST['userpage'])) {
+                    // Set render data
+                    $renderData['page'] = [
+                        'redirect' => $redirect,
+                        'message' => 'No userpage was supplied.',
+                        'success' => 0,
+                    ];
+                }
 
                 // Update database
-                $currentUser->setUserData(['userPage' => $userPage]);
+                Database::update('users', [['user_page' => $_POST['userpage']], ['user_id' => [$currentUser->id, '=']]]);
 
                 // Set render data
                 $renderData['page'] = [
-
                     'redirect' => $redirect,
                     'message' => 'Your userpage has been updated!',
                     'success' => 1,
-
                 ];
                 break;
 
             // Signature
             case 'signature':
-                // Base64 encode the signature
-                $signature = base64_encode($_POST['signature']);
+                if (!isset($_POST['signature'])) {
+                    // Set render data
+                    $renderData['page'] = [
+                        'redirect' => $redirect,
+                        'message' => 'No signature was supplied.',
+                        'success' => 0,
+                    ];
+                }
 
                 // Update database
-                $currentUser->setUserData(['signature' => $signature]);
+                Database::update('users', [['user_signature' => $_POST['signature']], ['user_id' => [$currentUser->id, '=']]]);
 
                 // Set render data
                 $renderData['page'] = [
-
                     'redirect' => $redirect,
                     'message' => 'Your signature has been updated!',
                     'success' => 1,
+                ];
+                break;
 
+            // Ranks
+            case 'ranks':
+                // Check submit data
+                if (!isset($_POST['rank'])) {
+                    $renderData['page'] = [
+                        'redirect' => $redirect,
+                        'message' => 'No rank was set.',
+                        'success' => 0,
+                    ];
+                    break;
+                }
+
+                // Check if the user is part of the rank
+                if (!$currentUser->hasRanks([$_POST['rank']])) {
+                    $renderData['page'] = [
+                        'redirect' => $redirect,
+                        'message' => 'You are not in this rank.',
+                        'success' => 0,
+                    ];
+                    break;
+                }
+
+                // Leaving
+                if (isset($_POST['remove'])) {
+                    // Check if we're not trying to leave hardranks
+                    if ($_POST['rank'] <= 2) {
+                        $renderData['page'] = [
+                            'redirect' => $redirect,
+                            'message' => 'You can\'t remove this rank.',
+                            'success' => 0,
+                        ];
+                        break;
+                    }
+
+                    // Remove the rank
+                    $currentUser->removeRanks([$_POST['rank']]);
+
+                    $renderData['page'] = [
+                        'redirect' => $redirect,
+                        'message' => 'Removed the rank from your account.',
+                        'success' => 0,
+                    ];
+                    break;
+                }
+
+                // Set as default
+                $currentUser->setMainRank($_POST['rank']);
+
+                // Set render data
+                $renderData['page'] = [
+                    'redirect' => $redirect,
+                    'message' => 'Changed your main rank!',
+                    'success' => 0,
+                ];
+                break;
+
+            // Sessions
+            case 'sessions':
+                // Check if sessionid is set
+                if (!isset($_POST['sessionid'])) {
+                    $renderData['page'] = [
+                        'redirect' => $redirect,
+                        'message' => 'A required field wasn\'t set.',
+                        'success' => 0,
+                    ];
+                    break;
+                }
+
+                // Check if sessionid is set to all
+                if ($_POST['sessionid'] === 'all') {
+                    // Delete all sessions assigned to the current user
+                    Database::delete('sessions', [
+                        'user_id' => [$currentUser->id, '='],
+                    ]);
+
+                    // Set render data
+                    $renderData['page'] = [
+                        'redirect' => $redirect,
+                        'message' => 'Killed all active sessions!',
+                        'success' => 1,
+                    ];
+                    break;
+                }
+
+                // Check if the session is owned by the current user
+                if (!Database::fetch('sessions', false, ['user_id' => [$currentUser->id, '='], 'session_id' => [$_POST['sessionid'], '=']])) {
+                    $renderData['page'] = [
+                        'redirect' => $redirect,
+                        'message' => 'The session you tried to kill doesn\'t exist.',
+                        'success' => 0,
+                    ];
+                    break;
+                }
+
+                // Delete the session
+                Database::delete('sessions', [
+                    'session_id' => [$_POST['sessionid'], '='],
+                ]);
+
+                // Set render data
+                $renderData['page'] = [
+                    'redirect' => $redirect,
+                    'message' => 'Killed the session!',
+                    'success' => 1,
+                ];
+                break;
+
+            // Deactivation
+            case 'deactivate':
+                // Check permissions
+                if (!$currentUser->permission(Site::DEACTIVATE_ACCOUNT)) {
+                    $renderData['page'] = [
+                        'redirect' => $redirect,
+                        'message' => 'You aren\'t allowed to deactivate your account.',
+                        'success' => 0,
+                    ];
+
+                    break;
+                }
+
+                // Check fields
+                if (!isset($_POST['username'])
+                    || !isset($_POST['password'])
+                    || !isset($_POST['email'])
+                    || !isset($_POST['sensitive'])) {
+                    $renderData['page'] = [
+                        'redirect' => $redirect,
+                        'message' => 'One or more forms wasn\'t set.',
+                        'success' => 0,
+                    ];
+
+                    break;
+                }
+
+                // Check values
+                if ($_POST['username'] !== $currentUser->username
+                    || !Hashing::validatePassword($_POST['password'], [$currentUser->passwordAlgo, $currentUser->passwordIter, $currentUser->passwordSalt, $currentUser->passwordHash])
+                    || $_POST['email'] !== $currentUser->email
+                    || md5($_POST['sensitive']) !== '81df445067d92dd02db9098ba82b0167') {
+                    $renderData['page'] = [
+                        'redirect' => $redirect,
+                        'message' => 'One or more forms wasn\'t correct.',
+                        'success' => 0,
+                    ];
+
+                    break;
+                }
+
+                // Deactivate account
+                $currentUser->removeRanks(array_keys($currentUser->ranks));
+                $currentUser->addRanks([1]);
+                $currentUser->setMainRank(1);
+
+                // Set render data
+                $renderData['page'] = [
+                    'redirect' => $redirect,
+                    'message' => 'Your account has been deactivated!',
+                    'success' => 1,
                 ];
                 break;
 
@@ -1172,10 +1295,18 @@ if (Users::checkLogin()) {
                         minimum image size is {{ background.min_width }}x{{ background.min_height }},
                         maximum file size is {{ background.max_size_view }}.',
                     ],
-                    'access' => (
-                        isset($currentUser->userData()['profileBackground'])
-                        && $currentUser->permission(Site::CHANGE_BACKGROUND)
-                    ) || $currentUser->permission(Site::CREATE_BACKGROUND),
+                    'access' => $currentUser->permission(Site::CHANGE_BACKGROUND),
+                    'menu' => true,
+                ],
+                'header' => [
+                    'title' => 'Header',
+                    'description' => [
+                        'The header that is displayed on your profile.',
+                        'Maximum image size is {{ header.max_width }}x{{ header.max_height }},
+                        minimum image size is {{ header.min_width }}x{{ header.min_height }},
+                        maximum file size is {{ header.max_size_view }}.',
+                    ],
+                    'access' => $currentUser->permission(Site::CHANGE_HEADER),
                     'menu' => true,
                 ],
                 'userpage' => [
@@ -1184,7 +1315,7 @@ if (Users::checkLogin()) {
                         'The custom text that is displayed on your profile.',
                     ],
                     'access' => (
-                        isset($currentUser->userData()['userPage'])
+                        $currentUser->page
                         && $currentUser->permission(Site::CHANGE_USERPAGE)
                     ) || $currentUser->permission(Site::CREATE_USERPAGE),
                     'menu' => true,
@@ -1364,34 +1495,25 @@ if (Users::checkLogin()) {
         // Avatar and background sizes
         case 'appearance.avatar':
         case 'appearance.background':
+        case 'appearance.header':
             $renderData[$mode] = [
                 'max_width' => Config::get($mode . '_max_width'),
                 'max_height' => Config::get($mode . '_max_height'),
                 'min_width' => Config::get($mode . '_min_width'),
                 'min_height' => Config::get($mode . '_min_height'),
                 'max_size' => Config::get($mode . '_max_fsize'),
-                'max_size_view' => Main::getByteSymbol(Config::get($mode . '_max_fsize')),
+                'max_size_view' => Utils::getByteSymbol(Config::get($mode . '_max_fsize')),
             ];
-            break;
-
-        // User page
-        case 'appearance.userpage':
-            $renderData['userPage'] = isset($currentUser->userData()['userPage']) ? base64_decode($currentUser->userData()['userPage']) : '';
-            break;
-
-        // Signature
-        case 'appearance.signature':
-            $renderData['signature'] = isset($currentUser->userData()['signature']) ? base64_decode($currentUser->userData()['signature']) : '';
             break;
 
         // Username changing
         case 'account.username':
-            $renderData['difference'] = $currentUser->getUsernameHistory() ? Main::timeElapsed($currentUser->getUsernameHistory()[0]['change_time']) : 0;
+            $renderData['difference'] = $currentUser->getUsernameHistory() ? Utils::timeElapsed($currentUser->getUsernameHistory()[0]['change_time']) : 0;
             break;
 
         // Sessions
         case 'advanced.sessions':
-            $renderData['sessions'] = Database::fetch('sessions', true, ['user_id' => [$currentUser->id(), '=']]);
+            $renderData['sessions'] = Database::fetch('sessions', true, ['user_id' => [$currentUser->id, '=']]);
             break;
     }
 

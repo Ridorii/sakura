@@ -14,31 +14,35 @@ use Sakura\Perms\Site;
  */
 class User
 {
-    // User data
-    private $data = [
-        'user_id' => 0,
-        'username' => 'User',
-        'username_clean' => 'user',
-        'password_hash' => '',
-        'password_salt' => '',
-        'password_algo' => 'disabled',
-        'password_iter' => 0,
-        'password_chan' => 0,
-        'email' => 'sakura@localhost',
-        'rank_main' => 1,
-        'user_colour' => '',
-        'register_ip' => '127.0.0.1',
-        'last_ip' => '127.0.0.1',
-        'user_title' => '',
-        'user_registered' => 0,
-        'user_last_online' => 0,
-        'user_birthday' => '',
-        'user_country' => 'XX',
-        'user_data' => '[]',
-    ];
-    private $ranks = [];
-    private $mainRank = [];
+    // Variables
+    public $id = 0;
+    public $username = 'User';
+    public $usernameClean = 'user';
+    public $passwordHash = '';
+    public $passwordSalt = '';
+    public $passwordAlgo = 'disabled';
+    public $passwordIter = 0;
+    public $passwordChan = 0;
+    public $email = 'user@sakura';
+    public $mainRank = null;
+    public $mainRankId = 1;
+    public $ranks = [];
+    public $colour = '';
+    public $registerIp = '0.0.0.0';
+    public $lastIp = '0.0.0.0';
+    public $title = '';
+    public $registered = 0;
+    public $lastOnline = 0;
+    public $country = 'XX';
+    public $avatar = 0;
+    public $background = 0;
+    public $header = 0;
+    public $page = '';
+    public $signature = '';
+    private $birthday = '0000-00-00';
     private $permissions;
+    private $optionFields = null;
+    private $profileFields = null;
     protected static $_userCache = [];
 
     // Static initialiser
@@ -58,8 +62,8 @@ class User
     public static function create($username, $password, $email, $ranks = [2])
     {
         // Set a few variables
-        $usernameClean = Main::cleanString($username, true);
-        $emailClean = Main::cleanString($email, true);
+        $usernameClean = Utils::cleanString($username, true);
+        $emailClean = Utils::cleanString($email, true);
         $password = Hashing::createHash($password);
         
         // Insert the user into the database
@@ -72,11 +76,11 @@ class User
             'password_iter' => $password[1],
             'email' => $emailClean,
             'rank_main' => 0,
-            'register_ip' => Main::getRemoteIP(),
-            'last_ip' => Main::getRemoteIP(),
+            'register_ip' => Utils::getRemoteIP(),
+            'last_ip' => Utils::getRemoteIP(),
             'user_registered' => time(),
             'user_last_online' => 0,
-            'user_country' => Main::getCountryCode(),
+            'user_country' => Utils::getCountryCode(),
             'user_data' => '[]',
         ]);
 
@@ -100,33 +104,49 @@ class User
     private function __construct($uid)
     {
         // Get the user database row
-        $getUser = Database::fetch(
+        $userRow = Database::fetch(
             'users',
             false,
             [
                 'user_id' => [$uid, '=', true],
-                'username_clean' => [Main::cleanString($uid, true), '=', true],
+                'username_clean' => [Utils::cleanString($uid, true), '=', true],
             ]
         );
 
-        // Check if the user actually exists
-        if (!empty($getUser)) {
-            // If not assign as the fallback user
-            $this->data = $getUser;
+        // Populate the variables
+        if ($userRow) {
+            $this->id = $userRow['user_id'];
+            $this->username = $userRow['username'];
+            $this->usernameClean = $userRow['username_clean'];
+            $this->passwordHash = $userRow['password_hash'];
+            $this->passwordSalt = $userRow['password_salt'];
+            $this->passwordAlgo = $userRow['password_algo'];
+            $this->passwordIter = $userRow['password_iter'];
+            $this->passwordChan = $userRow['password_chan'];
+            $this->email = $userRow['email'];
+            $this->mainRankId = $userRow['rank_main'];
+            $this->colour = $userRow['user_colour'];
+            $this->registerIp = $userRow['register_ip'];
+            $this->lastIp = $userRow['last_ip'];
+            $this->title = $userRow['user_title'];
+            $this->registered = $userRow['user_registered'];
+            $this->lastOnline = $userRow['user_last_online'];
+            $this->birthday = $userRow['user_birthday'];
+            $this->country = $userRow['user_country'];
+            $this->avatar = $userRow['user_avatar'];
+            $this->background = $userRow['user_background'];
+            $this->header = $userRow['user_header'];
+            $this->page = $userRow['user_page'];
+            $this->signature = $userRow['user_signature'];
         }
 
-        // Decode the json in the user_data column
-        $this->data['user_data'] = json_decode(!empty($this->data['user_data']) ? $this->data['user_data'] : '[]', true);
-
         // Get all ranks
-        $ranks = array_map(function ($a) {
-            return $a['rank_id'];
-        }, Database::fetch('user_ranks', true, ['user_id' => [$this->data['user_id'], '=']]));
+        $ranks = Database::fetch('user_ranks', true, ['user_id' => [$this->id, '=']]);
 
         // Get the rows for all the ranks
         foreach ($ranks as $rank) {
             // Store the database row in the array
-            $this->ranks[$rank] = Rank::construct($rank);
+            $this->ranks[$rank['rank_id']] = Rank::construct($rank['rank_id']);
         }
 
         // Check if ranks were set
@@ -135,107 +155,56 @@ class User
             $this->ranks[1] = Rank::construct(1);
         }
 
-        // Assign the user's main rank to a special variable since we'll use it a lot
-        $this->mainRank = $this->ranks[
-            array_key_exists($this->data['rank_main'], $this->ranks) ?
-            $this->data['rank_main'] :
-            array_keys($this->ranks)[0]
-        ];
+        // Check if the rank is actually assigned to this user
+        if (!array_key_exists($this->mainRankId, $this->ranks)) {
+            $this->mainRankId = array_keys($this->ranks)[0];
+            $this->setMainRank($this->mainRankId);
+        }
+
+        // Assign the main rank to its own var
+        $this->mainRank = $this->ranks[$this->mainRankId];
+
+        // Set user colour
+        $this->colour = $this->colour ? $this->colour : $this->mainRank->colour;
+
+        // Set user title
+        $this->title = $this->title ? $this->title : $this->mainRank->title;
 
         // Init the permissions
         $this->permissions = new Perms(Perms::SITE);
     }
 
-    // Get user id
-    public function id()
+    // Get user birthday
+    public function birthday($age = false)
     {
-        return $this->data['user_id'];
+        // If age is requested calculate it
+        if ($age) {
+            // Create dates
+            $birthday = date_create($this->birthday);
+            $now = date_create(date('Y-m-d'));
+
+            // Get the difference
+            $diff = date_diff($birthday, $now);
+
+            // Return the difference in years
+            return $diff->format('%Y');
+        }
+
+        // Otherwise just return the birthday value
+        return $this->birthday;
     }
 
-    // Get username (or clean variant)
-    public function username($clean = false)
+    // Get the user's long or short country names
+    public function country($long = false)
     {
-        return $this->data['username' . ($clean ? '_clean' : '')];
-    }
-
-    // Get password data
-    public function password()
-    {
-        return [
-            'password_hash' => $this->data['password_hash'],
-            'password_salt' => $this->data['password_salt'],
-            'password_algo' => $this->data['password_algo'],
-            'password_iter' => $this->data['password_iter'],
-            'password_chan' => $this->data['password_chan'],
-        ];
-    }
-
-    // Get email
-    public function email()
-    {
-        return $this->data['email'];
-    }
-
-    // Get main rank id
-    public function mainRank()
-    {
-        return $this->data['rank_main'];
-    }
-
-    // Get all rank ids
-    public function ranks($obj = false)
-    {
-        return $obj ? $this->ranks : array_keys($this->ranks);
-    }
-
-    // Get the user's colour
-    public function colour()
-    {
-        return empty($this->data['user_colour']) ? $this->mainRank->colour() : $this->data['user_colour'];
-    }
-
-    // Get the user's ip
-    public function ip($last = false)
-    {
-        return $this->data[($last ? 'last' : 'register') . '_ip'];
-    }
-
-    // Get the user's title
-    public function userTitle()
-    {
-        return empty($this->data['user_title']) ? $this->mainRank->title() : $this->data['user_title'];
-    }
-
-    // Get user event times
-    public function dates()
-    {
-        return [
-            'joined' => $this->data['user_registered'],
-            'lastOnline' => $this->data['user_last_online'],
-            'birth' => $this->data['user_birthday'],
-        ];
-    }
-
-    // Get the user's long and short country names
-    public function country()
-    {
-        return [
-            'long' => Main::getCountryName($this->data['user_country']),
-            'short' => $this->data['user_country'],
-        ];
-    }
-
-    // Get the user's raw additional settings
-    public function userData()
-    {
-        return $this->data['user_data'];
+        return $long ? Utils::getCountryName($this->country) : $this->country;
     }
 
     // Check if a user is online
     public function isOnline()
     {
         // Get all sessions
-        $sessions = Database::fetch('sessions', true, ['user_id' => [$this->id(), '=']]);
+        $sessions = Database::fetch('sessions', true, ['user_id' => [$this->id, '=']]);
 
         // If there's no entries just straight up return false
         if (!$sessions) {
@@ -243,13 +212,7 @@ class User
         }
 
         // Otherwise use the standard method
-        return $this->data['user_last_online'] > (time() - Config::get('max_online_time'));
-    }
-
-    // Compatibility
-    public function checkOnline()
-    {
-        return $this->isOnline();
+        return $this->lastOnline > (time() - Config::get('max_online_time'));
     }
 
     // Get user's forum statistics
@@ -258,12 +221,12 @@ class User
         return [
             'posts' => Database::count(
                 'posts',
-                ['poster_id' => [$this->id(), '=']]
+                ['poster_id' => [$this->id, '=']]
             )[0],
             'topics' => count(Database::fetch(
                 'posts',
                 true,
-                ['poster_id' => [$this->id(), '=']],
+                ['poster_id' => [$this->id, '=']],
                 ['post_time'],
                 null,
                 ['topic_id']
@@ -275,9 +238,13 @@ class User
     public function elapsed($append = ' ago', $none = 'Just now')
     {
         $times = [];
+        $dates = [
+            'joined' => $this->registered,
+            'lastOnline' => $this->lastOnline,
+        ];
 
-        foreach ($this->dates() as $key => $val) {
-            $times[$key] = Main::timeElapsed(is_string($val) ? strtotime($val) : $val, $append, $none);
+        foreach ($dates as $key => $val) {
+            $times[$key] = Utils::timeElapsed($val, $append, $none);
         }
 
         return $times;
@@ -287,13 +254,20 @@ class User
     public function addRanks($ranks)
     {
         // Update the ranks array
-        $ranks = array_diff(array_unique(array_merge($this->ranks(), $ranks)), $this->ranks());
+        $ranks = array_diff(
+            array_unique(
+                array_merge(
+                    array_keys($this->ranks),
+                    $ranks)
+                ),
+                array_keys($this->ranks)
+            );
 
         // Save to the database
         foreach ($ranks as $rank) {
             Database::insert('user_ranks', [
                 'rank_id' => $rank,
-                'user_id' => $this->id(),
+                'user_id' => $this->id,
             ]);
         }
     }
@@ -302,11 +276,11 @@ class User
     public function removeRanks($ranks)
     {
         // Current ranks
-        $remove = array_intersect($this->ranks(), $ranks);
+        $remove = array_intersect(array_keys($this->ranks), $ranks);
 
         // Iterate over the ranks
         foreach ($remove as $rank) {
-            Database::delete('user_ranks', ['user_id' => [$this->id(), '='], 'rank_id' => [$rank, '=']]);
+            Database::delete('user_ranks', ['user_id' => [$this->id, '='], 'rank_id' => [$rank, '=']]);
         }
     }
 
@@ -319,7 +293,7 @@ class User
                 'rank_main' => $rank,
             ],
             [
-                'user_id' => [$this->id(), '='],
+                'user_id' => [$this->id, '='],
             ],
         ]);
 
@@ -331,14 +305,14 @@ class User
     public function hasRanks($ranks)
     {
         // Check if the main rank is the specified rank
-        if (in_array($this->mainRank->id(), $ranks)) {
+        if (in_array($this->mainRankId, $ranks)) {
             return true;
         }
 
         // If not go over all ranks and check if the user has them
         foreach ($ranks as $rank) {
             // We check if $rank is in $this->ranks and if yes return true
-            if (in_array($rank, $this->ranks())) {
+            if (in_array($rank, array_keys($this->ranks))) {
                 return true;
             }
         }
@@ -365,13 +339,13 @@ class User
 
         // Add friend
         Database::insert('friends', [
-            'user_id' => $this->data['user_id'],
+            'user_id' => $this->id,
             'friend_id' => $uid,
             'friend_timestamp' => time(),
         ]);
 
         // Return true because yay
-        return [1, $user->isFriends($this->id()) ? 'FRIENDS' : 'NOT_MUTUAL'];
+        return [1, $user->isFriends($this->id) ? 'FRIENDS' : 'NOT_MUTUAL'];
     }
 
     // Remove a friend
@@ -392,14 +366,14 @@ class User
 
         // Remove friend
         Database::delete('friends', [
-            'user_id' => [$this->data['user_id'], '='],
+            'user_id' => [$this->id, '='],
             'friend_id' => [$uid, '='],
         ]);
 
         // Attempt to remove the request
         if ($deleteRequest) {
             Database::delete('friends', [
-                'friend_id' => [$this->data['user_id'], '='],
+                'friend_id' => [$this->id, '='],
                 'user_id' => [$uid, '='],
             ]);
         }
@@ -413,14 +387,14 @@ class User
     {
         // Accepted from this user
         $user = Database::count('friends', [
-            'user_id' => [$this->id(), '='],
+            'user_id' => [$this->id, '='],
             'friend_id' => [$with, '='],
         ])[0];
 
         // And the other user
         $friend = Database::count('friends', [
             'user_id' => [$with, '='],
-            'friend_id' => [$this->id(), '='],
+            'friend_id' => [$this->id, '='],
         ])[0];
 
         if ($user && $friend) {
@@ -443,32 +417,32 @@ class User
         switch ($level) {
             case 2:
                 // Get all the current user's friends
-                $self = array_column(Database::fetch('friends', true, ['user_id' => [$this->id(), '=']]), 'friend_id');
+                $self = array_column(Database::fetch('friends', true, ['user_id' => [$this->id, '=']]), 'friend_id');
                 // Get all the people that added this user as a friend
-                $others = array_column(Database::fetch('friends', true, ['friend_id' => [$this->id(), '=']]), 'user_id');
+                $others = array_column(Database::fetch('friends', true, ['friend_id' => [$this->id, '=']]), 'user_id');
                 // Create a difference map
                 $users = array_intersect($self, $others);
                 break;
 
             case 1:
-                $users = array_column(Database::fetch('friends', true, ['user_id' => [$this->id(), '=']]), 'friend_id');
+                $users = array_column(Database::fetch('friends', true, ['user_id' => [$this->id, '=']]), 'friend_id');
                 break;
 
             case 0:
             default:
                 // Get all the current user's friends
-                $self = array_column(Database::fetch('friends', true, ['user_id' => [$this->id(), '=']]), 'friend_id');
+                $self = array_column(Database::fetch('friends', true, ['user_id' => [$this->id, '=']]), 'friend_id');
                 // Get all the people that added this user as a friend
-                $others = array_column(Database::fetch('friends', true, ['friend_id' => [$this->id(), '=']]), 'user_id');
+                $others = array_column(Database::fetch('friends', true, ['friend_id' => [$this->id, '=']]), 'user_id');
                 // Create a difference map
                 $users = array_merge($others, $self);
                 break;
 
             case -1:
                 // Get all the current user's friends
-                $self = array_column(Database::fetch('friends', true, ['user_id' => [$this->id(), '=']]), 'friend_id');
+                $self = array_column(Database::fetch('friends', true, ['user_id' => [$this->id, '=']]), 'friend_id');
                 // Get all the people that added this user as a friend
-                $others = array_column(Database::fetch('friends', true, ['friend_id' => [$this->id(), '=']]), 'user_id');
+                $others = array_column(Database::fetch('friends', true, ['friend_id' => [$this->id, '=']]), 'user_id');
                 // Create a difference map
                 $users = array_diff($others, $self);
                 break;
@@ -496,7 +470,7 @@ class User
     // Check if the user is banned
     public function checkBan()
     {
-        return Bans::checkBan($this->data['user_id']);
+        return Bans::checkBan($this->id);
     }
 
     // Check if the user has the proper permissions
@@ -509,7 +483,7 @@ class User
         $perm = 0;
 
         // Bitwise OR it with the permissions for this forum
-        $perm = $this->permissions->user($this->id());
+        $perm = $this->permissions->user($this->id);
 
         return $this->permissions->check($flag, $perm);
     }
@@ -517,49 +491,55 @@ class User
     // Get a user's profile comments
     public function profileComments()
     {
-        return new Comments('profile-' . $this->data['user_id']);
+        return new Comments('profile-' . $this->id);
     }
 
     // Get the user's profile fields
     public function profileFields()
     {
-        // Get profile fields
-        $profileFields = Database::fetch('profilefields');
-
-        // If there's nothing just return null
-        if (!count($profileFields)) {
-            return [];
+        // Check if we have cached data
+        if ($this->profileFields) {
+            return $this->profileFields;
         }
 
-        // Once again if nothing was returned just return null
-        if (empty($this->data['user_data']['profileFields'])) {
-            return [];
-        }
-
-        // Create output array
+        // Create array and get values
         $profile = [];
+        $profileFields = Database::fetch('profilefields');
+        $profileValuesRaw = Database::fetch('user_profilefields', true, ['user_id' => [$this->id, '=']]);
+        $profileValueKeys = array_map(function ($a) {
+            return $a['field_name'];
+        }, $profileValuesRaw);
+        $profileValueVals = array_map(function ($a) {
+            return $a['field_value'];
+        }, $profileValuesRaw);
+        $profileValues = array_combine($profileValueKeys, $profileValueVals);
+
+        // Check if anything was returned
+        if (!$profileFields || !$profileValues) {
+            return $profile;
+        }
 
         // Check if profile fields aren't fake
         foreach ($profileFields as $field) {
             // Completely strip all special characters from the field name
-            $fieldName = Main::cleanString($field['field_name'], true, true);
+            $fieldName = Utils::cleanString($field['field_name'], true, true);
 
             // Check if the user has the current field set otherwise continue
-            if (!array_key_exists($fieldName, $this->data['user_data']['profileFields'])) {
+            if (!array_key_exists($fieldName, $profileValues)) {
                 continue;
             }
 
             // Assign field to output with value
             $profile[$fieldName] = [];
             $profile[$fieldName]['name'] = $field['field_name'];
-            $profile[$fieldName]['value'] = $this->data['user_data']['profileFields'][$fieldName];
+            $profile[$fieldName]['value'] = $profileValues[$fieldName];
             $profile[$fieldName]['islink'] = $field['field_link'];
 
             // If the field is set to be a link add a value for that as well
             if ($field['field_link']) {
                 $profile[$fieldName]['link'] = str_replace(
                     '{{ VAL }}',
-                    $this->data['user_data']['profileFields'][$fieldName],
+                    $profileValues[$fieldName],
                     $field['field_linkformat']
                 );
             }
@@ -572,15 +552,18 @@ class User
                 // Go over all additional forms
                 foreach ($additional as $subName => $subField) {
                     // Check if the user has the current field set otherwise continue
-                    if (!array_key_exists($subName, $this->data['user_data']['profileFields'])) {
+                    if (!array_key_exists($subName, $profileValues)) {
                         continue;
                     }
 
                     // Assign field to output with value
-                    $profile[$fieldName][$subName] = $this->data['user_data']['profileFields'][$subName];
+                    $profile[$fieldName][$subName] = $profileValues[$subName];
                 }
             }
         }
+
+        // Assign cache
+        $this->profileFields = $profile;
 
         // Return appropiate profile data
         return $profile;
@@ -589,26 +572,32 @@ class User
     // Get the user's option fields
     public function optionFields()
     {
-        // Get option fields
-        $optionFields = Database::fetch('optionfields');
-
-        // If there's nothing just return null
-        if (!count($optionFields)) {
-            return [];
+        // Check if we have cached data
+        if ($this->optionFields) {
+            return $this->optionFields;
         }
 
-        // Once again if nothing was returned just return null
-        if (empty($this->data['user_data']['userOptions'])) {
-            return [];
-        }
-
-        // Create output array
+        // Create array and get values
         $options = [];
+        $optionFields = Database::fetch('optionfields');
+        $optionValuesRaw = Database::fetch('user_optionfields', true, ['user_id' => [$this->id, '=']]);
+        $optionValueKeys = array_map(function ($a) {
+            return $a['field_name'];
+        }, $optionValuesRaw);
+        $optionValueVals = array_map(function ($a) {
+            return $a['field_value'];
+        }, $optionValuesRaw);
+        $optionValues = array_combine($optionValueKeys, $optionValueVals);
+        
+        // Check if anything was returned
+        if (!$optionFields || !$optionValues) {
+            return $options;
+        }
 
-        // Check if profile fields aren't fake
+        // Check if option fields aren't fake
         foreach ($optionFields as $field) {
             // Check if the user has the current field set otherwise continue
-            if (!array_key_exists($field['option_id'], $this->data['user_data']['userOptions'])) {
+            if (!array_key_exists($field['option_id'], $optionValues)) {
                 continue;
             }
 
@@ -618,10 +607,13 @@ class User
             }
 
             // Assign field to output with value
-            $options[$field['option_id']] = $this->data['user_data']['userOptions'][$field['option_id']];
+            $options[$field['option_id']] = $optionValues[$field['option_id']];
         }
-
-        // Return appropiate profile data
+        
+        // Assign cache
+        $this->optionFields = $options;
+        
+        // Return appropiate option data
         return $options;
     }
 
@@ -636,7 +628,7 @@ class User
 
         // Attempt to retrieve the premium record from the database
         $getRecord = Database::fetch('premium', false, [
-            'user_id' => [$this->data['user_id'], '='],
+            'user_id' => [$this->id, '='],
         ]);
 
         // If nothing was returned just return false
@@ -658,7 +650,7 @@ class User
     {
         // Do the database query
         $getWarnings = Database::fetch('warnings', true, [
-            'user_id' => [$this->data['user_id'], '='],
+            'user_id' => [$this->id, '='],
         ]);
 
         // Storage array
@@ -706,26 +698,13 @@ class User
     // Get a user's userpage
     public function userPage()
     {
-        return isset($this->data['user_data']['userPage']) ?
-        Main::mdParse(
-            base64_decode(
-                $this->data['user_data']['userPage']
-            ),
-            true
-        ) :
-        null;
+        return Utils::mdParse($this->page, true);
     }
 
     // Get a user's signature
     public function signature()
     {
-        return isset($this->data['user_data']['signature']) ?
-        BBcode::toHTML(
-            base64_decode(
-                $this->data['user_data']['signature']
-            )
-        ) :
-        null;
+        return BBcode::toHTML($this->signature);
     }
 
     // Get username change history
@@ -733,7 +712,7 @@ class User
     {
         // Do the database query
         $changes = Database::fetch('username_history', true, [
-            'user_id' => [$this->data['user_id'], '='],
+            'user_id' => [$this->id, '='],
         ], ['change_id', true]);
 
         // Return all the warnings
@@ -744,7 +723,7 @@ class User
     public function setUsername($username)
     {
         // Create a cleaned version
-        $username_clean = Main::cleanString($username, true);
+        $username_clean = Utils::cleanString($username, true);
 
         // Check if the username is too short
         if (strlen($username_clean) < Config::get('username_min_length')) {
@@ -763,7 +742,7 @@ class User
         ], ['change_id', true]);
 
         // Check if anything was returned
-        if ($getOld && $getOld['user_id'] != $this->id()) {
+        if ($getOld && $getOld['user_id'] != $this->id) {
             return [0, 'TOO_RECENT', $getOld['change_time']];
         }
 
@@ -780,11 +759,11 @@ class User
         // Insert into username_history table
         Database::insert('username_history', [
             'change_time' => time(),
-            'user_id' => $this->data['user_id'],
+            'user_id' => $this->id,
             'username_new' => $username,
             'username_new_clean' => $username_clean,
-            'username_old' => $this->data['username'],
-            'username_old_clean' => $this->data['username_clean'],
+            'username_old' => $this->username,
+            'username_old_clean' => $this->usernameClean,
         ]);
 
         // Update userrow
@@ -794,7 +773,7 @@ class User
                 'username_clean' => $username_clean,
             ],
             [
-                'user_id' => [$this->data['user_id'], '='],
+                'user_id' => [$this->id, '='],
             ],
         ]);
 
@@ -826,7 +805,7 @@ class User
                 'email' => $email,
             ],
             [
-                'user_id' => [$this->data['user_id'], '='],
+                'user_id' => [$this->id, '='],
             ],
         ]);
 
@@ -838,7 +817,7 @@ class User
     public function setPassword($old, $new, $confirm)
     {
         // Validate password
-        switch ($this->data['password_algo']) {
+        switch ($this->passwordAlgo) {
             // Disabled account
             case 'disabled':
                 return [0, 'NO_LOGIN'];
@@ -846,18 +825,18 @@ class User
             // Default hashing method
             default:
                 if (!Hashing::validatePassword($old, [
-                    $this->data['password_algo'],
-                    $this->data['password_iter'],
-                    $this->data['password_salt'],
-                    $this->data['password_hash'],
+                    $this->passwordAlgo,
+                    $this->passwordIter,
+                    $this->passwordSalt,
+                    $this->passwordHash,
                 ])) {
-                    return [0, 'INCORRECT_PASSWORD', $this->data['password_chan']];
+                    return [0, 'INCORRECT_PASSWORD', $this->passwordChan];
                 }
 
         }
 
         // Check password entropy
-        if (Main::pwdEntropy($new) < Config::get('min_entropy')) {
+        if (Utils::pwdEntropy($new) < Config::get('min_entropy')) {
             return [0, 'PASS_TOO_SHIT'];
         }
 
@@ -879,31 +858,11 @@ class User
                 'password_chan' => time(),
             ],
             [
-                'user_id' => [$this->data['user_id'], '='],
+                'user_id' => [$this->id, '='],
             ],
         ]);
 
         // Return success
         return [1, 'SUCCESS'];
-    }
-
-    // Update a user's userData
-    public function setUserData($data)
-    {
-        // Merge the arrays
-        $data = array_merge($this->userData(), $data);
-
-        // Encode it
-        $data = json_encode($data);
-
-        // Save it in the database
-        Database::update('users', [
-            [
-                'user_data' => $data,
-            ],
-            [
-                'user_id' => [$this->id(), '='],
-            ],
-        ]);
     }
 }

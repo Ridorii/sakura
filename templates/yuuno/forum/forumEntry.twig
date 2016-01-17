@@ -9,7 +9,7 @@
                     <div class="subforums">
                         Subforums:
                         {% for forum in forum.forums %}
-                            <a href="{% if forum.type == 2 %}{{ forum.link }}{% else %}{{ urls.format('FORUM_SUB', [forum.id]) }}{% endif %}" class="default">{{ forum.name }}</a>
+                            {% if forum.unread(user.id) %}<span style="font-variant: small-caps; color: #6C5D7B; text-shadow: 0px 0px 5px #9475B2;">[!]</span>{% endif %} <a href="{% if forum.type == 2 %}{{ forum.link }}{% else %}{{ urls.format('FORUM_SUB', [forum.id]) }}{% endif %}" class="default">{{ forum.name }}</a>
                         {% endfor %}
                     </div>
                 {% endif %}

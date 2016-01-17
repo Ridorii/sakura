@@ -12,9 +12,6 @@ define('SAKURA_NO_TPL', true);
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
 
-// Path to user uploads
-$userDirPath = ROOT . Config::get('user_uploads') . '/';
-
 // Check if the m(ode) GET request is set
 if (isset($_GET['m'])) {
     switch ($_GET['m']) {
@@ -58,13 +55,24 @@ if (isset($_GET['m'])) {
             }
 
             // Check if user has an avatar set
-            if (empty($user->userData()['userAvatar']) || !file_exists($userDirPath . $user->userData()['userAvatar'])) {
+            if (!$user->avatar) {
+                $serveImage = $noAvatar;
+                break;
+            }
+
+            // Attempt to get the file
+            $serve = new File($user->avatar);
+
+            // Check if the file exists
+            if (!$serve->id) {
                 $serveImage = $noAvatar;
                 break;
             }
 
             // Check if the avatar exist and assign it to a value
-            $serveImage = $userDirPath . $user->userData()['userAvatar'];
+            $serveImage = $serve->data;
+            $serveMime = $serve->mime;
+            $serveName = $serve->name;
             break;
 
         case 'background':
@@ -93,14 +101,24 @@ if (isset($_GET['m'])) {
             }
 
             // Check if user has a background set
-            if (empty($user->userData()['profileBackground'])
-                || !file_exists($userDirPath . $user->userData()['profileBackground'])) {
+            if (!$user->background) {
+                $serveImage = $noBackground;
+                break;
+            }
+
+            // Attempt to get the file
+            $serve = new File($user->background);
+
+            // Check if the file exists
+            if (!$serve->id) {
                 $serveImage = $noBackground;
                 break;
             }
 
             // Check if the avatar exist and assign it to a value
-            $serveImage = $userDirPath . $user->userData()['profileBackground'];
+            $serveImage = $serve->data;
+            $serveMime = $serve->mime;
+            $serveName = $serve->name;
             break;
 
         case 'header':
@@ -128,15 +146,25 @@ if (isset($_GET['m'])) {
                 break;
             }
 
-            // Check if user has a background set
-            if (empty($user->userData()['profileHeader'])
-                || !file_exists($userDirPath . $user->userData()['profileHeader'])) {
+            // Check if user has a header set
+            if (!$user->header) {
+                $serveImage = $noHeader;
+                break;
+            }
+
+            // Attempt to get the file
+            $serve = new File($user->header);
+
+            // Check if the file exists
+            if (!$serve->id) {
                 $serveImage = $noHeader;
                 break;
             }
 
             // Check if the avatar exist and assign it to a value
-            $serveImage = $userDirPath . $user->userData()['profileHeader'];
+            $serveImage = $serve->data;
+            $serveMime = $serve->mime;
+            $serveName = $serve->name;
             break;
 
         default:
@@ -147,12 +175,17 @@ if (isset($_GET['m'])) {
     $serveImage = ROOT . Config::get('pixel_img');
 }
 
-// Add original filename
-header('Content-Disposition: inline; filename="' . basename($serveImage) . '"');
+// Do some more checks
+if (!isset($serveName) || !isset($serveMime)) {
+    $serveName = basename($serveImage);
+    $serveImage = file_get_contents($serveImage);
+    $serveMime = getimagesizefromstring($serveImage)['mime'];
+}
 
-$serveImage = file_get_contents($serveImage);
+// Add original filename
+header('Content-Disposition: inline; filename="' . $serveName . '"');
 
 // Set content type
-header('Content-Type: ' . getimagesizefromstring($serveImage)['mime']);
+header('Content-Type: ' . $serveMime);
 
-print $serveImage;
+echo $serveImage;

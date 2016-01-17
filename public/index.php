@@ -19,19 +19,19 @@ $template->setTemplate($templateName);
 if (isset($_GET['p'])) {
     // Set default variables
     $renderData['page'] = [
-        'content' => Main::mdParse("# Unable to load the requested info page.\r\n\r\nCheck the URL and try again."),
+        'content' => Utils::mdParse("# Unable to load the requested info page.\r\n\r\nCheck the URL and try again."),
     ];
 
     // Set page id
     $pageId = isset($_GET['p']) ? strtolower($_GET['p']) : '';
 
     // Get info page data from the database
-    if ($ipData = Main::loadInfoPage($pageId)) {
+    if ($ipData = Utils::loadInfoPage($pageId)) {
         // Assign new proper variable
         $renderData['page'] = [
             'id' => $pageId,
             'title' => $ipData['page_title'],
-            'content' => Main::mdParse($ipData['page_content']),
+            'content' => Utils::mdParse($ipData['page_content']),
         ];
     }
 
@@ -59,7 +59,7 @@ $renderData['stats'] = [
         date_create(
             date(
                 'Y-m-d',
-                $_INDEX_NEWEST_USER->dates()['joined']
+                $_INDEX_NEWEST_USER->registered
             )
         ),
         date_create(

@@ -1,6 +1,6 @@
 <?php
 /*
- * Main Class
+ * Utils Class
  */
 
 namespace Sakura;
@@ -9,10 +9,10 @@ use Parsedown;
 use PHPMailer;
 
 /**
- * Class Main
+ * Class Utils
  * @package Sakura
  */
-class Main
+class Utils
 {
     // Parse markdown
     public static function mdParse($text, $escape = false)
@@ -598,7 +598,7 @@ class Main
         return $logs;
     }
 
-    // Time elapsed
+    // Time elapsed, doesn't account for leap years
     public static function timeElapsed($timestamp, $append = ' ago', $none = 'Just now')
     {
 

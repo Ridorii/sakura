@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160114');
+define('SAKURA_VERSION', '20160117');
 define('SAKURA_VLABEL', 'Amethyst');
 define('SAKURA_COLOUR', '#9966CC');
 
@@ -41,7 +41,6 @@ require_once ROOT . 'libraries/CSRF.php';
 require_once ROOT . 'libraries/Database.php';
 require_once ROOT . 'libraries/File.php';
 require_once ROOT . 'libraries/Hashing.php';
-require_once ROOT . 'libraries/Main.php';
 require_once ROOT . 'libraries/Manage.php';
 require_once ROOT . 'libraries/News.php';
 require_once ROOT . 'libraries/Payments.php';
@@ -53,6 +52,7 @@ require_once ROOT . 'libraries/Trick.php';
 require_once ROOT . 'libraries/Urls.php';
 require_once ROOT . 'libraries/User.php';
 require_once ROOT . 'libraries/Users.php';
+require_once ROOT . 'libraries/Utils.php';
 require_once ROOT . 'libraries/Whois.php';
 require_once ROOT . 'libraries/Forum/Forum.php';
 require_once ROOT . 'libraries/Forum/Post.php';
@@ -67,7 +67,7 @@ foreach (glob(ROOT . 'libraries/DBWrapper/*.php') as $driver) {
 }
 
 // Set Error handler
-set_error_handler(['Sakura\Main', 'errorHandler']);
+set_error_handler(['Sakura\Utils', 'errorHandler']);
 
 // Load the local configuration
 Config::init(ROOT . 'config/config.ini');
@@ -206,7 +206,7 @@ if (!defined('SAKURA_NO_TPL')) {
     }
 
     // Ban checking
-    if ($authCheck && !in_array($_SERVER['PHP_SELF'], [$urls->format('AUTH_ACTION', [], false)]) && $ban = Bans::checkBan($currentUser->id())) {
+    if ($authCheck && !in_array($_SERVER['PHP_SELF'], [$urls->format('AUTH_ACTION', [], false)]) && $ban = Bans::checkBan($currentUser->id)) {
         // Additional render data
         $renderData = array_merge($renderData, [
             'ban' => [

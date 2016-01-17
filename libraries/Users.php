@@ -104,7 +104,7 @@ class Users
 
         // Check if we haven't hit the rate limit
         $rates = Database::fetch('login_attempts', true, [
-            'attempt_ip' => [Main::getRemoteIP(), '='],
+            'attempt_ip' => [Utils::getRemoteIP(), '='],
             'attempt_timestamp' => [time() - 1800, '>'],
             'attempt_success' => [0, '='],
         ]);
@@ -122,7 +122,7 @@ class Users
         $user = User::construct($uid);
 
         // Validate password
-        switch ($user->password()['password_algo']) {
+        switch ($user->passwordAlgo) {
             // Disabled
             case 'disabled':
                 return [0, 'NO_LOGIN'];
@@ -130,22 +130,22 @@ class Users
             // Default hashing method
             default:
                 if (!Hashing::validatePassword($password, [
-                    $user->password()['password_algo'],
-                    $user->password()['password_iter'],
-                    $user->password()['password_salt'],
-                    $user->password()['password_hash'],
+                    $user->passwordAlgo,
+                    $user->passwordIter,
+                    $user->passwordSalt,
+                    $user->passwordHash,
                 ])) {
-                    return [0, 'INCORRECT_PASSWORD', $user->id(), $user->password()['password_chan']];
+                    return [0, 'INCORRECT_PASSWORD', $user->id, $user->passwordChan];
                 }
         }
 
         // Check if the user has the required privs to log in
         if ($user->permission(Site::DEACTIVATED)) {
-            return [0, 'NOT_ALLOWED', $user->id()];
+            return [0, 'NOT_ALLOWED', $user->id];
         }
 
         // Create a new session
-        $session = new Session($user->id());
+        $session = new Session($user->id);
 
         // Generate a session key
         $sessionKey = $session->create($remember);
@@ -155,7 +155,7 @@ class Users
             // User ID cookie
             setcookie(
                 Config::get('cookie_prefix') . 'id',
-                $user->id(),
+                $user->id,
                 time() + 604800,
                 Config::get('cookie_path'),
                 Config::get('cookie_domain')
@@ -172,7 +172,7 @@ class Users
         }
 
         // Successful login! (also has a thing for the legacy password system)
-        return [1, 'LOGIN_SUCCESS', $user->id()];
+        return [1, 'LOGIN_SUCCESS', $user->id];
     }
 
     // Logout and kill the session
@@ -228,7 +228,7 @@ class Users
 
         // Verify the captcha if it's enabled
         if (Config::get('recaptcha')) {
-            if (!Main::verifyCaptcha($captcha)['success']) {
+            if (!Utils::verifyCaptcha($captcha)['success']) {
                 return [0, 'CAPTCHA_FAIL'];
             }
         }
@@ -254,7 +254,7 @@ class Users
         }
 
         // Check the MX record of the email
-        if (!Main::checkMXRecord($email)) {
+        if (!Utils::checkMXRecord($email)) {
             return [0, 'INVALID_MX'];
         }
 
@@ -264,7 +264,7 @@ class Users
         }
 
         // Check password entropy
-        if (Main::pwdEntropy($password) < Config::get('min_entropy')) {
+        if (Utils::pwdEntropy($password) < Config::get('min_entropy')) {
             return [0, 'PASS_TOO_SHIT'];
         }
 
@@ -283,7 +283,7 @@ class Users
         // Check if we require e-mail activation
         if ($requireActive) {
             // Send activation e-mail to user
-            self::sendActivationMail($user->id());
+            self::sendActivationMail($user->id);
         }
 
         // Return true with a specific message if needed
@@ -299,8 +299,8 @@ class Users
         }
 
         // Clean username string
-        $usernameClean = Main::cleanString($username, true);
-        $emailClean = Main::cleanString($email, true);
+        $usernameClean = Utils::cleanString($username, true);
+        $emailClean = Utils::cleanString($email, true);
 
         // Do database request
         $user = Database::fetch('users', false, [
@@ -322,7 +322,7 @@ class Users
         }
 
         // Generate the verification key
-        $verk = ActionCode::generate('LOST_PASS', $userObj->id());
+        $verk = ActionCode::generate('LOST_PASS', $userObj->id);
 
         // Create new urls object
         $urls = new Urls();
@@ -339,7 +339,7 @@ class Users
         $message .= "--\r\n\r\nThanks\r\n\r\n" . Config::get('mail_signature');
 
         // Send the message
-        Main::sendMail([$user['email'] => $user['username']], Config::get('sitename') . ' password restoration', $message);
+        Utils::sendMail([$user['email'] => $user['username']], Config::get('sitename') . ' password restoration', $message);
 
         // Return success
         return [1, 'SUCCESS'];
@@ -354,7 +354,7 @@ class Users
         }
 
         // Check password entropy
-        if (Main::pwdEntropy($newpass) < Config::get('min_entropy')) {
+        if (Utils::pwdEntropy($newpass) < Config::get('min_entropy')) {
             return [0, 'PASS_TOO_SHIT'];
         }
 
@@ -402,8 +402,8 @@ class Users
         }
 
         // Clean username string
-        $usernameClean = Main::cleanString($username, true);
-        $emailClean = Main::cleanString($email, true);
+        $usernameClean = Utils::cleanString($username, true);
+        $emailClean = Utils::cleanString($email, true);
 
         // Do database request
         $user = Database::fetch('users', false, [
@@ -438,12 +438,12 @@ class Users
         $user = User::construct($uid);
 
         // User is already activated or doesn't even exist
-        if (!$user->id() || !$user->permission(Site::DEACTIVATED)) {
+        if (!$user->id || !$user->permission(Site::DEACTIVATED)) {
             return false;
         }
 
         // Generate activation key
-        $activate = ActionCode::generate('ACTIVATE', $user->id());
+        $activate = ActionCode::generate('ACTIVATE', $user->id);
 
         // Create new urls object
         $urls = new Urls();
@@ -452,20 +452,20 @@ class Users
         $message = "Welcome to " . Config::get('sitename') . "!\r\n\r\n";
         $message .= "Please keep this e-mail for your records. Your account intormation is as follows:\r\n\r\n";
         $message .= "----------------------------\r\n\r\n";
-        $message .= "Username: " . $user->username() . "\r\n\r\n";
-        $message .= "Your profile: http://" . Config::get('url_main') . $urls->format('USER_PROFILE', [$user->id()]) . "\r\n\r\n";
+        $message .= "Username: " . $user->username . "\r\n\r\n";
+        $message .= "Your profile: http://" . Config::get('url_main') . $urls->format('USER_PROFILE', [$user->id]) . "\r\n\r\n";
         $message .= "----------------------------\r\n\r\n";
         $message .= "Please visit the following link in order to activate your account:\r\n\r\n";
-        $message .= "http://" . Config::get('url_main') . $urls->format('SITE_ACTIVATE') . "?mode=activate&u=" . $user->id() . "&k=" . $activate . "\r\n\r\n";
+        $message .= "http://" . Config::get('url_main') . $urls->format('SITE_ACTIVATE') . "?mode=activate&u=" . $user->id . "&k=" . $activate . "\r\n\r\n";
         $message .= "Your password has been securely stored in our database and cannot be retrieved. ";
         $message .= "In the event that it is forgotten, you will be able to reset it using the email address associated with your account.\r\n\r\n";
         $message .= "Thank you for registering.\r\n\r\n";
         $message .= "--\r\n\r\nThanks\r\n\r\n" . Config::get('mail_signature');
 
         // Send the message
-        Main::sendMail(
+        Utils::sendMail(
             [
-                $user->email() => $user->username(),
+                $user->email() => $user->username,
             ],
             Config::get('sitename') . ' Activation Mail',
             $message
@@ -482,7 +482,7 @@ class Users
         $user = User::construct($uid);
 
         // Check if user exists
-        if (!$user->id()) {
+        if (!$user->id) {
             return [0, 'USER_NOT_EXIST'];
         }
 
@@ -494,7 +494,7 @@ class Users
         // Check if a key is set
         if ($requireKey) {
             // Check the action code
-            $action = ActionCode::validate('ACTIVATE', $key, $user->id());
+            $action = ActionCode::validate('ACTIVATE', $key, $user->id);
 
             // Check if we got a negative return
             if (!$action) {
@@ -515,7 +515,7 @@ class Users
     public static function userExists($user, $id = true)
     {
         // Clean string
-        $user = Main::cleanString($user, true);
+        $user = Utils::cleanString($user, true);
 
         // Do database request
         $user = Database::fetch('users', true, [($id ? 'user_id' : 'username_clean') => [$user, '=']]);
@@ -541,7 +541,7 @@ class Users
         // Iterate over the fields and clean them up
         foreach ($profileFields as $field) {
             $fields[$field['field_id']] = $field;
-            $fields[$field['field_id']]['field_identity'] = Main::cleanString($field['field_name'], true, true);
+            $fields[$field['field_id']]['field_identity'] = Utils::cleanString($field['field_name'], true, true);
             $fields[$field['field_id']]['field_additional'] = json_decode($field['field_additional'], true);
         }
 
@@ -645,18 +645,18 @@ class Users
         $check = $user->isPremium();
 
         // Check if the user has premium
-        if ($check[0] && !in_array($excepted, $user->ranks())) {
+        if ($check[0] && !array_key_exists($excepted, $user->ranks)) {
             // If so add the rank to them
             $user->addRanks([$premiumRank]);
 
             // Check if the user's default rank is standard user and update it to premium
-            if ($user->mainRank() == 2) {
+            if ($user->mainRankId == 2) {
                 $user->setMainRank($premiumRank);
             }
         } elseif (!$check[0]) {
             // Remove the expired entry
             Database::delete('premium', [
-                'user_id' => [$user->id(), '='],
+                'user_id' => [$user->id, '='],
             ]);
 
             // Else remove the rank from them
@@ -694,7 +694,7 @@ class Users
         // Go over all users and check if they have the rank id
         foreach ($users as $user) {
             // If so store the user's row in the array
-            if ($user->hasRanks([$rankId], $user->id())) {
+            if ($user->hasRanks([$rankId], $user->id)) {
                 $rank[] = $user;
             }
         }
@@ -721,7 +721,7 @@ class Users
                 continue;
             }
 
-            $users[$user->id()] = $user;
+            $users[$user->id] = $user;
         }
 
         // and return an array with the users

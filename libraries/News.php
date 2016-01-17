@@ -30,7 +30,7 @@ class News
             }
 
             // Parse the news post
-            $post['news_content_parsed'] = Main::mdParse($post['news_content']);
+            $post['news_content_parsed'] = Utils::mdParse($post['news_content']);
 
             // Attach the poster
             $post['news_poster'] = $this->posters[$post['user_id']];

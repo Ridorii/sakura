@@ -37,7 +37,7 @@ if ($forum->id < 0) {
 }
 
 // Check if the user has access to the forum
-if (!$forum->permission(ForumPerms::VIEW, $currentUser->id())) {
+if (!$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
     // Set render data
     $renderData['page'] = [
         'title' => 'Information',
@@ -72,7 +72,7 @@ if ($forum->type === 2) {
 // Check if we're marking as read
 if (isset($_GET['read']) && $_GET['read'] && isset($_GET['session']) && $_GET['session'] == session_id()) {
     // Run the function
-    $forum->trackUpdateAll($currentUser->id());
+    $forum->trackUpdateAll($currentUser->id);
 
     // Set render data
     $renderData['page'] = [

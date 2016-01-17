@@ -103,8 +103,8 @@ class BBcode
 
         $parsed = nl2br(self::$bbcode->getAsHtml());
 
-        $parsed = Main::fixCodeTags($parsed);
-        $parsed = Main::parseEmotes($parsed);
+        $parsed = Utils::fixCodeTags($parsed);
+        $parsed = Utils::parseEmotes($parsed);
 
         return $parsed;
     }
