@@ -5,7 +5,7 @@
 
 namespace Sakura\Forum;
 
-use Sakura\Main;
+use Sakura\Utils;
 use Sakura\Database;
 use Sakura\User;
 use Sakura\BBcode;
@@ -86,8 +86,8 @@ class Post
         Database::insert('posts', [
             'topic_id' => $thread->id,
             'forum_id' => $thread->forum,
-            'poster_id' => $poster->id(),
-            'poster_ip' => Main::getRemoteIP(),
+            'poster_id' => $poster->id,
+            'poster_ip' => Utils::getRemoteIP(),
             'post_time' => time(),
             'post_subject' => $subject,
             'post_text' => $text,
@@ -123,14 +123,14 @@ class Post
                 'post_id' => $this->id,
                 'topic_id' => $thread->id,
                 'forum_id' => $thread->forum,
-                'poster_id' => $this->poster->id(),
-                'poster_ip' => Main::getRemoteIP(),
+                'poster_id' => $this->poster->id,
+                'poster_ip' => Utils::getRemoteIP(),
                 'post_time' => $this->time,
                 'post_subject' => $this->subject,
                 'post_text' => $this->text,
                 'post_edit_time' => $this->editTime,
                 'post_edit_reason' => $this->editReason,
-                'post_edit_user' => $this->editUser->id(),
+                'post_edit_user' => $this->editUser->id,
             ],
             [
                 'post_id' => [$this->id, '='],
@@ -144,12 +144,12 @@ class Post
     // Time elapsed since creation
     public function timeElapsed()
     {
-        return Main::timeElapsed($this->time);
+        return Utils::timeElapsed($this->time);
     }
 
     // Time elapsed since last edit
     public function editTimeElapsed()
     {
-        return Main::timeElapsed($this->editTime);
+        return Utils::timeElapsed($this->editTime);
     }
 }

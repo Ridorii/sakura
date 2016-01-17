@@ -29,10 +29,13 @@
     it has been <b>{{ stats.lastRegDate }}</b> since the last user registered and the forum has <b>{{ stats.topicCount }} thread{% if stats.topicCount != 1 %}s{% endif %}</b> and <b>{{ stats.postCount }} post{% if stats.postCount != 1 %}s{% endif %}</b>.
     <div class="head">Online Users</div>
     {% if stats.onlineUsers %}
-        All active users in the past {{ sakura.onlineTimeout / 60 }} minute{% if sakura.onlineTimeout != 60 %}s{% endif %}:<br />
-        {% for amount,onlineUser in stats.onlineUsers %}
-            <a href="{{ urls.format('USER_PROFILE', [onlineUser.id]) }}" style="font-weight: bold; color: {{ onlineUser.colour }};" class="default">{{ onlineUser.username }}</a>{% if amount != (stats.onlineUsers|length - 1) %}, {% endif %}
-        {% endfor %}
+        All active users in the past {{ sakura.onlineTimeout / 60 }} minute{% if sakura.onlineTimeout != 60 %}s{% endif %}
+        <table class="panelTable">
+            {% for amount,onlineUser in stats.onlineUsers %}
+            {% if amount != (stats.onlineUsers|length - 1) %}, {% endif %}
+            <tr><td style="text-align: left;"><a href="{{ urls.format('USER_PROFILE', [onlineUser.id]) }}" style="font-weight: bold; color: {{ onlineUser.colour }};" class="default">{{ onlineUser.username }}</a></td><td title="{{ onlineUser.lastOnline|date(sakura.dateFormat) }}" style="text-align: right;">{{ onlineUser.elapsed.lastOnline }}</td></tr>
+            {% endfor %}
+        </table>
     {% else %}
         There were no online users in the past {{ sakura.onlineTimeout / 60 }} minute{% if sakura.onlineTimeout != 60 %}s{% endif %}.
     {% endif %}

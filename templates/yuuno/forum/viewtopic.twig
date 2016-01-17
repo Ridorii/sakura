@@ -90,8 +90,8 @@
                             <a class="username">[deleted user]</a>
                             {% endif %}
                             <div class="userdata">
-                                <div class="usertitle">{{ post.poster.userTitle }}</div>
-                                <img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi"{% if not post.poster.isPremium[0] %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.contentPath }}/images/flags/{{ post.poster.country.short|lower }}.png" alt="{{ post.poster.country.long }}" />{% if post.poster.id == (thread.posts|first).poster.id %} <img src="{{ sakura.contentPath }}/images/op.png" alt="OP" title="Original Poster" />{% endif %}
+                                <div class="usertitle">{{ post.poster.title }}</div>
+                                <img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi"{% if not post.poster.isPremium[0] %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.contentPath }}/images/flags/{{ post.poster.country|lower }}.png" alt="{{ post.poster.country(true) }}" />{% if post.poster.id == (thread.posts|first).poster.id %} <img src="{{ sakura.contentPath }}/images/op.png" alt="OP" title="Original Poster" />{% endif %}
                                 {% if session.checkLogin %}
                                 <div class="actions">
                                     {% if (user.id == post.poster.id and forum.permission(constant('Sakura\\Perms\\Forum::EDIT_OWN'), user.id)) or forum.permission(constant('Sakura\\Perms\\Forum::EDIT_ANY'), user.id) %}
@@ -128,7 +128,7 @@
                             {% if post.poster.signature and post.poster.permission(constant('Sakura\\Perms\\Site::CHANGE_SIGNATURE')) %}
                             <div class="clear"></div>
                             <div class="signature bbcode">
-                                {{ post.poster.signature|raw|nl2br }}
+                                {{ post.poster.signature()|raw|nl2br }}
                             </div>
                             {% endif %}
                         </td>

@@ -15,8 +15,8 @@ class Site
     const RESTRICTED = 2; // Is a user restricted
     const ALTER_PROFILE = 4; // Can alter their profile data
     const CHANGE_AVATAR = 8; // Can change their avatar
-    const CREATE_BACKGROUND = 16; // Can create a background
-    const CHANGE_BACKGROUND = 32; // Can change their background
+    const CHANGE_BACKGROUND = 16; // Can change their background
+    const CHANGE_HEADER = 32; // User can change their profile header
     const VIEW_MEMBERLIST = 64; // Can view the memberlist
     const CREATE_USERPAGE = 128; // Can create a userpage
     const CHANGE_USERPAGE = 256; // Can change their userpage

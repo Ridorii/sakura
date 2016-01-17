@@ -40,7 +40,7 @@ $thread->forum;
 $forum = new Forum\Forum($forumId);
 
 // Check if the user has access to the forum
-if (!$forum->permission(ForumPerms::VIEW, $currentUser->id()) || !$forum->permission(ForumPerms::REPLY, $currentUser->id())) {
+if (!$forum->permission(ForumPerms::VIEW, $currentUser->id) || !$forum->permission(ForumPerms::REPLY, $currentUser->id)) {
     // Set render data
     $renderData['page'] = [
         'title' => 'Information',
@@ -56,7 +56,7 @@ if (!$forum->permission(ForumPerms::VIEW, $currentUser->id()) || !$forum->permis
 }
 
 // Check if the user has access to the forum
-if (!isset($thread) && !$forum->permission(ForumPerms::CREATE_THREADS, $currentUser->id())) {
+if (!isset($thread) && !$forum->permission(ForumPerms::CREATE_THREADS, $currentUser->id)) {
     // Set render data
     $renderData['page'] = [
         'title' => 'Information',
@@ -75,7 +75,7 @@ $mode = isset($_GET['f']) ? 'f' : (isset($_GET['t']) ? 't' : (isset($_GET['p']) 
 
 // Include emotes and bbcodes
 $posting = [
-    'emoticons' => Main::getEmotes(),
+    'emoticons' => Utils::getEmotes(),
 ];
 
 // Check if we're in reply mode
@@ -100,7 +100,7 @@ if ($mode != 'f') {
     }
 
     // Prompt an error if the topic doesn't exist
-    if ($thread->status == 1 && !$forum->permission(ForumPerms::LOCK, $currentUser->id())) {
+    if ($thread->status == 1 && !$forum->permission(ForumPerms::LOCK, $currentUser->id)) {
         // Add page specific things
         $renderData['page'] = [
             'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
@@ -121,7 +121,7 @@ if ($mode != 'f') {
         $post = $thread->posts()[$_GET['p']];
 
         // Add subject to render data
-        $posting['text'] = '[quote=' . $post->poster->username() . ']' . BBcode::toEditor($post->text) . '[/quote]';
+        $posting['text'] = '[quote=' . $post->poster->username . ']' . BBcode::toEditor($post->text) . '[/quote]';
 
         // Post editing
     } elseif ($mode == 'p' && isset($_GET['edit']) && $_GET['edit'] == $_GET['p'] && array_key_exists($_GET['p'], $thread->posts())) {
@@ -141,7 +141,7 @@ if ($mode != 'f') {
             exit;
         }
         // Checks
-        if ($thread->posts()[$_GET['p']]->poster->id() != $currentUser->id() && !$forum->permission(ForumPerms::EDIT_ANY, $currentUser->id())) {
+        if ($thread->posts()[$_GET['p']]->poster->id != $currentUser->id && !$forum->permission(ForumPerms::EDIT_ANY, $currentUser->id)) {
             // Add page specific things
             $renderData['page'] = [
                 'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
@@ -184,7 +184,7 @@ if ($mode != 'f') {
         }
 
         // Checks
-        if ($thread->posts()[$_GET['p']]->poster->id() != $currentUser->id() && !$forum->permission(ForumPerms::DELETE_ANY, $currentUser->id())) {
+        if ($thread->posts()[$_GET['p']]->poster->id != $currentUser->id && !$forum->permission(ForumPerms::DELETE_ANY, $currentUser->id)) {
             // Add page specific things
             $renderData['page'] = [
                 'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),

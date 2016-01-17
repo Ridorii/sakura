@@ -14,17 +14,15 @@ use Sakura\Perms\Site;
  */
 class Rank
 {
-    // Rank data
-    private $data = [
-        'rank_id' => 0,
-        'rank_name' => 'Rank',
-        'rank_hierarchy' => 0,
-        'rank_multiple' => '',
-        'rank_hidden' => 1,
-        'rank_colour' => 'inherit',
-        'rank_description' => '',
-        'rank_title' => '',
-    ];
+    // Variables
+    public $id = 0;
+    public $name = 'Rank';
+    public $hierarchy = 0;
+    public $multiple = '';
+    public $colour = 'inherit';
+    public $description = '';
+    public $title = '';
+    private $hidden = true;
     private $permissions;
     protected static $_rankCache = [];
     
@@ -46,7 +44,7 @@ class Rank
     {
 
         // Get the rank database row
-        $getRank = Database::fetch(
+        $rankRow = Database::fetch(
             'ranks',
             false,
             [
@@ -55,55 +53,31 @@ class Rank
         );
 
         // Check if the rank actually exists
-        if (!empty($getRank)) {
-            // If not assign as the fallback rank
-            $this->data = $getRank;
+        if ($rankRow) {
+            $this->id = $rankRow['rank_id'];
+            $this->name = $rankRow['rank_name'];
+            $this->hierarchy = $rankRow['rank_hierarchy'];
+            $this->multiple = $rankRow['rank_multiple'];
+            $this->hidden = (bool) $rankRow['rank_hidden'];
+            $this->colour = $rankRow['rank_colour'];
+            $this->description = $rankRow['rank_description'];
+            $this->title = $rankRow['rank_title'];
         }
 
         // Init the permissions
         $this->permissions = new Perms(Perms::SITE);
     }
 
-    // Get the rank id
-    public function id()
-    {
-        return $this->data['rank_id'];
-    }
-
-    // Get the rank hierarchy
-    public function hierarchy()
-    {
-        return $this->data['rank_hierarchy'];
-    }
-
     // Get the rank name
     public function name($multi = false)
     {
-        return $this->data['rank_name'] . ($multi ? $this->data['rank_multiple'] : null);
-    }
-
-    // Get the rank title
-    public function title()
-    {
-        return $this->data['rank_title'];
-    }
-
-    // Get the rank description
-    public function description()
-    {
-        return $this->data['rank_description'];
-    }
-
-    // Get the rank colour
-    public function colour()
-    {
-        return $this->data['rank_colour'];
+        return $this->name . ($multi ? $this->multiple : null);
     }
 
     // Check if the rank is hidden
     public function hidden()
     {
-        return $this->data['rank_hidden'] || $this->permission(Site::DEACTIVATED) || $this->permission(Site::RESTRICTED);
+        return $this->hidden || $this->permission(Site::DEACTIVATED) || $this->permission(Site::RESTRICTED);
     }
 
     // Check if the rank has the proper permissions
@@ -113,7 +87,7 @@ class Rank
         $perm = 0;
 
         // Bitwise OR it with the permissions for this forum
-        $perm = $perm | $this->permissions->rank($this->id());
+        $perm = $perm | $this->permissions->rank($this->id);
         
         return $this->permissions->check($flag, $perm);
     }

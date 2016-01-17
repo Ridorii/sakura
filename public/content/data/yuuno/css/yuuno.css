@@ -2056,7 +2056,6 @@ textarea.inputStyling {
     width: 100%;
     max-height: 200px;
     overflow: auto;
-    line-height: 1em;
 }
 
 .forum.viewtopic .posts .post-content .signature img {

@@ -6,10 +6,7 @@ google*.html
 /config/config.ini
 /cache/*
 !/cache/.sakura
-/uploads/*
-!/uploads/.sakura
 /vendor
-!/vendor/.sakura
 [Tt]humbs.db
 ehthumbs.db
 Desktop.ini

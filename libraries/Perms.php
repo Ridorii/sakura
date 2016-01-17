@@ -69,7 +69,7 @@ class Perms
         $user = User::construct($uid);
 
         // Get data from ranks
-        foreach ($user->ranks() as $rank) {
+        foreach (array_keys($user->ranks) as $rank) {
             $perm = $perm | $this->rank($rank, $conditions, $perm);
         }
 

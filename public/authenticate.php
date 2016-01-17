@@ -195,7 +195,7 @@ if (isset($_REQUEST['mode'])) {
                     Database::insert('login_attempts', [
                         'attempt_success' => $login[0],
                         'attempt_timestamp' => time(),
-                        'attempt_ip' => Main::getRemoteIP(),
+                        'attempt_ip' => Utils::getRemoteIP(),
                         'user_id' => isset($login[2]) ? $login[2] : 0,
                     ]);
                 }
@@ -203,7 +203,7 @@ if (isset($_REQUEST['mode'])) {
                 // Add page specific things
                 $renderData['page'] = [
 
-                    'redirect' => $login[0] ? (User::construct($login[2])->dates()['lastOnline'] ? $_REQUEST['redirect'] : $urls->format('INFO_PAGE', ['welcome'])) : $urls->format('SITE_LOGIN'),
+                    'redirect' => $login[0] ? (User::construct($login[2])->lastOnline ? $_REQUEST['redirect'] : $urls->format('INFO_PAGE', ['welcome'])) : $urls->format('SITE_LOGIN'),
                     'message' => $messages[$login[1]],
                     'success' => $login[0],
 
@@ -323,7 +323,7 @@ if (Users::checkLogin()) {
 }
 
 // Check if a user has already registered from the current IP address
-if (count($regUserIP = Users::getUsersByIP(Main::getRemoteIP()))) {
+if (count($regUserIP = Users::getUsersByIP(Utils::getRemoteIP()))) {
     $renderData['auth']['blockRegister'] = [
 
         'do' => true,

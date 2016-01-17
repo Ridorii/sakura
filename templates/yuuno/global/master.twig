@@ -133,10 +133,8 @@
 
             {% endif %}
 
-            {% if php.self == '/profile.php' ? (profile.userData.profileBackground and not profile.optionFields.disableProfileParallax) : (user.permission(constant('Sakura\\Perms\\Site::CREATE_BACKGROUND')) and user.optionFields.profileBackgroundSiteWide and user.userData.profileBackground and not user.optionFields.disableProfileParallax) %}
-
+            {% if php.self == '/profile.php' ? (profile.background and not profile.optionFields.disableProfileParallax) : (user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) and user.optionFields.profileBackgroundSiteWide and user.background and not user.optionFields.disableProfileParallax) %}
                 initialiseParallax('userBackground');
-
             {% endif %}
             });
 
@@ -191,7 +189,7 @@
             </div>
             <div id="contentwrapper">
                 <div id="notifications"></div>
-                {% if php.self == '/profile.php' ? profile.userData.profileBackground : (user.permission(constant('Sakura\\Perms\\Site::CREATE_BACKGROUND')) and user.optionFields.profileBackgroundSiteWide and user.userData.profileBackground) %}
+                {% if php.self == '/profile.php' ? profile.background : (user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) and user.optionFields.profileBackgroundSiteWide and user.background) %}
                     <div id="userBackground" style="background-image: url('{{ urls.format('IMAGE_BACKGROUND', [(php.self == '/profile.php' ? profile : user).id]) }}');"></div>
                 {% endif %}
                 {% if not session.checkLogin and php.self != '/authenticate.php' %}

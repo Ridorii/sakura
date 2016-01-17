@@ -6,7 +6,7 @@
 namespace Sakura\Forum;
 
 use Sakura\Database;
-use Sakura\Main;
+use Sakura\Utils;
 
 /**
  * Class Thread
@@ -206,13 +206,13 @@ class Thread
     // Time elapsed since creation
     public function timeElapsed()
     {
-        return Main::timeElapsed($this->time);
+        return Utils::timeElapsed($this->time);
     }
 
     // Time elapsed since status change
     public function statusChangeElapsed()
     {
-        return Main::timeElapsed($this->statusChange);
+        return Utils::timeElapsed($this->statusChange);
     }
 
     // Read status

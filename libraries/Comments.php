@@ -40,7 +40,6 @@ class Comments
     // Sorting
     public function sortComments($comments)
     {
-
         // Create storage array
         $layer = [];
 
@@ -54,7 +53,7 @@ class Comments
 
             // Attach the poster
             $comment['comment_poster'] = $this->commenters[$comment['comment_poster']];
-            $comment['comment_text'] = Main::parseEmotes(Main::cleanString($comment['comment_text']));
+            $comment['comment_text'] = Utils::parseEmotes(Utils::cleanString($comment['comment_text']));
 
             // Get likes and dislikes
             $votes = $this->getVotes($comment['comment_id']);
@@ -95,7 +94,6 @@ class Comments
     // Getting a single comment
     public function getComment($cid)
     {
-
         // Get from database
         return Database::fetch('comments', false, [
             'comment_id' => [$cid, '='],
@@ -105,7 +103,6 @@ class Comments
     // Getting comment votes
     public function getVotes($cid)
     {
-
         // Get from database
         return Database::fetch('comment_votes', true, [
             'vote_comment' => [$cid, '='],
@@ -115,7 +112,6 @@ class Comments
     // Creating
     public function makeComment($uid, $reply, $content)
     {
-
         // Check if the comment is long enough
         if (strlen($content) < Config::get('comment_min_length')) {
             return [0, 'TOO_SHORT'];
@@ -142,7 +138,6 @@ class Comments
     // Voting
     public function makeVote($uid, $cid, $mode)
     {
-
         // Attempt to get previous vote
         $vote = Database::fetch('comment_votes', false, [
             'vote_user' => [$uid, '='],
@@ -185,7 +180,6 @@ class Comments
     // Deleting
     public function removeComment($cid)
     {
-
         // Remove from database
         return Database::delete('comments', [
             'comment_id' => [$cid, '='],
