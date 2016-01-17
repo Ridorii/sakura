@@ -65,7 +65,7 @@ class User
         $usernameClean = Utils::cleanString($username, true);
         $emailClean = Utils::cleanString($email, true);
         $password = Hashing::createHash($password);
-        
+
         // Insert the user into the database
         Database::insert('users', [
             'username' => $username,
@@ -81,7 +81,6 @@ class User
             'user_registered' => time(),
             'user_last_online' => 0,
             'user_country' => Utils::getCountryCode(),
-            'user_data' => '[]',
         ]);
 
         // Get the last id
@@ -588,7 +587,7 @@ class User
             return $a['field_value'];
         }, $optionValuesRaw);
         $optionValues = array_combine($optionValueKeys, $optionValueVals);
-        
+
         // Check if anything was returned
         if (!$optionFields || !$optionValues) {
             return $options;
@@ -609,10 +608,10 @@ class User
             // Assign field to output with value
             $options[$field['option_id']] = $optionValues[$field['option_id']];
         }
-        
+
         // Assign cache
         $this->optionFields = $options;
-        
+
         // Return appropiate option data
         return $options;
     }
