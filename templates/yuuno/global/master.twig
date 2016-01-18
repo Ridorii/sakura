@@ -109,7 +109,7 @@
                 }
             {% endif %}
 
-            {% if php.self == '/authenticate.php' and not sakura.lockAuth %}
+            {% if php.self == '/authenticate.php' and not (sakura.lockAuth or session.checkLogin) %}
 
                 // AJAX Form Submission
                 var forms = {
@@ -171,7 +171,7 @@
                         <!-- User menu, displayed on right side of the bar. -->
                         {% if session.checkLogin %}
                             <a class="menu-item avatar" href="{{ urls.format('USER_PROFILE', [user.id]) }}" title="Logged in as {{ user.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}'); width: auto; color: {{ user.colour }}; border-color: {{ user.colour }}; font-weight: 700;"></a>
-                            <a class="menu-item fa-envelope" href="{{ urls.format('SETTING_CAT', ['messages']) }}" title="Messages"></a>
+                            {#<a class="menu-item fa-envelope" href="{{ urls.format('SETTING_CAT', ['messages']) }}" title="Messages"></a>#}
                             {% if user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
                                 <a class="menu-item fa-gavel" href="{{ urls.format('MANAGE_INDEX') }}" title="Manage"></a>
                             {% endif %}

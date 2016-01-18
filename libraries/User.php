@@ -358,11 +358,6 @@ class User
             return [0, 'USER_NOT_EXIST'];
         }
 
-        // Check if the user has this user a friend
-        if (!$this->isFriends($uid)) {
-            return [0, 'ALREADY_REMOVED'];
-        }
-
         // Remove friend
         Database::delete('friends', [
             'user_id' => [$this->id, '='],

@@ -1122,14 +1122,15 @@ a.default:active {
     }
 
     #notifications > div > .notification-close {
-        height: 40px;
-        width: 40px;
+        height: 40px !important;
+        width: 40px !important;
         margin: 0;
-        padding: 0;
+        padding: 0 !important;
         border: 0;
         margin-right: 4px;
         visibility: visible;
         flex-shrink: 0;
+        font-size: 2em !important;
     }
 
     #notifications > div > .notification-close > div {
