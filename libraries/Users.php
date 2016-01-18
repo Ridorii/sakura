@@ -465,7 +465,7 @@ class Users
         // Send the message
         Utils::sendMail(
             [
-                $user->email() => $user->username,
+                $user->email => $user->username,
             ],
             Config::get('sitename') . ' Activation Mail',
             $message

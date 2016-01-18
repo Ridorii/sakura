@@ -1222,7 +1222,7 @@ if (Users::checkLogin()) {
                     'menu' => true,
                 ],
             ],
-        ],
+        ]/*,
         'messages' => [
             'title' => 'Messages',
             'modes' => [
@@ -1259,7 +1259,7 @@ if (Users::checkLogin()) {
                     'menu' => false,
                 ],
             ],
-        ],
+        ]*/,
         'notifications' => [
             'title' => 'Notifications',
             'modes' => [
