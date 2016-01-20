@@ -38,11 +38,13 @@
     {% else %}
         There were no online users in the past {{ sakura.onlineTimeout / 60 }} minute{% if sakura.onlineTimeout != 60 %}s{% endif %}.
     {% endif %}
-    {#<div class="ad-container ad-sidebar" id="sideAd">
-        <div class="head">Advertisment</div>
+    {% if not user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) or user.mainRankId == 4 %}
+    <div class="ad-container ad-sidebar" id="sideAd">
         <div class="ad-box">
-            <img src="http://i.flash.moe/1445793369-523-9238.png" />
-            <div><a href="#">Click here to meow!</a></div>
+            <a href="http://jbox.com/r.php??&acc=269&___store=jlist&bannerid=28" target="_blank">
+                <img src="https://jlist.com/js/magestore/affiliateplus/banner.php?id=28&account_id=269&store_id=2" alt="250x250 PG senpai shirt" title="250x250 PG senpai shirt" width="250" height="250" />
+            </a>
         </div>
-    </div>#}
+    </div>
+    {% endif %}
 </div>

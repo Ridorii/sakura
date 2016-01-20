@@ -5,7 +5,6 @@
         "ext-json": "*",
         "twig/twig": "*",
         "phpmailer/phpmailer": "*",
-        "erusev/parsedown": "*",
         "paypal/rest-api-sdk-php": "*",
         "jbbcode/jbbcode": "^1.3"
     }

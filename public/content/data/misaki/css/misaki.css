@@ -17,11 +17,6 @@
 @import url('/content/fonts/exo2-0-lightitalic/font.css'); /* Exo 2.0 Light Italic */
 
 /*
- * Import markdown stylesheet
- */
-@import url('markdown.css');
-
-/*
  * Keyframe definitions
  */
 @keyframes spin {

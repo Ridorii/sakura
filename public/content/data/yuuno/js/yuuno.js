@@ -378,56 +378,6 @@ function registerVarCheck(id, mode, option) {
         input.className = input.className.replace(check ? 'red' : 'green', '');
     }
 }
-// Initialising the element parallax functionality
-function initialiseParallax(id) {
-    // Assign the element to a variable
-    var parallax = document.getElementById(id);
-    // Set proper position values
-    parallax.style.top = '-2.5px';
-    parallax.style.bottom = '-2.5px';
-    parallax.style.left = '-2.5px';
-    parallax.style.right = '-2.5px';
-    // Add the event listener to the body element
-    document.addEventListener("mousemove", function (e) {
-        // Alter the position of the parallaxed element
-        parallax.style.top = convertParallaxPositionValue(e.clientY, true, false) + 'px';
-        parallax.style.bottom = convertParallaxPositionValue(e.clientY, true, true) + 'px';
-        parallax.style.left = convertParallaxPositionValue(e.clientX, false, false) + 'px';
-        parallax.style.right = convertParallaxPositionValue(e.clientX, false, true) + 'px';
-    });
-}
-// Converting the position value of the mouseover to a pixel value
-function convertParallaxPositionValue(pos, dir, neg) {
-    // Get the body element
-    var body = document.getElementsByTagName('body')[0];
-    // Get percentage of current position
-    var position = (pos / (dir ? body.clientHeight : body.clientWidth)) * 100;
-    // If someone decided to fuck with the inputs reset it to 0%
-    if (position < 0 || position > 100) {
-        position = 0;
-    }
-    // Do the first maths
-    position = (position / (dir ? 25 : 20)) - 2.5;
-    // If the negative flag is set inverse the number
-    if (neg) {
-        position = -position;
-    }
-    // Subtract another 2.5 to make the element not go all over the place
-    position = position - 2.5;
-    // Return the proper position value
-    return position;
-}
-// """"""""Smooth"""""""" scrolling
-function scrollToTop() {
-    // Get the current position
-    var windowY = window.pageYOffset - 100;
-    // Move up
-    window.scrollTo(0, windowY);
-    // Keep executing this function till we're at the top
-    if (windowY + 1 > 0) {
-        setTimeout(function () { scrollToTop(); }, 10);
-    }
-}
 // Replace some special tags
 function replaceTag(tag) {
     return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[tag] || tag;

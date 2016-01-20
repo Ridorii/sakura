@@ -19,7 +19,7 @@ $template->setTemplate($templateName);
 if (isset($_GET['p'])) {
     // Set default variables
     $renderData['page'] = [
-        'content' => Utils::mdParse("# Unable to load the requested info page.\r\n\r\nCheck the URL and try again."),
+        'content' => '<h1>Unable to load the requested info page.</h1><p>Check the URL and try again.</p>',
     ];
 
     // Set page id
@@ -31,7 +31,7 @@ if (isset($_GET['p'])) {
         $renderData['page'] = [
             'id' => $pageId,
             'title' => $ipData['page_title'],
-            'content' => Utils::mdParse($ipData['page_content']),
+            'content' => $ipData['page_content'],
         ];
     }
 
@@ -51,6 +51,8 @@ $renderData['news'] = ($forumMode ? null : (new News(Config::get('site_news_cate
 $renderData['newsCount'] = Config::get('front_page_news_posts');
 
 $renderData['forum'] = ($forumMode ? (new Forum\Forum()) : null);
+
+$renderData['latestPosts'] = Database::fetch('posts', true, null, ['post_id', true], [3]);
 
 $renderData['stats'] = [
     'userCount' => Database::count('users', ['password_algo' => ['nologin', '!='], 'rank_main' => ['1', '!=']])[0],

@@ -13,9 +13,8 @@
 @import url('/content/fonts/segoeui/font.css');
 @import url('/content/fonts/segoeui-light/font.css');
 
-/* Import bbcode and markdown specific style */
+/* Import bbcode specific style */
 @import url('bbcode.css');
-@import url('markdown.css');
 
 /*
  * Animation Keyframes
@@ -733,6 +732,12 @@ a.default:active {
     font-size: .8em;
 }
 
+.ad-container img {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+}
+
 .ad-container a {
     color: #22E;
     text-decoration: none;
@@ -752,13 +757,23 @@ a.default:active {
 
 .ad-container.ad-sidebar > .ad-box {
     text-align: center;
-    padding: 2px;
+    padding: 6px 2px;
+}
+
+.ad-container.ad-sidebar img {
+    max-height: 250px;
+    max-width: 250px;
 }
 
 .ad-container.ad-footer {
     display: block;
     margin: 10px auto;
     text-align: center;
+}
+
+.ad-container.ad-footer img {
+    max-height: 90px;
+    max-width: 728px;
 }
 
 .ad-container.ad-footer > .ad-box {
@@ -1198,8 +1213,13 @@ a.default:active {
 }
 
 .news-body {
-    font-size: 10pt;
+    font-size: .9em;
     padding: 2px 0 0 3px;
+}
+
+.news-body p {
+    margin: 0;
+    margin-bottom: 1em;
 }
 
 .news-post-time {
