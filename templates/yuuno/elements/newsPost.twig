@@ -6,8 +6,8 @@
             <h1 style="color: {{ post.news_poster.colour }}; text-shadow: 0 0 7px {% if post.news_poster.colour != 'inherit' %}{{ post.news_poster.colour }}{% else %}#222{% endif %}; padding: 0 0 10px;">{{ post.news_poster.username }}</h1>
         </div>
     </a>
-    <div class="markdown">
-        {{ post.news_content_parsed|raw }}
+    <div class="bbcode">
+        {{ post.news_content|raw }}
     </div>
 </div>
 <div class="clear"></div>

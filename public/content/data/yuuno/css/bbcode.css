@@ -8,7 +8,9 @@
     word-wrap: break-word;
 }
 
-.bbcode h1 {
+.bbcode h1,
+.bbcode h2,
+.bbcode h3 {
     text-shadow: 0 0 5px #8364A1;
     color: #614390;
 }
@@ -30,7 +32,7 @@
     border: 1px solid #9475b2;
     border-bottom: 0;
     border-right: 0;
-    background: linear-gradient(90deg, #B697d4, transparent) transparent;
+    background: #D8B9F6;
     margin: .5em;
 }
 
@@ -44,7 +46,7 @@
 
 .bbcode blockquote > .quote {
     margin-left: .5em;
-    padding-bottom: .5em;
+    padding-bottom: .2em;
 }
 
 .bbcode a {

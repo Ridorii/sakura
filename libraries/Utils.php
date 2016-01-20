@@ -5,7 +5,6 @@
 
 namespace Sakura;
 
-use Parsedown;
 use PHPMailer;
 
 /**
@@ -14,16 +13,6 @@ use PHPMailer;
  */
 class Utils
 {
-    // Parse markdown
-    public static function mdParse($text, $escape = false)
-    {
-        $pd = new Parsedown();
-
-        return $escape ?
-        $pd->setMarkupEscaped(true)->text($text) :
-        $pd->text($text);
-    }
-
     // Get emoticons
     public static function getEmotes()
     {
@@ -270,22 +259,8 @@ class Utils
         // Subject line
         $mail->Subject = $subject;
 
-        // Set the mail type to HTML
-        $mail->isHTML(true);
-
-        // Set email contents
-        $htmlMail = file_get_contents(ROOT . 'templates/htmlEmail.html');
-
-        // Replace template tags
-        $htmlMail = str_replace('{{ sitename }}', Config::get('sitename'), $htmlMail);
-        $htmlMail = str_replace('{{ siteurl }}', '//' . Config::get('url_main'), $htmlMail);
-        $htmlMail = str_replace('{{ contents }}', self::mdParse($body), $htmlMail);
-
-        // Set HTML body
-        $mail->Body = $htmlMail;
-
-        // Set fallback body
-        $mail->AltBody = $body;
+        // Set body
+        $mail->Body = $body;
 
         // Send the message
         $send = $mail->send();

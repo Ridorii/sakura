@@ -59,9 +59,10 @@ if (isset($_GET['restrict']) && $_GET['restrict'] == session_id() && $currentUse
 
     if ($restricted) {
         $profile->removeRanks([Config::get('restricted_rank_id')]);
+        $profile->addRanks([2]);
     } else {
         $profile->addRanks([Config::get('restricted_rank_id')]);
-        $profile->removeRanks($profile->ranks());
+        $profile->removeRanks(array_keys($profile->ranks));
     }
 
     $renderData['page'] = [

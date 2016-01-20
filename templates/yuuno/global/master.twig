@@ -132,10 +132,6 @@
                 }
 
             {% endif %}
-
-            {% if php.self == '/profile.php' ? (profile.background and not profile.optionFields.disableProfileParallax) : (user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) and user.optionFields.profileBackgroundSiteWide and user.background and not user.optionFields.disableProfileParallax) %}
-                initialiseParallax('userBackground');
-            {% endif %}
             });
 
             // Error reporter
@@ -240,11 +236,15 @@
                     <h1 class="stylised" style="text-align: center; margin: 2em auto;">{{ php.self }} is now printing!</h1>
                 {% endblock %}
 
-                {#<div class="ad-container ad-footer" id="footerAd">
+                {% if not user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) or user.mainRankId == 4 %}
+                <div class="ad-container ad-footer" id="footerAd">
                     <div class="ad-box">
-                        <img src="http://i.flash.moe/1445792838-522-8610.png" />
+                        <a href="http://jbox.com/r.php??series/touhou&acc=269&___store=jlist&bannerid=8" target="_blank">
+                            <img src="https://jlist.com/js/magestore/affiliateplus/banner.php?id=8&account_id=269&store_id=2" alt="728x90 PG -- Touhou 1" title="728x90 PG -- Touhou 1" width="728" height="90" />
+                        </a>
                     </div>
-                </div>#}
+                </div>
+                {% endif %}
             </div>
             <div class="footer">
                 <div class="ftsections">

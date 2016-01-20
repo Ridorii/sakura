@@ -1,50 +1,55 @@
 {% extends 'global/master.twig' %}
 
+{% set sorts = ['boxes', 'rectangles', 'list'] %}
+{% set sort = get.sort in sorts ? get.sort : sorts[0] %}
+
+{% set notfound = memberlist.active == 0 and get.rank is defined %}
+
 {% set rankTitle %}
-{% if page.notfound %}Not found{% else %}{% if not page.active %}All members{% else %}{{ page.ranks[page.active].name(true) }}{% endif %}{% endif %}
+{% if notfound %}Not found{% else %}{% if not memberlist.active %}All members{% else %}{{ memberlist.ranks[memberlist.active].name(true) }}{% endif %}{% endif %}
 {% endset %}
 
 {% set rankDescription %}
-{% if page.notfound %}The requested rank could not be found!{% else %}{% if not page.active %}The entire user list.{% else %}{{ page.ranks[page.active].description }}{% endif %}{% endif %}
+{% if notfound %}The requested rank could not be found!{% else %}{% if not memberlist.active %}The entire user list.{% else %}{{ memberlist.ranks[memberlist.active].description }}{% endif %}{% endif %}
 {% endset %}
 
-{% set users = users|batch(membersPerPage) %}
+{% set users = memberlist.users|batch(memberlist.membersPerPage) %}
 
 {% set currPage = get.page|default(1) - 1 %}
 
 {% set paginationPages = users %}
-{% set paginationUrl %}{% if page.sort and page.active %}{{ urls.format('MEMBERLIST_ALL', [page.sort, page.active]) }}{% elseif page.sort %}{{ urls.format('MEMBERLIST_SORT', [page.sort]) }}{% elseif page.active %}{{ urls.format('MEMBERLIST_RANK', [page.active]) }}{% else %}{{ urls.format('MEMBERLIST_INDEX') }}{% endif %}{% endset %}
+{% set paginationUrl %}{% if sort and memberlist.active %}{{ urls.format('MEMBERLIST_ALL', [sort, memberlist.active]) }}{% elseif sort %}{{ urls.format('MEMBERLIST_SORT', [sort]) }}{% elseif memberlist.active %}{{ urls.format('MEMBERLIST_RANK', [memberlist.active]) }}{% else %}{{ urls.format('MEMBERLIST_INDEX') }}{% endif %}{% endset %}
 
 {% block title %}{{ rankTitle }}{% endblock %}
 
 {% block content %}
     <div class="headerNotify" style="margin-bottom: 1px;">
-        <h1 style="{% if page.active %}text-shadow: 0 0 5px {{ page.ranks[page.active].colour }}; color: {{ page.ranks[page.active].colour }};{% else %}text-shadow: 0 0 5px #555;{% endif %}">{{ rankTitle }}</h1>
+        <h1 style="{% if memberlist.active %}text-shadow: 0 0 5px {{ memberlist.ranks[memberlist.active].colour }}; color: {{ memberlist.ranks[memberlist.active].colour }};{% else %}text-shadow: 0 0 5px #555;{% endif %}">{{ rankTitle }}</h1>
         <h3>{{ rankDescription }}</h3>
     </div>
     <div class="membersPage" style="min-height: 500px;">
         <div class="dropDown" style="margin: 0 auto; font-size: 1.5em; line-height: 1.5em; height: 30px;">
             <div class="dropDownInner" style="float: left; color: #FFF;">
                 <a class="dropDownDesc">Rank:</a>
-                <a href="{% if page.sort %}{{ urls.format('MEMBERLIST_SORT', [page.sort]) }}{% else %}{{ urls.format('MEMBERLIST_INDEX') }}{% endif %}"{% if not page.active %} class="dropDownSelected"{% endif %}>All members</a>
-                {% for rank in page.ranks %}
-                    {% if not rank.hidden or (rank.hidden and page.active == rank.id) %}
-                        <a href="{% if page.sort %}{{ urls.format('MEMBERLIST_ALL', [page.sort, rank.id]) }}{% else %}{{ urls.format('MEMBERLIST_RANK', [rank.id]) }}{% endif %}" style="color: {{ rank.colour }};"{% if page.active == rank.id %} class="dropDownSelected"{% endif %}>{{ rank.name(true) }}</a>
+                <a href="{% if sort %}{{ urls.format('MEMBERLIST_SORT', [sort]) }}{% else %}{{ urls.format('MEMBERLIST_INDEX') }}{% endif %}"{% if not memberlist.active %} class="dropDownSelected"{% endif %}>All members</a>
+                {% for rank in memberlist.ranks %}
+                    {% if not rank.hidden or (rank.hidden and memberlist.active == rank.id) %}
+                        <a href="{% if sort %}{{ urls.format('MEMBERLIST_ALL', [sort, rank.id]) }}{% else %}{{ urls.format('MEMBERLIST_RANK', [rank.id]) }}{% endif %}" style="color: {{ rank.colour }};"{% if memberlist.active == rank.id %} class="dropDownSelected"{% endif %}>{{ rank.name(true) }}</a>
                     {% endif %}
                 {% endfor %}
             </div>
             <div class="dropDownInner" style="float: left;">
                 <a class="dropDownDesc">View:</a>
-                {% for sort in page.sorts %}
-                <a href="{% if page.active %}{{ urls.format('MEMBERLIST_ALL', [sort, page.active]) }}{% else %}{{ urls.format('MEMBERLIST_SORT', [sort]) }}{% endif %}"{% if page.sort == sort %} class="dropDownSelected"{% endif %}>{{ sort|capitalize }}</a>
+                {% for s in sorts %}
+                <a href="{% if memberlist.active %}{{ urls.format('MEMBERLIST_ALL', [s, memberlist.active]) }}{% else %}{{ urls.format('MEMBERLIST_SORT', [s]) }}{% endif %}"{% if s == sort %} class="dropDownSelected"{% endif %}>{{ s|capitalize }}</a>
                 {% endfor %}
             </div>
         </div>
         {% if not users|length %}
             <h1 class="stylised" style="margin: 2em 0;">This rank has no members!</h1>
-        {% elseif not page.notfound %}
-            <div class="membersPageList {{ page.sort }}">
-                {% if page.sort == page.sorts[2] %}
+        {% elseif not notfound %}
+            <div class="membersPageList {{ sort }}">
+                {% if sort == sorts[2] %}
                 <table>
                     <thead>
                         <tr>
@@ -70,22 +75,22 @@
                     <tbody>
                         <tr>
                             <td>
-                                #{{ page.active ? count + 1 : count }}
+                                #{{ memberlist.active ? count + 1 : count }}
                             </td>
                             <td>
                                 <a href="{{ urls.format('USER_PROFILE', [user.id]) }}" class="default" style="font-weight: bold; color: {{ user.colour }}; text-shadow: 0 0 5px {{ user.colour }};">{{ user.username }}</a>
                             </td>
-                            <td title="{{ user.dates.joined|date(sakura.dateFormat) }}">
+                            <td title="{{ user.registered|date(sakura.dateFormat) }}">
                                 {{ user.elapsed.joined }}
                             </td>
-                            <td title="{% if user.dates.lastOnline == 0 %}Never logged in.{% else %}{{ user.dates.lastOnline|date(sakura.dateFormat) }}{% endif %}">
-                                {% if user.dates.lastOnline == 0 %}<i>Never logged in.</i>{% else %}{{ user.elapsed.lastOnline }}{% endif %}
+                            <td title="{% if user.lastOnline == 0 %}Never logged in.{% else %}{{ user.lastOnline|date(sakura.dateFormat) }}{% endif %}">
+                                {% if user.lastOnline == 0 %}<i>Never logged in.</i>{% else %}{{ user.elapsed.lastOnline }}{% endif %}
                             </td>
                             <td>
-                                {{ user.userTitle }}
+                                {{ user.title }}
                             </td>
                             <td>
-                                <img src="{{ sakura.contentPath }}/images/flags/{{ user.country.short|lower }}.png" alt="{% if user.country.short|lower == 'xx' %}?{% else %}{{ user.country.long }}{% endif %}" title="{% if user.country.short|lower == 'xx' %}Unknown{% else %}{{ user.country.long }}{% endif %}" />
+                                <img src="{{ sakura.contentPath }}/images/flags/{{ user.country|lower }}.png" alt="{% if user.country|lower == 'xx' %}?{% else %}{{ user.country(true) }}{% endif %}" title="{% if user.country|lower == 'xx' %}Unknown{% else %}{{ user.country(true) }}{% endif %}" />
                             </td>
                         </tr>
                     </tbody>
@@ -104,9 +109,9 @@
                     {% endfor %}
                 {% endif %}
             </div>
-        {% endif %}
-        {% if users|length > 1 %}
-            {% include 'elements/pagination.twig' %}
+            {% if users|length > 1 %}
+                {% include 'elements/pagination.twig' %}
+            {% endif %}
         {% endif %}
     </div>
 {% endblock %}

@@ -692,13 +692,13 @@ class User
     // Get a user's userpage
     public function userPage()
     {
-        return Utils::mdParse($this->page, true);
+        return BBcode::toHTML(htmlentities($this->page));
     }
 
     // Get a user's signature
     public function signature()
     {
-        return BBcode::toHTML($this->signature);
+        return BBcode::toHTML(htmlentities($this->signature));
     }
 
     // Get username change history
