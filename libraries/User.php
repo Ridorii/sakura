@@ -186,7 +186,7 @@ class User
             $diff = date_diff($birthday, $now);
 
             // Return the difference in years
-            return $diff->format('%Y');
+            return (int) $diff->format('%Y');
         }
 
         // Otherwise just return the birthday value
