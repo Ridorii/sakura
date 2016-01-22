@@ -30,7 +30,7 @@
                     {% if profile.mainRankId > 1 and profile.checkBan|length < 1 %}
                         <span style="font-size: .8em;">{{ profile.title }}</span>
                         <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px {% if profile.colour != 'inherit' %}{{ profile.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;" {% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0]['username_old'] }} before {{ profile.getUsernameHistory[0]['change_time']|date(sakura.dateFormat) }}." {% endif %}>{{ profile.username }}</h1>
-                        {% if profile.isPremium[0] %}<img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;" /> {% endif %}<img src="{{ sakura.contentPath }}/images/flags/{{ profile.country|lower }}.png" alt="{{ profile.country.short }}" style="vertical-align: middle;" /> <span style="font-size: .8em; line-height: 11px;">{{ profile.country.long }}</span>
+                        {% if profile.isPremium[0] %}<img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;" /> {% endif %}<img src="{{ sakura.contentPath }}/images/flags/{{ profile.country|lower }}.png" alt="{{ profile.country }}" style="vertical-align: middle;" /> <span style="font-size: .8em; line-height: 11px;">{{ profile.country(true) }}</span>
                         {% if session.checkLogin %}
                         <div class="user-actions">
                             {% if user.id == profile.id %}

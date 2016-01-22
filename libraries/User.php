@@ -173,6 +173,12 @@ class User
         $this->permissions = new Perms(Perms::SITE);
     }
 
+    // Update
+    public function update()
+    {
+        // placeholder
+    }
+
     // Get user birthday
     public function birthday($age = false)
     {

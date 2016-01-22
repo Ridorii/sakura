@@ -54,6 +54,7 @@ require_once ROOT . 'libraries/User.php';
 require_once ROOT . 'libraries/Users.php';
 require_once ROOT . 'libraries/Utils.php';
 require_once ROOT . 'libraries/Whois.php';
+require_once ROOT . 'libraries/Console/Application.php';
 require_once ROOT . 'libraries/Forum/Forum.php';
 require_once ROOT . 'libraries/Forum/Post.php';
 require_once ROOT . 'libraries/Forum/Thread.php';
@@ -83,6 +84,13 @@ Config::initDB();
 
 // Assign servers file to whois class
 Whois::setServers(ROOT . Config::local('data', 'whoisservers'));
+
+// Check if we're using console
+if (php_sapi_name() === 'cli') {
+    $console = new Console\Application;
+    $console->run($argv);
+    exit;
+}
 
 // Check if we the system has a cron service
 if (Config::get('no_cron_service')) {
