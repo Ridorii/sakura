@@ -12,7 +12,6 @@ namespace Sakura;
 class News
 {
     public $posts = []; // Posts array
-    private $posters = []; // Posters array (so we don't create a new user object every time)
 
     // Initialise the news object
     public function __construct($category)
@@ -23,14 +22,8 @@ class News
 
         // Attach poster data
         foreach ($posts as $post) {
-            // Check if we already have an object for this user
-            if (!array_key_exists($post['user_id'], $this->posters)) {
-                // Create new object
-                $this->posters[$post['user_id']] = User::construct($post['user_id']);
-            }
-
             // Attach the poster
-            $post['news_poster'] = $this->posters[$post['user_id']];
+            $post['news_poster'] = User::construct($post['user_id']);
 
             // Load comments
             $post['news_comments'] = $this->comments = new Comments('news-' . $category . '-' . $post['news_id']);

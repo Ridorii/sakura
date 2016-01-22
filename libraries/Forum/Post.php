@@ -120,7 +120,6 @@ class Post
         // Update the post
         Database::update('posts', [
             [
-                'post_id' => $this->id,
                 'topic_id' => $thread->id,
                 'forum_id' => $thread->forum,
                 'poster_id' => $this->poster->id,

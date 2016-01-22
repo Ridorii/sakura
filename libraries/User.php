@@ -173,6 +173,12 @@ class User
         $this->permissions = new Perms(Perms::SITE);
     }
 
+    // Update
+    public function update()
+    {
+        // placeholder
+    }
+
     // Get user birthday
     public function birthday($age = false)
     {
@@ -186,7 +192,7 @@ class User
             $diff = date_diff($birthday, $now);
 
             // Return the difference in years
-            return $diff->format('%Y');
+            return (int) $diff->format('%Y');
         }
 
         // Otherwise just return the birthday value

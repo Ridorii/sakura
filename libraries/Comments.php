@@ -12,7 +12,6 @@ namespace Sakura;
 class Comments
 {
     public $comments = []; // Array containing comments
-    private $commenters = []; // Array containing User objects
     public $category; // Comment category
     public $count = 0; // Amount of comments
 
@@ -45,14 +44,8 @@ class Comments
 
         // Sort comments
         foreach ($comments as $comment) {
-            // Check if we already have an object for this user
-            if (!array_key_exists($comment['comment_poster'], $this->commenters)) {
-                // Create new object
-                $this->commenters[$comment['comment_poster']] = User::construct($comment['comment_poster']);
-            }
-
             // Attach the poster
-            $comment['comment_poster'] = $this->commenters[$comment['comment_poster']];
+            $comment['comment_poster'] = User::construct($comment['comment_poster']);
             $comment['comment_text'] = Utils::parseEmotes(Utils::cleanString($comment['comment_text']));
 
             // Get likes and dislikes

@@ -25,7 +25,7 @@ if (Users::checkLogin()) {
             && $_GET['rank']
             && array_key_exists($_GET['rank'], $_MEMBERLIST_RANKS) ? $_GET['rank'] : 0
         )),
-        'users' => ($_MEMBERLIST_ACTIVE && !$_MEMBERLIST_NFOUND ? Users::getUsersInRank($_MEMBERLIST_ACTIVE) : Users::getAllUsers()),
+        'users' => ($_MEMBERLIST_ACTIVE ? Users::getUsersInRank($_MEMBERLIST_ACTIVE) : Users::getAllUsers(false)),
         'membersPerPage' => Config::get('members_per_page'),
     ];
 

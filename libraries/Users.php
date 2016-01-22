@@ -704,7 +704,7 @@ class Users
     }
 
     // Get all users
-    public static function getAllUsers($includeInactive = true, $includeAbyss = false)
+    public static function getAllUsers($includeInactive = true, $includeRestricted = false)
     {
         // Execute query
         $getUsers = Database::fetch('users', true);
@@ -718,6 +718,11 @@ class Users
 
             // Skip if inactive and not include deactivated users
             if (!$includeInactive && $user->permission(Site::DEACTIVATED)) {
+                continue;
+            }
+
+            // Skip if inactive and not include restricted users
+            if (!$includeRestricted && $user->permission(Site::RESTRICTED)) {
                 continue;
             }
 
