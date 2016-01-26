@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160122');
+define('SAKURA_VERSION', '20160126');
 define('SAKURA_VLABEL', 'Amethyst');
 define('SAKURA_COLOUR', '#9966CC');
 
@@ -17,6 +17,10 @@ define('ROOT', __DIR__ . '/');
 
 // Turn error reporting on for the initial startup sequence
 error_reporting(-1);
+
+// Override expiration variables
+ignore_user_abort(true);
+set_time_limit(0);
 
 // Set internal encoding method
 mb_internal_encoding('utf-8');
@@ -38,6 +42,7 @@ require_once ROOT . 'libraries/BBcode.php';
 require_once ROOT . 'libraries/Comments.php';
 require_once ROOT . 'libraries/Config.php';
 require_once ROOT . 'libraries/CSRF.php';
+require_once ROOT . 'libraries/DB.php';
 require_once ROOT . 'libraries/Database.php';
 require_once ROOT . 'libraries/File.php';
 require_once ROOT . 'libraries/Hashing.php';
@@ -86,7 +91,7 @@ Config::initDB();
 Whois::setServers(ROOT . Config::local('data', 'whoisservers'));
 
 // Check if we're using console
-if (php_sapi_name() === 'cli') {
+if (php_sapi_name() === 'cli' && !defined('SAKURA_CRON')) {
     $console = new Console\Application;
     $console->run($argv);
     exit;

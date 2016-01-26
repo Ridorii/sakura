@@ -1,3 +1,6 @@
 {% set comments = profile.profileComments.comments %}
 {% set commentsCategory = 'profile-' ~ profile.id %}
+<div class="new-profile-mode-title">
+    <h1 class="stylised">Comments</h1>
+</div>
 {% include 'elements/comments.twig' %}

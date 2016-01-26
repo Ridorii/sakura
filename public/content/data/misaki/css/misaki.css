@@ -485,6 +485,7 @@ a:active {
     display: flex;
     align-items: flex-end;
     box-shadow: 0 2px 6px rgba(0, 0, 0, .75);
+    background: no-repeat center center / cover transparent;
 }
 
 #profileHeader.floating {

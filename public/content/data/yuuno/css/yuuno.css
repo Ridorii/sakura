@@ -1320,6 +1320,212 @@ a.default:active {
 }
 
 /*
+ * New profile page styling
+ */
+.new-profile {
+    background: rgba(211, 191, 255, .8) !important;
+}
+
+.new-profile .new-profile-header {
+    height: 200px;
+    background: no-repeat center center / cover transparent;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #9475b2;
+}
+
+.new-profile .new-profile-info {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(0deg, rgba(211, 191, 255, .8), rgba(211, 191, 255, .8) 52px, transparent 52px, transparent);
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.new-profile .new-profile-avatar {
+    margin: 0;
+    height: 190px;
+    width: 190px;
+    margin: 0 2px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    background: no-repeat center center / cover transparent;
+}
+
+.new-profile .new-profile-username {
+    align-self: flex-end;
+    margin-left: 4px;
+}
+
+.new-profile .new-profile-dates {
+    font-size: .8em;
+    line-height: 1.4em;
+    text-align: right;
+    align-self: flex-end;
+    flex-grow: 5;
+    height: 45px;
+}
+
+.new-profile .new-profile-interactions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 2.5em;
+    line-height: 1.4em;
+    border-bottom: 1px solid #9475b2;
+}
+
+.new-profile .new-profile-interactions a {
+    color: #8364A1;
+    text-decoration: none;
+    text-shadow: 0 0 2px #9475B2;
+    transition: all .2s;
+}
+
+.new-profile .new-profile-interactions a:hover {
+    text-shadow: 0 0 6px #9475B2;
+}
+
+.new-profile .new-profile-interactions a:active {
+    color: #725390;
+    text-shadow: 0 0 8px #8364A1;
+}
+
+.new-profile .new-profile-navigation {
+    margin-left: 5px;
+}
+
+.new-profile .new-profile-actions {
+    border-left: 1px solid #9475b2;
+    min-width: 345px;
+    text-align: right;
+    margin-right: 5px;
+}
+
+.new-profile .new-profile-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.new-profile .new-profile-data {
+    display: block;
+    width: 350px;
+    border-left: 1px solid #9475b2;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.new-profile .new-profile-mode {
+    width: 100%;
+    flex-grow: 0;
+    margin-right: 2px;
+    overflow: auto;
+}
+
+.new-profile .new-profile-mode-title {
+    padding-bottom: 2px;
+    border-bottom: 1px solid #9475b2;
+    margin-bottom: 2px;
+}
+
+@media (max-width: 1032px) {
+    .new-profile .new-profile-info {
+        background: rgba(211, 191, 255, .5);
+        flex-flow: column;
+    }
+
+    .new-profile .new-profile-avatar {
+        height: 120px;
+        width: 120px;
+        margin: 2px;
+    }
+
+    .new-profile .new-profile-dates,
+    .new-profile .new-profile-username {
+        flex-grow: 6;
+        width: 100%;
+        text-align: center;
+    }
+
+    .new-profile .new-profile-dates br {
+        content: "";
+    }
+
+    .new-profile .new-profile-dates br:before {
+        content: "- ";
+    }
+
+    .new-profile .new-profile-interactions {
+        flex-flow: column;
+    }
+
+    .new-profile .new-profile-navigation,
+    .new-profile .new-profile-actions {
+        border: 0;
+        width: 100%;
+        text-align: center;
+        margin: 0;
+    }
+
+    .new-profile .new-profile-content {
+        flex-flow: column-reverse;
+    }
+
+    .new-profile .new-profile-data {
+        width: 100%;
+        border-bottom: 1px solid #9475b2;
+        border-left: 0;
+    }
+
+    .new-profile .new-profile-mode {
+        margin: 0;
+    }
+}
+
+@media (max-width: 500px) {
+    .new-profile .new-profile-dates {
+        display: none;
+    }
+}
+
+/*
+ * Friends section
+ */
+
+.profile-friends {
+    text-align: center;
+}
+
+.profile-friends > div:not(:last-child) {
+    display: inline-block;
+    border: 1px solid #9475B2;
+    text-align: center;
+    width: 200px;
+    margin: 4px 0;
+    border-radius: 3px;
+    box-shadow: inset 0 0 1px #9475B2;
+    background: #E4CFFF;
+    transition: background .2s, box-shadow .2s;
+}
+
+.profile-friends > div:not(:last-child):hover {
+    background: #C2AFFE;
+    box-shadow: inset 0 0 2px #9475B2;
+}
+
+.profile-friends > div > .friends-list-data {
+    display: block;
+}
+
+.profile-friends > div > .friends-list-data > .friends-list-name {
+    font-size: 1.2em;
+    line-height: 1.5em;
+    padding-bottom: 4px;
+}
+
+/*
  * Panel table
  */
 .panelTable {
