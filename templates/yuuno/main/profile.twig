@@ -22,10 +22,10 @@
                 </ul>
             </div>
         </div>
-    {% else %}
+    {% elseif get.old %}
         <div class="content profile">
             <div class="content-right content-column">
-                <div style="text-align: center;{% if profile.header %} background: url({{ urls.format('IMAGE_HEADER', [profile.id]) }}) no-repeat center top; background-size: 336px;{% endif %}">
+                <div style="text-align: center;">
                     <img src="{{ urls.format('IMAGE_AVATAR', [profile.id]) }}" alt="{{ profile.username }}'s Avatar" class="default-avatar-setting" style="box-shadow: 0 3px 7px #{% if profile.isOnline %}484{% else %}844{% endif %};" /><br />
                     {% if profile.mainRankId > 1 and profile.checkBan|length < 1 %}
                         <span style="font-size: .8em;">{{ profile.title }}</span>
@@ -46,8 +46,8 @@
                             <hr class="default" />
                             <a class="fa fa-file-text-o" title="View {{ profile.username }}'s user page" href="{{ urls.format('USER_PROFILE', [profile.id]) }}"></a>
                             {#<a class="fa fa-list" title="View {{ profile.username }}'s threads" href="{{ urls.format('USER_THREADS', [profile.id]) }}"></a>
-                            <a class="fa fa-reply" title="View {{ profile.username }}'s posts" href="{{ urls.format('USER_POSTS', [profile.id]) }}"></a>
-                            <a class="fa fa-star" title="View {{ profile.username }}'s friends" href="{{ urls.format('USER_FRIENDS', [profile.id]) }}"></a> shh #}
+                            <a class="fa fa-reply" title="View {{ profile.username }}'s posts" href="{{ urls.format('USER_POSTS', [profile.id]) }}"></a> shh #}
+                            <a class="fa fa-star" title="View {{ profile.username }}'s friends" href="{{ urls.format('USER_FRIENDS', [profile.id]) }}"></a>
                             {#<a class="fa fa-users" title="View {{ profile.username }}'s groups" href="{{ urls.format('USER_GROUPS', [profile.id]) }}"></a>#}
                             {% if not noUserpage %}
                             <a class="fa fa-comments-o" title="View {{ profile.username }}'s profile comments" href="{{ urls.format('USER_COMMENTS', [profile.id]) }}"></a>
@@ -148,6 +148,153 @@
                 {% include 'profile/' ~ profileView ~ '.twig' %}
             </div>
             <div class="clear"></div>
+        </div>
+    {% else %}
+        <div class="content new-profile">
+            <div class="new-profile-container">
+                <div class="new-profile-header" style="background-image: url({{ urls.format('IMAGE_HEADER', [profile.id]) }});">
+                    <div class="new-profile-info">
+                        <div class="default-avatar-setting new-profile-avatar" style="background-image: url({{ urls.format('IMAGE_AVATAR', [profile.id]) }}); box-shadow: 0 0 5px #{% if profile.isOnline %}484{% else %}844{% endif %};"></div>
+                        <div class="new-profile-username">
+                            <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px {% if profile.colour != 'inherit' %}{{ profile.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;" {% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0]['username_old'] }} before {{ profile.getUsernameHistory[0]['change_time']|date(sakura.dateFormat) }}." {% endif %}>{{ profile.username }}</h1>
+                            {% if profile.isPremium[0] %}<img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;" /> {% endif %}<img src="{{ sakura.contentPath }}/images/flags/{{ profile.country|lower }}.png" alt="{{ profile.country }}" style="vertical-align: middle;" title="{{ profile.country(true) }}" /> <span style="font-size: .8em;">{{ profile.title }}</span>
+                        </div>
+                        <div class="new-profile-dates">
+                            <b>Joined</b> <span title="{{ profile.registered|date(sakura.dateFormat) }}">{{ profile.elapsed.joined }}</span>
+                            <br />
+                            {% if profile.lastOnline < 1 %}
+                            <b>{{ profile.username }} hasn't logged in yet.</b>
+                            {% else %}
+                            <b>Last online</b> <span title="{{ profile.lastOnline|date(sakura.dateFormat) }}">{{ profile.elapsed.lastOnline }}</span>
+                            {% endif %}
+                            {% if profile.birthday != '0000-00-00' and profile.birthday|split('-')[0] > 0 %}
+                            <br /><b>Age</b> <span title="{{ profile.birthday }}">{{ profile.birthday(true) }} years old</span>&nbsp;
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="new-profile-interactions">
+                    <div class="new-profile-navigation">
+                        <a class="fa fa-file-text-o" title="View {{ profile.username }}'s user page" href="{{ urls.format('USER_PROFILE', [profile.id]) }}"></a>
+                        {#<a class="fa fa-list" title="View {{ profile.username }}'s threads" href="{{ urls.format('USER_THREADS', [profile.id]) }}"></a>
+                        <a class="fa fa-reply" title="View {{ profile.username }}'s posts" href="{{ urls.format('USER_POSTS', [profile.id]) }}"></a>#}
+                        <a class="fa fa-star" title="View {{ profile.username }}'s friends" href="{{ urls.format('USER_FRIENDS', [profile.id]) }}"></a>
+                        {#<a class="fa fa-users" title="View {{ profile.username }}'s groups" href="{{ urls.format('USER_GROUPS', [profile.id]) }}"></a>#}
+                        {% if not noUserpage %}
+                        <a class="fa fa-comments-o" title="View {{ profile.username }}'s profile comments" href="{{ urls.format('USER_COMMENTS', [profile.id]) }}"></a>
+                        {% endif %}
+                    </div>
+                    {% if session.checkLogin %}
+                    <div class="new-profile-actions">
+                        {% if user.id == profile.id %}
+                        <a class="fa fa-pencil-square-o" title="Edit your profile" href="{{ urls.format('SETTING_MODE', ['general', 'profile']) }}"></a>
+                        {% else %}
+                        {% if user.isFriends(profile.id) != 0 %}<a class="fa fa-{% if user.isFriends(profile.id) == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
+                        <a class="fa fa-user-{% if user.isFriends(profile.id) == 0 %}plus{% else %}times{% endif %}" title="{% if user.isFriends(profile.id) == 0 %}Add {{ profile.username }} as a friend{% else %}Remove friend{% endif %}" href="{% if user.isFriends(profile.id) == 0 %}{{ urls.format('FRIEND_ADD', [profile.id, php.sessionid, php.time, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [profile.id, php.sessionid, php.time, sakura.currentPage]) }}{% endif %}" id="profileFriendToggle"></a>
+                        {#<a class="fa fa-exclamation-circle" title="Report {{ profile.username }}" href="{{ urls.format('USER_REPORT', [profile.id]) }}"></a>#}
+                        {% endif %}
+                        {% if user.permission(constant('Sakura\\Perms\\Manage::CAN_RESTRICT_USERS'), constant('Sakura\\Perms::MANAGE')) %}
+                            <a class="fa fa-trash" title="Restrict {{ profile.username }}" href="?restrict={{ php.sessionid }}"></a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="new-profile-content">
+                    <div class="new-profile-mode">
+                        <div>
+                            {% include 'profile/' ~ profileView ~ '.twig' %}
+                        </div>
+                    </div>
+                    <div class="new-profile-data">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="text-align: left; font-weight: bold;">Threads</td>
+                                <td style="text-align: right;">{{ profile.forumStats.topics }}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; font-weight: bold;">Posts</td>
+                                <td style="text-align: right;">{{ profile.forumStats.posts }}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; font-weight: bold;">Friends</td>
+                                <td style="text-align: right;">{{ profile.friends(2)|length }}</td>
+                            </tr>
+                        </table>
+                        <hr class="default" />
+                        {% if profile.profileFields or user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
+                            {% if session.checkLogin %}
+                                <table style="width: 100%;">
+                                {% for name,field in profile.profileFields %}
+                                    <tr>
+                                        <td style="text-align: left; font-weight: bold;">
+                                            {{ field.name }}
+                                        </td>
+                                        <td style="text-align: right;">
+                                            {% if name == 'youtube' %}
+                                                <a href="https://youtube.com/{% if field.youtubetype == true %}channel{% else %}user{% endif %}/{{ field.value }}" class="default">{% if field.youtubetype == true %}{{ profile.username }}'s Channel{% else %}{{ field.value }}{% endif %}</a>
+                                            {% else %}
+                                                {% if field.islink %}
+                                                    <a href="{{ field.link }}" class="default">
+                                                {% endif %}
+                                                {{ field.value }}
+                                                {% if field.islink %}
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                {% if user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
+                                    <tr>
+                                        <td style="text-align: left; font-weight: bold;">E-mail address</td>
+                                        <td style="text-align: right;"><a href="mailto:{{ profile.email }}" class="default">{{ profile.email }}</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; font-weight: bold;">Register IP</td>
+                                        <td style="text-align: right;">{{ profile.registerIp }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left; font-weight: bold;">Last IP</td>
+                                        <td style="text-align: right;">{{ profile.lastIp }}</td>
+                                    </tr>
+                                {% endif %}
+                                </table>
+                            {% else %}
+                                <b>Log in to view the full profile!</b>
+                            {% endif %}
+                        {% endif %}
+                        <hr class="default" />
+                        <b>Account Standing</b>
+                        {% if profile.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) %}
+                            <h2 style="color: #888; text-shadow: 0 0 7px #888; margin-top: 0;">Deactivated</h2>
+                        {% elseif profile.checkBan %}
+                            <h2 style="color: #222; text-shadow: 0 0 7px #222; margin-top: 0;">Banned</h2>
+                        {% elseif profile.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}
+                            <h2 style="color: #800; text-shadow: 0 0 7px #800; margin-top: 0;">Restricted</h2>
+                        {% elseif profile.getWarnings %}
+                            <h2 style="color: #A00; text-shadow: 0 0 7px #A00; margin-top: 0;">Bad</h2>
+                        {% else %}
+                            <h2 style="color: #080; text-shadow: 0 0 7px #080; margin-top: 0;">Good</h2>
+                        {% endif %}
+                        {% if profile.getWarnings %}
+                            <table class="panelTable">
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Duration</th>
+                                    <th>Reason</th>
+                                </tr>
+                                {% for warning in profile.getWarnings %}
+                                <tr class="{{ warning.warning_action_text|lower }}">
+                                    <td>{{ warning.warning_action_text }}</td>
+                                    <td>{{ warning.warning_length }} minute{% if warning.warning_length != 1 %}s{% endif %}</td>
+                                    <td>{{ warning.warning_reason }}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
     {% endif %}
 {% endblock %}

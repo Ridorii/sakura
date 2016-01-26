@@ -21,10 +21,11 @@ $profile = User::construct(isset($_GET['u']) ? $_GET['u'] : 0);
 // Views array
 $views = [
     'index',
-    /*'friends',
-    'threads',
-    'posts',*/
+    'friends',
+    //'threads',
+    //'posts',
     'comments',
+    //'groups',
 ];
 
 // Assign the object to a renderData variable
