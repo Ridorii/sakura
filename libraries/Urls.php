@@ -16,7 +16,7 @@ class Urls
 
         // General site sections
         'SITE_HOME' => [
-            '/',
+            '/index.php',
             '/',
         ],
         'SITE_NEWS' => [
@@ -32,7 +32,7 @@ class Urls
             '/news/%s',
         ],
         'SITE_NEWS_CAT_POST' => [
-            '/news.php?cat=$s&id=%u',
+            '/news.php?cat=%s&id=%u',
             '/news/%s/%u',
         ],
         'SITE_SEARCH' => [
@@ -292,7 +292,7 @@ class Urls
         }
 
         // Check if mod_rewrite is enabled
-        $rewrite = ($rewrite === null ? Config::get('url_rewrite') : $rewrite) ? 1 : 0;
+        $rewrite = 0; //($rewrite === null ? Config::get('url_rewrite') : $rewrite) ? 1 : 0;
 
         // Format urls
         $formatted = vsprintf($this->urls[$lid][$rewrite], $args);

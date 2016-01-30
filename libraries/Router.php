@@ -17,7 +17,7 @@ class Router
     // Router container
     protected static $router = null;
 
-    // Base path
+    // Base path (unused for now)
     protected static $basePath = null;
 
     // Dispatcher
@@ -40,9 +40,10 @@ class Router
         // Check if the method exists
         if (in_array($name = strtoupper($name), self::$methods)) {
             $path = isset($args[2]) && $args !== null ? [$args[0], $args[2]] : $args[0];
+            $handler = is_callable($args[1]) || is_array($args[1]) ? $args[1] : explode('@', $args[1]);
             $filter = isset($args[3]) ? $args[3] : [];
 
-            self::$router->addRoute($name, $path, $args[1], $filter);
+            self::$router->addRoute($name, $path, $handler, $filter);
         }
     }
 
@@ -65,7 +66,7 @@ class Router
     // Parse the url
     private static function parseUrl($url)
     {
-        return parse_url(str_replace(self::$basePath, '', $url), PHP_URL_PATH);
+        return parse_url($url, PHP_URL_PATH);
     }
 
     // Handle requests
