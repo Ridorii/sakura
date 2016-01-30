@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160126');
+define('SAKURA_VERSION', '20160130');
 define('SAKURA_VLABEL', 'Amethyst');
 define('SAKURA_COLOUR', '#9966CC');
 
@@ -51,6 +51,7 @@ require_once ROOT . 'libraries/News.php';
 require_once ROOT . 'libraries/Payments.php';
 require_once ROOT . 'libraries/Perms.php';
 require_once ROOT . 'libraries/Rank.php';
+require_once ROOT . 'libraries/Router.php';
 require_once ROOT . 'libraries/Session.php';
 require_once ROOT . 'libraries/Template.php';
 require_once ROOT . 'libraries/Trick.php';
@@ -60,6 +61,7 @@ require_once ROOT . 'libraries/Users.php';
 require_once ROOT . 'libraries/Utils.php';
 require_once ROOT . 'libraries/Whois.php';
 require_once ROOT . 'libraries/Console/Application.php';
+require_once ROOT . 'libraries/Controllers/Meta.php';
 require_once ROOT . 'libraries/Forum/Forum.php';
 require_once ROOT . 'libraries/Forum/Post.php';
 require_once ROOT . 'libraries/Forum/Thread.php';
@@ -115,6 +117,12 @@ if (Config::get('no_cron_service')) {
 
 // Start output buffering
 ob_start(Config::get('use_gzip') ? 'ob_gzhandler' : null);
+
+// Initialise the router
+Router::init();
+
+// Include routes file
+include_once ROOT . 'routes.php';
 
 // Auth check
 $authCheck = Users::checkLogin();

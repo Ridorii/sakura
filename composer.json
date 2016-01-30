@@ -7,6 +7,7 @@
         "phpmailer/phpmailer": "*",
         "paypal/rest-api-sdk-php": "*",
         "jbbcode/jbbcode": "*",
-        "corneltek/cliframework":  "*"
+        "corneltek/cliframework":  "*",
+        "phroute/phroute": "^2.1"
     }
 }

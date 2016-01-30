@@ -1,7 +1,7 @@
 {% set friends = profile.friends(2)|batch(12) %}
 
 {% set paginationPages = friends %}
-{% set paginationUrl %}{{ urls.format('SETTING_MODE', ['friends', 'listing']) }}{% endset %}
+{% set paginationUrl %}{{ urls.format('USER_FRIENDS', [profile.id]) }}{% endset %}
 
 <div class="new-profile-mode-title">
     <h1 class="stylised">Friends</h1>
@@ -16,9 +16,9 @@
     </div>
     {% endfor %}
     <div class="clear"></div>
-    {% if friends|length > 1 %}
-    <div>
-        {% include 'elements/pagination.twig' %}
-    </div>
-    {% endif %}
 </div>
+{% if friends|length > 1 %}
+<div style="text-align: right;">
+    {% include 'elements/pagination.twig' %}
+</div>
+{% endif %}

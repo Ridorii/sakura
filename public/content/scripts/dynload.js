@@ -6,6 +6,12 @@ var DynLoad = (function () {
     }
     // Add the hooks
     DynLoad.init = function () {
+        if (this.active) {
+            return;
+        }
+        else {
+            this.active = true;
+        }
         // Add an event listener to the document
         document.addEventListener("click", function (e) {
             // Check if a href attribute is set
@@ -21,7 +27,7 @@ var DynLoad = (function () {
                     var doc = (new DOMParser()).parseFromString(loader.response(), "text/html");
                     history.pushState(null, null, e.target['href']);
                     document.head.innerHTML = doc.head.innerHTML;
-                    document.getElementById("content").innerHTML = doc.getElementById("content").innerHTML;
+                    document.getElementById("contentwrapper").innerHTML = doc.getElementById("contentwrapper").innerHTML;
                     var evt = document.createEvent('Event');
                     evt.initEvent('load', false, false);
                     window.dispatchEvent(evt);
@@ -31,5 +37,7 @@ var DynLoad = (function () {
             }
         });
     };
+    // Is active
+    DynLoad.active = false;
     return DynLoad;
 })();
