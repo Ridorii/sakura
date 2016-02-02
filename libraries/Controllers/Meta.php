@@ -109,7 +109,6 @@ class Meta
 
         // Print page contents
         echo $template->render('main/faq');
-
     }
 
     // Info pages

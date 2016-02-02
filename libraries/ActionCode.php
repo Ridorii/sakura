@@ -1,8 +1,4 @@
 <?php
-/*
- * Action code handler
- */
-
 namespace Sakura;
 
 /**
