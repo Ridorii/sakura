@@ -1,26 +1,29 @@
 <?php
-/*
- * Sakura MySQL Database Engine
- */
-
 namespace Sakura\DBWrapper;
 
 use PDO;
 use PDOException;
+use PDOStatement;
 use \Sakura\Config;
 
 /**
- * Class MySQL
- * @package Sakura\DBWrapper
+ * Sakura MySQL Wrapper.
+ * 
+ * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class mysql
 {
-    // Variable that will contain the SQL connection
-    // Please refrain from referring to this, unless it's for your personal branch/purpose, despite it being public
-    // it sort of defeats the "dynamic database system" I want to go for.
-    public $sql;
+    /**
+     * Contains the PDO object.
+     * 
+     * @var PDO
+     */
+    protected $sql;
 
-    // Constructor
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         if (!extension_loaded('PDO')) {
@@ -51,7 +54,15 @@ class mysql
         );
     }
 
-    // Regular IP/Hostname connection method prepare function
+    /**
+     * Generates a DSN for a regular hostname:port endpoint.
+     * 
+     * @param string $dbHost Database hostname.
+     * @param string $dbName Database name.
+     * @param int $dbPort Database host port.
+     * 
+     * @return string The PDO DSN.
+     */
     private function prepareHost($dbHost, $dbName, $dbPort = 3306)
     {
         $dsn = 'mysql:host=' . $dbHost . ';port=' . $dbPort . ';dbname=' . $dbName;
@@ -59,7 +70,14 @@ class mysql
         return $dsn;
     }
 
-    // Unix Socket connection method prepare function
+    /**
+     * Generates a DSN for a unix socket endpoint.
+     * 
+     * @param string $dbHost Path to the Unix Socket.
+     * @param string $dbName Database name.
+     * 
+     * @return string The PDO DSN.
+     */
     private function prepareSock($dbHost, $dbName)
     {
         $dsn = 'mysql:unix_socket=' . $dbHost . ';dbname=' . $dbName;
@@ -67,7 +85,15 @@ class mysql
         return $dsn;
     }
 
-    // Initialise connection using default PDO stuff
+    /**
+     * Initialise a the database connection.
+     * 
+     * @param string $dsn The PDO DSN.
+     * @param string $dbUname The database username.
+     * @param string $dbPword The database password.
+     * 
+     * @return bool Returns true if the connection was successful.
+     */
     private function initConnect($dsn, $dbUname, $dbPword)
     {
         try {
@@ -84,6 +110,20 @@ class mysql
         return true;
     }
 
+    /**
+     * Select table row(s).
+     * 
+     * @param string $table The table to select data from.
+     * @param array $data The WHERE selectors.
+     * @param array $order The order in which the data is returned.
+     * @param array $limit The limit of what should be returned.
+     * @param array $group The way MySQL will group the data.
+     * @param bool $distinct Only return distinct values.
+     * @param string $column Only select from this column.
+     * @param string $prefix Use a different table prefix than the one from the configuration.
+     * 
+     * @return PDOStatement The PDOStatement object for this action.
+     */
     public function select($table, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*', $prefix = null)
     {
 
@@ -184,7 +224,21 @@ class mysql
         return $query;
     }
 
-    // Fetch array from database
+    /**
+     * Summary of fetch
+     * 
+     * @param string $table The table to select data from.
+     * @param bool $fetchAll Whether all result will be returned or just the first one.
+     * @param array $data The WHERE selectors.
+     * @param array $order The order in which the data is returned.
+     * @param array $limit The limit of what should be returned.
+     * @param array $group The way MySQL will group the data.
+     * @param bool $distinct Only return distinct values.
+     * @param string $column Only select from this column.
+     * @param string $prefix Use a different table prefix than the one from the configuration.
+     * 
+     * @return array The data the database returned.
+     */
     public function fetch($table, $fetchAll = true, $data = null, $order = null, $limit = null, $group = null, $distinct = false, $column = '*', $prefix = null)
     {
 
@@ -195,7 +249,15 @@ class mysql
         return $fetchAll ? $query->fetchAll(PDO::FETCH_ASSOC) : $query->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Insert data to database
+    /**
+     * Insert data into the database.
+     * 
+     * @param string $table The table that the data will be inserted into.
+     * @param array $data The data that should be stored.
+     * @param string $prefix Use a different table prefix than the one from the configuration.
+     * 
+     * @return bool Successfulness.
+     */
     public function insert($table, $data, $prefix = null)
     {
 
@@ -236,7 +298,15 @@ class mysql
         return $result;
     }
 
-    // Update data in the database
+    /**
+     * Update existing database rows.
+     * 
+     * @param string $table The table that the updated data will be inserted into.
+     * @param array $data The data that should be stored.
+     * @param string $prefix Use a different table prefix than the one from the configuration.
+     * 
+     * @return bool Successfulness.
+     */
     public function update($table, $data, $prefix = null)
     {
 
@@ -289,7 +359,15 @@ class mysql
         return $result;
     }
 
-    // Delete data from the database
+    /**
+     * Deleted data from the database.
+     * 
+     * @param string $table The table that the data will be removed from.
+     * @param array $data The pointers to what should be deleted.
+     * @param string $prefix Use a different table prefix than the one from the configuration.
+     * 
+     * @return bool Successfulness.
+     */
     public function delete($table, $data, $prefix = null)
     {
 
@@ -328,7 +406,15 @@ class mysql
         return $result;
     }
 
-    // Count data from the database
+    /**
+     * Return the amount of rows from a table.
+     * 
+     * @param string $table Table to count in.
+     * @param array $data Data that should be matched.
+     * @param string $prefix Use a different table prefix than the one from the configuration.
+     * 
+     * @return array Array containing the SQL result.
+     */
     public function count($table, $data = null, $prefix = null)
     {
 
@@ -372,7 +458,13 @@ class mysql
         return $query->fetch(PDO::FETCH_BOTH);
     }
 
-    // Get the ID of the last inserted item
+    /**
+     * Get the id of the item that was last inserted into the database.
+     * 
+     * @param string $name Sequence of which the last id should be returned.
+     * 
+     * @return string The last inserted id.
+     */
     public function lastInsertID($name = null)
     {
         return $this->sql->lastInsertID($name);

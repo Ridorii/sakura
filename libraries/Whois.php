@@ -30,15 +30,25 @@
 namespace Sakura;
 
 /**
- * Class Whois
+ * WHOIS client.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Whois
 {
-    // Variables
+    /**
+     * The index of WHOIS servers.
+     * 
+     * @var array
+     */
     public static $servers;
 
-    // Set the whois servers list
+    /**
+     * Set the list of WHOIS servers.
+     * 
+     * @param string $serversFile The file containing the servers json.
+     */
     public static function setServers($serversFile)
     {
 
@@ -66,7 +76,13 @@ class Whois
         self::$servers = $servers;
     }
 
-    // Query the whois servers
+    /**
+     * Query a whois server.
+     * 
+     * @param string $address Hostname/IP address
+     * 
+     * @return bool|string Whois result.
+     */
     public static function query($address)
     {
 
@@ -84,7 +100,13 @@ class Whois
         }
     }
 
-    // Validates an address
+    /**
+     * Validate an address.
+     * 
+     * @param string $address The address.
+     * 
+     * @return int The address type.
+     */
     private static function validateAddress($address)
     {
 
@@ -102,7 +124,13 @@ class Whois
         return 0;
     }
 
-    // Look up a domain
+    /**
+     * Look up a domain.
+     * 
+     * @param string $address The address.
+     * 
+     * @return string The WHOIS result.
+     */
     private static function lookupDomain($address)
     {
 
@@ -153,7 +181,13 @@ class Whois
         return $return;
     }
 
-    // Look up an IP
+    /**
+     * Look up an IP.
+     * 
+     * @param string $address The IP.
+     * 
+     * @return string The WHOIS result.
+     */
     private static function lookupIP($address)
     {
 
@@ -192,7 +226,16 @@ class Whois
         return $return;
     }
 
-    // Query whois server
+    /**
+     * Query a whois server.
+     * 
+     * @param mixed $server The WHOIS server.
+     * @param mixed $address The address that should WHOIS'd.
+     * @param mixed $port The WHOIS server port.
+     * @param mixed $timeout The request timeout.
+     * 
+     * @return null|string The WHOIS result.
+     */
     private static function queryWhois($server, $address, $port = 43, $timeout = 10)
     {
 

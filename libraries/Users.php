@@ -1,19 +1,24 @@
 <?php
-/*
- * User Management
- */
-
 namespace Sakura;
 
 use Sakura\Perms\Site;
 
 /**
- * Class Users
+ * User management
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Users
 {
-    // Check if a user is logged in
+    /**
+     * Check if a user is logged in
+     * 
+     * @param int $uid The user ID.
+     * @param string $sid The session ID.
+     * 
+     * @return array|bool Either false or the ID and session in an array.
+     */
     public static function checkLogin($uid = null, $sid = null)
     {
         // Assign $uid and $sid
@@ -40,8 +45,7 @@ class Users
                 Config::get('cookie_prefix') . 'id',
                 0,
                 time() - 60,
-                Config::get('cookie_path'),
-                Config::get('cookie_domain')
+                Config::get('cookie_path')
             );
 
             // Unset Session ID
@@ -49,8 +53,7 @@ class Users
                 Config::get('cookie_prefix') . 'session',
                 '',
                 time() - 60,
-                Config::get('cookie_path'),
-                Config::get('cookie_domain')
+                Config::get('cookie_path')
             );
 
             return false;
@@ -63,8 +66,7 @@ class Users
                 Config::get('cookie_prefix') . 'id',
                 $uid,
                 time() + 604800,
-                Config::get('cookie_path'),
-                Config::get('cookie_domain')
+                Config::get('cookie_path')
             );
 
             // Session ID cookie
@@ -72,8 +74,7 @@ class Users
                 Config::get('cookie_prefix') . 'session',
                 $sid,
                 time() + 604800,
-                Config::get('cookie_path'),
-                Config::get('cookie_domain')
+                Config::get('cookie_path')
             );
         }
 
@@ -94,7 +95,16 @@ class Users
         return [$uid, $sid];
     }
 
-    // Log a user in
+    /**
+     * Log in to an account.
+     * 
+     * @param string $username The username.
+     * @param string $password The password.
+     * @param bool $remember Stay logged in "forever"?
+     * @param bool $cookies Set cookies?
+     * 
+     * @return array Return the status.
+     */
     public static function login($username, $password, $remember = false, $cookies = true)
     {
         // Check if authentication is disallowed
@@ -157,8 +167,7 @@ class Users
                 Config::get('cookie_prefix') . 'id',
                 $user->id,
                 time() + 604800,
-                Config::get('cookie_path'),
-                Config::get('cookie_domain')
+                Config::get('cookie_path')
             );
 
             // Session ID cookie
@@ -166,8 +175,7 @@ class Users
                 Config::get('cookie_prefix') . 'session',
                 $sessionKey,
                 time() + 604800,
-                Config::get('cookie_path'),
-                Config::get('cookie_domain')
+                Config::get('cookie_path')
             );
         }
 
@@ -175,7 +183,11 @@ class Users
         return [1, 'LOGIN_SUCCESS', $user->id];
     }
 
-    // Logout and kill the session
+    /**
+     * Logout
+     * 
+     * @return bool Was the logout successful?
+     */
     public static function logout()
     {
         // Check if user is logged in
@@ -191,8 +203,7 @@ class Users
             Config::get('cookie_prefix') . 'id',
             0,
             time() - 60,
-            Config::get('cookie_path'),
-            Config::get('cookie_domain')
+            Config::get('cookie_path')
         );
 
         // Unset Session ID
@@ -200,15 +211,26 @@ class Users
             Config::get('cookie_prefix') . 'session',
             '',
             time() - 60,
-            Config::get('cookie_path'),
-            Config::get('cookie_domain')
+            Config::get('cookie_path')
         );
 
         // Return true indicating a successful logout
         return true;
     }
 
-    // Register user
+    /**
+     * Register a new account.
+     * 
+     * @param string $username The username.
+     * @param string $password The password.
+     * @param string $confirmpass The password, again.
+     * @param string $email The e-mail.
+     * @param bool $tos Agreeing to the ToS.
+     * @param string $captcha Captcha.
+     * @param string $regkey Registration key (unused).
+     * 
+     * @return array Status.
+     */
     public static function register($username, $password, $confirmpass, $email, $tos, $captcha = null, $regkey = null)
     {
         // Check if authentication is disallowed
@@ -290,7 +312,14 @@ class Users
         return [1, ($requireActive ? 'EMAILSENT' : 'SUCCESS')];
     }
 
-    // Check if a user exists and then send the password forgot email
+    /**
+     * Send password forgot e-mail
+     * 
+     * @param string $username The username.
+     * @param string $email The e-mail.
+     * 
+     * @return array The status.
+     */
     public static function sendPasswordForgot($username, $email)
     {
         // Check if authentication is disallowed
@@ -345,7 +374,16 @@ class Users
         return [1, 'SUCCESS'];
     }
 
-    // Reset password with key
+    /**
+     * Reset a password.
+     * 
+     * @param string $verk The e-mail verification key.
+     * @param int $uid The user id.
+     * @param string $newpass New pass.
+     * @param string $verpass Again.
+     * 
+     * @return array Status.
+     */
     public static function resetPassword($verk, $uid, $newpass, $verpass)
     {
         // Check if authentication is disallowed
@@ -393,7 +431,14 @@ class Users
         return [1, 'SUCCESS'];
     }
 
-    // Check if a user exists and then resend the activation e-mail
+    /**
+     * Resend activation e-mail.
+     * 
+     * @param string $username Username.
+     * @param string $email E-mail.
+     * 
+     * @return array Status
+     */
     public static function resendActivationMail($username, $email)
     {
         // Check if authentication is disallowed
@@ -430,7 +475,14 @@ class Users
         return [1, 'SUCCESS'];
     }
 
-    // Send the activation e-mail and do other required stuff
+    /**
+     * Send activation e-mail.
+     * 
+     * @param mixed $uid User ID.
+     * @param mixed $customKey Key.
+     * 
+     * @return bool Always true.
+     */
     public static function sendActivationMail($uid, $customKey = null)
     {
 
@@ -475,7 +527,15 @@ class Users
         return true;
     }
 
-    // Activating a user
+    /**
+     * Activate a user.
+     * 
+     * @param int $uid The ID.
+     * @param bool $requireKey Require a key.
+     * @param string $key The key.
+     * 
+     * @return array Status.
+     */
     public static function activateUser($uid, $requireKey = false, $key = null)
     {
         // Get the user data
@@ -511,7 +571,14 @@ class Users
         return [1, 'SUCCESS'];
     }
 
-    // Check if a user exists
+    /**
+     * Check if a user exists.
+     * 
+     * @param mixed $user The Username or ID.
+     * @param bool $id Use id instead.
+     * 
+     * @return mixed Returns the ID if it exists, false otherwise.
+     */
     public static function userExists($user, $id = true)
     {
         // Clean string
@@ -524,7 +591,11 @@ class Users
         return count($user) ? $user[0]['user_id'] : false;
     }
 
-    // Get the available profile fields
+    /**
+     * Get all available profile fields.
+     * 
+     * @return array|null The fields.
+     */
     public static function getProfileFields()
     {
         // Get profile fields
@@ -549,7 +620,11 @@ class Users
         return $fields;
     }
 
-    // Get the available option fields
+    /**
+     * Get all available option fields.
+     * 
+     * @return array|null The fields.
+     */
     public static function getOptionFields()
     {
         // Get option fields
@@ -578,7 +653,11 @@ class Users
         return $fields;
     }
 
-    // Get all online users
+    /**
+     * Get all online users.
+     * 
+     * @return array Array containing User instances.
+     */
     public static function checkAllOnline()
     {
         // Assign time - 500 to a variable
@@ -597,7 +676,14 @@ class Users
         return $return;
     }
 
-    // Add premium to a user
+    /**
+     * Add premium time to a user.
+     * 
+     * @param int $id The user ID.
+     * @param int $seconds The amount of extra seconds.
+     * 
+     * @return array|double|int The new expiry date.
+     */
     public static function addUserPremium($id, $seconds)
     {
         // Check if there's already a record of premium for this user in the database
@@ -631,7 +717,11 @@ class Users
         return $expire;
     }
 
-    // Update the premium data
+    /**
+     * Process premium meta data.
+     * 
+     * @param int $id The user ID.
+     */
     public static function updatePremiumMeta($id)
     {
         // Get the ID for the premium user rank from the database
@@ -664,7 +754,13 @@ class Users
         }
     }
 
-    // Get user(s) by IP
+    /**
+     * Get all users that registered from a certain IP.
+     * 
+     * @param string $ip The IP. 
+     * 
+     * @return array The users.
+     */
     public static function getUsersByIP($ip)
     {
         // Get users by registration IP
@@ -680,7 +776,15 @@ class Users
         return $users;
     }
 
-    // Get users in rank
+    /**
+     * Get users from a rank.
+     * 
+     * @param int $rankId The rank ID.
+     * @param mixed $users Array with users.
+     * @param mixed $excludeAbyss Unused.
+     * 
+     * @return array Users.
+     */
     public static function getUsersInRank($rankId, $users = null, $excludeAbyss = true)
     {
         // Get all users (or use the supplied user list to keep server load down)
@@ -703,7 +807,14 @@ class Users
         return $rank;
     }
 
-    // Get all users
+    /**
+     * Get all users.
+     * 
+     * @param mixed $includeInactive include deactivated users.
+     * @param mixed $includeRestricted include restricted users.
+     * 
+     * @return array The users.
+     */
     public static function getAllUsers($includeInactive = true, $includeRestricted = false)
     {
         // Execute query
@@ -733,7 +844,11 @@ class Users
         return $users;
     }
 
-    // Get all ranks
+    /**
+     * Get all ranks.
+     * 
+     * @return array All ranks.
+     */
     public static function getAllRanks()
     {
         // Execute query
@@ -751,7 +866,16 @@ class Users
         return $ranks;
     }
 
-    // Get a user's notifications
+    /**
+     * Get a user's notifications.
+     * 
+     * @param int $uid The user id.
+     * @param int $timediff The maximum difference in time.
+     * @param bool $excludeRead Exclude notifications that were already read.
+     * @param bool $markRead Automatically mark as read.
+     * 
+     * @return array The notifications.
+     */
     public static function getNotifications($uid = null, $timediff = 0, $excludeRead = true, $markRead = false)
     {
         // Prepare conditions
@@ -787,7 +911,12 @@ class Users
         return $notifications;
     }
 
-    // Marking notifications as read
+    /**
+     * Mark a notification as read
+     * 
+     * @param mixed $id The notification's ID. 
+     * @param mixed $mode Read or unread.
+     */
     public static function markNotificationRead($id, $mode = true)
     {
         // Execute an update statement
@@ -801,7 +930,17 @@ class Users
         ]);
     }
 
-    // Adding a new notification
+    /**
+     * Create a new notification.
+     * 
+     * @param int $user The user id.
+     * @param string $title The notification title.
+     * @param string $text The rest of the text.
+     * @param int $timeout After how many seconds the notification should disappear.
+     * @param string $img The image.
+     * @param string $link The link.
+     * @param int $sound Whether it should play a noise.
+     */
     public static function createNotification($user, $title, $text, $timeout = 60000, $img = 'FONT:fa-info-circle', $link = '', $sound = 0)
     {
         // Get current timestamp
@@ -821,7 +960,11 @@ class Users
         ]);
     }
 
-    // Get the ID of the newest user
+    /**
+     * Get the newest member's ID.
+     * 
+     * @return int The user ID.
+     */
     public static function getNewestUserId()
     {
         return Database::fetch('users', false, ['rank_main' => [Config::get('restricted_rank_id'), '!=']], ['user_id', true], ['1'])['user_id'];

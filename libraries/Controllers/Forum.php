@@ -1,8 +1,4 @@
 <?php
-/*
- * Forum controllers
- */
-
 namespace Sakura\Controllers;
 
 use Sakura\Config;
@@ -15,12 +11,18 @@ use Sakura\Users;
 use Sakura\Utils;
 
 /**
- * Class Forum
+ * Forum page controllers.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Forum
 {
-    // Forum index
+    /**
+     * Serves the forum index.
+     * 
+     * @return mixed HTML for the forum index.
+     */
     public static function index()
     {
         // Get the global renderData
@@ -53,10 +55,5 @@ class Forum
 
         // Return the compiled page
         return $template->render('forum/index');
-    }
-
-    // View a forum
-    public static function forum($id = null)
-    {
     }
 }

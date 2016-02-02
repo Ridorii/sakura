@@ -1,25 +1,33 @@
 <?php
-/*
- * Utils Class
- */
-
 namespace Sakura;
 
 use PHPMailer;
 
 /**
- * Class Utils
+ * Meta utility functions.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Utils
 {
-    // Get emoticons
+    /**
+     * Get the emoticons.
+     * 
+     * @return array Array containing emoticons.
+     */
     public static function getEmotes()
     {
         return Database::fetch('emoticons');
     }
 
-    // Parsing emoticons
+    /**
+     * Parse the emoticons.
+     * 
+     * @param string $text String to parse emoticons from.
+     * 
+     * @return string Parsed text.
+     */
     public static function parseEmotes($text)
     {
 
@@ -39,7 +47,13 @@ class Utils
         return $text;
     }
 
-    // Verify ReCAPTCHA
+    /**
+     * Verify a ReCaptcha
+     * 
+     * @param string $response The user response.
+     * 
+     * @return array The response from the ReCaptcha API.
+     */
     public static function verifyCaptcha($response)
     {
 
@@ -63,7 +77,14 @@ class Utils
         return $resp;
     }
 
-    // Error Handler
+    /**
+     * The error handler.
+     * 
+     * @param int $errno The error ID.
+     * @param string $errstr Quick description of the event.
+     * @param string $errfile File the error occurred in.
+     * @param int $errline Line the error occurred on.
+     */
     public static function errorHandler($errno, $errstr, $errfile, $errline)
     {
 
@@ -217,7 +238,14 @@ class Utils
         die($errorPage);
     }
 
-    // Send emails
+    /**
+     * Send an e-mail.
+     * 
+     * @param string $to Destination e-mail.
+     * @param string $subject E-mail subject.
+     * @param string $body Contents of the message.
+     * @return bool|string Return whatever PHPMailer returns.
+     */
     public static function sendMail($to, $subject, $body)
     {
 
@@ -277,7 +305,16 @@ class Utils
         return $send;
     }
 
-    // Cleaning strings
+    /**
+     * Clean a string
+     * 
+     * @param string $string Dirty string.
+     * @param bool $lower Make the string lowercase.
+     * @param bool $noSpecial String all special characters.
+     * @param bool $replaceSpecial Thing to replace special characters with.
+     * 
+     * @return string Clean string.
+     */
     public static function cleanString($string, $lower = false, $noSpecial = false, $replaceSpecial = '')
     {
 
@@ -300,7 +337,13 @@ class Utils
         return $string;
     }
 
-    // Loading info pages
+    /**
+     * Load contents of an infopage.
+     * 
+     * @param string $id ID of the info page.
+     * 
+     * @return array|bool Contents of the info page.
+     */
     public static function loadInfoPage($id)
     {
 
@@ -311,7 +354,13 @@ class Utils
         return count($infopage) ? $infopage : false;
     }
 
-    // Validate MX records
+    /**
+     * Validate MX records.
+     * 
+     * @param string $email E-mail address.
+     * 
+     * @return bool Success.
+     */
     public static function checkMXRecord($email)
     {
 
@@ -325,7 +374,13 @@ class Utils
         return $record;
     }
 
-    // Check IP version
+    /**
+     * Detect the version of an IP.
+     * 
+     * @param string $ip The IP.
+     * 
+     * @return int Either 0, 4 or 6.
+     */
     public static function ipVersion($ip)
     {
 
@@ -346,7 +401,13 @@ class Utils
         return 0;
     }
 
-    // Convert inet_pton to string with bits
+    /**
+     * Unpack an IPv6
+     * 
+     * @param mixed $inet IP address.
+     * 
+     * @return null|string The unpacked IP.
+     */
     public static function inetToBits($inet)
     {
 
@@ -368,7 +429,14 @@ class Utils
         return $binaryIP;
     }
 
-    // Match IP subnets
+    /**
+     * Match a subnet.
+     * 
+     * @param string $ip the IP.
+     * @param string $range The range.
+     * 
+     * @return bool|int Success.
+     */
     public static function matchSubnet($ip, $range)
     {
 
@@ -413,7 +481,13 @@ class Utils
         }
     }
 
-    // Check if IP is a CloudFlare IP
+    /**
+     * Check if an IP originates from CloudFlare.
+     * 
+     * @param string $ip The IP.
+     * 
+     * @return bool Success.
+     */
     public static function checkCFIP($ip)
     {
 
@@ -445,7 +519,11 @@ class Utils
         return false;
     }
 
-    // Gets IP of current visitor
+    /**
+     * Get the IP of a visitor.
+     * 
+     * @return string The IP.
+     */
     public static function getRemoteIP()
     {
 
@@ -464,12 +542,17 @@ class Utils
         return $ip;
     }
 
-    // Get country code from CloudFlare header (which just returns XX if not found)
+    /**
+     * Get the country code of a visitor.
+     * 
+     * @return string 2 character country code.
+     */
     public static function getCountryCode()
     {
         // Attempt to get country code using PHP's built in geo thing
         if (function_exists("geoip_country_code_by_name")) {
             $code = geoip_country_code_by_name(self::getRemoteIP());
+
             // Check if $code is anything
             if ($code) {
                 return $code;
@@ -485,7 +568,13 @@ class Utils
         return 'XX';
     }
 
-    // Calculate password entropy
+    /**
+     * Check the entropy of a password.
+     * 
+     * @param string $pw Password.
+     * 
+     * @return double|int Entropy.
+     */
     public static function pwdEntropy($pw)
     {
 
@@ -496,7 +585,13 @@ class Utils
         return count(count_chars($pw, 1)) * log(256, 2);
     }
 
-    // Get country name from ISO 3166 code
+    /**
+     * Get the country name from a 2 character code.
+     * 
+     * @param string $code The country code.
+     * 
+     * @return string The country name.
+     */
     public static function getCountryName($code)
     {
 
@@ -519,7 +614,11 @@ class Utils
         return 'Unknown';
     }
 
-    // Get FAQ data
+    /**
+     * Get the FAQ table data (why is this a function).
+     * 
+     * @return array FAQ data.
+     */
     public static function getFaqData()
     {
 
@@ -530,7 +629,11 @@ class Utils
         return $faq;
     }
 
-    // Get log type string
+    /**
+     * Get the type of log in text (unused and will probably be removwed).
+     * @param mixed $type 
+     * @return mixed
+     */
     public static function getLogStringFromType($type)
     {
 
@@ -546,7 +649,11 @@ class Utils
         return $return['string'];
     }
 
-    // Get formatted logs
+    /**
+     * Get a user's logs (unused, probably removed in future).
+     * @param mixed $uid 
+     * @return array
+     */
     public static function getUserLogs($uid = 0)
     {
 
@@ -573,7 +680,15 @@ class Utils
         return $logs;
     }
 
-    // Time elapsed, doesn't account for leap years
+    /**
+     * Calculate the time that has elapsed since a certain data (doesn't take leap years in account).
+     * 
+     * @param int $timestamp The timestamp.
+     * @param string $append Append to
+     * @param string $none Text if 0.
+     * 
+     * @return string Returns the time elapsed in a readable format.
+     */
     public static function timeElapsed($timestamp, $append = ' ago', $none = 'Just now')
     {
 
@@ -609,7 +724,13 @@ class Utils
         }
     }
 
-    // Get the byte symbol from a value
+    /**
+     * Get the byte symbol for a unit from bytes.
+     * 
+     * @param int $bytes The amount of bytes.
+     * 
+     * @return string The converted amount with the symbol.
+     */
     public static function getByteSymbol($bytes)
     {
 
@@ -631,7 +752,11 @@ class Utils
         return $bytes;
     }
 
-    // Get Premium tracker data
+    /**
+     * Get the premium tracker data.
+     * 
+     * @return array The premium tracker data.
+     */
     public static function getPremiumTrackerData()
     {
 
@@ -665,7 +790,13 @@ class Utils
         return $data;
     }
 
-    // Update donation tracker
+    /**
+     * Add a new entry to the tracker.
+     * 
+     * @param int $id The user ID.
+     * @param float $amount The amount of money.
+     * @param string $comment A little information.
+     */
     public static function updatePremiumTracker($id, $amount, $comment)
     {
         Database::insert('premium_log', [
@@ -678,7 +809,13 @@ class Utils
         ]);
     }
 
-    // Cleaning up the contents of code tags
+    /**
+     * Clean up the contents of <code> tags.
+     * 
+     * @param string $text Dirty
+     * 
+     * @return string Clean
+     */
     public static function fixCodeTags($text)
     {
         $parts = explode('<code>', $text);

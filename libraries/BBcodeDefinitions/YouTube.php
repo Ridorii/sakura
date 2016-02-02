@@ -1,23 +1,34 @@
 <?php
-/*
- * YouTube BBcode
- * As displayed on this page http://jbbcode.com/docs
- */
-
 namespace Sakura\BBcodeDefinitions;
 
 use JBBCode\Parser;
 use JBBCode\CodeDefinition;
 use JBBCode\ElementNode;
 
+/**
+ * YouTube video embedding bbcode for JBBCode
+ * 
+ * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
+ */
 class YouTube extends CodeDefinition
 {
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         parent::__construct();
         $this->setTagName("youtube");
     }
 
+    /**
+     * Compiles the YouTube bbcode to HTML
+     * 
+     * @param ElementNode $el The JBBCode element node.
+     * 
+     * @return string The compiled HTML.
+     */
     public function asHtml(ElementNode $el)
     {
         $content = "";

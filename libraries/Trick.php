@@ -1,13 +1,11 @@
 <?php
-/*
- * Extension manager
- */
-
 namespace Sakura;
 
 /**
- * Class Trick
+ * Extension manager.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Trick
 {

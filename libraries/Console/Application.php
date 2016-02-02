@@ -1,21 +1,27 @@
 <?php
-/*
- * CLI Main
- */
-
 namespace Sakura\Console;
 
 /**
- * Class Console
+ * Command line interface main.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Application extends \CLIFramework\Application
 {
-    // Application info
+    /**
+     * CLI Application name
+     */
     const NAME = 'Sakura';
+
+    /**
+     * CLI Application version
+     */
     const VERSION = SAKURA_VERSION;
 
-    // Initialiser
+    /**
+     * CLI initialiser
+     */
     public function init()
     {
         parent::init();

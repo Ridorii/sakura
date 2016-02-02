@@ -1,16 +1,21 @@
 <?php
-/*
- * Text align bbcode
- */
-
 namespace Sakura\BBcodeDefinitions;
 
 use JBBCode\Parser;
 use JBBCode\CodeDefinition;
 use JBBCode\ElementNode;
 
+/**
+ * Text alignment bbcode for JBBCode
+ * 
+ * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
+ */
 class Align extends CodeDefinition
 {
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -18,6 +23,13 @@ class Align extends CodeDefinition
         $this->setUseOption(true);
     }
 
+    /**
+     * Creates compiled HTML from the align bbcode.
+     * 
+     * @param ElementNode $el The JBBCode element node.
+     * 
+     * @return string Compiled HTML.
+     */
     public function asHtml(ElementNode $el)
     {
         $alignments = [

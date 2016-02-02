@@ -1,16 +1,21 @@
 <?php
-/*
- * Management permissions
- */
-
 namespace Sakura\Perms;
 
 /**
- * Class Manage
+ * All site management permission flags.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Manage
 {
-    const USE_MANAGE = 1; // Can use manage
-    const CAN_RESTRICT_USERS = 2; // Can change the status of users to restricted
+    /**
+     * Can this user use the management panel?
+     */
+    const USE_MANAGE = 1;
+
+    /**
+     * Can this user toggle the restriction status of users?
+     */
+    const CAN_RESTRICT_USERS = 2;
 }

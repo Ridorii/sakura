@@ -1,32 +1,58 @@
 <?php
-/*
- * Permission Handler
- */
-
 namespace Sakura;
 
 /**
- * Class Perms
+ * Global permissions handler.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Perms
 {
-    // Modes
+    /**
+     * SITE permission mode, used for general permissions.
+     */
     const SITE = 'permissions\permissions_site';
+
+    /**
+     * MANAGE permission mode, used for site management actions.
+     */
     const MANAGE = 'permissions\permissions_manage';
+    
+    /**
+     * FORUM permission mode, used per forum.
+     */
     const FORUM = 'forum_permissions\forum_perms';
 
-    // Variables
+    /**
+     * The table containing the permissions.
+     * 
+     * @var string
+     */
     protected $table = '';
+
+    /**
+     * The column containing the permissions.
+     * 
+     * @var string
+     */
     protected $column = '';
     
-    // Constructor
+    /**
+     * Constructor.
+     * 
+     * @param string $mode One of the modes above.
+     */
     public function __construct($mode)
     {
         $this->mode($mode);
     }
 
-    // Change the mode
+    /**
+     * Set a permission mode.
+     * 
+     * @param string $mode One of the modes above.
+     */
     public function mode($mode)
     {
         // Split the mode variable
@@ -37,13 +63,28 @@ class Perms
         $this->column = $mode[1];
     }
 
-    // Checking permissions
+    /**
+     * Compare a permission flag.
+     * 
+     * @param int $flag The permission flag.
+     * @param int $perm The permissions of the user.
+     * 
+     * @return bool Success indicator.
+     */
     public function check($flag, $perm)
     {
         return ($flag & $perm) > 0;
     }
 
-    // Getting a rank's permissions
+    /**
+     * Get the permissions from a rank.
+     * 
+     * @param int $rid The ID of the rank in question.
+     * @param array $conditions Additional SQL conditions.
+     * @param int $perm A permission flag to append to.
+     * 
+     * @return int A permission flag.
+     */
     public function rank($rid, $conditions = [], $perm = 0)
     {
         // Merge rank id and additional conditions
@@ -62,7 +103,15 @@ class Perms
         return $perm;
     }
 
-    // Getting a user's permissions
+    /**
+     * Get the permissions from a user.
+     * 
+     * @param int $uid The ID of the user in question.
+     * @param array $conditions Additional SQL conditions.
+     * @param int $perm A permission flag to append to.
+     * 
+     * @return int A permission flag.
+     */
     public function user($uid, $conditions = [], $perm = 0)
     {
         // Create a user object

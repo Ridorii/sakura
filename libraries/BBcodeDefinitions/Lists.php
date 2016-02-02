@@ -1,9 +1,4 @@
 <?php
-/*
- * List BBcode
- * https://gist.github.com/jbowens/5646994
- */
-
 namespace Sakura\BBcodeDefinitions;
 
 use JBBCode\Parser;
@@ -19,9 +14,14 @@ use JBBCode\ElementNode;
  *   [*] third item
  * [/list]
  *
+ * @package Sakura
+ * @author Jackson Owens <jackson_owens@alumni.brown.edu>
  */
 class Lists extends CodeDefinition
 {
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->parseContent = true;
@@ -30,6 +30,13 @@ class Lists extends CodeDefinition
         $this->nestLimit = -1;
     }
 
+    /**
+     * Compiles the list bbcode to HTML.
+     * 
+     * @param ElementNode $el The JBBCode element node.
+     * 
+     * @return string The compiled HTML list.
+     */
     public function asHtml(ElementNode $el)
     {
         $bodyHtml = '';

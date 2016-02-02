@@ -1,25 +1,66 @@
 <?php
-/*
- * Forum permissions
- */
-
 namespace Sakura\Perms;
 
 /**
- * Class Forum
+ * All forum permission flags.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Forum
 {
-    const VIEW = 1; // Can view this forum
-    const REPLY = 2; // Can reply to threads in this forum
-    const CREATE_THREADS = 4; // Can create threads in this forum
-    const EDIT_OWN = 8; // Can edit their posts
-    const DELETE_OWN = 16; // Can delete theirs posts
-    const STICKY = 32; // Can sticky threads
-    const ANNOUNCEMENT = 64; // Can announce threads
-    const EDIT_ANY = 128; // Can edit any post
-    const DELETE_ANY = 256; // Can delete any post
-    const LOCK = 512; // Can (un)lock threads
-    const MOVE = 1024; // Can move threads
+    /**
+     * Can this user view/read this forum?
+     */
+    const VIEW = 1;
+
+    /**
+     * Can this user post/reply in this forum?
+     */
+    const REPLY = 2;
+
+    /**
+     * Can this user create threads in this forum?
+     */
+    const CREATE_THREADS = 4;
+
+    /**
+     * Can this user edit their own posts?
+     */
+    const EDIT_OWN = 8;
+
+    /**
+     * Can this user delete their own posts?
+     */
+    const DELETE_OWN = 16;
+
+    /**
+     * Can this user change threads to the sticky type?
+     */
+    const STICKY = 32;
+
+    /**
+     * Can this user change threads to the announcement type?
+     */
+    const ANNOUNCEMENT = 64;
+
+    /**
+     * Can this user edit any post in this forum?
+     */
+    const EDIT_ANY = 128;
+
+    /**
+     * Can this user delete any post in this forum?
+     */
+    const DELETE_ANY = 256;
+
+    /**
+     * Can this user toggle the locked status on threads in this forum?
+     */
+    const LOCK = 512;
+
+    /**
+     * Can this user move threads to other forums from/to this forum?
+     */
+    const MOVE = 1024;
 }

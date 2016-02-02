@@ -1,29 +1,43 @@
 <?php
-/*
- * Router Wrapper
- */
-
 namespace Sakura;
 
 use Phroute\Phroute\RouteCollector;
 use Phroute\Phroute\Dispatcher;
 
 /**
- * Class Router
+ * Sakura Wrapper for Phroute.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Router
 {
-    // Router container
+    /**
+     * Container for RouteCollector
+     * 
+     * @var RouteCollector
+     */
     protected static $router = null;
 
-    // Base path (unused for now)
+    /**
+     * Base path of the router.
+     * 
+     * @var string
+     */
     protected static $basePath = null;
 
-    // Dispatcher
+    /**
+     * Container for the Dispatcher
+     * 
+     * @var Dispatcher
+     */
     protected static $dispatcher = null;
 
-    // Request methods
+    /**
+     * Collection of handled HTTP request types.
+     * 
+     * @var array
+     */
     protected static $methods = [
         'GET',
         'POST',
@@ -34,7 +48,12 @@ class Router
         'ANY'
     ];
 
-    // Add a handler
+    /**
+     * Method aliases for adding routes.
+     * 
+     * @param string $name A HTTP method.
+     * @param array $args The arguments.
+     */
     public static function __callStatic($name, $args)
     {
         // Check if the method exists
@@ -47,7 +66,11 @@ class Router
         }
     }
 
-    // Initialisation function
+    /**
+     * Initialisation.
+     * 
+     * @param string $basePath The base path of the router.
+     */
     public static function init($basePath = '/')
     {
         // Set base path
@@ -57,19 +80,36 @@ class Router
         self::$router = new RouteCollector;
     }
 
-    // Set base path
+    /**
+     * Set the base path.
+     * 
+     * @param string $basePath The base path of the router.
+     */
     public static function setBasePath($basePath)
     {
         self::$basePath = $basePath;
     }
 
-    // Parse the url
+    /**
+     * Parse a URL.
+     * 
+     * @param string $url The URL that is to be parsed.
+     * 
+     * @return string THe parsed URL.
+     */
     private static function parseUrl($url)
     {
         return parse_url($url, PHP_URL_PATH);
     }
 
-    // Handle requests
+    /**
+     * Handle requests.
+     * 
+     * @param string $method The HTTP method used to make the request.
+     * @param string $url The URL the request is made to.
+     * 
+     * @return mixed The response.
+     */
     public static function handle($method, $url)
     {
         // Check if the dispatcher is defined

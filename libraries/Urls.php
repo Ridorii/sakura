@@ -1,17 +1,21 @@
 <?php
-/*
- * URL management
- */
-
 namespace Sakura;
 
 /**
- * Class Urls
+ * Rewrite URL generator.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Urls
 {
-    // Unformatted links [0] = no mod_rewrite, [1] = mod_rewrite
+    /**
+     * Unformatted links
+     * 0 - Plain
+     * 1 - mod_rewrite
+     * 
+     * @var array
+     */
     protected $urls = [
 
         // General site sections
@@ -282,7 +286,15 @@ class Urls
 
     ];
 
-    // Get a formatted url
+    /**
+     * Format a URL.
+     * 
+     * @param string $lid The ID of a URL.
+     * @param array $args Additional arguments.
+     * @param bool $rewrite Toggle mod_rewrite.
+     * 
+     * @return null|string The formatted URL.
+     */
     public function format($lid, $args = [], $rewrite = null)
     {
 

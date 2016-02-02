@@ -1,14 +1,14 @@
 <?php
 /*
  * Sakura Community Management System
- * (c) 2013-2016 Flashwave <http://flash.moe>
+ * (c) 2013-2016 Julian van de Groep <http://flash.moe>
  */
 
 // Declare namespace
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160130');
+define('SAKURA_VERSION', '20160202');
 define('SAKURA_VLABEL', 'Amethyst');
 define('SAKURA_COLOUR', '#9966CC');
 
@@ -42,11 +42,9 @@ require_once ROOT . 'libraries/BBcode.php';
 require_once ROOT . 'libraries/Comments.php';
 require_once ROOT . 'libraries/Config.php';
 require_once ROOT . 'libraries/CSRF.php';
-require_once ROOT . 'libraries/DB.php';
 require_once ROOT . 'libraries/Database.php';
 require_once ROOT . 'libraries/File.php';
 require_once ROOT . 'libraries/Hashing.php';
-require_once ROOT . 'libraries/Manage.php';
 require_once ROOT . 'libraries/News.php';
 require_once ROOT . 'libraries/Payments.php';
 require_once ROOT . 'libraries/Perms.php';

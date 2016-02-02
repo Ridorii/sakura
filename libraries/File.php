@@ -1,28 +1,74 @@
 <?php
-/*
- * File handler
- */
-
 namespace Sakura;
 
 use finfo;
 
 /**
- * Class File
+ * Used for storing files served through Sakura.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class File
 {
-    // Variables
+    /**
+     * ID of the file.
+     * @var int
+     */
     public $id = 0;
+
+    /**
+     * User instance of the user that uploaded this file.
+     * 
+     * @var User
+     */
     public $user = null;
+
+    /**
+     * Data of the file.
+     * 
+     * @var string
+     */
     public $data = null;
+
+    /**
+     * Original filename of the file.
+     * 
+     * @var string
+     */
     public $name = null;
+
+    /**
+     * Mime type of the file.
+     * 
+     * @var string
+     */
     public $mime = null;
+
+    /**
+     * The UNIX timestamp of when this file was created.
+     * 
+     * @var int
+     */
     public $time = 0;
+
+    /**
+     * The UNIX timestamp of when this file should automatically remove itself (currently unused).
+     * 
+     * @var int
+     */
     public $expire = 0;
 
-    // Create a new file
+    /**
+     * Create a new file.
+     * 
+     * @param string $data Contents of the file.
+     * @param string $name Name of the file.
+     * @param User $user User instance of the user creating this file.
+     * @param int $expire UNIX timestamp of when this file should automatically remove itself.
+     * 
+     * @return File The created file instance for the file.
+     */
     public static function create($data, $name, User $user, $expire = 0)
     {
         // Get the mimetype
@@ -45,7 +91,11 @@ class File
         return new File($id);
     }
 
-    // Constructor
+    /**
+     * Constructor.
+     * 
+     * @param int $fileId ID of the file that should be constructed.
+     */
     public function __construct($fileId)
     {
         // Attempt to get the database row
@@ -63,7 +113,9 @@ class File
         }
     }
 
-    // Delete the file
+    /**
+     * Delete this file from the database.
+     */
     public function delete()
     {
         Database::delete('uploads', [

@@ -1,8 +1,4 @@
 <?php
-/*
- * Meta controllers
- */
-
 namespace Sakura\Controllers;
 
 use Sakura\Config;
@@ -14,12 +10,18 @@ use Sakura\Users;
 use Sakura\Utils;
 
 /**
- * Class Meta
+ * Meta page controllers (sections that aren't big enough to warrant a dedicated controller class).
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Meta
 {
-    // Site index
+    /**
+     * Serves the site index.
+     * 
+     * @return mixed HTML for the index.
+     */
     public static function index()
     {
         // Get the global renderData
@@ -55,7 +57,11 @@ class Meta
         return $template->render('main/index');
     }
 
-    // News
+    /**
+     * Handles the news pages.
+     * 
+     * @return mixed HTML for the correct news section.
+     */
     public static function news()
     {
         // Get the global renderData
@@ -89,7 +95,11 @@ class Meta
         return $template->render('main/news');
     }
 
-    // FAQ
+    /**
+     * Displays the FAQ.
+     * 
+     * @return mixed HTML for the FAQ.
+     */
     public static function faq()
     {
         // Get the global renderData
@@ -108,10 +118,16 @@ class Meta
         $template->setVariables($renderData);
 
         // Print page contents
-        echo $template->render('main/faq');
+        return $template->render('main/faq');
     }
 
-    // Info pages
+    /**
+     * Handles the info pages.
+     * 
+     * @param string $id The page ID from the database.
+     * 
+     * @return mixed HTML for the info page.
+     */
     public static function infoPage($id = null)
     {
         // Get the global renderData
@@ -145,7 +161,11 @@ class Meta
         return $template->render('main/infopage');
     }
 
-    // Search
+    /**
+     * Search page
+     * 
+     * @return mixed HTML for the search page.
+     */
     public static function search()
     {
         // Get the global renderData
@@ -163,6 +183,6 @@ class Meta
         $template->setVariables($renderData);
 
         // Print page contents
-        echo $template->render('main/search');
+        return $template->render('main/search');
     }
 }

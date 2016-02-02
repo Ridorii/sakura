@@ -1,8 +1,4 @@
 <?php
-/*
- * Post class
- */
-
 namespace Sakura\Forum;
 
 use Sakura\Utils;
@@ -12,29 +8,102 @@ use Sakura\BBcode;
 use Sakura\Config;
 
 /**
- * Class Post
+ * Used to serve, create and update posts.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Post
 {
-    // Variables
+    /**
+     * The ID of the post.
+     * 
+     * @var int
+     */
     public $id = 0;
-    public $thread = 0;
-    public $forum = 0;
-    public $poster = [];
-    public $ip = "";
-    public $time = 0;
-    public $parse = 0;
-    public $signature = 0;
-    public $emotes = 0;
-    public $subject = "";
-    public $text = "";
-    public $parsed = "";
-    public $editTime = 0;
-    public $editReason = "";
-    public $editUser = [];
 
-    // Constructor
+    /**
+     * The id of the thread this post is a part of.
+     * 
+     * @var int
+     */
+    public $thread = 0;
+
+    /**
+     * The id of the forum this post is a part of.
+     * 
+     * @var int
+     */
+    public $forum = 0;
+
+    /**
+     * The User object of the poster.
+     * 
+     * @var User
+     */
+    public $poster = null;
+
+    /**
+     * The IP address from which this post was created.
+     * 
+     * @var string
+     */
+    public $ip = "";
+
+    /**
+     * The UNIX timestamp from when this post was created.
+     * 
+     * @var int
+     */
+    public $time = 0;
+
+    /**
+     * The subject of this post.
+     * 
+     * @var string
+     */
+    public $subject = "";
+
+    /**
+     * The raw contents of this post.
+     * 
+     * @var string
+     */
+    public $text = "";
+
+    /**
+     * The parsed contents of this post.
+     * 
+     * @var string
+     */
+    public $parsed = "";
+
+    /**
+     * The UNIX timestamp of the last time this post was edited.
+     * 
+     * @var int
+     */
+    public $editTime = 0;
+
+    /**
+     * The reason why this post was edited.
+     * 
+     * @var string
+     */
+    public $editReason = "";
+
+    /**
+     * The User object of the user that last edited this post.
+     * 
+     * @var User
+     */
+    public $editUser = null;
+
+    /**
+     * Constructor.
+     * 
+     * @param int $postId ID of the post that should be constructed.
+     */
     public function __construct($postId)
     {
         // Attempt to get the database row
@@ -59,7 +128,17 @@ class Post
         $this->parsed = BBcode::toHTML(htmlentities($this->text));
     }
 
-    // Create a new post
+    /**
+     * Creating a new post.
+     * 
+     * @param string $subject The subject of the thread.
+     * @param string $text The raw contents of the post.
+     * @param User $poster The User object of the poster.
+     * @param int $thread The ID of the thread this post is a reply to.
+     * @param mixed $forum The forum this post is a reply in.
+     * 
+     * @return null|Post Either null, indicating a failure, or the Post object.
+     */
     public static function create($subject, $text, User $poster, $thread = 0, $forum = 0)
     {
         // Check if the data meets the requirements
@@ -103,7 +182,11 @@ class Post
         return new Post($id);
     }
 
-    // Update a post
+    /**
+     * Commit the changes to the Database.
+     * 
+     * @return null|Post Either null, indicating a failure, or the Post object.
+     */
     public function update()
     {
         // Check if the data meets the requirements
@@ -140,13 +223,21 @@ class Post
         return new Post($this->id);
     }
 
-    // Time elapsed since creation
+    /**
+     * The "elapsed" string for this post.
+     * 
+     * @return string Readable time elapsed since this post was created.
+     */
     public function timeElapsed()
     {
         return Utils::timeElapsed($this->time);
     }
 
-    // Time elapsed since last edit
+    /**
+     * Time "elapsed" since the last edit.
+     * 
+     * @return string Readable time elapsed since this post was last edited.
+     */
     public function editTimeElapsed()
     {
         return Utils::timeElapsed($this->editTime);

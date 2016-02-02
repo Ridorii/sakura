@@ -1,8 +1,4 @@
 <?php
-/*
- * Payment components (only slightly convoluted)
- */
-
 namespace Sakura;
 
 use \PayPal\Api\Amount;
@@ -16,15 +12,26 @@ use \PayPal\Api\RedirectUrls;
 use \PayPal\Api\Transaction;
 
 /**
- * Class Payments
+ * Sakura PayPal API wrapper.
+ * 
  * @package Sakura
+ * @author Kamil Rakowski <admin@krakow.pw>
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Payments
 {
-    // Container for PayPal API
+    /**
+     * Container for the PayPal API
+     * 
+     * @var \PayPal\Rest\ApiContext
+     */
     private static $paypal;
 
-    // Initialise PayPal API
+    /**
+     * Initialise the wrapper.
+     * 
+     * @return bool Always true.
+     */
     public static function init()
     {
 
@@ -40,6 +47,7 @@ class Payments
             return false;
         }
 
+        // Set the configuration
         self::$paypal->setConfig([
             'mode' => Config::get('paypal_mode'),
         ]);
@@ -47,7 +55,16 @@ class Payments
         return true;
     }
 
-    // Create transaction
+    /**
+     * Create a new transaction.
+     * 
+     * @param float $total The total amount of money.
+     * @param string $itemName The name of the item being purchased.
+     * @param string $transDescription The description of the item.
+     * @param string $returnUrl The URL that PayPal will redirect back to.
+     * 
+     * @return bool|null|string If successful; the PayPal approval link.
+     */
     public static function createTransaction($total, $itemName, $transDescription, $returnUrl)
     {
 
@@ -122,7 +139,14 @@ class Payments
         return $payment->getApprovalLink();
     }
 
-    // Complete the PayPal transaction
+    /**
+     * Complete the PayPal transaction.
+     * 
+     * @param string $paymentId ID of the payment.
+     * @param string $payerId ID of the payer.
+     * 
+     * @return bool Success indicator.
+     */
     public static function completeTransaction($paymentId, $payerId)
     {
 

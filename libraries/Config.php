@@ -1,21 +1,33 @@
 <?php
-/*
- * Configuration Management
- */
-
 namespace Sakura;
 
 /**
- * Class Config
+ * Handles both the local and database stored configuration sides of Sakura.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Config
 {
-    // Configuration data
+    /**
+     * Container for the parsed local configuration.
+     * 
+     * @var array
+     */
     private static $local = [];
+
+    /**
+     * Container for the configuration stored in the database.
+     * 
+     * @var array
+     */
     private static $database = [];
 
-    // Initialise configuration, does not contain database initialisation because explained below
+    /**
+     * Initialiser, parses the local configuration.
+     * 
+     * @param string $local Path to the configuration file.
+     */
     public static function init($local)
     {
 
@@ -40,10 +52,8 @@ class Config
         }
     }
 
-    /*
-     * Initialise Database configuration values.
-     * Different from init as that is called before the database connection is initially
-     * established.
+    /**
+     * Fetch configuration values from the database.
      */
     public static function initDB()
     {
@@ -63,7 +73,14 @@ class Config
         self::$database = $_DBCN;
     }
 
-    // Get values from the configuration on the file system
+    /**
+     * Get a value from the local configuration file.
+     * 
+     * @param string $key Configuration section.
+     * @param string $subkey Configuration key.
+     * 
+     * @return string Configuration value.
+     */
     public static function local($key, $subkey = null)
     {
 
@@ -86,7 +103,14 @@ class Config
         return null;
     }
 
-    // Get values from the configuration in the database
+    /**
+     * Get a configuration value from the database.
+     * 
+     * @param string $key Configuration key.
+     * @param bool $returnNull Unused value, only exists to prevent explosions.
+     * 
+     * @return string Configuration value.
+     */
     public static function get($key, $returnNull = false)
     {
 

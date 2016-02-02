@@ -1,21 +1,34 @@
 <?php
-/*
- * User session container
- */
-
 namespace Sakura;
 
 /**
- * Class Session
+ * User session handler.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Session
 {
-    // Current user data
+    /**
+     * The ID of the user this session is from.
+     * 
+     * @var int
+     */
     public $userId = 0;
+
+    /**
+     * The ID of the session.
+     * 
+     * @var string
+     */
     public $sessionId = "";
 
-    // Initialise new session
+    /**
+     * Constructor.
+     * 
+     * @param int $userId The ID of the user.
+     * @param int $sessionId The active session ID.
+     */
     public function __construct($userId, $sessionId = null)
     {
         // Set the supposed session data
@@ -28,7 +41,9 @@ class Session
         }
     }
 
-    // Destroy this session
+    /**
+     * Destroy the active session.
+     */
     public function destroy()
     {
         // Invalidate the session key
@@ -47,7 +62,9 @@ class Session
         }
     }
 
-    // Destroy all sessions keys for this user
+    /**
+     * Destroy all sessions from this user.
+     */
     public function destroyAll()
     {
         // Delete all database entries with this user in it
@@ -57,7 +74,13 @@ class Session
         $this->destroy();
     }
 
-    // Create a new session
+    /**
+     * Create a new session.
+     * 
+     * @param boolean $permanent Is this a permanent session?
+     * 
+     * @return string The session key.
+     */
     public function create($permanent)
     {
         // Generate session key
@@ -78,7 +101,11 @@ class Session
         return $session;
     }
 
-    // Validate an apparently existing session
+    /**
+     * Validate the session.
+     * 
+     * @return int Success indicator; 0 = false, 1 = active, 2 = permanent.
+     */
     public function validate()
     {
         // Get session from database

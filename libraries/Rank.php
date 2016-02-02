@@ -1,32 +1,95 @@
 <?php
-/*
- * Rank Class
- */
-
 namespace Sakura;
 
 use Sakura\Perms;
 use Sakura\Perms\Site;
 
 /**
- * Class Rank
+ * Serves Rank data.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Rank
 {
-    // Variables
+    /**
+     * ID of the rank.
+     * 
+     * @var int
+     */
     public $id = 0;
+
+    /**
+     * Name of the rank.
+     * 
+     * @var string
+     */
     public $name = 'Rank';
+
+    /**
+     * Global hierarchy of the rank.
+     * 
+     * @var int
+     */
     public $hierarchy = 0;
+
+    /**
+     * Text that should be append to the name to make it address multiple.
+     * 
+     * @var string
+     */
     public $multiple = '';
+
+    /**
+     * The rank's username colour.
+     * 
+     * @var string
+     */
     public $colour = 'inherit';
+
+    /**
+     * Description of the rank.
+     * 
+     * @var string
+     */
     public $description = '';
+
+    /**
+     * User title of the rank.
+     * 
+     * @var string
+     */
     public $title = '';
+
+    /**
+     * Indicates if this rank should be hidden.
+     * 
+     * @var bool
+     */
     private $hidden = true;
+
+    /**
+     * Permission container.
+     * 
+     * @var Perms
+     */
     private $permissions;
+
+    /**
+     * Instance cache container.
+     * 
+     * @var array
+     */
     protected static $_rankCache = [];
     
-    // Static initialiser
+    /**
+     * Cached constructor.
+     * 
+     * @param int $rid ID of the rank.
+     * @param bool $forceRefresh Force a cache refresh.
+     * 
+     * @return Rank The requested rank object.
+     */
     public static function construct($rid, $forceRefresh = false)
     {
         // Check if a rank object isn't present in cache
@@ -39,7 +102,11 @@ class Rank
         return self::$_rankCache[$rid];
     }
 
-    // Initialise the rank object
+    /**
+     * Constructor.
+     * 
+     * @param int $rid ID of the rank that should be constructed.
+     */
     private function __construct($rid)
     {
 
@@ -68,19 +135,35 @@ class Rank
         $this->permissions = new Perms(Perms::SITE);
     }
 
-    // Get the rank name
+    /**
+     * Get the name of the rank.
+     * 
+     * @param bool $multi Should the multiple sense be appended?
+     * 
+     * @return string The rank's name.
+     */
     public function name($multi = false)
     {
         return $this->name . ($multi ? $this->multiple : null);
     }
 
-    // Check if the rank is hidden
+    /**
+     * Indicates if the rank is hidden.
+     * 
+     * @return bool Hidden status.
+     */
     public function hidden()
     {
         return $this->hidden || $this->permission(Site::DEACTIVATED) || $this->permission(Site::RESTRICTED);
     }
 
-    // Check if the rank has the proper permissions
+    /**
+     * Check permissions.
+     * 
+     * @param int $flag Permission flag that should be checked.
+     * 
+     * @return bool Success indicator.
+     */
     public function permission($flag)
     {
         // Set default permission value

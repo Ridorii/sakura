@@ -1,21 +1,39 @@
 <?php
-/*
- * A flexible comment system
- */
-
 namespace Sakura;
 
 /**
- * Class Comments
+ * Handles and serves comments on pages.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class Comments
 {
-    public $comments = []; // Array containing comments
-    public $category; // Comment category
-    public $count = 0; // Amount of comments
+    /**
+     * The array containing the comments.
+     * 
+     * @var array
+     */
+    public $comments = [];
 
-    // Constructor
+    /**
+     * The comment category.
+     * 
+     * @var string
+     */
+    public $category;
+
+    /**
+     * The amount of comments.
+     * @var int
+     */
+    public $count = 0;
+
+    /**
+     * Constructor.
+     * 
+     * @param mixed $category The category that comments should be fetched from.
+     */
     public function __construct($category)
     {
         // Set category
@@ -36,7 +54,13 @@ class Comments
         $this->comments = $this->sortComments($comments);
     }
 
-    // Sorting
+    /**
+     * Sort the comments.
+     * 
+     * @param array $comments Array containing comments.
+     * 
+     * @return array Array containing the sorted comments.
+     */
     public function sortComments($comments)
     {
         // Create storage array
@@ -84,7 +108,13 @@ class Comments
         return $layer;
     }
 
-    // Getting a single comment
+    /**
+     * Get a single comment.
+     * 
+     * @param int $cid ID of the comment.
+     * 
+     * @return array The comment.
+     */
     public function getComment($cid)
     {
         // Get from database
@@ -93,7 +123,13 @@ class Comments
         ]);
     }
 
-    // Getting comment votes
+    /**
+     * Get the votes for a comment.
+     * 
+     * @param int $cid ID of the comment.
+     * 
+     * @return array The votes.
+     */
     public function getVotes($cid)
     {
         // Get from database
@@ -102,7 +138,15 @@ class Comments
         ]);
     }
 
-    // Creating
+    /**
+     * Creating a new comment.
+     * 
+     * @param int $uid ID of the user creating the comment.
+     * @param int $reply ID of the comment that is being replied to.
+     * @param string $content Contents of the comment.
+     * 
+     * @return array Response identifier.
+     */
     public function makeComment($uid, $reply, $content)
     {
         // Check if the comment is long enough
@@ -128,7 +172,15 @@ class Comments
         return [1, 'SUCCESS'];
     }
 
-    // Voting
+    /**
+     * Making a vote.
+     * 
+     * @param int $uid User making this vote.
+     * @param int $cid ID of the comment that is being voted on.
+     * @param int $mode Positive or negative vote.
+     * 
+     * @return bool Always returns true.
+     */
     public function makeVote($uid, $cid, $mode)
     {
         // Attempt to get previous vote
@@ -170,7 +222,13 @@ class Comments
         return true;
     }
 
-    // Deleting
+    /**
+     * Remove a comment
+     * 
+     * @param int $cid ID of the comment to remove.
+     * 
+     * @return mixed No idea what this returns but it doesn't really matter anyway, the comment is dead.
+     */
     public function removeComment($cid)
     {
         // Remove from database

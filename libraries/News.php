@@ -1,19 +1,26 @@
 <?php
-/*
- * The news page backend
- */
-
 namespace Sakura;
 
 /**
- * Class News
+ * Used to serve news posts.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class News
 {
-    public $posts = []; // Posts array
+    /**
+     * Array containing news posts.
+     * 
+     * @var array
+     */
+    public $posts = [];
 
-    // Initialise the news object
+    /**
+     * Constructor
+     * 
+     * @param mixed $category ID of the category that should be constructed.
+     */
     public function __construct($category)
     {
 
@@ -33,13 +40,23 @@ class News
         }
     }
 
-    // Get the amount of posts
+    /**
+     * Get the amount of news posts.
+     * 
+     * @return int Number of posts.
+     */
     public function getCount()
     {
         return count($this->posts);
     }
 
-    // Get the amount of posts
+    /**
+     * Check if a post exists in this category.
+     * 
+     * @param int $pid The ID of the post.
+     * 
+     * @return int If true the post it gets returns, else 0.
+     */
     public function postExists($pid)
     {
         return array_key_exists($pid, $this->posts) ? $pid : 0;

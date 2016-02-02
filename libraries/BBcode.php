@@ -1,8 +1,4 @@
 <?php
-/*
- * BBcode Wrapper
- */
-
 namespace Sakura;
 
 use JBBCode\Parser;
@@ -10,15 +6,23 @@ use JBBCode\DefaultCodeDefinitionSet;
 use JBBCode\CodeDefinitionBuilder;
 
 /**
- * Class BBcode
+ * Sakura wrapper for JBBCode.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class BBcode
 {
-    // Parser container
+    /**
+     * The container for JBBCode.
+     * 
+     * @var Parser
+     */
     private static $bbcode = null;
 
-    // Constructor
+    /**
+     * Initialiser.
+     */
     public static function init()
     {
         // Create new parser class
@@ -28,7 +32,9 @@ class BBcode
         self::loadStandardCodes();
     }
 
-    // Add basic bbcodes
+    /**
+     * Adds the standard BBcode.
+     */
     public static function loadStandardCodes()
     {
         // Add the standard definitions
@@ -82,7 +88,11 @@ class BBcode
         }
     }
 
-    // Set text
+    /**
+     * Set the text to parse.
+     * 
+     * @param string $text The text that should be parsed.
+     */
     public static function text($text)
     {
         // Check if $bbcode is still null
@@ -93,7 +103,13 @@ class BBcode
         self::$bbcode->parse($text);
     }
 
-    // Get as HTML
+    /**
+     * Convert the parsed text to HTML.
+     * 
+     * @param string $text The text that should be parsed.
+     * 
+     * @return string The parsed HTML.
+     */
     public static function toHTML($text = null)
     {
         // Check if text isn't null
@@ -109,7 +125,13 @@ class BBcode
         return $parsed;
     }
 
-    // Get as BBmarkup
+    /**
+     * Convert the parsed text to BBCode.
+     * 
+     * @param string $text The text that should be parsed.
+     * 
+     * @return string The converted bbcode.
+     */
     public static function toEditor($text = null)
     {
         // Check if text isn't null
@@ -120,7 +142,13 @@ class BBcode
         return self::$bbcode->getAsBBCode();
     }
 
-    // Get as plaintext
+    /**
+     * Convert the parsed text to plain.
+     * 
+     * @param string $text The text that should be parsed.
+     * 
+     * @return string The converted plaintext.
+     */
     public static function toPlain($text = null)
     {
         // Check if text isn't null

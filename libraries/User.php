@@ -1,51 +1,227 @@
 <?php
-/*
- * Everything you'd ever need from a specific user
- */
-
 namespace Sakura;
 
 use Sakura\Perms;
 use Sakura\Perms\Site;
 
 /**
- * Class User
+ * Everything you'd ever need from a specific user.
+ * 
  * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
  */
 class User
 {
-    // Variables
+    /**
+     * The User's ID.
+     * 
+     * @var int
+     */
     public $id = 0;
+
+    /**
+     * The user's username.
+     * 
+     * @var string
+     */
     public $username = 'User';
+
+    /**
+     * A cleaned version of the username.
+     * 
+     * @var string
+     */
     public $usernameClean = 'user';
+
+    /**
+     * The user's password hash.
+     * 
+     * @var string
+     */
     public $passwordHash = '';
+
+    /**
+     * The user's password salt.
+     * 
+     * @var string
+     */
     public $passwordSalt = '';
+
+    /**
+     * The user's password algorithm.
+     * 
+     * @var string
+     */
     public $passwordAlgo = 'disabled';
+
+    /**
+     * The password iterations.
+     * 
+     * @var int
+     */
     public $passwordIter = 0;
+
+    /**
+     * UNIX timestamp of last time the password was changed.
+     * 
+     * @var int
+     */
     public $passwordChan = 0;
+
+    /**
+     * The user's e-mail address.
+     * 
+     * @var string
+     */
     public $email = 'user@sakura';
+
+    /**
+     * The rank object of the user's main rank.
+     * 
+     * @var Rank
+     */
     public $mainRank = null;
+
+    /**
+     * The ID of the main rank.
+     * 
+     * @var int
+     */
     public $mainRankId = 1;
+
+    /**
+     * The index of rank objects.
+     * 
+     * @var array
+     */
     public $ranks = [];
+
+    /**
+     * The user's username colour.
+     * 
+     * @var string
+     */
     public $colour = '';
+
+    /**
+     * The IP the user registered from.
+     * 
+     * @var string
+     */
     public $registerIp = '0.0.0.0';
+
+    /**
+     * The IP the user was last active from.
+     * 
+     * @var string
+     */
     public $lastIp = '0.0.0.0';
+
+    /**
+     * A user's title.
+     * 
+     * @var string
+     */
     public $title = '';
+
+    /**
+     * The UNIX timestamp of when the user registered.
+     * 
+     * @var int
+     */
     public $registered = 0;
+
+    /**
+     * The UNIX timestamp of when the user was last online.
+     * 
+     * @var int
+     */
     public $lastOnline = 0;
+
+    /**
+     * The 2 character country code of a user.
+     * 
+     * @var string
+     */
     public $country = 'XX';
+
+    /**
+     * The File id of the user's avatar.
+     * 
+     * @var int
+     */
     public $avatar = 0;
+
+    /**
+     * The File id of the user's background.
+     * 
+     * @var int
+     */
     public $background = 0;
+
+    /**
+     * The FIle id of the user's header.
+     * @var mixed
+     */
     public $header = 0;
+
+    /**
+     * The raw userpage of the user.
+     * 
+     * @var string
+     */
     public $page = '';
+
+    /**
+     * The raw signature of the user.
+     * 
+     * @var string
+     */
     public $signature = '';
+
+    /**
+     * The user's birthday.
+     * 
+     * @var string
+     */
     private $birthday = '0000-00-00';
+
+    /**
+     * The user's permission container.
+     * 
+     * @var Perms
+     */
     private $permissions;
+
+    /**
+     * The user's option fields.
+     * 
+     * @var array
+     */
     private $optionFields = null;
+
+    /**
+     * The user's profile fields.
+     * 
+     * @var array
+     */
     private $profileFields = null;
+
+    /**
+     * The User instance cache array.
+     * 
+     * @var array
+     */
     protected static $_userCache = [];
 
-    // Static initialiser
+    /**
+     * Cached constructor.
+     * 
+     * @param int|string $uid The user ID or clean username.
+     * @param bool $forceRefresh Force a recreation.
+     * 
+     * @return User Returns a user object.
+     */
     public static function construct($uid, $forceRefresh = false)
     {
         // Check if a user object isn't present in cache
@@ -58,7 +234,16 @@ class User
         return self::$_userCache[$uid];
     }
 
-    // Creating a new user
+    /**
+     * Create a new user.
+     * 
+     * @param string $username The username of the user.
+     * @param string $password The password of the user.
+     * @param string $email The e-mail, used primarily for activation.
+     * @param array $ranks The ranks assigned to the user on creation.
+     * 
+     * @return User The newly created user's object.
+     */
     public static function create($username, $password, $email, $ranks = [2])
     {
         // Set a few variables
@@ -99,7 +284,11 @@ class User
         return $user;
     }
 
-    // Initialise the user object
+    /**
+     * The actual constructor
+     * 
+     * @param int|string $uid The user ID or clean username.
+     */
     private function __construct($uid)
     {
         // Get the user database row
@@ -173,13 +362,22 @@ class User
         $this->permissions = new Perms(Perms::SITE);
     }
 
-    // Update
+    
+    /**
+     * Commit changed to database, doesn't do anything yet.
+     */
     public function update()
     {
         // placeholder
     }
 
-    // Get user birthday
+    /**
+     * Get the user's birthday.
+     * 
+     * @param bool $age Just get the age.
+     * 
+     * @return int|string Return the birthday.
+     */
     public function birthday($age = false)
     {
         // If age is requested calculate it
@@ -199,13 +397,23 @@ class User
         return $this->birthday;
     }
 
-    // Get the user's long or short country names
+    /**
+     * Get the user's country.
+     * 
+     * @param bool $long Get the full country name.
+     * 
+     * @return string The country.
+     */
     public function country($long = false)
     {
         return $long ? Utils::getCountryName($this->country) : $this->country;
     }
 
-    // Check if a user is online
+    /**
+     * Check if a user is online.
+     * 
+     * @return bool Are they online?
+     */
     public function isOnline()
     {
         // Get all sessions
@@ -220,7 +428,11 @@ class User
         return $this->lastOnline > (time() - Config::get('max_online_time'));
     }
 
-    // Get user's forum statistics
+    /**
+     * Get a few forum statistics.
+     * 
+     * @return array Post and thread counts.
+     */
     public function forumStats()
     {
         return [
@@ -239,7 +451,14 @@ class User
         ];
     }
 
-    // Get amount of time since user events using the same format as dates()
+    /**
+     * Get the elapsed string for some of the user's dates
+     * 
+     * @param string $append Append to the value.
+     * @param string $none Replace the 0 value with this.
+     * 
+     * @return array The times.
+     */
     public function elapsed($append = ' ago', $none = 'Just now')
     {
         $times = [];
@@ -255,7 +474,11 @@ class User
         return $times;
     }
 
-    // Add ranks to a user
+    /**
+     * Add ranks to a user.
+     * 
+     * @param array $ranks Array containing the rank IDs.
+     */
     public function addRanks($ranks)
     {
         // Update the ranks array
@@ -277,7 +500,11 @@ class User
         }
     }
 
-    // Remove ranks from a user
+    /**
+     * Remove a set of ranks from a user.
+     * 
+     * @param array $ranks Array containing the IDs of ranks to remove.
+     */
     public function removeRanks($ranks)
     {
         // Current ranks
@@ -289,7 +516,13 @@ class User
         }
     }
 
-    // Set the main rank of this user
+    /**
+     * Change the main rank of a user.
+     * 
+     * @param int $rank The ID of the new main rank.
+     * 
+     * @return bool Always true.
+     */
     public function setMainRank($rank)
     {
         // If it does exist update their row
@@ -306,7 +539,13 @@ class User
         return true;
     }
 
-    // Check if this user has the specified ranks
+    /**
+     * Check if a user has a certain set of rank.
+     * 
+     * @param array $ranks Ranks IDs to check.
+     * 
+     * @return bool Successful?
+     */
     public function hasRanks($ranks)
     {
         // Check if the main rank is the specified rank
@@ -326,7 +565,13 @@ class User
         return false;
     }
 
-    // Add a new friend
+    /**
+     * Add a new friend.
+     * 
+     * @param int $uid The ID of the friend.
+     * 
+     * @return array Status indicator.
+     */
     public function addFriend($uid)
     {
         // Create the foreign object
@@ -353,7 +598,14 @@ class User
         return [1, $user->isFriends($this->id) ? 'FRIENDS' : 'NOT_MUTUAL'];
     }
 
-    // Remove a friend
+    /**
+     * Remove a friend.
+     * 
+     * @param int $uid The friend Id
+     * @param bool $deleteRequest Delete the open request as well (remove you from their friends list).
+     * 
+     * @return array Status indicator.
+     */
     public function removeFriend($uid, $deleteRequest = false)
     {
         // Create the foreign object
@@ -382,7 +634,13 @@ class User
         return [1, 'REMOVED'];
     }
 
-    // Check if the user is friends with the currently authenticated
+    /**
+     * Check if this user is friends with another user.
+     * 
+     * @param int $with ID of the other user.
+     * 
+     * @return int 0 = no, 1 = pending request, 2 = mutual
+     */
     public function isFriends($with)
     {
         // Accepted from this user
@@ -407,7 +665,14 @@ class User
         return 0;
     }
 
-    // Get all the friend of this user
+    /**
+     * Get all the friends from this user.
+     * 
+     * @param int $level Friend level; (figure out what the levels are at some point)
+     * @param bool $noObj Just return IDs.
+     * 
+     * @return array The array with either the objects or the ids.
+     */
     public function friends($level = 0, $noObj = false)
     {
         // User ID container
@@ -467,13 +732,24 @@ class User
         return $objects;
     }
 
-    // Check if the user is banned
+    /**
+     * Check if the user is banned.
+     * 
+     * @return array|bool Ban status.
+     */
     public function checkBan()
     {
         return Bans::checkBan($this->id);
     }
 
-    // Check if the user has the proper permissions
+    /**
+     * Check if the user has a certaing permission flag.
+     * 
+     * @param int $flag The permission flag.
+     * @param string $mode The permission mode.
+     * 
+     * @return bool Success?
+     */
     public function permission($flag, $mode = null)
     {
         // Set mode
@@ -488,13 +764,20 @@ class User
         return $this->permissions->check($flag, $perm);
     }
 
-    // Get a user's profile comments
+    /**
+     *  Get the comments from the user's profile.
+     * @return Comments
+     */
     public function profileComments()
     {
         return new Comments('profile-' . $this->id);
     }
 
-    // Get the user's profile fields
+    /**
+     * Get the user's profile fields.
+     * 
+     * @return array The profile fields.
+     */
     public function profileFields()
     {
         // Check if we have cached data
@@ -569,7 +852,11 @@ class User
         return $profile;
     }
 
-    // Get the user's option fields
+    /**
+     * Get a user's option fields.
+     * 
+     * @return array The array containing the fields.
+     */
     public function optionFields()
     {
         // Check if we have cached data
@@ -617,7 +904,11 @@ class User
         return $options;
     }
 
-    // Check if user has Premium
+    /**
+     * Does this user have premium?
+     * 
+     * @return array Premium status information.
+     */
     public function isPremium()
     {
 
@@ -645,7 +936,11 @@ class User
         return [1, $getRecord['premium_start'], $getRecord['premium_expire']];
     }
 
-    // Get all warnings issued to the user
+    /**
+     * Get the open warnings on this user.
+     * 
+     * @return array The warnings.
+     */
     public function getWarnings()
     {
         // Do the database query
@@ -695,19 +990,31 @@ class User
         return $warnings;
     }
 
-    // Get a user's userpage
+    /**
+     * Parse the user's userpage.
+     * 
+     * @return string The parsed page.
+     */
     public function userPage()
     {
         return BBcode::toHTML(htmlentities($this->page));
     }
 
-    // Get a user's signature
+    /**
+     * Parse a user's signature
+     * 
+     * @return string The parsed signature.
+     */
     public function signature()
     {
         return BBcode::toHTML(htmlentities($this->signature));
     }
 
-    // Get username change history
+    /**
+     * Get a user's username history.
+     * 
+     * @return array The history.
+     */
     public function getUsernameHistory()
     {
         // Do the database query
@@ -719,7 +1026,13 @@ class User
         return $changes;
     }
 
-    // Set a new username
+    /**
+     * Alter the user's username
+     * 
+     * @param string $username The new username.
+     * 
+     * @return array Status indicator.
+     */
     public function setUsername($username)
     {
         // Create a cleaned version
@@ -781,7 +1094,13 @@ class User
         return [1, 'SUCCESS', $username];
     }
 
-    // Set a new e-mail address
+    /**
+     * Alter a user's e-mail address
+     * 
+     * @param string $email The new e-mail address.
+     * 
+     * @return array Status indicator.
+     */
     public function setEMailAddress($email)
     {
         // Validate e-mail address
@@ -813,7 +1132,15 @@ class User
         return [1, 'SUCCESS', $email];
     }
 
-    // Set a new password
+    /**
+     * Change the user's password
+     * 
+     * @param string $old The old password.
+     * @param string $new The new password
+     * @param string $confirm The new one again.
+     * 
+     * @return array Status indicator.
+     */
     public function setPassword($old, $new, $confirm)
     {
         // Validate password
