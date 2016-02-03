@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Whois in PHP (featuring a very original name), adjusted for Sakura
  * By Flashwave <http://flash.moe>
  * Released under the MIT-License
@@ -25,6 +25,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ * 
+ * @package Sakura
  */
 
 namespace Sakura;

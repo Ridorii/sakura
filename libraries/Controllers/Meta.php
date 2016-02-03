@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the meta page controllers.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura\Controllers;
 
 use Sakura\Config;

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the templating engine class.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 use Twig_Environment;

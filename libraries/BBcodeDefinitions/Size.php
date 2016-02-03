@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the font size bbcode class.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura\BBcodeDefinitions;
 
 use JBBCode\Parser;

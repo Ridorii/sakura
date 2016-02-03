@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the holds the comment handler class.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 /**

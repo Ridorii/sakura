@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds various utility functions.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 use PHPMailer;

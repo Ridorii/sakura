@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the extension manager.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 /**

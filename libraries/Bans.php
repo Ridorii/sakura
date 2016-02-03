@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the ban manager.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 /**

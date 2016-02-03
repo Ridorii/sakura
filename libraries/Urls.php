@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the url generation class.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 /**

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the rank object class.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 use Sakura\Perms;

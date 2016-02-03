@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the action code handling class.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 /**

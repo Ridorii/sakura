@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the CSRF token handler.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 use Sakura\Hashing;

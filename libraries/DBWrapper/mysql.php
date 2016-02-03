@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the MySQL/PDO wrapper.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura\DBWrapper;
 
 use PDO;

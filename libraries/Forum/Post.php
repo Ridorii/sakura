@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the post object class.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura\Forum;
 
 use Sakura\Utils;

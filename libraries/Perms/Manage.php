@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the site management permission flags.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura\Perms;
 
 /**

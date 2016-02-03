@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the router class.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 use Phroute\Phroute\RouteCollector;

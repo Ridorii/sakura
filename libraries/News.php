@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the news handler.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 /**

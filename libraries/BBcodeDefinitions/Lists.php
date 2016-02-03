@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the list bbcode class.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura\BBcodeDefinitions;
 
 use JBBCode\Parser;

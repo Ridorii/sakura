@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the forum object class.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura\Forum;
 
 use Sakura\Database;
@@ -157,7 +163,11 @@ class Forum
         return $raw ? $perm : $this->_permissions->check($flag, $perm);
     }
 
-    // Subforums
+    /**
+     * Gets all subforums of this forum.
+     * 
+     * @return array Array containing forum objects.
+     */
     public function forums()
     {
         // Check if _forums is populated

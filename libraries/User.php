@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the user object class.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 use Sakura\Perms;

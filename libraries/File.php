@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the file server.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 use finfo;

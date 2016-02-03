@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the global permissions handler.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 /**

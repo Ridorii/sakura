@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the thread object class.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura\Forum;
 
 use Sakura\Database;

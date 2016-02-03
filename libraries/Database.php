@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the database wrapper interfacer.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 /**

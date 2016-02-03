@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the BBcode handler.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 use JBBCode\Parser;

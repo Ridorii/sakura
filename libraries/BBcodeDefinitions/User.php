@@ -1,6 +1,8 @@
 <?php
-/*
- * User bbcode
+/**
+ * Holds the username linking bbcode class.
+ * 
+ * @package Sakura
  */
 
 namespace Sakura\BBcodeDefinitions;
@@ -9,8 +11,17 @@ use JBBCode\Parser;
 use JBBCode\CodeDefinition;
 use JBBCode\ElementNode;
 
+/**
+ * Username BBcode for JBBCode.
+ * 
+ * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
+ */
 class User extends CodeDefinition
 {
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -19,6 +30,13 @@ class User extends CodeDefinition
         $this->setParseContent(false);
     }
 
+    /**
+     * Compiles the user bbcode to HTML
+     * 
+     * @param ElementNode $el The JBBCode element node.
+     * 
+     * @return string The compiled HTML.
+     */
     public function asHtml(ElementNode $el)
     {
         $content = "";

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the configuration manager.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 /**

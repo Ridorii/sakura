@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the console application meta.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura\Console;
 
 /**

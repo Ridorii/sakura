@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the forum pages controllers.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura\Controllers;
 
 use Sakura\Config;

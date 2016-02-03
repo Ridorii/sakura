@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the session handler.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 /**

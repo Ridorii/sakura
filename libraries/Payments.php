@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds the payments handler.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 use \PayPal\Api\Amount;

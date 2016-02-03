@@ -1,4 +1,10 @@
 <?php
+/**
+ * Holds various functions to interface with users.
+ * 
+ * @package Sakura
+ */
+
 namespace Sakura;
 
 use Sakura\Perms\Site;
