@@ -12,12 +12,6 @@ use Sakura\Perms\Forum as ForumPerms;
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
 
-// Initialise templating engine
-$template = new Template();
-
-// Change templating engine
-$template->setTemplate($templateName);
-
 // Set location
 $topicId = isset($_GET['t']) ?
 $_GET['t'] :
@@ -48,10 +42,10 @@ if (!$forum->permission(ForumPerms::VIEW, $currentUser->id) || !$forum->permissi
     ];
 
     // Set parse variables
-    $template->setVariables($renderData);
+    Template::vars($renderData);
 
     // Print page contents
-    echo $template->render('global/information');
+    echo Template::render('global/information');
     exit;
 }
 
@@ -64,10 +58,10 @@ if (!isset($thread) && !$forum->permission(ForumPerms::CREATE_THREADS, $currentU
     ];
 
     // Set parse variables
-    $template->setVariables($renderData);
+    Template::vars($renderData);
 
     // Print page contents
-    echo $template->render('global/information');
+    echo Template::render('global/information');
     exit;
 }
 
@@ -92,10 +86,10 @@ if ($mode != 'f') {
         ];
 
         // Set parse variables
-        $template->setVariables($renderData);
+        Template::vars($renderData);
 
         // Print page contents
-        echo $template->render('global/information');
+        echo Template::render('global/information');
         exit;
     }
 
@@ -108,10 +102,10 @@ if ($mode != 'f') {
         ];
 
         // Set parse variables
-        $template->setVariables($renderData);
+        Template::vars($renderData);
 
         // Print page contents
-        echo $template->render('global/information');
+        echo Template::render('global/information');
         exit;
     }
 
@@ -134,10 +128,10 @@ if ($mode != 'f') {
             ];
 
             // Set parse variables
-            $template->setVariables($renderData);
+            Template::vars($renderData);
 
             // Print page contents
-            echo $template->render('global/information');
+            echo Template::render('global/information');
             exit;
         }
         // Checks
@@ -149,10 +143,10 @@ if ($mode != 'f') {
             ];
 
             // Set parse variables
-            $template->setVariables($renderData);
+            Template::vars($renderData);
 
             // Print page contents
-            echo $template->render('global/information');
+            echo Template::render('global/information');
             exit;
         }
 
@@ -176,10 +170,10 @@ if ($mode != 'f') {
             ];
 
             // Set parse variables
-            $template->setVariables($renderData);
+            Template::vars($renderData);
 
             // Print page contents
-            echo $template->render('global/information');
+            echo Template::render('global/information');
             exit;
         }
 
@@ -192,10 +186,10 @@ if ($mode != 'f') {
             ];
 
             // Set parse variables
-            $template->setVariables($renderData);
+            Template::vars($renderData);
 
             // Print page contents
-            echo $template->render('global/information');
+            echo Template::render('global/information');
             exit;
         }
 
@@ -225,10 +219,10 @@ if ($mode != 'f') {
                 ];
 
                 // Set parse variables
-                $template->setVariables($renderData);
+                Template::vars($renderData);
 
                 // Print page contents
-                echo $template->render('global/information');
+                echo Template::render('global/information');
                 exit;
                 // Return to previous page
             } else {
@@ -246,10 +240,10 @@ if ($mode != 'f') {
         ]);
 
         // Set parse variables
-        $template->setVariables($renderData);
+        Template::vars($renderData);
 
         // Print page contents
-        echo $template->render('global/confirm');
+        echo Template::render('global/confirm');
         exit;
     }
 
@@ -296,10 +290,10 @@ if (isset($_POST['post'])) {
             $renderData['page']['redirect'];
     } else {
         // Set parse variables
-        $template->setVariables($renderData);
+        Template::vars($renderData);
 
         // Print page contents
-        echo $template->render('global/information');
+        echo Template::render('global/information');
     }
     exit;
 }
@@ -310,7 +304,7 @@ $renderData = array_merge($renderData, [
 ]);
 
 // Set parse variables
-$template->setVariables($renderData);
+Template::vars($renderData);
 
 // Print page contents
-echo $template->render('forum/posting');
+echo Template::render('forum/posting');

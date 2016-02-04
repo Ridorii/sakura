@@ -9,12 +9,6 @@ namespace Sakura;
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
 
-// Initialise templating engine
-$template = new Template();
-
-// Change templating engine
-$template->setTemplate($templateName);
-
 // Page actions
 if (isset($_REQUEST['mode'])) {
     // Continue
@@ -108,7 +102,6 @@ if (isset($_REQUEST['mode'])) {
 
                 // Add page specific things
                 $renderData['page'] = [
-
                     'redirect' => (
                         $passforget[0] ?
                         $urls->format('SITE_LOGIN') :
@@ -116,7 +109,6 @@ if (isset($_REQUEST['mode'])) {
                     ),
                     'message' => $messages[$passforget[1]],
                     'success' => $passforget[0],
-
                 ];
                 break;
 
@@ -289,8 +281,8 @@ if (isset($_REQUEST['mode'])) {
             $renderData['page']['success'] . '|' .
             $renderData['page']['redirect'];
     } else {
-        $template->setVariables($renderData);
-        echo $template->render('global/information');
+        Template::vars($renderData);
+        echo Template::render('global/information');
     }
     exit;
 }
@@ -317,8 +309,8 @@ if (Users::checkLogin()) {
 
     ];
 
-    $template->setVariables($renderData);
-    echo $template->render('global/information');
+    Template::vars($renderData);
+    echo Template::render('global/information');
     exit;
 }
 
@@ -341,11 +333,11 @@ if (isset($_REQUEST['pw']) && $_REQUEST['pw']) {
         $renderData['auth']['forgotKey'] = $_REQUEST['key'];
     }
 
-    $template->setVariables($renderData);
-    echo $template->render('main/forgotpassword');
+    Template::vars($renderData);
+    echo Template::render('main/forgotpassword');
     exit;
 }
 
 // Print page contents
-$template->setVariables($renderData);
-echo $template->render('main/authenticate');
+Template::vars($renderData);
+echo Template::render('main/authenticate');

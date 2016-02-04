@@ -15,19 +15,13 @@ define('SAKURA_MANAGE', true);
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
 
-// Initialise templating engine
-$template = new Template();
-
-// Change templating engine
-$template->setTemplate($templateName);
-
 // Make sure user has the permissions to view this
 if (!$currentUser->permission(Manage::USE_MANAGE, Perms::MANAGE)) {
     // Set parse variables
-    $template->setVariables($renderData);
+    Template::vars($renderData);
 
     // Print page contents
-    echo $template->render('global/restricted');
+    echo Template::render('global/restricted');
     exit;
 }
 
@@ -268,10 +262,10 @@ if (!$category
     header('HTTP/1.0 404 Not Found');
 
     // Set parse variables
-    $template->setVariables($renderData);
+    Template::vars($renderData);
 
     // Print page contents
-    echo $template->render('global/notfound');
+    echo Template::render('global/notfound');
     exit;
 }
 
@@ -313,7 +307,7 @@ switch ($category . '.' . $mode) {
 }
 
 // Set parse variables
-$template->setVariables($renderData);
+Template::vars($renderData);
 
 // Print page contents
-echo $template->render('main/settings');
+echo Template::render('main/settings');

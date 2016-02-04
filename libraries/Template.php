@@ -24,51 +24,40 @@ class Template
      * 
      * @var array
      */
-    private $vars = [];
+    private static $vars = [];
 
     /**
      * The templating engine.
      * 
      * @var Twig_Environment
      */
-    private $template;
+    private static $template;
 
     /**
      * The template name.
      * 
      * @var string
      */
-    private $templateName;
+    private static $templateName;
 
     /**
      * The template options.
      * 
      * @var array
      */
-    private $templateOptions;
+    private static $templateOptions;
 
     /**
      * The file extension used by template files
-     * 
-     * @var string
      */
-    protected $templateFileExtension = ".twig";
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        // Set template to default
-        $this->setTemplate(Config::get('site_style'));
-    }
+    const FILE_EXT = '.twig';
 
     /**
      * Set the template name.
      * 
      * @param string $name The name of the template directory.
      */
-    public function setTemplate($name)
+    public static function set($name)
     {
         // Assign config path to a variable so we don't have to type it out twice
         $confPath = ROOT . 'templates/' . $name . '/template.ini';
@@ -79,22 +68,22 @@ class Template
         }
 
         // Parse and store the configuration
-        $this->templateOptions = parse_ini_file($confPath, true);
+        self::$templateOptions = parse_ini_file($confPath, true);
 
         // Set variables
-        $this->templateName = $name;
+        self::$templateName = $name;
 
         // Reinitialise
-        $this->initTemplate();
+        self::init();
     }
 
     /**
      * Initialise the templating engine.
      */
-    public function initTemplate()
+    public static function init()
     {
         // Initialise Twig Filesystem Loader
-        $twigLoader = new Twig_Loader_Filesystem(ROOT . 'templates/' . $this->templateName);
+        $twigLoader = new Twig_Loader_Filesystem(ROOT . 'templates/' . self::$templateName);
 
         // Environment variable
         $twigEnv = [];
@@ -105,10 +94,10 @@ class Template
         }
 
         // And now actually initialise the templating engine
-        $this->template = new Twig_Environment($twigLoader, $twigEnv);
+        self::$template = new Twig_Environment($twigLoader, $twigEnv);
 
         // Load String template loader
-        $this->template->addExtension(new Twig_Extension_StringLoader());
+        self::$template->addExtension(new Twig_Extension_StringLoader());
     }
 
     /**
@@ -116,9 +105,9 @@ class Template
      * 
      * @param array $vars The new variables.
      */
-    public function setVariables($vars)
+    public static function vars($vars)
     {
-        $this->vars = array_merge($this->vars, $vars);
+        self::$vars = array_merge(self::$vars, $vars);
     }
 
     /**
@@ -128,10 +117,10 @@ class Template
      * 
      * @return bool|string An error or the HTML.
      */
-    public function render($file)
+    public static function render($file)
     {
         try {
-            return $this->template->render($file . $this->templateFileExtension, $this->vars);
+            return self::$template->render($file . self::FILE_EXT, self::$vars);
         } catch (\Exception $e) {
             return trigger_error($e->getMessage(), E_USER_ERROR);
         }

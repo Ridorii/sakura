@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160202');
+define('SAKURA_VERSION', '20160204');
 define('SAKURA_VLABEL', 'Amethyst');
 define('SAKURA_COLOUR', '#9966CC');
 
@@ -59,8 +59,9 @@ require_once ROOT . 'libraries/Users.php';
 require_once ROOT . 'libraries/Utils.php';
 require_once ROOT . 'libraries/Whois.php';
 require_once ROOT . 'libraries/Console/Application.php';
-require_once ROOT . 'libraries/Controllers/Forum.php';
+require_once ROOT . 'libraries/Controllers/Forums.php';
 require_once ROOT . 'libraries/Controllers/Meta.php';
+require_once ROOT . 'libraries/Controllers/User.php';
 require_once ROOT . 'libraries/Forum/Forum.php';
 require_once ROOT . 'libraries/Forum/Post.php';
 require_once ROOT . 'libraries/Forum/Thread.php';
@@ -140,6 +141,9 @@ $templateName =
 'misaki' : Config::get('site_style');
 
 if (!defined('SAKURA_NO_TPL')) {
+    // Start templating engine
+    Template::set($templateName);
+
     // Set base page rendering data
     $renderData = [
         'sakura' => [
@@ -202,33 +206,27 @@ if (!defined('SAKURA_NO_TPL')) {
         'post' => $_POST,
     ];
 
+    // Add the default render data
+    Template::vars($renderData);
+
     // Site closing
     if (Config::get('site_closed')) {
-        // Additional render data
-        $renderData = array_merge($renderData, [
+        // Set parse variables
+        Template::vars([
             'page' => [
                 'message' => Config::get('site_closed_reason'),
             ],
         ]);
 
-        // Initialise templating engine
-        $template = new Template();
-
-        // Change templating engine
-        $template->setTemplate($templateName);
-
-        // Set parse variables
-        $template->setVariables($renderData);
-
         // Print page contents
-        echo $template->render('global/information');
+        echo Template::render('global/information');
         exit;
     }
 
     // Ban checking
     if ($authCheck && !in_array($_SERVER['PHP_SELF'], [$urls->format('AUTH_ACTION', [], false)]) && $ban = Bans::checkBan($currentUser->id)) {
         // Additional render data
-        $renderData = array_merge($renderData, [
+        Template::vars([
             'ban' => [
                 'reason' => $ban['reason'],
                 'issued' => $ban['issued'],
@@ -237,17 +235,8 @@ if (!defined('SAKURA_NO_TPL')) {
             ],
         ]);
 
-        // Initialise templating engine
-        $template = new Template();
-
-        // Change templating engine
-        $template->setTemplate($templateName);
-
-        // Set parse variables
-        $template->setVariables($renderData);
-
         // Print page contents
-        echo $template->render('main/banned');
+        echo Template::render('main/banned');
         exit;
     }
 }

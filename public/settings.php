@@ -16,14 +16,6 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
 
-if (!defined('SAKURA_NO_TPL')) {
-    // Initialise templating engine
-    $template = new Template();
-
-    // Change templating engine
-    $template->setTemplate($templateName);
-}
-
 // Notifications
 if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications']) {
     // Create the notification container array
@@ -275,10 +267,10 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
             $renderData['page']['redirect'];
     } else {
         // If not allowed print the restricted page
-        $template->setVariables($renderData);
+        Template::vars($renderData);
 
         // Print page contents
-        echo $template->render('global/information');
+        echo Template::render('global/information');
     }
     exit;
 } elseif (isset($_REQUEST['friend-action']) && $_REQUEST['friend-action'] && Users::checkLogin()) {
@@ -404,10 +396,10 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
             $renderData['page']['redirect'];
     } else {
         // If not allowed print the restricted page
-        $template->setVariables($renderData);
+        Template::vars($renderData);
 
         // Print page contents
-        echo $template->render('global/information');
+        echo Template::render('global/information');
     }
     exit;
 } elseif (isset($_POST['submit']) && isset($_POST['submit'])) {
@@ -1158,10 +1150,10 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
             $renderData['page']['redirect'];
     } else {
         // If not allowed print the restricted page
-        $template->setVariables($renderData);
+        Template::vars($renderData);
 
         // Print page contents
-        echo $template->render('global/information');
+        echo Template::render('global/information');
     }
     exit;
 }
@@ -1429,10 +1421,10 @@ if (Users::checkLogin()) {
         header('HTTP/1.0 404 Not Found');
 
         // Set parse variables
-        $template->setVariables($renderData);
+        Template::vars($renderData);
 
         // Print page contents
-        echo $template->render('global/notfound');
+        echo Template::render('global/notfound');
         exit;
     }
 
@@ -1518,14 +1510,14 @@ if (Users::checkLogin()) {
     }
 
     // Set parse variables
-    $template->setVariables($renderData);
+    Template::vars($renderData);
 
     // Print page contents
-    echo $template->render('main/settings');
+    echo Template::render('main/settings');
 } else {
     // If not allowed print the restricted page
-    $template->setVariables($renderData);
+    Template::vars($renderData);
 
     // Print page contents
-    echo $template->render('global/restricted');
+    echo Template::render('global/restricted');
 }

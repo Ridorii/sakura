@@ -18,7 +18,15 @@ Router::get('/news/{category}', 'Sakura\Controllers\Meta@news', 'news.category')
 Router::get('/news/{category}/{id}', 'Sakura\Controllers\Meta@news', 'news.post');
 
 // Forum
-Router::get('/forum', 'Sakura\Controllers\Forum@index', 'forum.index');
+Router::get('/forum', 'Sakura\Controllers\Forums@index', 'forums.index');
+Router::get('/forum/{id}', 'Sakura\Controllers\Forums@forum', 'forums.forum');
+
+// Members
+Router::get('/members', 'Sakura\Controllers\User@members', 'members.all');
+Router::get('/members/{rank}', 'Sakura\Controllers\User@members', 'members.rank');
+
+// User
+Router::get('/u/{id}', 'Sakura\Controllers\User@profile', 'user.profile');
 
 // Redirections
 Router::any('/index.php', function () {
@@ -59,6 +67,51 @@ Router::any('/news.php', function () {
 
     // All posts in main category
     header('Location: /news');
+});
+
+Router::any('/profile.php', function () {
+    // Redirect to the profile
+    if (isset($_REQUEST['u'])) {
+        header('Location: /u/' . $_REQUEST['u']);
+        return;
+    }
+
+    // Redirect to index
+    header('Location: /');
+});
+
+Router::any('/members.php', function () {
+    // Append sort
+    $append = isset($_REQUEST['sort']) ? '?sort=' . $_REQUEST['sort'] : '';
+
+    // Redirect to the profile
+    if (isset($_REQUEST['rank'])) {
+        header('Location: /members/' . $_REQUEST['rank'] . $append);
+        return;
+    }
+
+    // Redirect to index
+    header('Location: /members/' . $append);
+});
+
+Router::any('/viewforum.php', function () {
+    // Redirect to the profile
+    if (isset($_REQUEST['f'])) {
+        $req = [];
+        foreach ($_REQUEST as $k => $v) {
+            if ($k == 'f') {
+                continue;
+            }
+
+            $req[] = $k . '=' . $v;
+        }
+
+        header('Location: /forum/' . $_REQUEST['f'] . ($req ? '?' . implode('&', $req) : ''));
+        return;
+    }
+
+    // Redirect to index
+    header('Location: /forum/');
 });
 
 Router::any('/faq.php', function () {

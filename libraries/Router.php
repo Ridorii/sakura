@@ -7,8 +7,10 @@
 
 namespace Sakura;
 
-use Phroute\Phroute\RouteCollector;
 use Phroute\Phroute\Dispatcher;
+use Phroute\Phroute\Exception\HttpRouteNotFoundException;
+use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
+use Phroute\Phroute\RouteCollector;
 
 /**
  * Sakura Wrapper for Phroute.
@@ -109,6 +111,19 @@ class Router
     }
 
     /**
+     * Generate the URI of a route using names.
+     * 
+     * @param string $name The identifier of the route.
+     * @param string|array $args The route arguments.
+     * 
+     * @return string The generated URI.
+     */
+    public static function url($name, $args = null)
+    {
+        return self::$router->route($name, $args);
+    }
+
+    /**
      * Handle requests.
      * 
      * @param string $method The HTTP method used to make the request.
@@ -127,6 +142,13 @@ class Router
         $url = self::parseUrl($url);
 
         // Handle the request
-        return self::$dispatcher->dispatch($method, $url);
+        try {
+            try {
+                return self::$dispatcher->dispatch($method, $url);
+            } catch (HttpMethodNotAllowedException $e) {}
+        } catch (HttpRouteNotFoundException $e) {}
+
+        // Default to the not found page
+        return Template::render('global/notfound');
     }
 }

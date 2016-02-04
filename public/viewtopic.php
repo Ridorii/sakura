@@ -21,12 +21,6 @@ $thread = new Forum\Thread(
 // And attempt to get the forum
 $forum = new Forum\Forum($thread->forum);
 
-// Initialise templating engine
-$template = new Template();
-
-// Change templating engine
-$template->setTemplate($templateName);
-
 // Check if the forum exists
 if (!$thread) {
     // Set render data
@@ -36,10 +30,10 @@ if (!$thread) {
     ];
 
     // Set parse variables
-    $template->setVariables($renderData);
+    Template::vars($renderData);
 
     // Print page contents
-    echo $template->render('global/information');
+    echo Template::render('global/information');
     exit;
 }
 
@@ -52,10 +46,10 @@ if (!$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
     ];
 
     // Set parse variables
-    $template->setVariables($renderData);
+    Template::vars($renderData);
 
     // Print page contents
-    echo $template->render('global/information');
+    echo Template::render('global/information');
     exit;
 }
 
@@ -78,10 +72,10 @@ if (isset($_GET['sticky']) && $_GET['sticky'] == session_id() && $forum->permiss
     ];
 
     // Set parse variables
-    $template->setVariables($renderData);
+    Template::vars($renderData);
 
     // Print page contents
-    echo $template->render('global/information');
+    echo Template::render('global/information');
     exit;
 }
 
@@ -103,10 +97,10 @@ if (isset($_GET['announce']) && $_GET['announce'] == session_id() && $forum->per
     ];
 
     // Set parse variables
-    $template->setVariables($renderData);
+    Template::vars($renderData);
 
     // Print page contents
-    echo $template->render('global/information');
+    echo Template::render('global/information');
     exit;
 }
 
@@ -128,10 +122,10 @@ if (isset($_GET['lock']) && $_GET['lock'] == session_id() && $forum->permission(
     ];
 
     // Set parse variables
-    $template->setVariables($renderData);
+    Template::vars($renderData);
 
     // Print page contents
-    echo $template->render('global/information');
+    echo Template::render('global/information');
     exit;
 }
 
@@ -155,10 +149,10 @@ if (isset($_GET['trash']) && $_GET['trash'] == session_id() && $forum->permissio
     }
 
     // Set parse variables
-    $template->setVariables($renderData);
+    Template::vars($renderData);
 
     // Print page contents
-    echo $template->render('global/information');
+    echo Template::render('global/information');
     exit;
 }
 
@@ -183,10 +177,10 @@ if (isset($_GET['restore']) && $_GET['restore'] == session_id() && $forum->permi
     }
 
     // Set parse variables
-    $template->setVariables($renderData);
+    Template::vars($renderData);
 
     // Print page contents
-    echo $template->render('global/information');
+    echo Template::render('global/information');
     exit;
 }
 
@@ -210,10 +204,10 @@ if (isset($_GET['prune']) && $_GET['prune'] == session_id() && $forum->permissio
     }
 
     // Set parse variables
-    $template->setVariables($renderData);
+    Template::vars($renderData);
 
     // Print page contents
-    echo $template->render('global/information');
+    echo Template::render('global/information');
     exit;
 }
 
@@ -230,7 +224,7 @@ $renderData = array_merge($renderData, [
 ]);
 
 // Set parse variables
-$template->setVariables($renderData);
+Template::vars($renderData);
 
 // Print page contents
-echo $template->render('forum/viewtopic');
+echo Template::render('forum/viewtopic');

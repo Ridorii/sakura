@@ -30,37 +30,25 @@ class Meta
      */
     public static function index()
     {
-        // Get the global renderData
-        global $renderData;
-
-        // Initialise templating engine
-        $template = new Template();
-
         // Merge index specific stuff with the global render data
-        $renderData = array_merge(
-            $renderData,
-            [
-                'news' => new News(Config::get('site_news_category')),
-                'newsCount' => Config::get('front_page_news_posts'),
-                'stats' => [
-                    'userCount' => Database::count('users', ['password_algo' => ['nologin', '!='], 'rank_main' => ['1', '!=']])[0],
-                    'newestUser' => User::construct(Users::getNewestUserId()),
-                    'lastRegDate' => date_diff(
-                        date_create(date('Y-m-d', User::construct(Users::getNewestUserId())->registered)),
-                        date_create(date('Y-m-d'))
-                    )->format('%a'),
-                    'topicCount' => Database::count('topics')[0],
-                    'postCount' => Database::count('posts')[0],
-                    'onlineUsers' => Users::checkAllOnline(),
-                ],
-            ]
-        );
-
-        // Set parse variables
-        $template->setVariables($renderData);
+        Template::vars([
+            'news' => new News(Config::get('site_news_category')),
+            'newsCount' => Config::get('front_page_news_posts'),
+            'stats' => [
+                'userCount' => Database::count('users', ['password_algo' => ['nologin', '!='], 'rank_main' => ['1', '!=']])[0],
+                'newestUser' => User::construct(Users::getNewestUserId()),
+                'lastRegDate' => date_diff(
+                    date_create(date('Y-m-d', User::construct(Users::getNewestUserId())->registered)),
+                    date_create(date('Y-m-d'))
+                )->format('%a'),
+                'topicCount' => Database::count('topics')[0],
+                'postCount' => Database::count('posts')[0],
+                'onlineUsers' => Users::checkAllOnline(),
+            ],
+        ]);
 
         // Return the compiled page
-        return $template->render('main/index');
+        return Template::render('main/index');
     }
 
     /**
@@ -70,9 +58,6 @@ class Meta
      */
     public static function news()
     {
-        // Get the global renderData
-        global $renderData;
-
         // Get arguments
         $args = func_get_args();
         $category = isset($args[0]) && !is_numeric($args[0]) ? $args[0] : Config::get('site_news_category');
@@ -83,22 +68,16 @@ class Meta
         // Create news object
         $news = new News($category);
 
-        // Merge the data for this page with the global
-        $renderData = array_merge($renderData, [
+        // Set parse variables
+        Template::vars([
             'news' => $news,
             'postsPerPage' => Config::get('news_posts_per_page'),
             'viewPost' => $post != 0,
             'postExists' => $news->postExists($post),
         ]);
 
-        // Initialise templating engine
-        $template = new Template();
-
-        // Set parse variables
-        $template->setVariables($renderData);
-
         // Print page contents
-        return $template->render('main/news');
+        return Template::render('main/news');
     }
 
     /**
@@ -108,23 +87,16 @@ class Meta
      */
     public static function faq()
     {
-        // Get the global renderData
-        global $renderData;
-
-        // Add page specific things
-        $renderData['page'] = [
-            'title' => 'Frequently Asked Questions',
-            'questions' => Utils::getFaqData(),
-        ];
-
-        // Initialise templating engine
-        $template = new Template();
-
         // Set parse variables
-        $template->setVariables($renderData);
+        Template::vars([
+            'page' => [
+                'title' => 'Frequently Asked Questions',
+                'questions' => Utils::getFaqData(),
+            ],
+        ]);
 
         // Print page contents
-        return $template->render('main/faq');
+        return Template::render('main/faq');
     }
 
     /**
@@ -136,12 +108,6 @@ class Meta
      */
     public static function infoPage($id = null)
     {
-        // Get the global renderData
-        global $renderData;
-
-        // Initialise templating engine
-        $template = new Template();
-
         // Set default variables
         $renderData['page'] = [
             'content' => '<h1>Unable to load the requested info page.</h1><p>Check the URL and try again.</p>',
@@ -161,10 +127,10 @@ class Meta
         }
 
         // Set parse variables
-        $template->setVariables($renderData);
+        Template::vars($renderData);
 
         // Return the compiled page
-        return $template->render('main/infopage');
+        return Template::render('main/infopage');
     }
 
     /**
@@ -174,21 +140,14 @@ class Meta
      */
     public static function search()
     {
-        // Get the global renderData
-        global $renderData;
-
-        // Add page specific things
-        $renderData['page'] = [
-            'title' => 'Search',
-        ];
-
-        // Initialise templating engine
-        $template = new Template();
-
         // Set parse variables
-        $template->setVariables($renderData);
+        Template::vars([
+            'page' => [
+                'title' => 'Search',
+            ],
+        ]);
 
         // Print page contents
-        return $template->render('main/search');
+        return Template::render('main/search');
     }
 }

@@ -11,12 +11,6 @@ use Sakura\Perms\Site;
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
 
-// Initialise templating engine
-$template = new Template();
-
-// Change templating engine
-$template->setTemplate($templateName);
-
 // Switch between modes (we only allow this to be used by logged in user)
 if (isset($_REQUEST['mode'])
     && Users::checkLogin()
@@ -126,10 +120,10 @@ if (isset($_REQUEST['mode'])
                 ], $renderData);
 
                 // Set parse variables
-                $template->setVariables($renderData);
+                Template::vars($renderData);
 
                 // Print page contents
-                echo $template->render('main/premiumcomplete');
+                echo Template::render('main/premiumcomplete');
                 break;
 
             default:
@@ -147,10 +141,10 @@ if (isset($_GET['tracker'])) {
     $renderData['tracker'] =  Utils::getPremiumTrackerData();
 
     // Set parse variables
-    $template->setVariables($renderData);
+    Template::vars($renderData);
 
     // Print page contents
-    echo $template->render('main/supporttracker');
+    echo Template::render('main/supporttracker');
     exit;
 }
 
@@ -165,7 +159,7 @@ $renderData['page'] = [
 ];
 
 // Set parse variables
-$template->setVariables($renderData);
+Template::vars($renderData);
 
 // Print page contents
-echo $template->render('main/support');
+echo Template::render('main/support');
