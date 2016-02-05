@@ -335,26 +335,6 @@ class Thread
     }
 
     /**
-     * The "elapsed" string for this thread since it was created.
-     * 
-     * @return string Readable time elapsed since this thread was created.
-     */
-    public function timeElapsed()
-    {
-        return Utils::timeElapsed($this->time);
-    }
-
-    /**
-     * The "elapsed" string for this thread since the status was last changed.
-     * 
-     * @return string Readble time elapsed since the status was last changed.
-     */
-    public function statusChangeElapsed()
-    {
-        return Utils::timeElapsed($this->statusChange);
-    }
-
-    /**
      * Check if a user has read this thread before.
      * 
      * @param mixed $user The id of the user in question.

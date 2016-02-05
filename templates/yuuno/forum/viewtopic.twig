@@ -118,7 +118,7 @@
                                     <a href="#p{{ post.id }}" class="clean">{{ post.subject|slice(0, 50) }}{% if post.subject|length > 50 %}...{% endif %}</a>
                                 </div>
                                 <div class="date">
-                                    <a href="{{ urls.format('FORUM_POST', [post.id]) }}#p{{ post.id }}" class="clean" title="{{ post.time|date(sakura.dateFormat) }}">#{{ post.id }} - {{ post.timeElapsed }}</a>
+                                    <a href="{{ urls.format('FORUM_POST', [post.id]) }}#p{{ post.id }}" class="clean">#{{ post.id }} - <time>{{ post.time|date(sakura.dateFormat) }}</time></a>
                                 </div>
                                 <div class="clear"></div>
                             </div>

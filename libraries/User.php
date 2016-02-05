@@ -458,29 +458,6 @@ class User
     }
 
     /**
-     * Get the elapsed string for some of the user's dates
-     * 
-     * @param string $append Append to the value.
-     * @param string $none Replace the 0 value with this.
-     * 
-     * @return array The times.
-     */
-    public function elapsed($append = ' ago', $none = 'Just now')
-    {
-        $times = [];
-        $dates = [
-            'joined' => $this->registered,
-            'lastOnline' => $this->lastOnline,
-        ];
-
-        foreach ($dates as $key => $val) {
-            $times[$key] = Utils::timeElapsed($val, $append, $none);
-        }
-
-        return $times;
-    }
-
-    /**
      * Add ranks to a user.
      * 
      * @param array $ranks Array containing the rank IDs.

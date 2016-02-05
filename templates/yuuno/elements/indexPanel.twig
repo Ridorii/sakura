@@ -32,7 +32,7 @@
         All active users in the past {{ sakura.onlineTimeout / 60 }} minute{% if sakura.onlineTimeout != 60 %}s{% endif %}
         <table class="panelTable">
             {% for amount,onlineUser in stats.onlineUsers %}
-            <tr><td style="text-align: left;"><a href="{{ urls.format('USER_PROFILE', [onlineUser.id]) }}" style="font-weight: bold; color: {{ onlineUser.colour }};" class="default">{{ onlineUser.username }}</a></td><td title="{{ onlineUser.lastOnline|date(sakura.dateFormat) }}" style="text-align: right;">{{ onlineUser.elapsed.lastOnline }}</td></tr>
+            <tr><td style="text-align: left;"><a href="{{ urls.format('USER_PROFILE', [onlineUser.id]) }}" style="font-weight: bold; color: {{ onlineUser.colour }};" class="default">{{ onlineUser.username }}</a></td><td style="text-align: right;"><time>{{ onlineUser.lastOnline|date(sakura.dateFormat) }}</time></td></tr>
             {% endfor %}
         </table>
     {% else %}

@@ -82,12 +82,12 @@
                             {% if profile.isPremium[0] %}<img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;" /> {% endif %}<img src="{{ sakura.contentPath }}/images/flags/{{ profile.country|lower }}.png" alt="{{ profile.country }}" style="vertical-align: middle;" title="{{ profile.country(true) }}" /> <span style="font-size: .8em;">{{ profile.title }}</span>
                         </div>
                         <div class="new-profile-dates">
-                            <b>Joined</b> <span title="{{ profile.registered|date(sakura.dateFormat) }}">{{ profile.elapsed.joined }}</span>
+                            <b>Joined</b> <time>{{ profile.registered|date(sakura.dateFormat) }}</time>
                             <br />
                             {% if profile.lastOnline < 1 %}
                             <b>{{ profile.username }} hasn't logged in yet.</b>
                             {% else %}
-                            <b>Last online</b> <span title="{{ profile.lastOnline|date(sakura.dateFormat) }}">{{ profile.elapsed.lastOnline }}</span>
+                            <b>Last online</b> <time>{{ profile.lastOnline|date(sakura.dateFormat) }}</time>
                             {% endif %}
                             {% if profile.birthday != '0000-00-00' and profile.birthday|split('-')[0] > 0 %}
                             <br /><b>Age</b> <span title="{{ profile.birthday }}">{{ profile.birthday(true) }} years old</span>&nbsp;

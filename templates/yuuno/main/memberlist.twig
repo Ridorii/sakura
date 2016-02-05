@@ -80,11 +80,11 @@
                             <td>
                                 <a href="{{ urls.format('USER_PROFILE', [user.id]) }}" class="default" style="font-weight: bold; color: {{ user.colour }}; text-shadow: 0 0 5px {{ user.colour }};">{{ user.username }}</a>
                             </td>
-                            <td title="{{ user.registered|date(sakura.dateFormat) }}">
-                                {{ user.elapsed.joined }}
+                            <td>
+                                <time>{{ user.registered|date(sakura.dateFormat) }}</time>
                             </td>
-                            <td title="{% if user.lastOnline == 0 %}Never logged in.{% else %}{{ user.lastOnline|date(sakura.dateFormat) }}{% endif %}">
-                                {% if user.lastOnline == 0 %}<i>Never logged in.</i>{% else %}{{ user.elapsed.lastOnline }}{% endif %}
+                            <td>
+                                {% if user.lastOnline == 0 %}<i>Never logged in.</i>{% else %}<time>{{ user.lastOnline|date(sakura.dateFormat) }}</time>{% endif %}
                             </td>
                             <td>
                                 {{ user.title }}

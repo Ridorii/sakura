@@ -22,6 +22,6 @@
         {% else %}
             [deleted user]
         {% endif %} <a href="{{ urls.format('FORUM_POST', [thread.lastPost.id]) }}#p{{ thread.lastPost.id }}" class="default fa fa-tag"></a><br />
-        <span title="{{ thread.lastPost.time|date(sakura.dateFormat) }}">{{ thread.lastPost.timeElapsed }}</span>
+        <time>{{ thread.lastPost.time|date(sakura.dateFormat) }}</time>
     </td>
 </tr>

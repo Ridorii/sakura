@@ -1498,11 +1498,6 @@ if (Users::checkLogin()) {
             ];
             break;
 
-        // Username changing
-        case 'account.username':
-            $renderData['difference'] = $currentUser->getUsernameHistory() ? Utils::timeElapsed($currentUser->getUsernameHistory()[0]['change_time']) : 0;
-            break;
-
         // Sessions
         case 'advanced.sessions':
             $renderData['sessions'] = Database::fetch('sessions', true, ['user_id' => [$currentUser->id, '=']]);

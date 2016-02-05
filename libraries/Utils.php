@@ -687,50 +687,6 @@ class Utils
     }
 
     /**
-     * Calculate the time that has elapsed since a certain data (doesn't take leap years in account).
-     * 
-     * @param int $timestamp The timestamp.
-     * @param string $append Append to
-     * @param string $none Text if 0.
-     * 
-     * @return string Returns the time elapsed in a readable format.
-     */
-    public static function timeElapsed($timestamp, $append = ' ago', $none = 'Just now')
-    {
-
-        // Subtract the entered timestamp from the current timestamp
-        $time = time() - $timestamp;
-
-        // If the new timestamp is below 1 return a standard string
-        if ($time < 1) {
-            return $none;
-        }
-
-        // Array containing time "types"
-        $times = [
-            365 * 24 * 60 * 60 => 'year',
-            30 * 24 * 60 * 60 => 'month',
-            24 * 60 * 60 => 'day',
-            60 * 60 => 'hour',
-            60 => 'minute',
-            1 => 'second',
-        ];
-
-        foreach ($times as $secs => $str) {
-            // Do a devision to check if the given timestamp fits in the current "type"
-            $calc = $time / $secs;
-
-            if ($calc >= 1) {
-                // Round the number
-                $round = floor($calc);
-
-                // Return the string
-                return $round . ' ' . $times[$secs] . ($round == 1 ? '' : 's') . $append;
-            }
-        }
-    }
-
-    /**
      * Get the byte symbol for a unit from bytes.
      * 
      * @param int $bytes The amount of bytes.

@@ -58,64 +58,6 @@
             Sakura.cookiePrefix = "{{ sakura.cookie.prefix }}";
             Sakura.cookiePath = "{{ sakura.cookie.path }}";
 
-            // Space for things that need to happen onload
-            window.addEventListener("load", function() {
-            {% if session.checkLogin %}
-                // Convert href to object in logout link
-                prepareAjaxLink('headerLogoutLink', 'submitPost', ', true, "Logging out..."');
-            {% elseif not sakura.lockAuth and php.self != '/authenticate.php' %}
-                // Make the header login form dynamic
-                prepareAjaxForm('headerLoginForm', 'Logging in...');
-            {% endif %}
-
-            {% if session.checkLogin %}
-                // Make notification requests (there's a seperate one to make it happen before the first 60 seconds)
-                notifyRequest('{{ php.sessionid }}');
-
-                // Create interval
-                setInterval(function() {
-                    notifyRequest('{{ php.sessionid }}');
-                }, 60000);
-            {% endif %}
-
-            {% if php.self == '/profile.php' and session.checkLogin and user.id != profile.id %}
-                // Make friend button dynamic
-                prepareAjaxLink('profileFriendToggle', 'submitPost', ', true, "{% if profile.friend == 0 %}Adding{% else %}Removing{% endif %} friend..."');
-            {% endif %}
-
-            {% if php.self == '/viewtopic.php' and session.checkLogin %}
-                var forumFriendToggles = document.querySelectorAll('.forum-friend-toggle');
-
-                for(var i in forumFriendToggles) {
-                    prepareAjaxLink(forumFriendToggles[i], 'submitPost', ', true, "Please wait..."');
-                }
-            {% endif %}
-
-            {% if php.self == '/authenticate.php' and not (sakura.lockAuth or session.checkLogin) %}
-
-                // AJAX Form Submission
-                var forms = {
-                    {% if not auth.changingPass %}
-                        "loginForm": 'Logging in...',
-                    {% if not sakura.disableRegistration %}
-                        "registerForm": 'Processing registration...',
-                    {% endif %}
-                    {% if sakura.requireActivation %}
-                        "resendForm": 'Attempting to resend activation...',
-                    {% endif %}
-                        "passwordForm": 'Sending password recovery mail...'
-                    {% else %}
-                        "passwordForm": 'Changing password...'
-                    {% endif %}
-                };
-
-                for(var i in forms) {
-                    prepareAjaxForm(i, forms[i], (i == 'registerForm'));
-                }
-
-            {% endif %}
-            });
-
             // Error reporter
             window.onerror = function(msg, url, line, col, error) {
                 notifyUI({
@@ -200,6 +142,7 @@
                         <div>A staff member has set your account to restricted mode most likely due to violation of the rules. While restricted you won't be able to use most public features of the site. If you think this is a mistake please <a href="{{ urls.format('INFO_PAGE', ['contact']) }}" style="color: inherit;">get in touch with one of our staff members</a>.</div>
                     </div>
                 {% endif %}
+
                 <noscript>
                     <div class="headerNotify">
                         <h1>You have JavaScript disabled!</h1>
@@ -259,6 +202,80 @@
                 </div>
             </div>
         </div>
+        <script type="text/javascript">
+            // Space for things that need to happen onload
+            window.addEventListener("load", function() {
+            {% if session.checkLogin %}
+                // Convert href to object in logout link
+                prepareAjaxLink('headerLogoutLink', 'submitPost', ', true, "Logging out..."');
+            {% elseif not sakura.lockAuth and php.self != '/authenticate.php' %}
+                // Make the header login form dynamic
+                prepareAjaxForm('headerLoginForm', 'Logging in...');
+            {% endif %}
+
+            {% if session.checkLogin %}
+                // Make notification requests (there's a seperate one to make it happen before the first 60 seconds)
+                notifyRequest('{{ php.sessionid }}');
+
+                // Create interval
+                setInterval(function() {
+                    notifyRequest('{{ php.sessionid }}');
+                }, 60000);
+            {% endif %}
+
+            {% if php.self == '/profile.php' and session.checkLogin and user.id != profile.id %}
+                // Make friend button dynamic
+                prepareAjaxLink('profileFriendToggle', 'submitPost', ', true, "{% if profile.friend == 0 %}Adding{% else %}Removing{% endif %} friend..."');
+            {% endif %}
+
+            {% if php.self == '/viewtopic.php' and session.checkLogin %}
+                var forumFriendToggles = document.querySelectorAll('.forum-friend-toggle');
+
+                for(var i in forumFriendToggles) {
+                    prepareAjaxLink(forumFriendToggles[i], 'submitPost', ', true, "Please wait..."');
+                }
+            {% endif %}
+
+            {% if php.self == '/authenticate.php' and not (sakura.lockAuth or session.checkLogin) %}
+
+                // AJAX Form Submission
+                var forms = {
+                    {% if not auth.changingPass %}
+                        "loginForm": 'Logging in...',
+                    {% if not sakura.disableRegistration %}
+                        "registerForm": 'Processing registration...',
+                    {% endif %}
+                    {% if sakura.requireActivation %}
+                        "resendForm": 'Attempting to resend activation...',
+                    {% endif %}
+                        "passwordForm": 'Sending password recovery mail...'
+                    {% else %}
+                        "passwordForm": 'Changing password...'
+                    {% endif %}
+                };
+
+                for(var i in forms) {
+                    prepareAjaxForm(i, forms[i], (i == 'registerForm'));
+                }
+
+            {% endif %}
+            });
+
+            // Parse time elements
+            var timeElems = document.getElementsByTagName('time');
+            
+            // Iterate over them
+            for (var timeElem in timeElems) {
+                // Attempt to parse it
+                var parsed = Date.parse(timeElems[timeElem].innerText);
+
+                // If it can be parsed do DOM edits
+                if (!isNaN(parsed)) {
+                    timeElems[timeElem].title = timeElems[timeElem].innerText;
+                    timeElems[timeElem].innerText = Sakura.timeElapsed(Math.floor(parsed / 1000));
+                }
+            }
+        </script>
         {% if sakura.dev.showChangelog and php.self == '/index.php' and stats %}
         <script type="text/javascript" src="https://sakura.flash.moe/?get={{ sakura.versionInfo.version|slice(0, 4) }}-{{ sakura.versionInfo.version|slice(4, 2) }}-{{ sakura.versionInfo.version|slice(6, 2) }}&amp;variable=true"></script>
         <script type="text/javascript">

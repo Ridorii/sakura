@@ -170,7 +170,7 @@ if (!defined('SAKURA_NO_TPL')) {
             'siteLogo' => Config::get('sitelogo'),
             'siteDesc' => Config::get('sitedesc'),
             'siteTags' => json_decode(Config::get('sitetags'), true),
-            'dateFormat' => Config::get('date_format'),
+            'dateFormat' => 'r',
             'currentPage' => (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null),
             'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null),
             'onlineTimeout' => Config::get('max_online_time'),

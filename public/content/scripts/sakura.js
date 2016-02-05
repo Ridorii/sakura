@@ -106,6 +106,42 @@ var Sakura = (function () {
         // Test it on the email var which'll return a boolean
         return re.test(email);
     };
+    // Calculate the time that has elapsed since a certain data (doesn't take leap years in account).
+    Sakura.timeElapsed = function (timestamp, append, none) {
+        if (append === void 0) { append = ' ago'; }
+        if (none === void 0) { none = 'Just now'; }
+        // Subtract the entered timestamp from the current timestamp
+        var time = this.epoch() - timestamp;
+        // If the new timestamp is below 1 return a standard string
+        if (time < 1) {
+            return none;
+        }
+        // Times array
+        var times = {
+            31536000: 'year',
+            2592000: 'month',
+            86400: 'day',
+            3600: 'hour',
+            60: 'minute',
+            1: 'second'
+        };
+        // 
+        var timeKeys = Object.keys(times).reverse();
+        // Iterate over the times
+        for (var i in timeKeys) {
+            // Do a devision to check if the given timestamp fits in the current "type"
+            var calc = time / parseInt(timeKeys[i]);
+            // Check if we have a match
+            if (calc >= 1) {
+                // Round the number
+                var display = Math.floor(calc);
+                // Return the formatted string
+                return display + " " + times[timeKeys[i]] + (display === 1 ? '' : 's') + append;
+            }
+        }
+        // If everything fails just return none
+        return none;
+    };
     Sakura.cookiePrefix = ""; // Cookie prefix, gets prepended to cookie names
     Sakura.cookiePath = "/"; // Cookie path, can in most cases be left untouched
     return Sakura;

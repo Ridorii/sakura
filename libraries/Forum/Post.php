@@ -228,24 +228,4 @@ class Post
         // Return a new post object
         return new Post($this->id);
     }
-
-    /**
-     * The "elapsed" string for this post.
-     * 
-     * @return string Readable time elapsed since this post was created.
-     */
-    public function timeElapsed()
-    {
-        return Utils::timeElapsed($this->time);
-    }
-
-    /**
-     * Time "elapsed" since the last edit.
-     * 
-     * @return string Readable time elapsed since this post was last edited.
-     */
-    public function editTimeElapsed()
-    {
-        return Utils::timeElapsed($this->editTime);
-    }
 }

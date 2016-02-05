@@ -5,7 +5,7 @@
     <input type="hidden" name="timestamp" value="{{ php.time }}" />
     <input type="hidden" name="mode" value="username" />
     <h1 class="stylised" style="text-align: center; margin-top: 10px;{% if not eligible %} color: #c44;{% endif %}">You are {% if not eligible %}not {% endif %}eligible for a name change.</h1>
-    <h3 style="text-align: center;">{% if user.getUsernameHistory %}Your last name change was {{ difference }}.{% else %}This is your first username change.{% endif %}</h3>
+    <h3 style="text-align: center;">{% if user.getUsernameHistory %}Your last name change was <time>{{ user.getUsernameHistory[0]['change_time']|date(sakura.dateFormat) }}</time>.{% else %}This is your first username change.{% endif %}</h3>
     {% if eligible %}
         <div class="profile-field">
             <div><h2>Username</h2></div>
