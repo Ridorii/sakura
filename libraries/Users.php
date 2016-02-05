@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds various functions to interface with users.
- * 
+ *
  * @package Sakura
  */
 
@@ -11,7 +11,7 @@ use Sakura\Perms\Site;
 
 /**
  * User management
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -19,10 +19,10 @@ class Users
 {
     /**
      * Check if a user is logged in
-     * 
+     *
      * @param int $uid The user ID.
      * @param string $sid The session ID.
-     * 
+     *
      * @return array|bool Either false or the ID and session in an array.
      */
     public static function checkLogin($uid = null, $sid = null)
@@ -103,12 +103,12 @@ class Users
 
     /**
      * Log in to an account.
-     * 
+     *
      * @param string $username The username.
      * @param string $password The password.
      * @param bool $remember Stay logged in "forever"?
      * @param bool $cookies Set cookies?
-     * 
+     *
      * @return array Return the status.
      */
     public static function login($username, $password, $remember = false, $cookies = true)
@@ -191,7 +191,7 @@ class Users
 
     /**
      * Logout
-     * 
+     *
      * @return bool Was the logout successful?
      */
     public static function logout()
@@ -226,7 +226,7 @@ class Users
 
     /**
      * Register a new account.
-     * 
+     *
      * @param string $username The username.
      * @param string $password The password.
      * @param string $confirmpass The password, again.
@@ -234,7 +234,7 @@ class Users
      * @param bool $tos Agreeing to the ToS.
      * @param string $captcha Captcha.
      * @param string $regkey Registration key (unused).
-     * 
+     *
      * @return array Status.
      */
     public static function register($username, $password, $confirmpass, $email, $tos, $captcha = null, $regkey = null)
@@ -320,10 +320,10 @@ class Users
 
     /**
      * Send password forgot e-mail
-     * 
+     *
      * @param string $username The username.
      * @param string $email The e-mail.
-     * 
+     *
      * @return array The status.
      */
     public static function sendPasswordForgot($username, $email)
@@ -382,12 +382,12 @@ class Users
 
     /**
      * Reset a password.
-     * 
+     *
      * @param string $verk The e-mail verification key.
      * @param int $uid The user id.
      * @param string $newpass New pass.
      * @param string $verpass Again.
-     * 
+     *
      * @return array Status.
      */
     public static function resetPassword($verk, $uid, $newpass, $verpass)
@@ -439,10 +439,10 @@ class Users
 
     /**
      * Resend activation e-mail.
-     * 
+     *
      * @param string $username Username.
      * @param string $email E-mail.
-     * 
+     *
      * @return array Status
      */
     public static function resendActivationMail($username, $email)
@@ -483,10 +483,10 @@ class Users
 
     /**
      * Send activation e-mail.
-     * 
+     *
      * @param mixed $uid User ID.
      * @param mixed $customKey Key.
-     * 
+     *
      * @return bool Always true.
      */
     public static function sendActivationMail($uid, $customKey = null)
@@ -535,11 +535,11 @@ class Users
 
     /**
      * Activate a user.
-     * 
+     *
      * @param int $uid The ID.
      * @param bool $requireKey Require a key.
      * @param string $key The key.
-     * 
+     *
      * @return array Status.
      */
     public static function activateUser($uid, $requireKey = false, $key = null)
@@ -567,7 +567,7 @@ class Users
                 return [0, 'INVALID_CODE'];
             }
         }
-        
+
         // Add normal user, remove deactivated and set normal as default
         $user->addRanks([2]);
         $user->removeRanks([1]);
@@ -579,10 +579,10 @@ class Users
 
     /**
      * Check if a user exists.
-     * 
+     *
      * @param mixed $user The Username or ID.
      * @param bool $id Use id instead.
-     * 
+     *
      * @return mixed Returns the ID if it exists, false otherwise.
      */
     public static function userExists($user, $id = true)
@@ -599,7 +599,7 @@ class Users
 
     /**
      * Get all available profile fields.
-     * 
+     *
      * @return array|null The fields.
      */
     public static function getProfileFields()
@@ -628,7 +628,7 @@ class Users
 
     /**
      * Get all available option fields.
-     * 
+     *
      * @return array|null The fields.
      */
     public static function getOptionFields()
@@ -661,7 +661,7 @@ class Users
 
     /**
      * Get all online users.
-     * 
+     *
      * @return array Array containing User instances.
      */
     public static function checkAllOnline()
@@ -684,10 +684,10 @@ class Users
 
     /**
      * Add premium time to a user.
-     * 
+     *
      * @param int $id The user ID.
      * @param int $seconds The amount of extra seconds.
-     * 
+     *
      * @return array|double|int The new expiry date.
      */
     public static function addUserPremium($id, $seconds)
@@ -725,7 +725,7 @@ class Users
 
     /**
      * Process premium meta data.
-     * 
+     *
      * @param int $id The user ID.
      */
     public static function updatePremiumMeta($id)
@@ -762,9 +762,9 @@ class Users
 
     /**
      * Get all users that registered from a certain IP.
-     * 
-     * @param string $ip The IP. 
-     * 
+     *
+     * @param string $ip The IP.
+     *
      * @return array The users.
      */
     public static function getUsersByIP($ip)
@@ -783,42 +783,11 @@ class Users
     }
 
     /**
-     * Get users from a rank.
-     * 
-     * @param int $rankId The rank ID.
-     * @param mixed $users Array with users.
-     * @param mixed $excludeAbyss Unused.
-     * 
-     * @return array Users.
-     */
-    public static function getUsersInRank($rankId, $users = null, $excludeAbyss = true)
-    {
-        // Get all users (or use the supplied user list to keep server load down)
-        if (!$users) {
-            $users = self::getAllUsers();
-        }
-
-        // Make output array
-        $rank = [];
-
-        // Go over all users and check if they have the rank id
-        foreach ($users as $user) {
-            // If so store the user's row in the array
-            if ($user->hasRanks([$rankId], $user->id)) {
-                $rank[] = $user;
-            }
-        }
-
-        // Then return the array with the user rows
-        return $rank;
-    }
-
-    /**
      * Get all users.
-     * 
+     *
      * @param mixed $includeInactive include deactivated users.
      * @param mixed $includeRestricted include restricted users.
-     * 
+     *
      * @return array The users.
      */
     public static function getAllUsers($includeInactive = true, $includeRestricted = false)
@@ -852,7 +821,7 @@ class Users
 
     /**
      * Get all ranks.
-     * 
+     *
      * @return array All ranks.
      */
     public static function getAllRanks()
@@ -874,12 +843,12 @@ class Users
 
     /**
      * Get a user's notifications.
-     * 
+     *
      * @param int $uid The user id.
      * @param int $timediff The maximum difference in time.
      * @param bool $excludeRead Exclude notifications that were already read.
      * @param bool $markRead Automatically mark as read.
-     * 
+     *
      * @return array The notifications.
      */
     public static function getNotifications($uid = null, $timediff = 0, $excludeRead = true, $markRead = false)
@@ -919,8 +888,8 @@ class Users
 
     /**
      * Mark a notification as read
-     * 
-     * @param mixed $id The notification's ID. 
+     *
+     * @param mixed $id The notification's ID.
      * @param mixed $mode Read or unread.
      */
     public static function markNotificationRead($id, $mode = true)
@@ -938,7 +907,7 @@ class Users
 
     /**
      * Create a new notification.
-     * 
+     *
      * @param int $user The user id.
      * @param string $title The notification title.
      * @param string $text The rest of the text.
@@ -968,7 +937,7 @@ class Users
 
     /**
      * Get the newest member's ID.
-     * 
+     *
      * @return int The user ID.
      */
     public static function getNewestUserId()

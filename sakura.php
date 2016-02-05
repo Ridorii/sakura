@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160204');
+define('SAKURA_VERSION', '20160205');
 define('SAKURA_VLABEL', 'Amethyst');
 define('SAKURA_COLOUR', '#9966CC');
 
@@ -26,8 +26,8 @@ set_time_limit(0);
 mb_internal_encoding('utf-8');
 
 // Stop the execution if the PHP Version is older than 5.4.0
-if (version_compare(phpversion(), '5.4.0', '<')) {
-    die('Sakura requires at least PHP 5.4.0, please upgrade to a newer PHP version.');
+if (version_compare(phpversion(), '5.5.0', '<')) {
+    die('Sakura requires at least PHP 5.5.0, please upgrade to a newer PHP version.');
 }
 
 // Include third-party libraries

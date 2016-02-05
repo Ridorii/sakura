@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the user page controllers.
- * 
+ *
  * @package Sakura
  */
 
@@ -9,23 +9,24 @@ namespace Sakura\Controllers;
 
 use Sakura\Config;
 use Sakura\Database;
+use Sakura\Rank;
 use Sakura\Template;
 use Sakura\User as UserContext;
 use Sakura\Utils;
 
 /**
  * Everything that is just for serving user data.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class User
 {
     /**
-     * Display the profile of a user
-     * 
+     * Display the profile of a user.
+     *
      * @param mixed $id The user ID.
-     * 
+     *
      * @return bool|string The profile page.
      */
     public static function profile($id = 0)
@@ -39,7 +40,7 @@ class User
         if ($profile->id == 0) {
             // Fetch from username_history
             $check = Database::fetch('username_history', false, ['username_old_clean' => [Utils::cleanString(isset($_GET['u']) ? $_GET['u'] : 0, true, true), '=']]);
-            
+
             // Redirect if so
             if ($check) {
                 Template::vars([
@@ -85,6 +86,13 @@ class User
         return Template::render('main/profile');
     }
 
+    /**
+     * Display the memberlist.
+     *
+     * @param int $rank Optional rank ID.
+     *
+     * @return bool|string The memberlist.
+     */
     public static function members($rank = 0)
     {
         global $currentUser;
@@ -99,7 +107,7 @@ class User
             'memberlist' => [
                 'ranks' => ($_MEMBERLIST_RANKS = \Sakura\Users::getAllRanks()),
                 'active' => ($_MEMBERLIST_ACTIVE = (array_key_exists($rank, $_MEMBERLIST_RANKS) ? $rank : 0)),
-                'users' => ($_MEMBERLIST_ACTIVE ? \Sakura\Users::getUsersInRank($_MEMBERLIST_ACTIVE) : \Sakura\Users::getAllUsers(false)),
+                'users' => ($_MEMBERLIST_ACTIVE ? Rank::construct($_MEMBERLIST_ACTIVE)->users() : \Sakura\Users::getAllUsers(false)),
                 'membersPerPage' => Config::get('members_per_page'),
             ]
         ]);
