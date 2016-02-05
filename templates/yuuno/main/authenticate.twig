@@ -7,7 +7,6 @@
         <h1 class="stylised" style="line-height: 1.8em; text-align: center;">Authentication is currently disallowed, try again later.</h1>
     {% else %}
     <div class="loginPage">
-        <div class="loginCont">
             <div class="loginForm">
                 <div class="head">
                     Login to {{ sakura.siteName }}
@@ -65,8 +64,6 @@
                     </div>
                 </form>
             </div>
-        </div>
-        <div class="registerCont">
             <div class="registerForm">
                 <div class="head">
                     Register on {{ sakura.siteName }}
@@ -177,8 +174,6 @@
                 </form>
             </div>
             {% endif %}
-        </div>
-        <div class="clear"></div>
     </div>
     {% endif %}
 {% endblock %}

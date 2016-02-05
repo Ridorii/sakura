@@ -12,6 +12,9 @@ Router::get('/faq', 'Sakura\Controllers\Meta@faq', 'main.faq');
 Router::get('/search', 'Sakura\Controllers\Meta@search', 'main.search');
 Router::get('/p/{id}', 'Sakura\Controllers\Meta@infoPage', 'main.infopage');
 
+// Auth
+Router::get('/login', 'Sakura\Controllers\Auth@login', 'auth.login');
+
 // News
 Router::get('/news', 'Sakura\Controllers\Meta@news', 'news.index');
 Router::get('/news/{category}', 'Sakura\Controllers\Meta@news', 'news.category');

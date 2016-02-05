@@ -159,6 +159,7 @@
                             {% if sakura.lockAuth %}
                                 <div class="menu-item fa-lock" style="padding-left: 10px; padding-right: 10px;" title="Authentication is locked"></div>
                             {% else %}
+                                <a class="menu-item fa-magic" href="{{ urls.format('SITE_REGISTER') }}" title="Login"></a>
                                 <a class="menu-item fa-sign-in" href="{{ urls.format('SITE_LOGIN') }}" title="Login"></a>
                             {% endif %}
                         {% endif %}

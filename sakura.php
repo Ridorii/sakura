@@ -59,6 +59,7 @@ require_once ROOT . 'libraries/Users.php';
 require_once ROOT . 'libraries/Utils.php';
 require_once ROOT . 'libraries/Whois.php';
 require_once ROOT . 'libraries/Console/Application.php';
+require_once ROOT . 'libraries/Controllers/Auth.php';
 require_once ROOT . 'libraries/Controllers/Forums.php';
 require_once ROOT . 'libraries/Controllers/Meta.php';
 require_once ROOT . 'libraries/Controllers/User.php';

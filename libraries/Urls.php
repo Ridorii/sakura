@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the url generation class.
- * 
+ *
  * @package Sakura
  */
 
@@ -9,7 +9,7 @@ namespace Sakura;
 
 /**
  * Rewrite URL generator.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -19,7 +19,7 @@ class Urls
      * Unformatted links
      * 0 - Plain
      * 1 - mod_rewrite
-     * 
+     *
      * @var array
      */
     protected $urls = [
@@ -62,23 +62,23 @@ class Urls
             '/faq',
         ],
         'SITE_LOGIN' => [
-            '/authenticate.php',
+            '/authenticate.php?ref=login',
             '/login',
         ],
         'SITE_LOGOUT' => [
-            '/authenticate.php',
+            '/authenticate.php?ref=logout',
             '/logout',
         ],
         'SITE_REGISTER' => [
-            '/authenticate.php',
+            '/authenticate.php?ref=register',
             '/register',
         ],
         'SITE_FORGOT_PASSWORD' => [
-            '/authenticate.php',
+            '/authenticate.php?ref=forgotpassword',
             '/forgotpassword',
         ],
         'SITE_ACTIVATE' => [
-            '/authenticate.php',
+            '/authenticate.php?ref=activate',
             '/activate',
         ],
         'INFO_PAGE' => [
@@ -294,11 +294,11 @@ class Urls
 
     /**
      * Format a URL.
-     * 
+     *
      * @param string $lid The ID of a URL.
      * @param array $args Additional arguments.
      * @param bool $rewrite Toggle mod_rewrite.
-     * 
+     *
      * @return null|string The formatted URL.
      */
     public function format($lid, $args = [], $rewrite = null)
