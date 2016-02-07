@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160205');
+define('SAKURA_VERSION', '20160207');
 define('SAKURA_VLABEL', 'Amethyst');
 define('SAKURA_COLOUR', '#9966CC');
 
@@ -45,6 +45,7 @@ require_once ROOT . 'libraries/CSRF.php';
 require_once ROOT . 'libraries/Database.php';
 require_once ROOT . 'libraries/File.php';
 require_once ROOT . 'libraries/Hashing.php';
+require_once ROOT . 'libraries/Net.php';
 require_once ROOT . 'libraries/News.php';
 require_once ROOT . 'libraries/Payments.php';
 require_once ROOT . 'libraries/Perms.php';

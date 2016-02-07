@@ -91,7 +91,7 @@ class Meta
         Template::vars([
             'page' => [
                 'title' => 'Frequently Asked Questions',
-                'questions' => Utils::getFaqData(),
+                'questions' => Database::fetch('faq', true, null, ['faq_id']),
             ],
         ]);
 
@@ -117,7 +117,7 @@ class Meta
         $id = strtolower($id);
 
         // Get info page data from the database
-        if ($ipData = Utils::loadInfoPage($id)) {
+        if ($ipData = Database::fetch('infopages', false, ['page_shorthand' => [$id, '=']])) {
             // Assign new proper variable
             $renderData['page'] = [
                 'id' => $id,

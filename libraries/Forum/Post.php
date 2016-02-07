@@ -12,6 +12,7 @@ use Sakura\Database;
 use Sakura\User;
 use Sakura\BBcode;
 use Sakura\Config;
+use Sakura\Net;
 
 /**
  * Used to serve, create and update posts.
@@ -212,7 +213,7 @@ class Post
                 'topic_id' => $thread->id,
                 'forum_id' => $thread->forum,
                 'poster_id' => $this->poster->id,
-                'poster_ip' => Utils::getRemoteIP(),
+                'poster_ip' => Net::pton(Net::IP()),
                 'post_time' => $this->time,
                 'post_subject' => $this->subject,
                 'post_text' => $this->text,

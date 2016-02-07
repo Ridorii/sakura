@@ -69,7 +69,7 @@ $mode = isset($_GET['f']) ? 'f' : (isset($_GET['t']) ? 't' : (isset($_GET['p']) 
 
 // Include emotes and bbcodes
 $posting = [
-    'emoticons' => Utils::getEmotes(),
+    'emoticons' => Database::fetch('emoticons'),
 ];
 
 // Check if we're in reply mode

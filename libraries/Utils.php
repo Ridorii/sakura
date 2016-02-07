@@ -18,16 +18,6 @@ use PHPMailer;
 class Utils
 {
     /**
-     * Get the emoticons.
-     * 
-     * @return array Array containing emoticons.
-     */
-    public static function getEmotes()
-    {
-        return Database::fetch('emoticons');
-    }
-
-    /**
      * Parse the emoticons.
      * 
      * @param string $text String to parse emoticons from.
@@ -36,9 +26,8 @@ class Utils
      */
     public static function parseEmotes($text)
     {
-
         // Get emoticons from the database
-        $emotes = self::getEmotes();
+        $emotes = Database::fetch('emoticons');
 
         // Do the replacements
         foreach ($emotes as $emote) {
@@ -62,7 +51,6 @@ class Utils
      */
     public static function verifyCaptcha($response)
     {
-
         // Attempt to get the response
         $resp = @file_get_contents(
             'https://www.google.com/recaptcha/api/siteverify?secret='
@@ -93,7 +81,6 @@ class Utils
      */
     public static function errorHandler($errno, $errstr, $errfile, $errline)
     {
-
         // Remove ROOT path from the error string and file location
         $errstr = str_replace(ROOT, '', $errstr);
         $errfile = str_replace(ROOT, '', $errfile);
@@ -254,7 +241,6 @@ class Utils
      */
     public static function sendMail($to, $subject, $body)
     {
-
         // Initialise PHPMailer
         $mail = new PHPMailer();
 
@@ -323,7 +309,6 @@ class Utils
      */
     public static function cleanString($string, $lower = false, $noSpecial = false, $replaceSpecial = '')
     {
-
         // Run common sanitisation function over string
         $string = htmlentities($string, ENT_NOQUOTES | ENT_HTML401, Config::get('charset'));
         $string = stripslashes($string);
@@ -344,23 +329,6 @@ class Utils
     }
 
     /**
-     * Load contents of an infopage.
-     * 
-     * @param string $id ID of the info page.
-     * 
-     * @return array|bool Contents of the info page.
-     */
-    public static function loadInfoPage($id)
-    {
-
-        // Get contents from the database
-        $infopage = Database::fetch('infopages', false, ['page_shorthand' => [$id, '=']]);
-
-        // Return the data if there is any else just return false
-        return count($infopage) ? $infopage : false;
-    }
-
-    /**
      * Validate MX records.
      * 
      * @param string $email E-mail address.
@@ -369,7 +337,6 @@ class Utils
      */
     public static function checkMXRecord($email)
     {
-
         // Get the domain from the e-mail address
         $domain = substr(strstr($email, '@'), 1);
 
@@ -381,174 +348,6 @@ class Utils
     }
 
     /**
-     * Detect the version of an IP.
-     * 
-     * @param string $ip The IP.
-     * 
-     * @return int Either 0, 4 or 6.
-     */
-    public static function ipVersion($ip)
-    {
-
-        // Check if var is IP
-        if (filter_var($ip, FILTER_VALIDATE_IP)) {
-            // IPv4
-            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-                return 4;
-            }
-
-            // IPv6
-            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-                return 6;
-            }
-        }
-
-        // Not an IP or unknown type
-        return 0;
-    }
-
-    /**
-     * Unpack an IPv6
-     * 
-     * @param mixed $inet IP address.
-     * 
-     * @return null|string The unpacked IP.
-     */
-    public static function inetToBits($inet)
-    {
-
-        // Unpack string
-        $unpacked = unpack('A16', $inet);
-
-        // Split the string
-        $unpacked = str_split($unpacked[1]);
-
-        // Define variable
-        $binaryIP = null;
-
-        // "Build" binary IP
-        foreach ($unpacked as $char) {
-            $binaryIP .= str_pad(decbin(ord($char)), 8, '0', STR_PAD_LEFT);
-        }
-
-        // Return IP
-        return $binaryIP;
-    }
-
-    /**
-     * Match a subnet.
-     * 
-     * @param string $ip the IP.
-     * @param string $range The range.
-     * 
-     * @return bool|int Success.
-     */
-    public static function matchSubnet($ip, $range)
-    {
-
-        // Use the proper IP type
-        switch (self::ipVersion($ip)) {
-            case 4:
-                // Break the range up in parts
-                list($subnet, $bits) = explode('/', $range);
-
-                // Convert IP and Subnet to long
-                $ip = ip2long($ip);
-                $subnet = ip2long($subnet);
-                $mask = -1 << (32 - $bits);
-
-                // In case the supplied subnet wasn't correctly aligned
-                $subnet &= $mask;
-
-                // Return true if IP is in subnet
-                return ($ip & $mask) == $subnet;
-
-            case 6:
-                // Break the range up in parts
-                list($subnet, $bits) = explode('/', $range);
-
-                // Convert subnet to packed address and convert it to binary
-                $subnet = inet_pton($subnet);
-                $binarySubnet = self::inetToBits($subnet);
-
-                // Convert IPv6 to packed address and convert it to binary as well
-                $ip = inet_pton($ip);
-                $binaryIP = self::inetToBits($ip);
-
-                // Return bits of the strings according to the bits
-                $ipBits = substr($binaryIP, 0, $bits);
-                $subnetBits = substr($binarySubnet, 0, $bits);
-
-                return ($ipBits === $subnetBits);
-
-            default:
-                return 0;
-
-        }
-    }
-
-    /**
-     * Check if an IP originates from CloudFlare.
-     * 
-     * @param string $ip The IP.
-     * 
-     * @return bool Success.
-     */
-    public static function checkCFIP($ip)
-    {
-
-        // Get CloudFlare Subnet list
-        $cfhosts = file_get_contents(
-            ROOT . Config::local('data', 'cfipv' . (self::ipVersion($ip)))
-        );
-
-        // Replace \r\n with \n
-        $cfhosts = str_replace("\r\n", "\n", $cfhosts);
-
-        // Explode the file into an array
-        $cfhosts = explode("\n", $cfhosts);
-
-        // Check if IP is in a CloudFlare subnet
-        foreach ($cfhosts as $subnet) {
-            // Check if the subnet isn't empty (git newline prevention)
-            if (strlen($subnet) < 1) {
-                continue;
-            }
-
-            // Return true if found
-            if (self::matchSubnet($ip, $subnet)) {
-                return true;
-            }
-        }
-
-        // Return false if fails
-        return false;
-    }
-
-    /**
-     * Get the IP of a visitor.
-     * 
-     * @return string The IP.
-     */
-    public static function getRemoteIP()
-    {
-
-        // Assign REMOTE_ADDR to a variables
-        $ip = $_SERVER['REMOTE_ADDR'];
-
-        // Check if the IP is a CloudFlare IP
-        if (self::checkCFIP($ip)) {
-            // If it is check if the CloudFlare IP header is set and if it is assign it to the ip variable
-            if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
-                $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
-            }
-        }
-
-        // Return the correct IP
-        return $ip;
-    }
-
-    /**
      * Get the country code of a visitor.
      * 
      * @return string 2 character country code.
@@ -557,7 +356,7 @@ class Utils
     {
         // Attempt to get country code using PHP's built in geo thing
         if (function_exists("geoip_country_code_by_name")) {
-            $code = geoip_country_code_by_name(self::getRemoteIP());
+            $code = geoip_country_code_by_name(Net::IP());
 
             // Check if $code is anything
             if ($code) {
@@ -583,7 +382,6 @@ class Utils
      */
     public static function pwdEntropy($pw)
     {
-
         // Decode utf-8 chars
         $pw = utf8_decode($pw);
 
@@ -600,7 +398,6 @@ class Utils
      */
     public static function getCountryName($code)
     {
-
         // Parse JSON file
         $iso3166 = json_decode(
             utf8_encode(
@@ -621,72 +418,6 @@ class Utils
     }
 
     /**
-     * Get the FAQ table data (why is this a function).
-     * 
-     * @return array FAQ data.
-     */
-    public static function getFaqData()
-    {
-
-        // Do database call
-        $faq = Database::fetch('faq', true, null, ['faq_id']);
-
-        // Return FAQ data
-        return $faq;
-    }
-
-    /**
-     * Get the type of log in text (unused and will probably be removwed).
-     * @param mixed $type 
-     * @return mixed
-     */
-    public static function getLogStringFromType($type)
-    {
-
-        // Query the database
-        $return = Database::fetch('logtypes', false, ['id' => [$type, '=']]);
-
-        // Check if type exists and else return a unformattable string
-        if (count($return) < 2) {
-            return 'Unknown action.';
-        }
-
-        // Return the string
-        return $return['string'];
-    }
-
-    /**
-     * Get a user's logs (unused, probably removed in future).
-     * @param mixed $uid 
-     * @return array
-     */
-    public static function getUserLogs($uid = 0)
-    {
-
-        // Check if a user is specified
-        $conditions = ($uid ? ['uid' => [$uid, '=']] : null);
-
-        // Get data from database
-        $logsDB = Database::fetch('logs', true, $conditions, ['id', true]);
-
-        // Storage array
-        $logs = [];
-
-        // Iterate over entries
-        foreach ($logsDB as $log) {
-            // Store usable data
-            $logs[$log['id']] = [
-                'user' => $_USER = Users::getUser($log['uid']),
-                'rank' => Users::getRank($_USER['rank_main']),
-                'string' => vsprintf(self::getLogStringFromType($log['action']), json_decode($log['attribs'], true)),
-            ];
-        }
-
-        // Return new logs
-        return $logs;
-    }
-
-    /**
      * Get the byte symbol for a unit from bytes.
      * 
      * @param int $bytes The amount of bytes.
@@ -695,7 +426,6 @@ class Utils
      */
     public static function getByteSymbol($bytes)
     {
-
         // Return nothing if the input was 0
         if (!$bytes) {
             return;
@@ -721,7 +451,6 @@ class Utils
      */
     public static function getPremiumTrackerData()
     {
-
         // Create data array
         $data = [];
 
@@ -762,12 +491,10 @@ class Utils
     public static function updatePremiumTracker($id, $amount, $comment)
     {
         Database::insert('premium_log', [
-
             'user_id' => $id,
             'transaction_amount' => $amount,
             'transaction_date' => time(),
             'transaction_comment' => $comment,
-
         ]);
     }
 

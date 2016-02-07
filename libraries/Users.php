@@ -120,7 +120,7 @@ class Users
 
         // Check if we haven't hit the rate limit
         $rates = Database::fetch('login_attempts', true, [
-            'attempt_ip' => [Utils::getRemoteIP(), '='],
+            'attempt_ip' => [Net::pton(Net::IP()), '='],
             'attempt_timestamp' => [time() - 1800, '>'],
             'attempt_success' => [0, '='],
         ]);

@@ -145,8 +145,10 @@ class Router
         try {
             try {
                 return self::$dispatcher->dispatch($method, $url);
-            } catch (HttpMethodNotAllowedException $e) {}
-        } catch (HttpRouteNotFoundException $e) {}
+            } catch (HttpMethodNotAllowedException $e) {
+            }
+        } catch (HttpRouteNotFoundException $e) {
+        }
 
         // Default to the not found page
         return Template::render('global/notfound');

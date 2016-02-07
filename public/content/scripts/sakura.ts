@@ -141,12 +141,13 @@ class Sakura {
 
         // Times array
         var times: Object = {
-            31536000: 'year',
-            2592000: 'month',
-            86400: 'day',
-            3600: 'hour',
-            60: 'minute',
-            1: 'second'
+            31536000: ['year', 'a'],
+            2592000: ['month', 'a'],
+            604800: ['week', 'a'],
+            86400: ['day', 'a'],
+            3600: ['hour', 'an'],
+            60: ['minute', 'a'],
+            1: ['second', 'a']
         };
 
         // 
@@ -163,7 +164,7 @@ class Sakura {
                 var display: number = Math.floor(calc);
 
                 // Return the formatted string
-                return display + " " + times[timeKeys[i]] + (display === 1 ? '' : 's') + append;
+                return (display === 1 ? times[timeKeys[i]][1] : display) + " " + times[timeKeys[i]][0] + (display === 1 ? '' : 's') + append;
             }
         }
 

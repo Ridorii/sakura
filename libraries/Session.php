@@ -95,7 +95,7 @@ class Session
         // Insert the session into the database
         Database::insert('sessions', [
             'user_id' => $this->userId,
-            'user_ip' => Utils::getRemoteIP(),
+            'user_ip' => Net::pton(Net::IP()),
             'user_agent' => Utils::cleanString(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'No user agent header.'),
             'session_key' => $session,
             'session_start' => time(),
@@ -132,13 +132,13 @@ class Session
         }
 
         // IP Check
-        $ipCheck = Config::get('session_check');
+        $ipCheck = false;// Config::get('session_check');
 
         // Origin checking
         if ($ipCheck) {
             // Split both IPs up
             $sessionIP = explode('.', $session['user_ip']);
-            $userIP = explode('.', Utils::getRemoteIP());
+            $userIP = explode('.', Net::IP());
 
             // Take 1 off the ipCheck variable so it's equal to the array keys
             $ipCheck = $ipCheck - 1;

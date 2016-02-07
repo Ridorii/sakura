@@ -187,7 +187,7 @@ if (isset($_REQUEST['mode'])) {
                     Database::insert('login_attempts', [
                         'attempt_success' => $login[0],
                         'attempt_timestamp' => time(),
-                        'attempt_ip' => Utils::getRemoteIP(),
+                        'attempt_ip' => Net::pton(Net::IP()),
                         'user_id' => isset($login[2]) ? $login[2] : 0,
                     ]);
                 }
@@ -315,7 +315,7 @@ if (Users::checkLogin()) {
 }
 
 // Check if a user has already registered from the current IP address
-if (count($regUserIP = Users::getUsersByIP(Utils::getRemoteIP()))) {
+if (count($regUserIP = Users::getUsersByIP(Net::pton(Net::IP())))) {
     $renderData['auth']['blockRegister'] = [
 
         'do' => true,
