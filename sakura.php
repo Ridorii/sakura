@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160207');
+define('SAKURA_VERSION', '20160213');
 define('SAKURA_VLABEL', 'Amethyst');
 define('SAKURA_COLOUR', '#9966CC');
 
@@ -58,7 +58,6 @@ require_once ROOT . 'libraries/Urls.php';
 require_once ROOT . 'libraries/User.php';
 require_once ROOT . 'libraries/Users.php';
 require_once ROOT . 'libraries/Utils.php';
-require_once ROOT . 'libraries/Whois.php';
 require_once ROOT . 'libraries/Console/Application.php';
 require_once ROOT . 'libraries/Controllers/Auth.php';
 require_once ROOT . 'libraries/Controllers/Forums.php';
@@ -90,9 +89,6 @@ Database::init(Config::local('database', 'driver'));
 
 // Load the configuration stored in the database
 Config::initDB();
-
-// Assign servers file to whois class
-Whois::setServers(ROOT . Config::local('data', 'whoisservers'));
 
 // Check if we're using console
 if (php_sapi_name() === 'cli' && !defined('SAKURA_CRON')) {
