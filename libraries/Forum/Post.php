@@ -173,7 +173,7 @@ class Post
             'topic_id' => $thread->id,
             'forum_id' => $thread->forum,
             'poster_id' => $poster->id,
-            'poster_ip' => Utils::getRemoteIP(),
+            'poster_ip' => Net::IP(),
             'post_time' => time(),
             'post_subject' => $subject,
             'post_text' => $text,

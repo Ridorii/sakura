@@ -18,31 +18,6 @@ use PHPMailer;
 class Utils
 {
     /**
-     * Parse the emoticons.
-     * 
-     * @param string $text String to parse emoticons from.
-     * 
-     * @return string Parsed text.
-     */
-    public static function parseEmotes($text)
-    {
-        // Get emoticons from the database
-        $emotes = Database::fetch('emoticons');
-
-        // Do the replacements
-        foreach ($emotes as $emote) {
-            $text = str_replace(
-                $emote['emote_string'],
-                '<img src="' . $emote['emote_path'] . '" class="emoticon" alt="' . $emote['emote_string'] . '" />',
-                $text
-            );
-        }
-
-        // Return the parsed text
-        return $text;
-    }
-
-    /**
      * Verify a ReCaptcha
      * 
      * @param string $response The user response.

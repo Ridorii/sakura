@@ -13,7 +13,8 @@ namespace Sakura;
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
-class Net {
+class Net
+{
     /**
      * Returns the connecting IP.
      * 

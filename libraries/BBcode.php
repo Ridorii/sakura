@@ -39,6 +39,29 @@ class BBcode
     }
 
     /**
+     * Parse the emoticons.
+     *
+     * @param string $text String to parse emoticons from.
+     *
+     * @return string Parsed text.
+     */
+    public static function parseEmoticons($text)
+    {
+        // Get emoticons from the database
+        $emotes = Database::fetch('emoticons');
+
+        // Parse all emoticons
+        foreach($emotes as $emote) {
+            $image = "<img src='{$emote['emote_path']}' alt='{$emote['emote_string']}' class='emoticon' />";
+            $icon = preg_quote($emote['emote_string'], '#');
+            $text = preg_replace("#$icon#", $image, $text);
+        }
+
+        // Return the parsed text
+        return $text;
+    }
+
+    /**
      * Adds the standard BBcode.
      */
     public static function loadStandardCodes()
@@ -126,7 +149,7 @@ class BBcode
         $parsed = nl2br(self::$bbcode->getAsHtml());
 
         $parsed = Utils::fixCodeTags($parsed);
-        $parsed = Utils::parseEmotes($parsed);
+        $parsed = self::parseEmoticons($parsed);
 
         return $parsed;
     }

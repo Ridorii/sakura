@@ -76,7 +76,7 @@ class Comments
         foreach ($comments as $comment) {
             // Attach the poster
             $comment['comment_poster'] = User::construct($comment['comment_poster']);
-            $comment['comment_text'] = Utils::parseEmotes(Utils::cleanString($comment['comment_text']));
+            $comment['comment_text'] = BBcode::parseEmoticons(Utils::cleanString($comment['comment_text']));
 
             // Get likes and dislikes
             $votes = $this->getVotes($comment['comment_id']);

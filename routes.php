@@ -31,6 +31,10 @@ Router::get('/members/{rank}', 'Sakura\Controllers\User@members', 'members.rank'
 // User
 Router::get('/u/{id}', 'Sakura\Controllers\User@profile', 'user.profile');
 
+// Premium
+Router::get('/support', 'Sakura\Controllers\Premium@index', 'premium.index');
+Router::get('/support/tracker', 'Sakura\Controllers\Premium@tracker', 'premium.tracker');
+
 // Redirections
 Router::any('/index.php', function () {
     // Info pages
@@ -115,6 +119,15 @@ Router::any('/viewforum.php', function () {
 
     // Redirect to index
     header('Location: /forum/');
+});
+
+Router::any('/support.php', function () {
+    if (isset($_GET['tracker'])) {
+        header('Location: /support/tracker');
+        return;
+    }
+
+    header('Location: /support');
 });
 
 Router::any('/faq.php', function () {

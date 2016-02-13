@@ -35,40 +35,17 @@ if (!@include_once ROOT . 'vendor/autoload.php') {
     die('Autoloader not found, did you run composer?');
 }
 
-// Include core libraries
-require_once ROOT . 'libraries/ActionCode.php';
-require_once ROOT . 'libraries/Bans.php';
-require_once ROOT . 'libraries/BBcode.php';
-require_once ROOT . 'libraries/Comments.php';
-require_once ROOT . 'libraries/Config.php';
-require_once ROOT . 'libraries/CSRF.php';
-require_once ROOT . 'libraries/Database.php';
-require_once ROOT . 'libraries/File.php';
-require_once ROOT . 'libraries/Hashing.php';
-require_once ROOT . 'libraries/Net.php';
-require_once ROOT . 'libraries/News.php';
-require_once ROOT . 'libraries/Payments.php';
-require_once ROOT . 'libraries/Perms.php';
-require_once ROOT . 'libraries/Rank.php';
-require_once ROOT . 'libraries/Router.php';
-require_once ROOT . 'libraries/Session.php';
-require_once ROOT . 'libraries/Template.php';
-require_once ROOT . 'libraries/Trick.php';
-require_once ROOT . 'libraries/Urls.php';
-require_once ROOT . 'libraries/User.php';
-require_once ROOT . 'libraries/Users.php';
-require_once ROOT . 'libraries/Utils.php';
-require_once ROOT . 'libraries/Console/Application.php';
-require_once ROOT . 'libraries/Controllers/Auth.php';
-require_once ROOT . 'libraries/Controllers/Forums.php';
-require_once ROOT . 'libraries/Controllers/Meta.php';
-require_once ROOT . 'libraries/Controllers/User.php';
-require_once ROOT . 'libraries/Forum/Forum.php';
-require_once ROOT . 'libraries/Forum/Post.php';
-require_once ROOT . 'libraries/Forum/Thread.php';
-require_once ROOT . 'libraries/Perms/Forum.php';
-require_once ROOT . 'libraries/Perms/Manage.php';
-require_once ROOT . 'libraries/Perms/Site.php';
+// Setup the autoloader
+spl_autoload_register(function ($className) {
+    // Create a throwaway count variable
+    $i = 1;
+
+    // Replace the sakura namespace with the libraries directory
+    $className = str_replace('Sakura\\', 'libraries/', $className, $i);
+
+    // Require the file
+    require_once ROOT . $className . '.php';
+});
 
 // Include database extensions
 foreach (glob(ROOT . 'libraries/DBWrapper/*.php') as $driver) {
