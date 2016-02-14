@@ -17,7 +17,7 @@ use Sakura\Template;
  */
 class Auth
 {
-    public static function login()
+    public function login()
     {
         return Template::render('main/login');
     }

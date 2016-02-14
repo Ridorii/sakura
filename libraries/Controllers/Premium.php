@@ -25,7 +25,7 @@ use Sakura\Perms\Site;
  */
 class Premium
 {
-    public static function index()
+    public function index()
     {
         global $currentUser, $urls;
 
@@ -155,7 +155,7 @@ class Premium
         return Template::render('main/support');
     }
 
-    public static function tracker()
+    public function tracker()
     {
         // Set parse variables
         Template::vars([

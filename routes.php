@@ -7,33 +7,33 @@
 namespace Sakura;
 
 // Meta pages
-Router::get('/', 'Sakura\Controllers\Meta@index', 'main.index');
-Router::get('/faq', 'Sakura\Controllers\Meta@faq', 'main.faq');
-Router::get('/search', 'Sakura\Controllers\Meta@search', 'main.search');
-Router::get('/p/{id}', 'Sakura\Controllers\Meta@infoPage', 'main.infopage');
+Router::get('/', 'Meta@index', 'main.index');
+Router::get('/faq', 'Meta@faq', 'main.faq');
+Router::get('/search', 'Meta@search', 'main.search');
+Router::get('/p/{id}', 'Meta@infoPage', 'main.infopage');
 
 // Auth
-Router::get('/login', 'Sakura\Controllers\Auth@login', 'auth.login');
+Router::get('/login', 'Auth@login', 'auth.login');
 
 // News
-Router::get('/news', 'Sakura\Controllers\Meta@news', 'news.index');
-Router::get('/news/{category}', 'Sakura\Controllers\Meta@news', 'news.category');
-Router::get('/news/{category}/{id}', 'Sakura\Controllers\Meta@news', 'news.post');
+Router::get('/news', 'Meta@news', 'news.index');
+Router::get('/news/{category}', 'Meta@news', 'news.category');
+Router::get('/news/{category}/{id}', 'Meta@news', 'news.post');
 
 // Forum
-Router::get('/forum', 'Sakura\Controllers\Forums@index', 'forums.index');
-Router::get('/forum/{id}', 'Sakura\Controllers\Forums@forum', 'forums.forum');
+Router::get('/forum', 'Forums@index', 'forums.index');
+Router::get('/forum/{id}', 'Forums@forum', 'forums.forum');
 
 // Members
-Router::get('/members', 'Sakura\Controllers\User@members', 'members.all');
-Router::get('/members/{rank}', 'Sakura\Controllers\User@members', 'members.rank');
+Router::get('/members', 'User@members', 'members.all');
+Router::get('/members/{rank}', 'User@members', 'members.rank');
 
 // User
-Router::get('/u/{id}', 'Sakura\Controllers\User@profile', 'user.profile');
+Router::get('/u/{id}', 'User@profile', 'user.profile');
 
 // Premium
-Router::get('/support', 'Sakura\Controllers\Premium@index', 'premium.index');
-Router::get('/support/tracker', 'Sakura\Controllers\Premium@tracker', 'premium.tracker');
+Router::get('/support', 'Premium@index', 'premium.index');
+Router::get('/support/tracker', 'Premium@tracker', 'premium.tracker');
 
 // Redirections
 Router::any('/index.php', function () {

@@ -29,7 +29,7 @@ class User
      *
      * @return bool|string The profile page.
      */
-    public static function profile($id = 0)
+    public function profile($id = 0)
     {
         global $currentUser;
 
@@ -93,7 +93,7 @@ class User
      *
      * @return bool|string The memberlist.
      */
-    public static function members($rank = 0)
+    public function members($rank = 0)
     {
         global $currentUser;
 
@@ -106,8 +106,8 @@ class User
         Template::vars([
             'memberlist' => [
                 'ranks' => ($_MEMBERLIST_RANKS = \Sakura\Users::getAllRanks()),
-                'active' => ($_MEMBERLIST_ACTIVE = (array_key_exists($rank, $_MEMBERLIST_RANKS) ? $rank : 0)),
-                'users' => ($_MEMBERLIST_ACTIVE ? Rank::construct($_MEMBERLIST_ACTIVE)->users() : \Sakura\Users::getAllUsers(false)),
+                'active' => ($_MEMBERLIST_ACTIVE = (array_key_exists($rank, $_MEMBERLIST_RANKS) ? $rank : 2)),
+                'users' => Rank::construct($_MEMBERLIST_ACTIVE)->users(),
                 'membersPerPage' => Config::get('members_per_page'),
             ]
         ]);

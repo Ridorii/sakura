@@ -31,10 +31,9 @@
         <div class="dropDown" style="margin: 0 auto; font-size: 1.5em; line-height: 1.5em; height: 30px;">
             <div class="dropDownInner" style="float: left; color: #FFF;">
                 <a class="dropDownDesc">Rank:</a>
-                <a href="{% if sort %}{{ urls.format('MEMBERLIST_SORT', [sort]) }}{% else %}{{ urls.format('MEMBERLIST_INDEX') }}{% endif %}"{% if not memberlist.active %} class="dropDownSelected"{% endif %}>All members</a>
                 {% for rank in memberlist.ranks %}
                     {% if not rank.hidden or (rank.hidden and memberlist.active == rank.id) %}
-                        <a href="{% if sort %}{{ urls.format('MEMBERLIST_ALL', [sort, rank.id]) }}{% else %}{{ urls.format('MEMBERLIST_RANK', [rank.id]) }}{% endif %}" style="color: {{ rank.colour }};"{% if memberlist.active == rank.id %} class="dropDownSelected"{% endif %}>{{ rank.name(true) }}</a>
+                        <a href="{{ urls.format('MEMBERLIST_RANK', [rank.id]) }}" style="color: {{ rank.colour }};"{% if memberlist.active == rank.id %} class="dropDownSelected"{% endif %}>{{ rank.name(true) }}</a>
                     {% endif %}
                 {% endfor %}
             </div>

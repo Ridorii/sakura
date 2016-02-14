@@ -28,7 +28,7 @@ class Meta
      * 
      * @return mixed HTML for the index.
      */
-    public static function index()
+    public function index()
     {
         // Merge index specific stuff with the global render data
         Template::vars([
@@ -56,7 +56,7 @@ class Meta
      * 
      * @return mixed HTML for the correct news section.
      */
-    public static function news()
+    public function news()
     {
         // Get arguments
         $args = func_get_args();
@@ -85,7 +85,7 @@ class Meta
      * 
      * @return mixed HTML for the FAQ.
      */
-    public static function faq()
+    public function faq()
     {
         // Set parse variables
         Template::vars([
@@ -106,7 +106,7 @@ class Meta
      * 
      * @return mixed HTML for the info page.
      */
-    public static function infoPage($id = null)
+    public function infoPage($id = null)
     {
         // Set default variables
         $renderData['page'] = [
@@ -138,7 +138,7 @@ class Meta
      * 
      * @return mixed HTML for the search page.
      */
-    public static function search()
+    public function search()
     {
         // Set parse variables
         Template::vars([

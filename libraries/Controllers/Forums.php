@@ -29,7 +29,7 @@ class Forums
      * 
      * @return mixed HTML for the forum index.
      */
-    public static function index()
+    public function index()
     {
         // Merge index specific stuff with the global render data
         Template::vars([
@@ -51,7 +51,7 @@ class Forums
         return Template::render('forum/index');
     }
 
-    public static function forum($id = 0)
+    public function forum($id = 0)
     {
         global $currentUser;
 
