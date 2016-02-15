@@ -23,7 +23,7 @@ class Config
     private static $local = [];
 
     /**
-     * Container for the configuration stored in the database.
+     * Cache for the configuration stored in the database.
      * 
      * @var array
      */
@@ -36,7 +36,6 @@ class Config
      */
     public static function init($local)
     {
-
         // Check if the configuration file exists
         if (!file_exists($local)) {
             trigger_error('Local configuration file does not exist', E_USER_ERROR);
@@ -59,27 +58,6 @@ class Config
     }
 
     /**
-     * Fetch configuration values from the database.
-     */
-    public static function initDB()
-    {
-
-        // Get config table from the database
-        $_DATA = Database::fetch('config', true);
-
-        // Create variable to temporarily store values in
-        $_DBCN = [];
-
-        // Properly sort the values
-        foreach ($_DATA as $_CONF) {
-            $_DBCN[$_CONF['config_name']] = $_CONF['config_value'];
-        }
-
-        // Assign the temporary array to the static one
-        self::$database = $_DBCN;
-    }
-
-    /**
      * Get a value from the local configuration file.
      * 
      * @param string $key Configuration section.
@@ -89,7 +67,6 @@ class Config
      */
     public static function local($key, $subkey = null)
     {
-
         // Check if the key that we're looking for exists
         if (array_key_exists($key, self::$local)) {
             if ($subkey) {
@@ -119,11 +96,16 @@ class Config
      */
     public static function get($key, $returnNull = false)
     {
-
         // Check if the key that we're looking for exists
         if (array_key_exists($key, self::$database)) {
             // Then return the value
             return self::$database[$key];
+        } else {
+            $value = Database::fetch('config', false, ['config_name' => [$key, '=']]);
+            if ($value) {
+                self::$database[$key] = $value['config_value'];
+                return self::$database[$key];
+            }
         }
 
         // Then return the value

@@ -143,10 +143,8 @@ class Router
 
         // Handle the request
         try {
-            try {
-                return self::$dispatcher->dispatch($method, $url);
-            } catch (HttpMethodNotAllowedException $e) {
-            }
+            return self::$dispatcher->dispatch($method, $url);
+        } catch (HttpMethodNotAllowedException $e) {
         } catch (HttpRouteNotFoundException $e) {
         }
 

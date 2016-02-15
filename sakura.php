@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160214');
+define('SAKURA_VERSION', '20160215');
 define('SAKURA_VLABEL', 'Amethyst');
 define('SAKURA_COLOUR', '#9966CC');
 
@@ -25,7 +25,7 @@ set_time_limit(0);
 // Set internal encoding method
 mb_internal_encoding('utf-8');
 
-// Stop the execution if the PHP Version is older than 5.4.0
+// Stop the execution if the PHP Version is older than 5.5.0
 if (version_compare(phpversion(), '5.5.0', '<')) {
     die('Sakura requires at least PHP 5.5.0, please upgrade to a newer PHP version.');
 }
@@ -63,9 +63,6 @@ error_reporting(Config::local('dev', 'show_errors') ? -1 : 0);
 
 // Make the database connection
 Database::init(Config::local('database', 'driver'));
-
-// Load the configuration stored in the database
-Config::initDB();
 
 // Check if we're using console
 if (php_sapi_name() === 'cli' && !defined('SAKURA_CRON')) {

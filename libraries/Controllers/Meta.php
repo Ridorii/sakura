@@ -16,12 +16,12 @@ use Sakura\Users;
 use Sakura\Utils;
 
 /**
- * Meta page controllers (sections that aren't big enough to warrant a dedicated controller class).
+ * Meta page controllers (sections that aren't big enough to warrant a dedicated controller).
  * 
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
-class Meta
+class Meta extends Controller
 {
     /**
      * Serves the site index.

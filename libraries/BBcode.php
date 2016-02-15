@@ -51,7 +51,7 @@ class BBcode
         $emotes = Database::fetch('emoticons');
 
         // Parse all emoticons
-        foreach($emotes as $emote) {
+        foreach ($emotes as $emote) {
             $image = "<img src='{$emote['emote_path']}' alt='{$emote['emote_string']}' class='emoticon' />";
             $icon = preg_quote($emote['emote_string'], '#');
             $text = preg_replace("#$icon#", $image, $text);

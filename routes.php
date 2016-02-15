@@ -25,15 +25,52 @@ Router::get('/forum', 'Forums@index', 'forums.index');
 Router::get('/forum/{id}', 'Forums@forum', 'forums.forum');
 
 // Members
-Router::get('/members', 'User@members', 'members.all');
+Router::get('/members', 'User@members', 'members.index');
 Router::get('/members/{rank}', 'User@members', 'members.rank');
 
 // User
 Router::get('/u/{id}', 'User@profile', 'user.profile');
+Router::get('/u/{id}/header', 'Files@header', 'user.header');
+
+// Files
+Router::get('/a/{id}', 'Files@avatar', 'file.avatar');
+Router::get('/bg/{id}', 'Files@background', 'file.background');
 
 // Premium
 Router::get('/support', 'Premium@index', 'premium.index');
 Router::get('/support/tracker', 'Premium@tracker', 'premium.tracker');
+
+// Management
+/*
+ * General
+ * - Dashboard
+ * - Info pages (possibly deprecate with wiki)
+ * Configuration
+ * - General
+ * - Files
+ * - User
+ * - Mail
+ * Forums
+ * - Manage
+ * - Settings
+ * Comments
+ * - Manage
+ * Users
+ * - Manage users
+ * - Manage ranks
+ * - Profile fields
+ * - Option fields
+ * - Bans and restrictions
+ * - Warnings
+ * Permissions
+ * - Site
+ * - Management
+ * - Forum
+ * Logs
+ * - Actions
+ * - Management
+ * - Errors
+ */
 
 // Redirections
 Router::any('/index.php', function () {
@@ -128,6 +165,25 @@ Router::any('/support.php', function () {
     }
 
     header('Location: /support');
+});
+
+Router::any('/imageserve.php', function () {
+    // Category + post
+    if (isset($_REQUEST['u']) && isset($_REQUEST['m'])) {
+        switch ($_REQUEST['m']) {
+            case 'avatar':
+                header('Location: /a/' . $_REQUEST['u']);
+                return;
+            case 'background':
+                header('Location: /bg/' . $_REQUEST['u']);
+                return;
+            case 'header':
+                header('Location: /u/' . $_REQUEST['u'] . '/header');
+                return;
+        }
+    }
+
+    header('Location: /bg/0');
 });
 
 Router::any('/faq.php', function () {

@@ -20,7 +20,7 @@ use Sakura\Utils;
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
-class User
+class User extends Controller
 {
     /**
      * Display the profile of a user.

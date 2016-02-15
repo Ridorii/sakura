@@ -23,7 +23,7 @@ use Sakura\Perms\Site;
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
-class Premium
+class Premium extends Controller
 {
     public function index()
     {
@@ -96,8 +96,7 @@ class Premium
                             // Attempt to complete the transaction
                             try {
                                 $finalise = Payments::completeTransaction($_GET['paymentId'], $_GET['PayerID']);
-                            }
-                            catch (Exception $e) {
+                            } catch (Exception $e) {
                                 return trigger_error('Something went horribly wrong.', E_USER_ERROR);
                             }
 

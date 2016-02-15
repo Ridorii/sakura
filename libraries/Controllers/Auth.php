@@ -15,7 +15,7 @@ use Sakura\Template;
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
-class Auth
+class Auth extends Controller
 {
     public function login()
     {
