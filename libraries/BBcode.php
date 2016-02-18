@@ -48,12 +48,14 @@ class BBcode
     public static function parseEmoticons($text)
     {
         // Get emoticons from the database
-        $emotes = Database::fetch('emoticons');
+        $emotes = DB::prepare('SELECT * FROM `{prefix}emoticons`');
+        $emotes->execute();
+        $emotes = $emotes->fetchAll();
 
         // Parse all emoticons
         foreach ($emotes as $emote) {
-            $image = "<img src='{$emote['emote_path']}' alt='{$emote['emote_string']}' class='emoticon' />";
-            $icon = preg_quote($emote['emote_string'], '#');
+            $image = "<img src='{$emote->emote_path}' alt='{$emote->emote_string}' class='emoticon' />";
+            $icon = preg_quote($emote->emote_string, '#');
             $text = preg_replace("#$icon#", $image, $text);
         }
 

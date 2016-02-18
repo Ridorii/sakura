@@ -184,11 +184,12 @@ if (isset($_REQUEST['mode'])) {
                 // Check if we're not RATE_LIMIT
                 if ($login[1] != 'RATE_LIMIT') {
                     // Add to database
-                    Database::insert('login_attempts', [
-                        'attempt_success' => $login[0],
-                        'attempt_timestamp' => time(),
-                        'attempt_ip' => Net::pton(Net::IP()),
-                        'user_id' => isset($login[2]) ? $login[2] : 0,
+                    DB::prepare('INSERT INTO `{prefix}login_attempts` (`attempt_success`, `attempt_timestamp`, `attempt_ip`, `user_id`) VALUES (:succ, :time, :ip, :user)')
+                        ->execute([
+                        'succ' => $login[0],
+                        'time' => time(),
+                        'ip' => Net::pton(Net::IP()),
+                        'user' => isset($login[2]) ? $login[2] : 0,
                     ]);
                 }
 

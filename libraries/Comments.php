@@ -9,6 +9,7 @@ namespace Sakura;
 
 /**
  * Handles and serves comments on pages.
+ * Needs a reimplementation.
  * 
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
@@ -46,15 +47,11 @@ class Comments
         $this->category = $category;
 
         // Get the comments and assign them to $comments
-        $comments = Database::fetch(
-            'comments',
-            true,
-            [
-                'comment_category' => [$this->category, '='],
-                'comment_reply_to' => ['0', '='],
-            ],
-            ['comment_id', true]
-        );
+        $comments = DB::prepare('SELECT * FROM `{prefix}comments` WHERE `comment_category` = :category AND `comment_reply_to` = 0 ORDER BY `comment_id` DESC');
+        $comments->execute([
+            'category' => $this->category,
+        ]);
+        $comments = $comments->fetchAll(\PDO::FETCH_ASSOC);
 
         // Feed them into the sorter
         $this->comments = $this->sortComments($comments);
@@ -99,10 +96,12 @@ class Comments
             $this->count += 1;
 
             // Attempt to get replies from the database
-            $replies = Database::fetch('comments', true, [
-                'comment_category' => [$this->category, '='],
-                'comment_reply_to' => [$comment['comment_id'], '='],
+            $replies = DB::prepare('SELECT * FROM `{prefix}comments` WHERE `comment_category` = :category AND `comment_reply_to` = :thread');
+            $replies->execute([
+                'category' => $this->category,
+                'thread' => $comment['comment_id'],
             ]);
+            $replies = $replies->fetchAll(\PDO::FETCH_ASSOC);
 
             // Check if this was a reply to something
             if ($replies) {
@@ -124,9 +123,11 @@ class Comments
     public function getComment($cid)
     {
         // Get from database
-        return Database::fetch('comments', false, [
-            'comment_id' => [$cid, '='],
+        $comment = DB::prepare('SELECT * FROM `{prefix}comments` WHERE `comment_id` = :id');
+        $comment->execute([
+            'id' => $cid,
         ]);
+        return $comment->fetch(\PDO::FETCH_ASSOC);
     }
 
     /**
@@ -139,9 +140,11 @@ class Comments
     public function getVotes($cid)
     {
         // Get from database
-        return Database::fetch('comment_votes', true, [
-            'vote_comment' => [$cid, '='],
+        $comment = DB::prepare('SELECT * FROM `{prefix}comment_votes` WHERE `vote_comment` = :id');
+        $comment->execute([
+            'id' => $cid,
         ]);
+        return $comment->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**
@@ -166,12 +169,13 @@ class Comments
         }
 
         // Insert into database
-        Database::insert('comments', [
-            'comment_category' => $this->category,
-            'comment_timestamp' => time(),
-            'comment_poster' => $uid,
-            'comment_reply_to' => (int) $reply,
-            'comment_text' => $content,
+        DB::prepare('INSERT INTO `{prefix}comments` (`comment_category`, `comment_timestamp`, `comment_poster`, `comment_reply_to`, `comment_text`) VALUES (:cat, :time, :user, :thread, :text)')
+            ->execute([
+            'cat' => $this->category,
+            'time' => time(),
+            'user' => $uid,
+            'thread' => (int) $reply,
+            'text' => $content,
         ]);
 
         // Return success
@@ -190,38 +194,39 @@ class Comments
     public function makeVote($uid, $cid, $mode)
     {
         // Attempt to get previous vote
-        $vote = Database::fetch('comment_votes', false, [
-            'vote_user' => [$uid, '='],
-            'vote_comment' => [$cid, '='],
+        $vote = DB::prepare('SELECT * FROM `{prefix}comment_votes` WHERE `vote_user` = :user AND `vote_comment` = :comment');
+        $vote->execute([
+            'user' => $uid,
+            'comment' => $cid,
         ]);
+        $vote = $vote->fetch(\PDO::FETCH_ASSOC);
 
         // Check if anything was returned
         if ($vote) {
             // Check if the vote that's being casted is the same
             if ($vote['vote_state'] == $mode) {
                 // Delete the vote
-                Database::delete('comment_votes', [
-                    'vote_user' => [$uid, '='],
-                    'vote_comment' => [$cid, '='],
+                DB::prepare('DELETE FROM `{prefix}comment_votes` WHERE `vote_user` = :user AND `vote_comment` = :comment')
+                    ->execute([
+                    'user' => $uid,
+                    'comment' => $cid,
                 ]);
             } else {
                 // Otherwise update the vote
-                Database::update('comment_votes', [
-                    [
-                        'vote_state' => $mode,
-                    ],
-                    [
-                        'vote_user' => [$uid, '='],
-                        'vote_comment' => [$cid, '='],
-                    ],
+                DB::prepare('UPDATE `{prefix}comment_votes` SET `vote_state` = :state WHERE `vote_user` = :user AND `vote_comment` = :comment')
+                    ->execute([
+                    'state' => $mode,
+                    'user' => $uid,
+                    'comment' => $cid,
                 ]);
             }
         } else {
             // Create a vote
-            Database::insert('comment_votes', [
-                'vote_user' => $uid,
-                'vote_comment' => $cid,
-                'vote_state' => $mode,
+            DB::prepare('INSERT INTO `{prefix}comment_votes` (`vote_user`, `vote_comment`, `vote_state`) VALUES (:user, :comment, :state)')
+                ->execute([
+                'user' => $uid,
+                'comment' => $cid,
+                'state' => $mode,
             ]);
         }
 
@@ -232,14 +237,13 @@ class Comments
      * Remove a comment
      * 
      * @param int $cid ID of the comment to remove.
-     * 
-     * @return mixed No idea what this returns but it doesn't really matter anyway, the comment is dead.
      */
     public function removeComment($cid)
     {
         // Remove from database
-        return Database::delete('comments', [
-            'comment_id' => [$cid, '='],
+        DB::prepare('DELETE FROM `{prefix}comments` WHERE `comment_id` = :id')
+            ->execute([
+            'id' => $cid,
         ]);
     }
 }

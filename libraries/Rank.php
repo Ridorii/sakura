@@ -117,24 +117,22 @@ class Rank
     {
 
         // Get the rank database row
-        $rankRow = Database::fetch(
-            'ranks',
-            false,
-            [
-                'rank_id' => [$rid, '=', true],
-            ]
-        );
+        $rankRow = DB::prepare('SELECT * FROM `{prefix}ranks` WHERE `rank_id` = :id');
+        $rankRow->execute([
+            'id' => $rid,
+        ]);
+        $rankRow = $rankRow->fetch();
 
         // Check if the rank actually exists
         if ($rankRow) {
-            $this->id = $rankRow['rank_id'];
-            $this->name = $rankRow['rank_name'];
-            $this->hierarchy = $rankRow['rank_hierarchy'];
-            $this->multiple = $rankRow['rank_multiple'];
-            $this->hidden = (bool) $rankRow['rank_hidden'];
-            $this->colour = $rankRow['rank_colour'];
-            $this->description = $rankRow['rank_description'];
-            $this->title = $rankRow['rank_title'];
+            $this->id = $rankRow->rank_id;
+            $this->name = $rankRow->rank_name;
+            $this->hierarchy = $rankRow->rank_hierarchy;
+            $this->multiple = $rankRow->rank_multiple;
+            $this->hidden = (bool) $rankRow->rank_hidden;
+            $this->colour = $rankRow->rank_colour;
+            $this->description = $rankRow->rank_description;
+            $this->title = $rankRow->rank_title;
         }
 
         // Init the permissions
@@ -191,7 +189,11 @@ class Rank
     public function users($justIds = false)
     {
         // Fetch all users part of this rank
-        $userIds = array_column(Database::fetch('user_ranks', true, ['rank_id' => [$this->id, '=']]), 'user_id');
+        $fetch = DB::prepare('SELECT `user_id` FROM `{prefix}user_ranks` WHERE `rank_id` = :id');
+        $fetch->execute([
+            'id' => $this->id,
+        ]);
+        $userIds = array_column($fetch->fetchAll(\PDO::FETCH_ASSOC), 'user_id');
 
         // Just return that if we were asked for just the ids
         if ($justIds) {

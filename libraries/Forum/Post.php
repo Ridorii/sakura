@@ -9,6 +9,7 @@ namespace Sakura\Forum;
 
 use Sakura\Utils;
 use Sakura\Database;
+use Sakura\DB;
 use Sakura\User;
 use Sakura\BBcode;
 use Sakura\Config;
@@ -114,21 +115,25 @@ class Post
     public function __construct($postId)
     {
         // Attempt to get the database row
-        $postRow = Database::fetch('posts', false, ['post_id' => [$postId, '=']]);
+        $postRow = DB::prepare('SELECT * FROM `{prefix}posts` WHERE `post_id` = :id');
+        $postRow->execute([
+            'id' => $postId,
+        ]);
+        $postRow = $postRow->fetch();
         
         // Assign data if a row was returned
         if ($postRow) {
-            $this->id = $postRow['post_id'];
-            $this->thread = $postRow['topic_id'];
-            $this->forum = $postRow['forum_id'];
-            $this->poster = User::construct($postRow['poster_id']);
-            $this->ip = $postRow['poster_ip'];
-            $this->time = $postRow['post_time'];
-            $this->subject = $postRow['post_subject'];
-            $this->text = $postRow['post_text'];
-            $this->editTime = $postRow['post_edit_time'];
-            $this->editReason = $postRow['post_edit_reason'];
-            $this->editUser = User::construct($postRow['post_edit_user']);
+            $this->id = $postRow->post_id;
+            $this->thread = $postRow->topic_id;
+            $this->forum = $postRow->forum_id;
+            $this->poster = User::construct($postRow->poster_id);
+            $this->ip = $postRow->poster_ip;
+            $this->time = $postRow->post_time;
+            $this->subject = $postRow->post_subject;
+            $this->text = $postRow->post_text;
+            $this->editTime = $postRow->post_edit_time;
+            $this->editReason = $postRow->post_edit_reason;
+            $this->editUser = User::construct($postRow->post_edit_user);
         }
 
         // Parse the markup
@@ -144,7 +149,7 @@ class Post
      * @param int $thread The ID of the thread this post is a reply to.
      * @param mixed $forum The forum this post is a reply in.
      * 
-     * @return null|Post Either null, indicating a failure, or the Post object.
+     * @return null|self Either null, indicating a failure, or the Post object.
      */
     public static function create($subject, $text, User $poster, $thread = 0, $forum = 0)
     {
@@ -169,18 +174,19 @@ class Post
         }
 
         // Insert the post
-        Database::insert('posts', [
-            'topic_id' => $thread->id,
-            'forum_id' => $thread->forum,
-            'poster_id' => $poster->id,
-            'poster_ip' => Net::IP(),
-            'post_time' => time(),
-            'post_subject' => $subject,
-            'post_text' => $text,
+        DB::prepare('INSERT INTO `{prefix}posts` (`topic_id`, `forum_id`, `poster_id`, `poster_ip`, `post_time`, `post_subject`, `post_text`) VALUES (:thread, :forum, :user, :ip, :time, :subject, :text)')
+            ->execute([
+            'thread' => $thread->id,
+            'forum' => $thread->forum,
+            'user' => $poster->id,
+            'ip' => Net::IP(),
+            'time' => time(),
+            'subject' => $subject,
+            'text' => $text,
         ]);
 
         // Get post id
-        $id = Database::lastInsertID();
+        $id = (int) DB::lastID();
 
         // Update the last post date
         $thread->lastUpdate();
@@ -208,22 +214,19 @@ class Post
         $thread = new Thread($this->thread);
 
         // Update the post
-        Database::update('posts', [
-            [
-                'topic_id' => $thread->id,
-                'forum_id' => $thread->forum,
-                'poster_id' => $this->poster->id,
-                'poster_ip' => Net::pton(Net::IP()),
-                'post_time' => $this->time,
-                'post_subject' => $this->subject,
-                'post_text' => $this->text,
-                'post_edit_time' => $this->editTime,
-                'post_edit_reason' => $this->editReason,
-                'post_edit_user' => $this->editUser->id,
-            ],
-            [
-                'post_id' => [$this->id, '='],
-            ]
+        DB::prepare('UPDATE `{prefix}posts` SET `topic_id` = :thread, `forum_id` = :forum, `poster_id` = :user, `poster_ip` = :ip, `post_time` = :time, `post_subject` = :subject, `post_text` = :text, `post_edit_time` = :edit_time, `post_edit_reason` = :edit_reason, `post_edit_user` = :edit_user WHERE `post_id` = :post')
+            ->execute([
+            'post' => $this->id,
+            'thread' => $thread->id,
+            'forum' => $thread->forum,
+            'user' => $this->poster->id,
+            'ip' => Net::pton(Net::IP()),
+            'time' => $this->time,
+            'subject' => $this->subject,
+            'text' => $this->text,
+            'edit_time' => $this->editTime,
+            'edit_reason' => $this->editReason,
+            'edit_user' => $this->editUser->id,
         ]);
 
         // Return a new post object

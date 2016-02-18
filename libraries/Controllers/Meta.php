@@ -9,6 +9,7 @@ namespace Sakura\Controllers;
 
 use Sakura\Config;
 use Sakura\Database;
+use Sakura\DB;
 use Sakura\News;
 use Sakura\Template;
 use Sakura\User;
@@ -30,19 +31,26 @@ class Meta extends Controller
      */
     public function index()
     {
+        $userCount = DB::prepare("SELECT * FROM `{prefix}users` WHERE `password_algo` != 'disabled' AND `rank_main` != 1");
+        $userCount->execute();
+        $threadCount = DB::prepare('SELECT * FROM `{prefix}topics`');
+        $threadCount->execute();
+        $postCount = DB::prepare('SELECT * FROM `{prefix}posts`');
+        $postCount->execute();
+
         // Merge index specific stuff with the global render data
         Template::vars([
             'news' => new News(Config::get('site_news_category')),
             'newsCount' => Config::get('front_page_news_posts'),
             'stats' => [
-                'userCount' => Database::count('users', ['password_algo' => ['nologin', '!='], 'rank_main' => ['1', '!=']])[0],
+                'userCount' => $userCount->rowCount(),
                 'newestUser' => User::construct(Users::getNewestUserId()),
                 'lastRegDate' => date_diff(
                     date_create(date('Y-m-d', User::construct(Users::getNewestUserId())->registered)),
                     date_create(date('Y-m-d'))
                 )->format('%a'),
-                'topicCount' => Database::count('topics')[0],
-                'postCount' => Database::count('posts')[0],
+                'topicCount' => $threadCount->rowCount(),
+                'postCount' => $postCount->rowCount(),
                 'onlineUsers' => Users::checkAllOnline(),
             ],
         ]);
@@ -87,11 +95,16 @@ class Meta extends Controller
      */
     public function faq()
     {
+        // Get faq entries
+        $faq = DB::prepare('SELECT * FROM `{prefix}faq` ORDER BY `faq_id`');
+        $faq->execute();
+        $faq = $faq->fetchAll();
+
         // Set parse variables
         Template::vars([
             'page' => [
                 'title' => 'Frequently Asked Questions',
-                'questions' => Database::fetch('faq', true, null, ['faq_id']),
+                'questions' => $faq,
             ],
         ]);
 
@@ -109,25 +122,33 @@ class Meta extends Controller
     public function infoPage($id = null)
     {
         // Set default variables
-        $renderData['page'] = [
-            'content' => '<h1>Unable to load the requested info page.</h1><p>Check the URL and try again.</p>',
-        ];
+        Template::vars([
+            'page' => [
+                'content' => '<h1>Unable to load the requested info page.</h1><p>Check the URL and try again.</p>',
+            ],
+        ]);
 
         // Set page id
         $id = strtolower($id);
 
-        // Get info page data from the database
-        if ($ipData = Database::fetch('infopages', false, ['page_shorthand' => [$id, '=']])) {
-            // Assign new proper variable
-            $renderData['page'] = [
-                'id' => $id,
-                'title' => $ipData['page_title'],
-                'content' => $ipData['page_content'],
-            ];
-        }
+        // Get the page from the database
+        $ipData = DB::prepare('SELECT * FROM `{prefix}infopages` WHERE `page_shorthand` = :id');
+        $ipData->execute([
+            'id' => $id,
+        ]);
+        $ipData = $ipData->fetch();
 
-        // Set parse variables
-        Template::vars($renderData);
+        // Get info page data from the database
+        if ($ipData) {
+            // Assign new proper variable
+            Template::vars([
+                'page' => [
+                    'id' => $id,
+                    'title' => $ipData->page_title,
+                    'content' => $ipData->page_content,
+                ],
+            ]);
+        }
 
         // Return the compiled page
         return Template::render('main/infopage');

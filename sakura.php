@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160215');
+define('SAKURA_VERSION', '20160219');
 define('SAKURA_VLABEL', 'Amethyst');
 define('SAKURA_COLOUR', '#9966CC');
 
@@ -62,7 +62,13 @@ Config::init(ROOT . 'config/config.ini');
 error_reporting(Config::local('dev', 'show_errors') ? -1 : 0);
 
 // Make the database connection
-Database::init(Config::local('database', 'driver'));
+DB::open(
+    Config::local('database', 'driver'),
+    Config::local('dsn'),
+    Config::local('database', 'username'),
+    Config::local('database', 'password'),
+    Config::local('database', 'prefix')
+);
 
 // Check if we're using console
 if (php_sapi_name() === 'cli' && !defined('SAKURA_CRON')) {
@@ -83,7 +89,7 @@ if (Config::get('no_cron_service')) {
         }
 
         // Update last execution time
-        Database::update('config', [['config_value' => time()], ['config_name' => ['no_cron_last', '=']]]);
+        Config::set('no_cron_last', time());
     }
 }
 
@@ -117,7 +123,7 @@ if (!defined('SAKURA_NO_TPL')) {
     Template::set($templateName);
 
     // Set base page rendering data
-    $renderData = [
+    Template::vars([
         'sakura' => [
             'versionInfo' => [
                 'version' => SAKURA_VERSION,
@@ -176,10 +182,10 @@ if (!defined('SAKURA_NO_TPL')) {
 
         'get' => $_GET,
         'post' => $_POST,
-    ];
+    ]);
 
     // Add the default render data
-    Template::vars($renderData);
+    $renderData = [];
 
     // Site closing
     if (Config::get('site_closed')) {

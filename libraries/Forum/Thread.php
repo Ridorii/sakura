@@ -8,6 +8,7 @@
 namespace Sakura\Forum;
 
 use Sakura\Database;
+use Sakura\DB;
 use Sakura\Utils;
 
 /**
@@ -129,21 +130,25 @@ class Thread
     public function __construct($threadId)
     {
         // Attempt to get the database row
-        $threadRow = Database::fetch('topics', false, ['topic_id' => [$threadId, '=']]);
+        $threadRow = DB::prepare('SELECT * FROM `{prefix}topics` WHERE `topic_id` = :id');
+        $threadRow->execute([
+            'id' => $threadId,
+        ]);
+        $threadRow = $threadRow->fetch();
 
         // Assign data if a row was returned
         if ($threadRow) {
-            $this->id = $threadRow['topic_id'];
-            $this->forum = $threadRow['forum_id'];
-            $this->hidden = (bool) $threadRow['topic_hidden'];
-            $this->title = $threadRow['topic_title'];
-            $this->time = $threadRow['topic_time'];
-            $this->timeLimit = $threadRow['topic_time_limit'];
-            $this->views = $threadRow['topic_views'];
-            $this->status = $threadRow['topic_status'];
-            $this->statusChange = $threadRow['topic_status_change'];
-            $this->type = $threadRow['topic_type'];
-            $this->oldForum = $threadRow['topic_old_forum'];
+            $this->id = $threadRow->topic_id;
+            $this->forum = $threadRow->forum_id;
+            $this->hidden = (bool) $threadRow->topic_hidden;
+            $this->title = $threadRow->topic_title;
+            $this->time = $threadRow->topic_time;
+            $this->timeLimit = $threadRow->topic_time_limit;
+            $this->views = $threadRow->topic_views;
+            $this->status = $threadRow->topic_status;
+            $this->statusChange = $threadRow->topic_status_change;
+            $this->type = $threadRow->topic_type;
+            $this->oldForum = $threadRow->topic_old_forum;
         }
     }
 
@@ -155,21 +160,22 @@ class Thread
      * @param mixed $status Status of the thread.
      * @param mixed $type Type of thread.
      * 
-     * @return Thread The new thread instance.
+     * @return self The new thread instance.
      */
     public static function create($forum, $title, $status = 0, $type = 0)
     {
         // Create the database entry
-        Database::insert('topics', [
-            'forum_id' => $forum,
-            'topic_title' => $title,
-            'topic_time' => time(),
-            'topic_status' => $status,
-            'topic_type' => $type,
+        DB::prepare('INSERT INTO `{prefix}topics` (`forum_id`, `topic_title`, `topic_time`, `topic_status`, `topic_type`) VALUES (:forum, :title, :time, :status, :type)')
+            ->execute([
+            'forum' => $forum,
+            'title' => $title,
+            'time' => time(),
+            'status' => $status,
+            'type' => $type,
         ]);
 
         // Return the thread object
-        return new Thread(Database::lastInsertID());
+        return new Thread(DB::lastID());
     }
 
     /**
@@ -178,13 +184,15 @@ class Thread
     public function delete()
     {
         // Delete all posts
-        Database::delete('posts', [
-            'topic_id' => [$this->id, '='],
+        DB::prepare('DELETE FROM `{prefix}posts` WHERE `topic_id` = :id')
+            ->execute([
+            'id' => $this->id,
         ]);
 
         // Delete thread meta
-        Database::delete('topics', [
-            'topic_id' => [$this->id, '='],
+        DB::prepare('DELETE FROM `{prefix}topics` WHERE `topic_id` = :id')
+            ->execute([
+            'id' => $this->id,
         ]);
     }
 
@@ -197,48 +205,39 @@ class Thread
     public function move($forum, $setOld = true)
     {
         // Update all posts
-        Database::update('posts', [
-            [
-                'forum_id' => $forum,
-            ],
-            [
-                'topic_id' => [$this->id, '='],
-            ]
+        DB::prepare('UPDATE `{prefix}posts` SET `forum_id` = :forum WHERE `topic_id` = :thread')
+            ->execute([
+            'forum' => $forum,
+            'thread' => $this->id,
         ]);
 
         // Update thread meta
-        Database::update('topics', [
-            [
-                'forum_id' => $forum,
-                'topic_old_forum' => ($setOld ? $this->forum : 0),
-            ],
-            [
-                'topic_id' => [$this->id, '='],
-            ]
+        DB::prepare('UPDATE `{prefix}topics` SET `forum_id` = :forum, `topic_old_forum` = :old WHERE `topic_id` = :thread')
+            ->execute([
+            'forum' => $forum,
+            'old' => ($setOld ? $this->forum : 0),
+            'thread' => $this->id,
         ]);
     }
 
     /**
      * Update the thread data.
      * 
-     * @return Thread The updated thread.
+     * @return self The updated thread.
      */
     public function update()
     {
         // Update row
-        Database::update('topics', [
-            [
-                'topic_hidden' => $this->hidden,
-                'topic_title' => $this->title,
-                'topic_time_limit' => $this->timeLimit,
-                'topic_status' => $this->status,
-                'topic_status_change' => $this->statusChange,
-                'topic_type' => $this->type,
-                'topic_old_forum' => $this->oldForum,
-            ],
-            [
-                'topic_id' => [$this->id, '='],
-            ]
+        DB::prepare('UPDATE `{prefix}topics` SET `topic_hidden` = :hidden, `topic_title` = :title, `topic_time_limit` = :limit, `topic_status` = :status, `topic_status_change` = :change, `topic_type` = :type, `topic_old_forum` = :old WHERE `topic_id` = :id')
+            ->execute([
+                'hidden' => $this->hidden,
+                'title' => $this->title,
+                'limit' => $this->timeLimit,
+                'status' => $this->status,
+                'change' => $this->statusChange,
+                'type' => $this->type,
+                'old' => $this->oldForum,
+                'id' => $this->id,
         ]);
 
         // Return new object
@@ -255,14 +254,18 @@ class Thread
         // Check if _posts is something
         if (!count($this->_posts)) {
             // Get all rows with the thread id
-            $postRows = Database::fetch('posts', true, ['topic_id' => [$this->id, '=']]);
+            $postRows = DB::prepare('SELECT `post_id` FROM `{prefix}posts` WHERE `topic_id` = :thread');
+            $postRows->execute([
+                'thread' => $this->id,
+            ]);
+            $postRows = $postRows->fetchAll();
 
             // Create a storage array
             $posts = [];
 
             // Create new post objects for each post
             foreach ($postRows as $post) {
-                $posts[$post['post_id']] = new Post($post['post_id']);
+                $posts[$post->post_id] = new Post($post->post_id);
             }
 
             $this->_posts = $posts;
@@ -287,10 +290,14 @@ class Thread
         }
 
         // Get the row from the database
-        $post = Database::fetch('posts', false, ['topic_id' => [$this->id, '=']], ['post_id'], [1]);
+        $post = DB::prepare('SELECT `post_id` FROM `{prefix}posts` WHERE `topic_id` = :thread ORDER BY `post_id` LIMIT 1');
+        $post->execute([
+            'thread' => $this->id,
+        ]);
+        $post = $post->fetch();
 
         // Create the post class
-        $post = new Post($post ? $post['post_id'] : 0);
+        $post = new Post($post ? $post->post_id : 0);
 
         // Assign it to the cache var
         $this->_firstPost = $post;
@@ -312,10 +319,14 @@ class Thread
         }
 
         // Get the row from the database
-        $post = Database::fetch('posts', false, ['topic_id' => [$this->id, '=']], ['post_id', true], [1]);
+        $post = DB::prepare('SELECT `post_id` FROM `{prefix}posts` WHERE `topic_id` = :thread ORDER BY `post_id` DESC LIMIT 1');
+        $post->execute([
+            'thread' => $this->id,
+        ]);
+        $post = $post->fetch();
 
         // Create the post class
-        $post = new Post($post ? $post['post_id'] : 0);
+        $post = new Post($post ? $post->post_id : 0);
 
         // Assign it to the cache var
         $this->_lastPost = $post;
@@ -331,7 +342,11 @@ class Thread
      */
     public function replyCount()
     {
-        return Database::count('posts', ['topic_id' => [$this->id, '=']])[0];
+        $count = DB::prepare('SELECT * FROM `{prefix}posts` WHERE `topic_id` = :thread');
+        $count->execute([
+            'thread' => $this->id,
+        ]);
+        return $count->rowCount();
     }
 
     /**
@@ -344,10 +359,15 @@ class Thread
     public function unread($user)
     {
         // Attempt to get track row from the database
-        $track = Database::fetch('topics_track', false, ['user_id' => [$user, '='], 'topic_id' => [$this->id, '='], 'mark_time' => [$this->lastPost()->time, '>']]);
+        $track = DB::prepare('SELECT * FROM `{prefix}topics_track` WHERE `user_id` = :user AND `topic_id` = :thread AND `mark_time` > :last');
+        $track->execute([
+            'user' => $user,
+            'thread' => $this->id,
+            'last' => $this->lastPost()->time,
+        ]);
 
         // If nothing was returned it's obvious that the status is unread
-        if (!$track) {
+        if (!$track->rowCount()) {
             return true;
         }
 
@@ -363,26 +383,29 @@ class Thread
     public function trackUpdate($user)
     {
         // Check if we already have a track record
-        $track = Database::fetch('topics_track', false, ['user_id' => [$user, '='], 'topic_id' => [$this->id, '='], 'forum_id' => [$this->forum, '=']]);
+        $track = DB::prepare('SELECT * FROM `{prefix}topics_track` WHERE `user_id` = :user AND `topic_id` = :thread AND `forum_id` = :forum');
+        $track->execute([
+            'user' => $user,
+            'thread' => $this->id,
+            'forum' => $this->forum,
+        ]);
 
         // If so update it
-        if ($track) {
-            Database::update('topics_track', [
-                [
-                    'mark_time' => time(),
-                ],
-                [
-                    'user_id' => [$user, '='],
-                    'topic_id' => [$this->id, '='],
-                ],
+        if ($track->rowCount()) {
+            DB::prepare('UPDATE `{prefix}topics_track` SET `mark_time` = :time WHERE `user_id` = :user AND `topic_id` = :thread')
+                ->execute([
+                'user' => $user,
+                'thread' => $this->id,
+                'time' => time(),
             ]);
         } else {
             // If not create a new record
-            Database::insert('topics_track', [
-                'user_id' => $user,
-                'topic_id' => $this->id,
-                'forum_id' => $this->forum,
-                'mark_time' => time(),
+            DB::prepare('INSERT INTO `{prefix}topics_track` (`user_id`, `topic_id`, `forum_id`, `mark_time`) VALUES (:user, :thread, :forum, :time)')
+                ->execute([
+                'user' => $user,
+                'thread' => $this->id,
+                'forum' => $this->forum,
+                'time' => time(),
             ]);
         }
     }
@@ -392,13 +415,10 @@ class Thread
      */
     public function viewsUpdate()
     {
-        Database::update('topics', [
-            [
-                'topic_views' => $this->views + 1,
-            ],
-            [
-                'topic_id' => [$this->id, '='],
-            ],
+        DB::prepare('UPDATE `{prefix}topics` SET `topic_views` = :views WHERE `topic_id` = :thread')
+            ->execute([
+            'views' => $this->views + 1,
+            'thread' => $this->id,
         ]);
     }
 
@@ -407,13 +427,10 @@ class Thread
      */
     public function lastUpdate()
     {
-        Database::update('topics', [
-            [
-                'topic_last_reply' => time(),
-            ],
-            [
-                'topic_id' => [$this->id, '='],
-            ],
+        DB::prepare('UPDATE `{prefix}topics` SET `topic_last_reply` = :last WHERE `topic_id` = :thread')
+            ->execute([
+            'last' => time(),
+            'thread' => $this->id,
         ]);
     }
 }

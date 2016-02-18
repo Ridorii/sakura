@@ -258,24 +258,25 @@ class User
         $password = Hashing::createHash($password);
 
         // Insert the user into the database
-        Database::insert('users', [
-            'username' => $username,
-            'username_clean' => $usernameClean,
-            'password_hash' => $password[3],
-            'password_salt' => $password[2],
-            'password_algo' => $password[0],
-            'password_iter' => $password[1],
+        DB::prepare('INSERT INTO `{prefix}users` (`username`, `username_clean`, `password_hash`, `password_salt`, `password_algo`, `password_iter`, `email`, `rank_main`, `register_ip`, `last_ip`, `user_registered`, `user_last_online`, `user_country`) VALUES (:uname, :uname_clean, :pw_hash, :pw_salt, :pw_algo, :pw_iter, :email, :rank, :r_ip, :l_ip, :registered, :l_online, :country)')
+            ->execute([
+            'uname' => $username,
+            'uname_clean' => $usernameClean,
+            'pw_hash' => $password[3],
+            'pw_salt' => $password[2],
+            'pw_algo' => $password[0],
+            'pw_iter' => $password[1],
             'email' => $emailClean,
-            'rank_main' => 0,
-            'register_ip' => Net::pton(Net::IP()),
-            'last_ip' => Net::pton(Net::IP()),
-            'user_registered' => time(),
-            'user_last_online' => 0,
-            'user_country' => Utils::getCountryCode(),
+            'rank' => 0,
+            'r_ip' => Net::pton(Net::IP()),
+            'l_ip' => Net::pton(Net::IP()),
+            'registered' => time(),
+            'l_online' => 0,
+            'country' => Utils::getCountryCode(),
         ]);
 
         // Get the last id
-        $userId = Database::lastInsertID();
+        $userId = DB::lastID();
 
         // Create a user object
         $user = self::construct($userId);
@@ -298,49 +299,51 @@ class User
     private function __construct($uid)
     {
         // Get the user database row
-        $userRow = Database::fetch(
-            'users',
-            false,
-            [
-                'user_id' => [$uid, '=', true],
-                'username_clean' => [Utils::cleanString($uid, true), '=', true],
-            ]
-        );
+        $userRow = DB::prepare('SELECT * FROM `{prefix}users` WHERE `user_id` = :id OR `username_clean` = :clean');
+        $userRow->execute([
+            'id' => $uid,
+            'clean' => Utils::cleanString($uid, true, true),
+        ]);
+        $userRow = $userRow->fetch();
 
         // Populate the variables
         if ($userRow) {
-            $this->id = $userRow['user_id'];
-            $this->username = $userRow['username'];
-            $this->usernameClean = $userRow['username_clean'];
-            $this->passwordHash = $userRow['password_hash'];
-            $this->passwordSalt = $userRow['password_salt'];
-            $this->passwordAlgo = $userRow['password_algo'];
-            $this->passwordIter = $userRow['password_iter'];
-            $this->passwordChan = $userRow['password_chan'];
-            $this->email = $userRow['email'];
-            $this->mainRankId = $userRow['rank_main'];
-            $this->colour = $userRow['user_colour'];
-            $this->registerIp = $userRow['register_ip'];
-            $this->lastIp = $userRow['last_ip'];
-            $this->title = $userRow['user_title'];
-            $this->registered = $userRow['user_registered'];
-            $this->lastOnline = $userRow['user_last_online'];
-            $this->birthday = $userRow['user_birthday'];
-            $this->country = $userRow['user_country'];
-            $this->avatar = $userRow['user_avatar'];
-            $this->background = $userRow['user_background'];
-            $this->header = $userRow['user_header'];
-            $this->page = $userRow['user_page'];
-            $this->signature = $userRow['user_signature'];
+            $this->id = $userRow->user_id;
+            $this->username = $userRow->username;
+            $this->usernameClean = $userRow->username_clean;
+            $this->passwordHash = $userRow->password_hash;
+            $this->passwordSalt = $userRow->password_salt;
+            $this->passwordAlgo = $userRow->password_algo;
+            $this->passwordIter = $userRow->password_iter;
+            $this->passwordChan = $userRow->password_chan;
+            $this->email = $userRow->email;
+            $this->mainRankId = $userRow->rank_main;
+            $this->colour = $userRow->user_colour;
+            $this->registerIp = $userRow->register_ip;
+            $this->lastIp = $userRow->last_ip;
+            $this->title = $userRow->user_title;
+            $this->registered = $userRow->user_registered;
+            $this->lastOnline = $userRow->user_last_online;
+            $this->birthday = $userRow->user_birthday;
+            $this->country = $userRow->user_country;
+            $this->avatar = $userRow->user_avatar;
+            $this->background = $userRow->user_background;
+            $this->header = $userRow->user_header;
+            $this->page = $userRow->user_page;
+            $this->signature = $userRow->user_signature;
         }
 
         // Get all ranks
-        $ranks = Database::fetch('user_ranks', true, ['user_id' => [$this->id, '=']]);
+        $ranks = DB::prepare('SELECT * FROM `{prefix}user_ranks` WHERE `user_id` = :id');
+        $ranks->execute([
+            'id' => $this->id,
+        ]);
+        $ranks = $ranks->fetchAll();
 
         // Get the rows for all the ranks
         foreach ($ranks as $rank) {
             // Store the database row in the array
-            $this->ranks[$rank['rank_id']] = Rank::construct($rank['rank_id']);
+            $this->ranks[$rank->rank_id] = Rank::construct($rank->rank_id);
         }
 
         // Check if ranks were set
@@ -423,10 +426,13 @@ class User
     public function isOnline()
     {
         // Get all sessions
-        $sessions = Database::fetch('sessions', true, ['user_id' => [$this->id, '=']]);
+        $sessions = DB::prepare('SELECT `user_id` FROM `{prefix}sessions` WHERE `user_id` = :id');
+        $sessions->execute([
+            'id' => $this->id,
+        ]);
 
         // If there's no entries just straight up return false
-        if (!$sessions) {
+        if (!$sessions->rowCount()) {
             return false;
         }
 
@@ -441,19 +447,19 @@ class User
      */
     public function forumStats()
     {
+        $posts = DB::prepare('SELECT * FROM `{prefix}posts` WHERE `poster_id` = :id');
+        $posts->execute([
+            'id' => $this->id,
+        ]);
+
+        $threads = DB::prepare('SELECT DISTINCT * FROM `{prefix}posts` WHERE `poster_id` = :id GROUP BY `topic_id` ORDER BY `post_time`');
+        $threads->execute([
+            'id' => $this->id,
+        ]);
+
         return [
-            'posts' => Database::count(
-                'posts',
-                ['poster_id' => [$this->id, '=']]
-            )[0],
-            'topics' => count(Database::fetch(
-                'posts',
-                true,
-                ['poster_id' => [$this->id, '=']],
-                ['post_time'],
-                null,
-                ['topic_id']
-            )),
+            'posts' => $posts->rowCount(),
+            'topics' => $threads->rowCount(),
         ];
     }
 
@@ -476,9 +482,10 @@ class User
 
         // Save to the database
         foreach ($ranks as $rank) {
-            Database::insert('user_ranks', [
-                'rank_id' => $rank,
-                'user_id' => $this->id,
+            DB::prepare('INSERT INTO `{prefix}ranks` (`rank_id`, `user_id`) VALUES (:rank, :user)')
+                ->execute([
+                'rank' => $rank,
+                'user' => $this->id,
             ]);
         }
     }
@@ -495,7 +502,11 @@ class User
 
         // Iterate over the ranks
         foreach ($remove as $rank) {
-            Database::delete('user_ranks', ['user_id' => [$this->id, '='], 'rank_id' => [$rank, '=']]);
+            DB::prepare('DELETE FROM `{prefix}user_ranks` WHERE `user_id` = :user AND `rank_id` = :rank')
+                ->execute([
+                'user' => $this->id,
+                'rank' => $rank,
+            ]);
         }
     }
 
@@ -509,13 +520,10 @@ class User
     public function setMainRank($rank)
     {
         // If it does exist update their row
-        Database::update('users', [
-            [
-                'rank_main' => $rank,
-            ],
-            [
-                'user_id' => [$this->id, '='],
-            ],
+        DB::prepare('UPDATE `{prefix}users` SET `rank_main` = :rank WHERE `user_id` = :id')
+            ->execute([
+            'rank' => $rank,
+            'id' => $this->id,
         ]);
 
         // Return true if everything was successful
@@ -571,10 +579,11 @@ class User
         }
 
         // Add friend
-        Database::insert('friends', [
-            'user_id' => $this->id,
-            'friend_id' => $uid,
-            'friend_timestamp' => time(),
+        DB::prepare('INSERT INTO `{prefix}friends` (`user_id`, `friend_id`, `friend_timestamp`) VALUES (:user, :friend, :time)')
+            ->execute([
+            'user' => $this->id,
+            'friend' => $uid,
+            'time' => time(),
         ]);
 
         // Return true because yay
@@ -599,17 +608,20 @@ class User
             return [0, 'USER_NOT_EXIST'];
         }
 
+        // Prepare the statement
+        $rem = DB::prepare('DELETE FROM `{prefix}friends` WHERE `user_id` = :user AND `friend_id` = :friend');
+
         // Remove friend
-        Database::delete('friends', [
-            'user_id' => [$this->id, '='],
-            'friend_id' => [$uid, '='],
+        $rem->execute([
+            'user' => $this->id,
+            'friend' => $uid,
         ]);
 
         // Attempt to remove the request
         if ($deleteRequest) {
-            Database::delete('friends', [
-                'friend_id' => [$this->id, '='],
-                'user_id' => [$uid, '='],
+            $rem->execute([
+                'user' => $uid,
+                'friend' => $this->id,
             ]);
         }
 
@@ -627,16 +639,19 @@ class User
     public function isFriends($with)
     {
         // Accepted from this user
-        $user = Database::count('friends', [
-            'user_id' => [$this->id, '='],
-            'friend_id' => [$with, '='],
-        ])[0];
+        $get = DB::prepare('SELECT * FROM `{prefix}friends` WHERE `user_id` = :user AND `friend_id` = :friend');
+        $get->execute([
+            'user' => $this->id,
+            'friend' => $with,
+        ]);
+        $user = $get->rowCount();
 
         // And the other user
-        $friend = Database::count('friends', [
-            'user_id' => [$with, '='],
-            'friend_id' => [$this->id, '='],
-        ])[0];
+        $get->execute([
+            'user' => $with,
+            'friend' => $this->id,
+        ]);
+        $friend = $get->rowCount();
 
         if ($user && $friend) {
             return 2; // Mutual friends
@@ -663,34 +678,72 @@ class User
 
         // Select the correct level
         switch ($level) {
+            // Mutual
             case 2:
                 // Get all the current user's friends
-                $self = array_column(Database::fetch('friends', true, ['user_id' => [$this->id, '=']]), 'friend_id');
+                $self = DB::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
+                $self->execute([
+                    'user' => $this->id,
+                ]);
+                $self = array_column($self->fetchAll(\PDO::FETCH_ASSOC), 'friend_id');
+
                 // Get all the people that added this user as a friend
-                $others = array_column(Database::fetch('friends', true, ['friend_id' => [$this->id, '=']]), 'user_id');
+                $others = DB::prepare('SELECT `user_id` FROM `{prefix}friends` WHERE `friend_id` = :user');
+                $others->execute([
+                    'user' => $this->id,
+                ]);
+                $others = array_column($others->fetchAll(\PDO::FETCH_ASSOC), 'user_id');
+
                 // Create a difference map
                 $users = array_intersect($self, $others);
                 break;
 
+            // Non-mutual (from user perspective)
             case 1:
-                $users = array_column(Database::fetch('friends', true, ['user_id' => [$this->id, '=']]), 'friend_id');
+                $users = DB::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
+                $users->execute([
+                    'user' => $this->id,
+                ]);
+                $users = array_column($users->fetchAll(\PDO::FETCH_ASSOC), 'friend_id');
                 break;
 
+            // All friend cases
             case 0:
             default:
                 // Get all the current user's friends
-                $self = array_column(Database::fetch('friends', true, ['user_id' => [$this->id, '=']]), 'friend_id');
+                $self = DB::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
+                $self->execute([
+                    'user' => $this->id,
+                ]);
+                $self = array_column($self->fetchAll(\PDO::FETCH_ASSOC), 'friend_id');
+
                 // Get all the people that added this user as a friend
-                $others = array_column(Database::fetch('friends', true, ['friend_id' => [$this->id, '=']]), 'user_id');
+                $others = DB::prepare('SELECT `user_id` FROM `{prefix}friends` WHERE `friend_id` = :user');
+                $others->execute([
+                    'user' => $this->id,
+                ]);
+                $others = array_column($others->fetchAll(\PDO::FETCH_ASSOC), 'user_id');
+
                 // Create a difference map
                 $users = array_merge($others, $self);
                 break;
 
+            // Open requests
             case -1:
                 // Get all the current user's friends
-                $self = array_column(Database::fetch('friends', true, ['user_id' => [$this->id, '=']]), 'friend_id');
+                $self = DB::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
+                $self->execute([
+                    'user' => $this->id,
+                ]);
+                $self = array_column($self->fetchAll(\PDO::FETCH_ASSOC), 'friend_id');
+
                 // Get all the people that added this user as a friend
-                $others = array_column(Database::fetch('friends', true, ['friend_id' => [$this->id, '=']]), 'user_id');
+                $others = DB::prepare('SELECT `user_id` FROM `{prefix}friends` WHERE `friend_id` = :user');
+                $others->execute([
+                    'user' => $this->id,
+                ]);
+                $others = array_column($others->fetchAll(\PDO::FETCH_ASSOC), 'user_id');
+
                 // Create a difference map
                 $users = array_diff($others, $self);
                 break;
@@ -770,8 +823,17 @@ class User
 
         // Create array and get values
         $profile = [];
-        $profileFields = Database::fetch('profilefields');
-        $profileValuesRaw = Database::fetch('user_profilefields', true, ['user_id' => [$this->id, '=']]);
+
+        $profileFields = DB::prepare('SELECT * FROM `{prefix}profilefields`');
+        $profileFields->execute();
+        $profileFields = $profileFields->fetchAll(\PDO::FETCH_ASSOC);
+
+        $profileValuesRaw = DB::prepare('SELECT * FROM `{prefix}user_profilefields` WHERE `user_id` = :user');
+        $profileValuesRaw->execute([
+            'user' => $this->id,
+        ]);
+        $profileValuesRaw = $profileValuesRaw->fetchAll(\PDO::FETCH_ASSOC);
+
         $profileValueKeys = array_map(function ($a) {
             return $a['field_name'];
         }, $profileValuesRaw);
@@ -849,8 +911,17 @@ class User
 
         // Create array and get values
         $options = [];
-        $optionFields = Database::fetch('optionfields');
-        $optionValuesRaw = Database::fetch('user_optionfields', true, ['user_id' => [$this->id, '=']]);
+
+        $optionFields = DB::prepare('SELECT * FROM `{prefix}optionfields`');
+        $optionFields->execute();
+        $optionFields = $optionFields->fetchAll(\PDO::FETCH_ASSOC);
+
+        $optionValuesRaw = DB::prepare('SELECT * FROM `{prefix}user_optionfields` WHERE `user_id` = :user');
+        $optionValuesRaw->execute([
+            'user' => $this->id,
+        ]);
+        $optionValuesRaw = $optionValuesRaw->fetchAll(\PDO::FETCH_ASSOC);
+
         $optionValueKeys = array_map(function ($a) {
             return $a['field_name'];
         }, $optionValuesRaw);
@@ -901,9 +972,11 @@ class User
         }
 
         // Attempt to retrieve the premium record from the database
-        $getRecord = Database::fetch('premium', false, [
-            'user_id' => [$this->id, '='],
+        $getRecord = DB::prepare('SELECT * FROM `{prefix}premium` WHERE `user_id` = :user');
+        $getRecord->execute([
+            'user' => $this->id,
         ]);
+        $getRecord = $getRecord->fetch();
 
         // If nothing was returned just return false
         if (empty($getRecord)) {
@@ -911,12 +984,12 @@ class User
         }
 
         // Check if the Tenshi hasn't expired
-        if ($getRecord['premium_expire'] < time()) {
-            return [0, $getRecord['premium_start'], $getRecord['premium_expire']];
+        if ($getRecord->premium_expire < time()) {
+            return [0, $getRecord->premium_start, $getRecord->premium_expire];
         }
 
         // Else return the start and expiration date
-        return [1, $getRecord['premium_start'], $getRecord['premium_expire']];
+        return [1, $getRecord->premium_start, $getRecord->premium_expire];
     }
 
     /**
@@ -927,9 +1000,11 @@ class User
     public function getWarnings()
     {
         // Do the database query
-        $getWarnings = Database::fetch('warnings', true, [
-            'user_id' => [$this->id, '='],
+        $getWarnings = DB::prepare('SELECT * FROM `{prefix}warnings` WHERE `user_id` = :user');
+        $getWarnings->execute([
+            'user' => $this->id,
         ]);
+        $getWarnings = $getWarnings->fetchAll(\PDO::FETCH_ASSOC);
 
         // Storage array
         $warnings = [];
@@ -938,7 +1013,10 @@ class User
         foreach ($getWarnings as $warning) {
             // Check if it hasn't expired
             if ($warning['warning_expires'] < time()) {
-                Database::delete('warnings', ['warning_id' => [$warning['warning_id'], '=']]);
+                DB::prepare('DELETE FROM `{prefix}warnings` WHERE `warning_id` = :warn')
+                    ->execute([
+                    'warn' => $warning['warning_id'],
+                ]);
                 continue;
             }
 
@@ -1001,12 +1079,13 @@ class User
     public function getUsernameHistory()
     {
         // Do the database query
-        $changes = Database::fetch('username_history', true, [
-            'user_id' => [$this->id, '='],
-        ], ['change_id', true]);
+        $changes = DB::prepare('SELECT * FROM `{prefix}username_history` WHERE `user_id` = :user ORDER BY `change_id` DESC');
+        $changes->execute([
+            'user' => $this->id,
+        ]);
 
-        // Return all the warnings
-        return $changes;
+        // Return all the changes
+        return $changes->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**
@@ -1032,45 +1111,47 @@ class User
         }
 
         // Check if this username hasn't been used in the last amount of days set in the config
-        $getOld = Database::fetch('username_history', false, [
-            'username_old_clean' => [$username_clean, '='],
-            'change_time' => [(Config::get('old_username_reserve') * 24 * 60 * 60), '>'],
-        ], ['change_id', true]);
+        $getOld = DB::prepare('SELECT * FROM `{prefix}username_history` WHERE `username_old_clean` = :clean AND `change_time` > :time ORDER BY `change_id` DESC');
+        $getOld->execute([
+            'clean' => $username_clean,
+            'time' => (Config::get('old_username_reserve') * 24 * 60 * 60),
+        ]);
+        $getOld = $getOld->fetch();
 
         // Check if anything was returned
-        if ($getOld && $getOld['user_id'] != $this->id) {
+        if ($getOld && $getOld->user_id != $this->id) {
             return [0, 'TOO_RECENT', $getOld['change_time']];
         }
 
         // Check if the username is already in use
-        $getInUse = Database::fetch('users', false, [
-            'username_clean' => [$username_clean, '='],
+        $getInUse = DB::prepare('SELECT * FROM `{prefix}users` WHERE `username_clean` = :clean');
+        $getInUse->execute([
+            'clean' => $username_clean,
         ]);
+        $getInUse = $getInUse->fetch();
 
         // Check if anything was returned
         if ($getInUse) {
-            return [0, 'IN_USE', $getInUse['user_id']];
+            return [0, 'IN_USE', $getInUse->user_id];
         }
 
         // Insert into username_history table
-        Database::insert('username_history', [
-            'change_time' => time(),
-            'user_id' => $this->id,
-            'username_new' => $username,
-            'username_new_clean' => $username_clean,
-            'username_old' => $this->username,
-            'username_old_clean' => $this->usernameClean,
+        DB::prepare('INSERT INTO `{prefix}username_history` (`change_time`, `user_id`, `username_new`, `username_new_clean`, `username_old`, `username_old_clean`) VALUES (:time, :user, :new, :new_clean, :old, :old_clean)')
+            ->execute([
+            'time' => time(),
+            'user' => $this->id,
+            'new' => $username,
+            'new_clean' => $username_clean,
+            'old' => $this->username,
+            'old_clean' => $this->usernameClean,
         ]);
 
         // Update userrow
-        Database::update('users', [
-            [
-                'username' => $username,
-                'username_clean' => $username_clean,
-            ],
-            [
-                'user_id' => [$this->id, '='],
-            ],
+        DB::prepare('UPDATE `{prefix}users` SET `username` = :username, `username_clean` = :clean WHERE `user_id` = :id')
+            ->execute([
+            'username' => $username,
+            'clean' => $username_clean,
+            'id' => $this->id,
         ]);
 
         // Return success
@@ -1092,23 +1173,22 @@ class User
         }
 
         // Check if the username is already in use
-        $getInUse = Database::fetch('users', false, [
-            'email' => [$email, '='],
+        $getInUse = DB::prepare('SELECT * FROM `{prefix}users` WHERE `email` = :email');
+        $getInUse->execute([
+            'email' => $email,
         ]);
+        $getInUse = $getInUse->fetch();
 
         // Check if anything was returned
         if ($getInUse) {
-            return [0, 'IN_USE', $getInUse['user_id']];
+            return [0, 'IN_USE', $getInUse->user_id];
         }
 
         // Update userrow
-        Database::update('users', [
-            [
-                'email' => $email,
-            ],
-            [
-                'user_id' => [$this->id, '='],
-            ],
+        DB::prepare('UPDATE `{prefix}users` SET `email` = :email WHERE `user_id` = :id')
+            ->execute([
+            'email' => $email,
+            'id' => $this->id,
         ]);
 
         // Return success
@@ -1159,17 +1239,14 @@ class User
         $password = Hashing::createHash($new);
 
         // Update userrow
-        Database::update('users', [
-            [
-                'password_hash' => $password[3],
-                'password_salt' => $password[2],
-                'password_algo' => $password[0],
-                'password_iter' => $password[1],
-                'password_chan' => time(),
-            ],
-            [
-                'user_id' => [$this->id, '='],
-            ],
+        DB::prepare('UPDATE `{prefix}users` SET `password_hash` = :hash, `password_salt` = :salt, `password_algo` = :algo, `password_iter` = :iter, `password_chan` = :chan WHERE `user_id` = :id')
+            ->execute([
+            'hash' => $password[3],
+            'salt' => $password[2],
+            'algo' => $password[0],
+            'iter' => $password[1],
+            'chan' => time(),
+            'id' => $this->id,
         ]);
 
         // Return success

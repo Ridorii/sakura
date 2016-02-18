@@ -66,31 +66,32 @@ class Utils
             $backtrace = base64_encode(json_encode(debug_backtrace()));
 
             // Check if this error has already been logged in the past
-            if ($past = Database::fetch(
-                'error_log',
-                false,
-                [
-                    'error_backtrace' => [$backtrace, '=', true],
-                    'error_string' => [$errstr, '='],
-                    'error_line' => [$errline, '='],
-                ]
-            )) {
+            $past = DB::prepare('SELECT * FROM `{prefix}error_log` WHERE `error_backtrace` = :bc OR (`error_string` = :str AND `error_line` = :li)');
+            $past->execute([
+                'bc' => $backtrace,
+                'str' => $errstr,
+                'li' => $errline,
+            ]);
+            $past = $past->fetch();
+
+            if ($past) {
                 // If so assign the errid
-                $errid = $past['error_id'];
+                $errid = $past->error_id;
             } else {
                 // Create an error ID
                 $errid = substr(md5(microtime()), rand(0, 22), 10);
 
                 // Log the error
-                Database::insert('error_log', [
-                    'error_id' => $errid,
-                    'error_timestamp' => date("r"),
-                    'error_revision' => SAKURA_VERSION,
-                    'error_type' => $errno,
-                    'error_line' => $errline,
-                    'error_string' => $errstr,
-                    'error_file' => $errfile,
-                    'error_backtrace' => $backtrace,
+                DB::prepare('INSERT INTO `{prefix}error_log` (`error_id`, `error_timestamp`, `error_revision`, `error_type`, `error_line`, `error_string`, `error_file`, `error_backtrace`) VALUES (:id, :time, :rev, :type, :line, :string, :file, :bc)')
+                    ->execute([
+                    'id' => $errid,
+                    'time' => date("r"),
+                    'rev' => SAKURA_VERSION,
+                    'type' => $errno,
+                    'line' => $errline,
+                    'string' => $errstr,
+                    'file' => $errfile,
+                    'bc' => $backtrace,
                 ]);
             }
         }
@@ -430,7 +431,9 @@ class Utils
         $data = [];
 
         // Get database stuff
-        $table = Database::fetch('premium_log', true, null, ['transaction_id', true]);
+        $table = DB::prepare('SELECT * FROM `{prefix}premium_log` ORDER BY `transaction_id` DESC');
+        $table->execute();
+        $table = $table->fetchAll(\PDO::FETCH_ASSOC);
 
         // Add raw table data to data array
         $data['table'] = $table;
@@ -465,11 +468,12 @@ class Utils
      */
     public static function updatePremiumTracker($id, $amount, $comment)
     {
-        Database::insert('premium_log', [
-            'user_id' => $id,
-            'transaction_amount' => $amount,
-            'transaction_date' => time(),
-            'transaction_comment' => $comment,
+        DB::prepare('INSERT INTO `{prefix}premium_log` (`user_id`, `transaction_amount`, `transaction_date`, `transaction_comment`) VALUES (:user, :amount, :date, :comment)')
+            ->execute([
+            'user' => $id,
+            'amount' => $amount,
+            'date' => time(),
+            'comment' => $comment,
         ]);
     }
 

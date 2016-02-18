@@ -103,6 +103,7 @@ class Premium extends Controller
                             // Attempt to complete the transaction
                             if ($finalise) {
                                 // Make the user premium
+                                Users::addUserPremium($currentUser->id, (2628000 * $_SESSION['premiumMonths']));
                                 Users::updatePremiumMeta($currentUser->id);
                                 Utils::updatePremiumTracker(
                                     $currentUser->id,

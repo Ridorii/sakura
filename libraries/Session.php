@@ -53,9 +53,10 @@ class Session
     public function destroy()
     {
         // Invalidate the session key
-        Database::delete('sessions', [
-            'session_key' => [$this->sessionId, '='],
-            'user_id' => [$this->userId, '='],
+        DB::prepare('DELETE FROM `{prefix}sessions` WHERE `session_key` = :key AND `user_id` = :user')
+            ->execute([
+            'key' => $this->sessionId,
+            'user' => $this->userId,
         ]);
 
         // Unset userId and sessionId
@@ -74,7 +75,10 @@ class Session
     public function destroyAll()
     {
         // Delete all database entries with this user in it
-        Database::delete('sessions', ['user_id' => [$this->userId, '=']]);
+        DB::prepare('DELETE FROM `{prefix}sessions` WHERE `user_id` = :user')
+            ->execute([
+            'user' => $this->userId,
+        ]);
 
         // Destroy this session to finish it off
         $this->destroy();
@@ -93,14 +97,15 @@ class Session
         $session = hash('sha256', $this->userId . base64_encode('sakura' . mt_rand(0, 99999999)) . time());
 
         // Insert the session into the database
-        Database::insert('sessions', [
-            'user_id' => $this->userId,
-            'user_ip' => Net::pton(Net::IP()),
-            'user_agent' => Utils::cleanString(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'No user agent header.'),
-            'session_key' => $session,
-            'session_start' => time(),
-            'session_expire' => time() + 604800,
-            'session_remember' => $permanent ? '1' : '0',
+        DB::prepare('INSERT INTO `{prefix}sessions` (`user_id`, `user_ip`, `user_agent`, `session_key`, `session_start`, `session_expire`, `session_remember`) VALUES (:id, :ip, :agent, :key, :start, :end, :remember)')
+            ->execute([
+            'id' => $this->userId,
+            'ip' => Net::pton(Net::IP()),
+            'agent' => Utils::cleanString(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'No user agent header.'),
+            'key' => $session,
+            'start' => time(),
+            'end' => time() + 604800,
+            'remember' => $permanent ? '1' : '0',
         ]);
 
         // Return the session key
@@ -115,10 +120,12 @@ class Session
     public function validate()
     {
         // Get session from database
-        $session = Database::fetch('sessions', false, [
-            'user_id' => [$this->userId, '='],
-            'session_key' => [$this->sessionId, '='],
+        $session = DB::prepare('SELECT * FROM `{prefix}sessions` WHERE `user_id` = :user AND `session_key` = :key');
+        $session->execute([
+            'user' => $this->userId,
+            'key' => $this->sessionId,
         ]);
+        $session = $session->fetch();
 
         // Check if we actually got something in return
         if (!$session) {
@@ -126,13 +133,13 @@ class Session
         }
 
         // Check if the session expired
-        if ($session['session_expire'] < time()) {
+        if ($session->session_expire < time()) {
             // ...and return false
             return 0;
         }
 
         // IP Check
-        $ipCheck = false;// Config::get('session_check');
+        $ipCheck = false; // Forced disabled due to incompatibility with the Net class. -- Config::get('session_check');
 
         // Origin checking
         if ($ipCheck) {
@@ -178,18 +185,15 @@ class Session
         }
 
         // If the remember flag is set extend the session time
-        if ($session['session_remember']) {
-            Database::update('sessions', [
-                [
-                    'session_expire' => time() + 604800,
-                ],
-                [
-                    'session_id' => [$session['session_id'], '='],
-                ],
+        if ($session->session_remember) {
+            DB::prepare('UPDATE `{prefix}sessions` SET `session_expire` = :expire WHERE `session_id` = :id')
+                ->execute([
+                'expire' => time() + 604800,
+                'id' => $session->session_id,
             ]);
         }
 
         // Return 2 if the remember flag is set and return 1 if not
-        return $session['session_remember'] ? 2 : 1;
+        return $session->session_remember ? 2 : 1;
     }
 }

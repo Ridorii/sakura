@@ -63,7 +63,7 @@ class Config
      * @param string $key Configuration section.
      * @param string $subkey Configuration key.
      * 
-     * @return string Configuration value.
+     * @return array|string Configuration value.
      */
     public static function local($key, $subkey = null)
     {
@@ -101,9 +101,13 @@ class Config
             // Then return the value
             return self::$database[$key];
         } else {
-            $value = Database::fetch('config', false, ['config_name' => [$key, '=']]);
+            $value = DB::prepare('SELECT * FROM `{prefix}config` WHERE `config_name` = :name');
+            $value->execute([
+                'name' => $key,
+            ]);
+            $value = $value->fetch();
             if ($value) {
-                self::$database[$key] = $value['config_value'];
+                self::$database[$key] = $value->config_value;
                 return self::$database[$key];
             }
         }
@@ -114,5 +118,35 @@ class Config
             E_USER_ERROR
         );
         return null;
+    }
+
+    public static function set($key, $value)
+    {
+        // Unset the cached copy
+        if (array_key_exists($key, self::$database)) {
+            unset(self::$database[$key]);
+        }
+
+        // Check if the value already exists
+        $exists = DB::prepare('SELECT * FROM `{prefix}config` WHERE `config_name` = :name');
+        $exists->execute([
+            'name' => $key,
+        ]);
+
+        // If it exists run an update
+        if ($exists->rowCount()) {
+            $set = DB::prepare('UPDATE `{prefix}config` SET `config_value` = :value WHERE `config_name` = :name');
+        } else {
+            $set = DB::prepare('INSERT INTO `{prefix}config` (`config_name`, `config_value`) VALUES (:name, :value)');
+        }
+
+        // Run the setter
+        $set->execute([
+            'name' => $key,
+            'value' => $value,
+        ]);
+
+        // Return the value
+        return $value;
     }
 }

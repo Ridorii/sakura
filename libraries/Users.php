@@ -85,13 +85,10 @@ class Users
         }
 
         // Update last online
-        Database::update('users', [
-            [
-                'user_last_online' => time(),
-            ],
-            [
-                'user_id' => [$uid, '='],
-            ],
+        DB::prepare('UPDATE `{prefix}users` SET `user_last_online` = :lo WHERE `user_id` = :id')
+            ->execute([
+            'lo' => time(),
+            'id' => $uid,
         ]);
 
         // Update the premium meta
@@ -119,11 +116,12 @@ class Users
         }
 
         // Check if we haven't hit the rate limit
-        $rates = Database::fetch('login_attempts', true, [
-            'attempt_ip' => [Net::pton(Net::IP()), '='],
-            'attempt_timestamp' => [time() - 1800, '>'],
-            'attempt_success' => [0, '='],
+        $rates = DB::prepare('SELECT * FROM `{prefix}login_attempts` WHERE `attempt_ip` = :ip AND `attempt_timestamp` > :time AND `attempt_success` = 0');
+        $rates->execute([
+            'ip' => Net::pton(Net::IP()),
+            'time' => time() - 1800,
         ]);
+        $rates = $rates->fetchAll(\PDO::FETCH_ASSOC);
 
         if (count($rates) > 4) {
             return [0, 'RATE_LIMIT'];
@@ -287,7 +285,11 @@ class Users
         }
 
         // Check if the e-mail has already been used
-        if (Database::count('users', ['email' => [$email, '=']])[0] > 0) {
+        $emailCheck = DB::prepare('SELECT `user_id` FROM `{prefix}users` WHERE `email` = :email');
+        $emailCheck->execute([
+            'email' => $email,
+        ]);
+        if ($emailCheck->rowCount() > 0) {
             return [0, 'EMAIL_EXISTS'];
         }
 
@@ -338,10 +340,12 @@ class Users
         $emailClean = Utils::cleanString($email, true);
 
         // Do database request
-        $user = Database::fetch('users', false, [
-            'username_clean' => [$usernameClean, '='],
-            'email' => [$emailClean, '='],
+        $user = DB::prepare('SELECT * FROM `{prefix}users` WHERE `username_clean` = :clean AND `email` = :email');
+        $user->execute([
+            'clean' => $usernameClean,
+            'email' => $emailClean,
         ]);
+        $user = $user->fetch(\PDO::FETCH_ASSOC);
 
         // Check if user exists
         if (count($user) < 2) {
@@ -417,20 +421,16 @@ class Users
 
         // Hash the password
         $password = Hashing::createHash($newpass);
-        $time = time();
 
         // Update the user
-        Database::update('users', [
-            [
-                'password_hash' => $password[3],
-                'password_salt' => $password[2],
-                'password_algo' => $password[0],
-                'password_iter' => $password[1],
-                'password_chan' => $time,
-            ],
-            [
-                'user_id' => [$uid, '='],
-            ],
+        DB::prepare('UPDATE `{prefix}users` SET `password_hash` = :hash, `password_salt` = :salt, `password_algo` = :algo, `password_iter` = :iter, `password_chan` = :chan WHERE `user_id` = :id')
+            ->execute([
+            'hash' => $password[3],
+            'salt' => $password[2],
+            'algo' => $password[0],
+            'iter' => $password[1],
+            'chan' => time(),
+            'id' => $uid,
         ]);
 
         // Return success
@@ -457,10 +457,12 @@ class Users
         $emailClean = Utils::cleanString($email, true);
 
         // Do database request
-        $user = Database::fetch('users', false, [
-            'username_clean' => [$usernameClean, '='],
-            'email' => [$emailClean, '='],
+        $user = DB::prepare('SELECT * FROM `{prefix}users` WHERE `username_clean` = :clean AND `email` = :email');
+        $user->execute([
+            'clean' => $usernameClean,
+            'email' => $emailClean,
         ]);
+        $user = $user->fetch(\PDO::FETCH_ASSOC);
 
         // Check if user exists
         if (count($user) < 2) {
@@ -580,21 +582,23 @@ class Users
     /**
      * Check if a user exists.
      *
-     * @param mixed $user The Username or ID.
-     * @param bool $id Use id instead.
+     * @param mixed $id The Username or ID.
+     * @param mixed $unused Unused variable.
      *
      * @return mixed Returns the ID if it exists, false otherwise.
      */
-    public static function userExists($user, $id = true)
+    public static function userExists($id, $unused = null)
     {
-        // Clean string
-        $user = Utils::cleanString($user, true);
-
         // Do database request
-        $user = Database::fetch('users', true, [($id ? 'user_id' : 'username_clean') => [$user, '=']]);
+        $user = DB::prepare('SELECT * FROM `{prefix}users` WHERE `user_id` = :id OR `username_clean` = :clean');
+        $user->execute([
+            'id' => $id,
+            'clean' => Utils::cleanString($id, true, true),
+        ]);
+        $user = $user->fetch();
 
         // Return count (which would return 0, aka false, if nothing was found)
-        return count($user) ? $user[0]['user_id'] : false;
+        return $user ? $user->user_id : false;
     }
 
     /**
@@ -605,7 +609,9 @@ class Users
     public static function getProfileFields()
     {
         // Get profile fields
-        $profileFields = Database::fetch('profilefields');
+        $profileFields = DB::prepare('SELECT * FROM `{prefix}profilefields`');
+        $profileFields->execute();
+        $profileFields = $profileFields->fetchAll(\PDO::FETCH_ASSOC);
 
         // If there's nothing just return null
         if (!count($profileFields)) {
@@ -634,7 +640,9 @@ class Users
     public static function getOptionFields()
     {
         // Get option fields
-        $optionFields = Database::fetch('optionfields');
+        $optionFields = DB::prepare('SELECT * FROM `{prefix}optionfields`');
+        $optionFields->execute();
+        $optionFields = $optionFields->fetchAll(\PDO::FETCH_ASSOC);
 
         // If there's nothing just return null
         if (!count($optionFields)) {
@@ -672,10 +680,14 @@ class Users
         $return = [];
 
         // Get all online users in the past 5 minutes
-        $getAll = Database::fetch('users', true, ['user_last_online' => [$time, '>']]);
+        $getAll = DB::prepare('SELECT * FROM `{prefix}users` WHERE `user_last_online` > :lo');
+        $getAll->execute([
+            'lo' => $time,
+        ]);
+        $getAll = $getAll->fetchAll();
 
         foreach ($getAll as $user) {
-            $return[] = User::construct($user['user_id']);
+            $return[] = User::construct($user->user_id);
         }
 
         // Return all the online users
@@ -693,9 +705,11 @@ class Users
     public static function addUserPremium($id, $seconds)
     {
         // Check if there's already a record of premium for this user in the database
-        $getUser = Database::fetch('premium', false, [
-            'user_id' => [$id, '='],
+        $getUser = DB::prepare('SELECT * FROM `{prefix}premium` WHERE `user_id` = :user');
+        $getUser->execute([
+            'user' => $id,
         ]);
+        $getUser = $getUser->fetch(\PDO::FETCH_ASSOC);
 
         // Calculate the (new) start and expiration timestamp
         $start = isset($getUser['premium_start']) ? $getUser['premium_start'] : time();
@@ -703,19 +717,17 @@ class Users
 
         // If the user already exists do an update call, otherwise an insert call
         if (empty($getUser)) {
-            Database::insert('premium', [
-                'user_id' => $id,
-                'premium_start' => $start,
-                'premium_expire' => $expire,
+            DB::prepare('INSERT INTO `{prefix}premium` (`user_id`, `premium_start`, `premium_expire`) VALUES (:user, :start, :expire)')
+                ->execute([
+                'user' => $id,
+                'start' => $start,
+                'expire' => $expire,
             ]);
         } else {
-            Database::update('premium', [
-                [
-                    'premium_expire' => $expire,
-                ],
-                [
-                    'user_id' => [$id, '='],
-                ],
+            DB::prepare('UPDATE `{prefix}premium` SET `premium_expire` = :expire WHERE `user_id` = :id')
+                ->execute([
+                'expire' => $expire,
+                'user_id' => $id,
             ]);
         }
 
@@ -751,8 +763,9 @@ class Users
             }
         } elseif (!$check[0]) {
             // Remove the expired entry
-            Database::delete('premium', [
-                'user_id' => [$user->id, '='],
+            DB::prepare('DELETE FROM `{prefix}premium` WHERE `user_id` = :user')
+                ->execute([
+                'user' => $user->id,
             ]);
 
             // Else remove the rank from them
@@ -769,53 +782,15 @@ class Users
      */
     public static function getUsersByIP($ip)
     {
-        // Get users by registration IP
-        $registeredFrom = Database::fetch('users', true, ['register_ip' => [$ip, '=']]);
-
-        // Get users by last IP
-        $lastFrom = Database::fetch('users', true, ['last_ip' => [$ip, '='], 'register_ip' => [$ip, '!=']]);
-
-        // Merge the arrays
-        $users = array_merge($registeredFrom, $lastFrom);
+        // Get the users
+        $users = DB::prepare('SELECT * FROM `{prefix}users` WHERE `register_ip` = :rip OR `last_ip` = :lip');
+        $users->execute([
+            'rip' => $ip,
+            'lip' => $ip,
+        ]);
+        $users = $users->fetchAll(\PDO::FETCH_ASSOC);
 
         // Return the array with users
-        return $users;
-    }
-
-    /**
-     * Get all users.
-     *
-     * @param mixed $includeInactive include deactivated users.
-     * @param mixed $includeRestricted include restricted users.
-     *
-     * @return array The users.
-     */
-    public static function getAllUsers($includeInactive = true, $includeRestricted = false)
-    {
-        // Execute query
-        $getUsers = Database::fetch('users', true);
-
-        // Define variable
-        $users = [];
-
-        // Reorder shit
-        foreach ($getUsers as $user) {
-            $user = User::construct($user['user_id']);
-
-            // Skip if inactive and not include deactivated users
-            if (!$includeInactive && $user->permission(Site::DEACTIVATED)) {
-                continue;
-            }
-
-            // Skip if inactive and not include restricted users
-            if (!$includeRestricted && $user->permission(Site::RESTRICTED)) {
-                continue;
-            }
-
-            $users[$user->id] = $user;
-        }
-
-        // and return an array with the users
         return $users;
     }
 
@@ -827,14 +802,16 @@ class Users
     public static function getAllRanks()
     {
         // Execute query
-        $getRanks = Database::fetch('ranks', true);
+        $getRanks = DB::prepare('SELECT * FROM `{prefix}ranks`');
+        $getRanks->execute();
+        $getRanks = $getRanks->fetchAll();
 
         // Define variable
         $ranks = [];
 
         // Reorder shit
         foreach ($getRanks as $rank) {
-            $ranks[$rank['rank_id']] = Rank::construct($rank['rank_id']);
+            $ranks[$rank->rank_id] = Rank::construct($rank->rank_id);
         }
 
         // and return an array with the ranks
@@ -854,19 +831,18 @@ class Users
     public static function getNotifications($uid = null, $timediff = 0, $excludeRead = true, $markRead = false)
     {
         // Prepare conditions
-        $conditions = [];
-        $conditions['user_id'] = [($uid ? $uid : self::checkLogin()[0]), '='];
-
-        if ($timediff) {
-            $conditions['alert_timestamp'] = [time() - $timediff, '>'];
-        }
-
-        if ($excludeRead) {
-            $conditions['alert_read'] = [0, '='];
-        }
+        $uid = $uid ? $uid : self::checkLogin()[0];
+        $time = $timediff ? time() - $timediff : '%';
+        $read = $excludeRead ? '0' : '%';
 
         // Get notifications for the database
-        $notifications = Database::fetch('notifications', true, $conditions);
+        $notifications = DB::prepare('SELECT * FROM `{prefix}notifications` WHERE `user_id` = :user AND `alert_timestamp` > :time AND `alert_read` = :read');
+        $notifications->execute([
+            'user' => $uid,
+            'time' => $time,
+            'read' => $read,
+        ]);
+        $notifications = $notifications->fetchAll(\PDO::FETCH_ASSOC);
 
         // Mark the notifications as read
         if ($markRead) {
@@ -895,13 +871,10 @@ class Users
     public static function markNotificationRead($id, $mode = true)
     {
         // Execute an update statement
-        Database::update('notifications', [
-            [
-                'alert_read' => ($mode ? 1 : 0),
-            ],
-            [
-                'alert_id' => [$id, '='],
-            ],
+        DB::prepare('UPDATE `{prefix}notifications` SET `alert_read` = :read WHERE `alert_id` = :id')
+            ->execute([
+            'read' => ($mode ? 1 : 0),
+            'id' => $id,
         ]);
     }
 
@@ -918,20 +891,18 @@ class Users
      */
     public static function createNotification($user, $title, $text, $timeout = 60000, $img = 'FONT:fa-info-circle', $link = '', $sound = 0)
     {
-        // Get current timestamp
-        $time = time();
-
         // Insert it into the database
-        Database::insert('notifications', [
-            'user_id' => $user,
-            'alert_timestamp' => $time,
-            'alert_read' => 0,
-            'alert_sound' => ($sound ? 1 : 0),
-            'alert_title' => $title,
-            'alert_text' => $text,
-            'alert_link' => $link,
-            'alert_img' => $img,
-            'alert_timeout' => $timeout,
+        DB::prepare('INSERT INTO `{prefix}notifications` (`user_id`, `alert_timestamp`, `alert_read`, `alert_sound`, `alert_title`, `alert_text`, `alert_link`, `alert_img`, `alert_timeout`) VALUES (:user, :time, :read, :sound, :title, :text, :link, :img, :timeout)')
+            ->execute([
+            'user' => $user,
+            'time' => time(),
+            'read' => 0,
+            'sound' => ($sound ? 1 : 0),
+            'title' => $title,
+            'text' => $text,
+            'link' => $link,
+            'img' => $img,
+            'timeout' => $timeout,
         ]);
     }
 
@@ -942,6 +913,12 @@ class Users
      */
     public static function getNewestUserId()
     {
-        return Database::fetch('users', false, ['rank_main' => [Config::get('restricted_rank_id'), '!=']], ['user_id', true], ['1'])['user_id'];
+        $get = DB::prepare('SELECT `user_id` FROM `{prefix}users` WHERE `rank_main` != :restricted ORDER BY `user_id` DESC LIMIT 1');
+        $get->execute([
+            'restricted' => Config::get('restricted_rank_id'),
+        ]);
+        $get = $get->fetch();
+
+        return $get ? $get->user_id : 0;
     }
 }

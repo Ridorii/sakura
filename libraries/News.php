@@ -31,7 +31,11 @@ class News
     {
 
         // Get the news posts and assign them to $posts
-        $posts = Database::fetch('news', true, ['news_category' => [$category, '=']], ['news_id', true]);
+        $posts = DB::prepare('SELECT * FROM `{prefix}news` WHERE `news_category` = :cat ORDER BY `news_id` DESC');
+        $posts->execute([
+            'cat' => $category,
+        ]);
+        $posts = $posts->fetchAll(\PDO::FETCH_ASSOC);
 
         // Attach poster data
         foreach ($posts as $post) {

@@ -81,17 +81,18 @@ class File
         $mime = (new finfo(FILEINFO_MIME_TYPE))->buffer($data);
 
         // Insert it into the database
-        Database::insert('uploads', [
-            'user_id' => $user->id,
-            'file_data' => $data,
-            'file_name' => $name,
-            'file_mime' => $mime,
-            'file_time' => time(),
-            'file_expire' => $expire,
+        DB::prepare('INSERT INTO `{prefix}uploads` (`user_id`, `file_data`, `file_name`, `file_mime`, `file_time`, `file_expire`) VALUES (:id, :data, :name, :mime, :time, :expire)')
+            ->execute([
+            'id' => $user->id,
+            'data' => $data,
+            'name' => $name,
+            'mime' => $mime,
+            'time' => time(),
+            'expire' => $expire,
         ]);
 
         // Get the last insert id
-        $id = Database::lastInsertID();
+        $id = (int) DB::lastID();
 
         // Return a new File object
         return new File($id);
@@ -105,17 +106,21 @@ class File
     public function __construct($fileId)
     {
         // Attempt to get the database row
-        $fileRow = Database::fetch('uploads', false, ['file_id' => [$fileId, '=']]);
+        $fr = DB::prepare('SELECT * FROM `{prefix}uploads` WHERE `file_id` = :id');
+        $fr->execute([
+            'id' => $fileId,
+        ]);
+        $fileRow = $fr->fetch();
 
         // If anything was returned populate the variables
         if ($fileRow) {
-            $this->id = $fileRow['file_id'];
-            $this->user = User::construct($fileRow['user_id']);
-            $this->data = $fileRow['file_data'];
-            $this->name = $fileRow['file_name'];
-            $this->mime = $fileRow['file_mime'];
-            $this->time = $fileRow['file_time'];
-            $this->expire = $fileRow['file_expire'];
+            $this->id = $fileRow->file_id;
+            $this->user = User::construct($fileRow->user_id);
+            $this->data = $fileRow->file_data;
+            $this->name = $fileRow->file_name;
+            $this->mime = $fileRow->file_mime;
+            $this->time = $fileRow->file_time;
+            $this->expire = $fileRow->file_expire;
         }
     }
 
@@ -124,8 +129,9 @@ class File
      */
     public function delete()
     {
-        Database::delete('uploads', [
-            'file_id' => [$this->id, '='],
+        DB::prepare('DELETE FROM `{prefix}uploads` WHERE `file_id` = :id')
+            ->execute([
+            'id' => $this->id,
         ]);
     }
 }

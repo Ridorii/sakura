@@ -67,9 +67,12 @@ if (!isset($thread) && !$forum->permission(ForumPerms::CREATE_THREADS, $currentU
 
 $mode = isset($_GET['f']) ? 'f' : (isset($_GET['t']) ? 't' : (isset($_GET['p']) ? 'p' : null));
 
+$emotes = DB::prepare('SELECT * FROM `{prefix}emoticons`');
+$emotes->execute();
+
 // Include emotes and bbcodes
 $posting = [
-    'emoticons' => Database::fetch('emoticons'),
+    'emoticons' => $emotes->fetchAll(),
 ];
 
 // Check if we're in reply mode
@@ -198,8 +201,9 @@ if ($mode != 'f') {
             // Post deletion code
             if (isset($_POST['yes'])) {
                 // Delete the post
-                Database::delete('posts', [
-                    'post_id' => [$_POST['post_id'], '='],
+                DB::prepare('DELETE FROM `{prefix}posts` WHERE `post_id` = :post')
+                    ->execute([
+                    'post' => $_POST['post_id'],
                 ]);
 
                 // Reload the topic
@@ -207,8 +211,9 @@ if ($mode != 'f') {
 
                 // If there's no more posts left in the topic delete it as well
                 if (!$thread->replyCount()) {
-                    Database::delete('topics', [
-                        'topic_id' => [$thread->id, '='],
+                    DB::prepare('DELETE FROM `{prefix}topics` WHERE `topic_id` = :thread')
+                        ->execute([
+                        'thread' => $thread->id,
                     ]);
                 }
 

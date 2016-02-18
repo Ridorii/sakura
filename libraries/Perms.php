@@ -93,11 +93,30 @@ class Perms
      */
     public function rank($rid, $conditions = [], $perm = 0)
     {
-        // Merge rank id and additional conditions
-        $conditions = array_merge(['rank_id' => [$rid, '='], 'user_id' => [0, '=']], $conditions);
+        // Build statement
+        $stmt = "SELECT * FROM `{prefix}{$this->table}` WHERE `rank_id` = :rank AND `user_id` = 0";
+
+        // Append additional conditionals (DBWrapper v1 format, except OR is ignored)
+        foreach ($conditions as $column => $value) {
+            $stmt .= " AND `{$column}` {$value[1]} :_retarded_{$column}";
+        }
+
+        // Prepare the statement
+        $get = DB::prepare($stmt);
+
+        // Bind rank
+        $get->bindParam('rank', $rid);
+
+        // Bind additionals
+        foreach ($conditions as $column => $value) {
+            $get->bindParam("_retarded_{$column}", $value[0]);
+        }
+
+        // Execute!
+        $get->execute();
 
         // Fetch from the db
-        $get = Database::fetch($this->table, false, $conditions);
+        $get = $get->fetch(\PDO::FETCH_ASSOC);
 
         // Check if anything was returned
         if ($get && array_key_exists($this->column, $get) && $get['rank_id']) {
@@ -127,12 +146,31 @@ class Perms
         foreach (array_keys($user->ranks) as $rank) {
             $perm = $perm | $this->rank($rank, $conditions, $perm);
         }
+        
+        // Build statement
+        $stmt = "SELECT * FROM `{prefix}{$this->table}` WHERE `rank_id` = 0 AND `user_id` = :user";
 
-        // Merge user id and additional conditions
-        $conditions = array_merge(['user_id' => [$uid, '='], 'rank_id' => [0, '=']], $conditions);
+        // Append additional conditionals (DBWrapper v1 format, except OR is ignored)
+        foreach ($conditions as $column => $value) {
+            $stmt .= " AND `{$column}` {$value[1]} :_retarded_{$column}";
+        }
+
+        // Prepare the statement
+        $get = DB::prepare($stmt);
+
+        // Bind rank
+        $get->bindParam('user', $uid);
+
+        // Bind additionals
+        foreach ($conditions as $column => $value) {
+            $get->bindParam("_retarded_{$column}", $value[0]);
+        }
+
+        // Execute!
+        $get->execute();
 
         // Fetch from the db
-        $get = Database::fetch($this->table, false, $conditions);
+        $get = $get->fetch(\PDO::FETCH_ASSOC);
         
         // Check if anything was returned
         if ($get && array_key_exists($this->column, $get) && $get['user_id']) {
