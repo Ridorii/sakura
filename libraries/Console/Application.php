@@ -30,6 +30,10 @@ class Application extends \CLIFramework\Application
      */
     public function init()
     {
+        // Execute the original init function
         parent::init();
+
+        // Add commands with class reference because the autoloader is retarded
+        $this->command('serve', Command\ServeCommand::class);
     }
 }

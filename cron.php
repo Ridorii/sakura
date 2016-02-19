@@ -17,9 +17,6 @@ if (function_exists('posix_getuid')) {
 // Define that this page won't require templating
 define('SAKURA_NO_TPL', true);
 
-// To prevent the CLI from showing up
-define('SAKURA_CRON', true);
-
 // Include components
 require_once 'sakura.php';
 

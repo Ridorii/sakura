@@ -61,7 +61,7 @@ class Utils
         $errfile = str_replace(ROOT, '', $errfile);
 
         // Attempt to log the error to the database
-        if (Database::$database !== null) {
+        if (DB::$db !== null) {
             // Encode backtrace data
             $backtrace = base64_encode(json_encode(debug_backtrace()));
 

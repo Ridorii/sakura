@@ -7,7 +7,6 @@
 
 namespace Sakura\Forum;
 
-use Sakura\Database;
 use Sakura\DB;
 use Sakura\Utils;
 

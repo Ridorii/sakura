@@ -8,7 +8,6 @@
 namespace Sakura\Controllers;
 
 use Sakura\Config;
-use Sakura\Database;
 use Sakura\News;
 use Sakura\Template;
 use Sakura\User;

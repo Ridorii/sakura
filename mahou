@@ -1,0 +1,34 @@
+<?php
+/*
+ * Sakura Mahou
+ * Get it, because Sakura is a magical girl in that one anime?
+ * Kill me.
+ */
+
+// Declare Namespace
+namespace Sakura;
+
+// Uses
+use Sakura\Console\Application;
+use GetOptionKit\Exception\InvalidOptionException;
+
+// Define that this page won't require templating
+define('SAKURA_NO_TPL', true);
+
+// Include components
+require_once 'sakura.php';
+
+// Check if we're using console
+if (php_sapi_name() === 'cli') {
+    // Create an instance
+    $console = new Application;
+
+    // Attempt to run
+    try {
+        $console->run($argv);
+    } catch (InvalidOptionException $e) {
+        die($e->getMessage());
+    }
+} else {
+    echo 'Why would you even try to run a console app through a browser?';
+}

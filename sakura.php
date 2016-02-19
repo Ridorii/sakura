@@ -70,13 +70,6 @@ DB::open(
     Config::local('database', 'prefix')
 );
 
-// Check if we're using console
-if (php_sapi_name() === 'cli' && !defined('SAKURA_CRON')) {
-    $console = new Console\Application;
-    $console->run($argv);
-    exit;
-}
-
 // Check if we the system has a cron service
 if (Config::get('no_cron_service')) {
     // If not do an "asynchronous" call to the cron.php script
