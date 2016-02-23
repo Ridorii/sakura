@@ -37,11 +37,14 @@ if (!@include_once ROOT . 'vendor/autoload.php') {
 
 // Setup the autoloader
 spl_autoload_register(function ($className) {
+    // Replace \ with /
+    $className = str_replace('\\', '/', $className);
+
     // Create a throwaway count variable
     $i = 1;
 
     // Replace the sakura namespace with the libraries directory
-    $className = str_replace('Sakura\\', 'libraries/', $className, $i);
+    $className = str_replace('Sakura/', 'libraries/', $className, $i);
 
     // Require the file
     require_once ROOT . $className . '.php';

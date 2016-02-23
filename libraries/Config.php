@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the configuration manager.
- * 
+ *
  * @package Sakura
  */
 
@@ -9,7 +9,7 @@ namespace Sakura;
 
 /**
  * Handles both the local and database stored configuration sides of Sakura.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -17,21 +17,21 @@ class Config
 {
     /**
      * Container for the parsed local configuration.
-     * 
+     *
      * @var array
      */
     private static $local = [];
 
     /**
      * Cache for the configuration stored in the database.
-     * 
+     *
      * @var array
      */
     private static $database = [];
 
     /**
      * Initialiser, parses the local configuration.
-     * 
+     *
      * @param string $local Path to the configuration file.
      */
     public static function init($local)
@@ -59,10 +59,10 @@ class Config
 
     /**
      * Get a value from the local configuration file.
-     * 
+     *
      * @param string $key Configuration section.
      * @param string $subkey Configuration key.
-     * 
+     *
      * @return array|string Configuration value.
      */
     public static function local($key, $subkey = null)
@@ -88,13 +88,13 @@ class Config
 
     /**
      * Get a configuration value from the database.
-     * 
+     *
      * @param string $key Configuration key.
-     * @param bool $returnNull Unused value, only exists to prevent explosions.
-     * 
+     * @param string $default Value that gets used when the value doesn't exist.
+     *
      * @return string Configuration value.
      */
-    public static function get($key, $returnNull = false)
+    public static function get($key, $default = null)
     {
         // Check if the key that we're looking for exists
         if (array_key_exists($key, self::$database)) {
@@ -112,12 +112,11 @@ class Config
             }
         }
 
-        // Then return the value
-        trigger_error(
-            'Unable to get configuration value "' . $key . '"',
-            E_USER_ERROR
-        );
-        return null;
+        // If we fell all the way down here set the bundled default value
+        Config::set($key, $default);
+
+        // And then return default that value
+        return $default;
     }
 
     public static function set($key, $value)

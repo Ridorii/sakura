@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the serve command controller.
- * 
+ *
  * @package Sakura
  */
 
@@ -18,6 +18,6 @@ class ServeCommand extends Command
 
     public function execute()
     {
-        exec(PHP_BINDIR . '\php -S localhost:8000 -t ' . addslashes(ROOT . 'public/') . ' ' . addslashes(ROOT . 'server.php'));
+        exec(PHP_BINDIR . '/php -S localhost:8000 -t ' . addslashes(ROOT . 'public/') . ' ' . addslashes(ROOT . 'server.php'));
     }
 }
