@@ -8,6 +8,7 @@
 namespace Sakura\Forum;
 
 use Sakura\DB;
+use Sakura\DBv2;
 use Sakura\Users;
 use Sakura\User;
 use Sakura\Perms;
@@ -118,17 +119,16 @@ class Forum
     public function __construct($forumId = 0)
     {
         // Get the row from the database
-        $forumRow = DB::prepare('SELECT * FROM `{prefix}forums` WHERE `forum_id` = :id');
-        $forumRow->execute([
-            'id' => $forumId,
-        ]);
-        $forumRow = $forumRow->fetch();
+        $forumRow = DB::table('forums')
+            ->where('forum_id', $forumId)
+            ->get();
 
         // Create permissions object
         $this->_permissions = new Perms(Perms::FORUM);
 
         // Populate the variables
         if ($forumRow) {
+            $forumRow = $forumRow[0];
             $this->id = $forumRow->forum_id;
             $this->order = $forumRow->forum_order;
             $this->name = $forumRow->forum_name;
@@ -177,11 +177,10 @@ class Forum
         // Check if _forums is populated
         if (!count($this->_forums)) {
             // Get all rows with the category id set to the forum id
-            $forumRows = DB::prepare('SELECT `forum_id` FROM `{prefix}forums` WHERE `forum_category` = :cat ORDER BY forum_order');
-            $forumRows->execute([
-                'cat' => $this->id,
-            ]);
-            $forumRows = $forumRows->fetchAll();
+            $forumRows = DB::table('forums')
+                ->where('forum_category', $this->id)
+                ->orderBy('forum_order')
+                ->get(['forum_id']);
 
             // Create a storage array
             $forums = [];
@@ -210,11 +209,11 @@ class Forum
         // Check if _threads is populated
         if (!count($this->_threads)) {
             // Get all rows with the forum id for this forum
-            $threadRows = DB::prepare('SELECT * FROM `{prefix}topics` WHERE `forum_id` = :forum ORDER BY `topic_type` DESC, `topic_last_reply` DESC');
-            $threadRows->execute([
-                'forum' => $this->id,
-            ]);
-            $threadRows = $threadRows->fetchAll();
+            $threadRows = DB::table('topics')
+                ->where('forum_id', $this->id)
+                ->orderBy('topic_type', 'desc')
+                ->orderBy('topic_last_reply', 'desc')
+                ->get(['topic_id']);
 
             // Create a storage array
             $threads = [];
@@ -243,14 +242,14 @@ class Forum
         // Check if _firstPost is set
         if ($this->_firstPost === null) {
             // Get the row
-            $firstPost = DB::prepare('SELECT `post_id` FROM `{prefix}posts` WHERE `forum_id` = :id ORDER BY `post_id` LIMIT 1');
-            $firstPost->execute([
-                'id' => $this->id,
-            ]);
-            $firstPost = $firstPost->fetch();
+            $firstPost = DB::table('posts')
+                ->where('forum_id', $this->id)
+                ->orderBy('post_id')
+                ->limit(1)
+                ->get(['post_id']);
 
             // Create the post object
-            $post = new Post(empty($firstPost) ? 0 : $firstPost->post_id);
+            $post = new Post(empty($firstPost) ? 0 : $firstPost[0]->post_id);
 
             // Assign it to a "cache" variable
             $this->_firstPost = $post;
@@ -272,14 +271,14 @@ class Forum
         // Check if _lastPost is set
         if ($this->_lastPost === null) {
             // Get the row
-            $lastPost = DB::prepare('SELECT `post_id` FROM `{prefix}posts` WHERE `forum_id` = :id ORDER BY `post_id` DESC LIMIT 1');
-            $lastPost->execute([
-                'id' => $this->id,
-            ]);
-            $lastPost = $lastPost->fetch();
+            $lastPost = DB::table('posts')
+                ->where('forum_id', $this->id)
+                ->orderBy('post_id', 'desc')
+                ->limit(1)
+                ->get(['post_id']);
 
             // Create the post object
-            $post = new Post(empty($lastPost) ? 0 : $lastPost->post_id);
+            $post = new Post(empty($lastPost) ? 0 : $lastPost[0]->post_id);
 
             // Assign it to a "cache" variable
             $this->_lastPost = $post;
@@ -298,11 +297,9 @@ class Forum
      */
     public function threadCount()
     {
-        $count = DB::prepare('SELECT * FROM `{prefix}topics` WHERE `forum_id` = :id');
-        $count->execute([
-            'id' => $this->id,
-        ]);
-        return $count->rowCount();
+        return DB::table('topics')
+            ->where('forum_id', $this->id)
+            ->count();
     }
 
     /**
@@ -312,11 +309,9 @@ class Forum
      */
     public function postCount()
     {
-        $count = DB::prepare('SELECT * FROM `{prefix}posts` WHERE `forum_id` = :id');
-        $count->execute([
-            'id' => $this->id,
-        ]);
-        return $count->rowCount();
+        return DB::table('posts')
+            ->where('forum_id', $this->id)
+            ->count();
     }
 
     /**

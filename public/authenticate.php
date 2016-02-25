@@ -184,7 +184,7 @@ if (isset($_REQUEST['mode'])) {
                 // Check if we're not RATE_LIMIT
                 if ($login[1] != 'RATE_LIMIT') {
                     // Add to database
-                    DB::prepare('INSERT INTO `{prefix}login_attempts` (`attempt_success`, `attempt_timestamp`, `attempt_ip`, `user_id`) VALUES (:succ, :time, :ip, :user)')
+                    DBv2::prepare('INSERT INTO `{prefix}login_attempts` (`attempt_success`, `attempt_timestamp`, `attempt_ip`, `user_id`) VALUES (:succ, :time, :ip, :user)')
                         ->execute([
                         'succ' => $login[0],
                         'time' => time(),

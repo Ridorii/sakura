@@ -26,11 +26,9 @@ class Bans
     {
 
         // Attempt to get a ban from this user
-        $bans = DB::prepare('SELECT * FROM `{prefix}bans` WHERE `user_id` = :id');
-        $bans->execute([
-            'id' => $uid,
-        ]);
-        $bans = $bans->fetchAll();
+        $bans = DB::table('bans')
+            ->where('user_id', $uid)
+            ->get();
 
         // Reverse the array so new bans are listed first
         $bans = array_reverse($bans);
@@ -40,10 +38,9 @@ class Bans
             // Check if it hasn't expired
             if ($ban->ban_end != 0 && $ban->ban_end < time()) {
                 // If it has delete the entry and continue
-                DB::prepare('DELETE FROM `{prefix}bans` WHERE `ban_id` = :id')
-                    ->execute([
-                    'id' => $ban->user_id,
-                ]);
+                DB::table('bans')
+                    ->where('ban_id', $ban->ban_id)
+                    ->delete();
                 continue;
             }
 

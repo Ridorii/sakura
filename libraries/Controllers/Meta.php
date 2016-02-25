@@ -9,6 +9,7 @@ namespace Sakura\Controllers;
 
 use Sakura\Config;
 use Sakura\DB;
+use Sakura\DBv2;
 use Sakura\News;
 use Sakura\Template;
 use Sakura\User;
@@ -30,26 +31,19 @@ class Meta extends Controller
      */
     public function index()
     {
-        $userCount = DB::prepare("SELECT * FROM `{prefix}users` WHERE `password_algo` != 'disabled' AND `rank_main` != 1");
-        $userCount->execute();
-        $threadCount = DB::prepare('SELECT * FROM `{prefix}topics`');
-        $threadCount->execute();
-        $postCount = DB::prepare('SELECT * FROM `{prefix}posts`');
-        $postCount->execute();
-
         // Merge index specific stuff with the global render data
         Template::vars([
             'news' => new News(Config::get('site_news_category')),
             'newsCount' => Config::get('front_page_news_posts'),
             'stats' => [
-                'userCount' => $userCount->rowCount(),
+                'userCount' => DB::table('users')->where('password_algo', '!=', 'disabled')->whereNotIn('rank_main', [1, 10])->count(),
                 'newestUser' => User::construct(Users::getNewestUserId()),
                 'lastRegDate' => date_diff(
                     date_create(date('Y-m-d', User::construct(Users::getNewestUserId())->registered)),
                     date_create(date('Y-m-d'))
                 )->format('%a'),
-                'topicCount' => $threadCount->rowCount(),
-                'postCount' => $postCount->rowCount(),
+                'topicCount' => DB::table('topics')->count(),
+                'postCount' => DB::table('posts')->count(),
                 'onlineUsers' => Users::checkAllOnline(),
             ],
         ]);
@@ -95,9 +89,9 @@ class Meta extends Controller
     public function faq()
     {
         // Get faq entries
-        $faq = DB::prepare('SELECT * FROM `{prefix}faq` ORDER BY `faq_id`');
-        $faq->execute();
-        $faq = $faq->fetchAll();
+        $faq = DB::table('faq')
+            ->orderBy('faq_id')
+            ->get();
 
         // Set parse variables
         Template::vars([
@@ -131,11 +125,9 @@ class Meta extends Controller
         $id = strtolower($id);
 
         // Get the page from the database
-        $ipData = DB::prepare('SELECT * FROM `{prefix}infopages` WHERE `page_shorthand` = :id');
-        $ipData->execute([
-            'id' => $id,
-        ]);
-        $ipData = $ipData->fetch();
+        $ipData = DB::table('infopages')
+            ->where('page_shorthand', $id)
+            ->get();
 
         // Get info page data from the database
         if ($ipData) {
@@ -143,8 +135,8 @@ class Meta extends Controller
             Template::vars([
                 'page' => [
                     'id' => $id,
-                    'title' => $ipData->page_title,
-                    'content' => $ipData->page_content,
+                    'title' => $ipData[0]->page_title,
+                    'content' => $ipData[0]->page_content,
                 ],
             ]);
         }

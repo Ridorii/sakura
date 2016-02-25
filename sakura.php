@@ -65,13 +65,22 @@ Config::init(ROOT . 'config/config.ini');
 error_reporting(Config::local('dev', 'show_errors') ? -1 : 0);
 
 // Make the database connection
-DB::open(
+DBv2::open(
     Config::local('database', 'driver'),
     Config::local('dsn'),
     Config::local('database', 'username'),
     Config::local('database', 'password'),
     Config::local('database', 'prefix')
 );
+
+// Create a new database capsule
+$capsule = new \Illuminate\Database\Capsule\Manager;
+
+// Add the connection
+$capsule->addConnection(Config::local('database'));
+
+// Make the capsule globally accessible
+$capsule->setAsGlobal();
 
 // Check if we the system has a cron service
 if (Config::get('no_cron_service')) {

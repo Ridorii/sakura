@@ -1,4 +1,12 @@
 {
+    "name": "flashwave/sakura",
+    "description": "Flashii's backend",
+    "license": "Apache-2.0",
+    "homepage": "https://sakura.flash.moe",
+    "support": {
+        "email": "me@flash.moe",
+        "issues": "https://github.com/flashwave/sakura/issues"
+    },
     "require": {
         "php": ">=5.4.0",
         "ext-curl": "*",
@@ -7,7 +15,8 @@
         "phpmailer/phpmailer": "*",
         "paypal/rest-api-sdk-php": "*",
         "jbbcode/jbbcode": "*",
-        "corneltek/cliframework":  "*",
-        "phroute/phroute": "^2.1"
+        "corneltek/cliframework": "*",
+        "phroute/phroute": "^2.1",
+        "illuminate/database": "5.2.7"
     }
 }

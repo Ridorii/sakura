@@ -111,20 +111,19 @@ class Rank
     /**
      * Constructor.
      *
-     * @param int $rid ID of the rank that should be constructed.
+     * @param int $rankId ID of the rank that should be constructed.
      */
-    private function __construct($rid)
+    private function __construct($rankId)
     {
 
         // Get the rank database row
-        $rankRow = DB::prepare('SELECT * FROM `{prefix}ranks` WHERE `rank_id` = :id');
-        $rankRow->execute([
-            'id' => $rid,
-        ]);
-        $rankRow = $rankRow->fetch();
+        $rankRow = DB::table('ranks')
+            ->where('rank_id', $rankId)
+            ->get();
 
         // Check if the rank actually exists
         if ($rankRow) {
+            $rankRow = $rankRow[0];
             $this->id = $rankRow->rank_id;
             $this->name = $rankRow->rank_name;
             $this->hierarchy = $rankRow->rank_hierarchy;
@@ -189,7 +188,7 @@ class Rank
     public function users($justIds = false)
     {
         // Fetch all users part of this rank
-        $fetch = DB::prepare('SELECT `user_id` FROM `{prefix}user_ranks` WHERE `rank_id` = :id');
+        $fetch = DBv2::prepare('SELECT `user_id` FROM `{prefix}user_ranks` WHERE `rank_id` = :id');
         $fetch->execute([
             'id' => $this->id,
         ]);

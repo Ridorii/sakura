@@ -101,13 +101,14 @@ class Config
             // Then return the value
             return self::$database[$key];
         } else {
-            $value = DB::prepare('SELECT * FROM `{prefix}config` WHERE `config_name` = :name');
-            $value->execute([
-                'name' => $key,
-            ]);
-            $value = $value->fetch();
+            // Get the record from the database
+            $value = DB::table('config')
+                ->where('config_name', $key)
+                ->get();
+
+            // Check if it exists
             if ($value) {
-                self::$database[$key] = $value->config_value;
+                self::$database[$key] = $value[0]->config_value;
                 return self::$database[$key];
             }
         }
@@ -127,23 +128,19 @@ class Config
         }
 
         // Check if the value already exists
-        $exists = DB::prepare('SELECT * FROM `{prefix}config` WHERE `config_name` = :name');
-        $exists->execute([
-            'name' => $key,
-        ]);
+        $exists = DB::table('config')
+            ->where('config_name', $key)
+            ->count();
 
         // If it exists run an update
-        if ($exists->rowCount()) {
-            $set = DB::prepare('UPDATE `{prefix}config` SET `config_value` = :value WHERE `config_name` = :name');
+        if ($exists) {
+            DB::table('config')
+                ->where('config_name', $key)
+                ->update(['config_value' => $value]);
         } else {
-            $set = DB::prepare('INSERT INTO `{prefix}config` (`config_name`, `config_value`) VALUES (:name, :value)');
+            DB::table('config')
+                ->insert(['config_name' => $key, 'config_value' => $value]);
         }
-
-        // Run the setter
-        $set->execute([
-            'name' => $key,
-            'value' => $value,
-        ]);
 
         // Return the value
         return $value;

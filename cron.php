@@ -21,23 +21,21 @@ define('SAKURA_NO_TPL', true);
 require_once 'sakura.php';
 
 // Clean expired sessions
-$cleanSessions = DB::prepare('DELETE FROM `{prefix}sessions` WHERE `session_expire` < :time AND `session_remember` != 1');
-$cleanSessions->execute([
-    'time' => time(),
-]);
+DB::table('sessions')
+    ->where('session_expire', '<', time())
+    ->where('session_remember', '!=', 1)
+    ->delete();
 
 // Delete notifications that are older than a month but not unread
-$cleanAlerts = DB::prepare('DELETE FROM `{prefix}notifications` WHERE `alert_timestamp` < :time AND `alert_read` = 1');
-$cleanAlerts->execute([
-    'time' => (time() - 109500),
-]);
+DB::table('notifications')
+    ->where('alert_timestamp', '<', (time() - 109500))
+    ->where('alert_read', 1)
+    ->delete();
 
 // Get expired premium accounts
-$expiredPremium = DB::prepare('SELECT * FROM `{prefix}premium` WHERE `premium_expire` < :time');
-$expiredPremium->execute([
-    'time' => time(),
-]);
-$expiredPremium = $expiredPremium->fetchAll();
+$expiredPremium = DB::table('premium')
+    ->where('premium_expire', '<', time())
+    ->get();
 
 // Process expired premium accounts, make this not stupid in the future
 foreach ($expiredPremium as $expired) {

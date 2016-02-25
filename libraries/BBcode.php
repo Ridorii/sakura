@@ -48,9 +48,8 @@ class BBcode
     public static function parseEmoticons($text)
     {
         // Get emoticons from the database
-        $emotes = DB::prepare('SELECT * FROM `{prefix}emoticons`');
-        $emotes->execute();
-        $emotes = $emotes->fetchAll();
+        $emotes = DB::table('emoticons')
+            ->get();
 
         // Parse all emoticons
         foreach ($emotes as $emote) {

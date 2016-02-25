@@ -29,12 +29,10 @@ class ActionCode
         $code = uniqid();
 
         // Insert it
-        DB::prepare('INSERT INTO `{prefix}actioncodes` (`code_action`, `user_id`, `action_code`) VALUES (:action, :id, :code)')
-            ->execute([
-            'action' => $action,
-            'id' => $user,
-            'code' => $code,
-        ]);
+        DB::table('actioncodes')
+            ->insert(
+                ['action' => $action, 'id' => $user, 'code' => $code]
+            );
 
         // Return the code
         return $code;
@@ -53,16 +51,14 @@ class ActionCode
     public static function validate($action, $code, $user = 0, $invalidate = true)
     {
         // Fetch the code from the db
-        $get = DB::prepare('SELECT * FROM `{prefix}actioncodes` WHERE `code_action` = :code AND `action_code` = :action AND `user_id` = :id');
-        $get->execute([
-            'code' => $action,
-            'action' => $code,
-            'id' => $user,
-        ]);
-        $get = $get->rowCount();
+        $get = DB::table('actioncodes')
+            ->where('code_action', $action)
+            ->where('action_code', $code)
+            ->where('user_id', $user)
+            ->count();
 
         // Invalidate the code if requested
-        if ($invalidate) {
+        if ($get && $invalidate) {
             self::invalidate($code);
         }
 
@@ -77,9 +73,8 @@ class ActionCode
      */
     public static function invalidate($code)
     {
-        DB::prepare('DELETE FROM `{prefix}actioncodes` WHERE `code_action` = :code')
-            ->execute([
-            'code' => $code,
-        ]);
+        DB::table('actioncodes')
+            ->where('code_action', $code)
+            ->delete();
     }
 }

@@ -31,7 +31,7 @@ class News
     {
 
         // Get the news posts and assign them to $posts
-        $posts = DB::prepare('SELECT * FROM `{prefix}news` WHERE `news_category` = :cat ORDER BY `news_id` DESC');
+        $posts = DBv2::prepare('SELECT * FROM `{prefix}news` WHERE `news_category` = :cat ORDER BY `news_id` DESC');
         $posts->execute([
             'cat' => $category,
         ]);

@@ -258,7 +258,7 @@ class User
         $password = Hashing::createHash($password);
 
         // Insert the user into the database
-        DB::prepare('INSERT INTO `{prefix}users` (`username`, `username_clean`, `password_hash`, `password_salt`, `password_algo`, `password_iter`, `email`, `rank_main`, `register_ip`, `last_ip`, `user_registered`, `user_last_online`, `user_country`) VALUES (:uname, :uname_clean, :pw_hash, :pw_salt, :pw_algo, :pw_iter, :email, :rank, :r_ip, :l_ip, :registered, :l_online, :country)')
+        DBv2::prepare('INSERT INTO `{prefix}users` (`username`, `username_clean`, `password_hash`, `password_salt`, `password_algo`, `password_iter`, `email`, `rank_main`, `register_ip`, `last_ip`, `user_registered`, `user_last_online`, `user_country`) VALUES (:uname, :uname_clean, :pw_hash, :pw_salt, :pw_algo, :pw_iter, :email, :rank, :r_ip, :l_ip, :registered, :l_online, :country)')
             ->execute([
             'uname' => $username,
             'uname_clean' => $usernameClean,
@@ -276,7 +276,7 @@ class User
         ]);
 
         // Get the last id
-        $userId = DB::lastID();
+        $userId = DBv2::lastID();
 
         // Create a user object
         $user = self::construct($userId);
@@ -299,7 +299,7 @@ class User
     private function __construct($uid)
     {
         // Get the user database row
-        $userRow = DB::prepare('SELECT * FROM `{prefix}users` WHERE `user_id` = :id OR `username_clean` = :clean');
+        $userRow = DBv2::prepare('SELECT * FROM `{prefix}users` WHERE `user_id` = :id OR `username_clean` = :clean');
         $userRow->execute([
             'id' => $uid,
             'clean' => Utils::cleanString($uid, true, true),
@@ -334,7 +334,7 @@ class User
         }
 
         // Get all ranks
-        $ranks = DB::prepare('SELECT * FROM `{prefix}user_ranks` WHERE `user_id` = :id');
+        $ranks = DBv2::prepare('SELECT * FROM `{prefix}user_ranks` WHERE `user_id` = :id');
         $ranks->execute([
             'id' => $this->id,
         ]);
@@ -426,7 +426,7 @@ class User
     public function isOnline()
     {
         // Get all sessions
-        $sessions = DB::prepare('SELECT `user_id` FROM `{prefix}sessions` WHERE `user_id` = :id');
+        $sessions = DBv2::prepare('SELECT `user_id` FROM `{prefix}sessions` WHERE `user_id` = :id');
         $sessions->execute([
             'id' => $this->id,
         ]);
@@ -447,12 +447,12 @@ class User
      */
     public function forumStats()
     {
-        $posts = DB::prepare('SELECT * FROM `{prefix}posts` WHERE `poster_id` = :id');
+        $posts = DBv2::prepare('SELECT * FROM `{prefix}posts` WHERE `poster_id` = :id');
         $posts->execute([
             'id' => $this->id,
         ]);
 
-        $threads = DB::prepare('SELECT DISTINCT * FROM `{prefix}posts` WHERE `poster_id` = :id GROUP BY `topic_id` ORDER BY `post_time`');
+        $threads = DBv2::prepare('SELECT DISTINCT * FROM `{prefix}posts` WHERE `poster_id` = :id GROUP BY `topic_id` ORDER BY `post_time`');
         $threads->execute([
             'id' => $this->id,
         ]);
@@ -482,7 +482,7 @@ class User
 
         // Save to the database
         foreach ($ranks as $rank) {
-            DB::prepare('INSERT INTO `{prefix}ranks` (`rank_id`, `user_id`) VALUES (:rank, :user)')
+            DBv2::prepare('INSERT INTO `{prefix}ranks` (`rank_id`, `user_id`) VALUES (:rank, :user)')
                 ->execute([
                 'rank' => $rank,
                 'user' => $this->id,
@@ -502,7 +502,7 @@ class User
 
         // Iterate over the ranks
         foreach ($remove as $rank) {
-            DB::prepare('DELETE FROM `{prefix}user_ranks` WHERE `user_id` = :user AND `rank_id` = :rank')
+            DBv2::prepare('DELETE FROM `{prefix}user_ranks` WHERE `user_id` = :user AND `rank_id` = :rank')
                 ->execute([
                 'user' => $this->id,
                 'rank' => $rank,
@@ -520,7 +520,7 @@ class User
     public function setMainRank($rank)
     {
         // If it does exist update their row
-        DB::prepare('UPDATE `{prefix}users` SET `rank_main` = :rank WHERE `user_id` = :id')
+        DBv2::prepare('UPDATE `{prefix}users` SET `rank_main` = :rank WHERE `user_id` = :id')
             ->execute([
             'rank' => $rank,
             'id' => $this->id,
@@ -579,7 +579,7 @@ class User
         }
 
         // Add friend
-        DB::prepare('INSERT INTO `{prefix}friends` (`user_id`, `friend_id`, `friend_timestamp`) VALUES (:user, :friend, :time)')
+        DBv2::prepare('INSERT INTO `{prefix}friends` (`user_id`, `friend_id`, `friend_timestamp`) VALUES (:user, :friend, :time)')
             ->execute([
             'user' => $this->id,
             'friend' => $uid,
@@ -609,7 +609,7 @@ class User
         }
 
         // Prepare the statement
-        $rem = DB::prepare('DELETE FROM `{prefix}friends` WHERE `user_id` = :user AND `friend_id` = :friend');
+        $rem = DBv2::prepare('DELETE FROM `{prefix}friends` WHERE `user_id` = :user AND `friend_id` = :friend');
 
         // Remove friend
         $rem->execute([
@@ -639,7 +639,7 @@ class User
     public function isFriends($with)
     {
         // Accepted from this user
-        $get = DB::prepare('SELECT * FROM `{prefix}friends` WHERE `user_id` = :user AND `friend_id` = :friend');
+        $get = DBv2::prepare('SELECT * FROM `{prefix}friends` WHERE `user_id` = :user AND `friend_id` = :friend');
         $get->execute([
             'user' => $this->id,
             'friend' => $with,
@@ -681,14 +681,14 @@ class User
             // Mutual
             case 2:
                 // Get all the current user's friends
-                $self = DB::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
+                $self = DBv2::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
                 $self->execute([
                     'user' => $this->id,
                 ]);
                 $self = array_column($self->fetchAll(\PDO::FETCH_ASSOC), 'friend_id');
 
                 // Get all the people that added this user as a friend
-                $others = DB::prepare('SELECT `user_id` FROM `{prefix}friends` WHERE `friend_id` = :user');
+                $others = DBv2::prepare('SELECT `user_id` FROM `{prefix}friends` WHERE `friend_id` = :user');
                 $others->execute([
                     'user' => $this->id,
                 ]);
@@ -700,7 +700,7 @@ class User
 
             // Non-mutual (from user perspective)
             case 1:
-                $users = DB::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
+                $users = DBv2::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
                 $users->execute([
                     'user' => $this->id,
                 ]);
@@ -711,14 +711,14 @@ class User
             case 0:
             default:
                 // Get all the current user's friends
-                $self = DB::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
+                $self = DBv2::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
                 $self->execute([
                     'user' => $this->id,
                 ]);
                 $self = array_column($self->fetchAll(\PDO::FETCH_ASSOC), 'friend_id');
 
                 // Get all the people that added this user as a friend
-                $others = DB::prepare('SELECT `user_id` FROM `{prefix}friends` WHERE `friend_id` = :user');
+                $others = DBv2::prepare('SELECT `user_id` FROM `{prefix}friends` WHERE `friend_id` = :user');
                 $others->execute([
                     'user' => $this->id,
                 ]);
@@ -731,14 +731,14 @@ class User
             // Open requests
             case -1:
                 // Get all the current user's friends
-                $self = DB::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
+                $self = DBv2::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
                 $self->execute([
                     'user' => $this->id,
                 ]);
                 $self = array_column($self->fetchAll(\PDO::FETCH_ASSOC), 'friend_id');
 
                 // Get all the people that added this user as a friend
-                $others = DB::prepare('SELECT `user_id` FROM `{prefix}friends` WHERE `friend_id` = :user');
+                $others = DBv2::prepare('SELECT `user_id` FROM `{prefix}friends` WHERE `friend_id` = :user');
                 $others->execute([
                     'user' => $this->id,
                 ]);
@@ -824,11 +824,11 @@ class User
         // Create array and get values
         $profile = [];
 
-        $profileFields = DB::prepare('SELECT * FROM `{prefix}profilefields`');
+        $profileFields = DBv2::prepare('SELECT * FROM `{prefix}profilefields`');
         $profileFields->execute();
         $profileFields = $profileFields->fetchAll(\PDO::FETCH_ASSOC);
 
-        $profileValuesRaw = DB::prepare('SELECT * FROM `{prefix}user_profilefields` WHERE `user_id` = :user');
+        $profileValuesRaw = DBv2::prepare('SELECT * FROM `{prefix}user_profilefields` WHERE `user_id` = :user');
         $profileValuesRaw->execute([
             'user' => $this->id,
         ]);
@@ -912,11 +912,11 @@ class User
         // Create array and get values
         $options = [];
 
-        $optionFields = DB::prepare('SELECT * FROM `{prefix}optionfields`');
+        $optionFields = DBv2::prepare('SELECT * FROM `{prefix}optionfields`');
         $optionFields->execute();
         $optionFields = $optionFields->fetchAll(\PDO::FETCH_ASSOC);
 
-        $optionValuesRaw = DB::prepare('SELECT * FROM `{prefix}user_optionfields` WHERE `user_id` = :user');
+        $optionValuesRaw = DBv2::prepare('SELECT * FROM `{prefix}user_optionfields` WHERE `user_id` = :user');
         $optionValuesRaw->execute([
             'user' => $this->id,
         ]);
@@ -972,7 +972,7 @@ class User
         }
 
         // Attempt to retrieve the premium record from the database
-        $getRecord = DB::prepare('SELECT * FROM `{prefix}premium` WHERE `user_id` = :user');
+        $getRecord = DBv2::prepare('SELECT * FROM `{prefix}premium` WHERE `user_id` = :user');
         $getRecord->execute([
             'user' => $this->id,
         ]);
@@ -1000,7 +1000,7 @@ class User
     public function getWarnings()
     {
         // Do the database query
-        $getWarnings = DB::prepare('SELECT * FROM `{prefix}warnings` WHERE `user_id` = :user');
+        $getWarnings = DBv2::prepare('SELECT * FROM `{prefix}warnings` WHERE `user_id` = :user');
         $getWarnings->execute([
             'user' => $this->id,
         ]);
@@ -1013,7 +1013,7 @@ class User
         foreach ($getWarnings as $warning) {
             // Check if it hasn't expired
             if ($warning['warning_expires'] < time()) {
-                DB::prepare('DELETE FROM `{prefix}warnings` WHERE `warning_id` = :warn')
+                DBv2::prepare('DELETE FROM `{prefix}warnings` WHERE `warning_id` = :warn')
                     ->execute([
                     'warn' => $warning['warning_id'],
                 ]);
@@ -1079,7 +1079,7 @@ class User
     public function getUsernameHistory()
     {
         // Do the database query
-        $changes = DB::prepare('SELECT * FROM `{prefix}username_history` WHERE `user_id` = :user ORDER BY `change_id` DESC');
+        $changes = DBv2::prepare('SELECT * FROM `{prefix}username_history` WHERE `user_id` = :user ORDER BY `change_id` DESC');
         $changes->execute([
             'user' => $this->id,
         ]);
@@ -1111,7 +1111,7 @@ class User
         }
 
         // Check if this username hasn't been used in the last amount of days set in the config
-        $getOld = DB::prepare('SELECT * FROM `{prefix}username_history` WHERE `username_old_clean` = :clean AND `change_time` > :time ORDER BY `change_id` DESC');
+        $getOld = DBv2::prepare('SELECT * FROM `{prefix}username_history` WHERE `username_old_clean` = :clean AND `change_time` > :time ORDER BY `change_id` DESC');
         $getOld->execute([
             'clean' => $username_clean,
             'time' => (Config::get('old_username_reserve') * 24 * 60 * 60),
@@ -1124,7 +1124,7 @@ class User
         }
 
         // Check if the username is already in use
-        $getInUse = DB::prepare('SELECT * FROM `{prefix}users` WHERE `username_clean` = :clean');
+        $getInUse = DBv2::prepare('SELECT * FROM `{prefix}users` WHERE `username_clean` = :clean');
         $getInUse->execute([
             'clean' => $username_clean,
         ]);
@@ -1136,7 +1136,7 @@ class User
         }
 
         // Insert into username_history table
-        DB::prepare('INSERT INTO `{prefix}username_history` (`change_time`, `user_id`, `username_new`, `username_new_clean`, `username_old`, `username_old_clean`) VALUES (:time, :user, :new, :new_clean, :old, :old_clean)')
+        DBv2::prepare('INSERT INTO `{prefix}username_history` (`change_time`, `user_id`, `username_new`, `username_new_clean`, `username_old`, `username_old_clean`) VALUES (:time, :user, :new, :new_clean, :old, :old_clean)')
             ->execute([
             'time' => time(),
             'user' => $this->id,
@@ -1147,7 +1147,7 @@ class User
         ]);
 
         // Update userrow
-        DB::prepare('UPDATE `{prefix}users` SET `username` = :username, `username_clean` = :clean WHERE `user_id` = :id')
+        DBv2::prepare('UPDATE `{prefix}users` SET `username` = :username, `username_clean` = :clean WHERE `user_id` = :id')
             ->execute([
             'username' => $username,
             'clean' => $username_clean,
@@ -1173,7 +1173,7 @@ class User
         }
 
         // Check if the username is already in use
-        $getInUse = DB::prepare('SELECT * FROM `{prefix}users` WHERE `email` = :email');
+        $getInUse = DBv2::prepare('SELECT * FROM `{prefix}users` WHERE `email` = :email');
         $getInUse->execute([
             'email' => $email,
         ]);
@@ -1185,7 +1185,7 @@ class User
         }
 
         // Update userrow
-        DB::prepare('UPDATE `{prefix}users` SET `email` = :email WHERE `user_id` = :id')
+        DBv2::prepare('UPDATE `{prefix}users` SET `email` = :email WHERE `user_id` = :id')
             ->execute([
             'email' => $email,
             'id' => $this->id,
@@ -1239,7 +1239,7 @@ class User
         $password = Hashing::createHash($new);
 
         // Update userrow
-        DB::prepare('UPDATE `{prefix}users` SET `password_hash` = :hash, `password_salt` = :salt, `password_algo` = :algo, `password_iter` = :iter, `password_chan` = :chan WHERE `user_id` = :id')
+        DBv2::prepare('UPDATE `{prefix}users` SET `password_hash` = :hash, `password_salt` = :salt, `password_algo` = :algo, `password_iter` = :iter, `password_chan` = :chan WHERE `user_id` = :id')
             ->execute([
             'hash' => $password[3],
             'salt' => $password[2],

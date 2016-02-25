@@ -9,6 +9,7 @@ namespace Sakura\Controllers;
 
 use Sakura\Config;
 use Sakura\DB;
+use Sakura\DBv2;
 use Sakura\Forum;
 use Sakura\Perms\Forum as ForumPerms;
 use Sakura\Template;
@@ -31,25 +32,18 @@ class Forums extends Controller
      */
     public function index()
     {
-        $userCount = DB::prepare("SELECT * FROM `{prefix}users` WHERE `password_algo` != 'disabled' AND `rank_main` != 1");
-        $userCount->execute();
-        $threadCount = DB::prepare('SELECT * FROM `{prefix}topics`');
-        $threadCount->execute();
-        $postCount = DB::prepare('SELECT * FROM `{prefix}posts`');
-        $postCount->execute();
-
         // Merge index specific stuff with the global render data
         Template::vars([
             'forum' => (new Forum\Forum()),
             'stats' => [
-                'userCount' => $userCount->rowCount(),
+                'userCount' => DB::table('users')->where('password_algo', '!=', 'disabled')->whereNotIn('rank_main', [1, 10])->count(),
                 'newestUser' => User::construct(Users::getNewestUserId()),
-                'lastRegData' => date_diff(
+                'lastRegDate' => date_diff(
                     date_create(date('Y-m-d', User::construct(Users::getNewestUserId())->registered)),
                     date_create(date('Y-m-d'))
                 )->format('%a'),
-                'topicCount' => $threadCount->rowCount(),
-                'postCount' => $postCount->rowCount(),
+                'topicCount' => DB::table('topics')->count(),
+                'postCount' => DB::table('posts')->count(),
                 'onlineUsers' => Users::checkAllOnline(),
             ],
         ]);

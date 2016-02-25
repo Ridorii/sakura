@@ -9,6 +9,7 @@ namespace Sakura\Controllers;
 
 use Sakura\Config;
 use Sakura\DB;
+use Sakura\DBv2;
 use Sakura\Rank;
 use Sakura\Template;
 use Sakura\User as UserContext;
@@ -39,18 +40,17 @@ class User extends Controller
         // If the user id is zero check if there was a namechange
         if ($profile->id == 0) {
             // Fetch from username_history
-            $check = DB::prepare('SELECT `user_id` FROM `{prefix}username_history` WHERE `username_old_clean` = :uname ORDER BY `change_id` DESC');
-            $check->execute([
-                'uname' => Utils::cleanString($id, true, true),
-            ]);
-            $check = $check->fetch();
+            $check = DB::table('username_history')
+                ->where('username_old_clean', Utils::cleanString($id, true, true))
+                ->orderBy('change_id', 'desc')
+                ->get();
 
             // Redirect if so
             if ($check) {
                 Template::vars([
                     'page' => [
                         'message' => 'The user this profile belongs to changed their username, you are being redirected.',
-                        'redirect' => (new \Sakura\Urls)->format('USER_PROFILE', [$check->user_id]),
+                        'redirect' => (new \Sakura\Urls)->format('USER_PROFILE', [$check[0]->user_id]),
                     ],
                 ]);
 

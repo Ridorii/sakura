@@ -61,12 +61,12 @@ class Utils
         $errfile = str_replace(ROOT, '', $errfile);
 
         // Attempt to log the error to the database
-        if (DB::$db !== null) {
+        if (DBv2::$db !== null) {
             // Encode backtrace data
             $backtrace = base64_encode(json_encode(debug_backtrace()));
 
             // Check if this error has already been logged in the past
-            $past = DB::prepare('SELECT * FROM `{prefix}error_log` WHERE `error_backtrace` = :bc OR (`error_string` = :str AND `error_line` = :li)');
+            $past = DBv2::prepare('SELECT * FROM `{prefix}error_log` WHERE `error_backtrace` = :bc OR (`error_string` = :str AND `error_line` = :li)');
             $past->execute([
                 'bc' => $backtrace,
                 'str' => $errstr,
@@ -82,7 +82,7 @@ class Utils
                 $errid = substr(md5(microtime()), rand(0, 22), 10);
 
                 // Log the error
-                DB::prepare('INSERT INTO `{prefix}error_log` (`error_id`, `error_timestamp`, `error_revision`, `error_type`, `error_line`, `error_string`, `error_file`, `error_backtrace`) VALUES (:id, :time, :rev, :type, :line, :string, :file, :bc)')
+                DBv2::prepare('INSERT INTO `{prefix}error_log` (`error_id`, `error_timestamp`, `error_revision`, `error_type`, `error_line`, `error_string`, `error_file`, `error_backtrace`) VALUES (:id, :time, :rev, :type, :line, :string, :file, :bc)')
                     ->execute([
                     'id' => $errid,
                     'time' => date("r"),
@@ -431,7 +431,7 @@ class Utils
         $data = [];
 
         // Get database stuff
-        $table = DB::prepare('SELECT * FROM `{prefix}premium_log` ORDER BY `transaction_id` DESC');
+        $table = DBv2::prepare('SELECT * FROM `{prefix}premium_log` ORDER BY `transaction_id` DESC');
         $table->execute();
         $table = $table->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -468,7 +468,7 @@ class Utils
      */
     public static function updatePremiumTracker($id, $amount, $comment)
     {
-        DB::prepare('INSERT INTO `{prefix}premium_log` (`user_id`, `transaction_amount`, `transaction_date`, `transaction_comment`) VALUES (:user, :amount, :date, :comment)')
+        DBv2::prepare('INSERT INTO `{prefix}premium_log` (`user_id`, `transaction_amount`, `transaction_date`, `transaction_comment`) VALUES (:user, :amount, :date, :comment)')
             ->execute([
             'user' => $id,
             'amount' => $amount,

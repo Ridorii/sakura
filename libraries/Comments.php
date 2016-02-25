@@ -47,7 +47,7 @@ class Comments
         $this->category = $category;
 
         // Get the comments and assign them to $comments
-        $comments = DB::prepare('SELECT * FROM `{prefix}comments` WHERE `comment_category` = :category AND `comment_reply_to` = 0 ORDER BY `comment_id` DESC');
+        $comments = DBv2::prepare('SELECT * FROM `{prefix}comments` WHERE `comment_category` = :category AND `comment_reply_to` = 0 ORDER BY `comment_id` DESC');
         $comments->execute([
             'category' => $this->category,
         ]);
@@ -96,7 +96,7 @@ class Comments
             $this->count += 1;
 
             // Attempt to get replies from the database
-            $replies = DB::prepare('SELECT * FROM `{prefix}comments` WHERE `comment_category` = :category AND `comment_reply_to` = :thread');
+            $replies = DBv2::prepare('SELECT * FROM `{prefix}comments` WHERE `comment_category` = :category AND `comment_reply_to` = :thread');
             $replies->execute([
                 'category' => $this->category,
                 'thread' => $comment['comment_id'],
@@ -123,7 +123,7 @@ class Comments
     public function getComment($cid)
     {
         // Get from database
-        $comment = DB::prepare('SELECT * FROM `{prefix}comments` WHERE `comment_id` = :id');
+        $comment = DBv2::prepare('SELECT * FROM `{prefix}comments` WHERE `comment_id` = :id');
         $comment->execute([
             'id' => $cid,
         ]);
@@ -140,7 +140,7 @@ class Comments
     public function getVotes($cid)
     {
         // Get from database
-        $comment = DB::prepare('SELECT * FROM `{prefix}comment_votes` WHERE `vote_comment` = :id');
+        $comment = DBv2::prepare('SELECT * FROM `{prefix}comment_votes` WHERE `vote_comment` = :id');
         $comment->execute([
             'id' => $cid,
         ]);
@@ -169,7 +169,7 @@ class Comments
         }
 
         // Insert into database
-        DB::prepare('INSERT INTO `{prefix}comments` (`comment_category`, `comment_timestamp`, `comment_poster`, `comment_reply_to`, `comment_text`) VALUES (:cat, :time, :user, :thread, :text)')
+        DBv2::prepare('INSERT INTO `{prefix}comments` (`comment_category`, `comment_timestamp`, `comment_poster`, `comment_reply_to`, `comment_text`) VALUES (:cat, :time, :user, :thread, :text)')
             ->execute([
             'cat' => $this->category,
             'time' => time(),
@@ -194,7 +194,7 @@ class Comments
     public function makeVote($uid, $cid, $mode)
     {
         // Attempt to get previous vote
-        $vote = DB::prepare('SELECT * FROM `{prefix}comment_votes` WHERE `vote_user` = :user AND `vote_comment` = :comment');
+        $vote = DBv2::prepare('SELECT * FROM `{prefix}comment_votes` WHERE `vote_user` = :user AND `vote_comment` = :comment');
         $vote->execute([
             'user' => $uid,
             'comment' => $cid,
@@ -206,14 +206,14 @@ class Comments
             // Check if the vote that's being casted is the same
             if ($vote['vote_state'] == $mode) {
                 // Delete the vote
-                DB::prepare('DELETE FROM `{prefix}comment_votes` WHERE `vote_user` = :user AND `vote_comment` = :comment')
+                DBv2::prepare('DELETE FROM `{prefix}comment_votes` WHERE `vote_user` = :user AND `vote_comment` = :comment')
                     ->execute([
                     'user' => $uid,
                     'comment' => $cid,
                 ]);
             } else {
                 // Otherwise update the vote
-                DB::prepare('UPDATE `{prefix}comment_votes` SET `vote_state` = :state WHERE `vote_user` = :user AND `vote_comment` = :comment')
+                DBv2::prepare('UPDATE `{prefix}comment_votes` SET `vote_state` = :state WHERE `vote_user` = :user AND `vote_comment` = :comment')
                     ->execute([
                     'state' => $mode,
                     'user' => $uid,
@@ -222,7 +222,7 @@ class Comments
             }
         } else {
             // Create a vote
-            DB::prepare('INSERT INTO `{prefix}comment_votes` (`vote_user`, `vote_comment`, `vote_state`) VALUES (:user, :comment, :state)')
+            DBv2::prepare('INSERT INTO `{prefix}comment_votes` (`vote_user`, `vote_comment`, `vote_state`) VALUES (:user, :comment, :state)')
                 ->execute([
                 'user' => $uid,
                 'comment' => $cid,
@@ -241,7 +241,7 @@ class Comments
     public function removeComment($cid)
     {
         // Remove from database
-        DB::prepare('DELETE FROM `{prefix}comments` WHERE `comment_id` = :id')
+        DBv2::prepare('DELETE FROM `{prefix}comments` WHERE `comment_id` = :id')
             ->execute([
             'id' => $cid,
         ]);

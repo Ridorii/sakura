@@ -53,11 +53,10 @@ class Session
     public function destroy()
     {
         // Invalidate the session key
-        DB::prepare('DELETE FROM `{prefix}sessions` WHERE `session_key` = :key AND `user_id` = :user')
-            ->execute([
-            'key' => $this->sessionId,
-            'user' => $this->userId,
-        ]);
+        DB::table('sessions')
+            ->where('session_key', $this->sessionId)
+            ->where('user_id', $this->userId)
+            ->delete();
 
         // Unset userId and sessionId
         unset($this->userId);
@@ -75,10 +74,9 @@ class Session
     public function destroyAll()
     {
         // Delete all database entries with this user in it
-        DB::prepare('DELETE FROM `{prefix}sessions` WHERE `user_id` = :user')
-            ->execute([
-            'user' => $this->userId,
-        ]);
+        DB::table('sessions')
+            ->where('user_id', $this->userId)
+            ->delete();
 
         // Destroy this session to finish it off
         $this->destroy();
@@ -97,16 +95,16 @@ class Session
         $session = hash('sha256', $this->userId . base64_encode('sakura' . mt_rand(0, 99999999)) . time());
 
         // Insert the session into the database
-        DB::prepare('INSERT INTO `{prefix}sessions` (`user_id`, `user_ip`, `user_agent`, `session_key`, `session_start`, `session_expire`, `session_remember`) VALUES (:id, :ip, :agent, :key, :start, :end, :remember)')
-            ->execute([
-            'id' => $this->userId,
-            'ip' => Net::pton(Net::IP()),
-            'agent' => Utils::cleanString(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'No user agent header.'),
-            'key' => $session,
-            'start' => time(),
-            'end' => time() + 604800,
-            'remember' => $permanent ? '1' : '0',
-        ]);
+        DB::table('sessions')
+            ->insert([
+                'user_id' => $this->userId,
+                'user_ip' => Net::pton(Net::IP()),
+                'user_agent' => Utils::cleanString(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'No user agent header.'),
+                'session_key' => $session,
+                'session_start' => time(),
+                'session_expire' => time() + 604800,
+                'session_remember' => $permanent ? '1' : '0',
+            ]);
 
         // Return the session key
         return $session;
@@ -120,12 +118,10 @@ class Session
     public function validate()
     {
         // Get session from database
-        $session = DB::prepare('SELECT * FROM `{prefix}sessions` WHERE `user_id` = :user AND `session_key` = :key');
-        $session->execute([
-            'user' => $this->userId,
-            'key' => $this->sessionId,
-        ]);
-        $session = $session->fetch();
+        $session = DB::table('sessions')
+            ->where('user_id', $this->userId)
+            ->where('session_key', $this->sessionId)
+            ->get();
 
         // Check if we actually got something in return
         if (!$session) {
@@ -133,7 +129,7 @@ class Session
         }
 
         // Check if the session expired
-        if ($session->session_expire < time()) {
+        if ($session[0]->session_expire < time()) {
             // ...and return false
             return 0;
         }
@@ -144,7 +140,7 @@ class Session
         // Origin checking
         if ($ipCheck) {
             // Split both IPs up
-            $sessionIP = explode('.', $session['user_ip']);
+            $sessionIP = explode('.', $session[0]->user_ip);
             $userIP = explode('.', Net::IP());
 
             // Take 1 off the ipCheck variable so it's equal to the array keys
@@ -185,15 +181,13 @@ class Session
         }
 
         // If the remember flag is set extend the session time
-        if ($session->session_remember) {
-            DB::prepare('UPDATE `{prefix}sessions` SET `session_expire` = :expire WHERE `session_id` = :id')
-                ->execute([
-                'expire' => time() + 604800,
-                'id' => $session->session_id,
-            ]);
+        if ($session[0]->session_remember) {
+            DB::table('sessions')
+                ->where('session_id', $session[0]->session_id)
+                ->update(['session_expire' => time() + 604800]);
         }
 
         // Return 2 if the remember flag is set and return 1 if not
-        return $session->session_remember ? 2 : 1;
+        return $session[0]->session_remember ? 2 : 1;
     }
 }

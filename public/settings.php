@@ -617,7 +617,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update table
-                DB::prepare($stmt)
+                DBv2::prepare($stmt)
                     ->execute([
                     'img' => $fileId,
                     'user' => $currentUser->id,
@@ -640,12 +640,12 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 foreach ($fields as $field) {
                     // Add to the store array
                     if (isset($_POST['profile_' . $field['field_identity']]) && !empty($_POST['profile_' . $field['field_identity']])) {
-                        DB::prepare('DELETE FROM `{prefix}user_profilefields` WHERE `user_id` = :user AND `field_name` = :id')
+                        DBv2::prepare('DELETE FROM `{prefix}user_profilefields` WHERE `user_id` = :user AND `field_name` = :id')
                             ->execute([
                             'user' => $currentUser->id,
                             'id' => $field['field_identity'],
                         ]);
-                        DB::prepare('INSERT INTO `{prefix}user_profilefields` (`user_id`, `field_name`, `field_value`) VALUES (:user, :name, :value)')
+                        DBv2::prepare('INSERT INTO `{prefix}user_profilefields` (`user_id`, `field_name`, `field_value`) VALUES (:user, :name, :value)')
                             ->execute([
                             'user' => $currentUser->id,
                             'name' => $field['field_identity'],
@@ -659,12 +659,12 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         foreach ($field['field_additional'] as $addKey => $addVal) {
                             // Add to the array
                             $store = (isset($_POST['profile_additional_' . $addKey]) || !empty($_POST['profile_additional_' . $addKey])) ? $_POST['profile_additional_' . $addKey] : false;
-                            DB::prepare('DELETE FROM `{prefix}user_profilefields` WHERE `user_id` = :user AND `field_name` = :id')
+                            DBv2::prepare('DELETE FROM `{prefix}user_profilefields` WHERE `user_id` = :user AND `field_name` = :id')
                                 ->execute([
                                 'user' => $currentUser->id,
                                 'id' => $addKey,
                             ]);
-                            DB::prepare('INSERT INTO `{prefix}user_profilefields` (`user_id`, `field_name`, `field_value`) VALUES (:user, :name, :value)')
+                            DBv2::prepare('INSERT INTO `{prefix}user_profilefields` (`user_id`, `field_name`, `field_value`) VALUES (:user, :name, :value)')
                                 ->execute([
                                 'user' => $currentUser->id,
                                 'name' => $addKey,
@@ -731,7 +731,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         [$_POST['birthday_year'], $_POST['birthday_month'], $_POST['birthday_day']]
                     );
 
-                    DB::prepare('UPDATE `{prefix}users` SET `user_birthday` = :bd WHERE `user_id` = :id')
+                    DBv2::prepare('UPDATE `{prefix}users` SET `user_birthday` = :bd WHERE `user_id` = :id')
                         ->execute([
                         'bd' => $birthdate,
                         'id' => $currentUser->id,
@@ -746,7 +746,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 
                 // Go over each field
                 foreach ($fields as $field) {
-                    DB::prepare('DELETE FROM `{prefix}user_optionfields` WHERE `user_id` = :user AND `field_name` = :id')
+                    DBv2::prepare('DELETE FROM `{prefix}user_optionfields` WHERE `user_id` = :user AND `field_name` = :id')
                         ->execute([
                         'user' => $currentUser->id,
                         'id' => $field['option_id'],
@@ -759,7 +759,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 
                     if (isset($_POST['option_' . $field['option_id']])
                     && !empty($_POST['option_' . $field['option_id']])) {
-                        DB::prepare('INSERT INTO `{prefix}user_optionfields` (`user_id`, `field_name`, `field_value`) VALUES (:user, :name, :value)')
+                        DBv2::prepare('INSERT INTO `{prefix}user_optionfields` (`user_id`, `field_name`, `field_value`) VALUES (:user, :name, :value)')
                             ->execute([
                             'user' => $currentUser->id,
                             'name' => $field['option_id'],
@@ -801,7 +801,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update database
-                DB::prepare('UPDATE `{prefix}users` SET `user_title` = :title WHERE `user_id` = :id')
+                DBv2::prepare('UPDATE `{prefix}users` SET `user_title` = :title WHERE `user_id` = :id')
                     ->execute([
                     'title' => (isset($_POST['usertitle']) ? $_POST['usertitle'] : null),
                     'id' => $currentUser->id,
@@ -938,7 +938,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update database
-                DB::prepare('UPDATE `{prefix}users` SET `user_page` = :up WHERE `user_id` = :id')
+                DBv2::prepare('UPDATE `{prefix}users` SET `user_page` = :up WHERE `user_id` = :id')
                     ->execute([
                     'up' => $_POST['userpage'],
                     'id' => $currentUser->id,
@@ -964,7 +964,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update database
-                DB::prepare('UPDATE `{prefix}users` SET `user_signature` = :us WHERE `user_id` = :id')
+                DBv2::prepare('UPDATE `{prefix}users` SET `user_signature` = :us WHERE `user_id` = :id')
                     ->execute([
                     'us' => $_POST['signature'],
                     'id' => $currentUser->id,
@@ -1049,7 +1049,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 // Check if sessionid is set to all
                 if ($_POST['sessionid'] === 'all') {
                     // Delete all sessions assigned to the current user
-                    DB::prepare('DELETE FROM `{prefix}sessions` WHERE `user_id` = :user')
+                    DBv2::prepare('DELETE FROM `{prefix}sessions` WHERE `user_id` = :user')
                         ->execute([
                         'user' => $currentUser->id,
                     ]);
@@ -1064,7 +1064,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Check if the session is owned by the current user
-                $us = DB::prepare('SELECT * FROM `{prefix}sessions` WHERE `user_id` = :user AND `session_id` = :key');
+                $us = DBv2::prepare('SELECT * FROM `{prefix}sessions` WHERE `user_id` = :user AND `session_id` = :key');
                 $us->execute([
                     'user' => $currentUser->id,
                     'key' => $_POST['sessionid'],
@@ -1079,7 +1079,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Delete the session
-                DB::prepare('DELETE FROM `{prefix}sessions` WHERE `user_id` = :user AND `session_id` = :session')
+                DBv2::prepare('DELETE FROM `{prefix}sessions` WHERE `user_id` = :user AND `session_id` = :session')
                     ->execute([
                     'user' => $currentUser->id,
                     'session' => $_POST['sessionid'],
@@ -1519,7 +1519,7 @@ if (Users::checkLogin()) {
 
         // Sessions
         case 'advanced.sessions':
-            $sessions = DB::prepare('SELECT * FROM `{prefix}sessions` WHERE `user_id` = :user');
+            $sessions = DBv2::prepare('SELECT * FROM `{prefix}sessions` WHERE `user_id` = :user');
             $sessions->execute([
                 'user' => $currentUser->id,
             ]);

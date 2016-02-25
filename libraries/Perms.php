@@ -102,7 +102,7 @@ class Perms
         }
 
         // Prepare the statement
-        $get = DB::prepare($stmt);
+        $get = DBv2::prepare($stmt);
 
         // Bind rank
         $get->bindParam('rank', $rid);
@@ -156,7 +156,7 @@ class Perms
         }
 
         // Prepare the statement
-        $get = DB::prepare($stmt);
+        $get = DBv2::prepare($stmt);
 
         // Bind rank
         $get->bindParam('user', $uid);
