@@ -8,9 +8,6 @@
 namespace Sakura\Forum;
 
 use Sakura\DB;
-use Sakura\DBv2;
-use Sakura\Users;
-use Sakura\User;
 use Sakura\Perms;
 
 /**

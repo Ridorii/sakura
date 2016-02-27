@@ -7,15 +7,12 @@
 
 namespace Sakura\Controllers;
 
-use Sakura\Config;
 use Sakura\DB;
-use Sakura\DBv2;
 use Sakura\Forum;
 use Sakura\Perms\Forum as ForumPerms;
 use Sakura\Template;
 use Sakura\User;
 use Sakura\Users;
-use Sakura\Utils;
 
 /**
  * Forum page controllers.
@@ -121,8 +118,6 @@ class ForumController extends Controller
             // Print page contents
             return Template::render('global/information');
         }
-
-        $renderData['forum'] = $forum;
 
         // Set parse variables
         Template::vars([

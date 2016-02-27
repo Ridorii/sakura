@@ -9,10 +9,9 @@ namespace Sakura\Controllers;
 
 use Sakura\Config;
 use Sakura\DB;
-use Sakura\DBv2;
 use Sakura\Rank;
 use Sakura\Template;
-use Sakura\User as UserContext;
+use Sakura\User;
 use Sakura\Utils;
 
 /**
@@ -35,7 +34,7 @@ class UserController extends Controller
         global $currentUser;
 
         // Get the user's context
-        $profile = UserContext::construct($id);
+        $profile = User::construct($id);
 
         // If the user id is zero check if there was a namechange
         if ($profile->id == 0) {

@@ -27,7 +27,7 @@ class Utils
     public static function verifyCaptcha($response)
     {
         // Attempt to get the response
-        $resp = @file_get_contents(
+        $resp = file_get_contents(
             'https://www.google.com/recaptcha/api/siteverify?secret='
             . Config::get('recaptcha_private')
             . '&response='
@@ -36,7 +36,7 @@ class Utils
 
         // In the highly unlikely case that it failed to get anything forge a false
         if (!$resp) {
-            return false;
+            return [];
         }
 
         // Decode the response JSON from the servers

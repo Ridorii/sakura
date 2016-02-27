@@ -7,7 +7,6 @@
 
 namespace Sakura\BBcodeDefinitions;
 
-use JBBCode\Parser;
 use JBBCode\CodeDefinition;
 use JBBCode\ElementNode;
 

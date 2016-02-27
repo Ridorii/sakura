@@ -7,9 +7,7 @@
 
 namespace Sakura\Forum;
 
-use Sakura\Utils;
 use Sakura\DB;
-use Sakura\DBv2;
 use Sakura\User;
 use Sakura\BBcode;
 use Sakura\Config;

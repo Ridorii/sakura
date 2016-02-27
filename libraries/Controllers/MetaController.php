@@ -9,12 +9,10 @@ namespace Sakura\Controllers;
 
 use Sakura\Config;
 use Sakura\DB;
-use Sakura\DBv2;
 use Sakura\News;
 use Sakura\Template;
 use Sakura\User;
 use Sakura\Users;
-use Sakura\Utils;
 
 /**
  * Meta page controllers (sections that aren't big enough to warrant a dedicated controller).

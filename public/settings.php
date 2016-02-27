@@ -539,7 +539,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     $metadata = getimagesize($_FILES[$mode]['tmp_name']);
 
                     // Check if the image is actually an image
-                    if ($metadata == false) {
+                    if (!$metadata) {
                         // Set render data
                         $renderData['page'] = [
                             'redirect' => $redirect,

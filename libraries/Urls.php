@@ -310,7 +310,7 @@ class Urls
         }
 
         // Check if mod_rewrite is enabled
-        $rewrite = 0; //($rewrite === null ? Config::get('url_rewrite') : $rewrite) ? 1 : 0;
+        $rewrite = 0; // Pretty much disabled forever because of the router -- ($rewrite === null ? Config::get('url_rewrite') : $rewrite) ? 1 : 0;
 
         // Format urls
         $formatted = vsprintf($this->urls[$lid][$rewrite], $args);

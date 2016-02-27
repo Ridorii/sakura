@@ -7,8 +7,8 @@
 
 namespace Sakura\Controllers;
 
+use Exception;
 use Sakura\Config;
-use Sakura\News;
 use Sakura\Template;
 use Sakura\User;
 use Sakura\Users;

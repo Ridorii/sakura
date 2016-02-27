@@ -873,7 +873,7 @@ class User
             }
 
             // Check if we have additional options as well
-            if ($field['field_additional'] != null) {
+            if (!$field['field_additional']) {
                 // Decode the json of the additional stuff
                 $additional = json_decode($field['field_additional'], true);
 

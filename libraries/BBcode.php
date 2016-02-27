@@ -126,7 +126,7 @@ class BBcode
     public static function text($text)
     {
         // Check if $bbcode is still null
-        if (self::$bbcode == null) {
+        if (!self::$bbcode) {
             self::init();
         }
 

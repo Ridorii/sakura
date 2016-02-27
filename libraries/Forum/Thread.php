@@ -8,8 +8,6 @@
 namespace Sakura\Forum;
 
 use Sakura\DB;
-use Sakura\DBv2;
-use Sakura\Utils;
 
 /**
  * Used to serve, create and update threads.
