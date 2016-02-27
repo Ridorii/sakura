@@ -4,7 +4,7 @@
         {% if forum.type == 1 %}
             {% if forum.forums|length and forum.permission(constant('Sakura\\Perms\\Forum::VIEW'), user.id) %}
                 <div class="forumCategory">
-                    {% if forum.type != 1 %}Subforums{% else %}<a href="{{ urls.format('FORUM_SUB', [forum.id]) }}" class="clean">{{ forum.name }}</a>{% endif %}
+                    {% if forum.type != 1 %}Subforums{% else %}<a href="{{ route('forums.forum', forum.id) }}" class="clean">{{ forum.name }}</a>{% endif %}
                 </div>
                 {% for forum in forum.forums %}
                     {% include 'forum/forumEntry.twig' %}
@@ -19,7 +19,7 @@
     {% set threads = forum.threads|batch(25) %}
 
     {% set paginationPages = threads %}
-    {% set paginationUrl %}{{ urls.format('FORUM_SUB', [forum.id]) }}{% endset %}
+    {% set paginationUrl %}{{ route('forums.forum', forum.id) }}{% endset %}
 
     {% include 'forum/forumBtns.twig' %}
     {% if forum.threads %}

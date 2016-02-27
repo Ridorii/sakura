@@ -22,7 +22,7 @@ use Sakura\Utils;
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
-class Meta extends Controller
+class MetaController extends Controller
 {
     /**
      * Serves the site index.

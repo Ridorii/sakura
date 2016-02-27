@@ -1,6 +1,6 @@
             <li id="comment-{{ comment.comment_id }}">
                 <div class="comment">
-                    <a class="comment-avatar clean" href="{{ urls.format('USER_PROFILE', [comment.comment_poster.id]) }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [comment.comment_poster.id]) }}');"><span style="color: {{ comment.comment_poster.colour }};">{{ comment.comment_poster.username }}</span></a>
+                    <a class="comment-avatar clean" href="{{ route('user.profile', comment.comment_poster.id) }}" style="background-image: url('{{ route('file.avatar', comment.comment_poster.id) }}');"><span style="color: {{ comment.comment_poster.colour }};">{{ comment.comment_poster.username }}</span></a>
                     <div class="comment-pointer"></div>
                     <div class="comment-content">
                         <div class="comment-controls">

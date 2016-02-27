@@ -65,16 +65,11 @@ if (isset($_REQUEST['mode'])) {
     if ($continue) {
         switch ($_REQUEST['mode']) {
             case 'logout':
-                // Attempt logout
-                $logout = Users::logout();
-
-                // Add page specific data
+                // Add page specific things
                 $renderData['page'] = [
-
-                    'redirect' => ($logout ? $_REQUEST['redirect'] : $urls->format('SITE_LOGIN')),
-                    'message' => $logout ? 'You are now logged out.' : 'An unknown error occurred.',
-                    'success' => $logout ? 1 : 0,
-
+                    'redirect' => Router::route('main.index'),
+                    'message' => 'Wrong logout page.',
+                    'success' => 0,
                 ];
                 break;
 
@@ -165,41 +160,11 @@ if (isset($_REQUEST['mode'])) {
 
             // Login processing
             case 'login':
-                // Attempt login
-                $login = Users::login($_REQUEST['username'], $_REQUEST['password'], isset($_REQUEST['remember']));
-
-                // Array containing "human understandable" messages
-                $messages = [
-
-                    'AUTH_LOCKED' => 'Authentication is currently not allowed, try again later.',
-                    'USER_NOT_EXIST' => 'The user you tried to log into does not exist.',
-                    'INCORRECT_PASSWORD' => 'The password you entered was invalid.',
-                    'NOT_ALLOWED' => 'Your account does not have the required permissions to log in.',
-                    'NO_LOGIN' => 'Logging into this account is disabled.',
-                    'RATE_LIMIT' => 'Your IP has hit the login rate limit, try again later.',
-                    'LOGIN_SUCCESS' => 'Login successful!',
-
-                ];
-
-                // Check if we're not RATE_LIMIT
-                if ($login[1] != 'RATE_LIMIT') {
-                    // Add to database
-                    DBv2::prepare('INSERT INTO `{prefix}login_attempts` (`attempt_success`, `attempt_timestamp`, `attempt_ip`, `user_id`) VALUES (:succ, :time, :ip, :user)')
-                        ->execute([
-                        'succ' => $login[0],
-                        'time' => time(),
-                        'ip' => Net::pton(Net::IP()),
-                        'user' => isset($login[2]) ? $login[2] : 0,
-                    ]);
-                }
-
                 // Add page specific things
                 $renderData['page'] = [
-
-                    'redirect' => $login[0] ? (User::construct($login[2])->lastOnline ? $_REQUEST['redirect'] : $urls->format('INFO_PAGE', ['welcome'])) : $urls->format('SITE_LOGIN'),
-                    'message' => $messages[$login[1]],
-                    'success' => $login[0],
-
+                    'redirect' => Router::route('auth.login'),
+                    'message' => 'Wrong login page.',
+                    'success' => 0,
                 ];
                 break;
 

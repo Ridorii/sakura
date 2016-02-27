@@ -5,7 +5,7 @@
 {% block content %}
     <div class="content standalone bbcode">
         <div>
-            {{ page.content|raw }}
+            {{ include(template_from_string(page.content|raw)) }}
         </div>
     </div>
 {% endblock %}

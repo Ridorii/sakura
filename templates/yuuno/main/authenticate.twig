@@ -7,35 +7,6 @@
         <h1 class="stylised" style="line-height: 1.8em; text-align: center;">Authentication is currently disallowed, try again later.</h1>
     {% else %}
     <div class="loginPage">
-            <div class="loginForm">
-                <div class="head">
-                    Login to {{ sakura.siteName }}
-                </div>
-                <form method="post" action="{{ urls.format('AUTH_ACTION') }}" id="loginForm">
-                    <input type="hidden" name="redirect" value="{{ auth.redirect }}" />
-                    <input type="hidden" name="session" value="{{ php.sessionid }}" />
-                    <input type="hidden" name="time" value="{{ php.time }}" />
-                    <input type="hidden" name="mode" value="login" />
-                    <div class="leftAlign">
-                        <label for="loginUserName">Username:</label>
-                    </div>
-                    <div class="centreAlign">
-                        <input class="inputStyling" type="text" id="loginUserName" name="username" autofocus="true" />
-                    </div>
-                    <div class="leftAlign">
-                        <label for="loginPassword">Password:</label>
-                    </div>
-                    <div class="centreAlign">
-                        <input class="inputStyling" type="password" id="loginPassword" name="password" />
-                    </div>
-                    <div class="subLinks centreAlign">
-                        <input class="inputStyling" name="remember" type="checkbox" class="ignore-css" id="loginRemember" /><label for="loginRemember">Remember Me</a>
-                    </div>
-                    <div class="centreAlign">
-                        <input class="inputStyling" type="submit" id="loginButton" name="submit" value="Login" />
-                    </div>
-                </form>
-            </div>
             <div class="passwordForm">
                 <div class="head">
                     Lost Password

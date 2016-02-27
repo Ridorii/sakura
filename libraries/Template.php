@@ -10,6 +10,7 @@ namespace Sakura;
 use Twig_Environment;
 use Twig_Extension_StringLoader;
 use Twig_Loader_Filesystem;
+use Twig_SimpleFunction;
 
 /**
  * Sakura wrapper for Twig.
@@ -98,6 +99,11 @@ class Template
 
         // Load String template loader
         self::$template->addExtension(new Twig_Extension_StringLoader());
+
+        // Add route function
+        self::$template->addFunction(new Twig_SimpleFunction('route', function ($name, $args = null) {
+            return Router::route($name, $args);
+        }));
     }
 
     /**

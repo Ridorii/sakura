@@ -21,7 +21,7 @@ use Sakura\Utils;
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
-class User extends Controller
+class UserController extends Controller
 {
     /**
      * Display the profile of a user.
@@ -99,7 +99,7 @@ class User extends Controller
      *
      * @return bool|string The memberlist.
      */
-    public function members($rank = 0)
+    public function members($rank = null)
     {
         global $currentUser;
 
@@ -108,14 +108,31 @@ class User extends Controller
             return Template::render('global/restricted');
         }
 
+        // Get all ranks
+        
+        // Execute query
+        $getRanks = DB::table('ranks')
+            ->get(['rank_id']);
+
+        // Define variable
+        $ranks = [];
+
+        // Add the empty rank
+        $ranks[0] = Rank::construct(0);
+
+        // Reorder shit
+        foreach ($getRanks as $sortRank) {
+            $ranks[$sortRank->rank_id] = Rank::construct($sortRank->rank_id);
+        }
+
+        // Get the active rank
+        $rank = array_key_exists($rank, $ranks) ? $rank : ($rank ? 0 : 2);
+
         // Set parse variables
         Template::vars([
-            'memberlist' => [
-                'ranks' => ($_MEMBERLIST_RANKS = \Sakura\Users::getAllRanks()),
-                'active' => ($_MEMBERLIST_ACTIVE = (array_key_exists($rank, $_MEMBERLIST_RANKS) ? $rank : 2)),
-                'users' => Rank::construct($_MEMBERLIST_ACTIVE)->users(),
-                'membersPerPage' => Config::get('members_per_page'),
-            ]
+            'ranks' => $ranks,
+            'rank' => $rank,
+            'membersPerPage' => Config::get('members_per_page'),
         ]);
 
         // Render the template

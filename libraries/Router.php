@@ -118,9 +118,16 @@ class Router
      * 
      * @return string The generated URI.
      */
-    public static function url($name, $args = null)
+    public static function route($name, $args = null)
     {
-        return self::$router->route($name, $args);
+        // Array-ify the arguments
+        if ($args !== null && !is_array($args)) {
+            $temp = $args;
+            $args = [];
+            $args[] = $temp;
+        }
+
+        return self::$basePath . self::$router->route($name, $args);
     }
 
     /**

@@ -7,7 +7,7 @@
                 <input type="hidden" name="replyto" value="0" />
                 <input type="hidden" name="mode" value="comment" />
                 <div class="comment">
-                    <div class="comment-avatar" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}');"></div>
+                    <div class="comment-avatar" style="background-image: url('{{ route('file.avatar', user.id) }}');"></div>
                     <div class="comment-pointer"></div>
                     <textarea class="comment-content" name="comment" placeholder="Join the conversation..."></textarea>
                     <input class="comment-submit new" name="submit" type="submit" value="&#xf1d8;" />

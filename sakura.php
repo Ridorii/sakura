@@ -8,9 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160219');
-define('SAKURA_VLABEL', 'Amethyst');
-define('SAKURA_COLOUR', '#9966CC');
+define('SAKURA_VERSION', '20160227');
 
 // Define Sakura Path
 define('ROOT', __DIR__ . '/');
@@ -27,13 +25,16 @@ mb_internal_encoding('utf-8');
 
 // Stop the execution if the PHP Version is older than 5.5.0
 if (version_compare(phpversion(), '5.5.0', '<')) {
-    die('Sakura requires at least PHP 5.5.0, please upgrade to a newer PHP version.');
+    throw new \Exception('Sakura requires at least PHP 5.5.0, please upgrade to a newer PHP version.');
 }
 
-// Include third-party libraries
-if (!@include_once ROOT . 'vendor/autoload.php') {
-    die('Autoloader not found, did you run composer?');
+// Check if the composer autoloader exists
+if (!file_exists(ROOT . 'vendor/autoload.php')) {
+    throw new \Exception('Autoloader not found, did you run composer?');
 }
+
+// Require composer libraries
+require_once ROOT . 'vendor/autoload.php';
 
 // Setup the autoloader
 spl_autoload_register(function ($className) {
@@ -187,6 +188,7 @@ if (!defined('SAKURA_NO_TPL')) {
 
         'get' => $_GET,
         'post' => $_POST,
+        'server' => $_SERVER,
     ]);
 
     // Add the default render data

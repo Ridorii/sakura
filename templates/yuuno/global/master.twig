@@ -73,36 +73,36 @@
         <div id="container">
             <span id="top"></span>
             <div class="header" id="header">
-                <a class="logo" href="{{ urls.format('SITE_HOME') }}">{% if sakura.siteLogo %}<img src="{{ sakura.siteLogo }}" alt="{{ sakura.siteName }}" />{% else %}{{ sakura.siteName }}{% endif %}</a>
+                <a class="logo" href="{{ route('main.index') }}">{% if sakura.siteLogo %}<img src="{{ sakura.siteLogo }}" alt="{{ sakura.siteName }}" />{% else %}{{ sakura.siteName }}{% endif %}</a>
                 <div class="menu fa">
                     <div class="menu-nav" id="navMenuSite">
                         <!-- Navigation menu, displayed on left side of the bar. -->
-                        <a class="menu-item fa-home" href="{{ urls.format('SITE_HOME') }}" title="Home"></a>
-                        <a class="menu-item fa-newspaper-o" href="{{ urls.format('SITE_NEWS') }}" title="News"></a>
-                        <a class="menu-item fa-commenting" href="{{ urls.format('INFO_PAGE', ['chat']) }}" title="Chat"></a>
-                        <a class="menu-item fa-list" href="{{ urls.format('FORUM_INDEX') }}" title="Forums"></a>
-                        <a class="menu-item fa-search" href="{{ urls.format('SITE_SEARCH') }}" title="Search"></a>
+                        <a class="menu-item fa-home" href="{{ route('main.index') }}" title="Home"></a>
+                        <a class="menu-item fa-newspaper-o" href="{{ route('news.index') }}" title="News"></a>
+                        <a class="menu-item fa-commenting" href="{{ route('main.infopage', 'chat') }}" title="Chat"></a>
+                        <a class="menu-item fa-list" href="{{ route('forums.index') }}" title="Forums"></a>
+                        <a class="menu-item fa-search" href="{{ route('main.search') }}" title="Search"></a>
                         {% if session.checkLogin %}
-                            <a class="menu-item fa-users" href="{{ urls.format('MEMBERLIST_INDEX') }}" title="Members"></a>
-                            <a class="menu-item fa-heart" href="{{ urls.format('SITE_PREMIUM') }}" title="Support us"></a>
+                            <a class="menu-item fa-users" href="{{ route('members.index') }}" title="Members"></a>
+                            <a class="menu-item fa-heart" href="{{ route('premium.index') }}" title="Support us"></a>
                         {% endif %}
                     </div>
                     <div class="menu-ucp" id="navMenuUser">
                         <!-- User menu, displayed on right side of the bar. -->
                         {% if session.checkLogin %}
-                            <a class="menu-item avatar" href="{{ urls.format('USER_PROFILE', [user.id]) }}" title="Logged in as {{ user.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}'); width: auto; color: {{ user.colour }}; border-color: {{ user.colour }}; font-weight: 700;"></a>
+                            <a class="menu-item avatar" href="{{ route('user.profile', user.id) }}" title="Logged in as {{ user.username }}" style="background-image: url('{{ route('file.avatar', user.id) }}'); width: auto; color: {{ user.colour }}; border-color: {{ user.colour }}; font-weight: 700;"></a>
                             {#<a class="menu-item fa-envelope" href="{{ urls.format('SETTING_CAT', ['messages']) }}" title="Messages"></a>#}
                             {% if user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
                                 <a class="menu-item fa-gavel" href="{{ urls.format('MANAGE_INDEX') }}" title="Manage"></a>
                             {% endif %}
                             <a class="menu-item fa-cogs" href="{{ urls.format('SETTINGS_INDEX') }}" title="Settings"></a>
-                            <a class="menu-item fa-sign-out" href="{{ urls.format('USER_LOGOUT', [php.time, php.sessionid, sakura.currentPage]) }}" title="Logout" id="headerLogoutLink"></a>
+                            <a class="menu-item fa-sign-out" href="{{ route('auth.logout') }}?s={{ php.sessionid }}" title="Logout" id="headerLogoutLink"></a>
                         {% else %}
                             {% if sakura.lockAuth %}
                                 <div class="menu-item fa-lock" style="padding-left: 10px; padding-right: 10px;" title="Authentication is locked"></div>
                             {% else %}
                                 <a class="menu-item fa-magic" href="{{ urls.format('SITE_REGISTER') }}" title="Login"></a>
-                                <a class="menu-item fa-sign-in" href="{{ urls.format('SITE_LOGIN') }}" title="Login"></a>
+                                <a class="menu-item fa-sign-in" href="{{ route('auth.login') }}" title="Login"></a>
                             {% endif %}
                         {% endif %}
                     </div>
@@ -113,8 +113,8 @@
                 {% if php.self == '/profile.php' ? profile.background : (user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) and user.optionFields.profileBackgroundSiteWide and user.background) %}
                     <div id="userBackground" style="background-image: url('{{ urls.format('IMAGE_BACKGROUND', [(php.self == '/profile.php' ? profile : user).id]) }}');"></div>
                 {% endif %}
-                {% if not session.checkLogin and php.self != '/authenticate.php' %}
-                    <form method="post" action="{{ urls.format('AUTH_ACTION') }}" id="headerLoginForm">
+                {% if not session.checkLogin and sakura.currentPage != route('auth.login') %}
+                    <form method="post" action="{{ route('auth.login') }}" id="headerLoginForm">
                         <input type="hidden" name="redirect" value="{{ sakura.currentPage }}" />
                         <input type="hidden" name="session" value="{{ php.sessionid }}" />
                         <input type="hidden" name="time" value="{{ php.time }}" />
@@ -161,32 +161,22 @@
                 {% block content %}
                     <h1 class="stylised" style="text-align: center; margin: 2em auto;">{{ php.self }} is now printing!</h1>
                 {% endblock %}
-
-                {% if not user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) or user.mainRankId == 4 %}
-                <div class="ad-container ad-footer" id="footerAd">
-                    <div class="ad-box">
-                        <a href="http://jbox.com/r.php??series/touhou&acc=269&___store=jlist&bannerid=8" target="_blank">
-                            <img src="https://jlist.com/js/magestore/affiliateplus/banner.php?id=8&account_id=269&store_id=2" alt="728x90 PG -- Touhou 1" title="728x90 PG -- Touhou 1" width="728" height="90" />
-                        </a>
-                    </div>
-                </div>
-                {% endif %}
             </div>
             <div class="footer">
                 <div class="ftsections">
                     <div class="copycentre">Powered by <a href="https://github.com/flashwave/sakura/" target="_blank">Sakura</a>{% if sakura.dev.showChangelog %} <a href="https://sakura.flash.moe/#r{{ sakura.versionInfo.version }}" target="_blank">r{{ sakura.versionInfo.version }}</a>{% endif %} &copy; 2013-2016 <a href="http://flash.moe/" target="_blank">Flashwave</a></div>
                     <ul class="ftsection">
                         <li class="fthead">General</li>
-                        <li><a href="{{ urls.format('SITE_HOME') }}" title="Flashii Frontpage">Home</a></li>
-                        <li><a href="{{ urls.format('SITE_NEWS') }}" title="Flashii News &amp; Updates">News</a></li>
-                        <li><a href="{{ urls.format('SITE_SEARCH') }}" title="Do full-site search requests">Search</a></li>
-                        <li><a href="{{ urls.format('INFO_PAGE', ['contact']) }}" title="Contact our Staff">Contact</a></li>
+                        <li><a href="{{ route('main.index') }}" title="Flashii Frontpage">Home</a></li>
+                        <li><a href="{{ route('news.index') }}" title="Flashii News &amp; Updates">News</a></li>
+                        <li><a href="{{ route('main.search') }}" title="Do full-site search requests">Search</a></li>
+                        <li><a href="{{ route('main.infopage', 'contact') }}" title="Contact our Staff">Contact</a></li>
                         <li><a href="https://sakura.flash.moe" target="_blank" title="All the changes made to Sakura are listed here">Changelog</a></li>
-                        <li><a href="{{ urls.format('SITE_PREMIUM') }}" title="Get Tenshi and help us pay the bills">Support us</a></li>
+                        <li><a href="{{ route('premium.index') }}" title="Get Tenshi and help us pay the bills">Support us</a></li>
                     </ul>
                     <ul class="ftsection">
                         <li class="fthead">Community</li>
-                        <li><a href="{{ urls.format('FORUM_INDEX') }}" title="Read and post on our forums">Forums</a></li>
+                        <li><a href="{{ route('forums.index') }}" title="Read and post on our forums">Forums</a></li>
                         <li><a href="https://twitter.com/_flashii" target="_blank" title="Follow us on Twitter for news messages that are too short for the news page">Twitter</a></li>
                         <li><a href="https://youtube.com/user/flashiinet" target="_blank" title="Our YouTube page where stuff barely ever gets uploaded, mainly used to archive community creations">YouTube</a></li>
                         <li><a href="https://steamcommunity.com/groups/flashiinet" target="_blank" title="Our Steam group, play games with other members on the site">Steam</a></li>
@@ -194,73 +184,15 @@
                     </ul>
                     <ul class="ftsection">
                         <li class="fthead">Information</li>
-                        <li><a href="{{ urls.format('SITE_FAQ') }}" title="Questions that get Asked Frequently but not actually">FAQ</a></li>
-                        <li><a href="{{ urls.format('INFO_PAGE', ['rules']) }}" title="Some Rules and Information kind of summing up the ToS">Rules</a></li>
+                        <li><a href="{{ route('main.faq') }}" title="Questions that get Asked Frequently but not actually">FAQ</a></li>
+                        <li><a href="{{ route('main.infopage', 'rules') }}" title="Some Rules and Information kind of summing up the ToS">Rules</a></li>
                         <li><a href="//fiistat.us" target="_blank" title="Check the status on our Servers and related services">Server Status</a></li>
-                        <li><a href="{{ urls.format('INFO_PAGE', ['terms']) }}" title="Our Terms of Service">Terms of Service</a></li>
+                        <li><a href="{{ route('main.infopage', 'terms') }}" title="Our Terms of Service">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>
         </div>
         <script type="text/javascript">
-            // Space for things that need to happen onload
-            window.addEventListener("load", function() {
-            {% if session.checkLogin %}
-                // Convert href to object in logout link
-                prepareAjaxLink('headerLogoutLink', 'submitPost', ', true, "Logging out..."');
-            {% elseif not sakura.lockAuth and php.self != '/authenticate.php' %}
-                // Make the header login form dynamic
-                prepareAjaxForm('headerLoginForm', 'Logging in...');
-            {% endif %}
-
-            {% if session.checkLogin %}
-                // Make notification requests (there's a seperate one to make it happen before the first 60 seconds)
-                notifyRequest('{{ php.sessionid }}');
-
-                // Create interval
-                setInterval(function() {
-                    notifyRequest('{{ php.sessionid }}');
-                }, 60000);
-            {% endif %}
-
-            {% if php.self == '/profile.php' and session.checkLogin and user.id != profile.id %}
-                // Make friend button dynamic
-                prepareAjaxLink('profileFriendToggle', 'submitPost', ', true, "{% if profile.friend == 0 %}Adding{% else %}Removing{% endif %} friend..."');
-            {% endif %}
-
-            {% if php.self == '/viewtopic.php' and session.checkLogin %}
-                var forumFriendToggles = document.querySelectorAll('.forum-friend-toggle');
-
-                for(var i in forumFriendToggles) {
-                    prepareAjaxLink(forumFriendToggles[i], 'submitPost', ', true, "Please wait..."');
-                }
-            {% endif %}
-
-            {% if php.self == '/authenticate.php' and not (sakura.lockAuth or session.checkLogin) %}
-
-                // AJAX Form Submission
-                var forms = {
-                    {% if not auth.changingPass %}
-                        "loginForm": 'Logging in...',
-                    {% if not sakura.disableRegistration %}
-                        "registerForm": 'Processing registration...',
-                    {% endif %}
-                    {% if sakura.requireActivation %}
-                        "resendForm": 'Attempting to resend activation...',
-                    {% endif %}
-                        "passwordForm": 'Sending password recovery mail...'
-                    {% else %}
-                        "passwordForm": 'Changing password...'
-                    {% endif %}
-                };
-
-                for(var i in forms) {
-                    prepareAjaxForm(i, forms[i], (i == 'registerForm'));
-                }
-
-            {% endif %}
-            });
-
             // Parse time elements
             var timeElems = document.getElementsByTagName('time');
             
@@ -308,7 +240,7 @@
                     changelogLink.href = 'https://sakura.flash.moe/#r{{ sakura.versionInfo.version }}';
 
                     // Create the text container
-                    var changelogTitleText = document.createTextNode('Changelog');
+                    var changelogTitleText = document.createTextNode('Changelog ({{ sakura.versionInfo.version|slice(0, 4) }}-{{ sakura.versionInfo.version|slice(4, 2) }}-{{ sakura.versionInfo.version|slice(6, 2) }})');
 
                     // Append everything
                     changelogLink.appendChild(changelogTitleText);

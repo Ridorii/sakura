@@ -3,44 +3,44 @@
 {% set sorts = ['boxes', 'rectangles', 'list'] %}
 {% set sort = get.sort in sorts ? get.sort : sorts[0] %}
 
-{% set notfound = memberlist.active == 0 and get.rank is defined %}
+{% set notfound = rank == 0 %}
 
 {% set rankTitle %}
-{% if notfound %}Not found{% else %}{% if not memberlist.active %}All members{% else %}{{ memberlist.ranks[memberlist.active].name(true) }}{% endif %}{% endif %}
+{% if notfound %}Not found{% else %}{{ ranks[rank].name(true) }}{% endif %}
 {% endset %}
 
 {% set rankDescription %}
-{% if notfound %}The requested rank could not be found!{% else %}{% if not memberlist.active %}The entire user list.{% else %}{{ memberlist.ranks[memberlist.active].description }}{% endif %}{% endif %}
+{% if notfound %}The requested rank could not be found!{% else %}{{ ranks[rank].description }}{% endif %}
 {% endset %}
 
-{% set users = memberlist.users|batch(memberlist.membersPerPage) %}
+{% set users = ranks[rank].users|batch(membersPerPage) %}
 
 {% set currPage = get.page|default(1) - 1 %}
 
 {% set paginationPages = users %}
-{% set paginationUrl %}{% if sort and memberlist.active %}{{ urls.format('MEMBERLIST_ALL', [sort, memberlist.active]) }}{% elseif sort %}{{ urls.format('MEMBERLIST_SORT', [sort]) }}{% elseif memberlist.active %}{{ urls.format('MEMBERLIST_RANK', [memberlist.active]) }}{% else %}{{ urls.format('MEMBERLIST_INDEX') }}{% endif %}{% endset %}
+{% set paginationUrl %}{% if rank %}{{ route('members.rank', rank) }}{% else %}{{ route('members.index') }}{% endif %}{% endset %}
 
 {% block title %}{{ rankTitle }}{% endblock %}
 
 {% block content %}
     <div class="headerNotify" style="margin-bottom: 1px;">
-        <h1 style="{% if memberlist.active %}text-shadow: 0 0 5px {{ memberlist.ranks[memberlist.active].colour }}; color: {{ memberlist.ranks[memberlist.active].colour }};{% else %}text-shadow: 0 0 5px #555;{% endif %}">{{ rankTitle }}</h1>
+        <h1 style="{% if rank %}text-shadow: 0 0 5px {{ ranks[rank].colour }}; color: {{ ranks[rank].colour }};{% else %}text-shadow: 0 0 5px #555;{% endif %}">{{ rankTitle }}</h1>
         <h3>{{ rankDescription }}</h3>
     </div>
     <div class="membersPage" style="min-height: 500px;">
         <div class="dropDown" style="margin: 0 auto; font-size: 1.5em; line-height: 1.5em; height: 30px;">
             <div class="dropDownInner" style="float: left; color: #FFF;">
                 <a class="dropDownDesc">Rank:</a>
-                {% for rank in memberlist.ranks %}
-                    {% if not rank.hidden or (rank.hidden and memberlist.active == rank.id) %}
-                        <a href="{{ urls.format('MEMBERLIST_RANK', [rank.id]) }}" style="color: {{ rank.colour }};"{% if memberlist.active == rank.id %} class="dropDownSelected"{% endif %}>{{ rank.name(true) }}</a>
+                {% for r in ranks %}
+                    {% if not r.hidden or (r.hidden and rank == r.id) %}
+                        <a href="{{ route('members.rank', r.id) }}{{ server['QUERY_STRING'] ? '?' : '' }}{{ server['QUERY_STRING'] }}" style="color: {{ r.colour }};"{% if rank == r.id %} class="dropDownSelected"{% endif %}>{{ r.id == 0 ? 'Not found' : r.name(true) }}</a>
                     {% endif %}
                 {% endfor %}
             </div>
             <div class="dropDownInner" style="float: left;">
                 <a class="dropDownDesc">View:</a>
                 {% for s in sorts %}
-                <a href="{% if memberlist.active %}{{ urls.format('MEMBERLIST_ALL', [s, memberlist.active]) }}{% else %}{{ urls.format('MEMBERLIST_SORT', [s]) }}{% endif %}"{% if s == sort %} class="dropDownSelected"{% endif %}>{{ s|capitalize }}</a>
+                <a href="?{{ server['QUERY_STRING'] }}{{ server['QUERY_STRING'] ? '&' : '' }}sort={{ s }}"{% if s == sort %} class="dropDownSelected"{% endif %}>{{ s|capitalize }}</a>
                 {% endfor %}
             </div>
         </div>
@@ -74,10 +74,10 @@
                     <tbody>
                         <tr>
                             <td>
-                                #{{ memberlist.active ? count + 1 : count }}
+                                #{{ rank ? count + 1 : count }}
                             </td>
                             <td>
-                                <a href="{{ urls.format('USER_PROFILE', [user.id]) }}" class="default" style="font-weight: bold; color: {{ user.colour }}; text-shadow: 0 0 5px {{ user.colour }};">{{ user.username }}</a>
+                                <a href="{{ route('user.profile', user.id) }}" class="default" style="font-weight: bold; color: {{ user.colour }}; text-shadow: 0 0 5px {{ user.colour }};">{{ user.username }}</a>
                             </td>
                             <td>
                                 <time>{{ user.registered|date(sakura.dateFormat) }}</time>
@@ -97,9 +97,9 @@
                 </table>
                 {% else %}
                     {% for user in users[currPage] %}
-                        <a href="{{ urls.format('USER_PROFILE', [user.id]) }}">{# These comment tags are here to prevent the link extending too far
+                        <a href="{{ route('user.profile', user.id) }}">{# These comment tags are here to prevent the link extending too far
                             #}<div class="userBox" id="u{{ user.id }}">{#
-                                #}<img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.username }}"  style="background: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}') no-repeat center / contain;" />{#
+                                #}<img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.username }}"  style="background: url('{{ route('file.avatar', user.id) }}') no-repeat center / contain;" />{#
                                 #}<span class="userBoxUserName" style="color: {{ user.colour }};">{#
                                     #}{{ user.username }}{#
                                 #}</span>{#

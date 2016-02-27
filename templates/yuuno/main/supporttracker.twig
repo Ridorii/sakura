@@ -3,7 +3,7 @@
 {% block title %}Donation Tracker{% endblock %}
 
 {% set paginationPages = tracker.table|batch(20) %}
-{% set paginationUrl %}{{ urls.format('SITE_DONATE_TRACK') }}{% endset %}
+{% set paginationUrl %}{{ route('premium.tracker') }}{% endset %}
 
 {% block css %}
     <style type="text/css">
@@ -39,7 +39,7 @@
                 {% for supporter in tracker.table|batch(20)[get.page|default(1) - 1] %}
                     <tr>
                         <td>
-                            <a href="{{ urls.format('USER_PROFILE', [tracker.users[supporter.user_id].id]) }}" class="default" style="color: {{ tracker.users[supporter.user_id].colour }}; text-shadow: 0 0 7px {% if tracker.users[supporter.user_id].colour != 'inherit' %}{{ tracker.users[supporter.user_id].colour }}{% else %}#222{% endif %};">{{ tracker.users[supporter.user_id].username }}</a>
+                            <a href="{{ route('user.profile', tracker.users[supporter.user_id].id) }}" class="default" style="color: {{ tracker.users[supporter.user_id].colour }}; text-shadow: 0 0 7px {% if tracker.users[supporter.user_id].colour != 'inherit' %}{{ tracker.users[supporter.user_id].colour }}{% else %}#222{% endif %};">{{ tracker.users[supporter.user_id].username }}</a>
                         </td>
                         <td style="color: {% if supporter.transaction_amount > 0 %}#0A0{% else %}#A00{% endif %};">
                             &#8364;{{ supporter.transaction_amount|number_format(2) }}

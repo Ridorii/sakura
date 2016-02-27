@@ -22,7 +22,7 @@ use Sakura\Perms\Site;
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
-class Premium extends Controller
+class PremiumController extends Controller
 {
     public function index()
     {

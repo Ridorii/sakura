@@ -18,7 +18,7 @@ use Sakura\Perms\Site;
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
-class Files extends Controller
+class FileController extends Controller
 {
     private function serveImage($data, $mime, $name)
     {

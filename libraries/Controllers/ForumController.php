@@ -23,7 +23,7 @@ use Sakura\Utils;
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
-class Forums extends Controller
+class ForumController extends Controller
 {
     /**
      * Serves the forum index.

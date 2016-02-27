@@ -9,6 +9,7 @@
 {% block title %}{% if profileHidden %}User not found!{% else %}Profile of {{ profile.username }}{% endif %}{% endblock %}
 
 {% block js %}
+    {% if not profileHidden %}
     <script type="text/javascript">
         window.addEventListener('load', function () {
             // Check if location.hash is set
@@ -55,6 +56,7 @@
             newMode.className = 'profile-mode-current';
         }
     </script>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -65,7 +67,7 @@
                 There are a few possible reasons for this:
                 <ul style="padding-left: 40px;">
                     <li>They changed their username.</li>
-                    <li>They may have been <a href="{{ urls.format('SITE_FAQ') }}#abyss" class="default">abyss'd</a>.</li>
+                    <li>They may have been restricted.</li>
                     <li>You made a typo.</li>
                     <li>They never existed.</li>
                 </ul>
@@ -74,9 +76,9 @@
     {% else %}
         <div class="content new-profile">
             <div class="new-profile-container">
-                <div class="new-profile-header" style="background-image: url({{ urls.format('IMAGE_HEADER', [profile.id]) }});">
+                <div class="new-profile-header" style="background-image: url({{ route('user.header', profile.id) }});">
                     <div class="new-profile-info">
-                        <div class="default-avatar-setting new-profile-avatar" style="background-image: url({{ urls.format('IMAGE_AVATAR', [profile.id]) }}); box-shadow: 0 0 5px #{% if profile.isOnline %}484{% else %}844{% endif %};"></div>
+                        <div class="default-avatar-setting new-profile-avatar" style="background-image: url({{ route('file.avatar', profile.id) }}); box-shadow: 0 0 5px #{% if profile.isOnline %}484{% else %}844{% endif %};"></div>
                         <div class="new-profile-username">
                             <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px {% if profile.colour != 'inherit' %}{{ profile.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;" {% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0]['username_old'] }} before {{ profile.getUsernameHistory[0]['change_time']|date(sakura.dateFormat) }}." {% endif %}>{{ profile.username }}</h1>
                             {% if profile.isPremium[0] %}<img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;" /> {% endif %}<img src="{{ sakura.contentPath }}/images/flags/{{ profile.country|lower }}.png" alt="{{ profile.country }}" style="vertical-align: middle;" title="{{ profile.country(true) }}" /> <span style="font-size: .8em;">{{ profile.title }}</span>
