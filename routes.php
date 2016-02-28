@@ -16,6 +16,8 @@ Router::get('/p/{id}', 'MetaController@infoPage', 'main.infopage');
 Router::get('/login', 'AuthController@loginGet', 'auth.login');
 Router::post('/login', 'AuthController@loginPost', 'auth.login');
 Router::get('/logout', 'AuthController@logout', 'auth.logout');
+Router::get('/register', 'AuthController@registerGet', 'auth.register');
+Router::post('/register', 'AuthController@registerPost', 'auth.register');
 
 // News
 Router::get('/news', 'MetaController@news', 'news.index');

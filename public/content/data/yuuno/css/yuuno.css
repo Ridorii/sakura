@@ -411,7 +411,7 @@ a.default:active {
 
 }
 
-#headerLoginForm {
+.headerLoginContainer {
     background: rgba(211, 191, 255, .8);
     border: 1px solid #9475B2;
     box-shadow: 0 0 3px #8364A1;
@@ -422,14 +422,15 @@ a.default:active {
     border-radius: 3px;
 }
 
-#headerLoginForm > div {
+.headerLoginContainer form,
+.headerLoginContainer div {
     display: inline-block;
 }
 
-#headerLoginForm input[type="submit"],
-#headerLoginForm input[type="button"] {
-    display: inline-block;
-    border-radius: 3px;
+.headerLoginContainer input[type="submit"],
+.headerLoginContainer button {
+    display: inline-block !important;
+    border-radius: 3px !important;
 }
 
 @media (max-width: 640px) {

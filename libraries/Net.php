@@ -210,4 +210,30 @@ class Net
         // Compare them
         return ($ip & $mask) === $net;
     }
+
+    /**
+     * Fetch a remote file
+     * 
+     * @param string $url The location of the file
+     * 
+     * @return mixed The contents of the remote file
+     */
+    public static function fetch($url)
+    {
+        // Create a curl instance
+        $curl = curl_init();
+
+        // Set options
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 4);
+        curl_setopt($curl, CURLOPT_USERAGENT, 'Sakura/' . SAKURA_VERSION);
+
+        // Execute
+        $curl = curl_exec($curl);
+
+        // Return the data
+        return $curl;
+    }
 }

@@ -18,35 +18,6 @@ use PHPMailer;
 class Utils
 {
     /**
-     * Verify a ReCaptcha
-     * 
-     * @param string $response The user response.
-     * 
-     * @return array The response from the ReCaptcha API.
-     */
-    public static function verifyCaptcha($response)
-    {
-        // Attempt to get the response
-        $resp = file_get_contents(
-            'https://www.google.com/recaptcha/api/siteverify?secret='
-            . Config::get('recaptcha_private')
-            . '&response='
-            . $response
-        );
-
-        // In the highly unlikely case that it failed to get anything forge a false
-        if (!$resp) {
-            return [];
-        }
-
-        // Decode the response JSON from the servers
-        $resp = json_decode($resp, true);
-
-        // Return shit
-        return $resp;
-    }
-
-    /**
      * The error handler.
      * 
      * @param int $errno The error ID.
@@ -59,42 +30,6 @@ class Utils
         // Remove ROOT path from the error string and file location
         $errstr = str_replace(ROOT, '', $errstr);
         $errfile = str_replace(ROOT, '', $errfile);
-
-        // Attempt to log the error to the database
-        if (DBv2::$db !== null) {
-            // Encode backtrace data
-            $backtrace = base64_encode(json_encode(debug_backtrace()));
-
-            // Check if this error has already been logged in the past
-            $past = DBv2::prepare('SELECT * FROM `{prefix}error_log` WHERE `error_backtrace` = :bc OR (`error_string` = :str AND `error_line` = :li)');
-            $past->execute([
-                'bc' => $backtrace,
-                'str' => $errstr,
-                'li' => $errline,
-            ]);
-            $past = $past->fetch();
-
-            if ($past) {
-                // If so assign the errid
-                $errid = $past->error_id;
-            } else {
-                // Create an error ID
-                $errid = substr(md5(microtime()), rand(0, 22), 10);
-
-                // Log the error
-                DBv2::prepare('INSERT INTO `{prefix}error_log` (`error_id`, `error_timestamp`, `error_revision`, `error_type`, `error_line`, `error_string`, `error_file`, `error_backtrace`) VALUES (:id, :time, :rev, :type, :line, :string, :file, :bc)')
-                    ->execute([
-                    'id' => $errid,
-                    'time' => date("r"),
-                    'rev' => SAKURA_VERSION,
-                    'type' => $errno,
-                    'line' => $errline,
-                    'string' => $errstr,
-                    'file' => $errfile,
-                    'bc' => $backtrace,
-                ]);
-            }
-        }
 
         switch ($errno) {
             case E_ERROR:
@@ -120,11 +55,6 @@ class Utils
         // Truncate all previous outputs
         ob_clean();
         ob_end_clean();
-
-        // Check if this request was made through the ajax thing
-        if (isset($_REQUEST['ajax'])) {
-            die('An error occurred while executing the script.|1|javascript:alert("' . (isset($errid) ? 'Error Log ID: '. $errid : 'Failed to log.') . '");');
-        }
 
         // Check for dev mode
         $detailed = Config::local('dev', 'show_errors');
@@ -176,7 +106,7 @@ class Utils
                 <pre class="error">' . $error . '</pre>
                 <h2>Backtraces</h2>';
 
-            foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $num => $trace) {
+            foreach (debug_backtrace() as $num => $trace) {
                 $errorPage .= '<h3>#' . $num . '</h3><pre class="error">';
 
                 foreach ($trace as $key => $val) {

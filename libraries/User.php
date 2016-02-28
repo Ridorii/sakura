@@ -166,7 +166,7 @@ class User
     public $background = 0;
 
     /**
-     * The FIle id of the user's header.
+     * The File id of the user's header.
      * @var mixed
      */
     public $header = 0;
@@ -257,26 +257,23 @@ class User
         $emailClean = Utils::cleanString($email, true);
         $password = Hashing::createHash($password);
 
-        // Insert the user into the database
-        DBv2::prepare('INSERT INTO `{prefix}users` (`username`, `username_clean`, `password_hash`, `password_salt`, `password_algo`, `password_iter`, `email`, `rank_main`, `register_ip`, `last_ip`, `user_registered`, `user_last_online`, `user_country`) VALUES (:uname, :uname_clean, :pw_hash, :pw_salt, :pw_algo, :pw_iter, :email, :rank, :r_ip, :l_ip, :registered, :l_online, :country)')
-            ->execute([
-            'uname' => $username,
-            'uname_clean' => $usernameClean,
-            'pw_hash' => $password[3],
-            'pw_salt' => $password[2],
-            'pw_algo' => $password[0],
-            'pw_iter' => $password[1],
-            'email' => $emailClean,
-            'rank' => 0,
-            'r_ip' => Net::pton(Net::IP()),
-            'l_ip' => Net::pton(Net::IP()),
-            'registered' => time(),
-            'l_online' => 0,
-            'country' => Utils::getCountryCode(),
-        ]);
-
-        // Get the last id
-        $userId = DBv2::lastID();
+        // Insert the user into the database and get the id
+        $userId = DB::table('users')
+            ->insertGetId([
+                'username' => $username,
+                'username_clean' => $usernameClean,
+                'password_hash' => $password[3],
+                'password_salt' => $password[2],
+                'password_algo' => $password[0],
+                'password_iter' => $password[1],
+                'email' => $emailClean,
+                'rank_main' => 0,
+                'register_ip' => Net::pton(Net::IP()),
+                'last_ip' => Net::pton(Net::IP()),
+                'user_registered' => time(),
+                'user_last_online' => 0,
+                'user_country' => Utils::getCountryCode(),
+            ]);
 
         // Create a user object
         $user = self::construct($userId);
@@ -294,20 +291,19 @@ class User
     /**
      * The actual constructor
      * 
-     * @param int|string $uid The user ID or clean username.
+     * @param int|string $userId The user ID or clean username.
      */
-    private function __construct($uid)
+    private function __construct($userId)
     {
         // Get the user database row
-        $userRow = DBv2::prepare('SELECT * FROM `{prefix}users` WHERE `user_id` = :id OR `username_clean` = :clean');
-        $userRow->execute([
-            'id' => $uid,
-            'clean' => Utils::cleanString($uid, true, true),
-        ]);
-        $userRow = $userRow->fetch();
+        $userRow = DB::table('users')
+            ->where('user_id', $userId)
+            ->orWhere('username_clean', Utils::cleanString($userId, true, true))
+            ->get();
 
         // Populate the variables
         if ($userRow) {
+            $userRow = $userRow[0];
             $this->id = $userRow->user_id;
             $this->username = $userRow->username;
             $this->usernameClean = $userRow->username_clean;
@@ -319,8 +315,8 @@ class User
             $this->email = $userRow->email;
             $this->mainRankId = $userRow->rank_main;
             $this->colour = $userRow->user_colour;
-            $this->registerIp = $userRow->register_ip;
-            $this->lastIp = $userRow->last_ip;
+            $this->registerIp = Net::ntop($userRow->register_ip);
+            $this->lastIp = Net::ntop($userRow->last_ip);
             $this->title = $userRow->user_title;
             $this->registered = $userRow->user_registered;
             $this->lastOnline = $userRow->user_last_online;
@@ -334,11 +330,9 @@ class User
         }
 
         // Get all ranks
-        $ranks = DBv2::prepare('SELECT * FROM `{prefix}user_ranks` WHERE `user_id` = :id');
-        $ranks->execute([
-            'id' => $this->id,
-        ]);
-        $ranks = $ranks->fetchAll();
+        $ranks = DB::table('user_ranks')
+            ->where('user_id', $this->id)
+            ->get(['rank_id']);
 
         // Get the rows for all the ranks
         foreach ($ranks as $rank) {
@@ -369,15 +363,6 @@ class User
 
         // Init the permissions
         $this->permissions = new Perms(Perms::SITE);
-    }
-
-    
-    /**
-     * Commit changed to database, doesn't do anything yet.
-     */
-    public function update()
-    {
-        // placeholder
     }
 
     /**
@@ -425,14 +410,13 @@ class User
      */
     public function isOnline()
     {
-        // Get all sessions
-        $sessions = DBv2::prepare('SELECT `user_id` FROM `{prefix}sessions` WHERE `user_id` = :id');
-        $sessions->execute([
-            'id' => $this->id,
-        ]);
+        // Count sessions
+        $sessions = DB::table('sessions')
+            ->where('user_id', $this->id)
+            ->count();
 
         // If there's no entries just straight up return false
-        if (!$sessions->rowCount()) {
+        if (!$sessions) {
             return false;
         }
 
@@ -447,19 +431,20 @@ class User
      */
     public function forumStats()
     {
-        $posts = DBv2::prepare('SELECT * FROM `{prefix}posts` WHERE `poster_id` = :id');
-        $posts->execute([
-            'id' => $this->id,
-        ]);
+        $posts = DB::table('posts')
+            ->where('poster_id', $this->id)
+            ->count();
 
-        $threads = DBv2::prepare('SELECT DISTINCT * FROM `{prefix}posts` WHERE `poster_id` = :id GROUP BY `topic_id` ORDER BY `post_time`');
-        $threads->execute([
-            'id' => $this->id,
-        ]);
+        $threads = DB::table('posts')
+            ->where('poster_id', $this->id)
+            ->distinct()
+            ->groupBy('topic_id')
+            ->orderBy('post_time')
+            ->count();
 
         return [
-            'posts' => $posts->rowCount(),
-            'topics' => $threads->rowCount(),
+            'posts' => $posts,
+            'topics' => $threads,
         ];
     }
 
@@ -482,11 +467,11 @@ class User
 
         // Save to the database
         foreach ($ranks as $rank) {
-            DBv2::prepare('INSERT INTO `{prefix}ranks` (`rank_id`, `user_id`) VALUES (:rank, :user)')
-                ->execute([
-                'rank' => $rank,
-                'user' => $this->id,
-            ]);
+            DB::table('user_ranks')
+                ->insert([
+                    'rank_id' => $rank,
+                    'user_id' => $this->id,
+                ]);
         }
     }
 
@@ -502,11 +487,10 @@ class User
 
         // Iterate over the ranks
         foreach ($remove as $rank) {
-            DBv2::prepare('DELETE FROM `{prefix}user_ranks` WHERE `user_id` = :user AND `rank_id` = :rank')
-                ->execute([
-                'user' => $this->id,
-                'rank' => $rank,
-            ]);
+            DB::table('ranks')
+                ->where('user_id', $this->id)
+                ->where('rank_id', $rank)
+                ->delete();
         }
     }
 
@@ -520,11 +504,11 @@ class User
     public function setMainRank($rank)
     {
         // If it does exist update their row
-        DBv2::prepare('UPDATE `{prefix}users` SET `rank_main` = :rank WHERE `user_id` = :id')
-            ->execute([
-            'rank' => $rank,
-            'id' => $this->id,
-        ]);
+        DB::table('users')
+            ->where('user_id', $this->id)
+            ->update([
+                'rank_main' => $rank,
+            ]);
 
         // Return true if everything was successful
         return true;
@@ -579,12 +563,12 @@ class User
         }
 
         // Add friend
-        DBv2::prepare('INSERT INTO `{prefix}friends` (`user_id`, `friend_id`, `friend_timestamp`) VALUES (:user, :friend, :time)')
-            ->execute([
-            'user' => $this->id,
-            'friend' => $uid,
-            'time' => time(),
-        ]);
+        DB::table('friends')
+            ->insert([
+                'user_id' => $this->id,
+                'friend_id' => $uid,
+                'friend_timestamp' => time(),
+            ]);
 
         // Return true because yay
         return [1, $user->isFriends($this->id) ? 'FRIENDS' : 'NOT_MUTUAL'];
@@ -873,7 +857,7 @@ class User
             }
 
             // Check if we have additional options as well
-            if (!$field['field_additional']) {
+            if ($field['field_additional'] != null) {
                 // Decode the json of the additional stuff
                 $additional = json_decode($field['field_additional'], true);
 

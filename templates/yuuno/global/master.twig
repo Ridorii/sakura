@@ -101,7 +101,7 @@
                             {% if sakura.lockAuth %}
                                 <div class="menu-item fa-lock" style="padding-left: 10px; padding-right: 10px;" title="Authentication is locked"></div>
                             {% else %}
-                                <a class="menu-item fa-magic" href="{{ urls.format('SITE_REGISTER') }}" title="Login"></a>
+                                <a class="menu-item fa-magic" href="{{ route('auth.register') }}" title="Login"></a>
                                 <a class="menu-item fa-sign-in" href="{{ route('auth.login') }}" title="Login"></a>
                             {% endif %}
                         {% endif %}
@@ -114,6 +114,7 @@
                     <div id="userBackground" style="background-image: url('{{ urls.format('IMAGE_BACKGROUND', [(php.self == '/profile.php' ? profile : user).id]) }}');"></div>
                 {% endif %}
                 {% if not session.checkLogin and sakura.currentPage != route('auth.login') %}
+                <div class="headerLoginContainer">
                     <form method="post" action="{{ route('auth.login') }}" id="headerLoginForm">
                         <input type="hidden" name="redirect" value="{{ sakura.currentPage }}" />
                         <input type="hidden" name="session" value="{{ php.sessionid }}" />
@@ -135,6 +136,10 @@
                             <input type="submit" id="headerLoginButton" name="submit" class="inputStyling small" value="Login" />
                         </div>
                     </form>
+                    <form method="get" action="{{ route('auth.register') }}">
+                        <button class="inputStyling small">Register</button>
+                    </form>
+                </div>
                 {% endif %}
                 {% if user.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}
                     <div class="headerNotify" style="background: repeating-linear-gradient(-45deg, #B33, #B33 10px, #B00 10px, #B00 20px); color: #FFF; border: 1px solid #C00; box-shadow: 0 0 3px #C00;">

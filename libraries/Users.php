@@ -99,104 +99,6 @@ class Users
     }
 
     /**
-     * Register a new account.
-     *
-     * @param string $username The username.
-     * @param string $password The password.
-     * @param string $confirmpass The password, again.
-     * @param string $email The e-mail.
-     * @param bool $tos Agreeing to the ToS.
-     * @param string $captcha Captcha.
-     * @param string $regkey Registration key (unused).
-     *
-     * @return array Status.
-     */
-    public static function register($username, $password, $confirmpass, $email, $tos, $captcha = null, $regkey = null)
-    {
-        // Check if authentication is disallowed
-        if (Config::get('lock_authentication')) {
-            return [0, 'AUTH_LOCKED'];
-        }
-
-        // Check if registration is even enabled
-        if (Config::get('disable_registration')) {
-            return [0, 'DISABLED'];
-        }
-
-        // Check if the user agreed to the ToS
-        if (!$tos) {
-            return [0, 'TOS'];
-        }
-
-        // Verify the captcha if it's enabled
-        if (Config::get('recaptcha')) {
-            if (!Utils::verifyCaptcha($captcha)['success']) {
-                return [0, 'CAPTCHA_FAIL'];
-            }
-        }
-
-        // Check if the username already exists
-        if (self::userExists($username, false)) {
-            return [0, 'USER_EXISTS'];
-        }
-
-        // Username too short
-        if (strlen($username) < Config::get('username_min_length')) {
-            return [0, 'NAME_TOO_SHORT'];
-        }
-
-        // Username too long
-        if (strlen($username) > Config::get('username_max_length')) {
-            return [0, 'NAME_TOO_LONG'];
-        }
-
-        // Check if the given email address is formatted properly
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return [0, 'INVALID_EMAIL'];
-        }
-
-        // Check the MX record of the email
-        if (!Utils::checkMXRecord($email)) {
-            return [0, 'INVALID_MX'];
-        }
-
-        // Check if the e-mail has already been used
-        $emailCheck = DBv2::prepare('SELECT `user_id` FROM `{prefix}users` WHERE `email` = :email');
-        $emailCheck->execute([
-            'email' => $email,
-        ]);
-        if ($emailCheck->rowCount() > 0) {
-            return [0, 'EMAIL_EXISTS'];
-        }
-
-        // Check password entropy
-        if (Utils::pwdEntropy($password) < Config::get('min_entropy')) {
-            return [0, 'PASS_TOO_SHIT'];
-        }
-
-        // Passwords do not match
-        if ($password != $confirmpass) {
-            return [0, 'PASS_NOT_MATCH'];
-        }
-
-        // Set a few variables
-        $requireActive = Config::get('require_activation');
-        $ranks = $requireActive ? [1] : [2];
-
-        // Create the user
-        $user = User::create($username, $password, $email, $ranks);
-
-        // Check if we require e-mail activation
-        if ($requireActive) {
-            // Send activation e-mail to user
-            self::sendActivationMail($user->id);
-        }
-
-        // Return true with a specific message if needed
-        return [1, ($requireActive ? 'EMAILSENT' : 'SUCCESS')];
-    }
-
-    /**
      * Send password forgot e-mail
      *
      * @param string $username The username.
@@ -456,28 +358,6 @@ class Users
     }
 
     /**
-     * Check if a user exists.
-     *
-     * @param mixed $id The Username or ID.
-     * @param mixed $unused Unused variable.
-     *
-     * @return mixed Returns the ID if it exists, false otherwise.
-     */
-    public static function userExists($id, $unused = null)
-    {
-        // Do database request
-        $user = DBv2::prepare('SELECT * FROM `{prefix}users` WHERE `user_id` = :id OR `username_clean` = :clean');
-        $user->execute([
-            'id' => $id,
-            'clean' => Utils::cleanString($id, true, true),
-        ]);
-        $user = $user->fetch();
-
-        // Return count (which would return 0, aka false, if nothing was found)
-        return $user ? $user->user_id : false;
-    }
-
-    /**
      * Get all available profile fields.
      *
      * @return array|null The fields.
@@ -647,51 +527,6 @@ class Users
             // Else remove the rank from them
             $user->removeRanks([$premiumRank]);
         }
-    }
-
-    /**
-     * Get all users that registered from a certain IP.
-     *
-     * @param string $ip The IP.
-     *
-     * @return array The users.
-     */
-    public static function getUsersByIP($ip)
-    {
-        // Get the users
-        $users = DBv2::prepare('SELECT * FROM `{prefix}users` WHERE `register_ip` = :rip OR `last_ip` = :lip');
-        $users->execute([
-            'rip' => $ip,
-            'lip' => $ip,
-        ]);
-        $users = $users->fetchAll(\PDO::FETCH_ASSOC);
-
-        // Return the array with users
-        return $users;
-    }
-
-    /**
-     * Get all ranks.
-     *
-     * @return array All ranks.
-     */
-    public static function getAllRanks()
-    {
-        // Execute query
-        $getRanks = DBv2::prepare('SELECT * FROM `{prefix}ranks`');
-        $getRanks->execute();
-        $getRanks = $getRanks->fetchAll();
-
-        // Define variable
-        $ranks = [];
-
-        // Reorder shit
-        foreach ($getRanks as $rank) {
-            $ranks[$rank->rank_id] = Rank::construct($rank->rank_id);
-        }
-
-        // and return an array with the ranks
-        return $ranks;
     }
 
     /**
