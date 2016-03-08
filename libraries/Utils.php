@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds various utility functions.
- * 
+ *
  * @package Sakura
  */
 
@@ -11,7 +11,7 @@ use PHPMailer;
 
 /**
  * Meta utility functions.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -19,7 +19,7 @@ class Utils
 {
     /**
      * The error handler.
-     * 
+     *
      * @param int $errno The error ID.
      * @param string $errstr Quick description of the event.
      * @param string $errfile File the error occurred in.
@@ -139,7 +139,7 @@ class Utils
 
     /**
      * Send an e-mail.
-     * 
+     *
      * @param string $to Destination e-mail.
      * @param string $subject E-mail subject.
      * @param string $body Contents of the message.
@@ -205,12 +205,12 @@ class Utils
 
     /**
      * Clean a string
-     * 
+     *
      * @param string $string Dirty string.
      * @param bool $lower Make the string lowercase.
      * @param bool $noSpecial String all special characters.
      * @param bool $replaceSpecial Thing to replace special characters with.
-     * 
+     *
      * @return string Clean string.
      */
     public static function cleanString($string, $lower = false, $noSpecial = false, $replaceSpecial = '')
@@ -236,9 +236,9 @@ class Utils
 
     /**
      * Validate MX records.
-     * 
+     *
      * @param string $email E-mail address.
-     * 
+     *
      * @return bool Success.
      */
     public static function checkMXRecord($email)
@@ -255,7 +255,7 @@ class Utils
 
     /**
      * Get the country code of a visitor.
-     * 
+     *
      * @return string 2 character country code.
      */
     public static function getCountryCode()
@@ -281,9 +281,9 @@ class Utils
 
     /**
      * Check the entropy of a password.
-     * 
+     *
      * @param string $pw Password.
-     * 
+     *
      * @return double|int Entropy.
      */
     public static function pwdEntropy($pw)
@@ -297,9 +297,9 @@ class Utils
 
     /**
      * Get the country name from a 2 character code.
-     * 
+     *
      * @param string $code The country code.
-     * 
+     *
      * @return string The country name.
      */
     public static function getCountryName($code)
@@ -325,9 +325,9 @@ class Utils
 
     /**
      * Get the byte symbol for a unit from bytes.
-     * 
+     *
      * @param int $bytes The amount of bytes.
-     * 
+     *
      * @return string The converted amount with the symbol.
      */
     public static function getByteSymbol($bytes)
@@ -352,7 +352,7 @@ class Utils
 
     /**
      * Get the premium tracker data.
-     * 
+     *
      * @return array The premium tracker data.
      */
     public static function getPremiumTrackerData()
@@ -391,7 +391,7 @@ class Utils
 
     /**
      * Add a new entry to the tracker.
-     * 
+     *
      * @param int $id The user ID.
      * @param float $amount The amount of money.
      * @param string $comment A little information.
@@ -409,9 +409,9 @@ class Utils
 
     /**
      * Clean up the contents of <code> tags.
-     * 
+     *
      * @param string $text Dirty
-     * 
+     *
      * @return string Clean
      */
     public static function fixCodeTags($text)

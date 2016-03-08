@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the BBcode handler.
- * 
+ *
  * @package Sakura
  */
 
@@ -13,7 +13,7 @@ use JBBCode\CodeDefinitionBuilder;
 
 /**
  * Sakura wrapper for JBBCode.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -21,7 +21,7 @@ class BBcode
 {
     /**
      * The container for JBBCode.
-     * 
+     *
      * @var Parser
      */
     private static $bbcode = null;
@@ -120,7 +120,7 @@ class BBcode
 
     /**
      * Set the text to parse.
-     * 
+     *
      * @param string $text The text that should be parsed.
      */
     public static function text($text)
@@ -135,9 +135,9 @@ class BBcode
 
     /**
      * Convert the parsed text to HTML.
-     * 
+     *
      * @param string $text The text that should be parsed.
-     * 
+     *
      * @return string The parsed HTML.
      */
     public static function toHTML($text = null)
@@ -157,9 +157,9 @@ class BBcode
 
     /**
      * Convert the parsed text to BBCode.
-     * 
+     *
      * @param string $text The text that should be parsed.
-     * 
+     *
      * @return string The converted bbcode.
      */
     public static function toEditor($text = null)
@@ -174,9 +174,9 @@ class BBcode
 
     /**
      * Convert the parsed text to plain.
-     * 
+     *
      * @param string $text The text that should be parsed.
-     * 
+     *
      * @return string The converted plaintext.
      */
     public static function toPlain($text = null)

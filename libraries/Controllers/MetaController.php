@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the meta page controllers.
- * 
+ *
  * @package Sakura
  */
 
@@ -16,7 +16,7 @@ use Sakura\Users;
 
 /**
  * Meta page controllers (sections that aren't big enough to warrant a dedicated controller).
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -24,7 +24,7 @@ class MetaController extends Controller
 {
     /**
      * Serves the site index.
-     * 
+     *
      * @return mixed HTML for the index.
      */
     public function index()
@@ -52,7 +52,7 @@ class MetaController extends Controller
 
     /**
      * Handles the news pages.
-     * 
+     *
      * @return mixed HTML for the correct news section.
      */
     public function news()
@@ -81,7 +81,7 @@ class MetaController extends Controller
 
     /**
      * Displays the FAQ.
-     * 
+     *
      * @return mixed HTML for the FAQ.
      */
     public function faq()
@@ -105,9 +105,9 @@ class MetaController extends Controller
 
     /**
      * Handles the info pages.
-     * 
+     *
      * @param string $id The page ID from the database.
-     * 
+     *
      * @return mixed HTML for the info page.
      */
     public function infoPage($id = null)
@@ -145,7 +145,7 @@ class MetaController extends Controller
 
     /**
      * Search page
-     * 
+     *
      * @return mixed HTML for the search page.
      */
     public function search()

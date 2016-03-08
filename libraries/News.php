@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the news handler.
- * 
+ *
  * @package Sakura
  */
 
@@ -9,7 +9,7 @@ namespace Sakura;
 
 /**
  * Used to serve news posts.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -17,14 +17,14 @@ class News
 {
     /**
      * Array containing news posts.
-     * 
+     *
      * @var array
      */
     public $posts = [];
 
     /**
      * Constructor
-     * 
+     *
      * @param mixed $category ID of the category that should be constructed.
      */
     public function __construct($category)
@@ -52,7 +52,7 @@ class News
 
     /**
      * Get the amount of news posts.
-     * 
+     *
      * @return int Number of posts.
      */
     public function getCount()
@@ -62,9 +62,9 @@ class News
 
     /**
      * Check if a post exists in this category.
-     * 
+     *
      * @param int $pid The ID of the post.
-     * 
+     *
      * @return int If true the post it gets returns, else 0.
      */
     public function postExists($pid)

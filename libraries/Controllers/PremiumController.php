@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the premium pages controllers.
- * 
+ *
  * @package Sakura
  */
 
@@ -18,7 +18,7 @@ use Sakura\Perms\Site;
 
 /**
  * Premium pages controller.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */

@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the database wrapper (v2).
- * 
+ *
  * @package Sakura
  */
 
@@ -13,7 +13,7 @@ use PDOStatement;
 
 /**
  * A wrapper to make the database communication experience smoother.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -21,21 +21,21 @@ class DBv2
 {
     /**
      * The container for the PDO object.
-     * 
+     *
      * @var PDO
      */
     public static $db = null;
 
     /**
      * The table prefix
-     * 
+     *
      * @var string
      */
     public static $prefix = '';
 
     /**
      * Open the SQL connection and creates a PDO object.
-     * 
+     *
      * @param string $server A PDO driver.
      * @param array $dsnParts An array consisting out of DSN string parts.
      * @param string $username The username used to authenticate with the SQL server.
@@ -84,9 +84,9 @@ class DBv2
 
     /**
      * Get the id of the item that was last inserted into the database.
-     * 
+     *
      * @param string $name Sequence of which the last id should be returned.
-     * 
+     *
      * @return string The last inserted id.
      */
     public static function lastID($name = null)
@@ -96,10 +96,10 @@ class DBv2
 
     /**
      * Prepares a statement for execution and returns a statement object.
-     * 
+     *
      * @param string $stmt The statement to prepare.
      * @param array $opts Statement specific driver options.
-     * 
+     *
      * @return PDOStatement
      */
     public static function prepare($stmt, $opts = [])

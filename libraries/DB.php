@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the alias class for the Illuminate database thing.
- * 
+ *
  * @package Sakura
  */
 
@@ -11,7 +11,7 @@ use \Illuminate\Database\Capsule\Manager;
 
 /**
  * The Illuminate (Laravel) database wrapper.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */

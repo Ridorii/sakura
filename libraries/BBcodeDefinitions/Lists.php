@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the list bbcode class.
- * 
+ *
  * @package Sakura
  */
 
@@ -37,9 +37,9 @@ class Lists extends CodeDefinition
 
     /**
      * Compiles the list bbcode to HTML.
-     * 
+     *
      * @param ElementNode $el The JBBCode element node.
-     * 
+     *
      * @return string The compiled HTML list.
      */
     public function asHtml(ElementNode $el)

@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the everything networking.
- * 
+ *
  * @package Sakura
  */
 
@@ -9,7 +9,7 @@ namespace Sakura;
 
 /**
  * Networking methods.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -17,7 +17,7 @@ class Net
 {
     /**
      * Returns the connecting IP.
-     * 
+     *
      * @return string The IP.
      */
     public static function IP()
@@ -27,9 +27,9 @@ class Net
 
     /**
      * Detect the version of an IP.
-     * 
+     *
      * @param string $ipAddr The IP.
-     * 
+     *
      * @return int Either 0, 4 or 6.
      */
     public static function detectIPVersion($ipAddr)
@@ -53,11 +53,11 @@ class Net
 
     /**
      * Converts a printable IP address into an unpacked binary string.
-     * 
+     *
      * @param string $ip Printable IP string.
-     * 
+     *
      * @throws \Exception Thrown if an invalid IP is supplied.
-     * 
+     *
      * @return string Unpacked IP address.
      */
     public static function pton($ip)
@@ -81,11 +81,11 @@ class Net
 
     /**
      * Converts a binary unpacked IP to a printable packed IP.
-     * 
+     *
      * @param string $bin The unpacked IP.
-     * 
+     *
      * @throws \Exception Thrown if the unpacked IP is invalid.
-     * 
+     *
      * @return string The packed IP.
      */
     public static function ntop($bin)
@@ -132,11 +132,11 @@ class Net
 
     /**
      * Match an IPv4 CIDR
-     * 
+     *
      * @param string $ip The IP address to match.
      * @param string $net The Net address to match.
      * @param string $mask The Mask to match.
-     * 
+     *
      * @return bool Returns true if it matches.
      */
     private static function matchCIDRv4($ip, $net, $mask)
@@ -154,9 +154,9 @@ class Net
 
     /**
      * Converts an IPv6 mask to a byte array
-     * 
+     *
      * @param int $mask The mask.
-     * 
+     *
      * @return string The byte array.
      */
     private static function maskToByteArray($mask)
@@ -191,11 +191,11 @@ class Net
 
     /**
      * Match an IPv6 CIDR
-     * 
+     *
      * @param string $ip The IP address to match.
      * @param string $net The Net address to match.
      * @param int $mask The net mask.
-     * 
+     *
      * @return bool Returns true if it's a successful match.
      */
     private static function matchCIDRv6($ip, $net, $mask)
@@ -213,9 +213,9 @@ class Net
 
     /**
      * Fetch a remote file
-     * 
+     *
      * @param string $url The location of the file
-     * 
+     *
      * @return mixed The contents of the remote file
      */
     public static function fetch($url)
