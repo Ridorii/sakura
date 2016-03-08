@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the templating engine class.
- * 
+ *
  * @package Sakura
  */
 
@@ -14,7 +14,7 @@ use Twig_SimpleFunction;
 
 /**
  * Sakura wrapper for Twig.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -22,28 +22,28 @@ class Template
 {
     /**
      * The variables passed on to the templating engine.
-     * 
+     *
      * @var array
      */
     private static $vars = [];
 
     /**
      * The templating engine.
-     * 
+     *
      * @var Twig_Environment
      */
     private static $template;
 
     /**
      * The template name.
-     * 
+     *
      * @var string
      */
     private static $templateName;
 
     /**
      * The template options.
-     * 
+     *
      * @var array
      */
     private static $templateOptions;
@@ -55,7 +55,7 @@ class Template
 
     /**
      * Set the template name.
-     * 
+     *
      * @param string $name The name of the template directory.
      */
     public static function set($name)
@@ -108,7 +108,7 @@ class Template
 
     /**
      * Merge the parse variables.
-     * 
+     *
      * @param array $vars The new variables.
      */
     public static function vars($vars)
@@ -118,9 +118,9 @@ class Template
 
     /**
      * Render a template file.
-     * 
+     *
      * @param string $file The filename/path
-     * 
+     *
      * @return bool|string An error or the HTML.
      */
     public static function render($file)

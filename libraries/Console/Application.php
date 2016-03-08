@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the console application meta.
- * 
+ *
  * @package Sakura
  */
 
@@ -9,7 +9,7 @@ namespace Sakura\Console;
 
 /**
  * Command line interface main.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */

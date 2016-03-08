@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the holds the comment handler class.
- * 
+ *
  * @package Sakura
  */
 
@@ -10,7 +10,7 @@ namespace Sakura;
 /**
  * Handles and serves comments on pages.
  * Needs a reimplementation.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -18,14 +18,14 @@ class Comments
 {
     /**
      * The array containing the comments.
-     * 
+     *
      * @var array
      */
     public $comments = [];
 
     /**
      * The comment category.
-     * 
+     *
      * @var string
      */
     public $category;
@@ -38,7 +38,7 @@ class Comments
 
     /**
      * Constructor.
-     * 
+     *
      * @param mixed $category The category that comments should be fetched from.
      */
     public function __construct($category)
@@ -59,9 +59,9 @@ class Comments
 
     /**
      * Sort the comments.
-     * 
+     *
      * @param array $comments Array containing comments.
-     * 
+     *
      * @return array Array containing the sorted comments.
      */
     public function sortComments($comments)
@@ -115,9 +115,9 @@ class Comments
 
     /**
      * Get a single comment.
-     * 
+     *
      * @param int $cid ID of the comment.
-     * 
+     *
      * @return array The comment.
      */
     public function getComment($cid)
@@ -132,9 +132,9 @@ class Comments
 
     /**
      * Get the votes for a comment.
-     * 
+     *
      * @param int $cid ID of the comment.
-     * 
+     *
      * @return array The votes.
      */
     public function getVotes($cid)
@@ -149,11 +149,11 @@ class Comments
 
     /**
      * Creating a new comment.
-     * 
+     *
      * @param int $uid ID of the user creating the comment.
      * @param int $reply ID of the comment that is being replied to.
      * @param string $content Contents of the comment.
-     * 
+     *
      * @return array Response identifier.
      */
     public function makeComment($uid, $reply, $content)
@@ -184,11 +184,11 @@ class Comments
 
     /**
      * Making a vote.
-     * 
+     *
      * @param int $uid User making this vote.
      * @param int $cid ID of the comment that is being voted on.
      * @param int $mode Positive or negative vote.
-     * 
+     *
      * @return bool Always returns true.
      */
     public function makeVote($uid, $cid, $mode)
@@ -235,7 +235,7 @@ class Comments
 
     /**
      * Remove a comment
-     * 
+     *
      * @param int $cid ID of the comment to remove.
      */
     public function removeComment($cid)

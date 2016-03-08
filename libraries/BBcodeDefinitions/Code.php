@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the code format bbcode class.
- * 
+ *
  * @package Sakura
  */
 
@@ -12,7 +12,7 @@ use JBBCode\ElementNode;
 
 /**
  * Code bbcode for JBBCode
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -29,9 +29,9 @@ class Code extends CodeDefinition
 
     /**
      * Compiles the code bbcode to HTML.
-     * 
+     *
      * @param ElementNode $el The JBBCode element node.
-     * 
+     *
      * @return mixed The compiled HTML.
      */
     public function asHtml(ElementNode $el)

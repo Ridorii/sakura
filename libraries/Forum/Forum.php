@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the forum object class.
- * 
+ *
  * @package Sakura
  */
 
@@ -12,7 +12,7 @@ use Sakura\Perms;
 
 /**
  * Used to serve forums.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -20,28 +20,28 @@ class Forum
 {
     /**
      * The ID of the forum.
-     * 
+     *
      * @var int
      */
     public $id = 0;
 
     /**
      * The order of the forum.
-     * 
+     *
      * @var int
      */
     public $order = 0;
 
     /**
      * The name of the forum.
-     * 
+     *
      * @var string
      */
     public $name = "Forum";
 
     /**
      * The description of the forum.
-     * 
+     *
      * @var string
      */
     public $description = "";
@@ -54,63 +54,63 @@ class Forum
 
     /**
      * The ID of the parent forum.
-     * 
+     *
      * @var int
      */
     public $category = 0;
 
     /**
      * The type of forum.
-     * 
+     *
      * @var int
      */
     public $type = 0;
 
     /**
      * The icon of this forum.
-     * 
+     *
      * @var string
      */
     public $icon = "";
 
     /**
      * A cached instance of the first post in this forum.
-     * 
+     *
      * @var Post
      */
     private $_firstPost = null;
 
     /**
      * A cached instance of the last post in this forum.
-     * 
+     *
      * @var Post
      */
     private $_lastPost = null;
 
     /**
      * Cached instances of the subforums.
-     * 
+     *
      * @var array
      */
     private $_forums = [];
 
     /**
      * Cached instances of the threads in this forum.
-     * 
+     *
      * @var array
      */
     private $_threads = [];
 
     /**
      * The permission container.
-     * 
+     *
      * @var Perms
      */
     private $_permissions;
 
     /**
      * Constructor.
-     * 
+     *
      * @param int $forumId The ID of the forum that should be constructed.
      */
     public function __construct($forumId = 0)
@@ -141,11 +141,11 @@ class Forum
 
     /**
      * Checking a permission flag.
-     * 
+     *
      * @param int $flag Forum permission flag.
      * @param int $user The ID of the user that is being checked.
      * @param bool $raw Whether the raw full permission flag should be returned.
-     * 
+     *
      * @return bool|int Either a bool indicating the permission or the full flag.
      */
     public function permission($flag, $user, $raw = false)
@@ -166,7 +166,7 @@ class Forum
 
     /**
      * Gets all subforums of this forum.
-     * 
+     *
      * @return array Array containing forum objects.
      */
     public function forums()
@@ -198,7 +198,7 @@ class Forum
 
     /**
      * Gets the threads in this forum.
-     * 
+     *
      * @return array Array containing all threads.
      */
     public function threads()
@@ -231,7 +231,7 @@ class Forum
 
     /**
      * Gets the first post in this forum.
-     * 
+     *
      * @return Post The object of the first post.
      */
     public function firstPost()
@@ -260,7 +260,7 @@ class Forum
 
     /**
      * Gets the last post in this forum.
-     * 
+     *
      * @return Post The object of the last post.
      */
     public function lastPost()
@@ -289,7 +289,7 @@ class Forum
 
     /**
      * Counts the amount of threads in this forum.
-     * 
+     *
      * @return int Number of threads in this forum.
      */
     public function threadCount()
@@ -301,7 +301,7 @@ class Forum
 
     /**
      * Counts the amount of posts in this forum.
-     * 
+     *
      * @return int Number of posts in this forum.
      */
     public function postCount()
@@ -313,9 +313,9 @@ class Forum
 
     /**
      * Checks if a user has read every post in the specified forum.
-     * 
+     *
      * @param int $user Id of the user in question.
-     * 
+     *
      * @return bool Indicator if read or not.
      */
     public function unread($user)
@@ -345,7 +345,7 @@ class Forum
 
     /**
      * Update the read status of all threads in this forum at once.
-     * 
+     *
      * @param int $user The id of the user in question.
      */
     public function trackUpdateAll($user)

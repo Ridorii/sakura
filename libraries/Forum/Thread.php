@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the thread object class.
- * 
+ *
  * @package Sakura
  */
 
@@ -11,7 +11,7 @@ use Sakura\DB;
 
 /**
  * Used to serve, create and update threads.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -19,49 +19,49 @@ class Thread
 {
     /**
      * The ID of this thread.
-     * 
+     *
      * @var int
      */
     public $id = 0;
 
     /**
      * The ID of the forum this thread is a part of.
-     * 
+     *
      * @var int
      */
     public $forum = 0;
 
     /**
      * Is this forum hidden from the listing?
-     * 
+     *
      * @var bool
      */
     public $hidden = false;
 
     /**
      * The title of the thread.
-     * 
+     *
      * @var string
      */
     public $title = "";
 
     /**
      * The UNIX timestamp of when this thread was created.
-     * 
+     *
      * @var int
      */
     public $time = 0;
 
     /**
      * The UNIX timestamp of when this thread should be autolocked (currently unused).
-     * 
+     *
      * @var int
      */
     public $timeLimit = 0;
 
     /**
      * The amount of times this thread has been viewed.
-     * 
+     *
      * @var int
      */
     public $views = 0;
@@ -70,14 +70,14 @@ class Thread
      * The status of this thread.
      * 0 - Unlocked
      * 1 - Locked
-     * 
+     *
      * @var int
      */
     public $status = 0;
 
     /**
      * The UNIX timestamp of when the status was last changed.
-     * 
+     *
      * @var int
      */
     public $statusChange = 0;
@@ -87,42 +87,42 @@ class Thread
      * 0 - Normal thread
      * 1 - Sticky thread
      * 2 - Announcement
-     * 
+     *
      * @var int
      */
     public $type = 0;
 
     /**
      * The ID of the forum this thread was a part of before the last move.
-     * 
+     *
      * @var int
      */
     public $oldForum = 0;
 
     /**
      * The post object cache.
-     * 
+     *
      * @var array
      */
     private $_posts = [];
 
     /**
      * A cached instance of opening post.
-     * 
+     *
      * @var Post
      */
     private $_firstPost = null;
 
     /**
      * A cached instance of the last reply.
-     * 
+     *
      * @var Post
      */
     private $_lastPost = null;
 
     /**
      * Constructor.
-     * 
+     *
      * @param mixed $threadId ID of the thread that should be constructed.
      */
     public function __construct($threadId)
@@ -151,12 +151,12 @@ class Thread
 
     /**
      * Create a new thread.
-     * 
+     *
      * @param mixed $forum ID of the forum this thread is part of.
      * @param mixed $title Title of the thread.
      * @param mixed $status Status of the thread.
      * @param mixed $type Type of thread.
-     * 
+     *
      * @return self The new thread instance.
      */
     public static function create($forum, $title, $status = 0, $type = 0)
@@ -193,7 +193,7 @@ class Thread
 
     /**
      * Move the thread.
-     * 
+     *
      * @param mixed $forum The new forum ID.
      * @param mixed $setOld Remember the forum ID prior to the move for restoration.
      */
@@ -215,7 +215,7 @@ class Thread
 
     /**
      * Update the thread data.
-     * 
+     *
      * @return self The updated thread.
      */
     public function update()
@@ -239,7 +239,7 @@ class Thread
 
     /**
      * Get the replies to this thread.
-     * 
+     *
      * @return array Array containing Post instances.
      */
     public function posts()
@@ -270,7 +270,7 @@ class Thread
 
     /**
      * Get the opening post.
-     * 
+     *
      * @return Post A Post instance of the opening post.
      */
     public function firstPost()
@@ -299,7 +299,7 @@ class Thread
 
     /**
      * Get the latest reply.
-     * 
+     *
      * @return Post A Post instance of the latest reply.
      */
     public function lastPost()
@@ -328,7 +328,7 @@ class Thread
 
     /**
      * Get the amount of replies.
-     * 
+     *
      * @return int The number of replies to this thread.
      */
     public function replyCount()
@@ -340,9 +340,9 @@ class Thread
 
     /**
      * Check if a user has read this thread before.
-     * 
+     *
      * @param mixed $user The id of the user in question.
-     * 
+     *
      * @return bool A boolean indicating the read status.
      */
     public function unread($user)
@@ -365,7 +365,7 @@ class Thread
 
     /**
      * Update the read status.
-     * 
+     *
      * @param mixed $user The id of the user in question.
      */
     public function trackUpdate($user)

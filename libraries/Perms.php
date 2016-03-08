@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the global permissions handler.
- * 
+ *
  * @package Sakura
  */
 
@@ -9,7 +9,7 @@ namespace Sakura;
 
 /**
  * Global permissions handler.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -32,21 +32,21 @@ class Perms
 
     /**
      * The table containing the permissions.
-     * 
+     *
      * @var string
      */
     protected $table = '';
 
     /**
      * The column containing the permissions.
-     * 
+     *
      * @var string
      */
     protected $column = '';
     
     /**
      * Constructor.
-     * 
+     *
      * @param string $mode One of the modes above.
      */
     public function __construct($mode)
@@ -56,7 +56,7 @@ class Perms
 
     /**
      * Set a permission mode.
-     * 
+     *
      * @param string $mode One of the modes above.
      */
     public function mode($mode)
@@ -71,10 +71,10 @@ class Perms
 
     /**
      * Compare a permission flag.
-     * 
+     *
      * @param int $flag The permission flag.
      * @param int $perm The permissions of the user.
-     * 
+     *
      * @return bool Success indicator.
      */
     public function check($flag, $perm)
@@ -84,11 +84,11 @@ class Perms
 
     /**
      * Get the permissions from a rank.
-     * 
+     *
      * @param int $rid The ID of the rank in question.
      * @param array $conditions Additional SQL conditions.
      * @param int $perm A permission flag to append to.
-     * 
+     *
      * @return int A permission flag.
      */
     public function rank($rid, $conditions = [], $perm = 0)
@@ -130,11 +130,11 @@ class Perms
 
     /**
      * Get the permissions from a user.
-     * 
+     *
      * @param int $uid The ID of the user in question.
      * @param array $conditions Additional SQL conditions.
      * @param int $perm A permission flag to append to.
-     * 
+     *
      * @return int A permission flag.
      */
     public function user($uid, $conditions = [], $perm = 0)

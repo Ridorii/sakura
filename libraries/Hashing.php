@@ -25,7 +25,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @package Sakura
  */
 
@@ -33,7 +33,7 @@ namespace Sakura;
 
 /**
  * PBKDF2 password hashing implementation.
- * 
+ *
  * @package Sakura
  * @author Taylor Hornby <havoc@defuse.ca>
  * @author Julian van de Groep <me@flash.moe>
@@ -42,37 +42,37 @@ class Hashing
 {
     /**
      * Hashing algorithm that should be used.
-     * 
+     *
      * @var string
      */
     private static $hashAlgorithm = 'sha256';
 
     /**
      * Iterations.
-     * 
+     *
      * @var int
      */
     private static $iterations = 1000;
 
     /**
      * The amount of bytes the salt should be.
-     * 
+     *
      * @var int
      */
     private static $saltBytes = 24;
 
     /**
      * The amount of bytes the hash should be.
-     * 
+     *
      * @var int
      */
     private static $hashBytes = 24;
 
     /**
      * Creates a hash.
-     * 
+     *
      * @param string $pass The password that should be hashed.
-     * 
+     *
      * @return array An array containing the algorithm, iterations, salt and hash.
      */
     public static function createHash($pass)
@@ -107,10 +107,10 @@ class Hashing
 
     /**
      * Validate a password.
-     * 
+     *
      * @param string $password The password that is being validated.
      * @param array $params The parametres in the order of algorithm, iterations, salt and hash.
-     * 
+     *
      * @return bool Correct?
      */
     public static function validatePassword($password, $params)
@@ -138,10 +138,10 @@ class Hashing
 
     /**
      * Compares two strings $a and $b in length-constant time.
-     * 
+     *
      * @param string $a String A.
      * @param string $b String B.
-     * 
+     *
      * @return bool Boolean indicating difference.
      */
     public static function slowEquals($a, $b)
@@ -157,17 +157,17 @@ class Hashing
 
     /**
      * PBKDF2 key derivation function as defined by RSA's PKCS #5: https://www.ietf.org/rfc/rfc2898.txt
-     * 
+     *
      * This implementation of PBKDF2 was originally created by https://defuse.ca
      * With improvements by http://www.variations-of-shadow.com
-     * 
+     *
      * @param mixed $algorithm The hash algorithm to use. Recommended: SHA256.
      * @param mixed $password The password.
      * @param mixed $salt A salt that is unique to the password.
      * @param mixed $count Iteration count. Higher is better, but slower. Recommended: At least 1000.
      * @param mixed $key_length The length of the derived key in bytes.
      * @param mixed $raw_output A $key_length-byte key derived from the password and salt.
-     * 
+     *
      * @return string The PBKDF2 derivation.
      */
     private static function pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output = false)

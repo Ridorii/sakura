@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the font size bbcode class.
- * 
+ *
  * @package Sakura
  */
 
@@ -12,7 +12,7 @@ use JBBCode\ElementNode;
 
 /**
  * Size BBcode for JBBCode.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -30,9 +30,9 @@ class Size extends CodeDefinition
 
     /**
      * Compiles the size bbcode to HTML
-     * 
+     *
      * @param ElementNode $el The JBBCode element node.
-     * 
+     *
      * @return string The compiled HTML.
      */
     public function asHtml(ElementNode $el)

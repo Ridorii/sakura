@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the router class.
- * 
+ *
  * @package Sakura
  */
 
@@ -14,7 +14,7 @@ use Phroute\Phroute\RouteCollector;
 
 /**
  * Sakura Wrapper for Phroute.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -22,28 +22,28 @@ class Router
 {
     /**
      * Container for RouteCollector
-     * 
+     *
      * @var RouteCollector
      */
     protected static $router = null;
 
     /**
      * Base path of the router.
-     * 
+     *
      * @var string
      */
     protected static $basePath = null;
 
     /**
      * Container for the Dispatcher
-     * 
+     *
      * @var Dispatcher
      */
     protected static $dispatcher = null;
 
     /**
      * Collection of handled HTTP request types.
-     * 
+     *
      * @var array
      */
     protected static $methods = [
@@ -58,7 +58,7 @@ class Router
 
     /**
      * Method aliases for adding routes.
-     * 
+     *
      * @param string $name A HTTP method.
      * @param array $args The arguments.
      */
@@ -76,7 +76,7 @@ class Router
 
     /**
      * Initialisation.
-     * 
+     *
      * @param string $basePath The base path of the router.
      */
     public static function init($basePath = '/')
@@ -90,7 +90,7 @@ class Router
 
     /**
      * Set the base path.
-     * 
+     *
      * @param string $basePath The base path of the router.
      */
     public static function setBasePath($basePath)
@@ -100,9 +100,9 @@ class Router
 
     /**
      * Parse a URL.
-     * 
+     *
      * @param string $url The URL that is to be parsed.
-     * 
+     *
      * @return string THe parsed URL.
      */
     private static function parseUrl($url)
@@ -112,10 +112,10 @@ class Router
 
     /**
      * Generate the URI of a route using names.
-     * 
+     *
      * @param string $name The identifier of the route.
      * @param string|array $args The route arguments.
-     * 
+     *
      * @return string The generated URI.
      */
     public static function route($name, $args = null)
@@ -132,10 +132,10 @@ class Router
 
     /**
      * Handle requests.
-     * 
+     *
      * @param string $method The HTTP method used to make the request.
      * @param string $url The URL the request is made to.
-     * 
+     *
      * @return mixed The response.
      */
     public static function handle($method, $url)

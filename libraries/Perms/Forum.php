@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the forum permission flags.
- * 
+ *
  * @package Sakura
  */
 
@@ -9,7 +9,7 @@ namespace Sakura\Perms;
 
 /**
  * All forum permission flags.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */

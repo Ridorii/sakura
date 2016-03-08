@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the forum pages controllers.
- * 
+ *
  * @package Sakura
  */
 
@@ -16,7 +16,7 @@ use Sakura\Users;
 
 /**
  * Forum page controllers.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -24,7 +24,7 @@ class ForumController extends Controller
 {
     /**
      * Serves the forum index.
-     * 
+     *
      * @return mixed HTML for the forum index.
      */
     public function index()

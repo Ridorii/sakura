@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the text alignment bbcode class.
- * 
+ *
  * @package Sakura
  */
 
@@ -12,7 +12,7 @@ use JBBCode\ElementNode;
 
 /**
  * Text alignment bbcode for JBBCode
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -30,9 +30,9 @@ class Align extends CodeDefinition
 
     /**
      * Creates compiled HTML from the align bbcode.
-     * 
+     *
      * @param ElementNode $el The JBBCode element node.
-     * 
+     *
      * @return string Compiled HTML.
      */
     public function asHtml(ElementNode $el)

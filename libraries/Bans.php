@@ -1,7 +1,7 @@
 <?php
 /**
  * Holds the ban manager.
- * 
+ *
  * @package Sakura
  */
 
@@ -9,7 +9,7 @@ namespace Sakura;
 
 /**
  * User banishment management.
- * 
+ *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -17,9 +17,9 @@ class Bans
 {
     /**
      * Checks if a user is banned.
-     * 
+     *
      * @param int $uid The ID of the user that is being checked.
-     * 
+     *
      * @return array|bool Either false or an array containing information about the ban.
      */
     public static function checkBan($uid)
