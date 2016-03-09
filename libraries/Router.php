@@ -8,8 +8,8 @@
 namespace Sakura;
 
 use Phroute\Phroute\Dispatcher;
-use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
+use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Phroute\Phroute\RouteCollector;
 
 /**
@@ -53,7 +53,8 @@ class Router
         'PATCH',
         'DELETE',
         'HEAD',
-        'ANY'
+        'OPTIONS',
+        'ANY',
     ];
 
     /**
@@ -128,6 +129,20 @@ class Router
         }
 
         return self::$basePath . self::$router->route($name, $args);
+    }
+
+    /**
+     * Create group.
+     *
+     * @param array $filters The filters for this group.
+     * @param \Closure $callback The containers
+     *
+     * @return string The generated URI.
+     */
+    public static function group($filters, $callback)
+    {
+        // Execute the inner function
+        self::$router->group($filters, $callback);
     }
 
     /**

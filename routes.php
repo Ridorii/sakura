@@ -25,17 +25,23 @@ Router::post('/reactivate', 'AuthController@reactivatePost', 'auth.reactivate');
 Router::get('/activate', 'AuthController@activate', 'auth.activate');
 
 // News
-Router::get('/news', 'MetaController@news', 'news.index');
-Router::get('/news/{category}', 'MetaController@news', 'news.category');
-Router::get('/news/{category}/{id}', 'MetaController@news', 'news.post');
+Router::group(['prefix' => 'news'], function () {
+    Router::get('/', 'MetaController@news', 'news.index');
+    Router::get('/{category}', 'MetaController@news', 'news.category');
+    Router::get('/{category}/{id}', 'MetaController@news', 'news.post');
+});
 
 // Forum
-Router::get('/forum', 'ForumController@index', 'forums.index');
-Router::get('/forum/{id}', 'ForumController@forum', 'forums.forum');
+Router::group(['prefix' => 'forum'], function () {
+    Router::get('/', 'ForumController@index', 'forums.index');
+    Router::get('/{id}', 'ForumController@forum', 'forums.forum');
+});
 
 // Members
-Router::get('/members', 'UserController@members', 'members.index');
-Router::get('/members/{rank}', 'UserController@members', 'members.rank');
+Router::group(['prefix' => 'members'], function () {
+    Router::get('/', 'UserController@members', 'members.index');
+    Router::get('/{rank}', 'UserController@members', 'members.rank');
+});
 
 // User
 Router::get('/u/{id}', 'UserController@profile', 'user.profile');
@@ -46,8 +52,10 @@ Router::get('/a/{id}', 'FileController@avatar', 'file.avatar');
 Router::get('/bg/{id}', 'FileController@background', 'file.background');
 
 // Premium
-Router::get('/support', 'PremiumController@index', 'premium.index');
-Router::get('/support/tracker', 'PremiumController@tracker', 'premium.tracker');
+Router::group(['prefix' => 'support'], function () {
+    Router::get('/', 'PremiumController@index', 'premium.index');
+    Router::get('/tracker', 'PremiumController@tracker', 'premium.tracker');
+});
 
 // Management
 /*

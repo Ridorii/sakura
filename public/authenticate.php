@@ -20,11 +20,9 @@ if (isset($_REQUEST['mode'])) {
         // Compare time and session so we know the link isn't forged
         if (!isset($_REQUEST['time']) || $_REQUEST['time'] < time() - 1000) {
             $renderData['page'] = [
-
                 'redirect' => $urls->format('AUTH_ACTION'),
                 'message' => 'Timestamps differ too much, refresh the page and try again.',
                 'success' => 0,
-
             ];
 
             // Prevent
@@ -34,11 +32,9 @@ if (isset($_REQUEST['mode'])) {
         // Match session ids for the same reason
         if (!isset($_REQUEST['session']) || $_REQUEST['session'] != session_id()) {
             $renderData['page'] = [
-
                 'redirect' => $urls->format('AUTH_ACTION'),
                 'message' => 'Invalid session, please try again.',
                 'success' => 0,
-
             ];
 
             // Prevent
@@ -62,15 +58,6 @@ if (isset($_REQUEST['mode'])) {
 
     if ($continue) {
         switch ($_REQUEST['mode']) {
-            case 'logout':
-                // Add page specific things
-                $renderData['page'] = [
-                    'redirect' => Router::route('main.index'),
-                    'message' => 'Wrong logout page.',
-                    'success' => 0,
-                ];
-                break;
-
             case 'changepassword':
                 // Attempt change
                 $passforget = Users::resetPassword(
@@ -146,26 +133,6 @@ if (isset($_REQUEST['mode'])) {
                 ];
                 break;
 
-            // Login processing
-            case 'login':
-                // Add page specific things
-                $renderData['page'] = [
-                    'redirect' => Router::route('auth.login'),
-                    'message' => 'Wrong login page.',
-                    'success' => 0,
-                ];
-                break;
-
-            // Registration processing
-            case 'register':
-                // Add page specific things
-                $renderData['page'] = [
-                    'redirect' => Router::route('auth.register'),
-                    'message' => 'Wrong registration page.',
-                    'success' => 0,
-                ];
-                break;
-
             // Unforgetting passwords
             case 'forgotpassword':
                 // Attempt send
@@ -184,6 +151,30 @@ if (isset($_REQUEST['mode'])) {
                     'redirect' => $urls->format('SITE_FORGOT_PASSWORD'),
                     'message' => $messages[$passforgot[1]],
                     'success' => $passforgot[0],
+                ];
+                break;
+
+            case 'logout':
+                $renderData['page'] = [
+                    'redirect' => Router::route('main.index'),
+                    'message' => 'Wrong logout page.',
+                    'success' => 0,
+                ];
+                break;
+
+            case 'login':
+                $renderData['page'] = [
+                    'redirect' => Router::route('auth.login'),
+                    'message' => 'Wrong login page.',
+                    'success' => 0,
+                ];
+                break;
+
+            case 'register':
+                $renderData['page'] = [
+                    'redirect' => Router::route('auth.register'),
+                    'message' => 'Wrong registration page.',
+                    'success' => 0,
                 ];
                 break;
 
