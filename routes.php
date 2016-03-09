@@ -18,6 +18,11 @@ Router::post('/login', 'AuthController@loginPost', 'auth.login');
 Router::get('/logout', 'AuthController@logout', 'auth.logout');
 Router::get('/register', 'AuthController@registerGet', 'auth.register');
 Router::post('/register', 'AuthController@registerPost', 'auth.register');
+Router::get('/resetpassword', 'AuthController@resetPasswordGet', 'auth.resetpassword');
+Router::post('/resetpassword', 'AuthController@resetPasswordPost', 'auth.resetpassword');
+Router::get('/reactivate', 'AuthController@reactivateGet', 'auth.reactivate');
+Router::post('/reactivate', 'AuthController@reactivatePost', 'auth.reactivate');
+Router::get('/activate', 'AuthController@activate', 'auth.activate');
 
 // News
 Router::get('/news', 'MetaController@news', 'news.index');
