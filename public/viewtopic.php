@@ -26,7 +26,7 @@ if (!$thread) {
     // Set render data
     $renderData['page'] = [
         'message' => 'The topic you tried to access does not exist.',
-        'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+        'redirect' => Router::route('forums.thread', $thread->id),
     ];
 
     // Set parse variables
@@ -42,7 +42,7 @@ if (!$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
     // Set render data
     $renderData['page'] = [
         'message' => 'You do not have access to this thread.',
-        'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+        'redirect' => Router::route('forums.thread', $thread->id),
     ];
 
     // Set parse variables
@@ -68,7 +68,7 @@ if (isset($_GET['sticky']) && $_GET['sticky'] == session_id() && $forum->permiss
     // Set render data
     $renderData['page'] = [
         'message' => 'Changed the thread type.',
-        'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+        'redirect' => Router::route('forums.thread', $thread->id),
     ];
 
     // Set parse variables
@@ -93,7 +93,7 @@ if (isset($_GET['announce']) && $_GET['announce'] == session_id() && $forum->per
     // Set render data
     $renderData['page'] = [
         'message' => 'Changed the thread type.',
-        'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+        'redirect' => Router::route('forums.thread', $thread->id),
     ];
 
     // Set parse variables
@@ -118,7 +118,7 @@ if (isset($_GET['lock']) && $_GET['lock'] == session_id() && $forum->permission(
     // Set render data
     $renderData['page'] = [
         'message' => 'Changed the thread status.',
-        'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+        'redirect' => Router::route('forums.thread', $thread->id),
     ];
 
     // Set parse variables
@@ -138,13 +138,13 @@ if (isset($_GET['trash']) && $_GET['trash'] == session_id() && $forum->permissio
         // Set render data
         $renderData['page'] = [
             'message' => 'Moved thread to the trash.',
-            'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+            'redirect' => Router::route('forums.thread', $thread->id),
         ];
     } else {
         // Set render data
         $renderData['page'] = [
             'message' => 'This thread is already trashed.',
-            'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+            'redirect' => Router::route('forums.thread', $thread->id),
         ];
     }
 
@@ -166,13 +166,13 @@ if (isset($_GET['restore']) && $_GET['restore'] == session_id() && $forum->permi
         // Set render data
         $renderData['page'] = [
             'message' => 'Restored the thread to its previous location.',
-            'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+            'redirect' => Router::route('forums.thread', $thread->id),
         ];
     } else {
         // Set render data
         $renderData['page'] = [
             'message' => 'This thread has never been moved.',
-            'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+            'redirect' => Router::route('forums.thread', $thread->id),
         ];
     }
 
@@ -193,13 +193,13 @@ if (isset($_GET['prune']) && $_GET['prune'] == session_id() && $forum->permissio
         // Set render data
         $renderData['page'] = [
             'message' => 'The thread has been pruned.',
-            'redirect' => $urls->format('FORUM_SUB', [$thread->forum]),
+            'redirect' => Router::route('forums.forum', $thread->forum),
         ];
     } else {
         // Set render data
         $renderData['page'] = [
             'message' => 'You can only prune trashed threads.',
-            'redirect' => $urls->format('FORUM_THREAD', [$thread->id]),
+            'redirect' => Router::route('forums.thread', $thread->id),
         ];
     }
 
@@ -211,20 +211,4 @@ if (isset($_GET['prune']) && $_GET['prune'] == session_id() && $forum->permissio
     exit;
 }
 
-// Update the tracking status
-$thread->trackUpdate($currentUser->id);
-
-// Update views
-$thread->viewsUpdate();
-
-// Set additional render data
-$renderData = array_merge($renderData, [
-    'thread' => $thread,
-    'forum' => $forum,
-]);
-
-// Set parse variables
-Template::vars($renderData);
-
-// Print page contents
-echo Template::render('forum/viewtopic');
+header('Location: ' . Router::route('forums.thread', $thread->id));

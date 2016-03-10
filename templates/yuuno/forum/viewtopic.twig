@@ -84,8 +84,8 @@
                 {% for post in posts[get.page|default(1) - 1] %}
                     <tr class="post" id="p{{ post.id }}">
                         <td class="userpanel">
-                            {% if not post.poster.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) or post.poster.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}<a href="{{ urls.format('USER_PROFILE', [post.poster.id]) }}" class="default username" style="color: {{ post.poster.colour }}; text-shadow: 0 0 5px {% if post.poster.colour != 'inherit' %}{{ post.poster.colour }}{% else %}#222{% endif %};" title="Go to {{ post.poster.username }}'s profile">{{ post.poster.username }}</a>
-                            <img src="{{ urls.format('IMAGE_AVATAR', [post.poster.id]) }}" alt="{{ post.poster.username }}" class="avatar" style="box-shadow: 0 3px 7px #{% if post.poster.isOnline %}484{% else %}844{% endif %};" />
+                            {% if not post.poster.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) or post.poster.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}<a href="{{ route('user.profile', post.poster.id) }}" class="default username" style="color: {{ post.poster.colour }}; text-shadow: 0 0 5px {% if post.poster.colour != 'inherit' %}{{ post.poster.colour }}{% else %}#222{% endif %};" title="Go to {{ post.poster.username }}'s profile">{{ post.poster.username }}</a>
+                            <img src="{{ route('file.avatar', post.poster.id) }}" alt="{{ post.poster.username }}" class="avatar" style="box-shadow: 0 3px 7px #{% if post.poster.isOnline %}484{% else %}844{% endif %};" />
                             {% else %}
                             <a class="username">[deleted user]</a>
                             {% endif %}

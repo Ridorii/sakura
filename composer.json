@@ -17,6 +17,7 @@
         "jbbcode/jbbcode": "*",
         "corneltek/cliframework": "*",
         "phroute/phroute": "^2.1",
-        "illuminate/database": "5.2.*"
+        "illuminate/database": "5.2.*",
+        "doctrine/dbal": "~2.4"
     }
 }

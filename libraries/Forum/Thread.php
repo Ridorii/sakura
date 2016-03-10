@@ -226,7 +226,7 @@ class Thread
             ->update([
                 'topic_hidden' => $this->hidden,
                 'topic_title' => $this->title,
-                'topic_limit' => $this->timeLimit,
+                'topic_time_limit' => $this->timeLimit,
                 'topic_status' => $this->status,
                 'topic_status_change' => $this->statusChange,
                 'topic_type' => $this->type,

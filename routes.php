@@ -33,8 +33,16 @@ Router::group(['prefix' => 'news'], function () {
 
 // Forum
 Router::group(['prefix' => 'forum'], function () {
+    // Thread
+    Router::group(['prefix' => 'thread'], function () {
+        Router::get('/{id}', 'ForumController@thread', 'forums.thread');
+        Router::post('/{id}/mod', 'ForumController@threadModerate', 'forums.mod');
+    });
+
+    // Forum
     Router::get('/', 'ForumController@index', 'forums.index');
     Router::get('/{id}', 'ForumController@forum', 'forums.forum');
+    Router::get('/{id}/mark', 'ForumController@markForumRead', 'forums.mark');
 });
 
 // Members

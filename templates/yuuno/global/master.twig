@@ -200,7 +200,7 @@
         <script type="text/javascript">
             // Parse time elements
             var timeElems = document.getElementsByTagName('time');
-            
+
             // Iterate over them
             for (var timeElem in timeElems) {
                 // Attempt to parse it
@@ -213,8 +213,8 @@
                 }
             }
         </script>
-        {% if sakura.dev.showChangelog and php.self == '/index.php' and stats %}
-        <script type="text/javascript" src="https://sakura.flash.moe/?get={{ sakura.versionInfo.version|slice(0, 4) }}-{{ sakura.versionInfo.version|slice(4, 2) }}-{{ sakura.versionInfo.version|slice(6, 2) }}&amp;variable=true"></script>
+        {% if sakura.dev.showChangelog and stats %}
+        <script type="text/javascript" src="https://sakura.flash.moe/?get=all&amp;limit=5&amp;variable=true"></script>
         <script type="text/javascript">
             // Column colours for actions
             var changelogColours = [
@@ -227,55 +227,76 @@
                 '#C44' // Revert
             ];
 
-            window.addEventListener("load", function() {
+            window.addEventListener("load", function () {
                 // Check if the changelog variable is an object
                 if(typeof changelog === 'object') {
                     // Grab the index panel
-                    var indexPanel = document.getElementById('indexPanel');
+                    var _panel = document.getElementById('indexPanel');
 
                     // Create the head container
-                    var changelogTitle = document.createElement('div');
-                    changelogTitle.className = 'head';
-                    changelogTitle.style.marginBottom = '1px';
+                    var _cltitle = document.createElement('div');
+                    _cltitle.className = 'head';
+                    _cltitle.style.marginBottom = '1px';
 
                     // Create a link
-                    var changelogLink = document.createElement('a');
-                    changelogLink.className = 'underline';
-                    changelogLink.target = '_blank';
-                    changelogLink.href = 'https://sakura.flash.moe/#r{{ sakura.versionInfo.version }}';
-
-                    // Create the text container
-                    var changelogTitleText = document.createTextNode('Changelog ({{ sakura.versionInfo.version|slice(0, 4) }}-{{ sakura.versionInfo.version|slice(4, 2) }}-{{ sakura.versionInfo.version|slice(6, 2) }})');
+                    var _cllink = document.createElement('a');
+                    _cllink.className = 'underline';
+                    _cllink.target = '_blank';
+                    _cllink.href = 'https://sakura.flash.moe/#r{{ sakura.versionInfo.version }}';
 
                     // Append everything
-                    changelogLink.appendChild(changelogTitleText);
-                    changelogTitle.appendChild(changelogLink);
-                    indexPanel.appendChild(changelogTitle);
+                    _cllink.appendChild(document.createTextNode('Changelog'));
+                    _cltitle.appendChild(_cllink);
+                    _panel.appendChild(_cltitle);
 
                     // Create changelog table
-                    var changelogTable = document.createElement('table');
-                    changelogTable.className = 'panelTable';
+                    var _cltable = document.createElement('table');
+                    _cltable.className = 'panelTable';
+                    _cltable.style.borderSpacing = '0 1px';
 
                     // Create and append all changelog entries
-                    for (var i in changelog) {
-                        // Create elements
-                        var changelogRow = document.createElement('tr');
-                        var changelogColumnAction = document.createElement('td');
-                        var changelogColumnMessage = document.createElement('td');
+                    for (var _s in changelog) {
+                        // Create header
+                        var _hr = document.createElement('tr');
+                        var _hri = document.createElement('td');
 
                         // Set data
-                        changelogColumnAction.appendChild(document.createTextNode(changelog[i]['change_action']['action_name']));
-                        changelogColumnAction.style.background = changelogColours[changelog[i]['change_action']['action_id']];
-                        changelogColumnMessage.appendChild(document.createTextNode(changelog[i]['change_message']));
+                        _hri.appendChild(document.createTextNode(_s));
+                        _hri.style.background = '#9475b2';
+                        _hri.style.color = '#306';
+                        _hri.style.fontWeight = '700';
+                        _hri.style.fontSize = '1.2em';
+                        _hri.setAttribute('colspan', '2');
 
                         // Append
-                        changelogRow.appendChild(changelogColumnAction);
-                        changelogRow.appendChild(changelogColumnMessage);
-                        changelogTable.appendChild(changelogRow);
+                        _hr.appendChild(_hri);
+                        _cltable.appendChild(_hr);
+
+                        for (var _e in changelog[_s]) {
+                            // Reassign _e
+                            _e = changelog[_s][_e];
+
+                            // Create elements
+                            var _clr = document.createElement('tr');
+                            var _clca = document.createElement('td');
+                            var _clcm = document.createElement('td');
+
+                            // Set data
+                            _clca.appendChild(document.createTextNode(_e['change_action']['action_name']));
+                            _clca.style.background = changelogColours[_e['change_action']['action_id']];
+                            _clca.style.borderBottom = '1px solid ' + changelogColours[_e['change_action']['action_id']];
+                            _clcm.style.borderBottom = '1px solid ' + changelogColours[_e['change_action']['action_id']];
+                            _clcm.appendChild(document.createTextNode(_e['change_message']));
+
+                            // Append
+                            _clr.appendChild(_clca);
+                            _clr.appendChild(_clcm);
+                            _cltable.appendChild(_clr);
+                        }
                     }
 
                     // Append it to indexPanel
-                    indexPanel.appendChild(changelogTable);
+                    indexPanel.appendChild(_cltable);
                 }
             });
         </script>
