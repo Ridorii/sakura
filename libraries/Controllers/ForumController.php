@@ -7,6 +7,7 @@
 
 namespace Sakura\Controllers;
 
+use Sakura\Config;
 use Sakura\DB;
 use Sakura\Forum\Forum;
 use Sakura\Forum\Thread;
@@ -229,31 +230,125 @@ class ForumController extends Controller
         // And attempt to get the forum
         $forum = new Forum($thread->forum);
 
+        // Default stuff
+        $message = 'Unknown moderation action.';
+        $redirect = Router::route('forums.thread', $thread->id);
+
         // Check if the forum exists
-        if ($thread->id == 0 || !$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
-            // Set render data
-            Template::vars([
-                'page' => [
-                    'message' => 'This thread doesn\'t exist or you don\'t have access to it!',
-                    'redirect' => Router::route('forums.index'),
-                ],
-            ]);
+        if ($thread->id == 0
+            || !$forum->permission(ForumPerms::VIEW, $currentUser->id)
+            || !isset($_POST['session'])
+            || $_POST['session'] != session_id()) {
+            $message = 'This thread doesn\'t exist or you don\'t have access to it!';
+            $redirect = Router::route('forums.index');
         } else {
             // Take the action
             $action = isset($_POST['action']) ? $_POST['action'] : null;
 
             // Switch
             switch ($action) {
-                default:
-                    Template::vars([
-                        'page' => [
-                            'message' => 'Unknown moderation action.',
-                            'redirect' => Router::route('forums.thread', $thread->id),
-                        ],
-                    ]);
+                case 'sticky':
+                    // Check permission
+                    if (!$forum->permission(ForumPerms::STICKY, $currentUser->id)) {
+                        $message = "You're not allowed to do this!";
+                        break;
+                    }
+
+                    // Update the type
+                    $thread->type = $thread->type !== 1 ? 1 : 0;
+
+                    $thread->update();
+
+                    // Add page variable stuff
+                    $message = $thread->type ? 'Changed the thread to sticky!' : 'Reverted the thread back to normal!';
+                    break;
+
+                case 'announce':
+                    // Check permission
+                    if (!$forum->permission(ForumPerms::ANNOUNCEMENT, $currentUser->id)) {
+                        $message = "You're not allowed to do this!";
+                        break;
+                    }
+
+                    // Update the type
+                    $thread->type = $thread->type !== 2 ? 2 : 0;
+
+                    $thread->update();
+
+                    // Add page variable stuff
+                    $message = $thread->type ? 'Changed the thread to anto an announcement!' : 'Reverted the thread back to normal!';
+                    break;
+
+                case 'lock':
+                    // Check permission
+                    if (!$forum->permission(ForumPerms::LOCK, $currentUser->id)) {
+                        $message = "You're not allowed to do this!";
+                        break;
+                    }
+
+                    // Update the status
+                    $thread->status = $thread->status !== 1 ? 1 : 0;
+
+                    $thread->update();
+
+                    // Add page variable stuff
+                    $message = ($thread->status ? 'Locked' : 'Unlocked') . ' the thread!';
+                    break;
+
+                case 'delete':
+                    // Get the id of the trash forum
+                    $trash = Config::get('forum_trash_id');
+
+                    // Check if we're operating from the trash
+                    if ($thread->forum == $trash) {
+                        // Check permission
+                        if (!$forum->permission(ForumPerms::DELETE_ANY, $currentUser->id)) {
+                            $message = "You're not allowed to do this!";
+                            break;
+                        }
+
+                        // Set pruned to true
+                        $pruned = true;
+
+                        // Delete the thread
+                        $thread->delete();
+
+                        // Set message
+                        $message = "Deleted the thread!";
+                        $redirect = Router::route('forums.forum', $trash);
+                    } else {
+                        // Check permission
+                        if (!$forum->permission(ForumPerms::MOVE, $currentUser->id)) {
+                            $message = "You're not allowed to do this!";
+                            break;
+                        }
+
+                        // Move the thread
+                        $thread->move($trash);
+
+                        // Trashed!
+                        $message = "Moved the thread to the trash!";
+                    }
+                    break;
+
+                case 'restore':
+                    // Check if this thread has record of being in a previous forum
+                    if ($thread->oldForum) {
+                        // Move the thread back
+                        $thread->move($thread->oldForum, false);
+
+                        $message = "Moved the thread back to it's old location!";
+                    } else {
+                        $message = "This thread has never been moved!";
+                    }
                     break;
             }
         }
+
+        // Set the variables
+        Template::vars([
+            'page' => compact('message', 'redirect'),
+        ]);
 
         // Print page contents
         return Template::render('global/information');

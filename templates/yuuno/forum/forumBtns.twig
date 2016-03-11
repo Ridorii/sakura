@@ -14,28 +14,8 @@
         {% if forumMarkRead %}
             <a href="{{ forumMarkRead }}" class="forumbtn"><span class="fa fa-check-square-o"></span> Mark as Read</a>
         {% endif %}
-        {% if forumSticky %}
-            <a href="{{ forumSticky }}" class="forumbtn"><span class="fa fa-thumb-tack"></span> Stick</a>
-        {% elseif forumUnsticky %}
-            <a href="{{ forumUnsticky }}" class="forumbtn"><span class="fa fa-remove"></span> Unstick</a>
-        {% endif %}
-        {% if forumAnnounce %}
-            <a href="{{ forumAnnounce }}" class="forumbtn"><span class="fa fa-bullhorn"></span> Announce</a>
-        {% elseif forumUnannounce %}
-            <a href="{{ forumUnannounce }}" class="forumbtn"><span class="fa fa-remove"></span> Unannounce</a>
-        {% endif %}
-        {% if forumLock %}
-            <a href="{{ forumLock }}" class="forumbtn"><span class="fa fa-lock"></span> Lock</a>
-        {% elseif forumUnlock %}
-            <a href="{{ forumUnlock }}" class="forumbtn"><span class="fa fa-unlock"></span> Unlock</a>
-        {% endif %}
-        {% if forumRestore %}
-            <a href="{{ forumRestore }}" class="forumbtn"><span class="fa fa-history"></span> Restore</a>
-        {% endif %}
-        {% if forumTrash %}
-            <a href="{{ forumTrash }}" class="forumbtn"><span class="fa fa-trash"></span> Trash</a>
-        {% elseif forumPrune %}
-            <a href="{{ forumPrune }}" class="forumbtn"><span class="fa fa-bomb"></span> Prune</a>
+        {% if thread.id and showMod %}
+            {% include 'forum/forumMod.twig' %}
         {% endif %}
     </div>
     {% include 'elements/pagination.twig' %}

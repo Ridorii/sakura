@@ -36,7 +36,7 @@ Router::group(['prefix' => 'forum'], function () {
     // Thread
     Router::group(['prefix' => 'thread'], function () {
         Router::get('/{id}', 'ForumController@thread', 'forums.thread');
-        Router::post('/{id}/mod', 'ForumController@threadModerate', 'forums.mod');
+        Router::post('/{id}/mod', 'ForumController@threadModerate', 'forums.thread.mod');
     });
 
     // Forum
@@ -64,6 +64,37 @@ Router::group(['prefix' => 'support'], function () {
     Router::get('/', 'PremiumController@index', 'premium.index');
     Router::get('/tracker', 'PremiumController@tracker', 'premium.tracker');
 });
+
+// Settings
+/*
+ * General
+ * - Home (make this not worthless while you're at it)
+ * - Edit Profile
+ * - Site Options
+ * Friends
+ * - Listing
+ * - Requests
+ * Groups
+ * - Listing
+ * - Invites
+ * Notifications (will probably deprecate this entire section at some point but not relevant yet)
+ * - History
+ * Appearance (possibly combine ava, bg and header down into one menu as well as userpage and signature maybe)
+ * - Avatar
+ * - Background
+ * - Header
+ * - Userpage
+ * - Signature
+ * Account (also down to one section maybe)
+ * - E-mail
+ * - Username
+ * - Usertitle
+ * - Password
+ * - Ranks (except this one i guess)
+ * Advanced
+ * - Session manager
+ * - Deactivate account
+ */
 
 // Management
 /*

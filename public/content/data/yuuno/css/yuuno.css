@@ -2321,7 +2321,8 @@ textarea.inputStyling {
 /*
  * Pagination
  */
-.pagination a {
+.pagination a,
+.forumbtn {
     background: linear-gradient(0deg, #9475B2 10%, #C2AFFE 90%);
     color: #306;
     padding: 4px 8px;
@@ -2331,17 +2332,25 @@ textarea.inputStyling {
     display: inline-block;
     font-size: 1.3em;
     border: 1px solid #9475B2;
+    cursor: pointer;
 }
 
-.pagination a.current {
+button.forumbtn {
+    padding: 3px 6px;
+}
+
+.pagination a.current,
+.forumbtn.current {
     background: linear-gradient(0deg, #A586C3, #D3BFFF);
 }
 
-.pagination a:hover {
+.pagination a:hover,
+.forumbtn:hover {
     background: linear-gradient(0deg, #9475B2 30%, #C2AFFE 70%);
 }
 
-.pagination a:active {
+.pagination a:active,
+.forumbtn:active {
     background: linear-gradient(180deg, #9475B2 30%, #C2AFFE 70%);
 }
 

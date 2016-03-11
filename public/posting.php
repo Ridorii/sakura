@@ -84,7 +84,7 @@ if ($mode != 'f') {
     if (!$thread->id) {
         // Add page specific things
         $renderData['page'] = [
-            'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
+            'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : Router::route('forums.index')),
             'message' => 'The requested post does not exist.',
         ];
 
@@ -100,7 +100,7 @@ if ($mode != 'f') {
     if ($thread->status == 1 && !$forum->permission(ForumPerms::LOCK, $currentUser->id)) {
         // Add page specific things
         $renderData['page'] = [
-            'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
+            'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : Router::route('forums.index')),
             'message' => 'The thread you tried to reply to is locked.',
         ];
 
@@ -126,7 +126,7 @@ if ($mode != 'f') {
         if (!$currentUser->permission(ForumPerms::EDIT_OWN, Perms::FORUM)) {
             // Add page specific things
             $renderData['page'] = [
-                'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
+                'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : Router::route('forums.index')),
                 'message' => 'You are not allowed to edit posts!',
             ];
 
@@ -141,7 +141,7 @@ if ($mode != 'f') {
         if ($thread->posts()[$_GET['p']]->poster->id != $currentUser->id && !$forum->permission(ForumPerms::EDIT_ANY, $currentUser->id)) {
             // Add page specific things
             $renderData['page'] = [
-                'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
+                'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : Router::route('forums.index')),
                 'message' => 'You can only edit your own posts!',
             ];
 
@@ -168,7 +168,7 @@ if ($mode != 'f') {
         if (!$currentUser->permission(ForumPerms::DELETE_OWN, Perms::FORUM)) {
             // Add page specific things
             $renderData['page'] = [
-                'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
+                'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : Router::route('forums.index')),
                 'message' => 'You are not allowed to delete posts!',
             ];
 
@@ -184,7 +184,7 @@ if ($mode != 'f') {
         if ($thread->posts()[$_GET['p']]->poster->id != $currentUser->id && !$forum->permission(ForumPerms::DELETE_ANY, $currentUser->id)) {
             // Add page specific things
             $renderData['page'] = [
-                'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('FORUM_INDEX')),
+                'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : Router::route('forums.index')),
                 'message' => 'You can only delete your own posts!',
             ];
 
@@ -203,8 +203,8 @@ if ($mode != 'f') {
                 // Delete the post
                 DBv2::prepare('DELETE FROM `{prefix}posts` WHERE `post_id` = :post')
                     ->execute([
-                    'post' => $_POST['post_id'],
-                ]);
+                        'post' => $_POST['post_id'],
+                    ]);
 
                 // Reload the topic
                 $thread = new Forum\Thread($topicId);
@@ -213,13 +213,13 @@ if ($mode != 'f') {
                 if (!$thread->replyCount()) {
                     DBv2::prepare('DELETE FROM `{prefix}topics` WHERE `topic_id` = :thread')
                         ->execute([
-                        'thread' => $thread->id,
-                    ]);
+                            'thread' => $thread->id,
+                        ]);
                 }
 
                 // Add page specific things
                 $renderData['page'] = [
-                    'redirect' => ($thread->replyCount() ? $urls->format('FORUM_THREAD', [$thread->id]) : $urls->format('FORUM_INDEX')),
+                    'redirect' => ($thread->replyCount() ? Router::route('forums.thread', $thread->id) : Router::route('forums.index')),
                     'message' => 'Your post has been deleted!',
                 ];
 
@@ -231,6 +231,7 @@ if ($mode != 'f') {
                 exit;
                 // Return to previous page
             } else {
+                // (haven't (re)implemented post linking yet)
                 header('Location: ' . $urls->format('FORUM_POST', [$_POST['post_id']]));
                 exit;
             }
@@ -264,7 +265,7 @@ if (isset($_POST['post'])) {
     if (isset($_POST['id'])) {
         // Attempt to create a post object
         $post = new Forum\Post($_POST['id']);
-        
+
         // Check if the post israel
         if ($post->id == $_POST['id']) {
             $post->subject = $_POST['subject'];

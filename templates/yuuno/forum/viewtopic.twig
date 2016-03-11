@@ -1,9 +1,17 @@
 {% extends 'global/master.twig' %}
 
-{% set forumBackLink %}{{ urls.format('FORUM_SUB', [forum.id]) }}{% endset %}
+{% set forumBackLink %}{{ route('forums.forum', forum.id) }}{% endset %}
 
 {% if thread.status != 1 or forum.permission(constant('Sakura\\Perms\\Forum::LOCK'), user.id) %}
     {% set forumReplyLink %}{{ urls.format('FORUM_REPLY', [thread.id]) }}{% endset %}
+{% endif %}
+
+{% if forum.permission(constant('Sakura\\Perms\\Forum::STICKY'), user.id)
+    or forum.permission(constant('Sakura\\Perms\\Forum::ANNOUNCEMENT'), user.id)
+    or forum.permission(constant('Sakura\\Perms\\Forum::LOCK'), user.id)
+    or forum.permission(constant('Sakura\\Perms\\Forum::MOVE'), user.id)
+    or forum.permission(constant('Sakura\\Perms\\Forum::DELETE_ANY'), user.id) %}
+    {% set showMod = true %}
 {% endif %}
 
 {% if forum.permission(constant('Sakura\\Perms\\Forum::STICKY'), user.id) %}
@@ -62,7 +70,7 @@
 {% endif %}
 
 {% set paginationPages = posts %}
-{% set paginationUrl %}{{ urls.format('FORUM_THREAD', [thread.id]) }}{% endset %}
+{% set paginationUrl %}{{ route('forums.thread', thread.id) }}{% endset %}
 
 {% block title %}{{ thread.title }}{% endblock %}
 
