@@ -262,11 +262,14 @@ class Utils
     {
         // Attempt to get country code using PHP's built in geo thing
         if (function_exists("geoip_country_code_by_name")) {
-            $code = geoip_country_code_by_name(Net::IP());
+            try {
+                $code = geoip_country_code_by_name(Net::IP());
 
-            // Check if $code is anything
-            if ($code) {
-                return $code;
+                // Check if $code is anything
+                if ($code) {
+                    return $code;
+                }
+            } catch (\Exception $e) {
             }
         }
 
@@ -304,23 +307,17 @@ class Utils
      */
     public static function getCountryName($code)
     {
-        // Parse JSON file
-        $iso3166 = json_decode(
-            utf8_encode(
-                file_get_contents(
-                    ROOT . Config::local('data', 'iso3166')
-                )
-            ),
-            true
-        );
-
-        // Check if key exists
-        if (array_key_exists($code, $iso3166)) {
-            return $iso3166[$code]; // If entry found return the full name
+        // Catch XX
+        if (strtolower($code) === 'xx') {
+            return 'Unknown';
         }
 
-        // Else return unknown
-        return 'Unknown';
+        // Catch proxy
+        if (strtolower($code) === 'a1') {
+            return 'Anonymous Proxy';
+        }
+
+        return locale_get_display_region("-{$code}", 'en');
     }
 
     /**

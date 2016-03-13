@@ -61,8 +61,7 @@ class ForumController extends Controller
 
         // Redirect forum id 0 to the main page
         if ($forum->id === 0) {
-            header('Location: ' . Router::route('forums.index'));
-            exit;
+            return header('Location: ' . Router::route('forums.index'));
         }
 
         // Check if the forum exists
