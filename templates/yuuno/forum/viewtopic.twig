@@ -15,59 +15,34 @@
 {% endif %}
 
 {% if forum.permission(constant('Sakura\\Perms\\Forum::STICKY'), user.id) %}
-    {% if thread.type == 1 %}
-        {% set forumUnsticky %}{{ urls.format('FORUM_STICKY', [thread.id, php.sessionid]) }}{% endset %}
-    {% else %}
-        {% set forumSticky %}{{ urls.format('FORUM_STICKY', [thread.id, php.sessionid]) }}{% endset %}
-    {% endif %}
+    {% set forumSticky = thread.type == 1 ? true : false %}
 {% endif %}
 
 {% if forum.permission(constant('Sakura\\Perms\\Forum::ANNOUNCEMENT'), user.id) %}
-    {% if thread.type == 2 %}
-        {% set forumUnannounce %}{{ urls.format('FORUM_ANNOUNCE', [thread.id, php.sessionid]) }}{% endset %}
-    {% else %}
-        {% set forumAnnounce %}{{ urls.format('FORUM_ANNOUNCE', [thread.id, php.sessionid]) }}{% endset %}
-    {% endif %}
+    {% set forumAnnounce = thread.type == 2 ? true : false %}
 {% endif %}
 
 {% if forum.permission(constant('Sakura\\Perms\\Forum::LOCK'), user.id) %}
-    {% if thread.status == 1 %}
-        {% set forumUnlock %}{{ urls.format('FORUM_LOCK', [thread.id, php.sessionid]) }}{% endset %}
-    {% else %}
-        {% set forumLock %}{{ urls.format('FORUM_LOCK', [thread.id, php.sessionid]) }}{% endset %}
-    {% endif %}
+    {% set forumLock = thread.status == 1 ? true : false %}
 {% endif %}
 
 {% if forum.permission(constant('Sakura\\Perms\\Forum::MOVE'), user.id) %}
     {% if thread.oldForum %}
-        {% set forumRestore %}{{ urls.format('FORUM_RESTORE', [thread.id, php.sessionid]) }}{% endset %}
+        {% set forumRestore = true %}
     {% endif %}
+
     {% if thread.forum != sakura.trashForumId %}
-        {% set forumTrash %}{{ urls.format('FORUM_TRASH', [thread.id, php.sessionid]) }}{% endset %}
+        {% set forumTrash = true %}
     {% endif %}
 {% endif %}
 
 {% if forum.permission(constant('Sakura\\Perms\\Forum::DELETE_ANY'), user.id) %}
     {% if thread.forum == sakura.trashForumId %}
-        {% set forumPrune %}{{ urls.format('FORUM_PRUNE', [thread.id, php.sessionid]) }}{% endset %}
+        {% set forumPrune = true %}
     {% endif %}
 {% endif %}
 
 {% set posts = thread.posts|batch(10) %}
-
-{% if get.p and not get.page %}
-    {% set num = 0 %}
-
-    {% for k,v in thread.posts %}
-        {% if k < get.p %}
-            {% set num = num + 1 %}
-        {% endif %}
-    {% endfor %}
-
-    {% set num = (num / 10)|round(0, 'floor') + 1 %}
-
-    {% set get = get|merge({'page': num}) %}
-{% endif %}
 
 {% set paginationPages = posts %}
 {% set paginationUrl %}{{ route('forums.thread', thread.id) }}{% endset %}
@@ -126,7 +101,7 @@
                                     <a href="#p{{ post.id }}" class="clean">{{ post.subject|slice(0, 50) }}{% if post.subject|length > 50 %}...{% endif %}</a>
                                 </div>
                                 <div class="date">
-                                    <a href="{{ urls.format('FORUM_POST', [post.id]) }}#p{{ post.id }}" class="clean">#{{ post.id }} - <time>{{ post.time|date(sakura.dateFormat) }}</time></a>
+                                    #{{ post.id }} - <time>{{ post.time|date(sakura.dateFormat) }}</time>
                                 </div>
                                 <div class="clear"></div>
                             </div>

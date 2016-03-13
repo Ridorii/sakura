@@ -10,6 +10,7 @@ namespace Sakura\Controllers;
 use Sakura\Config;
 use Sakura\DB;
 use Sakura\Rank;
+use Sakura\Router;
 use Sakura\Template;
 use Sakura\User;
 use Sakura\Utils;
@@ -49,7 +50,7 @@ class UserController extends Controller
                 Template::vars([
                     'page' => [
                         'message' => 'The user this profile belongs to changed their username, you are being redirected.',
-                        'redirect' => (new \Sakura\Urls)->format('USER_PROFILE', [$check[0]->user_id]),
+                        'redirect' => Router::route('user.profile', $check[0]->user_id),
                     ],
                 ]);
 
@@ -74,7 +75,7 @@ class UserController extends Controller
             Template::vars([
                 'page' => [
                     'message' => 'Toggled the restricted status of the user.',
-                    'redirect' => (new \Sakura\Urls)->format('USER_PROFILE', [$profile->id]),
+                    'redirect' => Router::route('user.profile', $profile->id),
                 ],
             ]);
 
@@ -108,7 +109,7 @@ class UserController extends Controller
         }
 
         // Get all ranks
-        
+
         // Execute query
         $getRanks = DB::table('ranks')
             ->get(['rank_id']);

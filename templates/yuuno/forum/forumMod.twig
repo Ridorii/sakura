@@ -1,26 +1,18 @@
 <form method="post" action="{{ route('forums.thread.mod', thread.id) }}" style="display: inline-block;">
     <input type="hidden" name="session" value="{{ php.sessionid }}" />
-    {% if forumSticky %}
-        <button class="forumbtn" title="Sticky" name="action" value="sticky"><span class="fa fa-thumb-tack"></span></button>
-    {% elseif forumUnsticky %}
-        <button class="forumbtn" title="Unsticky" name="action" value="sticky"><span class="fa fa-remove"></span></button>
+    {% if forumSticky is defined %}
+        <button class="forumbtn" title="{{ forumSticky ? 'Unsticky' : 'Sticky' }}" name="action" value="sticky"><span class="fa fa-{{ forumSticky ? 'remove' : 'thumb-tack' }}"></span></button>
     {% endif %}
-    {% if forumAnnounce %}
-        <button class="forumbtn" title="Announce" name="action" value="announce"><span class="fa fa-bullhorn"></span></button>
-    {% elseif forumUnannounce %}
-        <button class="forumbtn" title="Unannounce" name="action" value="announce"><span class="fa fa-remove"></span></button>
+    {% if forumAnnounce is defined %}
+        <button class="forumbtn" title="{{ forumAnnounce ? 'Unannounce' : 'Announce' }}" name="action" value="announce"><span class="fa fa-{{ forumAnnounce ? 'remove' : 'bullhorn' }}"></span></button>
     {% endif %}
-    {% if forumLock %}
-        <button class="forumbtn" title="Lock" name="action" value="lock"><span class="fa fa-lock"></span></button>
-    {% elseif forumUnlock %}
-        <button class="forumbtn" title="Unlock" name="action" value="lock"><span class="fa fa-unlock"></span></button>
+    {% if forumLock is defined %}
+        <button class="forumbtn" title="{{ forumLock ? 'Unlock' : 'Lock' }}" name="action" value="lock"><span class="fa fa-{{ forumLock ? 'unlock' : 'lock' }}"></span></button>
     {% endif %}
-    {% if forumRestore %}
+    {% if forumRestore is defined %}
         <button class="forumbtn" title="Restore" name="action" value="restore"><span class="fa fa-history"></span></button>
     {% endif %}
-    {% if forumTrash %}
-        <button class="forumbtn" title="Trash" name="action" value="delete"><span class="fa fa-trash"></span></button>
-    {% elseif forumPrune %}
-        <button class="forumbtn" title="Prune" name="action" value="delete"><span class="fa fa-bomb"></span></button>
+    {% if forumTrash is defined or forumPrune is defined %}
+        <button class="forumbtn" title="{{ forumPrune ? 'Prune' : 'Trash' }}" name="action" value="delete"><span class="fa fa-{{ forumPrune ? 'bomb' : 'trash' }}"></span></button>
     {% endif %}
 </form>

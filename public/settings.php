@@ -451,14 +451,14 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 // Assign the correct column and title to a variable
                 switch ($mode) {
                     case 'background':
-                        $stmt = 'UPDATE `{prefix}users` SET `user_background` = :img WHERE `user_id` = :user';
+                        $column = 'user_background';
                         $msgTitle = 'Background';
                         $current = $currentUser->background;
                         $permission = $currentUser->permission(Site::CHANGE_BACKGROUND);
                         break;
 
                     case 'header':
-                        $stmt = 'UPDATE `{prefix}users` SET `user_header` = :img WHERE `user_id` = :user';
+                        $column = 'user_header';
                         $msgTitle = 'Header';
                         $current = $currentUser->header;
                         $permission = $currentUser->permission(Site::CHANGE_HEADER);
@@ -466,7 +466,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 
                     case 'avatar':
                     default:
-                        $stmt = 'UPDATE `{prefix}users` SET `user_avatar` = :img WHERE `user_id` = :user';
+                        $column = 'user_avatar';
                         $msgTitle = 'Avatar';
                         $current = $currentUser->avatar;
                         $permission = $currentUser->permission(Site::CHANGE_AVATAR);
@@ -617,11 +617,11 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update table
-                DBv2::prepare($stmt)
-                    ->execute([
-                    'img' => $fileId,
-                    'user' => $currentUser->id,
-                ]);
+                DB::table('users')
+                    ->where('user_id', $currentUser->id)
+                    ->update([
+                        $column => $fileId,
+                    ]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -636,21 +636,21 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 // Get profile fields and create storage var
                 $fields = Users::getProfileFields();
 
+                // Delete all profile fields
+                DB::table('user_profilefields')
+                    ->where('user_id', $currentUser->id)
+                    ->delete();
+
                 // Go over each field
                 foreach ($fields as $field) {
                     // Add to the store array
                     if (isset($_POST['profile_' . $field['field_identity']]) && !empty($_POST['profile_' . $field['field_identity']])) {
-                        DBv2::prepare('DELETE FROM `{prefix}user_profilefields` WHERE `user_id` = :user AND `field_name` = :id')
-                            ->execute([
-                            'user' => $currentUser->id,
-                            'id' => $field['field_identity'],
-                        ]);
-                        DBv2::prepare('INSERT INTO `{prefix}user_profilefields` (`user_id`, `field_name`, `field_value`) VALUES (:user, :name, :value)')
-                            ->execute([
-                            'user' => $currentUser->id,
-                            'name' => $field['field_identity'],
-                            'value' => $_POST['profile_' . $field['field_identity']],
-                        ]);
+                        DB::table('user_profilefields')
+                            ->insert([
+                                'user_id' => $currentUser->id,
+                                'field_name' => $field['field_identity'],
+                                'field_value' => $_POST['profile_' . $field['field_identity']],
+                            ]);
                     }
 
                     // Check if there's additional values we should keep in mind
@@ -659,17 +659,12 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         foreach ($field['field_additional'] as $addKey => $addVal) {
                             // Add to the array
                             $store = (isset($_POST['profile_additional_' . $addKey]) || !empty($_POST['profile_additional_' . $addKey])) ? $_POST['profile_additional_' . $addKey] : false;
-                            DBv2::prepare('DELETE FROM `{prefix}user_profilefields` WHERE `user_id` = :user AND `field_name` = :id')
-                                ->execute([
-                                'user' => $currentUser->id,
-                                'id' => $addKey,
-                            ]);
-                            DBv2::prepare('INSERT INTO `{prefix}user_profilefields` (`user_id`, `field_name`, `field_value`) VALUES (:user, :name, :value)')
-                                ->execute([
-                                'user' => $currentUser->id,
-                                'name' => $addKey,
-                                'value' => $store,
-                            ]);
+                            DB::table('user_profilefields')
+                                ->insert([
+                                    'user_id' => $currentUser->id,
+                                    'field_name' => $addKey,
+                                    'field_value' => $store,
+                                ]);
                         }
                     }
                 }
@@ -731,11 +726,11 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                         [$_POST['birthday_year'], $_POST['birthday_month'], $_POST['birthday_day']]
                     );
 
-                    DBv2::prepare('UPDATE `{prefix}users` SET `user_birthday` = :bd WHERE `user_id` = :id')
-                        ->execute([
-                        'bd' => $birthdate,
-                        'id' => $currentUser->id,
-                    ]);
+                    DB::table('users')
+                        ->where('user_id', $currentUser->id)
+                        ->update([
+                            'user_birthday' => $birthdate,
+                        ]);
                 }
                 break;
 
@@ -744,27 +739,26 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 // Get profile fields and create storage var
                 $fields = Users::getOptionFields();
 
+                // Delete all option fields for this user
+                DB::table('user_optionfields')
+                    ->where('user_id', $currentUser->id)
+                    ->delete();
+
                 // Go over each field
                 foreach ($fields as $field) {
-                    DBv2::prepare('DELETE FROM `{prefix}user_optionfields` WHERE `user_id` = :user AND `field_name` = :id')
-                        ->execute([
-                        'user' => $currentUser->id,
-                        'id' => $field['option_id'],
-                    ]);
-
                     // Make sure the user has sufficient permissions to complete this action
                     if (!$currentUser->permission(constant('Sakura\Perms\Site::' . $field['option_permission']))) {
                         continue;
                     }
 
                     if (isset($_POST['option_' . $field['option_id']])
-                    && !empty($_POST['option_' . $field['option_id']])) {
-                        DBv2::prepare('INSERT INTO `{prefix}user_optionfields` (`user_id`, `field_name`, `field_value`) VALUES (:user, :name, :value)')
-                            ->execute([
-                            'user' => $currentUser->id,
-                            'name' => $field['option_id'],
-                            'value' => $_POST['option_' . $field['option_id']],
-                        ]);
+                        && !empty($_POST['option_' . $field['option_id']])) {
+                        DB::table('user_optionfields')
+                            ->insert([
+                                'user_id' => $currentUser->id,
+                                'field_name' => $field['option_id'],
+                                'field_value' => $_POST['option_' . $field['option_id']],
+                            ]);
                     }
                 }
 
@@ -801,11 +795,11 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update database
-                DBv2::prepare('UPDATE `{prefix}users` SET `user_title` = :title WHERE `user_id` = :id')
-                    ->execute([
-                    'title' => (isset($_POST['usertitle']) ? $_POST['usertitle'] : null),
-                    'id' => $currentUser->id,
-                ]);
+                DB::table('users')
+                    ->where('user_id', $currentUser->id)
+                    ->update([
+                        'user_title' => (isset($_POST['usertitle']) ? $_POST['usertitle'] : null),
+                    ]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -938,11 +932,11 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update database
-                DBv2::prepare('UPDATE `{prefix}users` SET `user_page` = :up WHERE `user_id` = :id')
-                    ->execute([
-                    'up' => $_POST['userpage'],
-                    'id' => $currentUser->id,
-                ]);
+                DB::table('users')
+                    ->where('user_id', $currentUser->id)
+                    ->update([
+                        'user_page' => $_POST['userpage'],
+                    ]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -964,11 +958,11 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Update database
-                DBv2::prepare('UPDATE `{prefix}users` SET `user_signature` = :us WHERE `user_id` = :id')
-                    ->execute([
-                    'us' => $_POST['signature'],
-                    'id' => $currentUser->id,
-                ]);
+                DB::table('users')
+                    ->where('user_id', $currentUser->id)
+                    ->update([
+                        'user_signature' => $_POST['signature'],
+                    ]);
 
                 // Set render data
                 $renderData['page'] = [
@@ -1049,10 +1043,9 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 // Check if sessionid is set to all
                 if ($_POST['sessionid'] === 'all') {
                     // Delete all sessions assigned to the current user
-                    DBv2::prepare('DELETE FROM `{prefix}sessions` WHERE `user_id` = :user')
-                        ->execute([
-                        'user' => $currentUser->id,
-                    ]);
+                    DB::table('sessions')
+                        ->where('user_id', $currentUser->id)
+                        ->delete();
 
                     // Set render data
                     $renderData['page'] = [
@@ -1064,12 +1057,11 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Check if the session is owned by the current user
-                $us = DBv2::prepare('SELECT * FROM `{prefix}sessions` WHERE `user_id` = :user AND `session_id` = :key');
-                $us->execute([
-                    'user' => $currentUser->id,
-                    'key' => $_POST['sessionid'],
-                ]);
-                if (!$us->rowCount()) {
+                $us = DB::table('sessions')
+                    ->where('user_id', $currentUser->id)
+                    ->where('session_id', $_POST['sessionid'])
+                    ->count();
+                if (!$us) {
                     $renderData['page'] = [
                         'redirect' => $redirect,
                         'message' => 'The session you tried to kill doesn\'t exist.',
@@ -1079,11 +1071,10 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 }
 
                 // Delete the session
-                DBv2::prepare('DELETE FROM `{prefix}sessions` WHERE `user_id` = :user AND `session_id` = :session')
-                    ->execute([
-                    'user' => $currentUser->id,
-                    'session' => $_POST['sessionid'],
-                ]);
+                DB::table('sessions')
+                    ->where('user_id', $currentUser->id)
+                    ->where('session_id', $_POST['sessionid'])
+                    ->delete();
 
                 // Set render data
                 $renderData['page'] = [
@@ -1235,41 +1226,41 @@ if (Users::checkLogin()) {
             ],
         ]/*,
         'messages' => [
-            'title' => 'Messages',
-            'modes' => [
-                'inbox' => [
-                    'title' => 'Inbox',
-                    'description' => [
-                        'The list of messages you\'ve received.',
-                    ],
-                    'access' => $currentUser->permission(Site::USE_MESSAGES),
-                    'menu' => true,
-                ],
-                'sent' => [
-                    'title' => 'Sent',
-                    'description' => [
-                        'The list of messages you\'ve sent to other users.',
-                    ],
-                    'access' => $currentUser->permission(Site::USE_MESSAGES),
-                    'menu' => true,
-                ],
-                'compose' => [
-                    'title' => 'Compose',
-                    'description' => [
-                        'Write a new message.',
-                    ],
-                    'access' => $currentUser->permission(Site::SEND_MESSAGES),
-                    'menu' => true,
-                ],
-                'read' => [
-                    'title' => 'Read',
-                    'description' => [
-                        'Read a message.',
-                    ],
-                    'access' => $currentUser->permission(Site::USE_MESSAGES),
-                    'menu' => false,
-                ],
-            ],
+        'title' => 'Messages',
+        'modes' => [
+        'inbox' => [
+        'title' => 'Inbox',
+        'description' => [
+        'The list of messages you\'ve received.',
+        ],
+        'access' => $currentUser->permission(Site::USE_MESSAGES),
+        'menu' => true,
+        ],
+        'sent' => [
+        'title' => 'Sent',
+        'description' => [
+        'The list of messages you\'ve sent to other users.',
+        ],
+        'access' => $currentUser->permission(Site::USE_MESSAGES),
+        'menu' => true,
+        ],
+        'compose' => [
+        'title' => 'Compose',
+        'description' => [
+        'Write a new message.',
+        ],
+        'access' => $currentUser->permission(Site::SEND_MESSAGES),
+        'menu' => true,
+        ],
+        'read' => [
+        'title' => 'Read',
+        'description' => [
+        'Read a message.',
+        ],
+        'access' => $currentUser->permission(Site::USE_MESSAGES),
+        'menu' => false,
+        ],
+        ],
         ]*/,
         'notifications' => [
             'title' => 'Notifications',
@@ -1519,12 +1510,11 @@ if (Users::checkLogin()) {
 
         // Sessions
         case 'advanced.sessions':
-            $sessions = DBv2::prepare('SELECT * FROM `{prefix}sessions` WHERE `user_id` = :user');
-            $sessions->execute([
-                'user' => $currentUser->id,
-            ]);
+            $sessions = DB::table('sessions')
+                ->where('user_id', $currentUser->id)
+                ->get();
 
-            $renderData['sessions'] = $sessions->fetchAll();
+            $renderData['sessions'] = $sessions;
             break;
     }
 

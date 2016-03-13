@@ -47,11 +47,11 @@ class Comments
         $this->category = $category;
 
         // Get the comments and assign them to $comments
-        $comments = DBv2::prepare('SELECT * FROM `{prefix}comments` WHERE `comment_category` = :category AND `comment_reply_to` = 0 ORDER BY `comment_id` DESC');
-        $comments->execute([
-            'category' => $this->category,
-        ]);
-        $comments = $comments->fetchAll(\PDO::FETCH_ASSOC);
+        $comments = DB::table('comments')
+            ->where('comment_category', $this->category)
+            ->where('comment_reply_to', 0)
+            ->orderBy('comment_id', 'desc')
+            ->get();
 
         // Feed them into the sorter
         $this->comments = $this->sortComments($comments);
@@ -71,6 +71,9 @@ class Comments
 
         // Sort comments
         foreach ($comments as $comment) {
+            // Temporary hackjob to get rid of the old database layer, will reimplement later
+            $comment = get_object_vars($comment);
+
             // Attach the poster
             $comment['comment_poster'] = User::construct($comment['comment_poster']);
             $comment['comment_text'] = BBcode::parseEmoticons(Utils::cleanString($comment['comment_text']));
@@ -82,6 +85,7 @@ class Comments
 
             // Store amount in their respective variables
             foreach ($votes as $vote) {
+                $vote = get_object_vars($vote);
                 if ($vote['vote_state']) {
                     $comment['comment_likes'] += 1;
                 } else {
@@ -96,12 +100,11 @@ class Comments
             $this->count += 1;
 
             // Attempt to get replies from the database
-            $replies = DBv2::prepare('SELECT * FROM `{prefix}comments` WHERE `comment_category` = :category AND `comment_reply_to` = :thread');
-            $replies->execute([
-                'category' => $this->category,
-                'thread' => $comment['comment_id'],
-            ]);
-            $replies = $replies->fetchAll(\PDO::FETCH_ASSOC);
+            $replies = DB::table('comments')
+                ->where('comment_category', $this->category)
+                ->where('comment_reply_to', $comment['comment_id'])
+                ->orderBy('comment_id', 'desc')
+                ->get();
 
             // Check if this was a reply to something
             if ($replies) {
@@ -123,11 +126,11 @@ class Comments
     public function getComment($cid)
     {
         // Get from database
-        $comment = DBv2::prepare('SELECT * FROM `{prefix}comments` WHERE `comment_id` = :id');
-        $comment->execute([
-            'id' => $cid,
-        ]);
-        return $comment->fetch(\PDO::FETCH_ASSOC);
+        $comment = DB::table('comments')
+            ->where('comment_id', $cid)
+            ->get();
+
+        return $comment ? get_object_vars($comment[0]) : [];
     }
 
     /**
@@ -140,11 +143,11 @@ class Comments
     public function getVotes($cid)
     {
         // Get from database
-        $comment = DBv2::prepare('SELECT * FROM `{prefix}comment_votes` WHERE `vote_comment` = :id');
-        $comment->execute([
-            'id' => $cid,
-        ]);
-        return $comment->fetchAll(\PDO::FETCH_ASSOC);
+        $comment = DB::table('comment_votes')
+            ->where('vote_comment', $cid)
+            ->get();
+
+        return $comment;
     }
 
     /**
@@ -169,14 +172,14 @@ class Comments
         }
 
         // Insert into database
-        DBv2::prepare('INSERT INTO `{prefix}comments` (`comment_category`, `comment_timestamp`, `comment_poster`, `comment_reply_to`, `comment_text`) VALUES (:cat, :time, :user, :thread, :text)')
-            ->execute([
-            'cat' => $this->category,
-            'time' => time(),
-            'user' => $uid,
-            'thread' => (int) $reply,
-            'text' => $content,
-        ]);
+        DB::table('comments')
+            ->insert([
+                'comment_category' => $this->category,
+                'comment_timestamp' => time(),
+                'comment_poster' => (int) $uid,
+                'comment_reply_to' => (int) $reply,
+                'comment_text' => $content,
+            ]);
 
         // Return success
         return [1, 'SUCCESS'];
@@ -194,40 +197,37 @@ class Comments
     public function makeVote($uid, $cid, $mode)
     {
         // Attempt to get previous vote
-        $vote = DBv2::prepare('SELECT * FROM `{prefix}comment_votes` WHERE `vote_user` = :user AND `vote_comment` = :comment');
-        $vote->execute([
-            'user' => $uid,
-            'comment' => $cid,
-        ]);
-        $vote = $vote->fetch(\PDO::FETCH_ASSOC);
+        $vote = DB::table('comment_votes')
+            ->where('vote_user', $uid)
+            ->where('vote_comment', $cid)
+            ->get();
 
         // Check if anything was returned
         if ($vote) {
             // Check if the vote that's being casted is the same
-            if ($vote['vote_state'] == $mode) {
+            if ($vote[0]->vote_state == $mode) {
                 // Delete the vote
-                DBv2::prepare('DELETE FROM `{prefix}comment_votes` WHERE `vote_user` = :user AND `vote_comment` = :comment')
-                    ->execute([
-                    'user' => $uid,
-                    'comment' => $cid,
-                ]);
+                DB::table('comment_votes')
+                    ->where('vote_user', $uid)
+                    ->where('vote_comment', $cid)
+                    ->delete();
             } else {
                 // Otherwise update the vote
-                DBv2::prepare('UPDATE `{prefix}comment_votes` SET `vote_state` = :state WHERE `vote_user` = :user AND `vote_comment` = :comment')
-                    ->execute([
-                    'state' => $mode,
-                    'user' => $uid,
-                    'comment' => $cid,
-                ]);
+                DB::table('comment_votes')
+                    ->where('vote_user', $uid)
+                    ->where('vote_comment', $cid)
+                    ->update([
+                        'vote_state' => $mode,
+                    ]);
             }
         } else {
             // Create a vote
-            DBv2::prepare('INSERT INTO `{prefix}comment_votes` (`vote_user`, `vote_comment`, `vote_state`) VALUES (:user, :comment, :state)')
-                ->execute([
-                'user' => $uid,
-                'comment' => $cid,
-                'state' => $mode,
-            ]);
+            DB::table('comment_votes')
+                ->insert([
+                    'vote_user' => $uid,
+                    'vote_comment' => $cid,
+                    'vote_state' => $mode,
+                ]);
         }
 
         return true;
@@ -241,9 +241,8 @@ class Comments
     public function removeComment($cid)
     {
         // Remove from database
-        DBv2::prepare('DELETE FROM `{prefix}comments` WHERE `comment_id` = :id')
-            ->execute([
-            'id' => $cid,
-        ]);
+        DB::table('comments')
+            ->where('comment_id', $cid)
+            ->delete();
     }
 }

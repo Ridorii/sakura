@@ -461,9 +461,9 @@ class User
                 array_merge(
                     array_keys($this->ranks),
                     $ranks)
-                ),
-                array_keys($this->ranks)
-            );
+            ),
+            array_keys($this->ranks)
+        );
 
         // Save to the database
         foreach ($ranks as $rank) {
@@ -592,21 +592,18 @@ class User
             return [0, 'USER_NOT_EXIST'];
         }
 
-        // Prepare the statement
-        $rem = DBv2::prepare('DELETE FROM `{prefix}friends` WHERE `user_id` = :user AND `friend_id` = :friend');
-
         // Remove friend
-        $rem->execute([
-            'user' => $this->id,
-            'friend' => $uid,
-        ]);
+        DB::table('friends')
+            ->where('user_id', $this->id)
+            ->where('friend_id', $uid)
+            ->delete();
 
         // Attempt to remove the request
         if ($deleteRequest) {
-            $rem->execute([
-                'user' => $uid,
-                'friend' => $this->id,
-            ]);
+            DB::table('friends')
+                ->where('user_id', $uid)
+                ->where('friend_id', $this->id)
+                ->delete();
         }
 
         // Return true because yay
@@ -623,19 +620,16 @@ class User
     public function isFriends($with)
     {
         // Accepted from this user
-        $get = DBv2::prepare('SELECT * FROM `{prefix}friends` WHERE `user_id` = :user AND `friend_id` = :friend');
-        $get->execute([
-            'user' => $this->id,
-            'friend' => $with,
-        ]);
-        $user = $get->rowCount();
+        $user = DB::table('friends')
+            ->where('user_id', $this->id)
+            ->where('friend_id', $with)
+            ->count();
 
         // And the other user
-        $get->execute([
-            'user' => $with,
-            'friend' => $this->id,
-        ]);
-        $friend = $get->rowCount();
+        $user = DB::table('friends')
+            ->where('user_id', $with)
+            ->where('friend_id', $this->id)
+            ->count();
 
         if ($user && $friend) {
             return 2; // Mutual friends
@@ -665,18 +659,16 @@ class User
             // Mutual
             case 2:
                 // Get all the current user's friends
-                $self = DBv2::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
-                $self->execute([
-                    'user' => $this->id,
-                ]);
-                $self = array_column($self->fetchAll(\PDO::FETCH_ASSOC), 'friend_id');
+                $self = DB::table('friends')
+                    ->where('user_id', $this->id)
+                    ->get(['friend_id']);
+                $self = array_column($self, 'friend_id');
 
                 // Get all the people that added this user as a friend
-                $others = DBv2::prepare('SELECT `user_id` FROM `{prefix}friends` WHERE `friend_id` = :user');
-                $others->execute([
-                    'user' => $this->id,
-                ]);
-                $others = array_column($others->fetchAll(\PDO::FETCH_ASSOC), 'user_id');
+                $others = DB::table('friends')
+                    ->where('friend_id', $this->id)
+                    ->get(['user_id']);
+                $others = array_column($others, 'user_id');
 
                 // Create a difference map
                 $users = array_intersect($self, $others);
@@ -684,29 +676,26 @@ class User
 
             // Non-mutual (from user perspective)
             case 1:
-                $users = DBv2::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
-                $users->execute([
-                    'user' => $this->id,
-                ]);
-                $users = array_column($users->fetchAll(\PDO::FETCH_ASSOC), 'friend_id');
+                $users = DB::table('friends')
+                    ->where('user_id', $this->id)
+                    ->get(['friend_id']);
+                $users = array_column($users, 'friend_id');
                 break;
 
             // All friend cases
             case 0:
             default:
                 // Get all the current user's friends
-                $self = DBv2::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
-                $self->execute([
-                    'user' => $this->id,
-                ]);
-                $self = array_column($self->fetchAll(\PDO::FETCH_ASSOC), 'friend_id');
+                $self = DB::table('friends')
+                    ->where('user_id', $this->id)
+                    ->get(['friend_id']);
+                $self = array_column($self, 'friend_id');
 
                 // Get all the people that added this user as a friend
-                $others = DBv2::prepare('SELECT `user_id` FROM `{prefix}friends` WHERE `friend_id` = :user');
-                $others->execute([
-                    'user' => $this->id,
-                ]);
-                $others = array_column($others->fetchAll(\PDO::FETCH_ASSOC), 'user_id');
+                $others = DB::table('friends')
+                    ->where('friend_id', $this->id)
+                    ->get(['user_id']);
+                $others = array_column($others, 'user_id');
 
                 // Create a difference map
                 $users = array_merge($others, $self);
@@ -715,18 +704,16 @@ class User
             // Open requests
             case -1:
                 // Get all the current user's friends
-                $self = DBv2::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
-                $self->execute([
-                    'user' => $this->id,
-                ]);
-                $self = array_column($self->fetchAll(\PDO::FETCH_ASSOC), 'friend_id');
+                $self = DB::table('friends')
+                    ->where('user_id', $this->id)
+                    ->get(['friend_id']);
+                $self = array_column($self, 'friend_id');
 
                 // Get all the people that added this user as a friend
-                $others = DBv2::prepare('SELECT `user_id` FROM `{prefix}friends` WHERE `friend_id` = :user');
-                $others->execute([
-                    'user' => $this->id,
-                ]);
-                $others = array_column($others->fetchAll(\PDO::FETCH_ASSOC), 'user_id');
+                $others = DB::table('friends')
+                    ->where('friend_id', $this->id)
+                    ->get(['user_id']);
+                $others = array_column($others, 'user_id');
 
                 // Create a difference map
                 $users = array_diff($others, $self);
@@ -808,23 +795,14 @@ class User
         // Create array and get values
         $profile = [];
 
-        $profileFields = DBv2::prepare('SELECT * FROM `{prefix}profilefields`');
-        $profileFields->execute();
-        $profileFields = $profileFields->fetchAll(\PDO::FETCH_ASSOC);
+        $profileFields = DB::table('profilefields')
+            ->get();
 
-        $profileValuesRaw = DBv2::prepare('SELECT * FROM `{prefix}user_profilefields` WHERE `user_id` = :user');
-        $profileValuesRaw->execute([
-            'user' => $this->id,
-        ]);
-        $profileValuesRaw = $profileValuesRaw->fetchAll(\PDO::FETCH_ASSOC);
+        $profileValuesRaw = DB::table('user_profilefields')
+            ->where('user_id', $this->id)
+            ->get();
 
-        $profileValueKeys = array_map(function ($a) {
-            return $a['field_name'];
-        }, $profileValuesRaw);
-        $profileValueVals = array_map(function ($a) {
-            return $a['field_value'];
-        }, $profileValuesRaw);
-        $profileValues = array_combine($profileValueKeys, $profileValueVals);
+        $profileValues = array_column($profileValuesRaw, 'field_value', 'field_name');
 
         // Check if anything was returned
         if (!$profileFields || !$profileValues) {
@@ -834,7 +812,7 @@ class User
         // Check if profile fields aren't fake
         foreach ($profileFields as $field) {
             // Completely strip all special characters from the field name
-            $fieldName = Utils::cleanString($field['field_name'], true, true);
+            $fieldName = Utils::cleanString($field->field_name, true, true);
 
             // Check if the user has the current field set otherwise continue
             if (!array_key_exists($fieldName, $profileValues)) {
@@ -843,23 +821,23 @@ class User
 
             // Assign field to output with value
             $profile[$fieldName] = [];
-            $profile[$fieldName]['name'] = $field['field_name'];
+            $profile[$fieldName]['name'] = $field->field_name;
             $profile[$fieldName]['value'] = $profileValues[$fieldName];
-            $profile[$fieldName]['islink'] = $field['field_link'];
+            $profile[$fieldName]['islink'] = $field->field_link;
 
             // If the field is set to be a link add a value for that as well
-            if ($field['field_link']) {
+            if ($field->field_link) {
                 $profile[$fieldName]['link'] = str_replace(
                     '{{ VAL }}',
                     $profileValues[$fieldName],
-                    $field['field_linkformat']
+                    $field->field_linkformat
                 );
             }
 
             // Check if we have additional options as well
-            if ($field['field_additional'] != null) {
+            if ($field->field_additional != null) {
                 // Decode the json of the additional stuff
-                $additional = json_decode($field['field_additional'], true);
+                $additional = json_decode($field->field_additional, true);
 
                 // Go over all additional forms
                 foreach ($additional as $subName => $subField) {
@@ -896,23 +874,14 @@ class User
         // Create array and get values
         $options = [];
 
-        $optionFields = DBv2::prepare('SELECT * FROM `{prefix}optionfields`');
-        $optionFields->execute();
-        $optionFields = $optionFields->fetchAll(\PDO::FETCH_ASSOC);
+        $optionFields = DB::table('optionfields')
+            ->get();
 
-        $optionValuesRaw = DBv2::prepare('SELECT * FROM `{prefix}user_optionfields` WHERE `user_id` = :user');
-        $optionValuesRaw->execute([
-            'user' => $this->id,
-        ]);
-        $optionValuesRaw = $optionValuesRaw->fetchAll(\PDO::FETCH_ASSOC);
+        $optionValuesRaw = DB::table('user_optionfields')
+            ->where('user_id', $this->id)
+            ->get();
 
-        $optionValueKeys = array_map(function ($a) {
-            return $a['field_name'];
-        }, $optionValuesRaw);
-        $optionValueVals = array_map(function ($a) {
-            return $a['field_value'];
-        }, $optionValuesRaw);
-        $optionValues = array_combine($optionValueKeys, $optionValueVals);
+        $optionValues = array_column($optionValuesRaw, 'field_value', 'field_name');
 
         // Check if anything was returned
         if (!$optionFields || !$optionValues) {
@@ -922,17 +891,17 @@ class User
         // Check if option fields aren't fake
         foreach ($optionFields as $field) {
             // Check if the user has the current field set otherwise continue
-            if (!array_key_exists($field['option_id'], $optionValues)) {
+            if (!array_key_exists($field->option_id, $optionValues)) {
                 continue;
             }
 
             // Make sure the user has the proper permissions to use this option
-            if (!$this->permission(constant('Sakura\Perms\Site::' . $field['option_permission']))) {
+            if (!$this->permission(constant('Sakura\Perms\Site::' . $field->option_permission))) {
                 continue;
             }
 
             // Assign field to output with value
-            $options[$field['option_id']] = $optionValues[$field['option_id']];
+            $options[$field->option_id] = $optionValues[$field->option_id];
         }
 
         // Assign cache
@@ -956,16 +925,16 @@ class User
         }
 
         // Attempt to retrieve the premium record from the database
-        $getRecord = DBv2::prepare('SELECT * FROM `{prefix}premium` WHERE `user_id` = :user');
-        $getRecord->execute([
-            'user' => $this->id,
-        ]);
-        $getRecord = $getRecord->fetch();
+        $getRecord = DB::table('premium')
+            ->where('user_id', $this->id)
+            ->get();
 
         // If nothing was returned just return false
         if (empty($getRecord)) {
             return [0];
         }
+
+        $getRecord[0] = $getRecord;
 
         // Check if the Tenshi hasn't expired
         if ($getRecord->premium_expire < time()) {
@@ -984,11 +953,9 @@ class User
     public function getWarnings()
     {
         // Do the database query
-        $getWarnings = DBv2::prepare('SELECT * FROM `{prefix}warnings` WHERE `user_id` = :user');
-        $getWarnings->execute([
-            'user' => $this->id,
-        ]);
-        $getWarnings = $getWarnings->fetchAll(\PDO::FETCH_ASSOC);
+        $getWarnings = DB::table('warnings')
+            ->where('user_id', $this->id)
+            ->get();
 
         // Storage array
         $warnings = [];
@@ -996,39 +963,38 @@ class User
         // Add special stuff
         foreach ($getWarnings as $warning) {
             // Check if it hasn't expired
-            if ($warning['warning_expires'] < time()) {
-                DBv2::prepare('DELETE FROM `{prefix}warnings` WHERE `warning_id` = :warn')
-                    ->execute([
-                    'warn' => $warning['warning_id'],
-                ]);
+            if ($warning->warning_expires < time()) {
+                DB::table('warnings')
+                    ->where('warning_id', $warning['warning_id'])
+                    ->delete();
                 continue;
             }
 
             // Text action
-            switch ($warning['warning_action']) {
+            switch ($warning->warning_action) {
                 default:
                 case '0':
-                    $warning['warning_action_text'] = 'Warning';
+                    $warning->warning_action_text = 'Warning';
                     break;
                 case '1':
-                    $warning['warning_action_text'] = 'Silence';
+                    $warning->warning_action_text = 'Silence';
                     break;
                 case '2':
-                    $warning['warning_action_text'] = 'Restriction';
+                    $warning->warning_action_text = 'Restriction';
                     break;
                 case '3':
-                    $warning['warning_action_text'] = 'Ban';
+                    $warning->warning_action_text = 'Ban';
                     break;
                 case '4':
-                    $warning['warning_action_text'] = 'Abyss';
+                    $warning->warning_action_text = 'Abyss';
                     break;
             }
 
             // Text expiration
-            $warning['warning_length'] = round(($warning['warning_expires'] - $warning['warning_issued']) / 60);
+            $warning->warning_length = round(($warning->warning_expires - $warning->warning_issued) / 60);
 
             // Add to array
-            $warnings[$warning['warning_id']] = $warning;
+            $warnings[$warning->warning_id] = $warning;
         }
 
         // Return all the warnings
@@ -1062,14 +1028,10 @@ class User
      */
     public function getUsernameHistory()
     {
-        // Do the database query
-        $changes = DBv2::prepare('SELECT * FROM `{prefix}username_history` WHERE `user_id` = :user ORDER BY `change_id` DESC');
-        $changes->execute([
-            'user' => $this->id,
-        ]);
-
-        // Return all the changes
-        return $changes->fetchAll(\PDO::FETCH_ASSOC);
+        return DB::table('username_history')
+            ->where('user_id', $this->id)
+            ->orderBy('change_id', 'desc')
+            ->get();
     }
 
     /**
@@ -1095,48 +1057,45 @@ class User
         }
 
         // Check if this username hasn't been used in the last amount of days set in the config
-        $getOld = DBv2::prepare('SELECT * FROM `{prefix}username_history` WHERE `username_old_clean` = :clean AND `change_time` > :time ORDER BY `change_id` DESC');
-        $getOld->execute([
-            'clean' => $username_clean,
-            'time' => (Config::get('old_username_reserve') * 24 * 60 * 60),
-        ]);
-        $getOld = $getOld->fetch();
+        $getOld = DB::table('username_history')
+            ->where('username_old_clean', $username_clean)
+            ->where('change_time', '>', (Config::get('old_username_reserve') * 24 * 60 * 60))
+            ->orderBy('change_id', 'desc')
+            ->get();
 
         // Check if anything was returned
-        if ($getOld && $getOld->user_id != $this->id) {
-            return [0, 'TOO_RECENT', $getOld['change_time']];
+        if ($getOld && $getOld[0]->user_id != $this->id) {
+            return [0, 'TOO_RECENT', $getOld[0]['change_time']];
         }
 
         // Check if the username is already in use
-        $getInUse = DBv2::prepare('SELECT * FROM `{prefix}users` WHERE `username_clean` = :clean');
-        $getInUse->execute([
-            'clean' => $username_clean,
-        ]);
-        $getInUse = $getInUse->fetch();
+        $getInUse = DB::table('users')
+            ->where('username_clean', $username_clean)
+            ->get();
 
         // Check if anything was returned
         if ($getInUse) {
-            return [0, 'IN_USE', $getInUse->user_id];
+            return [0, 'IN_USE', $getInUse[0]->user_id];
         }
 
         // Insert into username_history table
-        DBv2::prepare('INSERT INTO `{prefix}username_history` (`change_time`, `user_id`, `username_new`, `username_new_clean`, `username_old`, `username_old_clean`) VALUES (:time, :user, :new, :new_clean, :old, :old_clean)')
-            ->execute([
-            'time' => time(),
-            'user' => $this->id,
-            'new' => $username,
-            'new_clean' => $username_clean,
-            'old' => $this->username,
-            'old_clean' => $this->usernameClean,
-        ]);
+        DB::table('username_history')
+            ->insert([
+                'change_time' => time(),
+                'user_id' => $this->id,
+                'username_new_clean' => $username,
+                'new_clean' => $username_clean,
+                'username_old' => $this->username,
+                'username_old_clean' => $this->usernameClean,
+            ]);
 
         // Update userrow
-        DBv2::prepare('UPDATE `{prefix}users` SET `username` = :username, `username_clean` = :clean WHERE `user_id` = :id')
-            ->execute([
-            'username' => $username,
-            'clean' => $username_clean,
-            'id' => $this->id,
-        ]);
+        DB::table('users')
+            ->where('user_id', $this->id)
+            ->update([
+                'username' => $username,
+                'username_clean' => $username_clean,
+            ]);
 
         // Return success
         return [1, 'SUCCESS', $username];
@@ -1157,23 +1116,21 @@ class User
         }
 
         // Check if the username is already in use
-        $getInUse = DBv2::prepare('SELECT * FROM `{prefix}users` WHERE `email` = :email');
-        $getInUse->execute([
-            'email' => $email,
-        ]);
-        $getInUse = $getInUse->fetch();
+        $getInUse = DB::table('users')
+            ->where('email', $email)
+            ->get();
 
         // Check if anything was returned
         if ($getInUse) {
-            return [0, 'IN_USE', $getInUse->user_id];
+            return [0, 'IN_USE', $getInUse[0]->user_id];
         }
 
         // Update userrow
-        DBv2::prepare('UPDATE `{prefix}users` SET `email` = :email WHERE `user_id` = :id')
-            ->execute([
-            'email' => $email,
-            'id' => $this->id,
-        ]);
+        DB::table('users')
+            ->where('user_id', $this->id)
+            ->update([
+                'email' => $email,
+            ]);
 
         // Return success
         return [1, 'SUCCESS', $email];
@@ -1223,15 +1180,15 @@ class User
         $password = Hashing::createHash($new);
 
         // Update userrow
-        DBv2::prepare('UPDATE `{prefix}users` SET `password_hash` = :hash, `password_salt` = :salt, `password_algo` = :algo, `password_iter` = :iter, `password_chan` = :chan WHERE `user_id` = :id')
-            ->execute([
-            'hash' => $password[3],
-            'salt' => $password[2],
-            'algo' => $password[0],
-            'iter' => $password[1],
-            'chan' => time(),
-            'id' => $this->id,
-        ]);
+        DB::table('users')
+            ->where('user_id', $this->id)
+            ->update([
+                'password_hash' => $password[3],
+                'password_salt' => $password[2],
+                'password_algo' => $password[0],
+                'password_iter' => $password[1],
+                'password_chan' => time(),
+            ]);
 
         // Return success
         return [1, 'SUCCESS'];

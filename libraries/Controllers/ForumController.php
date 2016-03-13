@@ -276,7 +276,7 @@ class ForumController extends Controller
                     $thread->update();
 
                     // Add page variable stuff
-                    $message = $thread->type ? 'Changed the thread to anto an announcement!' : 'Reverted the thread back to normal!';
+                    $message = $thread->type ? 'Changed the thread to into an announcement!' : 'Reverted the thread back to normal!';
                     break;
 
                 case 'lock':

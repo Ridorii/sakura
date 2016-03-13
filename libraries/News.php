@@ -31,14 +31,16 @@ class News
     {
 
         // Get the news posts and assign them to $posts
-        $posts = DBv2::prepare('SELECT * FROM `{prefix}news` WHERE `news_category` = :cat ORDER BY `news_id` DESC');
-        $posts->execute([
-            'cat' => $category,
-        ]);
-        $posts = $posts->fetchAll(\PDO::FETCH_ASSOC);
+        $posts = DB::table('news')
+            ->where('news_category', $category)
+            ->orderBy('news_id', 'desc')
+            ->get();
 
         // Attach poster data
         foreach ($posts as $post) {
+            // See Comments.php
+            $post = get_object_vars($post);
+
             // Attach the poster
             $post['news_poster'] = User::construct($post['user_id']);
 

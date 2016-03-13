@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160311');
+define('SAKURA_VERSION', '20160313');
 
 // Define Sakura Path
 define('ROOT', __DIR__ . '/');
@@ -64,15 +64,6 @@ Config::init(ROOT . 'config/config.ini');
 
 // Change error reporting according to the dev configuration
 error_reporting(Config::local('dev', 'show_errors') ? -1 : 0);
-
-// Make the database connection
-DBv2::open(
-    Config::local('database', 'driver'),
-    Config::local('dsn'),
-    Config::local('database', 'username'),
-    Config::local('database', 'password'),
-    Config::local('database', 'prefix')
-);
 
 // Create a new database capsule
 $capsule = new \Illuminate\Database\Capsule\Manager;
@@ -209,7 +200,9 @@ if (!defined('SAKURA_NO_TPL')) {
     }
 
     // Ban checking
-    if ($authCheck && !in_array($_SERVER['PHP_SELF'], [$urls->format('AUTH_ACTION', [], false)]) && $ban = Bans::checkBan($currentUser->id)) {
+    if ($authCheck
+        && !in_array($_SERVER['PHP_SELF'], [$urls->format('AUTH_ACTION', [], false)])
+        && $ban = Bans::checkBan($currentUser->id)) {
         // Additional render data
         Template::vars([
             'ban' => [

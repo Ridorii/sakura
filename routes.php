@@ -35,20 +35,20 @@ Router::group(['prefix' => 'news'], function () {
 Router::group(['prefix' => 'forum'], function () {
     // Thread
     Router::group(['prefix' => 'thread'], function () {
-        Router::get('/{id}', 'ForumController@thread', 'forums.thread');
-        Router::post('/{id}/mod', 'ForumController@threadModerate', 'forums.thread.mod');
+        Router::get('/{id:i}', 'ForumController@thread', 'forums.thread');
+        Router::post('/{id:i}/mod', 'ForumController@threadModerate', 'forums.thread.mod');
     });
 
     // Forum
     Router::get('/', 'ForumController@index', 'forums.index');
-    Router::get('/{id}', 'ForumController@forum', 'forums.forum');
-    Router::get('/{id}/mark', 'ForumController@markForumRead', 'forums.mark');
+    Router::get('/{id:i}', 'ForumController@forum', 'forums.forum');
+    Router::get('/{id:i}/mark', 'ForumController@markForumRead', 'forums.mark');
 });
 
 // Members
 Router::group(['prefix' => 'members'], function () {
     Router::get('/', 'UserController@members', 'members.index');
-    Router::get('/{rank}', 'UserController@members', 'members.rank');
+    Router::get('/{rank:i}', 'UserController@members', 'members.rank');
 });
 
 // User

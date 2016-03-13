@@ -188,11 +188,12 @@ class Rank
     public function users($justIds = false)
     {
         // Fetch all users part of this rank
-        $fetch = DBv2::prepare('SELECT `user_id` FROM `{prefix}user_ranks` WHERE `rank_id` = :id');
-        $fetch->execute([
-            'id' => $this->id,
-        ]);
-        $userIds = array_column($fetch->fetchAll(\PDO::FETCH_ASSOC), 'user_id');
+        $get = DB::table('user_ranks')
+            ->where('rank_id', $this->id)
+            ->get(['user_id']);
+
+        // Filter the user ids into one array
+        $userIds = array_column($get, 'user_id');
 
         // Just return that if we were asked for just the ids
         if ($justIds) {

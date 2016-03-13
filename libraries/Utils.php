@@ -49,7 +49,7 @@ class Utils
 
             default:
                 $error = '<b>Unknown error type</b> [' . $errno . ']: ' . $errstr . ' on line ' . $errline
-                . ' in ' . $errfile;
+                    . ' in ' . $errfile;
         }
 
         // Truncate all previous outputs
@@ -361,9 +361,9 @@ class Utils
         $data = [];
 
         // Get database stuff
-        $table = DBv2::prepare('SELECT * FROM `{prefix}premium_log` ORDER BY `transaction_id` DESC');
-        $table->execute();
-        $table = $table->fetchAll(\PDO::FETCH_ASSOC);
+        $table = DB::table('premium_log')
+            ->orderBy('transaction_id', 'desc')
+            ->get();
 
         // Add raw table data to data array
         $data['table'] = $table;
@@ -371,17 +371,17 @@ class Utils
         // Create balance entry
         $data['balance'] = 0.0;
 
-        // Create users entry
+        // users
         $data['users'] = [];
 
         // Calculate the thing
         foreach ($table as $row) {
             // Calculate balance
-            $data['balance'] = $data['balance'] + $row['transaction_amount'];
+            $data['balance'] = $data['balance'] + $row->transaction_amount;
 
             // Add userdata to table
-            if (!array_key_exists($row['user_id'], $data['users'])) {
-                $data['users'][$row['user_id']] = User::construct($row['user_id']);
+            if (!array_key_exists($row->user_id, $data['users'])) {
+                $data['users'][$row->user_id] = User::construct($row->user_id);
             }
         }
 
@@ -398,13 +398,13 @@ class Utils
      */
     public static function updatePremiumTracker($id, $amount, $comment)
     {
-        DBv2::prepare('INSERT INTO `{prefix}premium_log` (`user_id`, `transaction_amount`, `transaction_date`, `transaction_comment`) VALUES (:user, :amount, :date, :comment)')
-            ->execute([
-            'user' => $id,
-            'amount' => $amount,
-            'date' => time(),
-            'comment' => $comment,
-        ]);
+        DB::table('premium_log')
+            ->insert([
+                'user_id' => $id,
+                'transaction_amount' => $amount,
+                'transaction_date' => time(),
+                'transaction_comment' => $comment,
+            ]);
     }
 
     /**
@@ -427,7 +427,7 @@ class Utils
                     $code = str_replace('<br/>', '', $code);
                     $code = str_replace('<br>', '', $code);
                     $code = str_replace('<', '&lt;', $code);
-                    $newStr .= '<code>'.$code.'</code>';
+                    $newStr .= '<code>' . $code . '</code>';
                     $newStr .= $parts2[1];
                 } else {
                     $newStr .= $p;
@@ -436,7 +436,7 @@ class Utils
         } else {
             $newStr = $text;
         }
-        
+
         return $newStr;
     }
 }
