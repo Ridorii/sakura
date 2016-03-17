@@ -309,50 +309,6 @@ class Users
     }
 
     /**
-     * Activate a user.
-     *
-     * @param int $uid The ID.
-     * @param bool $requireKey Require a key.
-     * @param string $key The key.
-     *
-     * @return array Status.
-     */
-    public static function activateUser($uid, $requireKey = false, $key = null)
-    {
-        // Get the user data
-        $user = User::construct($uid);
-
-        // Check if user exists
-        if (!$user->id) {
-            return [0, 'USER_NOT_EXIST'];
-        }
-
-        // Check if user is already activated
-        if (!$user->permission(Site::DEACTIVATED)) {
-            return [0, 'USER_ALREADY_ACTIVE'];
-        }
-
-        // Check if a key is set
-        if ($requireKey) {
-            // Check the action code
-            $action = ActionCode::validate('ACTIVATE', $key, $user->id);
-
-            // Check if we got a negative return
-            if (!$action) {
-                return [0, 'INVALID_CODE'];
-            }
-        }
-
-        // Add normal user, remove deactivated and set normal as default
-        $user->addRanks([2]);
-        $user->removeRanks([1]);
-        $user->setMainRank(2);
-
-        // Return success
-        return [1, 'SUCCESS'];
-    }
-
-    /**
      * Get all available profile fields.
      *
      * @return array|null The fields.
@@ -613,6 +569,7 @@ class Users
     {
         $get = DB::table('users')
             ->where('rank_main', '!=', Config::get('restricted_rank_id'))
+            ->where('rank_main', '!=', Config::get('deactive_rank_id'))
             ->orderBy('user_id', 'desc')
             ->limit(1)
             ->get(['user_id']);

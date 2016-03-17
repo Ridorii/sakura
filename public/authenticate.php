@@ -90,28 +90,6 @@ if (isset($_REQUEST['mode'])) {
                 ];
                 break;
 
-            // Activating accounts
-            case 'activate':
-                // Attempt activation
-                $activate = Users::activateUser($_REQUEST['u'], true, $_REQUEST['k']);
-
-                // Array containing "human understandable" messages
-                $messages = [
-                    'USER_NOT_EXIST' => 'The user you tried to activate does not exist.',
-                    'USER_ALREADY_ACTIVE' => 'The user you tried to activate is already active.',
-                    'INVALID_CODE' => 'Invalid activation code, if you think this is an error contact the administrator.',
-                    'INVALID_USER' => 'The used activation code is not designated for this user.',
-                    'SUCCESS' => 'Successfully activated your account, you may now log in.',
-                ];
-
-                // Add page specific things
-                $renderData['page'] = [
-                    'redirect' => $urls->format('SITE_LOGIN'),
-                    'message' => $messages[$activate[1]],
-                    'success' => $activate[0],
-                ];
-                break;
-
             // Resending the activation e-mail
             case 'resendactivemail':
                 // Attempt send
@@ -174,6 +152,14 @@ if (isset($_REQUEST['mode'])) {
                 $renderData['page'] = [
                     'redirect' => Router::route('auth.register'),
                     'message' => 'Wrong registration page.',
+                    'success' => 0,
+                ];
+                break;
+
+            case 'activate':
+                $renderData['page'] = [
+                    'redirect' => Router::route('auth.activate'),
+                    'message' => 'Wrong activation page.',
                     'success' => 0,
                 ];
                 break;

@@ -460,7 +460,8 @@ class User
             array_unique(
                 array_merge(
                     array_keys($this->ranks),
-                    $ranks)
+                    $ranks
+                )
             ),
             array_keys($this->ranks)
         );
@@ -487,7 +488,7 @@ class User
 
         // Iterate over the ranks
         foreach ($remove as $rank) {
-            DB::table('ranks')
+            DB::table('user_ranks')
                 ->where('user_id', $this->id)
                 ->where('rank_id', $rank)
                 ->delete();
