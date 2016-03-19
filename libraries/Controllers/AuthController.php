@@ -428,4 +428,180 @@ class AuthController extends Controller
     {
         return Template::render('main/reactivate');
     }
+
+    public function reactivatePost()
+    {
+        // Preliminarily set registration to failed
+        $success = 0;
+        $redirect = Router::route('auth.reactivate');
+
+        // Check if authentication is disallowed
+        if (Config::get('lock_authentication')) {
+            $message = "You can't request a reactivation at this time, sorry!";
+
+            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+
+            return Template::render('global/information');
+        }
+
+        // Validate session
+        if (!isset($_POST['session']) || $_POST['session'] != session_id()) {
+            $message = "Your session expired, refreshing the page will most likely fix this!";
+
+            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+
+            return Template::render('global/information');
+        }
+
+        // Grab forms
+        $username = isset($_POST['username']) ? Utils::cleanString($_POST['username'], true) : null;
+        $email = isset($_POST['email']) ? Utils::cleanString($_POST['email'], true) : null;
+
+        // Do database request
+        $getUser = DB::table('users')
+            ->where('username_clean', $username)
+            ->where('email', $email)
+            ->get(['user_id']);
+
+        // Check if user exists
+        if (!$getUser) {
+            $message = "User not found! Double check your username and e-mail address!";
+
+            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+
+            return Template::render('global/information');
+        }
+
+        // Create user object
+        $user = User::construct($getUser[0]->user_id);
+
+        // Check if a user is activated
+        if (!$user->permission(Site::DEACTIVATED)) {
+            $message = "Your account is already activated! Why are you here?";
+
+            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+
+            return Template::render('global/information');
+        }
+
+        // Send activation e-mail to user
+        Users::sendActivationMail($user->id);
+
+        $success = 1;
+        $redirect = Router::route('auth.login');
+        $message = "Sent the e-mail! Make sure to check your spam folder as well!";
+
+        Template::vars(['page' => compact('success', 'redirect', 'message')]);
+
+        return Template::render('global/information');
+    }
+
+    public function resetPasswordGet()
+    {
+        return Template::render('main/resetpassword');
+    }
+
+    public function resetPasswordPost()
+    {
+        // Preliminarily set action to failed
+        $success = 0;
+        $redirect = Router::route('main.index');
+
+        // Check if authentication is disallowed
+        if (Config::get('lock_authentication')) {
+            $message = "You can't request a reactivation at this time, sorry!";
+
+            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+
+            return Template::render('global/information');
+        }
+
+        // Validate session
+        if (!isset($_POST['session']) || $_POST['session'] != session_id()) {
+            $message = "Your session expired, refreshing the page will most likely fix this!";
+
+            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+
+            return Template::render('global/information');
+        }
+
+        // Attempt to get the various required GET parameters
+        $userId = isset($_POST['user']) ? $_POST['user'] : 0;
+        $key = isset($_POST['key']) ? $_POST['key'] : "";
+        $password = isset($_POST['password']) ? $_POST['password'] : "";
+        $userName = isset($_POST['username']) ? Utils::cleanString($_POST['username'], true) : "";
+        $email = isset($_POST['email']) ? Utils::cleanString($_POST['email'], true) : null;
+
+        // Create user object
+        $user = User::construct($userId ? $userId : $userName);
+
+        // Quit if the user ID is 0
+        if ($user->id === 0 || ($email !== null ? $email !== $user->email : false)) {
+            $message = "This user does not exist! Contact us if you think this isn't right.";
+
+            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+
+            return Template::render('global/information');
+        }
+
+        // Check if the user is active
+        if ($user->permission(Site::DEACTIVATED)) {
+            $message = "Your account is deactivated, go activate it first...";
+
+            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+
+            return Template::render('global/information');
+        }
+
+        if ($key && $password) {
+            // Check password entropy
+            if (Utils::pwdEntropy($password) < Config::get('min_entropy')) {
+                $message = "Your password doesn't meet the strength requirements!";
+
+                Template::vars(['page' => compact('success', 'redirect', 'message')]);
+
+                return Template::render('global/information');
+            }
+
+            // Validate the activation key
+            $action = ActionCode::validate('LOST_PASS', $key, $user->id);
+
+            if (!$action) {
+                $message = "Invalid verification code! Contact us if you think this isn't right.";
+
+                Template::vars(['page' => compact('success', 'redirect', 'message')]);
+
+                return Template::render('global/information');
+            }
+
+            // Hash the password
+            $pw = Hashing::createHash($password);
+
+            // Update the user
+            DB::table('users')
+                ->where('user_id', $user->id)
+                ->update([
+                    'password_hash' => $pw[3],
+                    'password_salt' => $pw[2],
+                    'password_algo' => $pw[0],
+                    'password_iter' => $pw[1],
+                    'password_chan' => time(),
+                ]);
+
+            $success = 1;
+            $message = "Changed your password! You may now log in.";
+            $redirect = Router::route('auth.login');
+        } else {
+            // Send e-mail
+            Users::sendPasswordForgot($user->id, $user->email);
+
+            $success = 1;
+            $message = "Sent the e-mail, keep an eye on your spam folder as well!";
+            $redirect = Router::route('main.index');
+        }
+
+        Template::vars(['page' => compact('success', 'redirect', 'message')]);
+
+        return Template::render('global/information');
+    }
 }

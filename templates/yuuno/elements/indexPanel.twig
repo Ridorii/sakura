@@ -18,7 +18,7 @@
             <div class="head">Welcome!</div>
             Welcome to Flashii! This is a site for a bunch of friends to hang out, nothing special. Anyone is pretty much welcome to register so why not have a go?
             <div class="indexSidePanelLinks">
-                <a class="fa fa-magic" href="{{ urls.format('SITE_REGISTER') }}" title="Register" id="indexSidePanelRegister"></a>
+                <a class="fa fa-magic" href="{{ route('auth.register') }}" title="Register" id="indexSidePanelRegister"></a>
                 <a class="fa fa-sign-in" href="{{ route('auth.login') }}" title="Login" id="indexSidePanelLogin"></a>
             </div>
         {% endif %}

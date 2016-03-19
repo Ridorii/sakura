@@ -78,7 +78,7 @@ class ActionCode
     public static function invalidate($code)
     {
         DB::table('actioncodes')
-            ->where('code_action', $code)
+            ->where('action_code', $code)
             ->delete();
     }
 }

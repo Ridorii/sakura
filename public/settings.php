@@ -7,6 +7,7 @@
 namespace Sakura;
 
 use Sakura\Perms\Site;
+use Sakura\Router;
 
 // If this we're requesting notifications this page won't require templating
 if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications']) {
@@ -99,7 +100,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     exit;
 } elseif (isset($_REQUEST['comment-action']) && $_REQUEST['comment-action']) {
     // Referrer
-    $redirect = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('SITE_INDEX'));
+    $redirect = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : Router::route('main.index'));
 
     // Continue
     $continue = true;
@@ -278,7 +279,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
     $continue = true;
 
     // Referrer
-    $redirect = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('SITE_INDEX'));
+    $redirect = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : Router::route('main.index'));
 
     // Compare time and session so we know the link isn't forged
     if (!isset($_REQUEST['add']) && !isset($_REQUEST['remove'])) {
@@ -382,8 +383,8 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                 sprintf($notifStrings[$action[1]][0], $user->username),
                 $notifStrings[$action[1]][1],
                 60000,
-                $urls->format('IMAGE_AVATAR', [$user->id]),
-                $urls->format('USER_PROFILE', [$user->id]),
+                Router::route('file.avatar', $user->id),
+                Router::route('user.profile', $user->id),
                 '1'
             );
         }

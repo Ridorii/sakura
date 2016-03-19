@@ -36,7 +36,10 @@ class ForumController extends Controller
         Template::vars([
             'forum' => (new Forum()),
             'stats' => [
-                'userCount' => DB::table('users')->where('password_algo', '!=', 'disabled')->whereNotIn('rank_main', [1, 10])->count(),
+                'userCount' => DB::table('users')
+                    ->where('password_algo', '!=', 'disabled')
+                    ->whereNotIn('rank_main', [1, 10])
+                    ->count(),
                 'newestUser' => User::construct(Users::getNewestUserId()),
                 'lastRegDate' => date_diff(
                     date_create(date('Y-m-d', User::construct(Users::getNewestUserId())->registered)),

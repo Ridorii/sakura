@@ -3,7 +3,7 @@
         {% for rank in user.ranks %}
         <tr {% if rank.id == user.mainRankId %} class="current-session" {% endif %}>
             <td style="font-weight: bold; color: {{ rank.colour }}; text-shadow: 0 0 7px {{ rank.colour }}; text-align: left;">
-                <a href="{{ urls.format('MEMBERLIST_RANK', [rank.id]) }}" class="clean">{{ rank.name }}</a>
+                <a href="{{ route('members.rank', rank.id) }}" class="clean">{{ rank.name }}</a>
             </td>
             <td style="width: 90px;">
                 <form method="post" action="{{ sakura.currentPage }}">

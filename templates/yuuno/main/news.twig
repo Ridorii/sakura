@@ -7,7 +7,7 @@
     {% set comments = newsPosts[0].news_comments.comments %}
 {% else %}
     {% set paginationPages = news.posts|batch(postsPerPage) %}
-    {% set paginationUrl %}{{ urls.format('SITE_NEWS') }}{% endset %}
+    {% set paginationUrl %}{{ route('news.index') }}{% endset %}
 {% endif %}
 
 {% set title %}

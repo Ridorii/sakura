@@ -8,6 +8,7 @@
 namespace Sakura;
 
 use Sakura\Perms\Site;
+use Sakura\Router;
 
 /**
  * User management
@@ -101,211 +102,86 @@ class Users
     /**
      * Send password forgot e-mail
      *
-     * @param string $username The username.
+     * @param string $userId The user id.
      * @param string $email The e-mail.
-     *
-     * @return array The status.
      */
-    public static function sendPasswordForgot($username, $email)
+    public static function sendPasswordForgot($userId, $email)
     {
-        // Check if authentication is disallowed
-        if (Config::get('lock_authentication')) {
-            return [0, 'AUTH_LOCKED'];
-        }
+        $user = User::construct($userId);
 
-        // Clean username string
-        $usernameClean = Utils::cleanString($username, true);
-        $emailClean = Utils::cleanString($email, true);
-
-        // Do database request
-        $user = DB::table('users')
-            ->where('username_clean', $usernameClean)
-            ->where(':email', $emailClean)
-            ->get(['user_id']);
-
-        // Check if user exists
-        if (count($user) < 1) {
-            return [0, 'USER_NOT_EXIST'];
-        }
-
-        $userObj = User::construct($user[0]->user_id);
-
-        // Check if the user has the required privs to log in
-        if ($userObj->permission(Site::DEACTIVATED)) {
-            return [0, 'NOT_ALLOWED'];
+        if (!$user->id || $user->permission(Site::DEACTIVATED)) {
+            return;
         }
 
         // Generate the verification key
-        $verk = ActionCode::generate('LOST_PASS', $userObj->id);
+        $verk = ActionCode::generate('LOST_PASS', $user->id);
 
-        // Create new urls object
-        $urls = new Urls();
+        $siteName = Config::get('sitename');
+        $baseUrl = "http://" . Config::get('url_main');
+        $reactivateLink = Router::route('auth.resetpassword') . "?u={$user->id}&k={$verk}";
+        $signature = Config::get('mail_signature');
 
         // Build the e-mail
-        $message = "Hello " . $user['username'] . ",\r\n\r\n";
-        $message .= "You are receiving this notification because you have (or someone pretending to be you has) requested a password reset link to be sent for your account on \"" . Config::get('sitename') . "\". If you did not request this notification then please ignore it, if you keep receiving it please contact the site administrator.\r\n\r\n";
-        $message .= "To use this password reset key you need to go to a special page. To do this click the link provided below.\r\n\r\n";
-        $message .= "http://" . Config::get('url_main') . $urls->format('SITE_FORGOT_PASSWORD') . "?pw=true&uid=" . $user['user_id'] . "&key=" . $verk . "\r\n\r\n";
-        $message .= "If successful you should be able to change your password here.\r\n\r\n";
-        $message .= "Alternatively if the above method fails for some reason you can go to http://" . Config::get('url_main') . $urls->format('SITE_FORGOT_PASSWORD') . "?pw=true&uid=" . $user['user_id'] . " and use the key listed below:\r\n\r\n";
-        $message .= "Verification key: " . $verk . "\r\n\r\n";
-        $message .= "You can of course change this password yourself via the profile page. If you have any difficulties please contact the site administrator.\r\n\r\n";
-        $message .= "--\r\n\r\nThanks\r\n\r\n" . Config::get('mail_signature');
+        $message = "Hello {$user->username},\r\n\r\n"
+            . "You are receiving this notification because you have (or someone pretending to be you has)"
+            . " requested a password reset link to be sent for your account on \"{$siteName}\"."
+            . " If you did not request this notification then please ignore it,"
+            . " if you keep receiving it please contact the site administrator.\r\n\r\n"
+            . "To use this password reset key you need to go to a special page."
+            . " To do this click the link provided below.\r\n\r\n"
+            . "{$baseUrl}{$reactivateLink}\r\n\r\n"
+            . "If successful you should be able to change your password here.\r\n\r\n"
+            . "You can of course change this password yourself via the settings page."
+            . " If you have any difficulties please contact the site administrator.\r\n\r\n"
+            . "--\r\n\r\nThanks\r\n\r\n{$signature}";
 
         // Send the message
-        Utils::sendMail([$user['email'] => $user['username']], Config::get('sitename') . ' password restoration', $message);
-
-        // Return success
-        return [1, 'SUCCESS'];
-    }
-
-    /**
-     * Reset a password.
-     *
-     * @param string $verk The e-mail verification key.
-     * @param int $uid The user id.
-     * @param string $newpass New pass.
-     * @param string $verpass Again.
-     *
-     * @return array Status.
-     */
-    public static function resetPassword($verk, $uid, $newpass, $verpass)
-    {
-        // Check if authentication is disallowed
-        if (Config::get('lock_authentication')) {
-            return [0, 'AUTH_LOCKED'];
-        }
-
-        // Check password entropy
-        if (Utils::pwdEntropy($newpass) < Config::get('min_entropy')) {
-            return [0, 'PASS_TOO_SHIT'];
-        }
-
-        // Passwords do not match
-        if ($newpass != $verpass) {
-            return [0, 'PASS_NOT_MATCH'];
-        }
-
-        // Check the verification key
-        $action = ActionCode::validate('LOST_PASS', $verk, $uid);
-
-        // Check if we got a negative return
-        if (!$action) {
-            return [0, 'INVALID_CODE'];
-        }
-
-        // Hash the password
-        $password = Hashing::createHash($newpass);
-
-        // Update the user
-        DB::table('users')
-            ->where('user_id', $uid)
-            ->update([
-                'password_hash' => $password[3],
-                'password_salt' => $password[2],
-                'password_algo' => $password[0],
-                'password_iter' => $password[1],
-                'password_chan' => time(),
-            ]);
-
-        // Return success
-        return [1, 'SUCCESS'];
-    }
-
-    /**
-     * Resend activation e-mail.
-     *
-     * @param string $username Username.
-     * @param string $email E-mail.
-     *
-     * @return array Status
-     */
-    public static function resendActivationMail($username, $email)
-    {
-        // Check if authentication is disallowed
-        if (Config::get('lock_authentication')) {
-            return [0, 'AUTH_LOCKED'];
-        }
-
-        // Clean username string
-        $usernameClean = Utils::cleanString($username, true);
-        $emailClean = Utils::cleanString($email, true);
-
-        // Do database request
-        $user = DB::table('users')
-            ->where('username_clean', $usernameClean)
-            ->where(':email', $emailClean)
-            ->get(['user_id']);
-
-        // Check if user exists
-        if (count($user) < 1) {
-            return [0, 'USER_NOT_EXIST'];
-        }
-
-        $userObj = User::construct($user[0]->user_id);
-
-        // Check if a user is activated
-        if (!$userObj->permission(Site::DEACTIVATED)) {
-            return [0, 'USER_ALREADY_ACTIVE'];
-        }
-
-        // Send activation e-mail
-        self::sendActivationMail($userObj->id);
-
-        // Return success
-        return [1, 'SUCCESS'];
+        Utils::sendMail([$user->email => $user->username], "{$siteName} password restoration", $message);
     }
 
     /**
      * Send activation e-mail.
      *
-     * @param mixed $uid User ID.
+     * @param mixed $userId User ID.
      * @param mixed $customKey Key.
-     *
-     * @return bool Always true.
      */
-    public static function sendActivationMail($uid, $customKey = null)
+    public static function sendActivationMail($userId, $customKey = null)
     {
 
         // Get the user data
-        $user = User::construct($uid);
+        $user = User::construct($userId);
 
         // User is already activated or doesn't even exist
         if (!$user->id || !$user->permission(Site::DEACTIVATED)) {
-            return false;
+            return;
         }
 
         // Generate activation key
         $activate = ActionCode::generate('ACTIVATE', $user->id);
 
-        // Create new urls object
-        $urls = new Urls();
+        $siteName = Config::get('sitename');
+        $baseUrl = "http://" . Config::get('url_main');
+        $activateLink = Router::route('auth.activate') . "?u={$user->id}&k={$activate}";
+        $profileLink = Router::route('user.profile', $user->id);
+        $signature = Config::get('mail_signature');
 
         // Build the e-mail
-        $message = "Welcome to " . Config::get('sitename') . "!\r\n\r\n";
-        $message .= "Please keep this e-mail for your records. Your account intormation is as follows:\r\n\r\n";
-        $message .= "----------------------------\r\n\r\n";
-        $message .= "Username: " . $user->username . "\r\n\r\n";
-        $message .= "Your profile: http://" . Config::get('url_main') . $urls->format('USER_PROFILE', [$user->id]) . "\r\n\r\n";
-        $message .= "----------------------------\r\n\r\n";
-        $message .= "Please visit the following link in order to activate your account:\r\n\r\n";
-        $message .= "http://" . Config::get('url_main') . $urls->format('SITE_ACTIVATE') . "?mode=activate&u=" . $user->id . "&k=" . $activate . "\r\n\r\n";
-        $message .= "Your password has been securely stored in our database and cannot be retrieved. ";
-        $message .= "In the event that it is forgotten, you will be able to reset it using the email address associated with your account.\r\n\r\n";
-        $message .= "Thank you for registering.\r\n\r\n";
-        $message .= "--\r\n\r\nThanks\r\n\r\n" . Config::get('mail_signature');
+        $message = "Welcome to {$siteName}!\r\n\r\n"
+            . "Please keep this e-mail for your records. Your account intormation is as follows:\r\n\r\n"
+            . "----------------------------\r\n\r\n"
+            . "Username: {$user->username}\r\n\r\n"
+            . "Your profile: {$baseUrl}{$profileLink}\r\n\r\n"
+            . "----------------------------\r\n\r\n"
+            . "Please visit the following link in order to activate your account:\r\n\r\n"
+            . "{$baseUrl}{$activateLink}\r\n\r\n"
+            . "Your password has been securely stored in our database and cannot be retrieved. "
+            . "In the event that it is forgotten,"
+            . " you will be able to reset it using the email address associated with your account.\r\n\r\n"
+            . "Thank you for registering.\r\n\r\n"
+            . "--\r\n\r\nThanks\r\n\r\n{$signature}";
 
         // Send the message
-        Utils::sendMail(
-            [
-                $user->email => $user->username,
-            ],
-            Config::get('sitename') . ' Activation Mail',
-            $message
-        );
-
-        // Return true indicating that the things have been sent
-        return true;
+        Utils::sendMail([$user->email => $user->username], "{$siteName} activation mail", $message);
     }
 
     /**

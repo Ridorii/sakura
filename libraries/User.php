@@ -627,7 +627,7 @@ class User
             ->count();
 
         // And the other user
-        $user = DB::table('friends')
+        $friend = DB::table('friends')
             ->where('user_id', $with)
             ->where('friend_id', $this->id)
             ->count();
@@ -935,7 +935,7 @@ class User
             return [0];
         }
 
-        $getRecord[0] = $getRecord;
+        $getRecord = $getRecord[0];
 
         // Check if the Tenshi hasn't expired
         if ($getRecord->premium_expire < time()) {

@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160317');
+define('SAKURA_VERSION', '20160319');
 
 // Define Sakura Path
 define('ROOT', __DIR__ . '/');
@@ -50,11 +50,6 @@ spl_autoload_register(function ($className) {
     // Require the file
     require_once ROOT . $className . '.php';
 });
-
-// Include database extensions
-foreach (glob(ROOT . 'libraries/DBWrapper/*.php') as $driver) {
-    require_once $driver;
-}
 
 // Set Error handler
 set_error_handler(['Sakura\Utils', 'errorHandler']);
