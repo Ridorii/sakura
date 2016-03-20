@@ -10,6 +10,7 @@ namespace Sakura\Controllers;
 use Sakura\Config;
 use Sakura\DB;
 use Sakura\Forum\Forum;
+use Sakura\Forum\Post;
 use Sakura\Forum\Thread;
 use Sakura\Perms\Forum as ForumPerms;
 use Sakura\Router;
@@ -354,5 +355,57 @@ class ForumController extends Controller
 
         // Print page contents
         return Template::render('global/information');
+    }
+
+    public function post($id = 0)
+    {
+        global $currentUser;
+
+        // Attempt to get the post
+        $post = new Post($id);
+
+        // And attempt to get the forum
+        $thread = new Thread($post->thread);
+
+        // And attempt to get the forum
+        $forum = new Forum($thread->forum);
+
+        // Check if the forum exists
+        if ($post->id == 0 || $thread->id == 0 || !$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
+            // Set render data
+            Template::vars([
+                'page' => [
+                    'message' => 'This post doesn\'t exist or you don\'t have access to it!',
+                    'redirect' => Router::route('forums.index'),
+                ],
+            ]);
+
+            // Print page contents
+            return Template::render('global/information');
+        }
+
+        // Generate link
+        $threadLink = Router::route('forums.thread', $thread->id);
+
+        // Get all post ids from the database
+        $postIds = DB::table('posts')
+            ->where('topic_id', $thread->id)
+            ->get(['post_id']);
+        $postIds = array_column($postIds, 'post_id');
+
+        // Find in array
+        $postAt = ceil(array_search($post->id, $postIds) / 10);
+
+        // Only append the page variable if it's more than 1
+        if ($postAt > 1) {
+            $threadLink .= "?page={$postAt}";
+        }
+
+        return header("Location: {$threadLink}#p{$post->id}");
+    }
+
+    protected function postingBase($title, $text, $forum, $thread = 0, $post = 0)
+    {
+
     }
 }

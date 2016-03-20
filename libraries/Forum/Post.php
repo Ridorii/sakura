@@ -7,11 +7,11 @@
 
 namespace Sakura\Forum;
 
-use Sakura\DB;
-use Sakura\User;
 use Sakura\BBcode;
 use Sakura\Config;
+use Sakura\DB;
 use Sakura\Net;
+use Sakura\User;
 
 /**
  * Used to serve, create and update posts.
@@ -116,7 +116,7 @@ class Post
         $postRow = DB::table('posts')
             ->where('post_id', $postId)
             ->get();
-        
+
         // Assign data if a row was returned
         if ($postRow) {
             $postRow = $postRow[0];
@@ -225,5 +225,12 @@ class Post
 
         // Return a new post object
         return new Post($this->id);
+    }
+
+    public function delete()
+    {
+        DB::table('posts')
+            ->where('post_id', $this->id)
+            ->delete();
     }
 }

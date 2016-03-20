@@ -101,7 +101,7 @@
                                     <a href="#p{{ post.id }}" class="clean">{{ post.subject|slice(0, 50) }}{% if post.subject|length > 50 %}...{% endif %}</a>
                                 </div>
                                 <div class="date">
-                                    #{{ post.id }} - <time>{{ post.time|date(sakura.dateFormat) }}</time>
+                                    <a href="{{ route('forums.post', post.id) }}" class="clean">#{{ post.id }} - <time>{{ post.time|date(sakura.dateFormat) }}</time></a>
                                 </div>
                                 <div class="clear"></div>
                             </div>

@@ -229,8 +229,7 @@ if ($mode != 'f') {
                 exit;
                 // Return to previous page
             } else {
-                // (haven't (re)implemented post linking yet)
-                header('Location: ' . $urls->format('FORUM_POST', [$_POST['post_id']]));
+                header('Location: ' . Router::route('forums.post', $_POST['post_id']));
                 exit;
             }
         }
@@ -282,7 +281,7 @@ if (isset($_POST['post'])) {
 
     // Add page specific things
     $renderData['page'] = [
-        'redirect' => $post ? $urls->format('FORUM_POST', [$post->id]) . '#p' . $post->id : '',
+        'redirect' => $post ? Router::route('forums.post', $post->id) : '',
         'message' => $post ? 'Made the post!' : 'Something is wrong with your post!',
         'success' => $post ? 1 : 0,
     ];

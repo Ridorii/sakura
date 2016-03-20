@@ -7,9 +7,9 @@
 
 namespace Sakura;
 
-use JBBCode\Parser;
-use JBBCode\DefaultCodeDefinitionSet;
 use JBBCode\CodeDefinitionBuilder;
+use JBBCode\DefaultCodeDefinitionSet;
+use JBBCode\Parser;
 
 /**
  * Sakura wrapper for JBBCode.
@@ -102,9 +102,6 @@ class BBcode
 
         // Add special definitions (PHP files MUST have the same name as the definition class
         foreach (glob(ROOT . 'libraries/BBcodeDefinitions/*.php') as $ext) {
-            // Include the class
-            require_once $ext;
-            
             // Clean the file path
             $ext = str_replace(ROOT . 'libraries/', '', $ext);
             $ext = str_replace('.php', '', $ext);

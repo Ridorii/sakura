@@ -33,16 +33,24 @@ Router::group(['prefix' => 'news'], function () {
 
 // Forum
 Router::group(['prefix' => 'forum'], function () {
+    // Post
+    Router::group(['prefix' => 'post'], function () {
+        Router::get('/{id:i}', 'ForumController@post', 'forums.post');
+        Router::get('/{id:i}/reply', 'ForumController@postReply', 'forums.post.reply');
+    });
+
     // Thread
     Router::group(['prefix' => 'thread'], function () {
         Router::get('/{id:i}', 'ForumController@thread', 'forums.thread');
         Router::post('/{id:i}/mod', 'ForumController@threadModerate', 'forums.thread.mod');
+        Router::post('/{id:i}/reply', 'ForumController@threadReply', 'forums.thread.reply');
     });
 
     // Forum
     Router::get('/', 'ForumController@index', 'forums.index');
     Router::get('/{id:i}', 'ForumController@forum', 'forums.forum');
     Router::get('/{id:i}/mark', 'ForumController@markForumRead', 'forums.mark');
+    Router::get('/{id:i}/new', 'ForumController@newThread', 'forums.new');
 });
 
 // Members

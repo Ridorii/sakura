@@ -21,7 +21,7 @@
             <a href="{{ route('user.profile', thread.lastPost.poster.id) }}" class="default" style="color: {{ thread.lastPost.poster.colour }}; text-shadow: 0 0 5px {% if thread.lastPost.poster.colour != 'inherit' %}{{ thread.lastPost.poster.colour }}{% else %}#222{% endif %};">{{ thread.lastPost.poster.username }}</a>
         {% else %}
             [deleted user]
-        {% endif %} <a href="{{ urls.format('FORUM_POST', [thread.lastPost.id]) }}#p{{ thread.lastPost.id }}" class="default fa fa-tag"></a><br />
+        {% endif %} <a href="{{ route('forums.post', thread.lastPost.id) }}" class="default fa fa-tag"></a><br />
         <time>{{ thread.lastPost.time|date(sakura.dateFormat) }}</time>
     </td>
 </tr>
