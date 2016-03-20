@@ -406,6 +406,5 @@ class ForumController extends Controller
 
     protected function postingBase($title, $text, $forum, $thread = 0, $post = 0)
     {
-
     }
 }

@@ -1,29 +1,31 @@
 <?php
 /*
  * Sakura Forum Posting
- * Needs to be thoroughly unfucked before permissions can be properly implemented
  */
 
 // Declare Namespace
 namespace Sakura;
 
+use Sakura\Forum\Forum;
+use Sakura\Forum\Post;
+use Sakura\Forum\Thread;
 use Sakura\Perms\Forum as ForumPerms;
 
 // Include components
-require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
+require_once '../sakura.php';
 
 // Set location
 $topicId = isset($_GET['t']) ?
 $_GET['t'] :
 (
     isset($_GET['p']) ?
-    (new Forum\Post($_GET['p']))->thread :
+    (new Post($_GET['p']))->thread :
     0
 );
 
 // Get the topic
 if ($topicId) {
-    $thread = new Forum\Thread($topicId);
+    $thread = new Thread($topicId);
 }
 
 $forumId = isset($_GET['f']) ?
@@ -31,7 +33,7 @@ $_GET['f'] :
 $thread->forum;
 
 // Creare forum class
-$forum = new Forum\Forum($forumId);
+$forum = new Forum($forumId);
 
 // Check if the user has access to the forum
 if (!$forum->permission(ForumPerms::VIEW, $currentUser->id) || !$forum->permission(ForumPerms::REPLY, $currentUser->id)) {
@@ -65,7 +67,20 @@ if (!isset($thread) && !$forum->permission(ForumPerms::CREATE_THREADS, $currentU
     exit;
 }
 
-$mode = isset($_GET['f']) ? 'f' : (isset($_GET['t']) ? 't' : (isset($_GET['p']) ? 'p' : null));
+$mode = isset($_GET['f'])
+// New thread
+ ? 'f'
+: (
+    isset($_GET['t'])
+    // Reply to thread
+     ? 't'
+    : (
+        isset($_GET['p'])
+        // Quoting a post
+         ? 'p'
+        : null
+    )
+);
 
 $emotes = DB::table('emoticons')
     ->get();
@@ -78,7 +93,7 @@ $posting = [
 // Check if we're in reply mode
 if ($mode != 'f') {
     // Attempt to get the topic
-    $thread = $thread ? $thread : new Forum\Thread($topicId);
+    $thread = $thread ? $thread : new Thread($topicId);
 
     // Prompt an error if the topic doesn't exist
     if (!$thread->id) {
@@ -118,7 +133,8 @@ if ($mode != 'f') {
         $post = $thread->posts()[$_GET['p']];
 
         // Add subject to render data
-        $posting['text'] = '[quote=' . $post->poster->username . ']' . BBcode::toEditor($post->text) . '[/quote]';
+        $quotedPost = BBcode::toEditor($post->text);
+        $posting['text'] = "[quote={$post->poster->username}]{$quotedPost}[/quote]";
 
         // Post editing
     } elseif ($mode == 'p' && isset($_GET['edit']) && $_GET['edit'] == $_GET['p'] && array_key_exists($_GET['p'], $thread->posts())) {
@@ -206,7 +222,7 @@ if ($mode != 'f') {
                     ->delete();
 
                 // Reload the topic
-                $thread = new Forum\Thread($topicId);
+                $thread = new Thread($topicId);
 
                 // If there's no more posts left in the topic delete it as well
                 if (!$thread->replyCount()) {
@@ -236,7 +252,7 @@ if ($mode != 'f') {
 
         // Form mode
         $renderData = array_merge($renderData, [
-            'message' => 'Are you sure you want to delete your reply to ' . $thread->title . '?',
+            'message' => "Are you sure you want to delete your reply to {$thread->title}?",
             'conditions' => [
                 'post_id' => $thread->posts()[$_GET['p']]->id,
             ],
@@ -252,7 +268,7 @@ if ($mode != 'f') {
 
     // Add subject to render data
     if (!isset($posting['subject'])) {
-        $posting['subject'] = 'Re: ' . $thread->title;
+        $posting['subject'] = "Re: {$thread->title}";
     }
 }
 
@@ -261,7 +277,7 @@ if (isset($_POST['post'])) {
     // Check if an ID is set
     if (isset($_POST['id'])) {
         // Attempt to create a post object
-        $post = new Forum\Post($_POST['id']);
+        $post = new Post($_POST['id']);
 
         // Check if the post israel
         if ($post->id == $_POST['id']) {
@@ -276,11 +292,11 @@ if (isset($_POST['post'])) {
         }
     } else {
         // Attempt to make the post
-        $post = Forum\Post::create($_POST['subject'], $_POST['text'], $currentUser, $topicId, $forumId);
+        $post = Post::create($_POST['subject'], $_POST['text'], $currentUser, $topicId, $forumId);
     }
 
     // Add page specific things
-    $renderData['page'] = [
+    $renderData['page'] = [ // Why does fail just kind of not redirect to anywhere
         'redirect' => $post ? Router::route('forums.post', $post->id) : '',
         'message' => $post ? 'Made the post!' : 'Something is wrong with your post!',
         'success' => $post ? 1 : 0,
