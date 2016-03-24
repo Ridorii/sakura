@@ -45,15 +45,21 @@ class Lists extends CodeDefinition
     public function asHtml(ElementNode $el)
     {
         $bodyHtml = '';
+
         foreach ($el->getChildren() as $child) {
             $bodyHtml .= $child->getAsHTML();
         }
 
         $listPieces = explode('[*]', $bodyHtml);
+
         unset($listPieces[0]);
+
         $listPieces = array_map(function ($li) {
-            return '<li>'.$li.'</li>';
+            return "<li>{$li}</li>";
         }, $listPieces);
-        return '<ul>'.implode('', $listPieces).'</ul>';
+
+        $list = implode('', $listPieces);
+
+        return "<ul>{$list}</ul>";
     }
 }

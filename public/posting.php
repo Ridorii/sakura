@@ -36,7 +36,8 @@ $thread->forum;
 $forum = new Forum($forumId);
 
 // Check if the user has access to the forum
-if (!$forum->permission(ForumPerms::VIEW, $currentUser->id) || !$forum->permission(ForumPerms::REPLY, $currentUser->id)) {
+if (!$forum->permission(ForumPerms::VIEW, $currentUser->id)
+    || !$forum->permission(ForumPerms::REPLY, $currentUser->id)) {
     // Set render data
     $renderData['page'] = [
         'title' => 'Information',
@@ -52,7 +53,8 @@ if (!$forum->permission(ForumPerms::VIEW, $currentUser->id) || !$forum->permissi
 }
 
 // Check if the user has access to the forum
-if (!isset($thread) && !$forum->permission(ForumPerms::CREATE_THREADS, $currentUser->id)) {
+if (!isset($thread)
+    && !$forum->permission(ForumPerms::CREATE_THREADS, $currentUser->id)) {
     // Set render data
     $renderData['page'] = [
         'title' => 'Information',
@@ -112,7 +114,9 @@ if ($mode != 'f') {
     }
 
     // Prompt an error if the topic doesn't exist
-    if ($thread->status == 1 && !$forum->permission(ForumPerms::LOCK, $currentUser->id)) {
+    if ($thread->status == 1
+        && !$forum->permission(ForumPerms::LOCK, $currentUser->id)) {
+
         // Add page specific things
         $renderData['page'] = [
             'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : Router::route('forums.index')),
@@ -128,7 +132,11 @@ if ($mode != 'f') {
     }
 
     // Check if we're in quote mode
-    if ($mode == 'p' && isset($_GET['quote']) && $_GET['quote'] == $_GET['p'] && array_key_exists($_GET['p'], $thread->posts())) {
+    if ($mode == 'p'
+        && isset($_GET['quote'])
+        && $_GET['quote'] == $_GET['p']
+        && array_key_exists($_GET['p'], $thread->posts())) {
+
         // Reassign post for ease
         $post = $thread->posts()[$_GET['p']];
 
@@ -137,7 +145,11 @@ if ($mode != 'f') {
         $posting['text'] = "[quote={$post->poster->username}]{$quotedPost}[/quote]";
 
         // Post editing
-    } elseif ($mode == 'p' && isset($_GET['edit']) && $_GET['edit'] == $_GET['p'] && array_key_exists($_GET['p'], $thread->posts())) {
+    } elseif ($mode == 'p'
+        && isset($_GET['edit'])
+        && $_GET['edit'] == $_GET['p']
+        && array_key_exists($_GET['p'], $thread->posts())) {
+
         // Permissions
         if (!$currentUser->permission(ForumPerms::EDIT_OWN, Perms::FORUM)) {
             // Add page specific things
@@ -153,8 +165,11 @@ if ($mode != 'f') {
             echo Template::render('global/information');
             exit;
         }
+
         // Checks
-        if ($thread->posts()[$_GET['p']]->poster->id != $currentUser->id && !$forum->permission(ForumPerms::EDIT_ANY, $currentUser->id)) {
+        if ($thread->posts()[$_GET['p']]->poster->id != $currentUser->id
+            && !$forum->permission(ForumPerms::EDIT_ANY, $currentUser->id)) {
+
             // Add page specific things
             $renderData['page'] = [
                 'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : Router::route('forums.index')),
@@ -179,7 +194,11 @@ if ($mode != 'f') {
             'id' => $post->id,
         ]);
         // Post deletion
-    } elseif ($mode == 'p' && isset($_GET['delete']) && $_GET['delete'] == $_GET['p'] && array_key_exists($_GET['p'], $thread->posts())) {
+    } elseif ($mode == 'p'
+        && isset($_GET['delete'])
+        && $_GET['delete'] == $_GET['p']
+        && array_key_exists($_GET['p'], $thread->posts())) {
+
         // Permissions
         if (!$currentUser->permission(ForumPerms::DELETE_OWN, Perms::FORUM)) {
             // Add page specific things
@@ -197,7 +216,8 @@ if ($mode != 'f') {
         }
 
         // Checks
-        if ($thread->posts()[$_GET['p']]->poster->id != $currentUser->id && !$forum->permission(ForumPerms::DELETE_ANY, $currentUser->id)) {
+        if ($thread->posts()[$_GET['p']]->poster->id != $currentUser->id
+            && !$forum->permission(ForumPerms::DELETE_ANY, $currentUser->id)) {
             // Add page specific things
             $renderData['page'] = [
                 'redirect' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : Router::route('forums.index')),

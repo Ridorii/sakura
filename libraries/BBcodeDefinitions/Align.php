@@ -40,7 +40,7 @@ class Align extends CodeDefinition
         $alignments = [
             'left',
             'center',
-            'right'
+            'right',
         ];
 
         $content = "";
@@ -55,6 +55,6 @@ class Align extends CodeDefinition
             return $el->getAsBBCode();
         }
 
-        return '<div style="text-align: ' . $alignment . ';">' . $content . '</div>';
+        return "<div style='text-align: {$alignment};'>{$content}</div>";
     }
 }

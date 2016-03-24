@@ -403,8 +403,4 @@ class ForumController extends Controller
 
         return header("Location: {$threadLink}#p{$post->id}");
     }
-
-    protected function postingBase($title, $text, $forum, $thread = 0, $post = 0)
-    {
-    }
 }

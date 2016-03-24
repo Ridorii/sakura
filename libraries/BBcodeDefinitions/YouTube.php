@@ -47,7 +47,8 @@ class YouTube extends CodeDefinition
         if (!$foundMatch) {
             return $el->getAsBBCode();
         } else {
-            return "<iframe width=\"640\" height=\"390\" src=\"https://www.youtube.com/embed/".$matches[1]."\" frameborder=\"0\" allowfullscreen></iframe>";
+            return "<iframe width='640' height='390' src='https://www.youtube.com/embed/{$matches[1]}'
+            frameborder='0' allowfullscreen></iframe>";
         }
     }
 }
