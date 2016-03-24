@@ -109,8 +109,6 @@ class UserController extends Controller
         }
 
         // Get all ranks
-
-        // Execute query
         $getRanks = DB::table('ranks')
             ->get(['rank_id']);
 

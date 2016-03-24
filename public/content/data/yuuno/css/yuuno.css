@@ -251,14 +251,8 @@ a.default:active {
     width: 334px;
 }
 
-.content-left .head,
-.news .head,
-.support .head,
-.viewforum .head,
-.viewtopic .head,
-.posting .head,
-.loginPage  .head,
-.messages .head {
+.content .head,
+.loginPage .head {
     margin: -1px -2px;
     padding: 4px 5px 5px;
     font-weight: 700;
@@ -1321,13 +1315,12 @@ a.default:active {
 }
 
 .new-profile .new-profile-avatar {
-    margin: 0;
     height: 190px;
     width: 190px;
     margin: 0 2px;
     flex-grow: 0;
     flex-shrink: 0;
-    background: no-repeat center center / cover transparent;
+    background: no-repeat center center / cover #FFF;
 }
 
 .new-profile .new-profile-username {
@@ -2516,4 +2509,28 @@ button.forumbtn {
 
 #comments ul > li > ul .comment > textarea.comment-content {
     height: 40px;
+}
+
+/*
+ * User container
+ */
+.user-container {
+    display: flex;
+    align-items: center;
+    background: no-repeat center center / cover transparent;
+}
+
+.user-container-avatar {
+    height: 100px;
+    width: 100px;
+    margin: 0 2px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    background: no-repeat center center / cover #FFF;
+}
+
+.user-container-info {
+    background: rgba(211, 191, 255, .8);
+    width: 100%;
+    padding: 0 5px;
 }

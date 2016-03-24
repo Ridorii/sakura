@@ -197,10 +197,12 @@ class AuthController extends Controller
             ->orWhere('last_ip', Net::pton(Net::IP()))
             ->get();
 
-        Template::vars([
-            'haltRegistration' => count($getUserIP) > 1,
-            'haltName' => $getUserIP[array_rand($getUserIP)]->username,
-        ]);
+        if ($getUserIP) {
+            Template::vars([
+                'haltRegistration' => count($getUserIP) > 1,
+                'haltName' => $getUserIP[array_rand($getUserIP)]->username,
+            ]);
+        }
 
         return Template::render('main/register');
     }

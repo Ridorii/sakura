@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160320');
+define('SAKURA_VERSION', 20160324);
 
 // Define Sakura Path
 define('ROOT', __DIR__ . '/');
@@ -103,7 +103,7 @@ $currentUser = User::construct($authCheck[0]);
 // Create the Urls object
 $urls = new Urls();
 
-// Prepare the name of the template to load (outside of SAKURA_NO_TPL because it's used in imageserve.php)
+// Prepare the name of the template to load
 $templateName =
 !defined('SAKURA_MANAGE')
 && isset($currentUser->optionFields()['useMisaki'])

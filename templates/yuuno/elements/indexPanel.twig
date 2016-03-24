@@ -1,12 +1,15 @@
 <div id="indexPanel">
     {% if session.checkLogin %}
-        <div class="head">Hi, {{ user.username }}!</div>
-        <a href="{{ urls.format('SETTING_MODE', ['appearance', 'avatar']) }}"><img src="{{ route('file.avatar', user.id) }}" alt="{{ user.username }}" class="default-avatar-setting homepage-menu-avatar" /></a>
-        <ul class="panelQuickLinks">
-            <li><a href="{{ urls.format('SETTING_MODE', ['friends', 'requests']) }}" title="Pending friend requests"><span class="fa fa-user-plus"></span><span class="count">{{ user.friends(-1, true)|length }}</span></a></li>
-            <li><a href="{{ urls.format('MESSAGES_INDEX') }}" title="View private messages"><span class="fa fa-envelope"></span><span class="count">0</span></a></li>
-        </ul>
-        <div class="clear"></div>
+        <div class="user-container" style="background-image: url({{ route('user.header', user.id) }});">
+            <div class="default-avatar-setting user-container-avatar" style="background-image: url({{ route('file.avatar', user.id) }}); box-shadow: 0 0 5px {{ user.colour }};"><a href="{{ urls.format('SETTING_MODE', ['friends', 'requests']) }}" class="clean" style="display: block; height: 100%; width: 100%;"></a></div>
+            <div class="user-container-info">
+                <a href="{{ route('user.profile', user.id) }}" class="clean"><h1 style="color: {{ user.colour }}; text-shadow: 0 0 7px {% if user.colour != 'inherit' %}{{ user.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;">{{ user.username }}</h1></a>
+                {% set friendRequests = user.friends(-1, true)|length %}
+                {% if friendRequests %}
+                    <a class="default" href="{{ urls.format('SETTING_MODE', ['friends', 'requests']) }}" title="Pending friend requests">{{ friendRequests }} new friend requests</a>
+                {% endif %}
+            </div>
+        </div>
     {% else %}
         {% if sakura.lockAuth %}
             <div class="head">Whoops!</div>

@@ -190,6 +190,7 @@ class Rank
         // Fetch all users part of this rank
         $get = DB::table('user_ranks')
             ->where('rank_id', $this->id)
+            ->orderBy('user_id')
             ->get(['user_id']);
 
         // Filter the user ids into one array

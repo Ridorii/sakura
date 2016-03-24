@@ -233,4 +233,29 @@ class Post
             ->where('post_id', $this->id)
             ->delete();
     }
+
+    /**
+     * Check if a user has read this post before.
+     *
+     * @param mixed $user The id of the user in question.
+     *
+     * @return bool A boolean indicating the read status.
+     */
+    public function unread($user)
+    {
+        // Attempt to get track row from the database
+        $track = DB::table('topics_track')
+            ->where('user_id', $user)
+            ->where('topic_id', $this->thread)
+            ->where('mark_time', '>', $this->time)
+            ->count();
+
+        // If nothing was returned it's obvious that the status is unread
+        if (!$track) {
+            return true;
+        }
+
+        // Else just return false meaning everything is read
+        return false;
+    }
 }

@@ -16,7 +16,6 @@ use Sakura\Perms\Forum as ForumPerms;
 use Sakura\Router;
 use Sakura\Template;
 use Sakura\User;
-use Sakura\Users;
 
 /**
  * Forum page controllers.
@@ -33,24 +32,85 @@ class ForumController extends Controller
      */
     public function index()
     {
-        // Merge index specific stuff with the global render data
-        Template::vars([
-            'forum' => (new Forum()),
-            'stats' => [
-                'userCount' => DB::table('users')
-                    ->where('password_algo', '!=', 'disabled')
-                    ->whereNotIn('rank_main', [1, 10])
-                    ->count(),
-                'newestUser' => User::construct(Users::getNewestUserId()),
-                'lastRegDate' => date_diff(
-                    date_create(date('Y-m-d', User::construct(Users::getNewestUserId())->registered)),
-                    date_create(date('Y-m-d'))
-                )->format('%a'),
-                'topicCount' => DB::table('topics')->count(),
-                'postCount' => DB::table('posts')->count(),
-                'onlineUsers' => Users::checkAllOnline(),
-            ],
-        ]);
+        global $currentUser;
+
+        // Get the most active threads
+        $activeThreadsIds = DB::table('posts')
+            ->groupBy('topic_id')
+            ->orderByRaw('COUNT(*) DESC')
+            ->limit(10)
+            ->get(['topic_id']);
+        $activeThreads = [];
+
+        while (list($_n, $_t) = each($activeThreadsIds)) {
+            // Create the thread object
+            $thread = new Thread($_t->topic_id);
+
+            // Create a forum object
+            $forum = new Forum($thread->forum);
+
+            // Check if we have permission to view it
+            if (!$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
+                $fetch = DB::table('posts')
+                    ->groupBy('topic_id')
+                    ->orderByRaw('COUNT(*) DESC')
+                    ->skip(11 + $_n)
+                    ->take(1)
+                    ->get(['topic_id']);
+
+                if ($fetch) {
+                    $activeThreadsIds[] = $fetch[0];
+                }
+                continue;
+            }
+
+            $activeThreads[$thread->id] = $thread;
+        }
+
+        // Get the latest posts
+        $latestPostsIds = DB::table('posts')
+            ->orderBy('post_id', 'desc')
+            ->limit(10)
+            ->get(['post_id']);
+        $latestPosts = [];
+
+        while (list($_n, $_p) = each($latestPostsIds)) {
+            // Create new post object
+            $post = new Post($_p->post_id);
+
+            // Forum id
+            $forum = new Forum($post->forum);
+
+            // Check if we have permission to view it
+            if (!$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
+                $fetch = DB::table('posts')
+                    ->orderBy('post_id', 'desc')
+                    ->skip(11 + $_n)
+                    ->take(1)
+                    ->get(['post_id']);
+
+                if ($fetch) {
+                    $latestPostsIds[] = $fetch[0];
+                }
+                continue;
+            }
+
+            $latestPosts[$post->id] = $post;
+        }
+
+        // Get the most active poster
+        $activePosterId = DB::table('posts')
+            ->where('post_time', '>', time() - (24 * 60 * 60))
+            ->groupBy('poster_id')
+            ->orderByRaw('COUNT(*) DESC')
+            ->limit(1)
+            ->get(['poster_id']);
+        $activePoster = User::construct($activePosterId[0]->poster_id);
+
+        // Create the forum object
+        $forum = new Forum;
+
+        Template::vars(compact('forum', 'activeThreads', 'latestPosts', 'activePoster'));
 
         // Return the compiled page
         return Template::render('forum/index');
