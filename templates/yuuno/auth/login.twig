@@ -30,10 +30,12 @@
                         <input class="inputStyling" name="remember" type="checkbox" class="ignore-css" id="loginRemember" /><label for="loginRemember">Remember Me</a>
                     </div>
                     <div class="centreAlign">
-                        <input class="inputStyling" type="submit" id="loginButton" name="submit" value="Login" />
+                        <button class="inputStyling" id="loginButton"><i class="fa fa-sign-in"></i> Login</button>
                     </div>
-                    <div class="subLinks centreAlign">
-                        future links to password forgot, reactivate and register here
+                    <div class="subLinks centreAlign" style="line-height: 1.5em;">
+                        <p><a href="{{ route('auth.register') }}" class="default">I don't have an account yet!</a></p>
+                        <p><a href="{{ route('auth.resetpassword') }}" class="default">I forgot my password!</a></p>
+                        <p><a href="{{ route('auth.reactivate') }}" class="default">I want to reactivate my account!</a></p>
                     </div>
                 </form>
             </div>

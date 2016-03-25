@@ -36,6 +36,10 @@ Router::group(['prefix' => 'forum'], function () {
     // Post
     Router::group(['prefix' => 'post'], function () {
         Router::get('/{id:i}', 'ForumController@post', 'forums.post');
+        Router::get('/{id:i}/raw', 'ForumController@postRaw', 'forums.post.raw');
+        Router::get('/{id:i}/delete', 'ForumController@deletePost', 'forums.post.delete');
+        Router::post('/{id:i}/delete', 'ForumController@deletePost', 'forums.post.delete');
+        Router::post('/{id:i}/edit', 'ForumController@editPost', 'forums.post.edit');
     });
 
     // Thread

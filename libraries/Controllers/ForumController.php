@@ -12,6 +12,7 @@ use Sakura\DB;
 use Sakura\Forum\Forum;
 use Sakura\Forum\Post;
 use Sakura\Forum\Thread;
+use Sakura\Perms;
 use Sakura\Perms\Forum as ForumPerms;
 use Sakura\Router;
 use Sakura\Template;
@@ -428,16 +429,14 @@ class ForumController extends Controller
         $forum = new Forum($thread->forum);
 
         // Check if the forum exists
-        if ($post->id == 0 || $thread->id == 0 || !$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
-            // Set render data
-            Template::vars([
-                'page' => [
-                    'message' => 'This post doesn\'t exist or you don\'t have access to it!',
-                    'redirect' => Router::route('forums.index'),
-                ],
-            ]);
+        if ($post->id == 0
+            || $thread->id == 0
+            || !$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
+            $message = "This post doesn't exist or you don't have access to it!";
+            $redirect = Router::route('forums.index');
 
-            // Print page contents
+            Template::vars(['page' => compact('message', 'redirect')]);
+
             return Template::render('global/information');
         }
 
@@ -461,6 +460,29 @@ class ForumController extends Controller
         return header("Location: {$threadLink}#p{$post->id}");
     }
 
+    public function postRaw($id = 0)
+    {
+        global $currentUser;
+
+        // Attempt to get the post
+        $post = new Post($id);
+
+        // And attempt to get the forum
+        $thread = new Thread($post->thread);
+
+        // And attempt to get the forum
+        $forum = new Forum($thread->forum);
+
+        // Check if the forum exists
+        if ($post->id == 0
+            || $thread->id == 0
+            || !$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
+            return "";
+        }
+
+        return $post->text;
+    }
+
     public function threadReply($id = 0)
     {
         global $currentUser;
@@ -476,14 +498,23 @@ class ForumController extends Controller
         // Check if the thread exists
         if ($thread->id == 0
             || $forum->type !== 0
-            || !$forum->permission(ForumPerms::VIEW, $currentUser->id)
-            || !$forum->permission(ForumPerms::REPLY, $currentUser->id)
+            || !$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
+            $message = "This post doesn't exist or you don't have access to it!";
+            $redirect = Router::route('forums.index');
+
+            Template::vars(['page' => compact('message', 'redirect')]);
+
+            return Template::render('global/information');
+        }
+
+        // Check if the thread exists
+        if (!$forum->permission(ForumPerms::REPLY, $currentUser->id)
             || (
                 $thread->status === 1
                 && !$forum->permission(ForumPerms::LOCK, $currentUser->id)
             )) {
-            $message = "This post doesn't exist or you don't have access to it!";
-            $redirect = Router::route('forums.index');
+            $message = "You are not allowed to post in this thread!";
+            $redirect = Router::route('forums.thread', $thread->id);
 
             Template::vars(['page' => compact('message', 'redirect')]);
 
@@ -630,5 +661,203 @@ class ForumController extends Controller
         Template::vars(compact('forum'));
 
         return Template::render('forum/viewtopic');
+    }
+
+    public function editPost($id = 0)
+    {
+        global $currentUser;
+
+        $title = isset($_POST['title']) ? $_POST['title'] : null;
+        $text = isset($_POST['text']) ? $_POST['text'] : null;
+
+        // Attempt to get the post
+        $post = new Post($id);
+
+        // Attempt to get the thread
+        $thread = new Thread($post->thread);
+
+        // And attempt to get the forum
+        $forum = new Forum($thread->forum);
+
+        // Check permissions
+        $noAccess = $post->id == 0
+        || $thread->id == 0
+        || !$forum->permission(ForumPerms::VIEW, $currentUser->id);
+
+        $noEdit = (
+            $post->poster->id === $currentUser->id
+            ? !$currentUser->permission(ForumPerms::EDIT_OWN, Perms::FORUM)
+            : !$forum->permission(ForumPerms::EDIT_ANY, $currentUser->id)
+        ) || (
+            $thread->status === 1
+            && !$forum->permission(ForumPerms::LOCK, $currentUser->id)
+        );
+
+        // Check if the forum exists
+        if ($noAccess || $noEdit) {
+            if ($noDelete) {
+                $message = "You aren't allowed to edit posts in this thread!";
+                $redirect = Router::route('forums.post', $post->id);
+            } else {
+                $message = "This post doesn't exist or you don't have access to it!";
+                $redirect = Router::route('forums.index');
+            }
+
+            Template::vars(['page' => compact('message', 'redirect')]);
+
+            return Template::render('global/information');
+        }
+
+        // Length
+        $titleLength = strlen($title);
+        $textLength = strlen($text);
+        $titleMin = Config::get('forum_title_min');
+        $titleMax = Config::get('forum_title_max');
+        $textMin = Config::get('forum_text_min');
+        $textMax = Config::get('forum_text_max');
+
+        // Checks
+        $titleTooShort = $title !== null
+        && $post->id === $thread->firstPost()->id
+        && $titleLength < $titleMin;
+        $titleTooLong = $title !== null
+        && $post->id === $thread->firstPost()->id
+        && $titleLength > $titleMax;
+        $textTooShort = $textLength < $textMin;
+        $textTooLong = $textLength > $textMax;
+
+        // Check requirments
+        if ($titleTooShort
+            || $titleTooLong
+            || $textTooShort
+            || $textTooLong) {
+
+            $message = "";
+
+            if ($titleTooShort) {
+                $message = "This title is too short!";
+            } elseif ($titleTooLong) {
+                $message = "This title is too long!";
+            } elseif ($textTooShort) {
+                $message = "Please make your post a little bit longer!";
+            } elseif ($textTooLong) {
+                $message = "Your post is too long, you're gonna have to cut a little!";
+            }
+
+            $redirect = Router::route('forums.post', $post->id);
+
+            Template::vars(['page' => compact('message', 'redirect')]);
+
+            if (!isset($_SESSION['replyText'])) {
+                $_SESSION['replyText'] = [];
+            }
+
+            $_SESSION['replyText']["t{$forum->id}"] = $text;
+
+            return Template::render('global/information');
+        }
+
+        unset($_SESSION['replyText']["t{$forum->id}"]);
+
+        if ($post->id !== $thread->firstPost()->id || $title === null) {
+            $title = "Re: {$thread->title}";
+        } else {
+            $thread->title = $title;
+            $thread->update();
+        }
+
+        // Create the post
+        $post->subject = $title;
+        $post->text = $text;
+        $post->editTime = time();
+        $post->editReason = '';
+        $post->editUser = $currentUser;
+        $post = $post->update();
+
+        // Go to the post
+        $postLink = Router::route('forums.post', $post->id);
+
+        // Head to the post
+        return header("Location: {$postLink}");
+    }
+
+    public function deletePost($id = 0)
+    {
+        global $currentUser;
+
+        $action = isset($_POST['yes']) && isset($_POST['sessionid'])
+        ? $_POST['sessionid'] === session_id()
+        : null;
+
+        // Attempt to get the post
+        $post = new Post($id);
+
+        // And attempt to get the forum
+        $thread = new Thread($post->thread);
+
+        // And attempt to get the forum
+        $forum = new Forum($thread->forum);
+
+        // Check permissions
+        $noAccess = $post->id == 0
+        || $thread->id == 0
+        || !$forum->permission(ForumPerms::VIEW, $currentUser->id);
+
+        $noDelete = (
+            $post->poster->id === $currentUser->id
+            ? !$currentUser->permission(ForumPerms::DELETE_OWN, Perms::FORUM)
+            : !$forum->permission(ForumPerms::DELETE_ANY, $currentUser->id)
+        ) || (
+            $thread->status === 1
+            && !$forum->permission(ForumPerms::LOCK, $currentUser->id)
+        );
+
+        // Check if the forum exists
+        if ($noAccess || $noDelete) {
+            if ($noDelete) {
+                $message = "You aren't allowed to delete posts in this thread!";
+                $redirect = Router::route('forums.post', $post->id);
+            } else {
+                $message = "This post doesn't exist or you don't have access to it!";
+                $redirect = Router::route('forums.index');
+            }
+
+            Template::vars(['page' => compact('message', 'redirect')]);
+
+            return Template::render('global/information');
+        }
+
+        if ($action !== null) {
+            if ($action) {
+                // Set message
+                $message = "Deleted the post!";
+
+                // Check if the thread only has 1 post
+                if ($thread->replyCount() === 1) {
+                    // Delete the entire thread
+                    $thread->delete();
+
+                    $redirect = Router::route('forums.forum', $forum->id);
+                } else {
+                    // Just delete the post
+                    $post->delete();
+
+                    $redirect = Router::route('forums.thread', $thread->id);
+                }
+
+                Template::vars(['page' => compact('message', 'redirect')]);
+
+                return Template::render('global/information');
+            }
+
+            $postLink = Router::route('forums.post', $post->id);
+            return header("Location: {$postLink}");
+        }
+
+        $message = "Are you sure?";
+
+        Template::vars(compact('message'));
+
+        return Template::render('global/confirm');
     }
 }

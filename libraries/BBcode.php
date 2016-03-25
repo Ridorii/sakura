@@ -70,35 +70,28 @@ class BBcode
         // Add the standard definitions
         self::$bbcode->addCodeDefinitionSet(new DefaultCodeDefinitionSet());
 
-        // Header tag
-        $builder = new CodeDefinitionBuilder('header', '<h1>{param}</h1>');
-        self::$bbcode->addCodeDefinition($builder->build());
+        $simpleCodes = [
+            ['header', '<h1>{param}</h1>'],
+            ['s', '<del>{param}</del>'],
+            ['spoiler', '<span class="spoiler">{param}</span>'],
+            ['box', '<div class="spoiler-box-container">
+            <div class="spoiler-box-title" onclick="Sakura.toggleClass(this.parentNode.children[1], \'hidden\');">
+            Click to open</div><div class="spoiler-box-content hidden">{param}</div></div>', ],
+            ['box', '<div class="spoiler-box-container"><div class="spoiler-box-title"
+            onclick="Sakura.toggleClass(this.parentNode.children[1], \'hidden\');">{option}</div>
+            <div class="spoiler-box-content hidden">{param}</div></div>', ],
+            ['quote', '<blockquote><div class="quotee">Quote</div><div class="quote">{param}</div></blockquote>'],
+        ];
 
-        // Strike tag
-        $builder = new CodeDefinitionBuilder('s', '<del>{param}</del>');
-        self::$bbcode->addCodeDefinition($builder->build());
+        foreach ($simpleCodes as $code) {
+            $builder = new CodeDefinitionBuilder($code[0], $code[1]);
 
-        // Spoiler tag
-        $builder = new CodeDefinitionBuilder('spoiler', '<span class="spoiler">{param}</span>');
-        self::$bbcode->addCodeDefinition($builder->build());
+            if (strstr($code[1], '{option}')) {
+                $builder->setUseOption(true);
+            }
 
-        // Box tag
-        $builder = new CodeDefinitionBuilder('box', '<div class="spoiler-box-container"><div class="spoiler-box-title" onclick="Sakura.toggleClass(this.parentNode.children[1], \'hidden\');">Click to open</div><div class="spoiler-box-content hidden">{param}</div></div>');
-        self::$bbcode->addCodeDefinition($builder->build());
-
-        // Box tag
-        $builder = new CodeDefinitionBuilder('box', '<div class="spoiler-box-container"><div class="spoiler-box-title" onclick="Sakura.toggleClass(this.parentNode.children[1], \'hidden\');">{option}</div><div class="spoiler-box-content hidden">{param}</div></div>');
-        $builder->setUseOption(true);
-        self::$bbcode->addCodeDefinition($builder->build());
-
-        // Quote tag
-        $builder = new CodeDefinitionBuilder('quote', '<blockquote><div class="quotee">Quote</div><div class="quote">{param}</div></blockquote>');
-        self::$bbcode->addCodeDefinition($builder->build());
-
-        // Quote tag
-        $builder = new CodeDefinitionBuilder('quote', '<blockquote><div class="quotee">{option} wrote</div><div class="quote">{param}</div></blockquote>');
-        $builder->setUseOption(true);
-        self::$bbcode->addCodeDefinition($builder->build());
+            self::$bbcode->addCodeDefinition($builder->build());
+        }
 
         // Add special definitions (PHP files MUST have the same name as the definition class
         foreach (glob(ROOT . 'libraries/BBcodeDefinitions/*.php') as $ext) {

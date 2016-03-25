@@ -5,9 +5,11 @@
 {% block title %}{% if thread is defined %}{{ thread.title }}{% else %}Creating thread in {{ forum.name }}{% endif %}{% endblock %}
 
 {% if thread is defined %}
-    {% if thread.status != 1
+    {% if forum.permission(constant('Sakura\\Perms\\Forum::REPLY'), user.id)
+        and (
+        thread.status != 1
         or forum.permission(constant('Sakura\\Perms\\Forum::LOCK'), user.id)
-        or forum.permission(constant('Sakura\\Perms\\Forum::REPLY')) %}
+        ) %}
         {% set forumReplyLink %}#reply{% endset %}
     {% endif %}
 
@@ -59,13 +61,15 @@
 
 {% block js %}
     <script src="{{ sakura.contentPath }}/libraries/highlight.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
+    <script type="text/javascript">
+        hljs.initHighlightingOnLoad();
+    </script>
 {% endblock %}
 
 {% block content %}
     <div class="content homepage forum viewtopic">
         <div class="content-column">
-            <div class="head"><a href="{{ forumBackLink }}" class="clean">{{ forum.name }}</a> / <span id="threadTitle"><a href="{{ paginationUrl }}" class="clean">{{ thread.title }}</a></span></div>
+            <div class="head">{{ forum.name }} / <span id="threadTitle">{{ thread.title }}</span></div>
             {% include 'forum/forumBtns.twig' %}
             <table class="posts">
                 {% if thread is defined %}
@@ -86,10 +90,10 @@
                                     {% if session.checkLogin %}
                                     <div class="actions">
                                         {% if (user.id == post.poster.id and forum.permission(constant('Sakura\\Perms\\Forum::EDIT_OWN'), user.id)) or forum.permission(constant('Sakura\\Perms\\Forum::EDIT_ANY'), user.id) %}
-                                            <a class="fa fa-pencil-square-o" title="Edit this post" href="{{ urls.format('FORUM_EDIT_POST', [post.id]) }}"></a>
+                                            <a class="fa fa-pencil-square-o" title="Edit this post" href="javascript:void(0);" onclick="editPost({{ post.id }});"></a>
                                         {% endif %}
                                         {% if (user.id == post.poster.id and forum.permission(constant('Sakura\\Perms\\Forum::DELETE_OWN'), user.id)) or forum.permission(constant('Sakura\\Perms\\Forum::DELETE_ANY'), user.id) %}
-                                            <a class="fa fa-trash" title="Delete this post" href="{{ urls.format('FORUM_DELETE_POST', [post.id]) }}"></a>
+                                            <a class="fa fa-trash" title="Delete this post" href="{{ route('forums.post.delete', post.id) }}"></a>
                                         {% endif %}
                                         {% if not (post.poster.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) or post.poster.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) or user.id == post.poster.id) %}
                                             {% if user.isFriends(post.poster.id) != 0 %}
@@ -98,7 +102,7 @@
                                             <a class="fa fa-user-{% if user.isFriends(post.poster.id) == 0 %}plus{% else %}times{% endif %} forum-friend-toggle" title="{% if user.isFriends(post.poster.id) == 0 %}Add {{ post.poster.username }} as a friend{% else %}Remove friend{% endif %}" href="{% if user.isFriends(post.poster.id) == 0 %}{{ urls.format('FRIEND_ADD', [post.poster.id, php.sessionid, php.time, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [post.poster.id, php.sessionid, php.time, sakura.currentPage]) }}{% endif %}"></a>
                                             <a class="fa fa-flag" title="Report {{ post.poster.username }}" href="{{ urls.format('USER_REPORT', [post.poster.id]) }}"></a>
                                         {% endif %}
-                                        <a class="fa fa-reply" title="Quote this post" href="{{ urls.format('FORUM_QUOTE_POST', [post.id]) }}"></a>
+                                        <a class="fa fa-reply" title="Quote this post" href="javascript:void(0);" onclick="quotePost({{ post.id }});"></a>
                                     </div>
                                     {% endif %}
                                 </div>
@@ -130,30 +134,32 @@
                     {% set textCache = session.replyText['f' ~ forum.id].text %}
                     {% set postingAction = route('forums.new', forum.id) %}
                 {% endif %}
-                <tr class="post" id="postingPreview" style="display: none;">
-                    <td class="userpanel">
-                        <a class="default username" href="{{ route('user.profile', user.id) }}" style="color: {{ user.colour }}; text-shadow: 0 0 5px {% if user.colour != 'inherit' %}{{ user.colour }}{% else %}#222{% endif %};" title="Go to {{ user.username }}'s profile">{{ user.username }}</a>
-                        <img src="{{ route('file.avatar', user.id) }}" alt="{{ user.username }}" class="avatar" style="box-shadow: 0 3px 7px #484;" />
-                        <div class="userdata">
-                            <div class="usertitle">{{ user.title }}</div>
-                            <img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi"{% if not user.isPremium[0] %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.contentPath }}/images/flags/{{ user.country|lower }}.png" alt="{{ user.country(true) }}" />{% if user.id == (thread.posts|first).poster.id %} <img src="{{ sakura.contentPath }}/images/op.png" alt="OP" title="Original Poster" />{% endif %}
-                        </div>
-                    </td>
-                    <td class="post-content">
-                        <div class="details">
-                            <div class="subject" id="previewTitle">{% if titleCache is not defined %}Re: {{ thread.title }}{% endif %}</div>
-                            <div class="date">Preview</div>
-                            <div class="clear"></div>
-                        </div>
-                        <div class="post-text bbcode" id="previewText"></div>
-                        {% if user.signature and user.permission(constant('Sakura\\Perms\\Site::CHANGE_SIGNATURE')) %}
-                            <div class="clear"></div>
-                            <div class="signature bbcode">
-                                {{ user.signature()|raw|nl2br }}
+                {% if forumReplyLink is defined or thread is not defined %}
+                    <tr class="post" id="postingPreview" style="display: none;">
+                        <td class="userpanel">
+                            <a class="default username" href="{{ route('user.profile', user.id) }}" style="color: {{ user.colour }}; text-shadow: 0 0 5px {% if user.colour != 'inherit' %}{{ user.colour }}{% else %}#222{% endif %};" title="Go to {{ user.username }}'s profile">{{ user.username }}</a>
+                            <img src="{{ route('file.avatar', user.id) }}" alt="{{ user.username }}" class="avatar" style="box-shadow: 0 3px 7px #484;" />
+                            <div class="userdata">
+                                <div class="usertitle">{{ user.title }}</div>
+                                <img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi"{% if not user.isPremium[0] %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.contentPath }}/images/flags/{{ user.country|lower }}.png" alt="{{ user.country(true) }}" />{% if user.id == (thread.posts|first).poster.id %} <img src="{{ sakura.contentPath }}/images/op.png" alt="OP" title="Original Poster" />{% endif %}
                             </div>
-                        {% endif %}
-                    </td>
-                </tr>
+                        </td>
+                        <td class="post-content">
+                            <div class="details">
+                                <div class="subject" id="previewTitle">{% if titleCache is not defined %}Re: {{ thread.title }}{% endif %}</div>
+                                <div class="date" id="previewMode">Preview</div>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="post-text bbcode" id="previewText"></div>
+                            {% if user.signature and user.permission(constant('Sakura\\Perms\\Site::CHANGE_SIGNATURE')) %}
+                                <div class="clear"></div>
+                                <div class="signature bbcode">
+                                    {{ user.signature()|raw|nl2br }}
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
             </table>
             {% if forumReplyLink is defined or thread is not defined %}
                 {% include 'forum/replyForm.twig' %}

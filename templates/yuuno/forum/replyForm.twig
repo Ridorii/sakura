@@ -15,11 +15,9 @@
 
 <div id="reply">
     <form id="postingForm" method="post" action="{{ postingAction }}">
-        {% if titleCache is defined %}
-            <div class="posting-subject">
-                <input type="text" class="inputStyling" name="title" id="postingTitle" placeholder="Title" value="{{ titleCache }}" />
-            </div>
-        {% endif %}
+        <div class="posting-subject" id="postingTitleContainer"{% if titleCache is not defined %} style="display: none;"{% endif %}>
+            <input type="text" class="inputStyling" name="title" id="postingTitle" placeholder="Title" value="{{ titleCache is defined ? titleCache : '' }}" />
+        </div>
         <div class="posting-text">
             <textarea class="inputStyling" name="text" id="postingText" placeholder="Hit ctrl+enter to submit quickly!"{% if titleCache is defined %} autofocus{% endif %}>{{ textCache }}</textarea>
         </div>
@@ -30,6 +28,7 @@
                 {% endfor %}
             </div>
             <div style="float: right;">
+                <button class="forumbtn fa fa-remove" title="Stop editing" style="display: none;" type="button" onclick="stopEdit();" id="postingStopEditing"></button>
                 <button class="forumbtn fa fa-send" title="Reply"></button>
             </div>
             <div class="clear"></div>
@@ -44,21 +43,33 @@
         textMin = {{ sakura.forumTextMinLength }},
         preview = document.getElementById('postingPreview'),
         pTitle = document.getElementById('postingTitle'),
+        pTitleCont = document.getElementById('postingTitleContainer'),
         pText = document.getElementById('postingText'),
         pForm = document.getElementById('postingForm'),
+        pStopEdit = document.getElementById('postingStopEditing'),
+        pMode = document.getElementById('previewMode'),
         tTitle = document.getElementById('threadTitle'),
         rTitle = document.getElementById('previewTitle'),
         rText = document.getElementById('previewText'),
         lastParsed = Date.now(),
         lastKeystroke = Date.now(),
         parser = new AJAX(),
-        parserActive = false;
+        postFetch = new AJAX(),
+        parserActive = false,
+        op = {{ thread is defined ? thread.firstPost.id : 0 }},
+        threadName = "{{ thread is defined ? thread.firstPost.subject : '' }}";
 
     parser.setUrl("{{ route('helper.bbcode.parse') }}");
     parser.contentType("application/x-www-form-urlencoded");
 
     pText.addEventListener("focus", function () {
         preview.style.display = null;
+    });
+
+    pText.addEventListener("blur", function () {
+        if (op && pText.value.length < 1) {
+            preview.style.display = 'none';
+        }
     });
 
     setInterval(function () {
@@ -102,31 +113,74 @@
     pText.addEventListener("keydown", function (e) {
         lastKeystroke = Date.now();
 
+        if (e.keyCode == 9) {
+            e.preventDefault();
+            insertText('postingText', '    ');
+        }
+
         if (e.keyCode == 13 && e.ctrlKey) {
             pForm.submit();
         }
     });
 
-    {% if titleCache is defined %}
-        pTitle.addEventListener("keyup", function (e) {
-            var title = pTitle.value;
+    pTitle.addEventListener("keyup", function (e) {
+        var title = pTitle.value;
 
-            if (title.length == 0) {
-                title = "";
-            } else if (title.length < titleMin) {
-                title = "<span style='color: red;'>Too short!</span>";
-                tTitle.innerHTML = title;
-                rTitle.innerHTML = title;
-                return;
-            } else if (title.length > titleMax) {
-                title = "<span style='color: red;'>Too long!</span>";
-                tTitle.innerHTML = title;
-                rTitle.innerHTML = title;
-                return;
+        if (title.length == 0) {
+            title = "";
+        } else if (title.length < titleMin) {
+            title = "<span style='color: red;'>Too short!</span>";
+            tTitle.innerHTML = title;
+            rTitle.innerHTML = title;
+            return;
+        } else if (title.length > titleMax) {
+            title = "<span style='color: red;'>Too long!</span>";
+            tTitle.innerHTML = title;
+            rTitle.innerHTML = title;
+            return;
+        }
+
+        tTitle.innerText = title;
+        rTitle.innerText = title;
+    });
+
+    function quotePost(id) {
+        pText.value = pText.value + "[quote=#" + id + "][/quote]";
+        pText.focus();
+    }
+
+    function editPost(id) {
+        pText.disabled = true;
+        pTitleCont.style.display = 'none';
+        rTitle.innerText = 'Re: ' + threadName;
+
+        url = "{{ route('forums.post.raw', '1') }}".replace('1', id);
+
+        postFetch.setUrl(url);
+
+        postFetch.addCallback(200, function () {
+            pText.value = postFetch.response();
+            pStopEdit.style.display = null;
+            pForm.action = "{{ route('forums.post.edit', '1') }}".replace('1', id);
+            pMode.innerText = 'Editing #' + id;
+            if (id === op) {
+                pTitleCont.style.display = null;
+                pTitle.value = threadName;
+                rTitle.innerText = threadName;
             }
-
-            tTitle.innerText = title;
-            rTitle.innerText = title;
+            pText.disabled = false;
+            pText.focus();
         });
-    {% endif %}
+
+        postFetch.start(HTTPMethods.GET);
+    }
+
+    function stopEdit() {
+        pText.value = "";
+        pForm.action = "{{ postingAction }}";
+        pStopEdit.style.display = 'none';
+        pTitleCont.style.display = 'none';
+        pMode.innerText = 'Preview';
+        preview.style.display = 'none';
+    }
 </script>

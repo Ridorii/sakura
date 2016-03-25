@@ -67,7 +67,7 @@ class AuthController extends Controller
 
     public function loginGet()
     {
-        return Template::render('main/login');
+        return Template::render('auth/login');
     }
 
     public function loginPost()
@@ -204,7 +204,7 @@ class AuthController extends Controller
             ]);
         }
 
-        return Template::render('main/register');
+        return Template::render('auth/register');
     }
 
     public function registerPost()
@@ -428,7 +428,7 @@ class AuthController extends Controller
 
     public function reactivateGet()
     {
-        return Template::render('main/reactivate');
+        return Template::render('auth/reactivate');
     }
 
     public function reactivatePost()
@@ -500,7 +500,7 @@ class AuthController extends Controller
 
     public function resetPasswordGet()
     {
-        return Template::render('main/resetpassword');
+        return Template::render('auth/resetpassword');
     }
 
     public function resetPasswordPost()
