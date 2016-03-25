@@ -274,10 +274,7 @@ class ForumController extends Controller
         $thread->viewsUpdate();
 
         // Set parse variables
-        Template::vars([
-            'thread' => $thread,
-            'forum' => $forum,
-        ]);
+        Template::vars(compact('forum', 'thread'));
 
         // Print page contents
         return Template::render('forum/viewtopic');
@@ -462,5 +459,176 @@ class ForumController extends Controller
         }
 
         return header("Location: {$threadLink}#p{$post->id}");
+    }
+
+    public function threadReply($id = 0)
+    {
+        global $currentUser;
+
+        $text = isset($_POST['text']) ? $_POST['text'] : null;
+
+        // Attempt to get the forum
+        $thread = new Thread($id);
+
+        // And attempt to get the forum
+        $forum = new Forum($thread->forum);
+
+        // Check if the thread exists
+        if ($thread->id == 0
+            || $forum->type !== 0
+            || !$forum->permission(ForumPerms::VIEW, $currentUser->id)
+            || !$forum->permission(ForumPerms::REPLY, $currentUser->id)
+            || (
+                $thread->status === 1
+                && !$forum->permission(ForumPerms::LOCK, $currentUser->id)
+            )) {
+            $message = "This post doesn't exist or you don't have access to it!";
+            $redirect = Router::route('forums.index');
+
+            Template::vars(['page' => compact('message', 'redirect')]);
+
+            return Template::render('global/information');
+        }
+
+        // Length
+        $length = strlen($text);
+        $minLen = Config::get('forum_text_min');
+        $maxLen = Config::get('forum_text_max');
+        $tooShort = $length < $minLen;
+        $tooLong = $length > $maxLen;
+
+        // Check requirments
+        if ($tooShort
+            || $tooLong) {
+            $route = Router::route('forums.thread', $thread->id);
+
+            $message = "Your post is " . (
+                $tooShort
+                ? "too short, add some more text!"
+                : "too long, you're gonna have to cut a little!"
+            );
+            $redirect = "{$route}#reply";
+
+            Template::vars(['page' => compact('message', 'redirect')]);
+
+            if (!isset($_SESSION['replyText'])) {
+                $_SESSION['replyText'] = [];
+            }
+
+            $_SESSION['replyText']["t{$thread->id}"] = $text;
+
+            return Template::render('global/information');
+        }
+
+        unset($_SESSION['replyText']["t{$thread->id}"]);
+
+        // Create the post
+        $post = Post::create(
+            "Re: {$thread->title}",
+            $text,
+            $currentUser,
+            $thread->id,
+            $forum->id
+        );
+
+        // Go to the post
+        $postLink = Router::route('forums.post', $post->id);
+
+        // Head to the post
+        return header("Location: {$postLink}");
+    }
+
+    public function createThread($id = 0)
+    {
+        global $currentUser;
+
+        $title = isset($_POST['title']) ? $_POST['title'] : null;
+        $text = isset($_POST['text']) ? $_POST['text'] : null;
+
+        // And attempt to get the forum
+        $forum = new Forum($id);
+
+        // Check if the forum exists
+        if ($forum->id === 0
+            || $forum->type !== 0
+            || !$forum->permission(ForumPerms::VIEW, $currentUser->id)
+            || !$forum->permission(ForumPerms::REPLY, $currentUser->id)
+            || !$forum->permission(ForumPerms::CREATE_THREADS, $currentUser->id)) {
+            $message = "This forum doesn't exist or you don't have access to it!";
+            $redirect = Router::route('forums.index');
+
+            Template::vars(['page' => compact('message', 'redirect')]);
+
+            return Template::render('global/information');
+        }
+
+        if ($text && $title) {
+            // Length
+            $titleLength = strlen($title);
+            $textLength = strlen($text);
+            $titleMin = Config::get('forum_title_min');
+            $titleMax = Config::get('forum_title_max');
+            $textMin = Config::get('forum_text_min');
+            $textMax = Config::get('forum_text_max');
+
+            // Checks
+            $titleTooShort = $titleLength < $titleMin;
+            $titleTooLong = $titleLength > $titleMax;
+            $textTooShort = $textLength < $textMin;
+            $textTooLong = $textLength > $textMax;
+
+            // Check requirments
+            if ($titleTooShort
+                || $titleTooLong
+                || $textTooShort
+                || $textTooLong) {
+
+                $message = "";
+
+                if ($titleTooShort) {
+                    $message = "This title is too short!";
+                } elseif ($titleTooLong) {
+                    $message = "This title is too long!";
+                } elseif ($textTooShort) {
+                    $message = "Please make your post a little bit longer!";
+                } elseif ($textTooLong) {
+                    $message = "Your post is too long, you're gonna have to cut a little!";
+                }
+
+                $redirect = Router::route('forums.new', $forum->id);
+
+                Template::vars(['page' => compact('message', 'redirect')]);
+
+                if (!isset($_SESSION['replyText'])) {
+                    $_SESSION['replyText'] = [];
+                }
+
+                $_SESSION['replyText']["f{$forum->id}"]["title"] = $title;
+                $_SESSION['replyText']["f{$forum->id}"]["text"] = $text;
+
+                return Template::render('global/information');
+            }
+
+            unset($_SESSION['replyText']["f{$forum->id}"]);
+
+            // Create the post
+            $post = Post::create(
+                $title,
+                $text,
+                $currentUser,
+                0,
+                $forum->id
+            );
+
+            // Go to the post
+            $postLink = Router::route('forums.post', $post->id);
+
+            // Head to the post
+            return header("Location: {$postLink}");
+        }
+
+        Template::vars(compact('forum'));
+
+        return Template::render('forum/viewtopic');
     }
 }

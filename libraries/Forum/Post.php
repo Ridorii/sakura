@@ -150,14 +150,6 @@ class Post
      */
     public static function create($subject, $text, User $poster, $thread = 0, $forum = 0)
     {
-        // Check if the data meets the requirements
-        if (strlen($subject) < Config::get('forum_title_min')
-            || strlen($subject) > Config::get('forum_title_max')
-            || strlen($text) < Config::get('forum_text_min')
-            || strlen($text) > Config::get('forum_text_max')) {
-            return null;
-        }
-
         // If no thread is specified create a new one
         if ($thread) {
             $thread = new Thread($thread);

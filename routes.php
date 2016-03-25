@@ -36,7 +36,6 @@ Router::group(['prefix' => 'forum'], function () {
     // Post
     Router::group(['prefix' => 'post'], function () {
         Router::get('/{id:i}', 'ForumController@post', 'forums.post');
-        Router::get('/{id:i}/reply', 'ForumController@postReply', 'forums.post.reply');
     });
 
     // Thread
@@ -50,7 +49,8 @@ Router::group(['prefix' => 'forum'], function () {
     Router::get('/', 'ForumController@index', 'forums.index');
     Router::get('/{id:i}', 'ForumController@forum', 'forums.forum');
     Router::get('/{id:i}/mark', 'ForumController@markForumRead', 'forums.mark');
-    Router::get('/{id:i}/new', 'ForumController@newThread', 'forums.new');
+    Router::get('/{id:i}/new', 'ForumController@createThread', 'forums.new');
+    Router::post('/{id:i}/new', 'ForumController@createThread', 'forums.new');
 });
 
 // Members
@@ -71,6 +71,14 @@ Router::get('/bg/{id}', 'FileController@background', 'file.background');
 Router::group(['prefix' => 'support'], function () {
     Router::get('/', 'PremiumController@index', 'premium.index');
     Router::get('/tracker', 'PremiumController@tracker', 'premium.tracker');
+});
+
+// Helpers
+Router::group(['prefix' => 'helper'], function () {
+    // BBcode
+    Router::group(['prefix' => 'bbcode'], function () {
+        Router::post('/parse', 'HelperController@bbcodeParse', 'helper.bbcode.parse');
+    });
 });
 
 // Settings

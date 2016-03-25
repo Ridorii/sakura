@@ -34,7 +34,10 @@ class MetaController extends Controller
             'news' => new News(Config::get('site_news_category')),
             'newsCount' => Config::get('front_page_news_posts'),
             'stats' => [
-                'userCount' => DB::table('users')->where('password_algo', '!=', 'disabled')->whereNotIn('rank_main', [1, 10])->count(),
+                'userCount' => DB::table('users')
+                    ->where('password_algo', '!=', 'disabled')
+                    ->whereNotIn('rank_main', [1, 10])
+                    ->count(),
                 'newestUser' => User::construct(Users::getNewestUserId()),
                 'lastRegDate' => date_diff(
                     date_create(date('Y-m-d', User::construct(Users::getNewestUserId())->registered)),

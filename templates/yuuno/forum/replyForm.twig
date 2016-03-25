@@ -1,0 +1,132 @@
+{% set bbcode = {
+    'b': ['Bold: [b]text[/b]', 'bold'],
+    'i': ['Italic: [i]text[/i]', 'italic'],
+    'u': ['Underline: [u]text[/u]', 'underline'],
+    's': ['Strikethrough: [s]text[/s]', 'strikethrough'],
+    'header': ['Header: [header]text[/header]', 'header'],
+    'url': ['URL: [url]link[/url] or [url=link]text[/url]', 'chain'],
+    'code': ['Code: [code]text[/code] (bbcodes inside this tag are ignored!)', 'code'],
+    'spoiler': ['Spoiler: [spoiler]text[/spoiler]', 'minus'],
+    'box': ['Spoiler box: [box]text[/box] or [box=title]text[/box]', 'folder', true],
+    'list': ['List: [list][*]item\r\n[*]another item[/list]', 'list-ul'],
+    'img': ['Image: [img]image link[/img], please use https instead of http if possible', 'picture-o'],
+    'youtube': ['YouTube video: [youtube]video id (in the link after ?v= up until the first &)[/youtube]', 'youtube-play']
+} %}
+
+<div id="reply">
+    <form id="postingForm" method="post" action="{{ postingAction }}">
+        {% if titleCache is defined %}
+            <div class="posting-subject">
+                <input type="text" class="inputStyling" name="title" id="postingTitle" placeholder="Title" value="{{ titleCache }}" />
+            </div>
+        {% endif %}
+        <div class="posting-text">
+            <textarea class="inputStyling" name="text" id="postingText" placeholder="Hit ctrl+enter to submit quickly!"{% if titleCache is defined %} autofocus{% endif %}>{{ textCache }}</textarea>
+        </div>
+        <div class="posting-buttons">
+            <div style="float: left;">
+                {% for code,meta in bbcode %}
+                    <button onclick="insertBBcode('postingText', '{{ code }}'{% if meta[2] %}, true{% endif %});" type="button"{% if meta[0] %} title="{{ meta[0] }}"{% endif %} class="forumbtn{% if meta[1] %} fa fa-{{ meta[1] }}{% endif %}">{% if not meta[1] %}{{ code }}{% endif %}</button>
+                {% endfor %}
+            </div>
+            <div style="float: right;">
+                <button class="forumbtn fa fa-send" title="Reply"></button>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var titleMax = {{ sakura.forumTitleMaxLength }},
+        titleMin = {{ sakura.forumTitleMinLength }},
+        textMax = {{ sakura.forumTextMaxLength }},
+        textMin = {{ sakura.forumTextMinLength }},
+        preview = document.getElementById('postingPreview'),
+        pTitle = document.getElementById('postingTitle'),
+        pText = document.getElementById('postingText'),
+        pForm = document.getElementById('postingForm'),
+        tTitle = document.getElementById('threadTitle'),
+        rTitle = document.getElementById('previewTitle'),
+        rText = document.getElementById('previewText'),
+        lastParsed = Date.now(),
+        lastKeystroke = Date.now(),
+        parser = new AJAX(),
+        parserActive = false;
+
+    parser.setUrl("{{ route('helper.bbcode.parse') }}");
+    parser.contentType("application/x-www-form-urlencoded");
+
+    pText.addEventListener("focus", function () {
+        preview.style.display = null;
+    });
+
+    setInterval(function () {
+        if (lastParsed < Date.now() - 1000
+            && lastKeystroke > Date.now() - 1000
+            && parserActive !== true) {
+            lastParsed = Date.now();
+
+            var text = pText.value;
+
+            if (text.length == 0) {
+                rText.innerHTML = "";
+            } else if (text.length < textMin) {
+                rText.innerHTML = "<span style='color: red;'>Too short!</span>";
+            } else if (text.length > textMax) {
+                rText.innerHTML = "<span style='color: red;'>Too long!</span>";
+            } else {
+                parserActive = true;
+
+                parser.setSend({"text":text});
+
+                parser.addCallback(200, function () {
+                    rText.innerHTML = parser.response();
+
+                    var codeBlocks = rText.querySelectorAll("pre code");
+
+                    for (var _i in codeBlocks) {
+                        if ((typeof codeBlocks[_i]).toLowerCase() === 'object') {
+                            hljs.highlightBlock(codeBlocks[_i]);
+                        }
+                    }
+
+                    parserActive = false;
+                });
+
+                parser.start(HTTPMethods.POST);
+            }
+        }
+    }, 1000);
+
+    pText.addEventListener("keydown", function (e) {
+        lastKeystroke = Date.now();
+
+        if (e.keyCode == 13 && e.ctrlKey) {
+            pForm.submit();
+        }
+    });
+
+    {% if titleCache is defined %}
+        pTitle.addEventListener("keyup", function (e) {
+            var title = pTitle.value;
+
+            if (title.length == 0) {
+                title = "";
+            } else if (title.length < titleMin) {
+                title = "<span style='color: red;'>Too short!</span>";
+                tTitle.innerHTML = title;
+                rTitle.innerHTML = title;
+                return;
+            } else if (title.length > titleMax) {
+                title = "<span style='color: red;'>Too long!</span>";
+                tTitle.innerHTML = title;
+                rTitle.innerHTML = title;
+                return;
+            }
+
+            tTitle.innerText = title;
+            rTitle.innerText = title;
+        });
+    {% endif %}
+</script>

@@ -3,7 +3,7 @@
 {% set title %}Forums / {{ forum.name }}{% endset %}
 
 {% set forumBackLink %}{{ route('forums.index') }}{% endset %}
-{% set forumNewLink %}{{ urls.format('FORUM_NEW_THREAD', [forum.id]) }}{% endset %}
+{% set forumNewLink %}{{ route('forums.new', forum.id) }}{% endset %}
 {% set forumMarkRead %}{{ route('forums.mark', forum.id) }}?s={{ php.sessionid }}{% endset %}
 
 {% block title %}{{ title }}{% endblock %}

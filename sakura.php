@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', 20160324);
+define('SAKURA_VERSION', 20160325);
 
 // Define Sakura Path
 define('ROOT', __DIR__ . '/');
@@ -156,6 +156,11 @@ if (!defined('SAKURA_NO_TPL')) {
             'minPwdEntropy' => Config::get('min_entropy'),
             'minUsernameLength' => Config::get('username_min_length'),
             'maxUsernameLength' => Config::get('username_max_length'),
+
+            'forumTitleMaxLength' => Config::get('forum_title_max'),
+            'forumTitleMinLength' => Config::get('forum_title_min'),
+            'forumTextMaxLength' => Config::get('forum_text_max'),
+            'forumTextMinLength' => Config::get('forum_text_min'),
         ],
         'php' => [
             'sessionid' => \session_id(),
@@ -163,17 +168,18 @@ if (!defined('SAKURA_NO_TPL')) {
             'self' => $_SERVER['PHP_SELF'],
         ],
 
-        'session' => [
+        'session' => array_merge([
             'checkLogin' => $authCheck,
             'sessionId' => $authCheck[1],
             'userId' => $authCheck[0],
-        ],
+        ], $_SESSION),
 
         'user' => $currentUser,
         'urls' => $urls,
 
         'get' => $_GET,
         'post' => $_POST,
+        'request' => $_REQUEST,
         'server' => $_SERVER,
     ]);
 

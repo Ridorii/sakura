@@ -8,6 +8,7 @@
 namespace Sakura\Console\Command;
 
 use CLIFramework\Command;
+use Sakura\Config;
 
 class ServeCommand extends Command
 {
@@ -18,6 +19,11 @@ class ServeCommand extends Command
 
     public function execute()
     {
-        exec(PHP_BINDIR . '/php -S localhost:8000 -t ' . addslashes(ROOT . 'public/') . ' ' . addslashes(ROOT . 'server.php'));
+        $document_root = addslashes(ROOT . 'public/');
+        $router_proxy = addslashes(ROOT . 'server.php');
+        $php_dir = PHP_BINDIR;
+        $host = Config::local('dev', 'host');
+
+        exec("{$php_dir}/php -S {$host} -t {$document_root} {$router_proxy}");
     }
 }

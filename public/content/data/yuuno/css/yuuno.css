@@ -2256,50 +2256,51 @@ textarea.inputStyling {
     vertical-align: middle;
 }
 
-.forum.posting .posting-subject {
+.posting-subject {
     padding: 3px 0 2px;
 }
 
-.forum.posting .posting-subject input {
+.posting-subject input {
     width: calc(100% - 10px);
 }
 
-.forum.posting .posting-bbcodes {
+.posting-bbcodes {
     padding: 4px 0 2px;
 }
 
-.forum.posting .posting-bbcode-description {
+.posting-bbcode-description {
     font: .9em/1.2em "SegoeUI", "Segoe UI", sans-serif;
     padding: 2px 0 3px;
 }
 
-.forum.posting .posting-text {
+.posting-text {
     padding: 2px 0 0;
     margin: 0 0 -1px;
 }
 
-.forum.posting .posting-emotes {
+.posting-emotes {
     text-align: center;
     padding: 10px 0;
 }
 
-.forum.posting .posting-emotes img {
+.posting-emotes img {
     vertical-align: middle;
     cursor: pointer;
     margin: 0 3px;
 }
 
-.forum.posting .posting-text textarea {
-    width: calc(100% - 10px);
-    min-height: 300px;
+.posting-text textarea {
+    min-width: calc(100% - 10px);
+    max-width: calc(100% - 10px);
+    min-height: 200px;
 }
 
-.forum.posting .posting-options > div {
+.posting-options > div {
     float: left;
     padding: 10px 10px 0;
 }
 
-.forum.posting .posting-buttons {
+.posting-buttons {
     text-align: center;
 }
 

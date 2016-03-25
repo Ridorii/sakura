@@ -30,7 +30,7 @@ if ($topicId) {
 
 $forumId = isset($_GET['f']) ?
 $_GET['f'] :
-$thread->forum;
+($topicId ? $thread->forum : 0);
 
 // Creare forum class
 $forum = new Forum($forumId);
@@ -84,14 +84,6 @@ $mode = isset($_GET['f'])
     )
 );
 
-$emotes = DB::table('emoticons')
-    ->get();
-
-// Include emotes and bbcodes
-$posting = [
-    'emoticons' => $emotes,
-];
-
 // Check if we're in reply mode
 if ($mode != 'f') {
     // Attempt to get the topic
@@ -129,22 +121,6 @@ if ($mode != 'f') {
         // Print page contents
         echo Template::render('global/information');
         exit;
-    }
-
-    // Check if we're in quote mode
-    if ($mode == 'p'
-        && isset($_GET['quote'])
-        && $_GET['quote'] == $_GET['p']
-        && array_key_exists($_GET['p'], $thread->posts())) {
-
-        // Reassign post for ease
-        $post = $thread->posts()[$_GET['p']];
-
-        // Add subject to render data
-        $quotedPost = BBcode::toEditor($post->text);
-        $posting['text'] = "[quote={$post->poster->username}]{$quotedPost}[/quote]";
-
-        // Post editing
     } elseif ($mode == 'p'
         && isset($_GET['edit'])
         && $_GET['edit'] == $_GET['p']
@@ -285,16 +261,13 @@ if ($mode != 'f') {
         echo Template::render('global/confirm');
         exit;
     }
-
-    // Add subject to render data
-    if (!isset($posting['subject'])) {
-        $posting['subject'] = "Re: {$thread->title}";
-    }
 }
 
 // Check if a post is being made
 if (isset($_POST['post'])) {
     // Check if an ID is set
+    $post = null;
+
     if (isset($_POST['id'])) {
         // Attempt to create a post object
         $post = new Post($_POST['id']);
@@ -310,9 +283,6 @@ if (isset($_POST['post'])) {
         } else {
             $post = null;
         }
-    } else {
-        // Attempt to make the post
-        $post = Post::create($_POST['subject'], $_POST['text'], $currentUser, $topicId, $forumId);
     }
 
     // Add page specific things
@@ -337,13 +307,5 @@ if (isset($_POST['post'])) {
     exit;
 }
 
-// Set additional render data
-$renderData = array_merge($renderData, [
-    'posting' => $posting,
-]);
-
-// Set parse variables
-Template::vars($renderData);
-
-// Print page contents
-echo Template::render('forum/posting');
+$route = isset($thread) ? Router::route('forums.thread', $thread->id) : Router::route('forums.new', $forum->id);
+header("Location: {$route}#reply");
