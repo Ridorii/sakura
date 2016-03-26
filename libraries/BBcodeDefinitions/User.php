@@ -10,7 +10,7 @@ namespace Sakura\BBcodeDefinitions;
 use JBBCode\CodeDefinition;
 use JBBCode\ElementNode;
 use Sakura\Router;
-use Sakura\User;
+use Sakura\User as SakuraUser;
 use Sakura\Utils;
 
 /**
@@ -47,7 +47,7 @@ class User extends CodeDefinition
             $content .= Utils::cleanString($child->getAsText(), true);
         }
 
-        $user = User::construct($content);
+        $user = SakuraUser::construct($content);
         $profile = Router::route('user.profile', $user->id);
 
         return "<a class='default username' href='{$profile} style='color: {$user->colour};

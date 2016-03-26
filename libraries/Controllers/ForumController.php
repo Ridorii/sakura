@@ -106,7 +106,9 @@ class ForumController extends Controller
             ->orderByRaw('COUNT(*) DESC')
             ->limit(1)
             ->get(['poster_id']);
-        $activePoster = User::construct($activePosterId[0]->poster_id);
+        $activePoster = User::construct(
+            $activePosterId ? $activePosterId[0]->poster_id : 0
+        );
 
         // Create the forum object
         $forum = new Forum;

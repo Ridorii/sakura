@@ -1084,8 +1084,8 @@ class User
             ->insert([
                 'change_time' => time(),
                 'user_id' => $this->id,
-                'username_new_clean' => $username,
-                'new_clean' => $username_clean,
+                'username_new' => $username,
+                'username_new_clean' => $username_clean,
                 'username_old' => $this->username,
                 'username_old_clean' => $this->usernameClean,
             ]);
