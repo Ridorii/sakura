@@ -615,7 +615,6 @@ class ForumController extends Controller
                 || $titleTooLong
                 || $textTooShort
                 || $textTooLong) {
-
                 $message = "";
 
                 if ($titleTooShort) {
@@ -733,7 +732,6 @@ class ForumController extends Controller
             || $titleTooLong
             || $textTooShort
             || $textTooLong) {
-
             $message = "";
 
             if ($titleTooShort) {
