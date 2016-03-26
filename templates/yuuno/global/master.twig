@@ -212,6 +212,12 @@
                     timeElems[timeElem].innerText = Sakura.timeElapsed(Math.floor(parsed / 1000));
                 }
             }
+
+            notifyRequest('{{ php.sessionid }}');
+
+            setInterval(function() {
+                notifyRequest('{{ php.sessionid }}');
+            }, 60000);
         </script>
         {% if sakura.dev.showChangelog and stats %}
         <script type="text/javascript" src="https://sakura.flash.moe/?get=all&amp;limit=5&amp;variable=true"></script>

@@ -17,7 +17,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
 
-// Notifications
+// Notifications (decommissioned)
 if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications']) {
     // Create the notification container array
     $notifications = [];
@@ -28,20 +28,23 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
         && $_REQUEST['time'] > (time() - 1000)
         && isset($_REQUEST['session']) && $_REQUEST['session'] == session_id()) {
         // Get the user's notifications from the past forever but exclude read notifications
-        $userNotifs = Users::getNotifications(null, 0, true, true);
+        $alerts = $currentUser->notifications();
 
         // Add the proper values to the array
-        foreach ($userNotifs as $notif) {
+        foreach ($alerts as $alert) {
             // Add the notification to the display array
-            $notifications[$notif['alert_timestamp']] = [
-                'read' => $notif['alert_read'],
-                'title' => $notif['alert_title'],
-                'text' => $notif['alert_text'],
-                'link' => $notif['alert_link'],
-                'img' => $notif['alert_img'],
-                'timeout' => $notif['alert_timeout'],
-                'sound' => $notif['alert_sound'],
+            $notifications[$alert->id] = [
+                'read' => $alert->read,
+                'title' => $alert->title,
+                'text' => $alert->text,
+                'link' => $alert->link,
+                'img' => $alert->image,
+                'timeout' => $alert->timeout,
+                'sound' => $alert->sound,
             ];
+
+            $alert->toggleRead();
+            $alert->save();
         }
     }
 
@@ -71,7 +74,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     'title' => $friend->username . ' is online.',
                     'text' => '',
                     'link' => '',
-                    'img' => '/a/' . $friend->id,
+                    'img' => Router::route('file.avatar', $friend->id),
                     'timeout' => 2000,
                     'sound' => false,
                 ];
@@ -87,7 +90,7 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
                     'title' => $friend->username . ' is offline.',
                     'text' => '',
                     'link' => '',
-                    'img' => '/a/' . $friend->id,
+                    'img' => Router::route('file.avatar', $friend->id),
                     'timeout' => 2000,
                     'sound' => false,
                 ];
@@ -377,16 +380,20 @@ if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notification
         if (array_key_exists($action[1], $notifStrings)) {
             // Get the current user's profile data
             $user = User::construct($currentUser->id);
+            $friend = User::construct($_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')]);
 
-            Users::createNotification(
-                $_REQUEST[(isset($_REQUEST['add']) ? 'add' : 'remove')],
-                sprintf($notifStrings[$action[1]][0], $user->username),
-                $notifStrings[$action[1]][1],
-                60000,
-                Router::route('file.avatar', $user->id),
-                Router::route('user.profile', $user->id),
-                '1'
-            );
+            $alert = new Notification;
+
+            $alert->user = $friend->id;
+            $alert->time = time();
+            $alert->sound = true;
+            $alert->title = sprintf($notifStrings[$action[1]][0], $user->username);
+            $alert->text = $notifStrings[$action[1]][1];
+            $alert->image = Router::route('file.avatar', $user->id);
+            $alert->timeout = 60000;
+            $alert->link = Router::route('user.profile', $user->id);
+
+            $alert->save();
         }
     }
 
@@ -1488,11 +1495,6 @@ if (Users::checkLogin()) {
         // PM inbox
         case 'messages.inbox':
             $renderData['messages'] = [];
-            break;
-
-        // Notification history
-        case 'notifications.history':
-            $renderData['alerts'] = array_reverse(Users::getNotifications(null, 0, false, true));
             break;
 
         // Avatar and background sizes

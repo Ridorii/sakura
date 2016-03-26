@@ -1,4 +1,4 @@
-{% set alerts = alerts|batch(10) %}
+{% set alerts = user.notifications(0, false)|batch(10) %}
 
 {% set paginationPages = alerts %}
 {% set paginationUrl %}{{ urls.format('SETTING_MODE', ['notifications', 'history']) }}{% endset %}
@@ -14,25 +14,25 @@
 {% if alerts %}
     <div class="notification-history">
         {% for alert in alerts[get.page|default(1) - 1] %}
-        <a id="notif-hist-{{ alert.alert_id }}" class="clean {% if alert.alert_read %}read{% endif %}"{% if alert.alert_link %} href="{{ alert.alert_link }}"{% endif %}>
+        <a id="notif-hist-{{ alert.id }}" class="clean {% if alert.read %}read{% endif %}"{% if alert.link %} href="{{ alert.link }}"{% endif %}>
             <div class="notif-hist-icon">
-            {% if 'FONT:' in alert.alert_img %}
-                <div class="font-icon fa {{ alert.alert_img|replace({'FONT:': ''}) }} fa-4x"></div>
+            {% if 'FONT:' in alert.image %}
+                <div class="font-icon fa {{ alert.image|replace({'FONT:': ''}) }} fa-4x"></div>
             {% else %}
-                <img src="{{ alert.alert_img }}" alt="Notification" />
+                <img src="{{ alert.image }}" alt="Notification" />
             {% endif %}
             </div>
             <div class="notif-hist-content">
                 <div class="notif-hist-inside">
                     <div class="notif-hist-title">
-                        {{ alert.alert_title }}
+                        {{ alert.title }}
                     </div>
                     <div class="notif-hist-text">
-                        {{ alert.alert_text }}
+                        {{ alert.title }}
                     </div>
                 </div>
                 <div class="notif-hist-time">
-                    <time>{{ alert.alert_timestamp|date(sakura.dateFormat) }}</time>
+                    <time>{{ alert.time|date(sakura.dateFormat) }}</time>
                 </div>
             </div>
             <div class="clear"></div>

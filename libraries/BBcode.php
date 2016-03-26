@@ -75,11 +75,11 @@ class BBcode
             ['s', '<del>{param}</del>'],
             ['spoiler', '<span class="spoiler">{param}</span>'],
             ['box', '<div class="spoiler-box-container">
-            <div class="spoiler-box-title" onclick="Sakura.toggleClass(this.parentNode.children[1], \'hidden\');">
-            Click to open</div><div class="spoiler-box-content hidden">{param}</div></div>', ],
-            ['box', '<div class="spoiler-box-container"><div class="spoiler-box-title"
-            onclick="Sakura.toggleClass(this.parentNode.children[1], \'hidden\');">{option}</div>
-            <div class="spoiler-box-content hidden">{param}</div></div>', ],
+            <div class="spoiler-box-title" onclick="Sakura.toggleClass(this.parentNode.children[1], \'hidden\');">'
+                . 'Click to open</div><div class="spoiler-box-content hidden">{param}</div></div>'],
+            ['box', '<div class="spoiler-box-container"><div class="spoiler-box-title"'
+                . ' onclick="Sakura.toggleClass(this.parentNode.children[1], \'hidden\');">{option}</div>'
+                . '<div class="spoiler-box-content hidden">{param}</div></div>'],
             ['quote', '<blockquote><div class="quotee">Quote</div><div class="quote">{param}</div></blockquote>'],
         ];
 

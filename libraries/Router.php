@@ -136,13 +136,22 @@ class Router
      *
      * @param array $filters The filters for this group.
      * @param \Closure $callback The containers
-     *
-     * @return string The generated URI.
      */
     public static function group($filters, $callback)
     {
         // Execute the inner function
         self::$router->group($filters, $callback);
+    }
+
+    /**
+     * Create filter.
+     *
+     * string $name Identifier of the filter
+     * \Closure $method
+     */
+    public static function filter($name, $method)
+    {
+        self::$router->filter($name, $method);
     }
 
     /**

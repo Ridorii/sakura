@@ -1194,4 +1194,35 @@ class User
         // Return success
         return [1, 'SUCCESS'];
     }
+
+    /**
+     * Get all the notifications for this user.
+     *
+     * @param int $timeDifference The timeframe of alerts that should be fetched.
+     * @param bool $excludeRead Whether alerts that are marked as read should be included.
+     *
+     * @return array An array with Notification objects.
+     */
+    public function notifications($timeDifference = 0, $excludeRead = true)
+    {
+        $alertIds = DB::table('notifications')
+            ->where('user_id', $this->id);
+
+        if ($timeDifference) {
+            $alertIds->where('alert_timestamp', '>', time() - $timeDifference);
+        }
+
+        if ($excludeRead) {
+            $alertIds->where('alert_read', 0);
+        }
+
+        $alertIds = array_column($alertIds->get(['alert_id']), 'alert_id');
+        $alerts = [];
+
+        foreach ($alertIds as $alertId) {
+            $alerts[$alertId] = new Notification($alertId);
+        }
+
+        return $alerts;
+    }
 }

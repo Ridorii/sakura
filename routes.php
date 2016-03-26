@@ -6,6 +6,32 @@
 // Define namespace
 namespace Sakura;
 
+// Check if logged out
+Router::filter('logoutCheck', function () {
+    global $currentUser;
+
+    if ($currentUser->id !== 0) {
+        $message = "You must be logged out to do that!";
+
+        Template::vars(['page' => compact('message')]);
+
+        return Template::render('global/information');
+    }
+});
+
+// Check if logged in
+Router::filter('loginCheck', function () {
+    global $currentUser;
+
+    if ($currentUser->id === 0) {
+        $message = "You must be logged in to do that!";
+
+        Template::vars(['page' => compact('message')]);
+
+        return Template::render('global/information');
+    }
+});
+
 // Meta pages
 Router::get('/', 'MetaController@index', 'main.index');
 Router::get('/faq', 'MetaController@faq', 'main.faq');
@@ -13,16 +39,20 @@ Router::get('/search', 'MetaController@search', 'main.search');
 Router::get('/p/{id}', 'MetaController@infoPage', 'main.infopage');
 
 // Auth
-Router::get('/login', 'AuthController@loginGet', 'auth.login');
-Router::post('/login', 'AuthController@loginPost', 'auth.login');
-Router::get('/logout', 'AuthController@logout', 'auth.logout');
-Router::get('/register', 'AuthController@registerGet', 'auth.register');
-Router::post('/register', 'AuthController@registerPost', 'auth.register');
-Router::get('/resetpassword', 'AuthController@resetPasswordGet', 'auth.resetpassword');
-Router::post('/resetpassword', 'AuthController@resetPasswordPost', 'auth.resetpassword');
-Router::get('/reactivate', 'AuthController@reactivateGet', 'auth.reactivate');
-Router::post('/reactivate', 'AuthController@reactivatePost', 'auth.reactivate');
-Router::get('/activate', 'AuthController@activate', 'auth.activate');
+Router::group(['before' => 'logoutCheck'], function () {
+    Router::get('/login', 'AuthController@loginGet', 'auth.login');
+    Router::post('/login', 'AuthController@loginPost', 'auth.login');
+    Router::get('/register', 'AuthController@registerGet', 'auth.register');
+    Router::post('/register', 'AuthController@registerPost', 'auth.register');
+    Router::get('/resetpassword', 'AuthController@resetPasswordGet', 'auth.resetpassword');
+    Router::post('/resetpassword', 'AuthController@resetPasswordPost', 'auth.resetpassword');
+    Router::get('/reactivate', 'AuthController@reactivateGet', 'auth.reactivate');
+    Router::post('/reactivate', 'AuthController@reactivatePost', 'auth.reactivate');
+    Router::get('/activate', 'AuthController@activate', 'auth.activate');
+});
+Router::group(['before' => 'loginCheck'], function () {
+    Router::get('/logout', 'AuthController@logout', 'auth.logout');
+});
 
 // News
 Router::group(['prefix' => 'news'], function () {
@@ -37,9 +67,11 @@ Router::group(['prefix' => 'forum'], function () {
     Router::group(['prefix' => 'post'], function () {
         Router::get('/{id:i}', 'ForumController@post', 'forums.post');
         Router::get('/{id:i}/raw', 'ForumController@postRaw', 'forums.post.raw');
-        Router::get('/{id:i}/delete', 'ForumController@deletePost', 'forums.post.delete');
-        Router::post('/{id:i}/delete', 'ForumController@deletePost', 'forums.post.delete');
-        Router::post('/{id:i}/edit', 'ForumController@editPost', 'forums.post.edit');
+        Router::group(['before' => 'loginCheck'], function () {
+            Router::get('/{id:i}/delete', 'ForumController@deletePost', 'forums.post.delete');
+            Router::post('/{id:i}/delete', 'ForumController@deletePost', 'forums.post.delete');
+            Router::post('/{id:i}/edit', 'ForumController@editPost', 'forums.post.edit');
+        });
     });
 
     // Thread
@@ -66,6 +98,8 @@ Router::group(['prefix' => 'members'], function () {
 // User
 Router::get('/u/{id}', 'UserController@profile', 'user.profile');
 Router::get('/u/{id}/header', 'FileController@header', 'user.header');
+Router::get('/notifications', 'UserController@notifications', 'user.notifications');
+Router::get('/notifications/{id}/mark', 'UserController@markNotification', 'user.notifications.mark');
 
 // Files
 Router::get('/a/{id}', 'FileController@avatar', 'file.avatar');

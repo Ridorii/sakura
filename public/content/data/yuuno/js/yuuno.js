@@ -20,18 +20,18 @@ function notifyUI(content) {
     alert.className = 'notification-enter';
     alert.id = id;
     // Add the icon
-    if ((typeof content.img).toLowerCase() === 'undefined' || content.img == null || content.img.length < 2) {
+    if ((typeof content.image).toLowerCase() === 'undefined' || content.image == null || content.image.length < 2) {
         aIconCont = document.createElement('div');
         aIconCont.className = 'font-icon fa fa-info fa-4x';
     }
-    else if (content.img.substr(0, 5) == 'FONT:') {
+    else if (content.image.substr(0, 5) == 'FONT:') {
         aIconCont = document.createElement('div');
-        aIconCont.className = 'font-icon fa ' + content.img.replace('FONT:', '') + ' fa-4x';
+        aIconCont.className = 'font-icon fa ' + content.image.replace('FONT:', '') + ' fa-4x';
     }
     else {
         aIconCont = document.createElement('img');
         aIconCont.alt = id;
-        aIconCont.src = content.img;
+        aIconCont.src = content.image;
     }
     aIcon.appendChild(aIconCont);
     aIcon.className = 'notification-icon';
@@ -58,25 +58,6 @@ function notifyUI(content) {
     alert.appendChild(aClose);
     // Append the notification to the document
     cont.appendChild(alert);
-    // Play sound if request
-    if (content.sound) {
-        // Create the elements
-        var sound = document.createElement('audio');
-        var mp3 = document.createElement('source');
-        var ogg = document.createElement('source');
-        // Assign attribs
-        mp3.type = 'audio/mp3';
-        ogg.type = 'audio/ogg';
-        mp3.src = sakuraVars.content + '/sounds/notify.mp3';
-        ogg.src = sakuraVars.content + '/sounds/notify.ogg';
-        // Append
-        sound.appendChild(mp3);
-        sound.appendChild(ogg);
-        // Less loud
-        sound.volume = 0.5;
-        // And play
-        sound.play();
-    }
     // If keepalive is 0 keep the notification open forever
     if (content.timeout > 0) {
         // Set a timeout and close after an amount
@@ -111,7 +92,7 @@ function notifyRequest(session) {
     }
     // Create AJAX object
     var get = new AJAX();
-    get.setUrl('/settings.php?request-notifications=true&time=' + Sakura.epoch() + '&session=' + session);
+    get.setUrl('/notifications');
     // Add callbacks
     get.addCallback(200, function () {
         // Assign the parsed JSON

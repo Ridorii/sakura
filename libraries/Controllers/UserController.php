@@ -9,6 +9,8 @@ namespace Sakura\Controllers;
 
 use Sakura\Config;
 use Sakura\DB;
+use Sakura\Notification;
+use Sakura\Perms\Site;
 use Sakura\Rank;
 use Sakura\Router;
 use Sakura\Template;
@@ -104,7 +106,7 @@ class UserController extends Controller
         global $currentUser;
 
         // Check permission
-        if (!$currentUser->permission(\Sakura\Perms\Site::VIEW_MEMBERLIST)) {
+        if (!$currentUser->permission(Site::VIEW_MEMBERLIST)) {
             return Template::render('global/restricted');
         }
 
@@ -135,5 +137,43 @@ class UserController extends Controller
 
         // Render the template
         return Template::render('main/memberlist');
+    }
+
+    public function notifications()
+    {
+        // TODO: add friend on/offline messages
+        global $currentUser;
+
+        // Set json content type
+        header('Content-Type: application/json; charset=utf-8');
+
+        return json_encode(
+            $currentUser->notifications(),
+            JSON_FORCE_OBJECT | JSON_NUMERIC_CHECK | JSON_BIGINT_AS_STRING
+        );
+    }
+
+    public function markNotification($id = 0)
+    {
+        global $currentUser;
+
+        // Check permission
+        if ($currentUser->permission(Site::DEACTIVATED)) {
+            return '0';
+        }
+
+        // Create the notification object
+        $alert = new Notification($id);
+
+        // Verify that the currently authed user is the one this alert is for
+        if ($alert->user !== $currentUser->id) {
+            return '0';
+        }
+
+        // Toggle the read status and save
+        $alert->toggleRead();
+        $alert->save();
+
+        return '1';
     }
 }

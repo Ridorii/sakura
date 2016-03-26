@@ -8,9 +8,8 @@ interface Notification {
     title: string;
     text: string;
     link: string;
-    img: string;
+    image: string;
     timeout: number;
-    sound: boolean;
 }
 
 // Spawns a notification
@@ -29,22 +28,22 @@ function notifyUI(content: Notification): void {
     var aCIcon: HTMLDivElement = document.createElement('div');
     var aClear: HTMLDivElement = document.createElement('div');
     var aIconCont: any;
-    
+
     // Add attributes to the main element
     alert.className = 'notification-enter';
     alert.id = id;
 
     // Add the icon
-    if ((typeof content.img).toLowerCase() === 'undefined' || content.img == null || content.img.length < 2) {
+    if ((typeof content.image).toLowerCase() === 'undefined' || content.image == null || content.image.length < 2) {
         aIconCont = document.createElement('div');
         aIconCont.className = 'font-icon fa fa-info fa-4x';
-    } else if (content.img.substr(0, 5) == 'FONT:') {
+    } else if (content.image.substr(0, 5) == 'FONT:') {
         aIconCont = document.createElement('div');
-        aIconCont.className = 'font-icon fa ' + content.img.replace('FONT:', '') + ' fa-4x';
+        aIconCont.className = 'font-icon fa ' + content.image.replace('FONT:', '') + ' fa-4x';
     } else {
         aIconCont = document.createElement('img');
         aIconCont.alt = id;
-        aIconCont.src = content.img;
+        aIconCont.src = content.image;
     }
 
     aIcon.appendChild(aIconCont);
@@ -78,30 +77,6 @@ function notifyUI(content: Notification): void {
     // Append the notification to the document
     cont.appendChild(alert);
 
-    // Play sound if request
-    if (content.sound) {
-        // Create the elements
-        var sound: HTMLAudioElement = document.createElement('audio');
-        var mp3: HTMLSourceElement = document.createElement('source');
-        var ogg: HTMLSourceElement = document.createElement('source');
-
-        // Assign attribs
-        mp3.type = 'audio/mp3';
-        ogg.type = 'audio/ogg';
-        mp3.src = sakuraVars.content + '/sounds/notify.mp3';
-        ogg.src = sakuraVars.content + '/sounds/notify.ogg';
-
-        // Append
-        sound.appendChild(mp3);
-        sound.appendChild(ogg);
-
-        // Less loud
-        sound.volume = 0.5;
-
-        // And play
-        sound.play();
-    }
-
     // If keepalive is 0 keep the notification open forever
     if (content.timeout > 0) {
         // Set a timeout and close after an amount
@@ -128,7 +103,7 @@ function notifyClose(id: string): void {
 // Opening an alerted link
 function notifyOpen(id: string): void {
     var sakuraHref: string = document.getElementById(id).getAttribute('sakurahref');
-    
+
     if ((typeof sakuraHref).toLowerCase() !== 'undefined') {
         window.location.assign(sakuraHref);
     }
@@ -143,7 +118,7 @@ function notifyRequest(session: string): void {
 
     // Create AJAX object
     var get: AJAX = new AJAX();
-    get.setUrl('/settings.php?request-notifications=true&time=' + Sakura.epoch() + '&session=' + session);
+    get.setUrl('/notifications');
 
     // Add callbacks
     get.addCallback(200, () => {
