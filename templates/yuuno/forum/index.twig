@@ -45,7 +45,7 @@
             </div>
             <div id="forumMostActivePoster">
                 <div class="head">Today's most active poster</div>
-                {% if not activePoster.id %}
+                {% if activePoster.id %}
                     <a class="clean" href="{{ route('user.profile', activePoster.id) }}">
                         <div class="user-container" style="background-image: url({{ route('user.header', activePoster.id) }});">
                             <div class="default-avatar-setting user-container-avatar" style="background-image: url({{ route('file.avatar', activePoster.id) }}); box-shadow: 0 0 5px #{% if activePoster.isOnline %}484{% else %}844{% endif %};"></div>
