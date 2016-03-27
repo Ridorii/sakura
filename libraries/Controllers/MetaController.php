@@ -12,7 +12,6 @@ use Sakura\DB;
 use Sakura\News;
 use Sakura\Template;
 use Sakura\User;
-use Sakura\Users;
 
 /**
  * Meta page controllers (sections that aren't big enough to warrant a dedicated controller).
@@ -29,6 +28,38 @@ class MetaController extends Controller
      */
     public function index()
     {
+        // Get the newest user
+        $newestUserId = DB::table('users')
+            ->where('rank_main', '!=', Config::get('restricted_rank_id'))
+            ->where('rank_main', '!=', Config::get('deactive_rank_id'))
+            ->orderBy('user_id', 'desc')
+            ->limit(1)
+            ->get(['user_id']);
+        $newestUser = User::construct($newestUserId ? $newestUserId[0]->user_id : 0);
+
+        // Get all the currently online users
+        $timeRange = time() - Config::get('max_online_time');
+
+        // Create a storage variable
+        $onlineUsers = [];
+
+        // Get all online users
+        $getOnline = DB::table('users')
+            ->where('user_last_online', '>', $timeRange)
+            ->get(['user_id']);
+        $getOnline = array_column($getOnline, 'user_id');
+
+        foreach ($getOnline as $user) {
+            $user = User::construct($user);
+
+            // Do a second check
+            if (!$user->isOnline()) {
+                continue;
+            }
+
+            $onlineUsers[$user->id] = $user;
+        }
+
         // Merge index specific stuff with the global render data
         Template::vars([
             'news' => new News(Config::get('site_news_category')),
@@ -38,14 +69,14 @@ class MetaController extends Controller
                     ->where('password_algo', '!=', 'disabled')
                     ->whereNotIn('rank_main', [1, 10])
                     ->count(),
-                'newestUser' => User::construct(Users::getNewestUserId()),
+                'newestUser' => $newestUser,
                 'lastRegDate' => date_diff(
-                    date_create(date('Y-m-d', User::construct(Users::getNewestUserId())->registered)),
+                    date_create(date('Y-m-d', $newestUser->registered)),
                     date_create(date('Y-m-d'))
                 )->format('%a'),
                 'topicCount' => DB::table('topics')->count(),
                 'postCount' => DB::table('posts')->count(),
-                'onlineUsers' => Users::checkAllOnline(),
+                'onlineUsers' => $onlineUsers,
             ],
         ]);
 
@@ -153,14 +184,6 @@ class MetaController extends Controller
      */
     public function search()
     {
-        // Set parse variables
-        Template::vars([
-            'page' => [
-                'title' => 'Search',
-            ],
-        ]);
-
-        // Print page contents
         return Template::render('main/search');
     }
 }

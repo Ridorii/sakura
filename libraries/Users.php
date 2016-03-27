@@ -47,22 +47,6 @@ class Users
 
         // Check if the session exists and check if the user is activated
         if ($sessionValid == 0 || $user->permission(Site::DEACTIVATED)) {
-            // Unset User ID
-            setcookie(
-                Config::get('cookie_prefix') . 'id',
-                0,
-                time() - 60,
-                Config::get('cookie_path')
-            );
-
-            // Unset Session ID
-            setcookie(
-                Config::get('cookie_prefix') . 'session',
-                '',
-                time() - 60,
-                Config::get('cookie_path')
-            );
-
             return false;
         }
 
@@ -91,9 +75,6 @@ class Users
             ->update([
                 'user_last_online' => time(),
             ]);
-
-        // Update the premium meta
-        self::updatePremiumMeta($uid);
 
         // If everything went through return true
         return [$uid, $sid];
@@ -249,121 +230,5 @@ class Users
 
         // Return the yeahs
         return $fields;
-    }
-
-    /**
-     * Get all online users.
-     *
-     * @return array Array containing User instances.
-     */
-    public static function checkAllOnline()
-    {
-        // Assign time - 500 to a variable
-        $time = time() - Config::get('max_online_time');
-
-        $return = [];
-
-        // Get all online users in the past 5 minutes
-        $getAll = DB::table('users')
-            ->where('user_last_online', '>', $time)
-            ->get();
-
-        foreach ($getAll as $user) {
-            $return[] = User::construct($user->user_id);
-        }
-
-        // Return all the online users
-        return $return;
-    }
-
-    /**
-     * Add premium time to a user.
-     *
-     * @param int $id The user ID.
-     * @param int $seconds The amount of extra seconds.
-     *
-     * @return array|double|int The new expiry date.
-     */
-    public static function addUserPremium($id, $seconds)
-    {
-        // Check if there's already a record of premium for this user in the database
-        $getUser = DB::table('premium')
-            ->where('user_id', $id)
-            ->count();
-
-        // Calculate the (new) start and expiration timestamp
-        $start = isset($getUser['premium_start']) ? $getUser['premium_start'] : time();
-        $expire = isset($getUser['premium_expire']) ? $getUser['premium_expire'] + $seconds : time() + $seconds;
-
-        // If the user already exists do an update call, otherwise an insert call
-        if (empty($getUser)) {
-            DB::table('premium')
-                ->insert([
-                    'user_id' => $id,
-                    'premium_start' => $start,
-                    'premium_expire' => $expire,
-                ]);
-        } else {
-            DB::table('premium')
-                ->where('user_id', $id)
-                ->update('premium_expire', $expire);
-        }
-
-        // Return the expiration timestamp
-        return $expire;
-    }
-
-    /**
-     * Process premium meta data.
-     *
-     * @param int $id The user ID.
-     */
-    public static function updatePremiumMeta($id)
-    {
-        // Get the ID for the premium user rank from the database
-        $premiumRank = Config::get('premium_rank_id');
-        $excepted = Config::get('restricted_rank_id');
-
-        // Create user object
-        $user = User::construct($id);
-
-        // Run the check
-        $check = $user->isPremium();
-
-        // Check if the user has premium
-        if ($check[0] && !array_key_exists($excepted, $user->ranks)) {
-            // If so add the rank to them
-            $user->addRanks([$premiumRank]);
-
-            // Check if the user's default rank is standard user and update it to premium
-            if ($user->mainRankId == 2) {
-                $user->setMainRank($premiumRank);
-            }
-        } elseif (!$check[0]) {
-            // Remove the expired entry
-            DB::table('premium')
-                ->where('user_id', $user->id)
-                ->delete();
-
-            // Else remove the rank from them
-            $user->removeRanks([$premiumRank]);
-        }
-    }
-
-    /**
-     * Get the newest member's ID.
-     *
-     * @return int The user ID.
-     */
-    public static function getNewestUserId()
-    {
-        $get = DB::table('users')
-            ->where('rank_main', '!=', Config::get('restricted_rank_id'))
-            ->where('rank_main', '!=', Config::get('deactive_rank_id'))
-            ->orderBy('user_id', 'desc')
-            ->limit(1)
-            ->get(['user_id']);
-
-        return $get ? $get[0]->user_id : 0;
     }
 }

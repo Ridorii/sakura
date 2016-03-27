@@ -8,9 +8,9 @@
 namespace Sakura\Controllers;
 
 use Sakura\Config;
-use Sakura\User;
 use Sakura\File;
 use Sakura\Perms\Site;
+use Sakura\User;
 
 /**
  * File controller, handles user uploads like avatars.
@@ -20,18 +20,28 @@ use Sakura\Perms\Site;
  */
 class FileController extends Controller
 {
-    private function serveImage($data, $mime, $name)
+    /**
+     * The base for serving a file.
+     *
+     * @return string
+     */
+    private function serve($data, $mime, $name)
     {
         // Add original filename
-        header('Content-Disposition: inline; filename="' . $name . '"');
+        header("Content-Disposition: inline; filename={$name}");
 
         // Set content type
-        header('Content-Type: ' . $mime);
+        header("Content-Type: {$mime}");
 
         // Return image data
         return $data;
     }
 
+    /**
+     * Attempt to get an avatar.
+     *
+     * @return string
+     */
     public function avatar($id = 0)
     {
         global $templateName;
@@ -72,26 +82,32 @@ class FileController extends Controller
         $user = User::construct($id);
 
         if ($user->permission(Site::DEACTIVATED)) {
-            return $this->serveImage($deactive['data'], $deactive['mime'], $deactive['name']);
+            return $this->serve($deactive['data'], $deactive['mime'], $deactive['name']);
         }
 
-        if ($user->checkBan() || $user->permission(Site::RESTRICTED)) {
-            return $this->serveImage($banned['data'], $banned['mime'], $banned['name']);
+        if ($user->checkBan()
+            || $user->permission(Site::RESTRICTED)) {
+            return $this->serve($banned['data'], $banned['mime'], $banned['name']);
         }
 
         if (!$user->avatar) {
-            return $this->serveImage($none['data'], $none['mime'], $none['name']);
+            return $this->serve($none['data'], $none['mime'], $none['name']);
         }
 
         $serve = new File($user->avatar);
 
         if (!$serve->id) {
-            return $this->serveImage($none['data'], $none['mime'], $none['name']);
+            return $this->serve($none['data'], $none['mime'], $none['name']);
         }
 
-        return $this->serveImage($serve->data, $serve->mime, $serve->name);
+        return $this->serve($serve->data, $serve->mime, $serve->name);
     }
 
+    /**
+     * Attempt to get a background.
+     *
+     * @return string
+     */
     public function background($id = 0)
     {
         global $templateName;
@@ -104,24 +120,32 @@ class FileController extends Controller
         ];
 
         if (!$id) {
-            return $this->serveImage($none['data'], $none['mime'], $none['name']);
+            return $this->serve($none['data'], $none['mime'], $none['name']);
         }
 
         $user = User::construct($id);
 
-        if ($user->permission(Site::DEACTIVATED) || $user->checkBan() || $user->permission(Site::RESTRICTED) || !$user->background) {
-            return $this->serveImage($none['data'], $none['mime'], $none['name']);
+        if ($user->permission(Site::DEACTIVATED)
+            || $user->checkBan()
+            || $user->permission(Site::RESTRICTED)
+            || !$user->background) {
+            return $this->serve($none['data'], $none['mime'], $none['name']);
         }
 
         $serve = new File($user->background);
 
         if (!$serve->id) {
-            return $this->serveImage($none['data'], $none['mime'], $none['name']);
+            return $this->serve($none['data'], $none['mime'], $none['name']);
         }
 
-        return $this->serveImage($serve->data, $serve->mime, $serve->name);
+        return $this->serve($serve->data, $serve->mime, $serve->name);
     }
 
+    /**
+     * Attempt to get a profile header.
+     *
+     * @return string
+     */
     public function header($id = 0)
     {
         global $templateName;
@@ -134,21 +158,24 @@ class FileController extends Controller
         ];
 
         if (!$id) {
-            return $this->serveImage($none['data'], $none['mime'], $none['name']);
+            return $this->serve($none['data'], $none['mime'], $none['name']);
         }
 
         $user = User::construct($id);
 
-        if ($user->permission(Site::DEACTIVATED) || $user->checkBan() || $user->permission(Site::RESTRICTED) || !$user->header) {
-            return $this->serveImage($none['data'], $none['mime'], $none['name']);
+        if ($user->permission(Site::DEACTIVATED)
+            || $user->checkBan()
+            || $user->permission(Site::RESTRICTED)
+            || !$user->header) {
+            return $this->serve($none['data'], $none['mime'], $none['name']);
         }
 
         $serve = new File($user->header);
 
         if (!$serve->id) {
-            return $this->serveImage($none['data'], $none['mime'], $none['name']);
+            return $this->serve($none['data'], $none['mime'], $none['name']);
         }
 
-        return $this->serveImage($serve->data, $serve->mime, $serve->name);
+        return $this->serve($serve->data, $serve->mime, $serve->name);
     }
 }

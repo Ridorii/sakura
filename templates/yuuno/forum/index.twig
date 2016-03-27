@@ -51,7 +51,7 @@
                             <div class="default-avatar-setting user-container-avatar" style="background-image: url({{ route('file.avatar', activePoster.id) }}); box-shadow: 0 0 5px #{% if activePoster.isOnline %}484{% else %}844{% endif %};"></div>
                             <div class="user-container-info">
                                 <h1 style="color: {{ activePoster.colour }}; text-shadow: 0 0 7px {% if activePoster.colour != 'inherit' %}{{ activePoster.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;" {% if activePoster.getUsernameHistory %} title="Known as {{ activePoster.getUsernameHistory[0].username_old }} before {{ activePoster.getUsernameHistory[0].change_time|date(sakura.dateFormat) }}." {% endif %}>{{ activePoster.username }}</h1>
-                                {% if activePoster.isPremium[0] %}<img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;" /> {% endif %}<img src="{{ sakura.contentPath }}/images/flags/{{ activePoster.country|lower }}.png" alt="{{ activePoster.country }}" style="vertical-align: middle;" title="{{ activePoster.country(true) }}" /> <span style="font-size: .8em;">{{ activePoster.title }}</span>
+                                {% if activePoster.isPremium %}<img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;" /> {% endif %}<img src="{{ sakura.contentPath }}/images/flags/{{ activePoster.country|lower }}.png" alt="{{ activePoster.country }}" style="vertical-align: middle;" title="{{ activePoster.country(true) }}" /> <span style="font-size: .8em;">{{ activePoster.title }}</span>
                             </div>
                         </div>
                     </a>

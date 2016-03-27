@@ -10,8 +10,14 @@
         <meta name="msapplication-TileColor" content="#9475b2" />
         <meta name="msapplication-TileImage" content="/content/images/icons/ms-icon-144x144.png" />
         <meta name="theme-color" content="#9475B2" />
-{% if page.redirect %}
-        <meta http-equiv="refresh" content="{{ page.redirectTimeout ? page.redirectTimeout : '3' }}; URL={{ page.redirect }}" />
+
+{# want to start moving away from page.etc but older files are a thing #}
+{% if message is not defined %}{% set message = page.message %}{% endif %}
+{% if redirect is not defined %}{% set redirect = page.redirect %}{% endif %}
+{% if redirectTimeout is not defined %}{% set redirectTimeout = page.redirectTimeout %}{% endif %}
+
+{% if redirect %}
+        <meta http-equiv="refresh" content="{{ redirectTimeout ? redirectTimeout : '3' }}; URL={{ redirect }}" />
 {% endif %}
         <link rel="apple-touch-icon" sizes="57x57" href="/content/images/icons/apple-icon-57x57.png" />
         <link rel="apple-touch-icon" sizes="60x60" href="/content/images/icons/apple-icon-60x60.png" />
@@ -63,7 +69,7 @@
                 notifyUI({
                     "title":    "An error has occurred!",
                     "text":     "There was a problem while executing the JavaScript code for this page: " + msg + ", URL: " + url + ", Line: " + line + ", Column: " + col + ". Please report this to a developer.",
-                    "img":      "FONT:fa-warning"
+                    "image":      "FONT:fa-warning"
                 });
             }
         </script>

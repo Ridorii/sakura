@@ -86,7 +86,7 @@
                                 {% endif %}
                                 <div class="userdata">
                                     <div class="usertitle">{{ post.poster.title }}</div>
-                                    <img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi"{% if not post.poster.isPremium[0] %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.contentPath }}/images/flags/{{ post.poster.country|lower }}.png" alt="{{ post.poster.country(true) }}" />{% if post.poster.id == (thread.posts|first).poster.id %} <img src="{{ sakura.contentPath }}/images/op.png" alt="OP" title="Original Poster" />{% endif %}
+                                    <img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi"{% if not post.poster.isPremium %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.contentPath }}/images/flags/{{ post.poster.country|lower }}.png" alt="{{ post.poster.country(true) }}" />{% if post.poster.id == (thread.posts|first).poster.id %} <img src="{{ sakura.contentPath }}/images/op.png" alt="OP" title="Original Poster" />{% endif %}
                                     {% if session.checkLogin %}
                                     <div class="actions">
                                         {% if (user.id == post.poster.id and forum.permission(constant('Sakura\\Perms\\Forum::EDIT_OWN'), user.id)) or forum.permission(constant('Sakura\\Perms\\Forum::EDIT_ANY'), user.id) %}
@@ -141,7 +141,7 @@
                             <img src="{{ route('file.avatar', user.id) }}" alt="{{ user.username }}" class="avatar" style="box-shadow: 0 3px 7px #484;" />
                             <div class="userdata">
                                 <div class="usertitle">{{ user.title }}</div>
-                                <img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi"{% if not user.isPremium[0] %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.contentPath }}/images/flags/{{ user.country|lower }}.png" alt="{{ user.country(true) }}" />{% if user.id == (thread.posts|first).poster.id %} <img src="{{ sakura.contentPath }}/images/op.png" alt="OP" title="Original Poster" />{% endif %}
+                                <img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi"{% if not user.isPremium %} style="opacity: 0;"{% endif %} /> <img src="{{ sakura.contentPath }}/images/flags/{{ user.country|lower }}.png" alt="{{ user.country(true) }}" />{% if user.id == (thread.posts|first).poster.id %} <img src="{{ sakura.contentPath }}/images/op.png" alt="OP" title="Original Poster" />{% endif %}
                             </div>
                         </td>
                         <td class="post-content">

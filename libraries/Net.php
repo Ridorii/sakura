@@ -20,7 +20,7 @@ class Net
      *
      * @return string The IP.
      */
-    public static function IP()
+    public static function ip()
     {
         return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '::1';
     }
@@ -163,7 +163,7 @@ class Net
     {
         // Generate an address from the mask
         $addr = str_repeat("f", $mask / 4);
-        
+
         // Append uneven bit
         switch ($mask % 4) {
             case 1:
@@ -178,10 +178,10 @@ class Net
                 $addr .= 'e';
                 break;
         }
-        
+
         // Pad the address with zeroes
         $addr = str_pad($addr, 32, '0');
-        
+
         // Pack the address
         $addr = pack('H*', $addr);
 

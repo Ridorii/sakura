@@ -263,7 +263,7 @@ class Utils
         // Attempt to get country code using PHP's built in geo thing
         if (function_exists("geoip_country_code_by_name")) {
             try {
-                $code = geoip_country_code_by_name(Net::IP());
+                $code = geoip_country_code_by_name(Net::ip());
 
                 // Check if $code is anything
                 if ($code) {
@@ -345,95 +345,5 @@ class Utils
 
         // Return the formatted string
         return $bytes;
-    }
-
-    /**
-     * Get the premium tracker data.
-     *
-     * @return array The premium tracker data.
-     */
-    public static function getPremiumTrackerData()
-    {
-        // Create data array
-        $data = [];
-
-        // Get database stuff
-        $table = DB::table('premium_log')
-            ->orderBy('transaction_id', 'desc')
-            ->get();
-
-        // Add raw table data to data array
-        $data['table'] = $table;
-
-        // Create balance entry
-        $data['balance'] = 0.0;
-
-        // users
-        $data['users'] = [];
-
-        // Calculate the thing
-        foreach ($table as $row) {
-            // Calculate balance
-            $data['balance'] = $data['balance'] + $row->transaction_amount;
-
-            // Add userdata to table
-            if (!array_key_exists($row->user_id, $data['users'])) {
-                $data['users'][$row->user_id] = User::construct($row->user_id);
-            }
-        }
-
-        // Return the data
-        return $data;
-    }
-
-    /**
-     * Add a new entry to the tracker.
-     *
-     * @param int $id The user ID.
-     * @param float $amount The amount of money.
-     * @param string $comment A little information.
-     */
-    public static function updatePremiumTracker($id, $amount, $comment)
-    {
-        DB::table('premium_log')
-            ->insert([
-                'user_id' => $id,
-                'transaction_amount' => $amount,
-                'transaction_date' => time(),
-                'transaction_comment' => $comment,
-            ]);
-    }
-
-    /**
-     * Clean up the contents of <code> tags.
-     *
-     * @param string $text Dirty
-     *
-     * @return string Clean
-     */
-    public static function fixCodeTags($text)
-    {
-        $parts = explode('<code>', $text);
-        $newStr = '';
-
-        if (count($parts) > 1) {
-            foreach ($parts as $p) {
-                $parts2 = explode('</code>', $p);
-                if (count($parts2) > 1) {
-                    $code = str_replace('<br />', '', $parts2[0]);
-                    $code = str_replace('<br/>', '', $code);
-                    $code = str_replace('<br>', '', $code);
-                    $code = str_replace('<', '&lt;', $code);
-                    $newStr .= '<code>' . $code . '</code>';
-                    $newStr .= $parts2[1];
-                } else {
-                    $newStr .= $p;
-                }
-            }
-        } else {
-            $newStr = $text;
-        }
-
-        return $newStr;
     }
 }

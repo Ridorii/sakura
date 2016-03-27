@@ -28,17 +28,28 @@ use Sakura\Utils;
  */
 class AuthController extends Controller
 {
-    protected function touchRateLimit($user, $mode = 0)
+    /**
+     * Touch the login rate limit.
+     *
+     * @param $user int The ID of the user that attempted to log in.
+     * @param $sucess bool Whether the login attempt was successful.
+     */
+    protected function touchRateLimit($user, $success = false)
     {
         DB::table('login_attempts')
             ->insert([
-                'attempt_success' => $mode,
+                'attempt_success' => $success ? 1 : 0,
                 'attempt_timestamp' => time(),
-                'attempt_ip' => Net::pton(Net::IP()),
+                'attempt_ip' => Net::pton(Net::ip()),
                 'user_id' => $user,
             ]);
     }
 
+    /**
+     * End the current session.
+     *
+     * @return string
+     */
     public function logout()
     {
         // Check if user is logged in
@@ -65,11 +76,21 @@ class AuthController extends Controller
         return Template::render('global/information');
     }
 
+    /**
+     * Get the login page.
+     *
+     * @return string
+     */
     public function loginGet()
     {
         return Template::render('auth/login');
     }
 
+    /**
+     * Do a login attempt.
+     *
+     * @return string
+     */
     public function loginPost()
     {
         // Preliminarily set login to failed
@@ -91,7 +112,7 @@ class AuthController extends Controller
 
         // Check if we haven't hit the rate limit
         $rates = DB::table('login_attempts')
-            ->where('attempt_ip', Net::pton(Net::IP()))
+            ->where('attempt_ip', Net::pton(Net::ip()))
             ->where('attempt_timestamp', '>', time() - 1800)
             ->where('attempt_success', '0')
             ->count();
@@ -172,7 +193,7 @@ class AuthController extends Controller
             Config::get('cookie_path')
         );
 
-        $this->touchRateLimit($user->id, 1);
+        $this->touchRateLimit($user->id, true);
 
         $success = 1;
 
@@ -189,12 +210,17 @@ class AuthController extends Controller
         return Template::render('global/information');
     }
 
+    /**
+     * Get the registration page.
+     *
+     * @return string
+     */
     public function registerGet()
     {
         // Attempt to check if a user has already registered from the current IP
         $getUserIP = DB::table('users')
-            ->where('register_ip', Net::pton(Net::IP()))
-            ->orWhere('last_ip', Net::pton(Net::IP()))
+            ->where('register_ip', Net::pton(Net::ip()))
+            ->orWhere('last_ip', Net::pton(Net::ip()))
             ->get();
 
         if ($getUserIP) {
@@ -207,6 +233,11 @@ class AuthController extends Controller
         return Template::render('auth/register');
     }
 
+    /**
+     * Do a registration attempt.
+     *
+     * @return string
+     */
     public function registerPost()
     {
         // Preliminarily set registration to failed
@@ -366,6 +397,11 @@ class AuthController extends Controller
         return Template::render('global/information');
     }
 
+    /**
+     * Do a activation attempt.
+     *
+     * @return string
+     */
     public function activate()
     {
         // Preliminarily set activation to failed
@@ -426,11 +462,21 @@ class AuthController extends Controller
         return Template::render('global/information');
     }
 
+    /**
+     * Get the reactivation request form.
+     *
+     * @return string
+     */
     public function reactivateGet()
     {
         return Template::render('auth/reactivate');
     }
 
+    /**
+     * Do a reactivation preparation attempt.
+     *
+     * @return string
+     */
     public function reactivatePost()
     {
         // Preliminarily set registration to failed
@@ -498,11 +544,21 @@ class AuthController extends Controller
         return Template::render('global/information');
     }
 
+    /**
+     * Get the password reset forum.
+     *
+     * @return string
+     */
     public function resetPasswordGet()
     {
         return Template::render('auth/resetpassword');
     }
 
+    /**
+     * Do a password reset attempt.
+     *
+     * @return string
+     */
     public function resetPasswordPost()
     {
         // Preliminarily set action to failed

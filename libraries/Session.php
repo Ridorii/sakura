@@ -98,7 +98,7 @@ class Session
         DB::table('sessions')
             ->insert([
                 'user_id' => $this->userId,
-                'user_ip' => Net::pton(Net::IP()),
+                'user_ip' => Net::pton(Net::ip()),
                 'user_agent' => Utils::cleanString(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'No user agent header.'),
                 'session_key' => $session,
                 'session_start' => time(),
@@ -141,7 +141,7 @@ class Session
         if ($ipCheck) {
             // Split both IPs up
             $sessionIP = explode('.', $session[0]->user_ip);
-            $userIP = explode('.', Net::IP());
+            $userIP = explode('.', Net::ip());
 
             // Take 1 off the ipCheck variable so it's equal to the array keys
             $ipCheck = $ipCheck - 1;

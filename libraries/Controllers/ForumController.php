@@ -29,7 +29,7 @@ class ForumController extends Controller
     /**
      * Serves the forum index.
      *
-     * @return mixed HTML for the forum index.
+     * @return string HTML for the forum index.
      */
     public function index()
     {
@@ -119,6 +119,11 @@ class ForumController extends Controller
         return Template::render('forum/index');
     }
 
+    /**
+     * Get a forum page.
+     *
+     * @return string
+     */
     public function forum($id = 0)
     {
         global $currentUser;
@@ -182,6 +187,11 @@ class ForumController extends Controller
         return Template::render('forum/viewforum');
     }
 
+    /**
+     * Mark a forum as read.
+     *
+     * @return string
+     */
     public function markForumRead($id = 0)
     {
         global $currentUser;
@@ -246,6 +256,11 @@ class ForumController extends Controller
         return Template::render('global/information');
     }
 
+    /**
+     * View a thread.
+     *
+     * @return string
+     */
     public function thread($id = 0)
     {
         global $currentUser;
@@ -283,6 +298,11 @@ class ForumController extends Controller
         return Template::render('forum/viewtopic');
     }
 
+    /**
+     * Moderate a thread.
+     *
+     * @return string
+     */
     public function threadModerate($id = 0)
     {
         global $currentUser;
@@ -409,14 +429,17 @@ class ForumController extends Controller
         }
 
         // Set the variables
-        Template::vars([
-            'page' => compact('message', 'redirect'),
-        ]);
+        Template::vars(compact('message', 'redirect'));
 
         // Print page contents
         return Template::render('global/information');
     }
 
+    /**
+     * Redirect to the position of a post in a thread.
+     *
+     * @return mixed
+     */
     public function post($id = 0)
     {
         global $currentUser;
@@ -462,6 +485,11 @@ class ForumController extends Controller
         return header("Location: {$threadLink}#p{$post->id}");
     }
 
+    /**
+     * Get the raw text of a post.
+     *
+     * @return string
+     */
     public function postRaw($id = 0)
     {
         global $currentUser;
@@ -485,6 +513,11 @@ class ForumController extends Controller
         return $post->text;
     }
 
+    /**
+     * Reply to a thread.
+     *
+     * @return string
+     */
     public function threadReply($id = 0)
     {
         global $currentUser;
@@ -571,6 +604,11 @@ class ForumController extends Controller
         return header("Location: {$postLink}");
     }
 
+    /**
+     * Create a thread.
+     *
+     * @return string
+     */
     public function createThread($id = 0)
     {
         global $currentUser;
@@ -664,6 +702,11 @@ class ForumController extends Controller
         return Template::render('forum/viewtopic');
     }
 
+    /**
+     * Edit a post.
+     *
+     * @return string
+     */
     public function editPost($id = 0)
     {
         global $currentUser;
@@ -781,6 +824,11 @@ class ForumController extends Controller
         return header("Location: {$postLink}");
     }
 
+    /**
+     * Delete a post.
+     *
+     * @return string
+     */
     public function deletePost($id = 0)
     {
         global $currentUser;

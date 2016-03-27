@@ -9,6 +9,7 @@ namespace Sakura;
 
 use Sakura\Perms;
 use Sakura\Perms\Site;
+use stdClass;
 
 /**
  * Everything you'd ever need from a specific user.
@@ -268,8 +269,8 @@ class User
                 'password_iter' => $password[1],
                 'email' => $emailClean,
                 'rank_main' => 0,
-                'register_ip' => Net::pton(Net::IP()),
-                'last_ip' => Net::pton(Net::IP()),
+                'register_ip' => Net::pton(Net::ip()),
+                'last_ip' => Net::pton(Net::ip()),
                 'user_registered' => time(),
                 'user_last_online' => 0,
                 'user_country' => Utils::getCountryCode(),
@@ -913,37 +914,99 @@ class User
     }
 
     /**
-     * Does this user have premium?
+     * Add premium in seconds.
      *
-     * @return array Premium status information.
+     * @param int $seconds The amount of seconds.
+     *
+     * @return int The new expiry date.
      */
-    public function isPremium()
+    public function addPremium($seconds)
     {
-
-        // Check if the user has static premium
-        if ($this->permission(Site::STATIC_PREMIUM)) {
-            return [2, 0, time() + 1];
-        }
-
-        // Attempt to retrieve the premium record from the database
-        $getRecord = DB::table('premium')
+        // Check if there's already a record of premium for this user in the database
+        $getUser = DB::table('premium')
             ->where('user_id', $this->id)
             ->get();
 
-        // If nothing was returned just return false
-        if (empty($getRecord)) {
-            return [0];
+        // Calculate the (new) start and expiration timestamp
+        $start = $getUser ? $getUser[0]->premium_start : time();
+        $expire = $getUser ? $getUser[0]->premium_expire + $seconds : time() + $seconds;
+
+        // If the user already exists do an update call, otherwise an insert call
+        if ($getUser) {
+            DB::table('premium')
+                ->where('user_id', $this->id)
+                ->update([
+                    'premium_expire' => $expire,
+                ]);
+        } else {
+            DB::table('premium')
+                ->insert([
+                    'user_id' => $this->id,
+                    'premium_start' => $start,
+                    'premium_expire' => $expire,
+                ]);
         }
 
-        $getRecord = $getRecord[0];
+        // Return the expiration timestamp
+        return $expire;
+    }
 
-        // Check if the Tenshi hasn't expired
-        if ($getRecord->premium_expire < time()) {
-            return [0, $getRecord->premium_start, $getRecord->premium_expire];
+    /**
+     * Does this user have premium?
+     *
+     * @return int Returns the premium expiration date.
+     */
+    public function isPremium()
+    {
+        // Get rank IDs from the db
+        $premiumRank = (int) Config::get('premium_rank_id');
+        $defaultRank = (int) Config::get('default_rank_id');
+
+        // Fetch expiration date
+        $expire = $this->premiumInfo()->expire;
+
+        // Check if the user has static premium
+        if (!$expire
+            && $this->permission(Site::STATIC_PREMIUM)) {
+            $expire = time() + 1;
         }
 
-        // Else return the start and expiration date
-        return [1, $getRecord->premium_start, $getRecord->premium_expire];
+        // Check if the user has premium and isn't in the premium rank
+        if ($expire
+            && !$this->hasRanks([$premiumRank])) {
+            // Add the premium rank
+            $this->addRanks([$premiumRank]);
+
+            // Set it as default
+            if ($this->mainRankId == $defaultRank) {
+                $this->setMainRank($premiumRank);
+            }
+        } elseif (!$expire
+            && $this->hasRanks([$premiumRank])) {
+            $this->removeRanks([$premiumRank]);
+
+            if ($this->mainRankId == $premiumRank) {
+                $this->setMainRank($defaultRank);
+            }
+        }
+
+        return $expire;
+    }
+
+    public function premiumInfo()
+    {
+        // Attempt to retrieve the premium record from the database
+        $check = DB::table('premium')
+            ->where('user_id', $this->id)
+            ->where('premium_expire', '>', time())
+            ->get();
+
+        $return = new stdClass;
+
+        $return->start = $check ? $check[0]->premium_start : 0;
+        $return->expire = $check ? $check[0]->premium_expire : 0;
+
+        return $return;
     }
 
     /**

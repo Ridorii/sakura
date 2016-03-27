@@ -106,9 +106,11 @@ Router::get('/a/{id}', 'FileController@avatar', 'file.avatar');
 Router::get('/bg/{id}', 'FileController@background', 'file.background');
 
 // Premium
-Router::group(['prefix' => 'support'], function () {
+Router::group(['prefix' => 'support', 'before' => 'loginCheck'], function () {
     Router::get('/', 'PremiumController@index', 'premium.index');
-    Router::get('/tracker', 'PremiumController@tracker', 'premium.tracker');
+    Router::get('/handle', 'PremiumController@handle', 'premium.handle');
+    Router::get('/complete', 'PremiumController@complete', 'premium.complete');
+    Router::post('/purchase', 'PremiumController@purchase', 'premium.purchase');
 });
 
 // Helpers

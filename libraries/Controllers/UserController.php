@@ -49,46 +49,18 @@ class UserController extends Controller
 
             // Redirect if so
             if ($check) {
-                Template::vars([
-                    'page' => [
-                        'message' => 'The user this profile belongs to changed their username, you are being redirected.',
-                        'redirect' => Router::route('user.profile', $check[0]->user_id),
-                    ],
-                ]);
+                $message = "This user changed their username! Redirecting you to their new profile.";
+                $redirect = Router::route('user.profile', $check[0]->user_id);
+
+                Template::vars(compact('message', 'redirect'));
 
                 // Print page contents
                 return Template::render('global/information');
             }
         }
 
-        // Check if we're trying to restrict
-        if (isset($_GET['restrict']) && $_GET['restrict'] == session_id() && $currentUser->permission(\Sakura\Perms\Manage::CAN_RESTRICT_USERS, \Sakura\Perms::MANAGE)) {
-            // Check restricted status
-            $restricted = $profile->permission(\Sakura\Perms\Site::RESTRICTED);
-
-            if ($restricted) {
-                $profile->removeRanks([Config::get('restricted_rank_id')]);
-                $profile->addRanks([2]);
-            } else {
-                $profile->addRanks([Config::get('restricted_rank_id')]);
-                $profile->removeRanks(array_keys($profile->ranks));
-            }
-
-            Template::vars([
-                'page' => [
-                    'message' => 'Toggled the restricted status of the user.',
-                    'redirect' => Router::route('user.profile', $profile->id),
-                ],
-            ]);
-
-            // Print page contents
-            return Template::render('global/information');
-        }
-
         // Set parse variables
-        Template::vars([
-            'profile' => $profile,
-        ]);
+        Template::vars(compact('profile'));
 
         // Print page contents
         return Template::render('main/profile');
@@ -128,17 +100,21 @@ class UserController extends Controller
         // Get the active rank
         $rank = array_key_exists($rank, $ranks) ? $rank : ($rank ? 0 : 2);
 
+        // Get members per page
+        $membersPerPage = Config::get('members_per_page');
+
         // Set parse variables
-        Template::vars([
-            'ranks' => $ranks,
-            'rank' => $rank,
-            'membersPerPage' => Config::get('members_per_page'),
-        ]);
+        Template::vars(compact('ranks', 'rank', 'membersPerPage'));
 
         // Render the template
         return Template::render('main/memberlist');
     }
 
+    /**
+     * Get the notification JSON object for the currently authenticated user.
+     *
+     * @return string The JSON object.
+     */
     public function notifications()
     {
         // TODO: add friend on/offline messages
@@ -153,6 +129,13 @@ class UserController extends Controller
         );
     }
 
+    /**
+     * Mark a notification as read.
+     *
+     * @param int The ID of the notification.
+     *
+     * @return string Not entirely set on this one yet but 1 for success and 0 for fail.
+     */
     public function markNotification($id = 0)
     {
         global $currentUser;
