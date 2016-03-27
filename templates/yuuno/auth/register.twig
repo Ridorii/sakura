@@ -20,7 +20,7 @@
                 Register
             </div>
             <form id="registerForm" method="post" action="{{ route('auth.register') }}" style="display:{% if haltRegistration %}none{% else %}block{% endif %};">
-                <input type="hidden" name="session" value="{{ php.sessionid }}" />
+                <input type="hidden" name="session" value="{{ session_id() }}" />
                 <div class="leftAlign">
                     <label for="registerUserName">Username:</label>
                 </div>

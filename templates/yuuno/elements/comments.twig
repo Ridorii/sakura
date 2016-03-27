@@ -2,7 +2,7 @@
     <div class="comment-input-section">
         {% if session.checkLogin %}
             <form action="{{ urls.format('COMMENT_POST') }}" method="post" id="commentsForm">
-                <input type="hidden" name="session" value="{{ php.sessionid }}" />
+                <input type="hidden" name="session" value="{{ session_id() }}" />
                 <input type="hidden" name="category" value="{{ commentsCategory }}" />
                 <input type="hidden" name="replyto" value="0" />
                 <input type="hidden" name="mode" value="comment" />

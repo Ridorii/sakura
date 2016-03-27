@@ -9,6 +9,9 @@ namespace Sakura;
 use Sakura\Perms\Site;
 use Sakura\Router;
 
+// Legacy support!!!!!!!!!
+$renderData = [];
+
 // If this we're requesting notifications this page won't require templating
 if (isset($_REQUEST['request-notifications']) && $_REQUEST['request-notifications']) {
     define('SAKURA_NO_TPL', true);

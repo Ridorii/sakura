@@ -104,6 +104,8 @@ class Template
         self::$template->addFunction(new Twig_SimpleFunction('route', function ($name, $args = null) {
             return Router::route($name, $args);
         }));
+
+        self::$template->addFunction(new Twig_SimpleFunction('session_id', 'session_id'));
     }
 
     /**

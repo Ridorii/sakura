@@ -1,8 +1,8 @@
 {% set birthday = user.birthday|split('-') %}
 
 <form enctype="multipart/form-data" method="post" action="{{ sakura.currentPage }}" id="editProfileForm">
-    <input type="hidden" name="sessid" value="{{ php.sessionid }}" />
-    <input type="hidden" name="timestamp" value="{{ php.time }}" />
+    <input type="hidden" name="sessid" value="{{ session_id() }}" />
+    <input type="hidden" name="timestamp" value="{{ date().timestamp }}" />
     <input type="hidden" name="mode" value="profile" />
     {% for field in profile.fields %}
         <div class="profile-field">

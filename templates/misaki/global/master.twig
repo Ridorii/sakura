@@ -108,7 +108,7 @@
                                     <li><a href="{{ urls.format('SETTING_CAT', ['messages']) }}">Private Messages</a></li>
                                     <li><a href="{{ urls.format('SETTINGS_INDEX') }}">User Settings</a></li>
                                     <li><a href="{{ urls.format('MANAGE_INDEX') }}">Site Management</a></li>
-                                    <li><a href="{{ urls.format('USER_LOGOUT', [php.time, php.sessionid, sakura.currentPage]) }}">Logout</a></li>
+                                    <li><a href="{{ urls.format('USER_LOGOUT', [date().timestamp, session_id(), sakura.currentPage]) }}">Logout</a></li>
                                 </ul>
                             {% endif %}
                         </li>

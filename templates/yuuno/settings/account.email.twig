@@ -1,6 +1,6 @@
 <form enctype="multipart/form-data" method="post" action="{{ sakura.currentPage }}" id="emailAddressChangeForm">
-    <input type="hidden" name="sessid" value="{{ php.sessionid }}" />
-    <input type="hidden" name="timestamp" value="{{ php.time }}" />
+    <input type="hidden" name="sessid" value="{{ session_id() }}" />
+    <input type="hidden" name="timestamp" value="{{ date().timestamp }}" />
     <input type="hidden" name="mode" value="email" />
     <h3 style="text-align: center;">Your e-mail address is currently set to <span style="font-weight: 700;">{{ user.email }}</span>.</h3>
     <div class="profile-field">

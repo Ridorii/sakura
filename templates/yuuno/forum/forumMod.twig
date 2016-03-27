@@ -1,5 +1,5 @@
 <form method="post" action="{{ route('forums.thread.mod', thread.id) }}" style="display: inline-block;">
-    <input type="hidden" name="session" value="{{ php.sessionid }}" />
+    <input type="hidden" name="session" value="{{ session_id() }}" />
     {% if forumSticky is defined %}
         <button class="forumbtn" title="{{ forumSticky ? 'Unsticky' : 'Sticky' }}" name="action" value="sticky"><span class="fa fa-{{ forumSticky ? 'remove' : 'thumb-tack' }}"></span></button>
     {% endif %}

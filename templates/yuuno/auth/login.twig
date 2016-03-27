@@ -13,7 +13,7 @@
                 </div>
                 <form method="post" action="{{ route('auth.login') }}" id="loginForm">
                     <input type="hidden" name="redirect" value="{{ sakura.referrer ? sakura.referrer : route('main.index') }}" />
-                    <input type="hidden" name="session" value="{{ php.sessionid }}" />
+                    <input type="hidden" name="session" value="{{ session_id() }}" />
                     <div class="leftAlign">
                         <label for="loginUserName">Username:</label>
                     </div>

@@ -32,7 +32,7 @@ window.addEventListener("load", function() {
                     <div class="friends-list-name" style="color: {{ friend.colour }};">{{ friend.username }}</div>
                 </a>
                 <div class="friends-list-actions"><!-- urls -->
-                    <a class="remove fill fa fa-remove" title="Remove friend" href="/friends?remove={{ friend.id }}&amp;session={{ php.sessionid }}&amp;time={{ php.time }}" id="friendslist-friend-action-remove-{{ friend.id }}"></a>
+                    <a class="remove fill fa fa-remove" title="Remove friend" href="/friends?remove={{ friend.id }}&amp;session={{ session_id() }}&amp;time={{ date().timestamp }}" id="friendslist-friend-action-remove-{{ friend.id }}"></a>
                     <div class="clear"></div>
                 </div>
             </div>

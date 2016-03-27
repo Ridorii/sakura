@@ -102,7 +102,7 @@
                                 <a class="menu-item fa-gavel" href="{{ urls.format('MANAGE_INDEX') }}" title="Manage"></a>
                             {% endif %}
                             <a class="menu-item fa-cogs" href="{{ urls.format('SETTINGS_INDEX') }}" title="Settings"></a>
-                            <a class="menu-item fa-sign-out" href="{{ route('auth.logout') }}?s={{ php.sessionid }}" title="Logout" id="headerLogoutLink"></a>
+                            <a class="menu-item fa-sign-out" href="{{ route('auth.logout') }}?s={{ session_id() }}" title="Logout" id="headerLogoutLink"></a>
                         {% else %}
                             {% if sakura.lockAuth %}
                                 <div class="menu-item fa-lock" style="padding-left: 10px; padding-right: 10px;" title="Authentication is locked"></div>
@@ -123,8 +123,8 @@
                 <div class="headerLoginContainer">
                     <form method="post" action="{{ route('auth.login') }}" id="headerLoginForm">
                         <input type="hidden" name="redirect" value="{{ sakura.currentPage }}" />
-                        <input type="hidden" name="session" value="{{ php.sessionid }}" />
-                        <input type="hidden" name="time" value="{{ php.time }}" />
+                        <input type="hidden" name="session" value="{{ session_id() }}" />
+                        <input type="hidden" name="time" value="{{ date().timestamp }}" />
                         <input type="hidden" name="mode" value="login" />
                         <div>
                             <label for="headerLoginUserName">Username:</label>
@@ -170,7 +170,7 @@
                 {% endif %}
 
                 {% block content %}
-                    <h1 class="stylised" style="text-align: center; margin: 2em auto;">{{ php.self }} is now printing!</h1>
+                    <h1 class="stylised" style="text-align: center; margin: 2em auto;">There is nothing here!</h1>
                 {% endblock %}
             </div>
             <div class="footer">
@@ -219,10 +219,10 @@
                 }
             }
 
-            notifyRequest('{{ php.sessionid }}');
+            notifyRequest('{{ session_id() }}');
 
             setInterval(function() {
-                notifyRequest('{{ php.sessionid }}');
+                notifyRequest('{{ session_id() }}');
             }, 60000);
         </script>
         {% if sakura.dev.showChangelog and stats %}

@@ -22,7 +22,7 @@
         </div>
         <div style="margin-bottom: 10px;">
             <h3>{% if persistentPremium %}Your rank has persistent Tenshi.{% else %}Your Tenshi tag is valid till {{ user.premiumInfo.expire|date(sakura.dateFormat) }}.{% endif %}</h3>
-            <progress value="{{ persistentPremium ? 100 : (100 - (((php.time - user.premiumInfo.start) / (user.premiumInfo.expire - user.premiumInfo.start)) * 100)) }}" max="100" style="width: 100%"></progress>
+            <progress value="{{ persistentPremium ? 100 : (100 - (((date().timestamp - user.premiumInfo.start) / (user.premiumInfo.expire - user.premiumInfo.start)) * 100)) }}" max="100" style="width: 100%"></progress>
         </div>
         {% endif %}
         <div class="sectionHeader">
@@ -112,8 +112,8 @@
     {% if session.checkLogin and user.permission(constant('Sakura\\Perms\\Site::OBTAIN_PREMIUM')) %}
         <form action="{{ route('premium.purchase') }}" method="post" id="purchaseForm" class="hidden">
             <input type="hidden" name="mode" value="purchase" />
-            <input type="hidden" name="time" value="{{ php.time }}" />
-            <input type="hidden" name="session" value="{{ php.sessionid }}" />
+            <input type="hidden" name="time" value="{{ date().timestamp }}" />
+            <input type="hidden" name="session" value="{{ session_id() }}" />
             <input type="hidden" name="months" id="monthsNo" value="1" />
         </form>
         <script type="text/javascript">

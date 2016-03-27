@@ -5,8 +5,8 @@
 </div-->
 <hr class="default" />
 <form enctype="multipart/form-data" method="post" action="{{ sakura.currentPage }}" id="userPageEditorForm">
-    <input type="hidden" name="sessid" value="{{ php.sessionid }}" />
-    <input type="hidden" name="timestamp" value="{{ php.time }}" />
+    <input type="hidden" name="sessid" value="{{ session_id() }}" />
+    <input type="hidden" name="timestamp" value="{{ date().timestamp }}" />
     <input type="hidden" name="mode" value="userpage" />
     <div><textarea name="userpage" id="userPageEditor" placeholder="[header]Welcome to my userpage![/header]" class="inputStyling" style="width: calc(100% - 12px); height: 400px;">{% if user.page %}{{ user.page }}{% else %}[header]Welcome to my userpage![/header]{% endif %}</textarea></div>
     <div class="profile-save">

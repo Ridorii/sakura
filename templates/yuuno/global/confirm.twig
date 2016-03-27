@@ -9,8 +9,8 @@
             <hr class="default" />
             {{ message }}
             <form method="post" action="{{ sakura.currentPage }}" id="confirmationForm">
-                <input type="hidden" name="sessionid" value="{{ php.sessionid }}" />
-                <input type="hidden" name="timestamp" value="{{ php.time }}" />
+                <input type="hidden" name="sessionid" value="{{ session_id() }}" />
+                <input type="hidden" name="timestamp" value="{{ date().timestamp }}" />
                 {% for key,value in conditions %}
                     <input type="hidden" name="{{ key }}" value="{{ value }}" />
                 {% endfor %}

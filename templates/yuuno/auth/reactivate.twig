@@ -12,7 +12,7 @@
                     Reactivate account
                 </div>
                 <form method="post" action="{{ route('auth.reactivate') }}" id="resendForm">
-                    <input type="hidden" name="session" value="{{ php.sessionid }}" />
+                    <input type="hidden" name="session" value="{{ session_id() }}" />
                     <div class="leftAlign">
                         <label for="activeUserName">Username:</label>
                     </div>

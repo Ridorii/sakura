@@ -23,9 +23,9 @@ set_time_limit(0);
 // Set internal encoding method
 mb_internal_encoding('utf-8');
 
-// Stop the execution if the PHP Version is older than 5.5.0
-if (version_compare(phpversion(), '5.5.0', '<')) {
-    throw new \Exception('Sakura requires at least PHP 5.5.0, please upgrade to a newer PHP version.');
+// Stop the execution if the PHP Version is older than 7.0.0
+if (version_compare(phpversion(), '7.0.0', '<')) {
+    throw new \Exception('Sakura requires at least PHP 7.0.0, please upgrade to a newer PHP version.');
 }
 
 // Check if the composer autoloader exists
@@ -162,16 +162,10 @@ if (!defined('SAKURA_NO_TPL')) {
             'forumTextMaxLength' => Config::get('forum_text_max'),
             'forumTextMinLength' => Config::get('forum_text_min'),
         ],
-        'php' => [
-            'sessionid' => \session_id(),
-            'time' => \time(),
-            'self' => $_SERVER['PHP_SELF'],
-        ],
 
         'session' => array_merge([
             'checkLogin' => $authCheck,
             'sessionId' => $authCheck[1],
-            'userId' => $authCheck[0],
         ], $_SESSION),
 
         'user' => $currentUser,
@@ -182,9 +176,6 @@ if (!defined('SAKURA_NO_TPL')) {
         'request' => $_REQUEST,
         'server' => $_SERVER,
     ]);
-
-    // Add the default render data
-    $renderData = [];
 
     // Site closing
     if (Config::get('site_closed')) {

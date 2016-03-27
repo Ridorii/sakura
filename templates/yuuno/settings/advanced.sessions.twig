@@ -19,8 +19,8 @@
             </td>
             <td style="width: 90px;">
                 <form method="post" action="{{ sakura.currentPage }}">
-                    <input type="hidden" name="sessid" value="{{ php.sessionid }}" />
-                    <input type="hidden" name="timestamp" value="{{ php.time }}" />
+                    <input type="hidden" name="sessid" value="{{ session_id() }}" />
+                    <input type="hidden" name="timestamp" value="{{ date().timestamp }}" />
                     <input type="hidden" name="sessionid" value="{{ s.session_id }}" />
                     <input type="hidden" name="mode" value="sessions" />
                     <button class="inputStyling small" name="submit">Kill</button>
@@ -32,8 +32,8 @@
 </table>
 <div class="profile-save">
     <form method="post" action="{{ sakura.currentPage }}">
-        <input type="hidden" name="sessid" value="{{ php.sessionid }}" />
-        <input type="hidden" name="timestamp" value="{{ php.time }}" />
+        <input type="hidden" name="sessid" value="{{ session_id() }}" />
+        <input type="hidden" name="timestamp" value="{{ date().timestamp }}" />
         <input type="hidden" name="sessionid" value="all" />
         <input type="hidden" name="mode" value="sessions" />
         <button class="inputStyling" name="submit">Kill all active sessions</button>

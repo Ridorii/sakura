@@ -4,7 +4,7 @@
 
 {% set forumBackLink %}{{ route('forums.index') }}{% endset %}
 {% set forumNewLink %}{{ route('forums.new', forum.id) }}{% endset %}
-{% set forumMarkRead %}{{ route('forums.mark', forum.id) }}?s={{ php.sessionid }}{% endset %}
+{% set forumMarkRead %}{{ route('forums.mark', forum.id) }}?s={{ session_id() }}{% endset %}
 
 {% block title %}{{ title }}{% endblock %}
 

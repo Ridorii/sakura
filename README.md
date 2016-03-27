@@ -5,10 +5,10 @@
 
 ## Requirements
 
-- PHP 5.5.0 or newer
-- A database engine compatible with your PHP install and Laravel/Illuminate's database abstraction layer.
+- PHP 7.0.0 or newer
+- A database engine compatible with your PHP install and Laravel/Illuminate's database abstraction layer, MySQL 5.7 recommended.
 
-_these will likely update in the future because i'm planning to go php 7 only_
+I will include a full list of required extensions later.
 
 ## Contributing
 

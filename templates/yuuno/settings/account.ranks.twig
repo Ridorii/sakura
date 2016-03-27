@@ -7,8 +7,8 @@
             </td>
             <td style="width: 90px;">
                 <form method="post" action="{{ sakura.currentPage }}">
-                    <input type="hidden" name="sessid" value="{{ php.sessionid }}" />
-                    <input type="hidden" name="timestamp" value="{{ php.time }}" />
+                    <input type="hidden" name="sessid" value="{{ session_id() }}" />
+                    <input type="hidden" name="timestamp" value="{{ date().timestamp }}" />
                     <input type="hidden" name="rank" value="{{ rank.id }}" />
                     <input type="hidden" name="mode" value="ranks" />
                     <input type="hidden" name="submit" value="hello" />
