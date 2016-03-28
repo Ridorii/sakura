@@ -73,15 +73,6 @@ class Notification
         }
     }
 
-    public function delete()
-    {
-        DB::table('comments')
-            ->where('comment_id', $this->id)
-            ->delete();
-
-        $this->id = 0;
-    }
-
     public function toggleRead()
     {
         // Set read to the negative value of itself

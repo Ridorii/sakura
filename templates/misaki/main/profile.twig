@@ -145,8 +145,6 @@
                         <div class="title">Account Standing</div>
                         {% if profileHidden %}
                             <div class="standing" style="color: #444;">Unknown</div>
-                        {% elseif profile.checkBan %}
-                            <h2 class="standing" style="color: #811;">Banned</h2>
                         {% elseif profile.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}
                             <h2 class="standing" style="color: #811;">Restricted</h2>
                         {% else %}

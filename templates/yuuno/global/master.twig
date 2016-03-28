@@ -84,7 +84,7 @@
                     <div class="menu-nav" id="navMenuSite">
                         <!-- Navigation menu, displayed on left side of the bar. -->
                         <a class="menu-item fa-home" href="{{ route('main.index') }}" title="Home"></a>
-                        <a class="menu-item fa-newspaper-o" href="{{ route('news.index') }}" title="News"></a>
+                        <a class="menu-item fa-newspaper-o" href="{{ route('news.category') }}" title="News"></a>
                         <a class="menu-item fa-commenting" href="{{ route('main.infopage', 'chat') }}" title="Chat"></a>
                         <a class="menu-item fa-list" href="{{ route('forums.index') }}" title="Forums"></a>
                         <a class="menu-item fa-search" href="{{ route('main.search') }}" title="Search"></a>
@@ -178,27 +178,27 @@
                     <div class="copycentre">Powered by <a href="https://github.com/flashwave/sakura/" target="_blank">Sakura</a>{% if sakura.dev.showChangelog %} <a href="https://sakura.flash.moe/#r{{ sakura.versionInfo.version }}" target="_blank">r{{ sakura.versionInfo.version }}</a>{% endif %} &copy; 2013-2016 <a href="http://flash.moe/" target="_blank">Flashwave</a></div>
                     <ul class="ftsection">
                         <li class="fthead">General</li>
-                        <li><a href="{{ route('main.index') }}" title="Flashii Frontpage">Home</a></li>
-                        <li><a href="{{ route('news.index') }}" title="Flashii News &amp; Updates">News</a></li>
-                        <li><a href="{{ route('main.search') }}" title="Do full-site search requests">Search</a></li>
-                        <li><a href="{{ route('main.infopage', 'contact') }}" title="Contact our Staff">Contact</a></li>
-                        <li><a href="https://sakura.flash.moe" target="_blank" title="All the changes made to Sakura are listed here">Changelog</a></li>
-                        <li><a href="{{ route('premium.index') }}" title="Get Tenshi and help us pay the bills">Support us</a></li>
+                        <li><a href="{{ route('main.index') }}">Home</a></li>
+                        <li><a href="{{ route('news.category') }}">News</a></li>
+                        <li><a href="{{ route('main.search') }}">Search</a></li>
+                        <li><a href="{{ route('main.infopage', 'contact') }}">Contact</a></li>
+                        <li><a href="https://sakura.flash.moe" target="_blank">Changelog</a></li>
+                        <li><a href="{{ route('premium.index') }}">Support us</a></li>
                     </ul>
                     <ul class="ftsection">
                         <li class="fthead">Community</li>
-                        <li><a href="{{ route('forums.index') }}" title="Read and post on our forums">Forums</a></li>
-                        <li><a href="https://twitter.com/_flashii" target="_blank" title="Follow us on Twitter for news messages that are too short for the news page">Twitter</a></li>
-                        <li><a href="https://youtube.com/user/flashiinet" target="_blank" title="Our YouTube page where stuff barely ever gets uploaded, mainly used to archive community creations">YouTube</a></li>
-                        <li><a href="https://steamcommunity.com/groups/flashiinet" target="_blank" title="Our Steam group, play games with other members on the site">Steam</a></li>
-                        <li><a href="https://github.com/flashii" target="_blank" title="Our GitHub organisation">GitHub</a></li>
+                        <li><a href="{{ route('forums.index') }}">Forums</a></li>
+                        <li><a href="https://twitter.com/_flashii" target="_blank">Twitter</a></li>
+                        <li><a href="https://youtube.com/user/flashiinet" target="_blank">YouTube</a></li>
+                        <li><a href="https://steamcommunity.com/groups/flashiinet" target="_blank">Steam</a></li>
+                        <li><a href="https://github.com/flashii" target="_blank">GitHub</a></li>
                     </ul>
                     <ul class="ftsection">
                         <li class="fthead">Information</li>
-                        <li><a href="{{ route('main.faq') }}" title="Questions that get Asked Frequently but not actually">FAQ</a></li>
-                        <li><a href="{{ route('main.infopage', 'rules') }}" title="Some Rules and Information kind of summing up the ToS">Rules</a></li>
-                        <li><a href="//fiistat.us" target="_blank" title="Check the status on our Servers and related services">Server Status</a></li>
-                        <li><a href="{{ route('main.infopage', 'terms') }}" title="Our Terms of Service">Terms of Service</a></li>
+                        <li><a href="{{ route('main.faq') }}">FAQ</a></li>
+                        <li><a href="{{ route('main.infopage', 'rules') }}">Rules</a></li>
+                        <li><a href="//fiistat.us" target="_blank">Server Status</a></li>
+                        <li><a href="{{ route('main.infopage', 'terms') }}">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>

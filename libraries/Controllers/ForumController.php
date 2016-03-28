@@ -184,7 +184,7 @@ class ForumController extends Controller
         ]);
 
         // Print page contents
-        return Template::render('forum/viewforum');
+        return Template::render('forum/forum');
     }
 
     /**
@@ -295,7 +295,7 @@ class ForumController extends Controller
         Template::vars(compact('forum', 'thread'));
 
         // Print page contents
-        return Template::render('forum/viewtopic');
+        return Template::render('forum/thread');
     }
 
     /**
@@ -699,7 +699,7 @@ class ForumController extends Controller
 
         Template::vars(compact('forum'));
 
-        return Template::render('forum/viewtopic');
+        return Template::render('forum/thread');
     }
 
     /**

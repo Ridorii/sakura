@@ -9,7 +9,7 @@ namespace Sakura\Controllers;
 
 use Sakura\Config;
 use Sakura\DB;
-use Sakura\News;
+use Sakura\News\Category;
 use Sakura\Template;
 use Sakura\User;
 
@@ -60,10 +60,12 @@ class MetaController extends Controller
             $onlineUsers[$user->id] = $user;
         }
 
+        // Get news
+        $news = new Category(Config::get('site_news_category'));
+
         // Merge index specific stuff with the global render data
         Template::vars([
-            'news' => new News(Config::get('site_news_category')),
-            'newsCount' => Config::get('front_page_news_posts'),
+            'news' => $news->posts(Config::get('front_page_news_posts')),
             'stats' => [
                 'userCount' => DB::table('users')
                     ->where('password_algo', '!=', 'disabled')
@@ -81,36 +83,7 @@ class MetaController extends Controller
         ]);
 
         // Return the compiled page
-        return Template::render('main/index');
-    }
-
-    /**
-     * Handles the news pages.
-     *
-     * @return mixed HTML for the correct news section.
-     */
-    public function news()
-    {
-        // Get arguments
-        $args = func_get_args();
-        $category = isset($args[0]) && !is_numeric($args[0]) ? $args[0] : Config::get('site_news_category');
-        $post = isset($args[1]) && is_numeric($args[1]) ? $args[1] : (
-            isset($args[0]) && is_numeric($args[0]) ? $args[0] : 0
-        );
-
-        // Create news object
-        $news = new News($category);
-
-        // Set parse variables
-        Template::vars([
-            'news' => $news,
-            'postsPerPage' => Config::get('news_posts_per_page'),
-            'viewPost' => $post != 0,
-            'postExists' => $news->postExists($post),
-        ]);
-
-        // Print page contents
-        return Template::render('main/news');
+        return Template::render('meta/index');
     }
 
     /**
@@ -134,7 +107,7 @@ class MetaController extends Controller
         ]);
 
         // Print page contents
-        return Template::render('main/faq');
+        return Template::render('meta/faq');
     }
 
     /**
@@ -174,7 +147,7 @@ class MetaController extends Controller
         }
 
         // Return the compiled page
-        return Template::render('main/infopage');
+        return Template::render('meta/infopage');
     }
 
     /**
@@ -184,6 +157,6 @@ class MetaController extends Controller
      */
     public function search()
     {
-        return Template::render('main/search');
+        return Template::render('meta/search');
     }
 }

@@ -1,0 +1,33 @@
+{% extends 'global/master.twig' %}
+
+{% block title %}News{% endblock %}
+
+{% block css %}
+    <style type="text/css">
+        .pagination {
+            float: right;
+        }
+    </style>
+{% endblock %}
+
+{% set posts = category.posts|batch(3) %}
+
+{% set paginationPages = posts|keys %}
+{% set paginationUrl %}{{ route('news.category', category.name) }}{% endset %}
+
+{% block content %}
+    <div class="content">
+        <div class="content-column news">
+            <div class="head">News</div>
+            {% for post in posts[get.page|default(1) - 1] %}
+                {% include 'elements/newsPost.twig' %}
+            {% endfor %}
+            {% if posts|length > 1 %}
+                <div>
+                    {% include 'elements/pagination.twig' %}
+                    <div class="clear"></div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

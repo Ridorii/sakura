@@ -15,7 +15,7 @@
             <a href="{{ forumMarkRead }}" class="forumbtn"><span class="fa fa-check-square-o"></span> Mark as Read</a>
         {% endif %}
         {% if thread.id and showMod %}
-            {% include 'forum/forumMod.twig' %}
+            {% include 'forum/elements/forumMod.twig' %}
         {% endif %}
     </div>
     {% include 'elements/pagination.twig' %}

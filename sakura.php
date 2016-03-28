@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', 20160327);
+define('SAKURA_VERSION', 20160328);
 
 // Define Sakura Path
 define('ROOT', __DIR__ . '/');
@@ -104,11 +104,7 @@ $currentUser = User::construct($authCheck[0]);
 $urls = new Urls();
 
 // Prepare the name of the template to load
-$templateName =
-!defined('SAKURA_MANAGE')
-&& isset($currentUser->optionFields()['useMisaki'])
-&& $currentUser->optionFields()['useMisaki'] ?
-'misaki' : Config::get('site_style');
+$templateName = Config::get('site_style');
 
 if (!defined('SAKURA_NO_TPL')) {
     // Start templating engine
@@ -181,32 +177,11 @@ if (!defined('SAKURA_NO_TPL')) {
     if (Config::get('site_closed')) {
         // Set parse variables
         Template::vars([
-            'page' => [
-                'message' => Config::get('site_closed_reason'),
-            ],
+            'message' => Config::get('site_closed_reason'),
         ]);
 
         // Print page contents
         echo Template::render('global/information');
-        exit;
-    }
-
-    // Ban checking
-    if ($authCheck
-        && !in_array($_SERVER['PHP_SELF'], [$urls->format('AUTH_ACTION', [], false)])
-        && $ban = Bans::checkBan($currentUser->id)) {
-        // Additional render data
-        Template::vars([
-            'ban' => [
-                'reason' => $ban['reason'],
-                'issued' => $ban['issued'],
-                'expires' => $ban['expires'],
-                'issuer' => (User::construct($ban['issuer'])),
-            ],
-        ]);
-
-        // Print page contents
-        echo Template::render('main/banned');
         exit;
     }
 }

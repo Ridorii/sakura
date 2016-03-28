@@ -42,13 +42,6 @@ class Template
     private static $templateName;
 
     /**
-     * The template options.
-     *
-     * @var array
-     */
-    private static $templateOptions;
-
-    /**
      * The file extension used by template files
      */
     const FILE_EXT = '.twig';
@@ -60,17 +53,6 @@ class Template
      */
     public static function set($name)
     {
-        // Assign config path to a variable so we don't have to type it out twice
-        $confPath = ROOT . 'templates/' . $name . '/template.ini';
-
-        // Check if the configuration file exists
-        if (!file_exists($confPath)) {
-            trigger_error('Template configuration does not exist', E_USER_ERROR);
-        }
-
-        // Parse and store the configuration
-        self::$templateOptions = parse_ini_file($confPath, true);
-
         // Set variables
         self::$templateName = $name;
 

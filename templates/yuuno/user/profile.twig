@@ -207,10 +207,8 @@
                         <b>Account Standing</b>
                         {% if profile.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) %}
                             <h2 style="color: #888; text-shadow: 0 0 7px #888; margin-top: 0;">Deactivated</h2>
-                        {% elseif profile.checkBan %}
-                            <h2 style="color: #222; text-shadow: 0 0 7px #222; margin-top: 0;">Banned</h2>
                         {% elseif profile.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}
-                            <h2 style="color: #800; text-shadow: 0 0 7px #800; margin-top: 0;">Restricted</h2>
+                            <h2 style="color: #222; text-shadow: 0 0 7px #800; margin-top: 0;">Restricted</h2>
                         {% elseif profile.getWarnings %}
                             <h2 style="color: #A00; text-shadow: 0 0 7px #A00; margin-top: 0;">Bad</h2>
                         {% else %}

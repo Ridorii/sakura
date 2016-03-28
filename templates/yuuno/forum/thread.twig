@@ -70,7 +70,7 @@
     <div class="content homepage forum viewtopic">
         <div class="content-column">
             <div class="head">{{ forum.name }} / <span id="threadTitle">{{ thread.title }}</span></div>
-            {% include 'forum/forumBtns.twig' %}
+            {% include 'forum/elements/forumBtns.twig' %}
             <table class="posts">
                 {% if thread is defined %}
                     {% set textCache = session.replyText['t' ~ thread.id] %}
@@ -162,9 +162,9 @@
                 {% endif %}
             </table>
             {% if forumReplyLink is defined or thread is not defined %}
-                {% include 'forum/replyForm.twig' %}
+                {% include 'forum/elements/replyForm.twig' %}
             {% endif %}
-            {% include 'forum/forumBtns.twig' %}
+            {% include 'forum/elements/forumBtns.twig' %}
         </div>
     </div>
 {% endblock %}

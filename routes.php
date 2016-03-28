@@ -56,9 +56,8 @@ Router::group(['before' => 'loginCheck'], function () {
 
 // News
 Router::group(['prefix' => 'news'], function () {
-    Router::get('/', 'MetaController@news', 'news.index');
-    Router::get('/{category}', 'MetaController@news', 'news.category');
-    Router::get('/{category}/{id}', 'MetaController@news', 'news.post');
+    Router::get('/{category:c}?', 'NewsController@category', 'news.category');
+    Router::get('/post/{id:i}', 'NewsController@post', 'news.post');
 });
 
 // Forum
@@ -66,8 +65,8 @@ Router::group(['prefix' => 'forum'], function () {
     // Post
     Router::group(['prefix' => 'post'], function () {
         Router::get('/{id:i}', 'ForumController@post', 'forums.post');
-        Router::get('/{id:i}/raw', 'ForumController@postRaw', 'forums.post.raw');
         Router::group(['before' => 'loginCheck'], function () {
+            Router::get('/{id:i}/raw', 'ForumController@postRaw', 'forums.post.raw');
             Router::get('/{id:i}/delete', 'ForumController@deletePost', 'forums.post.delete');
             Router::post('/{id:i}/delete', 'ForumController@deletePost', 'forums.post.delete');
             Router::post('/{id:i}/edit', 'ForumController@editPost', 'forums.post.edit');
@@ -84,13 +83,15 @@ Router::group(['prefix' => 'forum'], function () {
     // Forum
     Router::get('/', 'ForumController@index', 'forums.index');
     Router::get('/{id:i}', 'ForumController@forum', 'forums.forum');
-    Router::get('/{id:i}/mark', 'ForumController@markForumRead', 'forums.mark');
-    Router::get('/{id:i}/new', 'ForumController@createThread', 'forums.new');
-    Router::post('/{id:i}/new', 'ForumController@createThread', 'forums.new');
+    Router::group(['before' => 'loginCheck'], function () {
+        Router::get('/{id:i}/mark', 'ForumController@markForumRead', 'forums.mark');
+        Router::get('/{id:i}/new', 'ForumController@createThread', 'forums.new');
+        Router::post('/{id:i}/new', 'ForumController@createThread', 'forums.new');
+    });
 });
 
 // Members
-Router::group(['prefix' => 'members'], function () {
+Router::group(['prefix' => 'members', 'before' => 'loginCheck'], function () {
     Router::get('/', 'UserController@members', 'members.index');
     Router::get('/{rank:i}', 'UserController@members', 'members.rank');
 });
@@ -98,8 +99,17 @@ Router::group(['prefix' => 'members'], function () {
 // User
 Router::get('/u/{id}', 'UserController@profile', 'user.profile');
 Router::get('/u/{id}/header', 'FileController@header', 'user.header');
-Router::get('/notifications', 'UserController@notifications', 'user.notifications');
-Router::get('/notifications/{id}/mark', 'UserController@markNotification', 'user.notifications.mark');
+
+// Notifications
+Router::group(['prefix' => 'notifications'], function () {
+    Router::get('/', 'NotificationsController@notifications', 'notifications.get');
+    Router::get('/{id}/mark', 'NotificationsController@mark', 'notifications.mark');
+});
+
+// Comments
+Router::group(['prefix' => 'comments', 'before' => 'loginCheck'], function () {
+    Router::post('/{category:c}/post/{reply:i}?', 'CommentsController@post', 'comments.post');
+});
 
 // Files
 Router::get('/a/{id}', 'FileController@avatar', 'file.avatar');
@@ -116,7 +126,7 @@ Router::group(['prefix' => 'support', 'before' => 'loginCheck'], function () {
 // Helpers
 Router::group(['prefix' => 'helper'], function () {
     // BBcode
-    Router::group(['prefix' => 'bbcode'], function () {
+    Router::group(['prefix' => 'bbcode', 'before' => 'loginCheck'], function () {
         Router::post('/parse', 'HelperController@bbcodeParse', 'helper.bbcode.parse');
     });
 });
@@ -211,35 +221,6 @@ Router::group(['prefix' => 'settings', 'before' => 'loginCheck'], function () {
         Router::get('/deactivate', 'Settings.AdvancedController@deactivate', 'settings.advanced.deactivate');
     });
 });
-/*
- * General
- * - Home (make this not worthless while you're at it)
- * - Edit Profile
- * - Site Options
- * Friends
- * - Listing
- * - Requests
- * Groups
- * - Listing
- * - Invites
- * Notifications (will probably deprecate this entire section at some point but not relevant yet)
- * - History
- * Appearance (possibly combine ava, bg and header down into one menu as well as userpage and signature maybe)
- * - Avatar
- * - Background
- * - Header
- * - Userpage
- * - Signature
- * Account (also down to one section maybe)
- * - E-mail
- * - Username
- * - Usertitle
- * - Password
- * - Ranks (except this one i guess)
- * Advanced
- * - Session manager
- * - Deactivate account
- */
 
 // Management
 /*

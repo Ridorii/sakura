@@ -742,16 +742,6 @@ class User
     }
 
     /**
-     * Check if the user is banned.
-     *
-     * @return array|bool Ban status.
-     */
-    public function checkBan()
-    {
-        return Bans::checkBan($this->id);
-    }
-
-    /**
      * Check if the user has a certaing permission flag.
      *
      * @param int $flag The permission flag.
@@ -774,12 +764,26 @@ class User
     }
 
     /**
-     *  Get the comments from the user's profile.
+     * Get the comments from the user's profile.
+     *
      * @return Comments
      */
     public function profileComments()
     {
-        return new Comments('profile-' . $this->id);
+        $commentIds = DB::table('comments')
+            ->where('comment_category', "profile-{$this->id}")
+            ->orderBy('comment_id', 'desc')
+            ->where('comment_reply_to', 0)
+            ->get(['comment_id']);
+        $commentIds = array_column($commentIds, 'comment_id');
+
+        $comments = [];
+
+        foreach ($commentIds as $comment) {
+            $comments[$comment] = new Comment($comment);
+        }
+
+        return $comments;
     }
 
     /**

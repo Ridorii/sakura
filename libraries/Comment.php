@@ -24,6 +24,7 @@ class Comment
     public $upvotes = 0;
     public $downvotes = 0;
     private $replyCache = [];
+    private $parsedCache = "";
 
     public function __construct($id = 0)
     {
@@ -69,6 +70,19 @@ class Comment
         }
     }
 
+    public function delete()
+    {
+        foreach ($this->replies() as $reply) {
+            $reply->delete();
+        }
+
+        DB::table('comments')
+            ->where('comment_id', $this->id)
+            ->delete();
+
+        $this->id = 0;
+    }
+
     private function getVotes()
     {
         $votes = DB::table('comment_votes')
@@ -77,11 +91,20 @@ class Comment
 
         foreach ($votes as $vote) {
             if ($vote->vote_state) {
-                $upvotes += 1;
+                $this->upvotes += 1;
             } else {
-                $downvotes += 1;
+                $this->downvotes += 1;
             }
         }
+    }
+
+    public function parsed()
+    {
+        if (!$this->parsedCache) {
+            $this->parsedCache = BBcode::parseEmoticons(Utils::cleanString($this->text));
+        }
+
+        return $this->parsedCache;
     }
 
     public function replies()
@@ -89,8 +112,9 @@ class Comment
         if (!$this->replyCache) {
             $commentIds = DB::table('comments')
                 ->where('comment_reply_to', $this->id)
+                ->orderBy('comment_id', 'desc')
                 ->get(['comment_id']);
-            $commentIds = array_column($comments, 'comment_id');
+            $commentIds = array_column($commentIds, 'comment_id');
 
             foreach ($commentIds as $comment) {
                 $this->replyCache[$comment] = new Comment($comment);

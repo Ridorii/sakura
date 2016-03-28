@@ -1528,7 +1528,7 @@ if (Users::checkLogin()) {
     Template::vars($renderData);
 
     // Print page contents
-    echo Template::render('main/settings');
+    echo Template::render('meta/settings');
 } else {
     // If not allowed print the restricted page
     Template::vars($renderData);

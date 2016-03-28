@@ -85,8 +85,7 @@ class FileController extends Controller
             return $this->serve($deactive['data'], $deactive['mime'], $deactive['name']);
         }
 
-        if ($user->checkBan()
-            || $user->permission(Site::RESTRICTED)) {
+        if ($user->permission(Site::RESTRICTED)) {
             return $this->serve($banned['data'], $banned['mime'], $banned['name']);
         }
 
@@ -126,7 +125,6 @@ class FileController extends Controller
         $user = User::construct($id);
 
         if ($user->permission(Site::DEACTIVATED)
-            || $user->checkBan()
             || $user->permission(Site::RESTRICTED)
             || !$user->background) {
             return $this->serve($none['data'], $none['mime'], $none['name']);
@@ -164,7 +162,6 @@ class FileController extends Controller
         $user = User::construct($id);
 
         if ($user->permission(Site::DEACTIVATED)
-            || $user->checkBan()
             || $user->permission(Site::RESTRICTED)
             || !$user->header) {
             return $this->serve($none['data'], $none['mime'], $none['name']);

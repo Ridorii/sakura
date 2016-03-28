@@ -49,7 +49,7 @@ class PremiumController extends Controller
 
         Template::vars(compact('price', 'amountLimit'));
 
-        return Template::render('main/support');
+        return Template::render('premium/index');
     }
 
     /**
@@ -180,6 +180,6 @@ class PremiumController extends Controller
      */
     public function complete()
     {
-        return Template::render('main/premiumcomplete');
+        return Template::render('premium/complete');
     }
 }

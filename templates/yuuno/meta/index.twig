@@ -7,7 +7,7 @@
         </div>
         <div class="content-left content-column">
             <div class="head">News</div>
-            {% for post in news.posts|batch(newsCount)[0] %}
+            {% for post in news %}
                 {% include 'elements/newsPost.twig' %}
             {% endfor %}
         </div>
