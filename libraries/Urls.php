@@ -301,7 +301,7 @@ class Urls
      *
      * @return null|string The formatted URL.
      */
-    public function format($lid, $args = [], $rewrite = null)
+    public function format($lid, $args = [], $rewrite = null, $b = true)
     {
 
         // Check if the requested url exists
@@ -309,11 +309,24 @@ class Urls
             return null;
         }
 
-        // Check if mod_rewrite is enabled
-        $rewrite = 0; // Pretty much disabled forever because of the router -- ($rewrite === null ? Config::get('url_rewrite') : $rewrite) ? 1 : 0;
+        if ($b && ($lid === 'SETTING_CAT' || $lid === 'SETTING_MODE')) {
+            if (in_array('messages', $args)) {
+                return null;
+            }
+
+            if ($lid === 'SETTING_CAT') {
+                return Router::route("settings.{$args[0]}");
+            }
+
+            if ($lid === 'SETTING_MODE') {
+                $a = implode('.', $args);
+                $a = str_replace("usertitle", "title", $a);
+                return Router::route("settings.{$a}");
+            }
+        }
 
         // Format urls
-        $formatted = vsprintf($this->urls[$lid][$rewrite], $args);
+        $formatted = vsprintf($this->urls[$lid][0], $args);
 
         // Return the formatted url
         return $formatted;

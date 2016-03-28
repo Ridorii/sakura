@@ -122,6 +122,95 @@ Router::group(['prefix' => 'helper'], function () {
 });
 
 // Settings
+Router::group(['prefix' => 'settings', 'before' => 'loginCheck'], function () {
+    Router::get('/', function () {
+        $route = Router::route('settings.general.home');
+        return header("Location: {$route}");
+    });
+
+    // General section
+    Router::group(['prefix' => 'general'], function () {
+        Router::get('/', function () {
+            $route = Router::route('settings.general.home');
+            return header("Location: {$route}");
+        });
+
+        Router::get('/home', 'Settings.GeneralController@home', 'settings.general.home');
+        Router::get('/profile', 'Settings.GeneralController@profile', 'settings.general.profile');
+        Router::get('/options', 'Settings.GeneralController@options', 'settings.general.options');
+    });
+
+    // Friends section
+    Router::group(['prefix' => 'friends'], function () {
+        Router::get('/', function () {
+            $route = Router::route('settings.friends.listing');
+            return header("Location: {$route}");
+        });
+
+        Router::get('/listing', 'Settings.FriendsController@listing', 'settings.friends.listing');
+        Router::get('/requests', 'Settings.FriendsController@requests', 'settings.friends.requests');
+    });
+
+    // Groups section
+    Router::group(['prefix' => 'groups'], function () {
+        Router::get('/', function () {
+            $route = Router::route('settings.groups.listing');
+            return header("Location: {$route}");
+        });
+
+        Router::get('/listing', 'Settings.GroupsController@listing', 'settings.groups.listing');
+        Router::get('/invites', 'Settings.GroupsController@invites', 'settings.groups.invites');
+    });
+
+    // Notifications section
+    Router::group(['prefix' => 'notifications'], function () {
+        Router::get('/', function () {
+            $route = Router::route('settings.notifications.history');
+            return header("Location: {$route}");
+        });
+
+        Router::get('/history', 'Settings.NotificationsController@history', 'settings.notifications.history');
+    });
+
+    // Appearance section
+    Router::group(['prefix' => 'appearance'], function () {
+        Router::get('/', function () {
+            $route = Router::route('settings.appearance.avatar');
+            return header("Location: {$route}");
+        });
+
+        Router::get('/avatar', 'Settings.AppearanceController@avatar', 'settings.appearance.avatar');
+        Router::get('/background', 'Settings.AppearanceController@background', 'settings.appearance.background');
+        Router::get('/header', 'Settings.AppearanceController@header', 'settings.appearance.header');
+        Router::get('/userpage', 'Settings.AppearanceController@userpage', 'settings.appearance.userpage');
+        Router::get('/signature', 'Settings.AppearanceController@signature', 'settings.appearance.signature');
+    });
+
+    // Account section
+    Router::group(['prefix' => 'account'], function () {
+        Router::get('/', function () {
+            $route = Router::route('settings.account.email');
+            return header("Location: {$route}");
+        });
+
+        Router::get('/email', 'Settings.AccountController@avatar', 'settings.account.email');
+        Router::get('/username', 'Settings.AccountController@username', 'settings.account.username');
+        Router::get('/title', 'Settings.AccountController@title', 'settings.account.title');
+        Router::get('/password', 'Settings.AccountController@password', 'settings.account.password');
+        Router::get('/ranks', 'Settings.AccountController@ranks', 'settings.account.ranks');
+    });
+
+    // Advanced section
+    Router::group(['prefix' => 'advanced'], function () {
+        Router::get('/', function () {
+            $route = Router::route('settings.advanced.sessions');
+            return header("Location: {$route}");
+        });
+
+        Router::get('/sessions', 'Settings.AdvancedController@sessions', 'settings.advanced.sessions');
+        Router::get('/deactivate', 'Settings.AdvancedController@deactivate', 'settings.advanced.deactivate');
+    });
+});
 /*
  * General
  * - Home (make this not worthless while you're at it)
