@@ -32,10 +32,7 @@ class NotificationsController extends Controller
         // Set json content type
         header('Content-Type: application/json; charset=utf-8');
 
-        return json_encode(
-            $currentUser->notifications(),
-            JSON_FORCE_OBJECT | JSON_NUMERIC_CHECK | JSON_BIGINT_AS_STRING
-        );
+        return $this->json($currentUser->notifications());
     }
 
     /**
