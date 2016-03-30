@@ -89,8 +89,11 @@ class Comment
             ->where('vote_comment', $this->id)
             ->get();
 
+        $this->upvotes = 0;
+        $this->downvotes = 0;
+
         foreach ($votes as $vote) {
-            if ($vote->vote_state) {
+            if (intval($vote->vote_state) !== 0) {
                 $this->upvotes += 1;
             } else {
                 $this->downvotes += 1;
@@ -129,8 +132,44 @@ class Comment
         return User::construct($this->user);
     }
 
-    public function vote()
+    public function vote($user, $vote)
     {
-        // can't be fucked to implement this right now
+        $vote = $vote ? '1' : '0';
+
+        // Attempt to get previous vote
+        $previous = DB::table('comment_votes')
+            ->where('vote_user', $user)
+            ->where('vote_comment', $this->id)
+            ->get();
+
+        // Check if anything was returned
+        if ($previous) {
+            // Check if the vote that's being casted is the same
+            if ($previous[0]->vote_state == $vote) {
+                // Delete the vote
+                DB::table('comment_votes')
+                    ->where('vote_user', $user)
+                    ->where('vote_comment', $this->id)
+                    ->delete();
+            } else {
+                // Otherwise update the vote
+                DB::table('comment_votes')
+                    ->where('vote_user', $user)
+                    ->where('vote_comment', $this->id)
+                    ->update([
+                        'vote_state' => $vote,
+                    ]);
+            }
+        } else {
+            // Create a vote
+            DB::table('comment_votes')
+                ->insert([
+                    'vote_user' => $user,
+                    'vote_comment' => $this->id,
+                    'vote_state' => $vote,
+                ]);
+        }
+
+        $this->getVotes();
     }
 }

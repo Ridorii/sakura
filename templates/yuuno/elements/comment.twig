@@ -6,13 +6,13 @@
                         <div class="comment-controls">
                             <ul>
                                 {% if comment.userData.id == user.id %}
-                                    <li><a href="{{ urls.format('COMMENT_DELETE', [comment.id, comment.category, session_id()])}}" class="clean fa fa-trash-o comment-deletion-link" title="Delete" id="comment-action-delete-{{ comment.id }}"></a></li>
+                                    <li><a href="javascript:void(0);" onclick="commentDelete({{ comment.id }});" class="clean fa fa-trash-o" title="Delete"></a></li>
                                 {% else %}
-                                    <li><a href="{{ urls.format('USER_REPORT', [comment.userData.id]) }}" class="clean fa fa-exclamation-circle" title="Report" id="comment-action-report-{{ comment.id }}"></a></li>
+                                    <li><a href="{{ urls.format('USER_REPORT', [comment.userData.id]) }}" class="clean fa fa-exclamation-circle" title="Report"></a></li>
                                 {% endif %}
-                                <li><a href="javascript:void(0);" onclick="commentReply({{ comment.id }}, '{{ session_id() }}', '{{ comment.category }}', '{{ urls.format('COMMENT_POST') }}', '{{ route('file.avatar', user.id) }}');" class="clean fa fa-reply" title="Reply" id="comment-action-reply-{{ comment.id }}"></a></li>
-                                <li class="shown voting like"><a href="{{ urls.format('COMMENT_VOTE', [comment.id, 1, comment.category, session_id()])}}" class="clean comment-like-link" id="comment-action-like-{{ comment.id }}"><span class="fa fa-thumbs-up"></span> <span id="comment-{{ comment.id }}-likes">{{ comment.upvotes }}</span></a></li>
-                                <li class="shown voting dislike"><a id="comment-action-dislike-{{ comment.id }}" href="{{ urls.format('COMMENT_VOTE', [comment.id, 0, comment.category, session_id()])}}" class="clean comment-dislike-link"><span class="fa fa-thumbs-down"></span> <span id="comment-{{ comment.id }}-dislikes">{{ comment.downvotes }}</span></a></li>
+                                <li><a href="javascript:void(0);" onclick="commentReply({{ comment.id }}, '{{ session_id() }}', '{{ route('file.avatar', user.id) }}');" class="clean fa fa-reply" title="Reply" id="comment-action-reply-{{ comment.id }}"></a></li>
+                                <li class="shown voting like"><a href="javascript:void(0);" onclick="commentVote({{ comment.id }}, 1);" class="clean"><span class="fa fa-thumbs-up"></span> <span id="comment-{{ comment.id }}-likes">{{ comment.upvotes }}</span></a></li>
+                                <li class="shown voting dislike"><a href="javascript:void(0);" onclick="commentVote({{ comment.id }}, 0);" class="clean"><span class="fa fa-thumbs-down"></span> <span id="comment-{{ comment.id }}-dislikes">{{ comment.downvotes }}</span></a></li>
                             </ul>
                             <div class="clear"></div>
                         </div>
@@ -21,7 +21,7 @@
                         </div>
                     </div>
                 </div>
-                <ul>
+                <ul class="comment-replies">
                     {% for comment in comment.replies %}
                         {% include 'elements/comment.twig' %}
                     {% endfor %}

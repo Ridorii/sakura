@@ -29,9 +29,6 @@ class NotificationsController extends Controller
         // TODO: add friend on/offline messages
         global $currentUser;
 
-        // Set json content type
-        header('Content-Type: application/json; charset=utf-8');
-
         return $this->json($currentUser->notifications());
     }
 

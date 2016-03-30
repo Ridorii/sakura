@@ -96,10 +96,8 @@
                                             <a class="fa fa-trash" title="Delete this post" href="{{ route('forums.post.delete', post.id) }}"></a>
                                         {% endif %}
                                         {% if not (post.poster.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) or post.poster.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) or user.id == post.poster.id) %}
-                                            {% if user.isFriends(post.poster.id) != 0 %}
-                                                <a class="fa fa-{% if user.isFriends(post.poster.id) == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>
-                                            {% endif %}
-                                            <a class="fa fa-user-{% if user.isFriends(post.poster.id) == 0 %}plus{% else %}times{% endif %} forum-friend-toggle" title="{% if user.isFriends(post.poster.id) == 0 %}Add {{ post.poster.username }} as a friend{% else %}Remove friend{% endif %}" href="{% if user.isFriends(post.poster.id) == 0 %}{{ urls.format('FRIEND_ADD', [post.poster.id, session_id(), date().timestamp, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [post.poster.id, session_id(), date().timestamp, sakura.currentPage]) }}{% endif %}"></a>
+                                            <a class="fa fa-{% if user.isFriends(post.poster.id) == 2 %}heart{% else %}star{% endif %} friend-{{ post.poster.id }}-level" title="You are friends" {% if user.isFriends(post.poster.id) == 0 %}style="display: none;"{% endif %}></a>
+                                            <a class="fa fa-user-{% if user.isFriends(post.poster.id) == 0 %}plus{% else %}times{% endif %} forum-friend-toggle friend-{{ post.poster.id }}-toggle" title="{% if user.isFriends(post.poster.id) == 0 %}Add {{ post.poster.username }} as a friend{% else %}Remove friend{% endif %}" href="javascript:void(0);" onclick="{% if user.isFriends(post.poster.id) == 0 %}addFriend({{ post.poster.id }}){% else %}removeFriend({{ post.poster.id }}){% endif %}"></a>
                                             <a class="fa fa-flag" title="Report {{ post.poster.username }}" href="{{ urls.format('USER_REPORT', [post.poster.id]) }}"></a>
                                         {% endif %}
                                         <a class="fa fa-reply" title="Quote this post" href="javascript:void(0);" onclick="quotePost({{ post.id }});"></a>

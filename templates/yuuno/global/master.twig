@@ -97,11 +97,11 @@
                         <!-- User menu, displayed on right side of the bar. -->
                         {% if session.checkLogin %}
                             <a class="menu-item avatar" href="{{ route('user.profile', user.id) }}" title="Logged in as {{ user.username }}" style="background-image: url('{{ route('file.avatar', user.id) }}'); width: auto; color: {{ user.colour }}; border-color: {{ user.colour }}; font-weight: 700;"></a>
-                            {#<a class="menu-item fa-envelope" href="{{ urls.format('SETTING_CAT', ['messages']) }}" title="Messages"></a>#}
+                            {#<a class="menu-item fa-envelope" href="#" title="Messages"></a>#}
                             {% if user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
-                                <a class="menu-item fa-gavel" href="{{ urls.format('MANAGE_INDEX') }}" title="Manage"></a>
+                                <a class="menu-item fa-gavel" href="#" title="Manage"></a>
                             {% endif %}
-                            <a class="menu-item fa-cogs" href="{{ urls.format('SETTINGS_INDEX') }}" title="Settings"></a>
+                            <a class="menu-item fa-cogs" href="{{ route('settings.index') }}" title="Settings"></a>
                             <a class="menu-item fa-sign-out" href="{{ route('auth.logout') }}?s={{ session_id() }}" title="Logout" id="headerLogoutLink"></a>
                         {% else %}
                             {% if sakura.lockAuth %}
@@ -224,6 +224,48 @@
             setInterval(function() {
                 notifyRequest('{{ session_id() }}');
             }, 60000);
+
+            var friendClient = new AJAX();
+
+            friendClient.contentType("application/x-www-form-urlencoded");
+
+            function addFriend(id) {
+                var url = "{{ route('friends.add', 1) }}".replace(1, id);
+                friendMode(url, id);
+            }
+
+            function removeFriend(id) {
+                var url = "{{ route('friends.remove', 1) }}".replace(1, id);
+                friendMode(url, id);
+            }
+
+            function friendMode(url, id) {
+                var level = document.querySelectorAll('.friend-' + id + '-level'),
+                    toggle = document.querySelectorAll('.friend-' + id + '-toggle');
+
+                friendClient.setUrl(url);
+
+                friendClient.setSend({"session":"{{ session_id() }}"});
+
+                friendClient.addCallback(200, function () {
+                    var resp = JSON.parse(friendClient.response());
+
+                    friendClient.setRawSend("");
+
+                    if (resp.error) {
+                        ajaxBusyView(true, resp.error, 'fail');
+
+                        setTimeout(function () {
+                            ajaxBusyView(false);
+                        }, 1500);
+                    } else {
+                        ajaxBusyView(true, resp.message, 'ok');
+                        location.reload();
+                    }
+                });
+
+                friendClient.start(HTTPMethods.POST);
+            }
         </script>
         {% if sakura.dev.showChangelog and stats %}
         <script type="text/javascript" src="https://sakura.flash.moe/?get=all&amp;limit=5&amp;variable=true"></script>

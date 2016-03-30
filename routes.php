@@ -108,7 +108,15 @@ Router::group(['prefix' => 'notifications'], function () {
 
 // Comments
 Router::group(['prefix' => 'comments', 'before' => 'loginCheck'], function () {
-    Router::post('/{category:c}/post/{reply:i}?', 'CommentsController@post', 'comments.post');
+    Router::post('/{category:c}/post/{reply:i}?', 'CommentsController@post', 'comments.category.post');
+    Router::post('/{id:i}/delete', 'CommentsController@delete', 'comments.comment.delete');
+    Router::post('/{id:i}/vote', 'CommentsController@vote', 'comments.comment.vote');
+});
+
+// Comments
+Router::group(['prefix' => 'friends', 'before' => 'loginCheck'], function () {
+    Router::post('/{id:i}/add', 'FriendsController@add', 'friends.add');
+    Router::post('/{id:i}/remove', 'FriendsController@remove', 'friends.remove');
 });
 
 // Files
@@ -136,7 +144,7 @@ Router::group(['prefix' => 'settings', 'before' => 'loginCheck'], function () {
     Router::get('/', function () {
         $route = Router::route('settings.general.home');
         return header("Location: {$route}");
-    });
+    }, 'settings.index');
 
     // General section
     Router::group(['prefix' => 'general'], function () {
@@ -203,7 +211,7 @@ Router::group(['prefix' => 'settings', 'before' => 'loginCheck'], function () {
             return header("Location: {$route}");
         });
 
-        Router::get('/email', 'Settings.AccountController@avatar', 'settings.account.email');
+        Router::get('/email', 'Settings.AccountController@email', 'settings.account.email');
         Router::get('/username', 'Settings.AccountController@username', 'settings.account.username');
         Router::get('/title', 'Settings.AccountController@title', 'settings.account.title');
         Router::get('/password', 'Settings.AccountController@password', 'settings.account.password');

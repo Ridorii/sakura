@@ -3,18 +3,6 @@
 {% set paginationPages = friends %}
 {% set paginationUrl %}{{ urls.format('SETTING_MODE', ['friends', 'requests']) }}{% endset %}
 
-{% block js %}
-<script type="text/javascript">
-window.addEventListener("load", function() {
-    var friendsListActions = document.querySelectorAll('[id^="friendslist-friend-action-"]');
-
-    for (var i in friendsListActions) {
-        prepareAjaxLink(friendsListActions[i], 'submitPost', ', true, "Please wait.."');
-    }
-});
-</script>
-{% endblock %}
-
 {% block css %}
 <style type="text/css">
     .pagination {
@@ -31,9 +19,9 @@ window.addEventListener("load", function() {
                     <img src="{{ route('file.avatar', friend.id) }}" alt="{{ friend.username }}" class="friends-list-avatar default-avatar-setting" style="width: 150px; height: 150px;" />
                     <div class="friends-list-name" style="color: {{ friend.colour }};">{{ friend.username }}</div>
                 </a>
-                <div class="friends-list-actions"><!-- urls -->
-                    <a class="add fa fa-check" title="Add friend" href="/friends?add={{ friend.id }}&amp;session={{ session_id() }}&amp;time={{ date().timestamp }}" id="friendslist-friend-action-add-{{ friend.id }}"></a>
-                    <a class="remove fa fa-remove" title="Remove friend" href="/friends?remove={{ friend.id }}&amp;session={{ session_id() }}&amp;time={{ date().timestamp }}" id="friendslist-friend-action-remove-{{ friend.id }}"></a>
+                <div class="friends-list-actions">
+                    <a class="add fa fa-check" title="Add friend" href="javascript:void(0);" onclick="addFriend({{ friend.id }});"></a>
+                    <a class="remove fa fa-remove" title="Remove friend" href="javascript:void(0);" onclick="removeFriend({{ friend.id }});"></a>
                     <div class="clear"></div>
                 </div>
             </div>

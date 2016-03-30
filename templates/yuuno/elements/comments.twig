@@ -1,23 +1,12 @@
 <div id="comments">
     <div class="comment-input-section">
         {% if session.checkLogin %}
-            <form action="{{ urls.format('COMMENT_POST') }}" method="post" id="commentsForm">
-                <input type="hidden" name="session" value="{{ session_id() }}" />
-                <input type="hidden" name="category" value="{{ commentsCategory }}" />
-                <input type="hidden" name="replyto" value="0" />
-                <input type="hidden" name="mode" value="comment" />
-                <div class="comment">
-                    <div class="comment-avatar" style="background-image: url('{{ route('file.avatar', user.id) }}');"></div>
-                    <div class="comment-pointer"></div>
-                    <textarea class="comment-content" name="comment" placeholder="Join the conversation..."></textarea>
-                    <input class="comment-submit new" name="submit" type="submit" value="&#xf1d8;" />
-                </div>
-            </form>
-            <script type="text/javascript">
-                window.addEventListener("load", function() {
-                    prepareAjaxForm('commentsForm', 'Posting comment...');
-                });
-            </script>
+            <div class="comment">
+                <div class="comment-avatar" style="background-image: url('{{ route('file.avatar', user.id) }}');"></div>
+                <div class="comment-pointer"></div>
+                <textarea class="comment-content" name="text" placeholder="Join the conversation..."></textarea>
+                <button class="comment-submit new" name="session" value="{{ session_id() }}" onclick="commentPost(this.parentNode, '{{ route('comments.category.post', commentsCategory) }}');">&#xf1d8;</button>
+            </div>
         {% else %}
             <h1 class="stylised" style="text-align: center; padding: 10px 0">Log in to comment!</h1>
         {% endif %}
@@ -37,18 +26,276 @@
 
 {% block js %}
     <script type="text/javascript">
-        var deletionLinks = document.querySelectorAll('.comment-deletion-link');
-        var likeLinks = document.querySelectorAll('.comment-like-link');
-        var dislikeLinks = document.querySelectorAll('.comment-dislike-link');
+        var commentClient = new AJAX();
 
-        for(var link in deletionLinks) {
-            prepareAjaxLink(deletionLinks[link].id, 'submitPost', ', true, "Deleting..."');
+        commentClient.contentType("application/x-www-form-urlencoded");
+
+        function commentPost(element, url) {
+            var text = element.querySelector('[name="text"]'),
+                session = element.querySelector('[name="session"]');
+
+            commentClient.setSend({"text":text.value,"session":session.value});
+
+            text.value = '';
+
+            commentClient.setUrl(url);
+
+            commentClient.addCallback(200, function () {
+                var resp = JSON.parse(commentClient.response());
+
+                if (resp.error) {
+                    ajaxBusyView(true, resp.error, 'fail');
+
+                    setTimeout(function () {
+                        ajaxBusyView(false);
+                    }, 1500);
+                } else {
+                    commentAdd(resp);
+                }
+
+                commentClient.setRawSend("");
+            });
+
+            commentClient.start(HTTPMethods.POST);
         }
-        for(var link in dislikeLinks) {
-            prepareAjaxLink(likeLinks[link].id, 'submitPost', ', true, "Voting..."');
+
+        function commentAdd(obj) {
+            var container = document.createElement('li');
+            container.id = "comment-" + obj.id;
+
+            var inner = document.createElement('div');
+            inner.className = 'comment';
+
+            var avatar = document.createElement('a');
+            avatar.className = 'comment-avatar clean';
+            avatar.href = "{{ route('user.profile', 1) }}".replace(1, obj.user);
+            avatar.style.backgroundImage = "url('{{ route('file.avatar', 1) }}')".replace(1, obj.user);
+            inner.appendChild(avatar);
+
+            var pointer = document.createElement('div');
+            pointer.className = 'comment-pointer';
+            inner.appendChild(pointer);
+
+            var content = document.createElement('div');
+            content.className = 'comment-content';
+
+            var controls = document.createElement('div');
+            controls.className = 'comment-controls';
+
+            var controlsInner = document.createElement('ul');
+
+            if (Sakura.cookie('id') == obj.user) {
+                var controlsTrashContainer = document.createElement('li');
+                var controlsTrash = document.createElement('a');
+                controlsTrash.href = 'javascript:void(0);';
+                controlsTrash.title = 'Delete';
+                controlsTrash.className = 'clean fa fa-trash-o';
+                controlsTrash.setAttribute('onclick', 'commentDelete(' + obj.id + ');');
+                controlsTrashContainer.appendChild(controlsTrash);
+                controlsInner.appendChild(controlsTrashContainer);
+            } else {
+                var controlsReportContainer = document.createElement('li');
+                var controlsReport = document.createElement('a');
+                controlsReport.href = '#';
+                controlsReport.title = 'Report';
+                controlsReport.className = 'clean fa fa-trash-o';
+                controlsReportContainer.appendChild(controlsReport);
+                controlsInner.appendChild(controlsReportContainer);
+            }
+
+            var controlsReplyContainer = document.createElement('li');
+            var controlsReply = document.createElement('a');
+            controlsReply.href = 'javascript:void(0);';
+            controlsReply.title = 'Reply';
+            controlsReply.className = 'clean fa fa-reply';
+            controlsReply.setAttribute('onclick', 'commentReply(' + obj.id + ', "{{ session_id() }}", "{{ route("file.avatar", user.id) }}");');
+            controlsReplyContainer.appendChild(controlsReply);
+            controlsInner.appendChild(controlsReplyContainer);
+
+            var controlsLikeContainer = document.createElement('li');
+            controlsLikeContainer.className = 'shown voting like';
+            var controlsLike = document.createElement('a');
+            controlsLike.href = 'javascript:void(0);';
+            controlsLike.setAttribute('onclick', 'commentVote(' + obj.id + ', 1);');
+            controlsLike.className = 'clean';
+            var controlsLikeIcon = document.createElement('span');
+            controlsLikeIcon.className = 'fa fa-thumbs-up';
+            controlsLike.appendChild(controlsLikeIcon);
+            controlsLike.innerHTML += "\r\n";
+            var controlsLikeCount = document.createElement('span');
+            controlsLikeCount.id = 'comment-' + obj.id + '-likes';
+            controlsLikeCount.innerText = obj.upvotes;
+            controlsLike.appendChild(controlsLikeCount);
+            controlsLikeContainer.appendChild(controlsLike);
+            controlsInner.appendChild(controlsLikeContainer);
+
+            var controlsDislikeContainer = document.createElement('li');
+            controlsDislikeContainer.className = 'shown voting dislike';
+            var controlsDislike = document.createElement('a');
+            controlsDislike.href = 'javascript:void(0);';
+            controlsDislike.setAttribute('onclick', 'commentVote(' + obj.id + ', 0);');
+            controlsDislike.className = 'clean';
+            var controlsDislikeIcon = document.createElement('span');
+            controlsDislikeIcon.className = 'fa fa-thumbs-down';
+            controlsDislike.appendChild(controlsDislikeIcon);
+            controlsDislike.innerHTML += "\r\n";
+            var controlsDislikeCount = document.createElement('span');
+            controlsDislikeCount.id = 'comment-' + obj.id + '-dislikes';
+            controlsDislikeCount.innerText = obj.upvotes;
+            controlsDislike.appendChild(controlsDislikeCount);
+            controlsDislikeContainer.appendChild(controlsDislike);
+            controlsInner.appendChild(controlsDislikeContainer);
+
+            controls.appendChild(controlsInner);
+
+            var clear = document.createElement('div');
+            clear.className = 'clear';
+            controls.appendChild(clear);
+
+            content.appendChild(controls);
+
+            var text = document.createElement('text');
+            text.className = 'comment-text';
+            text.innerHTML = obj.text;
+            content.appendChild(text);
+
+            inner.appendChild(content);
+            container.appendChild(inner);
+
+            var replies = document.createElement('ul');
+            replies.className = 'comment-replies';
+            container.appendChild(replies);
+
+            var discussion = document.getElementById('comments').querySelector('.comments-list');
+
+            if (obj.reply) {
+                discussion = document.getElementById('comment-' + obj.reply).querySelector('.comment-replies');
+            }
+
+            if (discussion.children.length > 0) {
+                discussion.insertBefore(container, discussion.firstChild);
+            } else {
+                discussion.appendChild(container);
+            }
         }
-        for(var link in dislikeLinks) {
-            prepareAjaxLink(dislikeLinks[link].id, 'submitPost', ', true, "Voting..."');
+
+        function commentReply(id, session, avatar) {
+            var url = "{{ route('comments.category.post', [':cat', 1]) }}"
+                .replace('1', id)
+                .replace(':cat', '{{ commentsCategory }}');
+
+            // Find subject post
+            var replyingTo = document.getElementById('comment-' + id);
+
+            // Check if it actually exists
+            if ((typeof replyingTo).toLowerCase() === 'undefined') {
+                return;
+            }
+
+            // Attempt to get previously created box
+            var replyBox = document.getElementById('comment-reply-container-' + id);
+
+            // Remove it if it already exists
+            if (replyBox) {
+                Sakura.removeById('comment-reply-container-' + id);
+                return;
+            }
+
+            // Container
+            var replyContainer = document.createElement('li');
+            replyContainer.id = 'comment-reply-container-' + id;
+
+            // Comment container
+            var replyDiv = document.createElement('div');
+            replyDiv.className = 'comment';
+            replyDiv.id = 'comment-reply-' + id;
+
+            // Avatar
+            var replyAvatar = document.createElement('div');
+            replyAvatar.className = 'comment-avatar';
+            replyAvatar.style.backgroundImage = 'url(' + avatar + ')';
+            replyDiv.appendChild(replyAvatar);
+
+            // Pointer
+            var replyPoint = document.createElement('div');
+            replyPoint.className = 'comment-pointer';
+            replyDiv.appendChild(replyPoint);
+
+            // Textarea
+            var replyText = document.createElement('textarea');
+            replyText.className = 'comment-content';
+            replyText.name = 'text';
+            replyDiv.appendChild(replyText);
+
+            // Submit
+            var replySubmit = document.createElement('button');
+            replySubmit.className = 'comment-submit';
+            replySubmit.name = 'session';
+            replySubmit.value = session;
+            replySubmit.setAttribute('onclick', 'commentPost(this.parentNode, "' + url + '"); commentReply(' + id + ');');
+            replySubmit.innerHTML = "\uf1d8";
+            replyDiv.appendChild(replySubmit);
+
+            // Append form to container
+            replyContainer.appendChild(replyDiv);
+
+            // Insert the HTML
+            if (replyingTo.querySelector('.comment-replies').children.length > 0) {
+                replyingTo.querySelector('.comment-replies').insertBefore(replyContainer, replyingTo.querySelector('.comment-replies').firstChild);
+            } else {
+                replyingTo.querySelector('.comment-replies').appendChild(replyContainer);
+            }
+        }
+
+        function commentDelete(id) {
+            var url = "{{ route('comments.comment.delete', 1) }}".replace(1, id);
+
+            commentClient.setUrl(url);
+
+            commentClient.addCallback(200, function () {
+                var resp = JSON.parse(commentClient.response());
+
+                if (resp.error) {
+                    ajaxBusyView(true, resp.error, 'fail');
+
+                    setTimeout(function () {
+                        ajaxBusyView(false);
+                    }, 1500);
+                } else {
+                    Sakura.removeById("comment-" + id);
+                }
+            });
+
+            commentClient.start(HTTPMethods.POST);
+        }
+
+        function commentVote(id, vote) {
+            var url = "{{ route('comments.comment.vote', 1) }}".replace(1, id),
+                upvotes = document.getElementById("comment-" + id + "-likes"),
+                downvotes = document.getElementById("comment-" + id + "-dislikes");
+
+            commentClient.setSend({"vote":vote});
+
+            commentClient.setUrl(url);
+
+            commentClient.addCallback(200, function () {
+                var resp = JSON.parse(commentClient.response());
+
+                if (resp.error) {
+                    ajaxBusyView(true, resp.error, 'fail');
+
+                    setTimeout(function () {
+                        ajaxBusyView(false);
+                    }, 1500);
+                } else {
+                    upvotes.innerText = resp.upvotes;
+                    downvotes.innerText = resp.downvotes;
+                }
+
+                commentClient.setRawSend("");
+            });
+
+            commentClient.start(HTTPMethods.POST);
         }
     </script>
 {% endblock %}

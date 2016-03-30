@@ -546,23 +546,11 @@ class User
      * Add a new friend.
      *
      * @param int $uid The ID of the friend.
-     *
-     * @return array Status indicator.
      */
     public function addFriend($uid)
     {
         // Create the foreign object
         $user = User::construct($uid);
-
-        // Validate that the user exists
-        if ($user->permission(Site::DEACTIVATED)) {
-            return [0, 'USER_NOT_EXIST'];
-        }
-
-        // Check if the user already has this user a friend
-        if ($this->isFriends($uid)) {
-            return [0, 'ALREADY_FRIENDS'];
-        }
 
         // Add friend
         DB::table('friends')
@@ -571,9 +559,6 @@ class User
                 'friend_id' => $uid,
                 'friend_timestamp' => time(),
             ]);
-
-        // Return true because yay
-        return [1, $user->isFriends($this->id) ? 'FRIENDS' : 'NOT_MUTUAL'];
     }
 
     /**
@@ -581,18 +566,11 @@ class User
      *
      * @param int $uid The friend Id
      * @param bool $deleteRequest Delete the open request as well (remove you from their friends list).
-     *
-     * @return array Status indicator.
      */
     public function removeFriend($uid, $deleteRequest = false)
     {
         // Create the foreign object
         $user = User::construct($uid);
-
-        // Validate that the user exists
-        if ($user->permission(Site::DEACTIVATED)) {
-            return [0, 'USER_NOT_EXIST'];
-        }
 
         // Remove friend
         DB::table('friends')
@@ -607,9 +585,6 @@ class User
                 ->where('friend_id', $this->id)
                 ->delete();
         }
-
-        // Return true because yay
-        return [1, 'REMOVED'];
     }
 
     /**
