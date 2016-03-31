@@ -3,7 +3,7 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-    {% if config('require_activation') or config('disable_registration') %}
+    {% if config('lock_authentication') or config('disable_registration') %}
     <div class="loginPage">
         <div class="registerForm" id="registerWarn" style="display: block;">
             <div class="centreAlign">
