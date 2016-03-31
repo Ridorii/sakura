@@ -7,9 +7,9 @@
 
 namespace Sakura\Controllers;
 
+use Sakura\ActiveUser;
 use Sakura\Notification;
 use Sakura\Perms\Site;
-use Sakura\User;
 
 /**
  * Notification stuff.
@@ -26,10 +26,7 @@ class NotificationsController extends Controller
      */
     public function notifications()
     {
-        // TODO: add friend on/offline messages
-        global $currentUser;
-
-        return $this->json($currentUser->notifications());
+        return $this->json(ActiveUser::$user->notifications());
     }
 
     /**
@@ -41,10 +38,8 @@ class NotificationsController extends Controller
      */
     public function mark($id = 0)
     {
-        global $currentUser;
-
         // Check permission
-        if ($currentUser->permission(Site::DEACTIVATED)) {
+        if (ActiveUser::$user->permission(Site::DEACTIVATED)) {
             return '0';
         }
 
@@ -52,7 +47,7 @@ class NotificationsController extends Controller
         $alert = new Notification($id);
 
         // Verify that the currently authed user is the one this alert is for
-        if ($alert->user !== $currentUser->id) {
+        if ($alert->user !== ActiveUser::$user->id) {
             return '0';
         }
 

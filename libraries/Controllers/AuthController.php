@@ -8,6 +8,7 @@
 namespace Sakura\Controllers;
 
 use Sakura\ActionCode;
+use Sakura\ActiveUser;
 use Sakura\Config;
 use Sakura\DB;
 use Sakura\Hashing;
@@ -52,10 +53,9 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        // Check if user is logged in
-        $check = Users::checkLogin();
-
-        if (!$check || !isset($_REQUEST['s']) || $_REQUEST['s'] != session_id()) {
+        if (!ActiveUser::$session->validate()
+            || !isset($_REQUEST['s'])
+            || $_REQUEST['s'] != session_id()) {
             $message = 'Something happened! This probably happened because you went here without being logged in.';
             $redirect = (isset($_REQUEST['redirect']) ? $_REQUEST['redirect'] : Router::route('main.index'));
 
@@ -65,7 +65,7 @@ class AuthController extends Controller
         }
 
         // Destroy the active session
-        (new Session($check[0], $check[1]))->destroy();
+        ActiveUser::$session->destroy();
 
         // Return true indicating a successful logout
         $message = 'Goodbye!';

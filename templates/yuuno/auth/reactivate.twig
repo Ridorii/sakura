@@ -3,7 +3,7 @@
 {% block title %}Reactivate account{% endblock %}
 
 {% block content %}
-    {% if sakura.lockAuth %}
+    {% if config('require_activation') %}
         <h1 class="stylised" style="line-height: 1.8em; text-align: center;">Reactivation is disabled for security checkups! Try again later.</h1>
     {% else %}
         <div class="loginPage">

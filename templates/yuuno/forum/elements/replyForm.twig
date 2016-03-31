@@ -37,10 +37,10 @@
 </div>
 
 <script type="text/javascript">
-    var titleMax = {{ sakura.forumTitleMaxLength }},
-        titleMin = {{ sakura.forumTitleMinLength }},
-        textMax = {{ sakura.forumTextMaxLength }},
-        textMin = {{ sakura.forumTextMinLength }},
+    var titleMax = {{ config('forum_title_max') }},
+        titleMin = {{ config('forum_title_min') }},
+        textMax = {{ config('forum_text_max') }},
+        textMin = {{ config('forum_text_min') }},
         preview = document.getElementById('postingPreview'),
         pTitle = document.getElementById('postingTitle'),
         pTitleCont = document.getElementById('postingTitleContainer'),

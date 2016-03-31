@@ -5,11 +5,11 @@
     <input type="hidden" name="timestamp" value="{{ date().timestamp }}" />
     <input type="hidden" name="mode" value="username" />
     <h1 class="stylised" style="text-align: center; margin-top: 10px;{% if not eligible %} color: #c44;{% endif %}">You are {% if not eligible %}not {% endif %}eligible for a name change.</h1>
-    <h3 style="text-align: center;">{% if user.getUsernameHistory %}Your last name change was <time>{{ user.getUsernameHistory[0]['change_time']|date(sakura.dateFormat) }}</time>.{% else %}This is your first username change.{% endif %}</h3>
+    <h3 style="text-align: center;">{% if user.getUsernameHistory %}Your last name change was <time datetime="{{ user.getUsernameHistory[0]['change_time']|date('r') }}">{{ user.getUsernameHistory[0]['change_time']|date(config('date_format')) }}</time>.{% else %}This is your first username change.{% endif %}</h3>
     {% if eligible %}
         <div class="profile-field">
             <div><h2>Username</h2></div>
-            <div><input type="text" name="username" placeholder="Enter your new username (at least {{ sakura.minUsernameLength }} and at most {{ sakura.maxUsernameLength }} characters!)" class="inputStyling" /></div>
+            <div><input type="text" name="username" placeholder="Enter your new username (at least {{ config('username_min_length') }} and at most {{ config('username_max_length') }} characters!)" class="inputStyling" /></div>
         </div>
         <div class="profile-save">
             <input type="submit" value="Save" name="submit" class="inputStyling" />

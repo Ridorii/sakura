@@ -8,6 +8,7 @@
 namespace Sakura\Controllers;
 
 use Exception;
+use Sakura\ActiveUser;
 use Sakura\Config;
 use Sakura\Payments;
 use Sakura\Perms\Site;
@@ -42,8 +43,6 @@ class PremiumController extends Controller
      */
     public function index()
     {
-        global $currentUser;
-
         $price = Config::get('premium_price_per_month');
         $amountLimit = Config::get('premium_amount_max');
 
@@ -59,16 +58,14 @@ class PremiumController extends Controller
      */
     public function purchase()
     {
-        global $currentUser;
-
         // Get values from post
         $session = isset($_POST['session']) ? $_POST['session'] : '';
         $months = isset($_POST['months']) ? $_POST['months'] : 0;
 
         // Check if the session is valid
         if ($session !== session_id()
-            || $currentUser->permission(Site::DEACTIVATED)
-            || !$currentUser->permission(Site::OBTAIN_PREMIUM)) {
+            || ActiveUser::$user->permission(Site::DEACTIVATED)
+            || !ActiveUser::$user->permission(Site::OBTAIN_PREMIUM)) {
             $message = "You are not allowed to get premium!";
             $redirect = Router::route('premium.index');
 
@@ -138,8 +135,6 @@ class PremiumController extends Controller
      */
     public function handle()
     {
-        global $currentUser;
-
         $success = isset($_GET['success']);
         $payment = isset($_GET['paymentId']) ? $_GET['paymentId'] : null;
         $payer = isset($_GET['PayerID']) ? $_GET['PayerID'] : null;
@@ -168,7 +163,7 @@ class PremiumController extends Controller
 
         $pricePerMonth = Config::get('premium_price_per_month');
 
-        $currentUser->addPremium(self::PERIOD_PER_PAYMENT * $months);
+        ActiveUser::$user->addPremium(self::PERIOD_PER_PAYMENT * $months);
 
         return header("Location: {$successRoute}");
     }

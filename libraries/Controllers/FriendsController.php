@@ -7,6 +7,7 @@
 
 namespace Sakura\Controllers;
 
+use Sakura\ActiveUser;
 use Sakura\Notification;
 use Sakura\Perms\Site;
 use Sakura\Router;
@@ -37,7 +38,7 @@ class FriendsController extends Controller
 
     public function add($id = 0)
     {
-        global $currentUser;
+        $user = ActiveUser::$user;
 
         $session = $_POST['session'] ?? '';
 
@@ -50,31 +51,31 @@ class FriendsController extends Controller
         $friend = User::construct($id);
 
         if ($friend->permission(Site::DEACTIVATED)
-            || $currentUser->permission(Site::DEACTIVATED)) {
+            || $user->permission(Site::DEACTIVATED)) {
             $error = "The user you tried to add does not exist!";
             return $this->json(compact('error'));
         }
 
-        if ($friend->id === $currentUser->id) {
+        if ($friend->id === $user->id) {
             $error = "You can't be friends with yourself, stop trying to bend reality!";
             return $this->json(compact('error'));
         }
 
-        if ($currentUser->isFriends($friend->id)) {
+        if ($user->isFriends($friend->id)) {
             $error = "You are already friends with this person!";
             return $this->json(compact('error'));
         }
 
         // Add friend
-        $currentUser->addFriend($friend->id);
+        $user->addFriend($friend->id);
 
-        $level = $currentUser->isFriends($friend->id);
+        $level = $user->isFriends($friend->id);
 
         $mutual = $level === 2;
 
         $alertTitle = $mutual
-        ? "{$currentUser->username} accepted your friend request!"
-        : "{$currentUser->username} added you as a friend!";
+        ? "{$user->username} accepted your friend request!"
+        : "{$user->username} added you as a friend!";
 
         $alertText = $mutual
         ? ""
@@ -82,7 +83,7 @@ class FriendsController extends Controller
 
         $this->addNotification(
             $friend,
-            $currentUser,
+            $user,
             $alertTitle,
             $alertText
         );
@@ -96,7 +97,7 @@ class FriendsController extends Controller
 
     public function remove($id = 0)
     {
-        global $currentUser;
+        $user = ActiveUser::$user;
 
         $session = $_POST['session'] ?? '';
 
@@ -109,26 +110,26 @@ class FriendsController extends Controller
         $friend = User::construct($id);
 
         if ($friend->permission(Site::DEACTIVATED)
-            || $currentUser->permission(Site::DEACTIVATED)) {
+            || $user->permission(Site::DEACTIVATED)) {
             $error = "The user you tried to remove does not exist!";
             return $this->json(compact('error'));
         }
 
-        if (!$currentUser->isFriends($friend->id)) {
+        if (!$user->isFriends($friend->id)) {
             $error = "You aren't even friends with that person!";
             return $this->json(compact('error'));
         }
 
         // Add friend
-        $currentUser->removeFriend($friend->id);
+        $user->removeFriend($friend->id);
 
-        $level = $currentUser->isFriends($friend->id);
+        $level = $user->isFriends($friend->id);
 
-        $alertTitle = "{$currentUser->username} removed you from their friends!";
+        $alertTitle = "{$user->username} removed you from their friends!";
 
         $this->addNotification(
             $friend,
-            $currentUser,
+            $user,
             $alertTitle
         );
 

@@ -1,6 +1,6 @@
 {% extends 'global/master.twig' %}
 
-{% block title %}Support {{ sakura.siteName }}{% endblock %}
+{% block title %}Support {{ config('sitename') }}{% endblock %}
 
 {% set persistentPremium = user.permission(constant('Sakura\\Perms\\Site::STATIC_PREMIUM')) %}
 
@@ -12,7 +12,7 @@
         </div>
     {% endif %}
     <div class="content support">
-        <div class="head">Support {{ sakura.siteName }}</div>
+        <div class="head">Support {{ config('sitename') }}</div>
         <div style="font-size: .9em; margin-bottom: 10px;">
             <p>In order to keep the site, its services and improvements on it going I need money but I'm not that big of a fan of asking for money without giving anything special in return thus Tenshi exists. Tenshi is the name for our supporter rank which gives you access to an extra set of features (which are listed further down on this page). With your help we can keep adding new stuff, get new hardware and keep the site awesome!</p>
         </div>
@@ -21,7 +21,7 @@
             Your current Tenshi tag
         </div>
         <div style="margin-bottom: 10px;">
-            <h3>{% if persistentPremium %}Your rank has persistent Tenshi.{% else %}Your Tenshi tag is valid till {{ user.premiumInfo.expire|date(sakura.dateFormat) }}.{% endif %}</h3>
+            <h3>{% if persistentPremium %}Your rank has persistent Tenshi.{% else %}Your Tenshi tag is valid till {{ user.premiumInfo.expire|date(config('date_format')) }}.{% endif %}</h3>
             <progress value="{{ persistentPremium ? 100 : (100 - (((date().timestamp - user.premiumInfo.start) / (user.premiumInfo.expire - user.premiumInfo.start)) * 100)) }}" max="100" style="width: 100%"></progress>
         </div>
         {% endif %}

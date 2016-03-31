@@ -7,6 +7,7 @@
 
 namespace Sakura\Controllers;
 
+use Sakura\ActiveUser;
 use Sakura\Config;
 use Sakura\DB;
 use Sakura\Forum\Forum;
@@ -33,8 +34,6 @@ class ForumController extends Controller
      */
     public function index()
     {
-        global $currentUser;
-
         // Get the most active threads
         $activeThreadsIds = DB::table('posts')
             ->groupBy('topic_id')
@@ -51,7 +50,7 @@ class ForumController extends Controller
             $forum = new Forum($thread->forum);
 
             // Check if we have permission to view it
-            if (!$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
+            if (!$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
                 $fetch = DB::table('posts')
                     ->groupBy('topic_id')
                     ->orderByRaw('COUNT(*) DESC')
@@ -83,7 +82,7 @@ class ForumController extends Controller
             $forum = new Forum($post->forum);
 
             // Check if we have permission to view it
-            if (!$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
+            if (!$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
                 $fetch = DB::table('posts')
                     ->orderBy('post_id', 'desc')
                     ->skip(11 + $_n)
@@ -126,8 +125,6 @@ class ForumController extends Controller
      */
     public function forum($id = 0)
     {
-        global $currentUser;
-
         // Get the forum
         $forum = new Forum($id);
 
@@ -151,7 +148,7 @@ class ForumController extends Controller
         }
 
         // Check if the user has access to the forum
-        if (!$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
+        if (!$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
             // Set render data
             Template::vars([
                 'page' => [
@@ -194,8 +191,6 @@ class ForumController extends Controller
      */
     public function markForumRead($id = 0)
     {
-        global $currentUser;
-
         // Check if the session id was supplied
         if (!isset($_GET['s']) || $_GET['s'] != session_id()) {
             // Set render data
@@ -228,7 +223,7 @@ class ForumController extends Controller
         }
 
         // Check if the user has access to the forum
-        if (!$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
+        if (!$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
             // Set render data
             Template::vars([
                 'page' => [
@@ -242,7 +237,7 @@ class ForumController extends Controller
         }
 
         // Run the function
-        $forum->trackUpdateAll($currentUser->id);
+        $forum->trackUpdateAll(ActiveUser::$user->id);
 
         // Set render data
         Template::vars([
@@ -263,8 +258,6 @@ class ForumController extends Controller
      */
     public function thread($id = 0)
     {
-        global $currentUser;
-
         // Attempt to get the thread
         $thread = new Thread($id);
 
@@ -272,7 +265,7 @@ class ForumController extends Controller
         $forum = new Forum($thread->forum);
 
         // Check if the forum exists
-        if ($thread->id == 0 || !$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
+        if ($thread->id == 0 || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
             // Set render data
             Template::vars([
                 'page' => [
@@ -286,7 +279,7 @@ class ForumController extends Controller
         }
 
         // Update the tracking status
-        $thread->trackUpdate($currentUser->id);
+        $thread->trackUpdate(ActiveUser::$user->id);
 
         // Update views
         $thread->viewsUpdate();
@@ -305,8 +298,6 @@ class ForumController extends Controller
      */
     public function threadModerate($id = 0)
     {
-        global $currentUser;
-
         // Attempt to get the thread
         $thread = new Thread($id);
 
@@ -319,7 +310,7 @@ class ForumController extends Controller
 
         // Check if the forum exists
         if ($thread->id == 0
-            || !$forum->permission(ForumPerms::VIEW, $currentUser->id)
+            || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)
             || !isset($_POST['session'])
             || $_POST['session'] != session_id()) {
             $message = 'This thread doesn\'t exist or you don\'t have access to it!';
@@ -332,7 +323,7 @@ class ForumController extends Controller
             switch ($action) {
                 case 'sticky':
                     // Check permission
-                    if (!$forum->permission(ForumPerms::STICKY, $currentUser->id)) {
+                    if (!$forum->permission(ForumPerms::STICKY, ActiveUser::$user->id)) {
                         $message = "You're not allowed to do this!";
                         break;
                     }
@@ -343,12 +334,14 @@ class ForumController extends Controller
                     $thread->update();
 
                     // Add page variable stuff
-                    $message = $thread->type ? 'Changed the thread to sticky!' : 'Reverted the thread back to normal!';
+                    $message = $thread->type
+                    ? 'Changed the thread to sticky!'
+                    : 'Reverted the thread back to normal!';
                     break;
 
                 case 'announce':
                     // Check permission
-                    if (!$forum->permission(ForumPerms::ANNOUNCEMENT, $currentUser->id)) {
+                    if (!$forum->permission(ForumPerms::ANNOUNCEMENT, ActiveUser::$user->id)) {
                         $message = "You're not allowed to do this!";
                         break;
                     }
@@ -359,12 +352,14 @@ class ForumController extends Controller
                     $thread->update();
 
                     // Add page variable stuff
-                    $message = $thread->type ? 'Changed the thread to into an announcement!' : 'Reverted the thread back to normal!';
+                    $message = $thread->type
+                    ? 'Changed the thread to into an announcement!'
+                    : 'Reverted the thread back to normal!';
                     break;
 
                 case 'lock':
                     // Check permission
-                    if (!$forum->permission(ForumPerms::LOCK, $currentUser->id)) {
+                    if (!$forum->permission(ForumPerms::LOCK, ActiveUser::$user->id)) {
                         $message = "You're not allowed to do this!";
                         break;
                     }
@@ -385,7 +380,7 @@ class ForumController extends Controller
                     // Check if we're operating from the trash
                     if ($thread->forum == $trash) {
                         // Check permission
-                        if (!$forum->permission(ForumPerms::DELETE_ANY, $currentUser->id)) {
+                        if (!$forum->permission(ForumPerms::DELETE_ANY, ActiveUser::$user->id)) {
                             $message = "You're not allowed to do this!";
                             break;
                         }
@@ -401,7 +396,7 @@ class ForumController extends Controller
                         $redirect = Router::route('forums.forum', $trash);
                     } else {
                         // Check permission
-                        if (!$forum->permission(ForumPerms::MOVE, $currentUser->id)) {
+                        if (!$forum->permission(ForumPerms::MOVE, ActiveUser::$user->id)) {
                             $message = "You're not allowed to do this!";
                             break;
                         }
@@ -442,8 +437,6 @@ class ForumController extends Controller
      */
     public function post($id = 0)
     {
-        global $currentUser;
-
         // Attempt to get the post
         $post = new Post($id);
 
@@ -456,7 +449,7 @@ class ForumController extends Controller
         // Check if the forum exists
         if ($post->id == 0
             || $thread->id == 0
-            || !$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
+            || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
             $message = "This post doesn't exist or you don't have access to it!";
             $redirect = Router::route('forums.index');
 
@@ -492,8 +485,6 @@ class ForumController extends Controller
      */
     public function postRaw($id = 0)
     {
-        global $currentUser;
-
         // Attempt to get the post
         $post = new Post($id);
 
@@ -506,7 +497,7 @@ class ForumController extends Controller
         // Check if the forum exists
         if ($post->id == 0
             || $thread->id == 0
-            || !$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
+            || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
             return "";
         }
 
@@ -520,8 +511,6 @@ class ForumController extends Controller
      */
     public function threadReply($id = 0)
     {
-        global $currentUser;
-
         $text = isset($_POST['text']) ? $_POST['text'] : null;
 
         // Attempt to get the forum
@@ -533,7 +522,7 @@ class ForumController extends Controller
         // Check if the thread exists
         if ($thread->id == 0
             || $forum->type !== 0
-            || !$forum->permission(ForumPerms::VIEW, $currentUser->id)) {
+            || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
             $message = "This post doesn't exist or you don't have access to it!";
             $redirect = Router::route('forums.index');
 
@@ -543,10 +532,10 @@ class ForumController extends Controller
         }
 
         // Check if the thread exists
-        if (!$forum->permission(ForumPerms::REPLY, $currentUser->id)
+        if (!$forum->permission(ForumPerms::REPLY, ActiveUser::$user->id)
             || (
                 $thread->status === 1
-                && !$forum->permission(ForumPerms::LOCK, $currentUser->id)
+                && !$forum->permission(ForumPerms::LOCK, ActiveUser::$user->id)
             )) {
             $message = "You are not allowed to post in this thread!";
             $redirect = Router::route('forums.thread', $thread->id);
@@ -592,7 +581,7 @@ class ForumController extends Controller
         $post = Post::create(
             "Re: {$thread->title}",
             $text,
-            $currentUser,
+            ActiveUser::$user,
             $thread->id,
             $forum->id
         );
@@ -611,8 +600,6 @@ class ForumController extends Controller
      */
     public function createThread($id = 0)
     {
-        global $currentUser;
-
         $title = isset($_POST['title']) ? $_POST['title'] : null;
         $text = isset($_POST['text']) ? $_POST['text'] : null;
 
@@ -622,9 +609,9 @@ class ForumController extends Controller
         // Check if the forum exists
         if ($forum->id === 0
             || $forum->type !== 0
-            || !$forum->permission(ForumPerms::VIEW, $currentUser->id)
-            || !$forum->permission(ForumPerms::REPLY, $currentUser->id)
-            || !$forum->permission(ForumPerms::CREATE_THREADS, $currentUser->id)) {
+            || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)
+            || !$forum->permission(ForumPerms::REPLY, ActiveUser::$user->id)
+            || !$forum->permission(ForumPerms::CREATE_THREADS, ActiveUser::$user->id)) {
             $message = "This forum doesn't exist or you don't have access to it!";
             $redirect = Router::route('forums.index');
 
@@ -685,7 +672,7 @@ class ForumController extends Controller
             $post = Post::create(
                 $title,
                 $text,
-                $currentUser,
+                ActiveUser::$user,
                 0,
                 $forum->id
             );
@@ -709,8 +696,6 @@ class ForumController extends Controller
      */
     public function editPost($id = 0)
     {
-        global $currentUser;
-
         $title = isset($_POST['title']) ? $_POST['title'] : null;
         $text = isset($_POST['text']) ? $_POST['text'] : null;
 
@@ -726,15 +711,15 @@ class ForumController extends Controller
         // Check permissions
         $noAccess = $post->id == 0
         || $thread->id == 0
-        || !$forum->permission(ForumPerms::VIEW, $currentUser->id);
+        || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id);
 
         $noEdit = (
-            $post->poster->id === $currentUser->id
-            ? !$currentUser->permission(ForumPerms::EDIT_OWN, Perms::FORUM)
-            : !$forum->permission(ForumPerms::EDIT_ANY, $currentUser->id)
+            $post->poster->id === ActiveUser::$user->id
+            ? !ActiveUser::$user->permission(ForumPerms::EDIT_OWN, Perms::FORUM)
+            : !$forum->permission(ForumPerms::EDIT_ANY, ActiveUser::$user->id)
         ) || (
             $thread->status === 1
-            && !$forum->permission(ForumPerms::LOCK, $currentUser->id)
+            && !$forum->permission(ForumPerms::LOCK, ActiveUser::$user->id)
         );
 
         // Check if the forum exists
@@ -814,7 +799,7 @@ class ForumController extends Controller
         $post->text = $text;
         $post->editTime = time();
         $post->editReason = '';
-        $post->editUser = $currentUser;
+        $post->editUser = ActiveUser::$user;
         $post = $post->update();
 
         // Go to the post
@@ -831,8 +816,6 @@ class ForumController extends Controller
      */
     public function deletePost($id = 0)
     {
-        global $currentUser;
-
         $action = isset($_POST['yes']) && isset($_POST['sessionid'])
         ? $_POST['sessionid'] === session_id()
         : null;
@@ -849,15 +832,15 @@ class ForumController extends Controller
         // Check permissions
         $noAccess = $post->id == 0
         || $thread->id == 0
-        || !$forum->permission(ForumPerms::VIEW, $currentUser->id);
+        || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id);
 
         $noDelete = (
-            $post->poster->id === $currentUser->id
-            ? !$currentUser->permission(ForumPerms::DELETE_OWN, Perms::FORUM)
-            : !$forum->permission(ForumPerms::DELETE_ANY, $currentUser->id)
+            $post->poster->id === ActiveUser::$user->id
+            ? !ActiveUser::$user->permission(ForumPerms::DELETE_OWN, Perms::FORUM)
+            : !$forum->permission(ForumPerms::DELETE_ANY, ActiveUser::$user->id)
         ) || (
             $thread->status === 1
-            && !$forum->permission(ForumPerms::LOCK, $currentUser->id)
+            && !$forum->permission(ForumPerms::LOCK, ActiveUser::$user->id)
         );
 
         // Check if the forum exists

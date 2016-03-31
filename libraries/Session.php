@@ -37,14 +37,14 @@ class Session
      */
     public function __construct($userId, $sessionId = null)
     {
-        // Set the supposed session data
-        $this->userId = $userId;
-        $this->sessionId = $sessionId;
-
         // Check if a PHP session was already started and if not start one
         if (session_status() != PHP_SESSION_ACTIVE) {
             session_start();
         }
+
+        // Set the supposed session data
+        $this->userId = $userId;
+        $this->sessionId = $sessionId;
     }
 
     /**
@@ -63,9 +63,8 @@ class Session
         unset($this->sessionId);
 
         // Destroy the session
-        if (session_status() == PHP_SESSION_ACTIVE) {
-            session_destroy();
-        }
+        session_regenerate_id(true);
+        session_destroy();
     }
 
     /**

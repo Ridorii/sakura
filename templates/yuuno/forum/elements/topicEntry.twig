@@ -22,6 +22,6 @@
         {% else %}
             [deleted user]
         {% endif %} <a href="{{ route('forums.post', thread.lastPost.id) }}" class="default fa fa-tag"></a><br />
-        <time>{{ thread.lastPost.time|date(sakura.dateFormat) }}</time>
+        <time datetime="{{ thread.lastPost.time|date('r') }}">{{ thread.lastPost.time|date(config('date_format')) }}</time>
     </td>
 </tr>

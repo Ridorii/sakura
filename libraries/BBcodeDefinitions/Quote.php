@@ -9,11 +9,11 @@ namespace Sakura\BBcodeDefinitions;
 
 use JBBCode\CodeDefinition;
 use JBBCode\ElementNode;
+use Sakura\ActiveUser;
 use Sakura\Forum\Forum;
 use Sakura\Forum\Post;
 use Sakura\Perms\Forum as ForumPerms;
 use Sakura\Router;
-use Sakura\User;
 
 /**
  * Quote BBcode for JBBCode.
@@ -43,8 +43,6 @@ class Quote extends CodeDefinition
      */
     public function asHtml(ElementNode $el)
     {
-        global $currentUser;
-
         $attr = $el->getAttribute()['quote'];
 
         if (substr($attr, 0, 1) === '#') {
@@ -53,7 +51,7 @@ class Quote extends CodeDefinition
             $forum = new Forum($post->forum);
 
             if ($post->id !== 0
-                && $forum->permission(ForumPerms::VIEW, $currentUser->id)) {
+                && $forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
                 $postLink = Router::route('forums.post', $post->id);
 
                 $content = "<blockquote><div class='quotee'><a href='{$postLink}' style='color: inherit;'>"

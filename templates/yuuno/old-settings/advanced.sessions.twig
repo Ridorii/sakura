@@ -15,7 +15,7 @@
                 {{ s.user_agent }}
             </td>
             <td>
-                {{ s.session_start|date(sakura.dateFormat) }}
+                {{ s.session_start|date(config('date_format')) }}
             </td>
             <td style="width: 90px;">
                 <form method="post" action="{{ sakura.currentPage }}">

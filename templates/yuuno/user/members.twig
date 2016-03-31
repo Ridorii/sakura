@@ -80,16 +80,16 @@
                                 <a href="{{ route('user.profile', user.id) }}" class="default" style="font-weight: bold; color: {{ user.colour }}; text-shadow: 0 0 5px {{ user.colour }};">{{ user.username }}</a>
                             </td>
                             <td>
-                                <time>{{ user.registered|date(sakura.dateFormat) }}</time>
+                                <time datetime="{{ user.registered|date('r') }}">{{ user.registered|date(config('date_format')) }}</time>
                             </td>
                             <td>
-                                {% if user.lastOnline == 0 %}<i>Never logged in.</i>{% else %}<time>{{ user.lastOnline|date(sakura.dateFormat) }}</time>{% endif %}
+                                {% if user.lastOnline == 0 %}<i>Never logged in.</i>{% else %}<time datetime="{{ user.lastOnline|date('r') }}">{{ user.lastOnline|date(config('date_format')) }}</time>{% endif %}
                             </td>
                             <td>
                                 {{ user.title }}
                             </td>
                             <td>
-                                <img src="{{ sakura.contentPath }}/images/flags/{{ user.country|lower }}.png" alt="{% if user.country|lower == 'xx' %}?{% else %}{{ user.country(true) }}{% endif %}" title="{% if user.country|lower == 'xx' %}Unknown{% else %}{{ user.country(true) }}{% endif %}" />
+                                <img src="{{ config('content_path') }}/images/flags/{{ user.country|lower }}.png" alt="{% if user.country|lower == 'xx' %}?{% else %}{{ user.country(true) }}{% endif %}" title="{% if user.country|lower == 'xx' %}Unknown{% else %}{{ user.country(true) }}{% endif %}" />
                             </td>
                         </tr>
                     </tbody>
@@ -99,7 +99,7 @@
                     {% for user in users[currPage] %}
                         <a href="{{ route('user.profile', user.id) }}">{# These comment tags are here to prevent the link extending too far
                             #}<div class="userBox" id="u{{ user.id }}">{#
-                                #}<img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.username }}"  style="background: url('{{ route('file.avatar', user.id) }}') no-repeat center / contain;" />{#
+                                #}<img src="{{ config('content_path') }}/pixel.png" alt="{{ user.username }}"  style="background: url('{{ route('file.avatar', user.id) }}') no-repeat center / contain;" />{#
                                 #}<span class="userBoxUserName" style="color: {{ user.colour }};">{#
                                     #}{{ user.username }}{#
                                 #}</span>{#

@@ -19,68 +19,6 @@ use Sakura\Router;
 class Users
 {
     /**
-     * Check if a user is logged in
-     *
-     * @param int $uid The user ID.
-     * @param string $sid The session ID.
-     *
-     * @return array|bool Either false or the ID and session in an array.
-     */
-    public static function checkLogin($uid = null, $sid = null)
-    {
-        // Assign $uid and $sid
-        $uid = $uid ? $uid : (isset($_COOKIE[Config::get('cookie_prefix') . 'id'])
-            ? $_COOKIE[Config::get('cookie_prefix') . 'id']
-            : 0);
-        $sid = $sid ? $sid : (isset($_COOKIE[Config::get('cookie_prefix') . 'session'])
-            ? $_COOKIE[Config::get('cookie_prefix') . 'session']
-            : 0);
-
-        // Get session
-        $session = new Session($uid, $sid);
-
-        // Validate the session
-        $sessionValid = $session->validate();
-
-        // Get user object
-        $user = User::construct($uid);
-
-        // Check if the session exists and check if the user is activated
-        if ($sessionValid == 0 || $user->permission(Site::DEACTIVATED)) {
-            return false;
-        }
-
-        // Extend the cookie times if the remember flag is set
-        if ($sessionValid == 2) {
-            // User ID cookie
-            setcookie(
-                Config::get('cookie_prefix') . 'id',
-                $uid,
-                time() + 604800,
-                Config::get('cookie_path')
-            );
-
-            // Session ID cookie
-            setcookie(
-                Config::get('cookie_prefix') . 'session',
-                $sid,
-                time() + 604800,
-                Config::get('cookie_path')
-            );
-        }
-
-        // Update last online
-        DB::table('users')
-            ->where('user_id', $uid)
-            ->update([
-                'user_last_online' => time(),
-            ]);
-
-        // If everything went through return true
-        return [$uid, $sid];
-    }
-
-    /**
      * Send password forgot e-mail
      *
      * @param string $userId The user id.

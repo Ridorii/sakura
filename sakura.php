@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', 20160330);
+define('SAKURA_VERSION', 20160331);
 
 // Define Sakura Path
 define('ROOT', __DIR__ . '/');
@@ -73,12 +73,19 @@ $capsule->setAsGlobal();
 if (Config::get('no_cron_service')) {
     // If not do an "asynchronous" call to the cron.php script
     if (Config::get('no_cron_last') < (time() - Config::get('no_cron_interval'))) {
+        $phpDir = PHP_BINDIR;
+        $cronPath = ROOT . 'cron.php';
+
         // Check OS
         if (substr(strtolower(PHP_OS), 0, 3) == 'win') {
-            pclose(popen('start /B ' . PHP_BINDIR . '\php.exe ' . addslashes(ROOT . 'cron.php'), 'r'));
+            $cronPath = addslashes($cronPath);
+
+            pclose(popen("start /B {$phpDir}\php.exe {$cronPath}", 'r'));
         } else {
-            pclose(popen(PHP_BINDIR . '/php ' . ROOT . 'cron.php > /dev/null 2>/dev/null &', 'r'));
+            pclose(popen("{$phpDir}/php {$cronPath} > /dev/null 2>/dev/null &", 'r'));
         }
+
+        unset($phpDir, $cronPath);
 
         // Update last execution time
         Config::set('no_cron_last', time());
@@ -94,11 +101,11 @@ Router::init();
 // Include routes file
 include_once ROOT . 'routes.php';
 
-// Auth check
-$authCheck = Users::checkLogin();
-
-// Create a user object for the current logged in user
-$currentUser = User::construct($authCheck[0]);
+// Initialise the current session
+ActiveUser::init(
+    intval($_COOKIE[Config::get('cookie_prefix') . 'id'] ?? 0),
+    $_COOKIE[Config::get('cookie_prefix') . 'session'] ?? ''
+);
 
 // Create the Urls object
 $urls = new Urls();
@@ -121,50 +128,18 @@ if (!defined('SAKURA_NO_TPL')) {
                 'showChangelog' => Config::local('dev', 'show_changelog'),
             ],
 
-            'cookie' => [
-                'prefix' => Config::get('cookie_prefix'),
-                'domain' => Config::get('cookie_domain'),
-                'path' => Config::get('cookie_path'),
-            ],
-
-            'contentPath' => Config::get('content_path'),
             'resources' => Config::get('content_path') . '/data/' . $templateName,
 
-            'charset' => Config::get('charset'),
-            'siteName' => Config::get('sitename'),
-            'siteLogo' => Config::get('sitelogo'),
-            'siteDesc' => Config::get('sitedesc'),
-            'siteTags' => json_decode(Config::get('sitetags'), true),
-            'dateFormat' => 'r',
-            'currentPage' => (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null),
-            'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null),
-            'onlineTimeout' => Config::get('max_online_time'),
-            'announcementImage' => Config::get('header_announcement_image'),
-            'announcementLink' => Config::get('header_announcement_link'),
-            'trashForumId' => Config::get('forum_trash_id'),
-
-            'recaptchaPublic' => Config::get('recaptcha_public'),
-            'recaptchaEnabled' => Config::get('recaptcha'),
-
-            'disableRegistration' => Config::get('disable_registration'),
-            'lockAuth' => Config::get('lock_authentication'),
-            'requireActivation' => Config::get('require_activation'),
-            'minPwdEntropy' => Config::get('min_entropy'),
-            'minUsernameLength' => Config::get('username_min_length'),
-            'maxUsernameLength' => Config::get('username_max_length'),
-
-            'forumTitleMaxLength' => Config::get('forum_title_max'),
-            'forumTitleMinLength' => Config::get('forum_title_min'),
-            'forumTextMaxLength' => Config::get('forum_text_max'),
-            'forumTextMinLength' => Config::get('forum_text_min'),
+            'currentPage' => $_SERVER['REQUEST_URI'] ?? null,
+            'referrer' => $_SERVER['HTTP_REFERER'] ?? null,
         ],
 
         'session' => array_merge([
-            'checkLogin' => $authCheck,
-            'sessionId' => $authCheck[1],
+            'checkLogin' => ActiveUser::$user->id && !ActiveUser::$user->permission(Perms\Site::DEACTIVATED),
+            'sessionId' => ActiveUser::$session->sessionId,
         ], $_SESSION),
 
-        'user' => $currentUser,
+        'user' => ActiveUser::$user,
         'urls' => $urls,
 
         'get' => $_GET,

@@ -7,6 +7,7 @@
 
 namespace Sakura\Controllers;
 
+use Sakura\ActiveUser;
 use Sakura\Comment;
 use Sakura\Config;
 use Sakura\Perms\Site;
@@ -21,8 +22,6 @@ class CommentsController extends Controller
 {
     public function post($category = '', $reply = 0)
     {
-        global $currentUser;
-
         $session = $_POST['session'] ?? '';
 
         // Check if the user can comment
@@ -32,7 +31,7 @@ class CommentsController extends Controller
         }
 
         // Check if the user can comment
-        if (!$currentUser->permission(Site::CREATE_COMMENTS)) {
+        if (!ActiveUser::$user->permission(Site::CREATE_COMMENTS)) {
             $error = "You aren't allowed to make comments!";
             return $this->json(compact('error'));
         }
@@ -57,7 +56,7 @@ class CommentsController extends Controller
         $comment->category = $category;
         $comment->time = time();
         $comment->reply = (int) $reply;
-        $comment->user = (int) $currentUser->id;
+        $comment->user = (int) ActiveUser::$user->id;
         $comment->text = $text;
 
         $comment->save();
@@ -67,10 +66,8 @@ class CommentsController extends Controller
 
     public function delete($id = 0)
     {
-        global $currentUser;
-
         // Check if the user can delete comments
-        if (!$currentUser->permission(Site::DELETE_COMMENTS)) {
+        if (!ActiveUser::$user->permission(Site::DELETE_COMMENTS)) {
             $error = "You aren't allowed to delete comments!";
             return $this->json(compact('error'));
         }
@@ -82,7 +79,7 @@ class CommentsController extends Controller
             return $this->json(compact('error'));
         }
 
-        if ($currentUser->id !== $comment->user) {
+        if (ActiveUser::$user->id !== $comment->user) {
             $error = "You aren't allowed to delete the comments of other people!";
             return $this->json(compact('error'));
         }
@@ -96,13 +93,11 @@ class CommentsController extends Controller
 
     public function vote($id = 0)
     {
-        global $currentUser;
-
         $vote = $_REQUEST['vote'] ?? 0;
         $vote = $vote != 0;
 
         // Check if the user can delete comments
-        if (!$currentUser->permission(Site::VOTE_COMMENTS)) {
+        if (!ActiveUser::$user->permission(Site::VOTE_COMMENTS)) {
             $error = "You aren't allowed to vote on comments!";
             return $this->json(compact('error'));
         }
@@ -114,7 +109,7 @@ class CommentsController extends Controller
             return $this->json(compact('error'));
         }
 
-        $comment->vote($currentUser->id, $vote);
+        $comment->vote(ActiveUser::$user->id, $vote);
 
         $upvotes = $comment->upvotes;
         $downvotes = $comment->downvotes;

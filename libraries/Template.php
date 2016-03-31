@@ -10,6 +10,7 @@ namespace Sakura;
 use Twig_Environment;
 use Twig_Extension_StringLoader;
 use Twig_Loader_Filesystem;
+use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 
 /**
@@ -87,7 +88,16 @@ class Template
             return Router::route($name, $args);
         }));
 
+        // Add config function
+        self::$template->addFunction(new Twig_SimpleFunction('config', function ($name) {
+            return Config::get($name);
+        }));
+
+        // Method of getting the currently active session id
         self::$template->addFunction(new Twig_SimpleFunction('session_id', 'session_id'));
+
+        // json_decode filter (why doesn't this exist to begin with?)
+        self::$template->addFilter(new Twig_SimpleFilter('json_decode', 'json_decode'));
     }
 
     /**

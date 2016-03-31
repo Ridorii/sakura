@@ -8,11 +8,12 @@ namespace Sakura;
 
 use Sakura\Perms\Site;
 
-// Legacy support!!!!!!!!!
-$renderData = [];
-
 // Include components
 require_once str_replace(basename(__DIR__), '', dirname(__FILE__)) . 'sakura.php';
+
+// Legacy support!!!!!!!!!
+$renderData = [];
+$currentUser = ActiveUser::$user;
 
 if (isset($_POST['submit']) && isset($_POST['submit'])) {
     $continue = true;
@@ -21,10 +22,10 @@ if (isset($_POST['submit']) && isset($_POST['submit'])) {
     $redirect = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $urls->format('SETTINGS_INDEX');
 
     // Check if the user is logged in
-    if (!Users::checkLogin() || !$continue) {
+    if (!ActiveUser::$user->id || !$continue) {
         $renderData['page'] = [
 
-            'redirect' => '/authenticate',
+            'redirect' => '/login',
             'message' => 'You must be logged in to edit your settings.',
             'success' => 0,
 
@@ -780,7 +781,7 @@ if (isset($_POST['submit']) && isset($_POST['submit'])) {
     exit;
 }
 
-if (Users::checkLogin()) {
+if (ActiveUser::$user->id) {
     // Settings page list
     $pages = [
         'general' => [
@@ -1051,7 +1052,7 @@ if (Users::checkLogin()) {
     }
 
     // Set templates directory
-    $renderData['templates'] = 'settings';
+    $renderData['templates'] = 'old-settings';
 
     // Render data
     $renderData['current'] = $category . '.' . $mode;

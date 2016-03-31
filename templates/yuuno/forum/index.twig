@@ -19,7 +19,7 @@
                             <td style="text-align: left; border-bottom: 1px solid #9475b2;">
                                 <a href="{{ route('forums.thread', _t.id) }}" class="default">{{ _t.title }}</a>
                             </td>
-                            <td class="rightAlign" style="border-bottom: 1px solid #9475b2;"><time>{{ _t.lastPost.time|date(sakura.dateFormat) }}</time></td>
+                            <td class="rightAlign" style="border-bottom: 1px solid #9475b2;"><time datetime="{{ _t.lastPost.time|date('r') }}">{{ _t.lastPost.time|date(config('date_format')) }}</time></td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -38,7 +38,7 @@
                                 by
                                 <a href="{{ route('user.profile', _p.poster.id) }}" class="default"><span style="color: {{ _p.poster.colour }};">{{ _p.poster.username }}</span></a>
                             </td>
-                            <td class="rightAlign" style="border-bottom: 1px solid #9475b2;"><time>{{ _p.time|date(sakura.dateFormat) }}</time></td>
+                            <td class="rightAlign" style="border-bottom: 1px solid #9475b2;"><time datetime="{{ _p.time|date('r') }}">{{ _p.time|date(config('date_format')) }}</time></td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -50,8 +50,8 @@
                         <div class="user-container" style="background-image: url({{ route('user.header', activePoster.id) }});">
                             <div class="default-avatar-setting user-container-avatar" style="background-image: url({{ route('file.avatar', activePoster.id) }}); box-shadow: 0 0 5px #{% if activePoster.isOnline %}484{% else %}844{% endif %};"></div>
                             <div class="user-container-info">
-                                <h1 style="color: {{ activePoster.colour }}; text-shadow: 0 0 7px {% if activePoster.colour != 'inherit' %}{{ activePoster.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;" {% if activePoster.getUsernameHistory %} title="Known as {{ activePoster.getUsernameHistory[0].username_old }} before {{ activePoster.getUsernameHistory[0].change_time|date(sakura.dateFormat) }}." {% endif %}>{{ activePoster.username }}</h1>
-                                {% if activePoster.isPremium %}<img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;" /> {% endif %}<img src="{{ sakura.contentPath }}/images/flags/{{ activePoster.country|lower }}.png" alt="{{ activePoster.country }}" style="vertical-align: middle;" title="{{ activePoster.country(true) }}" /> <span style="font-size: .8em;">{{ activePoster.title }}</span>
+                                <h1 style="color: {{ activePoster.colour }}; text-shadow: 0 0 7px {% if activePoster.colour != 'inherit' %}{{ activePoster.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;" {% if activePoster.getUsernameHistory %} title="Known as {{ activePoster.getUsernameHistory[0].username_old }} before {{ activePoster.getUsernameHistory[0].change_time|date(config('date_format')) }}." {% endif %}>{{ activePoster.username }}</h1>
+                                {% if activePoster.isPremium %}<img src="{{ config('content_path') }}/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;" /> {% endif %}<img src="{{ config('content_path') }}/images/flags/{{ activePoster.country|lower }}.png" alt="{{ activePoster.country }}" style="vertical-align: middle;" title="{{ activePoster.country(true) }}" /> <span style="font-size: .8em;">{{ activePoster.title }}</span>
                             </div>
                         </div>
                     </a>

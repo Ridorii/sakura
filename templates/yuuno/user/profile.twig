@@ -80,16 +80,16 @@
                     <div class="new-profile-info">
                         <div class="default-avatar-setting new-profile-avatar" style="background-image: url({{ route('file.avatar', profile.id) }}); box-shadow: 0 0 5px #{% if profile.isOnline %}484{% else %}844{% endif %};"></div>
                         <div class="new-profile-username">
-                            <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px {% if profile.colour != 'inherit' %}{{ profile.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;" {% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0].username_old }} before {{ profile.getUsernameHistory[0].change_time|date(sakura.dateFormat) }}." {% endif %}>{{ profile.username }}</h1>
-                            {% if profile.isPremium %}<img src="{{ sakura.contentPath }}/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;" /> {% endif %}<img src="{{ sakura.contentPath }}/images/flags/{{ profile.country|lower }}.png" alt="{{ profile.country }}" style="vertical-align: middle;" title="{{ profile.country(true) }}" /> <span style="font-size: .8em;">{{ profile.title }}</span>
+                            <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px {% if profile.colour != 'inherit' %}{{ profile.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;" {% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0].username_old }} before {{ profile.getUsernameHistory[0].change_time|date(config('date_format')) }}." {% endif %}>{{ profile.username }}</h1>
+                            {% if profile.isPremium %}<img src="{{ config('content_path') }}/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;" /> {% endif %}<img src="{{ config('content_path') }}/images/flags/{{ profile.country|lower }}.png" alt="{{ profile.country }}" style="vertical-align: middle;" title="{{ profile.country(true) }}" /> <span style="font-size: .8em;">{{ profile.title }}</span>
                         </div>
                         <div class="new-profile-dates">
-                            <b>Joined</b> <time>{{ profile.registered|date(sakura.dateFormat) }}</time>
+                            <b>Joined</b> <time datetime="{{ profile.registered|date('r') }}">{{ profile.registered|date(config('date_format')) }}</time>
                             <br />
                             {% if profile.lastOnline < 1 %}
                             <b>{{ profile.username }} hasn't logged in yet.</b>
                             {% else %}
-                            <b>Last online</b> <time>{{ profile.lastOnline|date(sakura.dateFormat) }}</time>
+                            <b>Last online</b> <time datetime="{{ profile.lastOnline|date('r') }}">{{ profile.lastOnline|date(config('date_format')) }}</time>
                             {% endif %}
                             {% if profile.birthday != '0000-00-00' and profile.birthday|split('-')[0] > 0 %}
                             <br /><b>Age</b> <span title="{{ profile.birthday }}">{{ profile.birthday(true) }} years old</span>&nbsp;
@@ -111,7 +111,7 @@
                     {% if session.checkLogin %}
                     <div class="new-profile-actions">
                         {% if user.id == profile.id %}
-                        <a class="fa fa-pencil-square-o" title="Edit your profile" href="{{ urls.format('SETTING_MODE', ['general', 'profile']) }}"></a>
+                        <a class="fa fa-pencil-square-o" title="Edit your profile" href="{{ route('settings.general.profile') }}"></a>
                         {% else %}
                         {% if user.isFriends(profile.id) != 0 %}<a class="fa fa-{% if user.isFriends(profile.id) == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
                         <a class="fa fa-user-{% if user.isFriends(profile.id) == 0 %}plus{% else %}times{% endif %}" title="{% if user.isFriends(profile.id) == 0 %}Add {{ profile.username }} as a friend{% else %}Remove friend{% endif %}" href="javascript:void(0);" onclick="{% if user.isFriends(profile.id) == 0 %}addFriend({{ profile.id }}){% else %}removeFriend({{ profile.id }}){% endif %}"></a>

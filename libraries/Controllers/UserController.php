@@ -7,6 +7,7 @@
 
 namespace Sakura\Controllers;
 
+use Sakura\ActiveUser;
 use Sakura\Config;
 use Sakura\DB;
 use Sakura\Perms\Site;
@@ -33,8 +34,6 @@ class UserController extends Controller
      */
     public function profile($id = 0)
     {
-        global $currentUser;
-
         // Get the user's context
         $profile = User::construct($id);
 
@@ -74,10 +73,8 @@ class UserController extends Controller
      */
     public function members($rank = null)
     {
-        global $currentUser;
-
         // Check permission
-        if (!$currentUser->permission(Site::VIEW_MEMBERLIST)) {
+        if (!ActiveUser::$user->permission(Site::VIEW_MEMBERLIST)) {
             return Template::render('global/restricted');
         }
 

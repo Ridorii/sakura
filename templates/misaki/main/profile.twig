@@ -49,7 +49,7 @@
             <div id="userAvatar" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [profile.id]) }}');">{{ profile.username }}'s Avatar</div>
             <div class="userData">
                 <div class="headerLeft">
-                    <div class="profileUsername" style="color: {{ profile.colour }};"{% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0]['username_old'] }} before {{ profile.getUsernameHistory[0]['change_time']|date(sakura.dateFormat) }}."{% endif %}>
+                    <div class="profileUsername" style="color: {{ profile.colour }};"{% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0]['username_old'] }} before {{ profile.getUsernameHistory[0]['change_time']|date(config('date_format')) }}."{% endif %}>
                         {% if profileHidden %}Unknown user{% else %}{{ profile.username }}{% endif %}
                     </div>
                     <div class="profileUserTitle">
@@ -58,8 +58,8 @@
                 </div>
                 <div class="headerRight">
                 {% if not profileHidden %}
-                    <div>Joined <span title="{{ profile.dates.joined|date(sakura.dateFormat) }}">{{ profile.elapsed.joined }}</span></div>
-                    <div>{% if profile.dates.lastOnline < 1 %}User hasn't logged in yet.{% else %}Last Active <span title="{{ profile.dates.lastOnline|date(sakura.dateFormat) }}">{{ profile.elapsed.lastOnline }}</span>{% endif %}</div>
+                    <div>Joined <span title="{{ profile.dates.joined|date(config('date_format')) }}">{{ profile.elapsed.joined }}</span></div>
+                    <div>{% if profile.dates.lastOnline < 1 %}User hasn't logged in yet.{% else %}Last Active <span title="{{ profile.dates.lastOnline|date(config('date_format')) }}">{{ profile.elapsed.lastOnline }}</span>{% endif %}</div>
                 {% endif %}
                 </div>
             </div>

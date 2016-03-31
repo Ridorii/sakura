@@ -12,6 +12,6 @@
 </div>
 <div class="clear"></div>
 <div class="news-post-time">
-    Posted <time>{{ post.time|date(sakura.dateFormat) }}</time>
+    Posted <time datetime="{{ post.time|date('r') }}">{{ post.time|date(config('date_format')) }}</time>
     {% if newsHideCommentCount is not defined %}<a class="default" href="{{ route('news.post', post.id) }}#comments">{{ post.commentCount }} comment{% if post.commentCount != 1 %}s{% endif %}</a>{% endif %}
 </div>
