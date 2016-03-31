@@ -8,7 +8,6 @@
 namespace Sakura;
 
 use Sakura\Perms\Site;
-use Sakura\Router;
 
 /**
  * User management
@@ -153,13 +152,11 @@ class Users
         // Create output array
         $fields = [];
 
-        $user = User::construct(self::checkLogin()[0]);
-
         // Iterate over the fields and clean them up
         foreach ($optionFields as $field) {
             $field = get_object_vars($field);
 
-            if (!$user->permission(constant('Sakura\Perms\Site::' . $field['option_permission']))) {
+            if (!ActiveUser::$user->permission(constant('Sakura\Perms\Site::' . $field['option_permission']))) {
                 continue;
             }
 
