@@ -94,8 +94,11 @@ Router::group(['prefix' => 'members', 'before' => 'loginCheck'], function () {
 });
 
 // User
-Router::get('/u/{id}', 'UserController@profile', 'user.profile');
-Router::get('/u/{id}/header', 'FileController@header', 'user.header');
+Router::group(['prefix' => 'u'], function () {
+    Router::get('/{id}', 'UserController@profile', 'user.profile');
+    Router::get('/{id}/report', 'UserController@report', 'user.report');
+    Router::get('/{id}/header', 'FileController@header', 'user.header');
+});
 
 // Notifications
 Router::group(['prefix' => 'notifications'], function () {
@@ -152,7 +155,9 @@ Router::group(['prefix' => 'settings', 'before' => 'loginCheck'], function () {
 
         Router::get('/home', 'Settings.GeneralController@home', 'settings.general.home');
         Router::get('/profile', 'Settings.GeneralController@profile', 'settings.general.profile');
+        Router::post('/profile', 'Settings.GeneralController@profile', 'settings.general.profile');
         Router::get('/options', 'Settings.GeneralController@options', 'settings.general.options');
+        Router::post('/options', 'Settings.GeneralController@options', 'settings.general.options');
     });
 
     // Friends section

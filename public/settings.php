@@ -244,145 +244,6 @@ if (isset($_POST['submit']) && isset($_POST['submit'])) {
                 ];
                 break;
 
-            // Profile
-            case 'profile':
-                // Get profile fields and create storage var
-                $fields = Users::getProfileFields();
-
-                // Delete all profile fields
-                DB::table('user_profilefields')
-                    ->where('user_id', $currentUser->id)
-                    ->delete();
-
-                // Go over each field
-                foreach ($fields as $field) {
-                    // Add to the store array
-                    if (isset($_POST['profile_' . $field['field_identity']]) && !empty($_POST['profile_' . $field['field_identity']])) {
-                        DB::table('user_profilefields')
-                            ->insert([
-                                'user_id' => $currentUser->id,
-                                'field_name' => $field['field_identity'],
-                                'field_value' => $_POST['profile_' . $field['field_identity']],
-                            ]);
-                    }
-
-                    // Check if there's additional values we should keep in mind
-                    if (isset($field['field_additional']) && !empty($field['field_additional'])) {
-                        // Go over each additional value
-                        foreach ($field['field_additional'] as $addKey => $addVal) {
-                            // Add to the array
-                            $store = (isset($_POST['profile_additional_' . $addKey]) || !empty($_POST['profile_additional_' . $addKey])) ? $_POST['profile_additional_' . $addKey] : false;
-                            DB::table('user_profilefields')
-                                ->insert([
-                                    'user_id' => $currentUser->id,
-                                    'field_name' => $addKey,
-                                    'field_value' => $store,
-                                ]);
-                        }
-                    }
-                }
-
-                // Set render data
-                $renderData['page'] = [
-                    'redirect' => $redirect,
-                    'message' => 'Your profile has been updated!',
-                    'success' => 1,
-                ];
-
-                // Birthdays
-                if (isset($_POST['birthday_day'])
-                    && isset($_POST['birthday_month'])
-                    && isset($_POST['birthday_year'])) {
-                    // Check if the values aren't fucked with
-                    if ($_POST['birthday_day'] < 0
-                        || $_POST['birthday_day'] > 31
-                        || $_POST['birthday_month'] < 0
-                        || $_POST['birthday_month'] > 12
-                        || (
-                            $_POST['birthday_year'] != 0
-                            && $_POST['birthday_year'] < (date("Y") - 100)
-                        )
-                        || $_POST['birthday_year'] > date("Y")) {
-                        $renderData['page']['message'] = 'Your birthdate is invalid.';
-                        $renderData['page']['success'] = 0;
-                        break;
-                    }
-
-                    // Check if the values aren't fucked with
-                    if ((
-                        $_POST['birthday_day'] < 1
-                        && $_POST['birthday_month'] > 0
-                    )
-                        || (
-                            $_POST['birthday_day'] > 0
-                            && $_POST['birthday_month'] < 1)
-                    ) {
-                        $renderData['page']['message'] = 'Only setting a day or month is disallowed.';
-                        $renderData['page']['success'] = 0;
-                        break;
-                    }
-
-                    // Check if the values aren't fucked with
-                    if ($_POST['birthday_year'] > 0
-                        && (
-                            $_POST['birthday_day'] < 1
-                            || $_POST['birthday_month'] < 1
-                        )
-                    ) {
-                        $renderData['page']['message'] = 'Only setting a year is disallowed.';
-                        $renderData['page']['success'] = 0;
-                        break;
-                    }
-
-                    $birthdate = implode(
-                        '-',
-                        [$_POST['birthday_year'], $_POST['birthday_month'], $_POST['birthday_day']]
-                    );
-
-                    DB::table('users')
-                        ->where('user_id', $currentUser->id)
-                        ->update([
-                            'user_birthday' => $birthdate,
-                        ]);
-                }
-                break;
-
-            // Site Options
-            case 'options':
-                // Get profile fields and create storage var
-                $fields = Users::getOptionFields();
-
-                // Delete all option fields for this user
-                DB::table('user_optionfields')
-                    ->where('user_id', $currentUser->id)
-                    ->delete();
-
-                // Go over each field
-                foreach ($fields as $field) {
-                    // Make sure the user has sufficient permissions to complete this action
-                    if (!$currentUser->permission(constant('Sakura\Perms\Site::' . $field['option_permission']))) {
-                        continue;
-                    }
-
-                    if (isset($_POST['option_' . $field['option_id']])
-                        && !empty($_POST['option_' . $field['option_id']])) {
-                        DB::table('user_optionfields')
-                            ->insert([
-                                'user_id' => $currentUser->id,
-                                'field_name' => $field['option_id'],
-                                'field_value' => $_POST['option_' . $field['option_id']],
-                            ]);
-                    }
-                }
-
-                // Set render data
-                $renderData['page'] = [
-                    'redirect' => $redirect,
-                    'message' => 'Changed your options!',
-                    'success' => 1,
-                ];
-                break;
-
             // Usertitle
             case 'usertitle':
                 // Check permissions
@@ -799,7 +660,7 @@ if (ActiveUser::$user->id) {
                     'menu' => true,
                 ],
                 'profile' => [
-                    'title' => 'Edit Profile',
+                    'title' => 'Profile',
                     'description' => [
                         'These are the external account links etc.
                         on your profile, shouldn\'t need any additional explanation for this one.',
@@ -808,7 +669,7 @@ if (ActiveUser::$user->id) {
                     'menu' => true,
                 ],
                 'options' => [
-                    'title' => 'Site Options',
+                    'title' => 'Options',
                     'description' => [
                         'These are a few personalisation options for the site while you\'re logged in.',
                     ],
@@ -837,44 +698,7 @@ if (ActiveUser::$user->id) {
                     'menu' => true,
                 ],
             ],
-        ]/*,
-        'messages' => [
-        'title' => 'Messages',
-        'modes' => [
-        'inbox' => [
-        'title' => 'Inbox',
-        'description' => [
-        'The list of messages you\'ve received.',
         ],
-        'access' => $currentUser->permission(Site::USE_MESSAGES),
-        'menu' => true,
-        ],
-        'sent' => [
-        'title' => 'Sent',
-        'description' => [
-        'The list of messages you\'ve sent to other users.',
-        ],
-        'access' => $currentUser->permission(Site::USE_MESSAGES),
-        'menu' => true,
-        ],
-        'compose' => [
-        'title' => 'Compose',
-        'description' => [
-        'Write a new message.',
-        ],
-        'access' => $currentUser->permission(Site::SEND_MESSAGES),
-        'menu' => true,
-        ],
-        'read' => [
-        'title' => 'Read',
-        'description' => [
-        'Read a message.',
-        ],
-        'access' => $currentUser->permission(Site::USE_MESSAGES),
-        'menu' => false,
-        ],
-        ],
-        ]*/,
         'notifications' => [
             'title' => 'Notifications',
             'modes' => [
@@ -949,7 +773,7 @@ if (ActiveUser::$user->id) {
             'title' => 'Account',
             'modes' => [
                 'email' => [
-                    'title' => 'E-mail Address',
+                    'title' => 'E-mail address',
                     'description' => [
                         'You e-mail address is used for password recovery and stuff like that, we won\'t spam you ;).',
                     ],
@@ -966,7 +790,7 @@ if (ActiveUser::$user->id) {
                     'menu' => true,
                 ],
                 'usertitle' => [
-                    'title' => 'Usertitle',
+                    'title' => 'Title',
                     'description' => [
                         'That little piece of text displayed under your username on your profile.',
                     ],
@@ -1011,7 +835,7 @@ if (ActiveUser::$user->id) {
                     'menu' => true,
                 ],
                 'deactivate' => [
-                    'title' => 'Deactivate Account',
+                    'title' => 'Deactivate',
                     'description' => [
                         'You can deactivate your account here if you want to leave :(.',
                     ],
@@ -1069,39 +893,6 @@ if (ActiveUser::$user->id) {
 
     // Section specific
     switch ($category . '.' . $mode) {
-        // Profile
-        case 'general.profile':
-            $renderData['profile'] = [
-                'fields' => Users::getProfileFields(),
-                'months' => [
-                    1 => 'January',
-                    2 => 'February',
-                    3 => 'March',
-                    4 => 'April',
-                    5 => 'May',
-                    6 => 'June',
-                    7 => 'July',
-                    8 => 'August',
-                    9 => 'September',
-                    10 => 'October',
-                    11 => 'November',
-                    12 => 'December',
-                ],
-            ];
-            break;
-
-        // Options
-        case 'general.options':
-            $renderData['options'] = [
-                'fields' => Users::getOptionFields(),
-            ];
-            break;
-
-        // PM inbox
-        case 'messages.inbox':
-            $renderData['messages'] = [];
-            break;
-
         // Avatar and background sizes
         case 'appearance.avatar':
         case 'appearance.background':
@@ -1112,7 +903,7 @@ if (ActiveUser::$user->id) {
                 'min_width' => Config::get($mode . '_min_width'),
                 'min_height' => Config::get($mode . '_min_height'),
                 'max_size' => Config::get($mode . '_max_fsize'),
-                'max_size_view' => Utils::getByteSymbol(Config::get($mode . '_max_fsize')),
+                'max_size_view' => byte_symbol(Config::get($mode . '_max_fsize')),
             ];
             break;
 

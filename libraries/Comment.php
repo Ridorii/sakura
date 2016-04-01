@@ -104,7 +104,7 @@ class Comment
     public function parsed()
     {
         if (!$this->parsedCache) {
-            $this->parsedCache = BBcode::parseEmoticons(Utils::cleanString($this->text));
+            $this->parsedCache = BBcode::parseEmoticons(clean_string($this->text));
         }
 
         return $this->parsedCache;

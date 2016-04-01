@@ -96,7 +96,7 @@
                                         <li class="settings"><a title="Change your settings" href="{{ urls.format('SETTINGS_INDEX') }}">Settings</a></li>
                                     {% else %}
                                         <li class="{% if user.checkFriends(profile.id) == 2 %}mutualFriend{% elseif user.checkFriends(profile.id) == 1 %}pendingFriend{% else %}addFriend{% endif %}"><a href="{% if user.checkFriends(profile.id) == 0 %}{{ urls.format('FRIEND_ADD', [profile.id, session_id(), date().timestamp, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [profile.id, session_id(), date().timestamp, sakura.currentPage]) }}{% endif %}">{% if user.checkFriends(profile.id) == 0 %}Add friend{% else %}Friends{% endif %}</a></li>
-                                        <li class="report"><a href="{{ urls.format('USER_REPORT', [profile.id]) }}">Report</a></li>
+                                        <li class="report"><a href="{{ route('user.report', profile.id) }}">Report</a></li>
                                     {% endif %}
                                 </ul>
                             </div>

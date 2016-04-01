@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', 20160331);
+define('SAKURA_VERSION', 20160401);
 
 // Define Sakura Path
 define('ROOT', __DIR__ . '/');
@@ -30,32 +30,17 @@ if (version_compare(phpversion(), '7.0.0', '<')) {
 
 // Check if the composer autoloader exists
 if (!file_exists(ROOT . 'vendor/autoload.php')) {
-    throw new \Exception('Autoloader not found, did you run composer?');
+    throw new \Exception('Autoloader not found, did you run composer install?');
 }
 
 // Require composer libraries
 require_once ROOT . 'vendor/autoload.php';
 
-// Setup the autoloader
-spl_autoload_register(function ($className) {
-    // Replace \ with /
-    $className = str_replace('\\', '/', $className);
-
-    // Create a throwaway count variable
-    $i = 1;
-
-    // Replace the sakura namespace with the libraries directory
-    $className = str_replace('Sakura/', 'libraries/', $className, $i);
-
-    // Require the file
-    require_once ROOT . $className . '.php';
-});
-
-// Set Error handler
-set_error_handler(['Sakura\Utils', 'errorHandler']);
-
 // Load the local configuration
 Config::init(ROOT . 'config/config.ini');
+
+// Set Error handler
+set_error_handler('error_handler');
 
 // Change error reporting according to the dev configuration
 error_reporting(Config::local('dev', 'show_errors') ? -1 : 0);
@@ -110,12 +95,9 @@ ActiveUser::init(
 // Create the Urls object
 $urls = new Urls();
 
-// Prepare the name of the template to load
-$templateName = Config::get('site_style');
-
 if (!defined('SAKURA_NO_TPL')) {
     // Start templating engine
-    Template::set($templateName);
+    Template::set(Config::get('site_style'));
 
     // Set base page rendering data
     Template::vars([
@@ -127,8 +109,6 @@ if (!defined('SAKURA_NO_TPL')) {
             'dev' => [
                 'showChangelog' => Config::local('dev', 'show_changelog'),
             ],
-
-            'resources' => Config::get('content_path') . '/data/' . $templateName,
 
             'currentPage' => $_SERVER['REQUEST_URI'] ?? null,
             'referrer' => $_SERVER['HTTP_REFERER'] ?? null,

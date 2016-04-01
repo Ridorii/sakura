@@ -18,8 +18,6 @@ use Sakura\Router;
 use Sakura\Session;
 use Sakura\Template;
 use Sakura\User;
-use Sakura\Users;
-use Sakura\Utils;
 
 /**
  * Authentication controllers.
@@ -125,7 +123,7 @@ class AuthController extends Controller
         }
 
         // Get account data
-        $user = User::construct(Utils::cleanString($username, true, true));
+        $user = User::construct(clean_string($username, true, true));
 
         // Check if the user that's trying to log in actually exists
         if ($user->id === 0) {
@@ -304,11 +302,12 @@ class AuthController extends Controller
         }
 
         // Attempt to get account data
-        $user = User::construct(Utils::cleanString($username, true, true));
+        $user = User::construct(clean_string($username, true, true));
 
         // Check if the username already exists
         if ($user && $user->id !== 0) {
-            $message = "{$user->username} is already a member here! If this is you please use the password reset form instead of making a new account.";
+            $message = "{$user->username} is already a member here!"
+                . " If this is you please use the password reset form instead of making a new account.";
 
             Template::vars(['page' => compact('success', 'redirect', 'message')]);
 
@@ -343,7 +342,7 @@ class AuthController extends Controller
         }
 
         // Check the MX record of the email
-        if (!Utils::checkMXRecord($email)) {
+        if (!check_mx_record($email)) {
             $message = 'No valid MX-Record found on the e-mail address you supplied.';
 
             Template::vars(['page' => compact('success', 'redirect', 'message')]);
@@ -364,7 +363,7 @@ class AuthController extends Controller
         }
 
         // Check password entropy
-        if (Utils::pwdEntropy($password) < Config::get('min_entropy')) {
+        if (password_entropy($password) < Config::get('min_entropy')) {
             $message = 'Your password is too weak, try adding some special characters.';
 
             Template::vars(['page' => compact('success', 'redirect', 'message')]);
@@ -382,7 +381,7 @@ class AuthController extends Controller
         // Check if we require e-mail activation
         if ($requireActive) {
             // Send activation e-mail to user
-            Users::sendActivationMail($user->id);
+            $this->sendActivationMail($user);
         }
 
         // Return true with a specific message if needed
@@ -502,8 +501,8 @@ class AuthController extends Controller
         }
 
         // Grab forms
-        $username = isset($_POST['username']) ? Utils::cleanString($_POST['username'], true) : null;
-        $email = isset($_POST['email']) ? Utils::cleanString($_POST['email'], true) : null;
+        $username = isset($_POST['username']) ? clean_string($_POST['username'], true) : null;
+        $email = isset($_POST['email']) ? clean_string($_POST['email'], true) : null;
 
         // Do database request
         $getUser = DB::table('users')
@@ -533,7 +532,7 @@ class AuthController extends Controller
         }
 
         // Send activation e-mail to user
-        Users::sendActivationMail($user->id);
+        $this->sendActivationMail($user);
 
         $success = 1;
         $redirect = Router::route('auth.login');
@@ -587,8 +586,8 @@ class AuthController extends Controller
         $userId = isset($_POST['user']) ? $_POST['user'] : 0;
         $key = isset($_POST['key']) ? $_POST['key'] : "";
         $password = isset($_POST['password']) ? $_POST['password'] : "";
-        $userName = isset($_POST['username']) ? Utils::cleanString($_POST['username'], true) : "";
-        $email = isset($_POST['email']) ? Utils::cleanString($_POST['email'], true) : null;
+        $userName = isset($_POST['username']) ? clean_string($_POST['username'], true) : "";
+        $email = isset($_POST['email']) ? clean_string($_POST['email'], true) : null;
 
         // Create user object
         $user = User::construct($userId ? $userId : $userName);
@@ -613,7 +612,7 @@ class AuthController extends Controller
 
         if ($key && $password) {
             // Check password entropy
-            if (Utils::pwdEntropy($password) < Config::get('min_entropy')) {
+            if (password_entropy($password) < Config::get('min_entropy')) {
                 $message = "Your password doesn't meet the strength requirements!";
 
                 Template::vars(['page' => compact('success', 'redirect', 'message')]);
@@ -650,8 +649,8 @@ class AuthController extends Controller
             $message = "Changed your password! You may now log in.";
             $redirect = Router::route('auth.login');
         } else {
-            // Send e-mail
-            Users::sendPasswordForgot($user->id, $user->email);
+            // Send the e-mail
+            $this->sendPasswordMail($user);
 
             $success = 1;
             $message = "Sent the e-mail, keep an eye on your spam folder as well!";
@@ -661,5 +660,73 @@ class AuthController extends Controller
         Template::vars(['page' => compact('success', 'redirect', 'message')]);
 
         return Template::render('global/information');
+    }
+
+    /**
+     * Send the activation e-mail
+     *
+     * @param User $user
+     */
+    private function sendActivationMail($user)
+    {
+        // Generate activation key
+        $activate = ActionCode::generate('ACTIVATE', $user->id);
+
+        $siteName = Config::get('sitename');
+        $baseUrl = "http://" . Config::get('url_main');
+        $activateLink = Router::route('auth.activate') . "?u={$user->id}&k={$activate}";
+        $profileLink = Router::route('user.profile', $user->id);
+        $signature = Config::get('mail_signature');
+
+        // Build the e-mail
+        $message = "Welcome to {$siteName}!\r\n\r\n"
+            . "Please keep this e-mail for your records. Your account intormation is as follows:\r\n\r\n"
+            . "----------------------------\r\n\r\n"
+            . "Username: {$user->username}\r\n\r\n"
+            . "Your profile: {$baseUrl}{$profileLink}\r\n\r\n"
+            . "----------------------------\r\n\r\n"
+            . "Please visit the following link in order to activate your account:\r\n\r\n"
+            . "{$baseUrl}{$activateLink}\r\n\r\n"
+            . "Your password has been securely stored in our database and cannot be retrieved. "
+            . "In the event that it is forgotten,"
+            . " you will be able to reset it using the email address associated with your account.\r\n\r\n"
+            . "Thank you for registering.\r\n\r\n"
+            . "--\r\n\r\nThanks\r\n\r\n{$signature}";
+
+        // Send the message
+        send_mail([$user->email => $user->username], "{$siteName} activation mail", $message);
+    }
+
+    /**
+     * Send the activation e-mail
+     *
+     * @param User $user
+     */
+    private function sendPasswordMail($user)
+    {
+        // Generate the verification key
+        $verk = ActionCode::generate('LOST_PASS', $user->id);
+
+        $siteName = Config::get('sitename');
+        $baseUrl = "http://" . Config::get('url_main');
+        $reactivateLink = Router::route('auth.resetpassword') . "?u={$user->id}&k={$verk}";
+        $signature = Config::get('mail_signature');
+
+        // Build the e-mail
+        $message = "Hello {$user->username},\r\n\r\n"
+            . "You are receiving this notification because you have (or someone pretending to be you has)"
+            . " requested a password reset link to be sent for your account on \"{$siteName}\"."
+            . " If you did not request this notification then please ignore it,"
+            . " if you keep receiving it please contact the site administrator.\r\n\r\n"
+            . "To use this password reset key you need to go to a special page."
+            . " To do this click the link provided below.\r\n\r\n"
+            . "{$baseUrl}{$reactivateLink}\r\n\r\n"
+            . "If successful you should be able to change your password here.\r\n\r\n"
+            . "You can of course change this password yourself via the settings page."
+            . " If you have any difficulties please contact the site administrator.\r\n\r\n"
+            . "--\r\n\r\nThanks\r\n\r\n{$signature}";
+
+        // Send the message
+        send_mail([$user->email => $user->username], "{$siteName} password restoration", $message);
     }
 }

@@ -98,7 +98,7 @@ class Session
             ->insert([
                 'user_id' => $this->userId,
                 'user_ip' => Net::pton(Net::ip()),
-                'user_agent' => Utils::cleanString(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'No user agent header.'),
+                'user_agent' => clean_string(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'No user agent header.'),
                 'session_key' => $session,
                 'session_start' => time(),
                 'session_expire' => time() + 604800,

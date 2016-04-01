@@ -7,6 +7,10 @@
 
 namespace Sakura\Controllers\Settings;
 
+use Sakura\ActiveUser;
+use Sakura\DB;
+use Sakura\Template;
+
 /**
  * Advanced settings.
  *
@@ -17,7 +21,13 @@ class AdvancedController extends Controller
 {
     public function sessions()
     {
-        return $this->go('advanced.sessions');
+        $sessions = DB::table('sessions')
+            ->where('user_id', ActiveUser::$user->id)
+            ->get();
+
+        Template::vars(compact('sessions'));
+
+        return Template::render('settings/advanced/sessions');
     }
 
     public function deactivate()

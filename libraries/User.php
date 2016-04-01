@@ -254,8 +254,8 @@ class User
     public static function create($username, $password, $email, $ranks = [2])
     {
         // Set a few variables
-        $usernameClean = Utils::cleanString($username, true);
-        $emailClean = Utils::cleanString($email, true);
+        $usernameClean = clean_string($username, true);
+        $emailClean = clean_string($email, true);
         $password = Hashing::createHash($password);
 
         // Insert the user into the database and get the id
@@ -273,7 +273,7 @@ class User
                 'last_ip' => Net::pton(Net::ip()),
                 'user_registered' => time(),
                 'user_last_online' => 0,
-                'user_country' => Utils::getCountryCode(),
+                'user_country' => get_country_code(),
             ]);
 
         // Create a user object
@@ -299,7 +299,7 @@ class User
         // Get the user database row
         $userRow = DB::table('users')
             ->where('user_id', $userId)
-            ->orWhere('username_clean', Utils::cleanString($userId, true, true))
+            ->orWhere('username_clean', clean_string($userId, true, true))
             ->get();
 
         // Populate the variables
@@ -401,7 +401,7 @@ class User
      */
     public function country($long = false)
     {
-        return $long ? Utils::getCountryName($this->country) : $this->country;
+        return $long ? get_country_name($this->country) : $this->country;
     }
 
     /**
@@ -793,7 +793,7 @@ class User
         // Check if profile fields aren't fake
         foreach ($profileFields as $field) {
             // Completely strip all special characters from the field name
-            $fieldName = Utils::cleanString($field->field_name, true, true);
+            $fieldName = clean_string($field->field_name, true, true);
 
             // Check if the user has the current field set otherwise continue
             if (!array_key_exists($fieldName, $profileValues)) {
@@ -1087,7 +1087,7 @@ class User
     public function setUsername($username)
     {
         // Create a cleaned version
-        $username_clean = Utils::cleanString($username, true);
+        $username_clean = clean_string($username, true);
 
         // Check if the username is too short
         if (strlen($username_clean) < Config::get('username_min_length')) {
@@ -1210,7 +1210,7 @@ class User
         }
 
         // Check password entropy
-        if (Utils::pwdEntropy($new) < Config::get('min_entropy')) {
+        if (password_entropy($new) < Config::get('min_entropy')) {
             return [0, 'PASS_TOO_SHIT'];
         }
 

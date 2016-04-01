@@ -1277,12 +1277,12 @@ a.default:active {
     }
 
     .content .content-right {
-        width: 100%;
+        width: 100% !important;
         min-height: 0;
     }
 
     .content .content-left {
-        width: 100%;
+        width: 100% !important;
         min-height: 0;
         border-top: 1px solid #9475B2;
     }
@@ -1558,6 +1558,13 @@ a.default:active {
     margin-left: 2em;
     list-style: square;
 }
+.settings .content-left {
+    width: 850px;
+}
+.settings .content-right {
+    width: 174px;
+    text-align: right;
+}
 .settings .right-menu-nav > div {
     background: #C2AFFE;
     padding: 4px;
@@ -1573,7 +1580,7 @@ a.default:active {
     line-height: 25px;
     color: #22E;
     text-decoration: none;
-    padding-left: 10px;
+    padding: 0 10px;
 }
 
 .settings .right-menu-nav > a:hover {

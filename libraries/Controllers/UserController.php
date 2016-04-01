@@ -15,7 +15,6 @@ use Sakura\Rank;
 use Sakura\Router;
 use Sakura\Template;
 use Sakura\User;
-use Sakura\Utils;
 
 /**
  * Everything that is just for serving user data.
@@ -41,7 +40,7 @@ class UserController extends Controller
         if ($profile->id == 0) {
             // Fetch from username_history
             $check = DB::table('username_history')
-                ->where('username_old_clean', Utils::cleanString($id, true, true))
+                ->where('username_old_clean', clean_string($id, true, true))
                 ->orderBy('change_id', 'desc')
                 ->get();
 
@@ -94,7 +93,7 @@ class UserController extends Controller
         }
 
         // Get the active rank
-        $rank = array_key_exists($rank, $ranks) ? $rank : ($rank ? 0 : 2);
+        $rank = array_key_exists($rank, $ranks) ? $rank : ($rank ? 0 : intval(Config::get('default_rank_id')));
 
         // Get members per page
         $membersPerPage = Config::get('members_per_page');
@@ -104,5 +103,10 @@ class UserController extends Controller
 
         // Render the template
         return Template::render('user/members');
+    }
+
+    public function report($id = 0)
+    {
+        return Template::render('user/report');
     }
 }

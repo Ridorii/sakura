@@ -1,0 +1,33 @@
+{% extends 'settings/general/master.twig' %}
+
+{% set mode = 'Options' %}
+
+{% block description %}
+    <p>These are a few personalisation options for the site while you're logged in.</p>
+{% endblock %}
+
+{% block settingsContent %}
+    {% if fields %}
+        <form enctype="multipart/form-data" method="post" action="{{ route('settings.general.options') }}">
+            {% for field in fields %}
+                <div class="profile-field">
+                    <div>
+                        <h2>{{ field.name }}</h2>
+                        <div style="font-size: .8em; line-height: 110%;">
+                            {{ field.description }}
+                        </div>
+                    </div>
+                    <div style="padding: 8px 0;">
+                        <input type="{{ field.type }}" name="option_{{ field.id }}" class="inputStyling"{% if user.optionFields[field.id] %}{% if field.type == 'checkbox' and user.optionFields[field.id] %} checked="checked" value="option_{{ field.id }}"{% else %} value="{{ user.optionFields[field.id] }}"{% endif %}{% endif %} />
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="profile-save">
+                <button name="session" value="{{ session_id() }}" class="inputStyling">Save</button>
+                <button type="reset" class="inputStyling">Reset</button>
+            </div>
+        </form>
+    {% else %}
+        <h1 class="stylised" style="margin: 2em auto; text-align: center;">There are currently no changeable options.</h1>
+    {% endif %}
+{% endblock %}

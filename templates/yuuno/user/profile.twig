@@ -115,7 +115,7 @@
                         {% else %}
                         {% if user.isFriends(profile.id) != 0 %}<a class="fa fa-{% if user.isFriends(profile.id) == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
                         <a class="fa fa-user-{% if user.isFriends(profile.id) == 0 %}plus{% else %}times{% endif %}" title="{% if user.isFriends(profile.id) == 0 %}Add {{ profile.username }} as a friend{% else %}Remove friend{% endif %}" href="javascript:void(0);" onclick="{% if user.isFriends(profile.id) == 0 %}addFriend({{ profile.id }}){% else %}removeFriend({{ profile.id }}){% endif %}"></a>
-                        {#<a class="fa fa-exclamation-circle" title="Report {{ profile.username }}" href="{{ urls.format('USER_REPORT', [profile.id]) }}"></a>#}
+                        <a class="fa fa-exclamation-circle" title="Report {{ profile.username }}" href="{{ route('user.report', profile.id) }}"></a>
                         {% endif %}
                         {% if user.permission(constant('Sakura\\Perms\\Manage::CAN_RESTRICT_USERS'), constant('Sakura\\Perms::MANAGE')) %}
                             <a class="fa fa-trash" title="Restrict {{ profile.username }}" href="?restrict={{ session_id() }}"></a>

@@ -11,6 +11,7 @@ use Sakura\ActiveUser;
 use Sakura\Controllers\Controller as BaseController;
 use Sakura\Perms\Site;
 use Sakura\Router;
+use Sakura\Template;
 use Sakura\Urls;
 
 /**
@@ -26,6 +27,10 @@ class Controller extends BaseController
     public function __construct()
     {
         $this->urls = new Urls();
+
+        $navigation = $this->navigation();
+
+        Template::vars(compact('navigation'));
     }
 
     public function go($location)

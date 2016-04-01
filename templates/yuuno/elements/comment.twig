@@ -8,7 +8,7 @@
                                 {% if comment.userData.id == user.id %}
                                     <li><a href="javascript:void(0);" onclick="commentDelete({{ comment.id }});" class="clean fa fa-trash-o" title="Delete"></a></li>
                                 {% else %}
-                                    <li><a href="{{ urls.format('USER_REPORT', [comment.userData.id]) }}" class="clean fa fa-exclamation-circle" title="Report"></a></li>
+                                    <li><a href="{{ route('user.report', comment.userData.id) }}" class="clean fa fa-exclamation-circle" title="Report"></a></li>
                                 {% endif %}
                                 <li><a href="javascript:void(0);" onclick="commentReply({{ comment.id }}, '{{ session_id() }}', '{{ route('file.avatar', user.id) }}');" class="clean fa fa-reply" title="Reply" id="comment-action-reply-{{ comment.id }}"></a></li>
                                 <li class="shown voting like"><a href="javascript:void(0);" onclick="commentVote({{ comment.id }}, 1);" class="clean"><span class="fa fa-thumbs-up"></span> <span id="comment-{{ comment.id }}-likes">{{ comment.upvotes }}</span></a></li>

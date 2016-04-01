@@ -1,0 +1,40 @@
+{% extends 'settings/general/master.twig' %}
+
+{% set friends = user.friends(-1)|batch(12) %}
+
+{% set paginationPages = friends %}
+{% set paginationUrl %}{{ route('settings.friends.requests') }}{% endset %}
+
+{% set mode = 'Requests' %}
+
+{% block description %}
+    <p>Handle friend requests.</p>
+{% endblock %}
+
+{% block settingsContent %}
+    {% if friends|length %}
+        <div class="friends-list">
+            {% for friend in friends[get.page|default(1) - 1] %}
+                <div class="friend-container" id="friend-{{ friend.id }}">
+                    <a class="friends-list-data clean" href="{{ route('user.profile', friend.id) }}">
+                        <img src="{{ route('file.avatar', friend.id) }}" alt="{{ friend.username }}" class="friends-list-avatar default-avatar-setting" style="width: 150px; height: 150px;" />
+                        <div class="friends-list-name" style="color: {{ friend.colour }};">{{ friend.username }}</div>
+                    </a>
+                    <div class="friends-list-actions">
+                        <a class="add fa fa-check" title="Add friend" href="javascript:void(0);" onclick="addFriend({{ friend.id }});"></a>
+                        <a class="remove fa fa-remove" title="Remove friend" href="javascript:void(0);" onclick="removeFriend({{ friend.id }});"></a>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="clear"></div>
+        </div>
+        {% if friends|length > 1 %}
+            <div>
+                {% include 'elements/pagination.twig' %}
+            </div>
+        {% endif %}
+    {% else %}
+        <h1 class="stylised" style="margin: 2em auto; text-align: center;">You don't have any pending requests!</h1>
+    {% endif %}
+{% endblock %}

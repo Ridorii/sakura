@@ -7,6 +7,8 @@
 
 namespace Sakura\Controllers\Settings;
 
+use Sakura\Template;
+
 /**
  * Friends settings.
  *
@@ -17,11 +19,11 @@ class FriendsController extends Controller
 {
     public function listing()
     {
-        return $this->go('friends.listing');
+        return Template::render('settings/friends/listing');
     }
 
     public function requests()
     {
-        return $this->go('friends.requests');
+        return Template::render('settings/friends/requests');
     }
 }

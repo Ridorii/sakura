@@ -7,6 +7,8 @@
 
 namespace Sakura\Controllers\Settings;
 
+use Sakura\Template;
+
 /**
  * Notification settings.
  *
@@ -17,6 +19,6 @@ class NotificationsController extends Controller
 {
     public function history()
     {
-        return $this->go('notifications.history');
+        return Template::render('settings/notifications/history');
     }
 }

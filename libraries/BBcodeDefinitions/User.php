@@ -11,7 +11,6 @@ use JBBCode\CodeDefinition;
 use JBBCode\ElementNode;
 use Sakura\Router;
 use Sakura\User as SakuraUser;
-use Sakura\Utils;
 
 /**
  * Username BBcode for JBBCode.
@@ -44,7 +43,7 @@ class User extends CodeDefinition
         $content = "";
 
         foreach ($el->getChildren() as $child) {
-            $content .= Utils::cleanString($child->getAsText(), true);
+            $content .= clean_string($child->getAsText(), true);
         }
 
         $user = SakuraUser::construct($content);
