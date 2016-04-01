@@ -35,11 +35,11 @@
         <link rel="manifest" href="/manifest.json" />
 {{ block('meta') }}
         <!-- CSS -->
-        <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/yuuno.css" />
+        <link rel="stylesheet" type="text/css" href="{{ resource('css/yuuno.css') }}" />
 {{ block('css') }}
         <!-- JS -->
         <script type="text/javascript" src="{{ config('content_path') }}/scripts/sakura.js"></script>
-        <script type="text/javascript" src="{{ sakura.resources }}/js/yuuno.js"></script>
+        <script type="text/javascript" src="{{ resource('js/yuuno.js') }}"></script>
         <script type="text/javascript">
             // Create an object so we can access certain settings from remote JavaScript files
             var sakuraVars = {

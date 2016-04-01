@@ -33,14 +33,21 @@ class Template
      *
      * @var Twig_Environment
      */
-    private static $template;
+    private static $engine;
 
     /**
      * The template name.
      *
      * @var string
      */
-    private static $templateName;
+    public static $name;
+
+    /**
+     * The path to the client side resources
+     *
+     * @var string
+     */
+    public static $resources;
 
     /**
      * The file extension used by template files
@@ -55,7 +62,10 @@ class Template
     public static function set($name)
     {
         // Set variables
-        self::$templateName = $name;
+        self::$name = $name;
+
+        // Set reources path
+        self::$resources = Config::get('content_path') . '/data/' . self::$name;
 
         // Reinitialise
         self::init();
@@ -67,7 +77,7 @@ class Template
     public static function init()
     {
         // Initialise Twig Filesystem Loader
-        $twigLoader = new Twig_Loader_Filesystem(ROOT . 'templates/' . self::$templateName);
+        $twigLoader = new Twig_Loader_Filesystem(ROOT . 'templates/' . self::$name);
 
         // Environment variable
         $twigEnv = [];
@@ -78,26 +88,31 @@ class Template
         }
 
         // And now actually initialise the templating engine
-        self::$template = new Twig_Environment($twigLoader, $twigEnv);
+        self::$engine = new Twig_Environment($twigLoader, $twigEnv);
 
         // Load String template loader
-        self::$template->addExtension(new Twig_Extension_StringLoader());
+        self::$engine->addExtension(new Twig_Extension_StringLoader());
 
         // Add route function
-        self::$template->addFunction(new Twig_SimpleFunction('route', function ($name, $args = null) {
+        self::$engine->addFunction(new Twig_SimpleFunction('route', function ($name, $args = null) {
             return Router::route($name, $args);
         }));
 
         // Add config function
-        self::$template->addFunction(new Twig_SimpleFunction('config', function ($name) {
+        self::$engine->addFunction(new Twig_SimpleFunction('config', function ($name) {
             return Config::get($name);
         }));
 
+        // Add resource function
+        self::$engine->addFunction(new Twig_SimpleFunction('resource', function ($path = "") {
+            return self::$resources . "/{$path}";
+        }));
+
         // Method of getting the currently active session id
-        self::$template->addFunction(new Twig_SimpleFunction('session_id', 'session_id'));
+        self::$engine->addFunction(new Twig_SimpleFunction('session_id', 'session_id'));
 
         // json_decode filter (why doesn't this exist to begin with?)
-        self::$template->addFilter(new Twig_SimpleFilter('json_decode', 'json_decode'));
+        self::$engine->addFilter(new Twig_SimpleFilter('json_decode', 'json_decode'));
     }
 
     /**
@@ -120,7 +135,7 @@ class Template
     public static function render($file)
     {
         try {
-            return self::$template->render($file . self::FILE_EXT, self::$vars);
+            return self::$engine->render($file . self::FILE_EXT, self::$vars);
         } catch (\Exception $e) {
             return trigger_error($e->getMessage(), E_USER_ERROR);
         }

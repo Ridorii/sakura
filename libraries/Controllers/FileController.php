@@ -10,6 +10,7 @@ namespace Sakura\Controllers;
 use Sakura\Config;
 use Sakura\File;
 use Sakura\Perms\Site;
+use Sakura\Template;
 use Sakura\User;
 
 /**
@@ -44,11 +45,9 @@ class FileController extends Controller
      */
     public function avatar($id = 0)
     {
-        global $templateName;
-
         $noAvatar = ROOT . str_replace(
             '{{ TPL }}',
-            $templateName,
+            Template::$name,
             Config::get('no_avatar_img')
         );
         $none = [
@@ -59,7 +58,7 @@ class FileController extends Controller
 
         $deactivePath = ROOT . str_replace(
             '{{ TPL }}',
-            $templateName,
+            Template::$name,
             Config::get('deactivated_avatar_img')
         );
         $deactive = [
@@ -70,7 +69,7 @@ class FileController extends Controller
 
         $bannedPath = ROOT . str_replace(
             '{{ TPL }}',
-            $templateName,
+            Template::$name,
             Config::get('banned_avatar_img')
         );
         $banned = [
@@ -109,8 +108,6 @@ class FileController extends Controller
      */
     public function background($id = 0)
     {
-        global $templateName;
-
         $noBg = ROOT . Config::get('no_background_img');
         $none = [
             'name' => basename($noBg),
@@ -146,8 +143,6 @@ class FileController extends Controller
      */
     public function header($id = 0)
     {
-        global $templateName;
-
         $noHeader = ROOT . Config::get('no_header_img');
         $none = [
             'name' => basename($noHeader),
