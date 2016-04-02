@@ -99,7 +99,11 @@ class Template
         }));
 
         // Add config function
-        self::$engine->addFunction(new Twig_SimpleFunction('config', function ($name) {
+        self::$engine->addFunction(new Twig_SimpleFunction('config', function ($name, $local = false) {
+            if ($local) {
+                $name = explode('.', $name);
+                return Config::local($name[0], $name[1]);
+            }
             return Config::get($name);
         }));
 

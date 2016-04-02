@@ -55,7 +55,7 @@
                 "minUserLen":       {{ config('username_min_length') }},
                 "maxUserLen":       {{ config('username_max_length') }},
                 "minPwdEntropy":    {{ config('min_entropy') }},
-                "checkLogin":       {{ session.checkLogin ? 'true' : 'false' }}
+                "checkLogin":       {{ user.isActive ? 'true' : 'false' }}
             };
 
             // Set cookie prefix and path
@@ -86,14 +86,14 @@
                         <a class="menu-item fa-commenting" href="{{ route('main.infopage', 'chat') }}" title="Chat"></a>
                         <a class="menu-item fa-list" href="{{ route('forums.index') }}" title="Forums"></a>
                         <a class="menu-item fa-search" href="{{ route('main.search') }}" title="Search"></a>
-                        {% if session.checkLogin %}
+                        {% if user.isActive %}
                             <a class="menu-item fa-users" href="{{ route('members.index') }}" title="Members"></a>
                             <a class="menu-item fa-heart" href="{{ route('premium.index') }}" title="Support us"></a>
                         {% endif %}
                     </div>
                     <div class="menu-ucp" id="navMenuUser">
                         <!-- User menu, displayed on right side of the bar. -->
-                        {% if session.checkLogin %}
+                        {% if user.isActive %}
                             <a class="menu-item avatar" href="{{ route('user.profile', user.id) }}" title="Logged in as {{ user.username }}" style="background-image: url('{{ route('file.avatar', user.id) }}'); width: auto; color: {{ user.colour }}; border-color: {{ user.colour }}; font-weight: 700;"></a>
                             {#<a class="menu-item fa-envelope" href="#" title="Messages"></a>#}
                             {% if user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
@@ -117,7 +117,7 @@
                 {% if profile is defined ? profile.background : (user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) and user.optionFields.profileBackgroundSiteWide and user.background) %}
                     <div id="userBackground" style="background-image: url('{{ route('file.background', (profile is defined ? profile : user).id) }}');"></div>
                 {% endif %}
-                {% if not session.checkLogin and sakura.currentPage != route('auth.login') %}
+                {% if not user.isActive and sakura.currentPage != route('auth.login') %}
                 <div class="headerLoginContainer">
                     <form method="post" action="{{ route('auth.login') }}" id="headerLoginForm">
                         <input type="hidden" name="redirect" value="{{ sakura.currentPage }}" />
@@ -173,7 +173,7 @@
             </div>
             <div class="footer">
                 <div class="ftsections">
-                    <div class="copycentre">Powered by <a href="https://github.com/flashwave/sakura/" target="_blank">Sakura</a>{% if sakura.dev.showChangelog %} <a href="https://sakura.flash.moe/#r{{ sakura.versionInfo.version }}" target="_blank">r{{ sakura.versionInfo.version }}</a>{% endif %} &copy; 2013-2016 <a href="http://flash.moe/" target="_blank">Flashwave</a></div>
+                    <div class="copycentre">Powered by <a href="https://github.com/flashwave/sakura/" target="_blank">Sakura</a>{% if config('dev.show_changelog', true) %} <a href="https://sakura.flash.moe/#r{{ constant('SAKURA_VERSION') }}" target="_blank">r{{ constant('SAKURA_VERSION') }}</a>{% endif %} &copy; 2013-2016 <a href="http://flash.moe/" target="_blank">Flashwave</a></div>
                     <ul class="ftsection">
                         <li class="fthead">General</li>
                         <li><a href="{{ route('main.index') }}">Home</a></li>
@@ -266,7 +266,7 @@
                 friendClient.start(HTTPMethods.POST);
             }
         </script>
-        {% if sakura.dev.showChangelog and stats %}
+        {% if config('dev.show_changelog', true) and stats %}
         <script type="text/javascript" src="https://sakura.flash.moe/?get=all&amp;limit=5&amp;variable=true"></script>
         <script type="text/javascript">
             // Column colours for actions
@@ -295,7 +295,7 @@
                     var _cllink = document.createElement('a');
                     _cllink.className = 'underline';
                     _cllink.target = '_blank';
-                    _cllink.href = 'https://sakura.flash.moe/#r{{ sakura.versionInfo.version }}';
+                    _cllink.href = 'https://sakura.flash.moe/#r{{ constant('SAKURA_VERSION') }}';
 
                     // Append everything
                     _cllink.appendChild(document.createTextNode('Changelog'));

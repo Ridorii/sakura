@@ -1,6 +1,6 @@
 <div id="comments">
     <div class="comment-input-section">
-        {% if session.checkLogin %}
+        {% if user.isActive %}
             <div class="comment">
                 <div class="comment-avatar" style="background-image: url('{{ route('file.avatar', user.id) }}');"></div>
                 <div class="comment-pointer"></div>

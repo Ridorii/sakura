@@ -55,7 +55,7 @@
                 "minUserLen":       {{ config('username_min_length') }},
                 "maxUserLen":       {{ config('username_max_length') }},
                 "minPwdEntropy":    {{ config('min_entropy') }},
-                "checkLogin":       {% if session.checkLogin %}true{% else %}false{% endif %}
+                "checkLogin":       {% if user.isActive %}true{% else %}false{% endif %}
 
             };
 
@@ -92,17 +92,17 @@
                     </ul>
                     <ul class="user-menu">
                         <li class="nav-usermenu">
-                            <a href="{% if session.checkLogin %}javascript:void(0);{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}">
+                            <a href="{% if user.isActive %}javascript:void(0);{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}">
                                 <div>
-                                    <div class="nav-username"{% if session.checkLogin %} style="color: {{ user.colour }};"{% endif %}>
-                                        {% if session.checkLogin %}{{ user.username }} <span class="nav-user-dropdown"></span>{% else %}Guest{% endif %}
+                                    <div class="nav-username"{% if user.isActive %} style="color: {{ user.colour }};"{% endif %}>
+                                        {% if user.isActive %}{{ user.username }} <span class="nav-user-dropdown"></span>{% else %}Guest{% endif %}
                                     </div>
                                     <div class="nav-userstats">
-                                        {% if session.checkLogin %}<span class="fa fa-envelope"></span> 0 / <span class="fa fa-user-plus"></span> 0 / <span class="fa fa-warning"></span> 0 / <span class="fa fa-reply"></span> 0{% else %}Please log in to proceed!{% endif %}
+                                        {% if user.isActive %}<span class="fa fa-envelope"></span> 0 / <span class="fa fa-user-plus"></span> 0 / <span class="fa fa-warning"></span> 0 / <span class="fa fa-reply"></span> 0{% else %}Please log in to proceed!{% endif %}
                                     </div>
                                 </div>
                             </a>
-                            {% if session.checkLogin %}
+                            {% if user.isActive %}
                                 <ul>
                                     <li><a href="{{ urls.format('USER_PROFILE', [user.id]) }}">My Profile</a></li>
                                     <li><a href="{{ urls.format('SETTING_CAT', ['messages']) }}">Private Messages</a></li>
@@ -112,7 +112,7 @@
                                 </ul>
                             {% endif %}
                         </li>
-                        <li><a href="{% if session.checkLogin %}{{ urls.format('USER_PROFILE', [user.id]) }}{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}"><img src="{{ config('content_path') }}/pixel.png" alt="{{ user.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}');" class="nav-avatar" /></a></li>
+                        <li><a href="{% if user.isActive %}{{ urls.format('USER_PROFILE', [user.id]) }}{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}"><img src="{{ config('content_path') }}/pixel.png" alt="{{ user.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}');" class="nav-avatar" /></a></li>
                     </ul>
                 </div>
 

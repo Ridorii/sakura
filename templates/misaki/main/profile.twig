@@ -87,7 +87,7 @@
                         </div>
                     </div>
                     {% endif %}
-                    {% if session.checkLogin %}
+                    {% if user.isActive %}
                         <div class="profilePlatform userActions">
                             <div class="inner">
                                 <ul class="actions">
@@ -104,7 +104,7 @@
                     {% endif %}
                     <div class="profilePlatform userAccounts">
                         <div class="inner">
-                            {% if session.checkLogin %}
+                            {% if user.isActive %}
                                 {% if profile.profileFields %}
                                     {% for name,field in profile.profileFields %}
                                     <div class="field">

@@ -87,7 +87,7 @@
                                 <div class="userdata">
                                     <div class="usertitle">{{ post.poster.title }}</div>
                                     <img src="{{ config('content_path') }}/images/tenshi.png" alt="Tenshi"{% if not post.poster.isPremium %} style="opacity: 0;"{% endif %} /> <img src="{{ config('content_path') }}/images/flags/{{ post.poster.country|lower }}.png" alt="{{ post.poster.country(true) }}" />{% if post.poster.id == (thread.posts|first).poster.id %} <img src="{{ config('content_path') }}/images/op.png" alt="OP" title="Original Poster" />{% endif %}
-                                    {% if session.checkLogin %}
+                                    {% if user.isActive %}
                                     <div class="actions">
                                         {% if (user.id == post.poster.id and forum.permission(constant('Sakura\\Perms\\Forum::EDIT_OWN'), user.id)) or forum.permission(constant('Sakura\\Perms\\Forum::EDIT_ANY'), user.id) %}
                                             <a class="fa fa-pencil-square-o" title="Edit this post" href="javascript:void(0);" onclick="editPost({{ post.id }});"></a>

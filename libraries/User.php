@@ -426,6 +426,16 @@ class User
     }
 
     /**
+     * Runs some checks to see if this user is activated.
+     *
+     * @return bool Are they activated?
+     */
+    public function isActive()
+    {
+        return $this->id !== 0 && !$this->permission(Site::DEACTIVATED);
+    }
+
+    /**
      * Get a few forum statistics.
      *
      * @return array Post and thread counts.

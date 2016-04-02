@@ -102,20 +102,11 @@ if (!defined('SAKURA_NO_TPL')) {
     // Set base page rendering data
     Template::vars([
         'sakura' => [
-            'versionInfo' => [
-                'version' => SAKURA_VERSION,
-            ],
-
-            'dev' => [
-                'showChangelog' => Config::local('dev', 'show_changelog'),
-            ],
-
             'currentPage' => $_SERVER['REQUEST_URI'] ?? null,
             'referrer' => $_SERVER['HTTP_REFERER'] ?? null,
         ],
 
         'session' => array_merge([
-            'checkLogin' => ActiveUser::$user->id && !ActiveUser::$user->permission(Perms\Site::DEACTIVATED),
             'sessionId' => ActiveUser::$session->sessionId,
         ], $_SESSION),
 

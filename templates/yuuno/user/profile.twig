@@ -108,7 +108,7 @@
                         {#<a class="fa fa-users" title="View {{ profile.username }}'s groups" href="#_groups" onclick="profileMode('groups');"></a>#}
                         <a class="fa fa-comments-o" title="View {{ profile.username }}'s profile comments" href="#_comments" onclick="profileMode('comments');"></a>
                     </div>
-                    {% if session.checkLogin %}
+                    {% if user.isActive %}
                     <div class="new-profile-actions">
                         {% if user.id == profile.id %}
                         <a class="fa fa-pencil-square-o" title="Edit your profile" href="{{ route('settings.general.profile') }}"></a>
@@ -162,7 +162,7 @@
                         </table>
                         <hr class="default" />
                         {% if profile.profileFields or user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
-                            {% if session.checkLogin %}
+                            {% if user.isActive %}
                                 <table style="width: 100%;">
                                 {% for name,field in profile.profileFields %}
                                     <tr>
