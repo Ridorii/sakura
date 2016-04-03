@@ -11,7 +11,7 @@ Router::filter('logoutCheck', function () {
     if (ActiveUser::$user->isActive()) {
         $message = "You must be logged out to do that!";
 
-        Template::vars(['page' => compact('message')]);
+        Template::vars(compact('message'));
 
         return Template::render('global/information');
     }
@@ -22,7 +22,7 @@ Router::filter('loginCheck', function () {
     if (!ActiveUser::$user->isActive()) {
         $message = "You must be logged in to do that!";
 
-        Template::vars(['page' => compact('message')]);
+        Template::vars(compact('message'));
 
         return Template::render('global/information');
     }
@@ -199,10 +199,15 @@ Router::group(['prefix' => 'settings', 'before' => 'loginCheck'], function () {
         });
 
         Router::get('/avatar', 'Settings.AppearanceController@avatar', 'settings.appearance.avatar');
+        Router::post('/avatar', 'Settings.AppearanceController@avatar', 'settings.appearance.avatar');
         Router::get('/background', 'Settings.AppearanceController@background', 'settings.appearance.background');
+        Router::post('/background', 'Settings.AppearanceController@background', 'settings.appearance.background');
         Router::get('/header', 'Settings.AppearanceController@header', 'settings.appearance.header');
+        Router::post('/header', 'Settings.AppearanceController@header', 'settings.appearance.header');
         Router::get('/userpage', 'Settings.AppearanceController@userpage', 'settings.appearance.userpage');
+        Router::post('/userpage', 'Settings.AppearanceController@userpage', 'settings.appearance.userpage');
         Router::get('/signature', 'Settings.AppearanceController@signature', 'settings.appearance.signature');
+        Router::post('/signature', 'Settings.AppearanceController@signature', 'settings.appearance.signature');
     });
 
     // Account section
@@ -213,10 +218,15 @@ Router::group(['prefix' => 'settings', 'before' => 'loginCheck'], function () {
         });
 
         Router::get('/email', 'Settings.AccountController@email', 'settings.account.email');
+        Router::post('/email', 'Settings.AccountController@email', 'settings.account.email');
         Router::get('/username', 'Settings.AccountController@username', 'settings.account.username');
+        Router::post('/username', 'Settings.AccountController@username', 'settings.account.username');
         Router::get('/title', 'Settings.AccountController@title', 'settings.account.title');
+        Router::post('/title', 'Settings.AccountController@title', 'settings.account.title');
         Router::get('/password', 'Settings.AccountController@password', 'settings.account.password');
+        Router::post('/password', 'Settings.AccountController@password', 'settings.account.password');
         Router::get('/ranks', 'Settings.AccountController@ranks', 'settings.account.ranks');
+        Router::post('/ranks', 'Settings.AccountController@ranks', 'settings.account.ranks');
     });
 
     // Advanced section
@@ -227,7 +237,9 @@ Router::group(['prefix' => 'settings', 'before' => 'loginCheck'], function () {
         });
 
         Router::get('/sessions', 'Settings.AdvancedController@sessions', 'settings.advanced.sessions');
+        Router::post('/sessions', 'Settings.AdvancedController@sessions', 'settings.advanced.sessions');
         Router::get('/deactivate', 'Settings.AdvancedController@deactivate', 'settings.advanced.deactivate');
+        Router::post('/deactivate', 'Settings.AdvancedController@deactivate', 'settings.advanced.deactivate');
     });
 });
 

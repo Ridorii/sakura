@@ -385,9 +385,6 @@ class ForumController extends Controller
                             break;
                         }
 
-                        // Set pruned to true
-                        $pruned = true;
-
                         // Delete the thread
                         $thread->delete();
 
@@ -453,7 +450,7 @@ class ForumController extends Controller
             $message = "This post doesn't exist or you don't have access to it!";
             $redirect = Router::route('forums.index');
 
-            Template::vars(['page' => compact('message', 'redirect')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -526,7 +523,7 @@ class ForumController extends Controller
             $message = "This post doesn't exist or you don't have access to it!";
             $redirect = Router::route('forums.index');
 
-            Template::vars(['page' => compact('message', 'redirect')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -540,7 +537,7 @@ class ForumController extends Controller
             $message = "You are not allowed to post in this thread!";
             $redirect = Router::route('forums.thread', $thread->id);
 
-            Template::vars(['page' => compact('message', 'redirect')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -564,7 +561,7 @@ class ForumController extends Controller
             );
             $redirect = "{$route}#reply";
 
-            Template::vars(['page' => compact('message', 'redirect')]);
+            Template::vars(compact('message', 'redirect'));
 
             if (!isset($_SESSION['replyText'])) {
                 $_SESSION['replyText'] = [];
@@ -615,7 +612,7 @@ class ForumController extends Controller
             $message = "This forum doesn't exist or you don't have access to it!";
             $redirect = Router::route('forums.index');
 
-            Template::vars(['page' => compact('message', 'redirect')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -654,7 +651,7 @@ class ForumController extends Controller
 
                 $redirect = Router::route('forums.new', $forum->id);
 
-                Template::vars(['page' => compact('message', 'redirect')]);
+                Template::vars(compact('message', 'redirect'));
 
                 if (!isset($_SESSION['replyText'])) {
                     $_SESSION['replyText'] = [];
@@ -732,7 +729,7 @@ class ForumController extends Controller
                 $redirect = Router::route('forums.index');
             }
 
-            Template::vars(['page' => compact('message', 'redirect')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -774,7 +771,7 @@ class ForumController extends Controller
 
             $redirect = Router::route('forums.post', $post->id);
 
-            Template::vars(['page' => compact('message', 'redirect')]);
+            Template::vars(compact('message', 'redirect'));
 
             if (!isset($_SESSION['replyText'])) {
                 $_SESSION['replyText'] = [];
@@ -853,7 +850,7 @@ class ForumController extends Controller
                 $redirect = Router::route('forums.index');
             }
 
-            Template::vars(['page' => compact('message', 'redirect')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -876,7 +873,7 @@ class ForumController extends Controller
                     $redirect = Router::route('forums.thread', $thread->id);
                 }
 
-                Template::vars(['page' => compact('message', 'redirect')]);
+                Template::vars(compact('message', 'redirect'));
 
                 return Template::render('global/information');
             }

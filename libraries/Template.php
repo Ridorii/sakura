@@ -117,6 +117,9 @@ class Template
 
         // json_decode filter (why doesn't this exist to begin with?)
         self::$engine->addFilter(new Twig_SimpleFilter('json_decode', 'json_decode'));
+
+        // byte_symbol filter
+        self::$engine->addFilter(new Twig_SimpleFilter('byte_symbol', 'byte_symbol'));
     }
 
     /**

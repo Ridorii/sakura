@@ -1,0 +1,21 @@
+{% extends 'settings/account/master.twig' %}
+
+{% set mode = 'E-mail address' %}
+
+{% block description %}
+    <p>You e-mail address is used for password recovery and stuff like that!</p>
+{% endblock %}
+
+{% block settingsContent %}
+    <form enctype="multipart/form-data" method="post" action="{{ route('settings.account.email') }}">
+        <h3 style="text-align: center;">Your e-mail address is currently set to <span style="font-weight: 700;">{{ user.email }}</span>.</h3>
+        <div class="profile-field">
+            <div><h2>E-mail address</h2></div>
+            <div><input type="text" name="email" placeholder="Enter your new e-mail address" class="inputStyling" /></div>
+        </div>
+        <div class="profile-save">
+            <button value="{{ session_id() }}" name="session" class="inputStyling">Save</button>
+            <button type="reset" class="inputStyling">Reset</button>
+        </div>
+    </form>
+{% endblock %}

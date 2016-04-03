@@ -10,12 +10,6 @@
         <meta name="msapplication-TileColor" content="#9475b2" />
         <meta name="msapplication-TileImage" content="/content/images/icons/ms-icon-144x144.png" />
         <meta name="theme-color" content="#9475B2" />
-
-{# want to start moving away from page.etc but older files are a thing #}
-{% if message is not defined %}{% set message = page.message %}{% endif %}
-{% if redirect is not defined %}{% set redirect = page.redirect %}{% endif %}
-{% if redirectTimeout is not defined %}{% set redirectTimeout = page.redirectTimeout %}{% endif %}
-
 {% if redirect %}
         <meta http-equiv="refresh" content="{{ redirectTimeout ? redirectTimeout : '3' }}; URL={{ redirect }}" />
 {% endif %}

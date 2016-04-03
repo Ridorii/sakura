@@ -559,9 +559,6 @@ class User
      */
     public function addFriend($uid)
     {
-        // Create the foreign object
-        $user = User::construct($uid);
-
         // Add friend
         DB::table('friends')
             ->insert([
@@ -579,9 +576,6 @@ class User
      */
     public function removeFriend($uid, $deleteRequest = false)
     {
-        // Create the foreign object
-        $user = User::construct($uid);
-
         // Remove friend
         DB::table('friends')
             ->where('user_id', $this->id)
@@ -1091,46 +1085,10 @@ class User
      * Alter the user's username
      *
      * @param string $username The new username.
-     *
-     * @return array Status indicator.
+     * @param string $username_clean The new (clean) username.
      */
-    public function setUsername($username)
+    public function setUsername($username, $username_clean)
     {
-        // Create a cleaned version
-        $username_clean = clean_string($username, true);
-
-        // Check if the username is too short
-        if (strlen($username_clean) < Config::get('username_min_length')) {
-            return [0, 'TOO_SHORT'];
-        }
-
-        // Check if the username is too long
-        if (strlen($username_clean) > Config::get('username_max_length')) {
-            return [0, 'TOO_LONG'];
-        }
-
-        // Check if this username hasn't been used in the last amount of days set in the config
-        $getOld = DB::table('username_history')
-            ->where('username_old_clean', $username_clean)
-            ->where('change_time', '>', (Config::get('old_username_reserve') * 24 * 60 * 60))
-            ->orderBy('change_id', 'desc')
-            ->get();
-
-        // Check if anything was returned
-        if ($getOld && $getOld[0]->user_id != $this->id) {
-            return [0, 'TOO_RECENT', $getOld[0]['change_time']];
-        }
-
-        // Check if the username is already in use
-        $getInUse = DB::table('users')
-            ->where('username_clean', $username_clean)
-            ->get();
-
-        // Check if anything was returned
-        if ($getInUse) {
-            return [0, 'IN_USE', $getInUse[0]->user_id];
-        }
-
         // Insert into username_history table
         DB::table('username_history')
             ->insert([
@@ -1149,88 +1107,32 @@ class User
                 'username' => $username,
                 'username_clean' => $username_clean,
             ]);
-
-        // Return success
-        return [1, 'SUCCESS', $username];
     }
 
     /**
      * Alter a user's e-mail address
      *
      * @param string $email The new e-mail address.
-     *
-     * @return array Status indicator.
      */
-    public function setEMailAddress($email)
+    public function setMail($email)
     {
-        // Validate e-mail address
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return [0, 'INVALID'];
-        }
-
-        // Check if the username is already in use
-        $getInUse = DB::table('users')
-            ->where('email', $email)
-            ->get();
-
-        // Check if anything was returned
-        if ($getInUse) {
-            return [0, 'IN_USE', $getInUse[0]->user_id];
-        }
-
         // Update userrow
         DB::table('users')
             ->where('user_id', $this->id)
             ->update([
                 'email' => $email,
             ]);
-
-        // Return success
-        return [1, 'SUCCESS', $email];
     }
 
     /**
      * Change the user's password
      *
-     * @param string $old The old password.
-     * @param string $new The new password
-     * @param string $confirm The new one again.
-     *
-     * @return array Status indicator.
+     * @param string $password The new password.
      */
-    public function setPassword($old, $new, $confirm)
+    public function setPassword($password)
     {
-        // Validate password
-        switch ($this->passwordAlgo) {
-            // Disabled account
-            case 'disabled':
-                return [0, 'NO_LOGIN'];
-
-            // Default hashing method
-            default:
-                if (!Hashing::validatePassword($old, [
-                    $this->passwordAlgo,
-                    $this->passwordIter,
-                    $this->passwordSalt,
-                    $this->passwordHash,
-                ])) {
-                    return [0, 'INCORRECT_PASSWORD', $this->passwordChan];
-                }
-
-        }
-
-        // Check password entropy
-        if (password_entropy($new) < Config::get('min_entropy')) {
-            return [0, 'PASS_TOO_SHIT'];
-        }
-
-        // Passwords do not match
-        if ($new != $confirm) {
-            return [0, 'PASS_NOT_MATCH'];
-        }
-
         // Create hash
-        $password = Hashing::createHash($new);
+        $password = Hashing::createHash($password);
 
         // Update userrow
         DB::table('users')
@@ -1242,9 +1144,6 @@ class User
                 'password_iter' => $password[1],
                 'password_chan' => time(),
             ]);
-
-        // Return success
-        return [1, 'SUCCESS'];
     }
 
     /**

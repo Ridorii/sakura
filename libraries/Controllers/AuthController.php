@@ -57,7 +57,7 @@ class AuthController extends Controller
             $message = 'Something happened! This probably happened because you went here without being logged in.';
             $redirect = (isset($_REQUEST['redirect']) ? $_REQUEST['redirect'] : Router::route('main.index'));
 
-            Template::vars(['page' => ['success' => 0, 'redirect' => $redirect, 'message' => $message]]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -69,7 +69,7 @@ class AuthController extends Controller
         $message = 'Goodbye!';
         $redirect = Router::route('auth.login');
 
-        Template::vars(['page' => ['success' => 1, 'redirect' => $redirect, 'message' => $message]]);
+        Template::vars(compact('message', 'redirect'));
 
         return Template::render('global/information');
     }
@@ -92,13 +92,12 @@ class AuthController extends Controller
     public function loginPost()
     {
         // Preliminarily set login to failed
-        $success = 0;
         $redirect = Router::route('auth.login');
 
         // Check if authentication is disallowed
         if (Config::get('lock_authentication')) {
             $message = 'Logging in is disabled for security checkups! Try again later.';
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -117,7 +116,7 @@ class AuthController extends Controller
 
         if ($rates > 4) {
             $message = 'Your have hit the login rate limit, try again later.';
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -129,7 +128,7 @@ class AuthController extends Controller
         if ($user->id === 0) {
             $this->touchRateLimit($user->id);
             $message = 'The user you tried to log into does not exist.';
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -140,7 +139,7 @@ class AuthController extends Controller
             case 'disabled':
                 $this->touchRateLimit($user->id);
                 $message = 'Logging into this account is disabled.';
-                Template::vars(['page' => compact('success', 'redirect', 'message')]);
+                Template::vars(compact('message', 'redirect'));
 
                 return Template::render('global/information');
 
@@ -154,7 +153,7 @@ class AuthController extends Controller
                 ])) {
                     $this->touchRateLimit($user->id);
                     $message = 'The password you entered was invalid.';
-                    Template::vars(['page' => compact('success', 'redirect', 'message')]);
+                    Template::vars(compact('message', 'redirect'));
 
                     return Template::render('global/information');
                 }
@@ -163,8 +162,9 @@ class AuthController extends Controller
         // Check if the user has the required privs to log in
         if ($user->permission(Site::DEACTIVATED)) {
             $this->touchRateLimit($user->id);
-            $message = 'Your account does not have the required permissions to log in.';
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            $message = 'Your account is deactivated, activate it first!';
+            $redirect = Router::route('auth.reactivate');
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -193,8 +193,6 @@ class AuthController extends Controller
 
         $this->touchRateLimit($user->id, true);
 
-        $success = 1;
-
         $redirect = $user->lastOnline
         ? (isset($_REQUEST['redirect'])
             ? $_REQUEST['redirect']
@@ -203,7 +201,7 @@ class AuthController extends Controller
 
         $message = 'Welcome' . ($user->lastOnline ? ' back' : '') . '!';
 
-        Template::vars(['page' => compact('success', 'redirect', 'message')]);
+        Template::vars(compact('message', 'redirect'));
 
         return Template::render('global/information');
     }
@@ -239,14 +237,13 @@ class AuthController extends Controller
     public function registerPost()
     {
         // Preliminarily set registration to failed
-        $success = 0;
         $redirect = Router::route('auth.register');
 
         // Check if authentication is disallowed
         if (Config::get('lock_authentication') || Config::get('disable_registration')) {
             $message = 'Registration is disabled for security checkups! Try again later.';
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -255,7 +252,7 @@ class AuthController extends Controller
         if (!isset($_POST['session']) || $_POST['session'] != session_id()) {
             $message = "Your session expired, refreshing the page will most likely fix this!";
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -274,7 +271,7 @@ class AuthController extends Controller
         if (!$terms) {
             $message = 'You are required to agree to the Terms of Service.';
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -295,7 +292,7 @@ class AuthController extends Controller
             if (!$response || !$response->success) {
                 $message = 'Captcha verification failed, please try again.';
 
-                Template::vars(['page' => compact('success', 'redirect', 'message')]);
+                Template::vars(compact('message', 'redirect'));
 
                 return Template::render('global/information');
             }
@@ -309,7 +306,7 @@ class AuthController extends Controller
             $message = "{$user->username} is already a member here!"
                 . " If this is you please use the password reset form instead of making a new account.";
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -318,7 +315,7 @@ class AuthController extends Controller
         if (strlen($username) < Config::get('username_min_length')) {
             $message = 'Your name must be at least 3 characters long.';
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -327,7 +324,7 @@ class AuthController extends Controller
         if (strlen($username) > Config::get('username_max_length')) {
             $message = 'Your name can\'t be longer than 16 characters.';
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -336,7 +333,7 @@ class AuthController extends Controller
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $message = 'Your e-mail address is formatted incorrectly.';
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -345,7 +342,7 @@ class AuthController extends Controller
         if (!check_mx_record($email)) {
             $message = 'No valid MX-Record found on the e-mail address you supplied.';
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -357,7 +354,7 @@ class AuthController extends Controller
         if ($emailCheck) {
             $message = 'Someone already registered using this email!';
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -366,7 +363,7 @@ class AuthController extends Controller
         if (password_entropy($password) < Config::get('min_entropy')) {
             $message = 'Your password is too weak, try adding some special characters.';
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -385,13 +382,12 @@ class AuthController extends Controller
         }
 
         // Return true with a specific message if needed
-        $success = 1;
         $redirect = Router::route('auth.login');
         $message = $requireActive
         ? 'Your registration went through! An activation e-mail has been sent.'
         : 'Your registration went through! Welcome to ' . Config::get('sitename') . '!';
 
-        Template::vars(['page' => compact('success', 'redirect', 'message')]);
+        Template::vars(compact('message', 'redirect'));
 
         return Template::render('global/information');
     }
@@ -404,7 +400,6 @@ class AuthController extends Controller
     public function activate()
     {
         // Preliminarily set activation to failed
-        $success = 0;
         $redirect = Router::route('main.index');
 
         // Attempt to get the required GET parameters
@@ -418,7 +413,7 @@ class AuthController extends Controller
         if ($user->id === 0) {
             $message = "This user does not exist! Contact us if you think this isn't right.";
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -427,7 +422,7 @@ class AuthController extends Controller
         if (!$user->permission(Site::DEACTIVATED)) {
             $message = "Your account is already activated! Why are you here?";
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -438,7 +433,7 @@ class AuthController extends Controller
         if (!$action) {
             $message = "Invalid activation code! Contact us if you think this isn't right.";
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -452,11 +447,10 @@ class AuthController extends Controller
         $user->setMainRank($rankDefault);
         $user->removeRanks([$rankDeactive]);
 
-        $success = 1;
         $redirect = Router::route('auth.login');
         $message = "Your account is activated, welcome to " . Config::get('sitename') . "!";
 
-        Template::vars(['page' => compact('success', 'redirect', 'message')]);
+        Template::vars(compact('message', 'redirect'));
 
         return Template::render('global/information');
     }
@@ -479,14 +473,13 @@ class AuthController extends Controller
     public function reactivatePost()
     {
         // Preliminarily set registration to failed
-        $success = 0;
         $redirect = Router::route('auth.reactivate');
 
         // Check if authentication is disallowed
         if (Config::get('lock_authentication')) {
             $message = "You can't request a reactivation at this time, sorry!";
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -495,7 +488,7 @@ class AuthController extends Controller
         if (!isset($_POST['session']) || $_POST['session'] != session_id()) {
             $message = "Your session expired, refreshing the page will most likely fix this!";
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -514,7 +507,7 @@ class AuthController extends Controller
         if (!$getUser) {
             $message = "User not found! Double check your username and e-mail address!";
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -526,7 +519,7 @@ class AuthController extends Controller
         if (!$user->permission(Site::DEACTIVATED)) {
             $message = "Your account is already activated! Why are you here?";
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -534,11 +527,10 @@ class AuthController extends Controller
         // Send activation e-mail to user
         $this->sendActivationMail($user);
 
-        $success = 1;
         $redirect = Router::route('auth.login');
         $message = "Sent the e-mail! Make sure to check your spam folder as well!";
 
-        Template::vars(['page' => compact('success', 'redirect', 'message')]);
+        Template::vars(compact('message', 'redirect'));
 
         return Template::render('global/information');
     }
@@ -561,14 +553,13 @@ class AuthController extends Controller
     public function resetPasswordPost()
     {
         // Preliminarily set action to failed
-        $success = 0;
         $redirect = Router::route('main.index');
 
         // Check if authentication is disallowed
         if (Config::get('lock_authentication')) {
             $message = "You can't request a reactivation at this time, sorry!";
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -577,7 +568,7 @@ class AuthController extends Controller
         if (!isset($_POST['session']) || $_POST['session'] != session_id()) {
             $message = "Your session expired, refreshing the page will most likely fix this!";
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -596,7 +587,7 @@ class AuthController extends Controller
         if ($user->id === 0 || ($email !== null ? $email !== $user->email : false)) {
             $message = "This user does not exist! Contact us if you think this isn't right.";
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -605,7 +596,7 @@ class AuthController extends Controller
         if ($user->permission(Site::DEACTIVATED)) {
             $message = "Your account is deactivated, go activate it first...";
 
-            Template::vars(['page' => compact('success', 'redirect', 'message')]);
+            Template::vars(compact('message', 'redirect'));
 
             return Template::render('global/information');
         }
@@ -615,7 +606,7 @@ class AuthController extends Controller
             if (password_entropy($password) < Config::get('min_entropy')) {
                 $message = "Your password doesn't meet the strength requirements!";
 
-                Template::vars(['page' => compact('success', 'redirect', 'message')]);
+                Template::vars(compact('message', 'redirect'));
 
                 return Template::render('global/information');
             }
@@ -626,7 +617,7 @@ class AuthController extends Controller
             if (!$action) {
                 $message = "Invalid verification code! Contact us if you think this isn't right.";
 
-                Template::vars(['page' => compact('success', 'redirect', 'message')]);
+                Template::vars(compact('message', 'redirect'));
 
                 return Template::render('global/information');
             }
@@ -645,19 +636,17 @@ class AuthController extends Controller
                     'password_chan' => time(),
                 ]);
 
-            $success = 1;
             $message = "Changed your password! You may now log in.";
             $redirect = Router::route('auth.login');
         } else {
             // Send the e-mail
             $this->sendPasswordMail($user);
 
-            $success = 1;
             $message = "Sent the e-mail, keep an eye on your spam folder as well!";
             $redirect = Router::route('main.index');
         }
 
-        Template::vars(['page' => compact('success', 'redirect', 'message')]);
+        Template::vars(compact('message', 'redirect'));
 
         return Template::render('global/information');
     }

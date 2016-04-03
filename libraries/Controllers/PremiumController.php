@@ -161,8 +161,6 @@ class PremiumController extends Controller
             return header("Location: {$failRoute}");
         }
 
-        $pricePerMonth = Config::get('premium_price_per_month');
-
         ActiveUser::$user->addPremium(self::PERIOD_PER_PAYMENT * $months);
 
         return header("Location: {$successRoute}");

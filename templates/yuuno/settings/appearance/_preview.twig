@@ -1,0 +1,35 @@
+<script type="text/javascript">
+    var parser = new AJAX(),
+        textMax = {{ maxLength }},
+        form = document.getElementById("settingsEditor"),
+        preview = document.getElementById("settingsPreview");
+
+    parser.setUrl("{{ route('helper.bbcode.parse') }}");
+    parser.contentType("application/x-www-form-urlencoded");
+
+    function settingsPreview() {
+        var text = form.value;
+
+        if (text.length == 0) {
+            preview.innerHTML = "";
+        } else if (text.length > textMax) {
+            preview.innerHTML = "<span style='color: red;'>Too long!</span>";
+        } else {
+            parser.setSend({"text":text});
+
+            parser.addCallback(200, function () {
+                preview.innerHTML = parser.response();
+
+                var codeBlocks = preview.querySelectorAll("pre code");
+
+                for (var _i in codeBlocks) {
+                    if ((typeof codeBlocks[_i]).toLowerCase() === 'object') {
+                        hljs.highlightBlock(codeBlocks[_i]);
+                    }
+                }
+            });
+
+            parser.start(HTTPMethods.POST);
+        }
+    }
+</script>

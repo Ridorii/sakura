@@ -1,0 +1,29 @@
+{% extends 'settings/account/master.twig' %}
+
+{% set mode = 'Ranks' %}
+
+{% block description %}
+    <p>Manage what ranks you're in and what is set as your main rank. Your main rank is highlighted. You get the permissions of all of the ranks you're in combined.</p>
+{% endblock %}
+
+{% block settingsContent %}
+    <table class="settings-table">
+        <tbody>
+            {% for rank in user.ranks %}
+            <tr {% if rank.id == user.mainRankId %} class="current-session" {% endif %}>
+                <td style="font-weight: bold; color: {{ rank.colour }}; text-shadow: 0 0 7px {{ rank.colour }}; text-align: left;">
+                    <a href="{{ route('members.rank', rank.id) }}" class="clean">{{ rank.name }}</a>
+                </td>
+                <td style="width: 90px;">
+                    <form method="post" action="{{ sakura.currentPage }}">
+                        <input type="hidden" name="session" value="{{ session_id() }}" />
+                        <input type="hidden" name="rank" value="{{ rank.id }}" />
+                        <button class="inputStyling small" name="mode" value="main">Set as main</button>
+                        <button class="inputStyling small" name="mode" value="remove" {% if rank.id in locked %}disabled="disabled"{% endif %}>Remove</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
