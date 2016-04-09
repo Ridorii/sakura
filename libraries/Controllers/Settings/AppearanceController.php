@@ -33,7 +33,7 @@ class AppearanceController extends Controller
             return Template::render('global/information');
         }
 
-        return $this->go('appearance.avatar');
+        return Template::render('settings/appearance/avatar');
     }
 
     public function background()
@@ -48,7 +48,7 @@ class AppearanceController extends Controller
             return Template::render('global/information');
         }
 
-        return $this->go('appearance.background');
+        return Template::render('settings/appearance/background');
     }
 
     public function header()

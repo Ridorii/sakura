@@ -261,7 +261,6 @@
             }
         </script>
         {% if config('dev.show_changelog', true) and stats %}
-        <script type="text/javascript" src="https://sakura.flash.moe/?get=all&amp;limit=5&amp;variable=true"></script>
         <script type="text/javascript">
             // Column colours for actions
             var changelogColours = [
@@ -274,77 +273,96 @@
                 '#C44' // Revert
             ];
 
-            window.addEventListener("load", function () {
-                // Check if the changelog variable is an object
-                if(typeof changelog === 'object') {
-                    // Grab the index panel
-                    var _panel = document.getElementById('indexPanel');
+            function yuunoCreateChangelog() {
+                // Grab the index panel
+                var _panel = document.getElementById('indexPanel');
 
-                    // Create the head container
-                    var _cltitle = document.createElement('div');
-                    _cltitle.className = 'head';
-                    _cltitle.style.marginBottom = '1px';
+                // Create the head container
+                var _cltitle = document.createElement('div');
+                _cltitle.className = 'head';
+                _cltitle.style.marginBottom = '1px';
 
-                    // Create a link
-                    var _cllink = document.createElement('a');
-                    _cllink.className = 'underline';
-                    _cllink.target = '_blank';
-                    _cllink.href = 'https://sakura.flash.moe/#r{{ constant('SAKURA_VERSION') }}';
+                // Create a link
+                var _cllink = document.createElement('a');
+                _cllink.className = 'underline';
+                _cllink.target = '_blank';
+                _cllink.href = 'https://sakura.flash.moe/#r{{ constant('SAKURA_VERSION') }}';
 
-                    // Append everything
-                    _cllink.appendChild(document.createTextNode('Changelog'));
-                    _cltitle.appendChild(_cllink);
-                    _panel.appendChild(_cltitle);
+                // Append everything
+                _cllink.appendChild(document.createTextNode('Changelog'));
+                _cltitle.appendChild(_cllink);
+                _panel.appendChild(_cltitle);
 
-                    // Create changelog table
-                    var _cltable = document.createElement('table');
-                    _cltable.className = 'panelTable';
-                    _cltable.style.borderSpacing = '0 1px';
+                // Create changelog table
+                var _cltable = document.createElement('table');
+                _cltable.className = 'panelTable';
+                _cltable.style.borderSpacing = '0 1px';
+                _cltable.id = 'yuunoChangelogTable';
 
-                    // Create and append all changelog entries
-                    for (var _s in changelog) {
-                        // Create header
-                        var _hr = document.createElement('tr');
-                        var _hri = document.createElement('td');
+                // Append it to indexPanel
+                indexPanel.appendChild(_cltable);
+            }
 
-                        // Set data
-                        _hri.appendChild(document.createTextNode(_s));
-                        _hri.style.background = '#9475b2';
-                        _hri.style.color = '#306';
-                        _hri.style.fontWeight = '700';
-                        _hri.style.fontSize = '1.2em';
-                        _hri.setAttribute('colspan', '2');
+            function yuunoAddToChangelog(object) {
+                _cltable = document.getElementById('yuunoChangelogTable');
 
-                        // Append
-                        _hr.appendChild(_hri);
-                        _cltable.appendChild(_hr);
+                // Create header
+                var _hr = document.createElement('tr');
+                var _hri = document.createElement('td');
 
-                        for (var _e in changelog[_s]) {
-                            // Reassign _e
-                            _e = changelog[_s][_e];
+                // Set data
+                _hri.appendChild(document.createTextNode(object.date));
+                _hri.style.background = '#9475b2';
+                _hri.style.color = '#306';
+                _hri.style.fontWeight = '700';
+                _hri.style.fontSize = '1.2em';
+                _hri.setAttribute('colspan', '2');
 
-                            // Create elements
-                            var _clr = document.createElement('tr');
-                            var _clca = document.createElement('td');
-                            var _clcm = document.createElement('td');
+                // Append
+                _hr.appendChild(_hri);
+                _cltable.appendChild(_hr);
 
-                            // Set data
-                            _clca.appendChild(document.createTextNode(_e['change_action']['action_name']));
-                            _clca.style.background = changelogColours[_e['change_action']['action_id']];
-                            _clca.style.borderBottom = '1px solid ' + changelogColours[_e['change_action']['action_id']];
-                            _clcm.style.borderBottom = '1px solid ' + changelogColours[_e['change_action']['action_id']];
-                            _clcm.appendChild(document.createTextNode(_e['change_message']));
+                for (var _e in object.changes) {
+                    // Reassign _e
+                    _e = object.changes[_e];
 
-                            // Append
-                            _clr.appendChild(_clca);
-                            _clr.appendChild(_clcm);
-                            _cltable.appendChild(_clr);
-                        }
-                    }
+                    // Create elements
+                    var _clr = document.createElement('tr');
+                    var _clca = document.createElement('td');
+                    var _clcm = document.createElement('td');
 
-                    // Append it to indexPanel
-                    indexPanel.appendChild(_cltable);
+                    // Set data
+                    _clca.appendChild(document.createTextNode(_e.action.name));
+                    _clca.style.background = changelogColours[_e.action.id];
+                    _clca.style.borderBottom = '1px solid ' + changelogColours[_e.action.id];
+                    _clcm.style.borderBottom = '1px solid ' + changelogColours[_e.action.id];
+                    _clcm.appendChild(document.createTextNode(_e.message));
+
+                    // Append
+                    _clr.appendChild(_clca);
+                    _clr.appendChild(_clcm);
+                    _cltable.appendChild(_clr);
                 }
+            }
+
+            window.addEventListener("load", function () {
+                yuunoCreateChangelog();
+
+                var changelog = {},
+                    fetch = 0,
+                    clg = new AJAX();
+
+                    clg.addCallback(200, function () {
+                        yuunoAddToChangelog(JSON.parse(clg.response()));
+                        if (fetch < 2) {
+                            fetch++;
+                            clg.setUrl('https://sakura.flash.moe/api.php/' + fetch);
+                            clg.start(HTTPMethods.GET);
+                        }
+                    });
+
+                    clg.setUrl('https://sakura.flash.moe/api.php/' + fetch);
+                    clg.start(HTTPMethods.GET);
             });
         </script>
         {% endif %}
