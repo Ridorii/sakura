@@ -8,8 +8,8 @@
 namespace Sakura\Controllers\Settings;
 
 use Sakura\ActiveUser;
-use Sakura\Router;
 use Sakura\Perms\Site;
+use Sakura\Router;
 use Sakura\Template;
 
 /**

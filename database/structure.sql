@@ -10,46 +10,11 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping database structure for sakura-development
-CREATE DATABASE IF NOT EXISTS `sakura-development` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
-USE `sakura-development`;
-
-
 -- Dumping structure for table sakura-development.sakura_actioncodes
 CREATE TABLE IF NOT EXISTS `sakura_actioncodes` (
   `code_action` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Action identifier so the backend knows what to do.',
   `user_id` bigint(255) unsigned NOT NULL COMMENT 'ID of the user that would be affected by this action',
   `action_code` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'The URL key for using this code.'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sakura-development.sakura_bans
-CREATE TABLE IF NOT EXISTS `sakura_bans` (
-  `ban_id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
-  `user_id` bigint(255) unsigned NOT NULL COMMENT 'ID of user that was banned, 0 for just an IP ban.',
-  `ban_begin` int(11) unsigned NOT NULL COMMENT 'Timestamp when the user was banned.',
-  `ban_end` int(11) unsigned NOT NULL COMMENT 'Timestamp when the user should regain access to the site.',
-  `ban_reason` varchar(512) COLLATE utf8_bin DEFAULT NULL COMMENT 'Reason given for the ban.',
-  `ban_moderator` bigint(255) unsigned NOT NULL COMMENT 'ID of moderator that banned this user,',
-  PRIMARY KEY (`ban_id`),
-  KEY `uid` (`user_id`),
-  KEY `mod_id` (`ban_moderator`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sakura-development.sakura_bbcodes
-CREATE TABLE IF NOT EXISTS `sakura_bbcodes` (
-  `bbcode_id` int(64) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
-  `bbcode_regex` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Regular expression string for the BBCode.',
-  `bbcode_replace` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'What to replace it with.',
-  `bbcode_title` varchar(128) COLLATE utf8_bin NOT NULL COMMENT 'Button title for this bbcode.',
-  `bbcode_description` varchar(512) COLLATE utf8_bin NOT NULL COMMENT 'Description of what this does.',
-  `bbcode_display` tinyint(1) unsigned NOT NULL COMMENT 'Set if this bbcode is displayed on the posting page.',
-  PRIMARY KEY (`bbcode_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- Data exporting was unselected.
@@ -179,26 +144,10 @@ CREATE TABLE IF NOT EXISTS `sakura_login_attempts` (
   `attempt_id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'MySQL Generated ID used for sorting.',
   `attempt_success` tinyint(1) unsigned NOT NULL COMMENT 'Success boolean.',
   `attempt_timestamp` int(11) unsigned NOT NULL COMMENT 'Unix timestamp of the event.',
-  `attempt_ip` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'IP that made this attempt.',
+  `attempt_ip` varbinary(50) NOT NULL COMMENT 'IP that made this attempt.',
   `user_id` bigint(255) unsigned NOT NULL COMMENT 'ID of the user that was attempted to log in to.',
   PRIMARY KEY (`attempt_id`)
 ) ENGINE=MEMORY DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table sakura-development.sakura_messages
-CREATE TABLE IF NOT EXISTS `sakura_messages` (
-  `id` bigint(128) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
-  `from_user` bigint(255) unsigned NOT NULL COMMENT 'ID of the user that sent this message.',
-  `to_user` bigint(255) unsigned NOT NULL COMMENT 'ID of user that should receive this message.',
-  `read` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'IDs of users who read this message.',
-  `deleted` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Indicator if one of the parties deleted the message, if it is already 1 the script will remove this row.',
-  `timestamp` int(11) unsigned NOT NULL COMMENT 'Timestamp of the time this message was sent',
-  `subject` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Title of the message',
-  `content` text COLLATE utf8_bin NOT NULL COMMENT 'Contents of the message.',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- Data exporting was unselected.
 
@@ -337,20 +286,6 @@ CREATE TABLE IF NOT EXISTS `sakura_ranks` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table sakura-development.sakura_regcodes
-CREATE TABLE IF NOT EXISTS `sakura_regcodes` (
-  `id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management.',
-  `code` varchar(32) COLLATE utf8_bin NOT NULL COMMENT 'Randomly generated registration key.',
-  `created_by` bigint(255) unsigned NOT NULL COMMENT 'ID of user who generated this code.',
-  `used_by` bigint(255) unsigned NOT NULL COMMENT 'ID of user who used this code.',
-  `key_used` tinyint(1) unsigned NOT NULL COMMENT 'Boolean for setting this key as used.',
-  PRIMARY KEY (`id`),
-  KEY `created_by` (`created_by`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
--- Data exporting was unselected.
-
-
 -- Dumping structure for table sakura-development.sakura_reports
 CREATE TABLE IF NOT EXISTS `sakura_reports` (
   `id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'MySQL Generated ID used for sorting.',
@@ -370,7 +305,7 @@ CREATE TABLE IF NOT EXISTS `sakura_reports` (
 CREATE TABLE IF NOT EXISTS `sakura_sessions` (
   `session_id` bigint(255) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Automatically generated ID by MySQL for management. ',
   `user_id` bigint(255) unsigned NOT NULL COMMENT 'ID of the user this session is spawned for. ',
-  `user_ip` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'IP of the user this session is spawned for.',
+  `user_ip` varbinary(50) NOT NULL COMMENT 'IP of the user this session is spawned for.',
   `user_agent` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'User agent of the user this session is spawned for.',
   `session_key` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Session key, allow direct access to the user''s account. ',
   `session_start` int(16) unsigned NOT NULL COMMENT 'The timestamp for when the session was started. ',

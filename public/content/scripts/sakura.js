@@ -126,7 +126,7 @@ var Sakura = (function () {
             60: ['minute', 'a'],
             1: ['second', 'a']
         };
-        // 
+        //
         var timeKeys = Object.keys(times).reverse();
         // Iterate over the times
         for (var i in timeKeys) {
