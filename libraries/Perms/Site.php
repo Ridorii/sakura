@@ -149,7 +149,7 @@ class Site
      * Can this user change the colour of their username?
      */
     const CHANGE_NAMECOLOUR = 67108864;
-    
+
     /**
      * Does this user have infinite premium?
      */

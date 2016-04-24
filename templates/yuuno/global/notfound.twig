@@ -3,12 +3,12 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Cannot find page</title>
-		<link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/error.css" />
+		<link rel="stylesheet" type="text/css" href="{{ resource('css/error.css') }}" />
 	</head>
 	<body>
 		<div id="wrap">
 			<h1>
-				<img src="{{ sakura.resources }}/images/404-info.gif" />
+				<img src="{{ resource('images/404-info.gif') }}" />
 				The page cannot be found
 			</h1>
 			<p>
@@ -25,15 +25,15 @@
 					sure that it is spelled correctly.
 				</li>
 				<li>
-					Open the <a href="/">flashii.net</a>
+					Open the <a href="{{ route('main.index') }}">flashii.net</a>
 					home page, and then look for links to the information you want.
 				</li>
 				<li>
-					Click the <img src="{{ sakura.resources }}/images/404-back.gif" /><a href="javascript:void(0);" onclick="history.go(-1);">Back</a>
+					Click the <img src="{{ resource('images/404-back.gif') }}" /><a href="javascript:void(0);" onclick="history.go(-1);">Back</a>
 					button to try another link.
 				</li>
 				<li>
-					Click <img src="{{ sakura.resources }}/images/404-search.gif" /><a href="http://www.bing.com/search?q=flashii">Search</a>
+					Click <img src="{{ resource('images/404-search.gif') }}" /><a href="{{ route('main.search') }}">Search</a>
 					to look for information on the Internet.
 				</li>
 			</ul>

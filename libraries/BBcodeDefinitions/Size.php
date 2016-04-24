@@ -52,6 +52,8 @@ class Size extends CodeDefinition
             return $el->getAsBBCode();
         }
 
-        return '<span style="font-size: ' . ($size / 100) . 'em;">' . $content . '</span>';
+        $size = $size / 100;
+
+        return "<span style='font-size: {$size}em;'>{$content}</span>";
     }
 }

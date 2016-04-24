@@ -9,6 +9,7 @@ namespace Sakura;
 
 use Sakura\Perms;
 use Sakura\Perms\Site;
+use stdClass;
 
 /**
  * Everything you'd ever need from a specific user.
@@ -253,8 +254,8 @@ class User
     public static function create($username, $password, $email, $ranks = [2])
     {
         // Set a few variables
-        $usernameClean = Utils::cleanString($username, true);
-        $emailClean = Utils::cleanString($email, true);
+        $usernameClean = clean_string($username, true);
+        $emailClean = clean_string($email, true);
         $password = Hashing::createHash($password);
 
         // Insert the user into the database and get the id
@@ -268,11 +269,11 @@ class User
                 'password_iter' => $password[1],
                 'email' => $emailClean,
                 'rank_main' => 0,
-                'register_ip' => Net::pton(Net::IP()),
-                'last_ip' => Net::pton(Net::IP()),
+                'register_ip' => Net::pton(Net::ip()),
+                'last_ip' => Net::pton(Net::ip()),
                 'user_registered' => time(),
                 'user_last_online' => 0,
-                'user_country' => Utils::getCountryCode(),
+                'user_country' => get_country_code(),
             ]);
 
         // Create a user object
@@ -298,7 +299,7 @@ class User
         // Get the user database row
         $userRow = DB::table('users')
             ->where('user_id', $userId)
-            ->orWhere('username_clean', Utils::cleanString($userId, true, true))
+            ->orWhere('username_clean', clean_string($userId, true, true))
             ->get();
 
         // Populate the variables
@@ -400,7 +401,7 @@ class User
      */
     public function country($long = false)
     {
-        return $long ? Utils::getCountryName($this->country) : $this->country;
+        return $long ? get_country_name($this->country) : $this->country;
     }
 
     /**
@@ -422,6 +423,16 @@ class User
 
         // Otherwise use the standard method
         return $this->lastOnline > (time() - Config::get('max_online_time'));
+    }
+
+    /**
+     * Runs some checks to see if this user is activated.
+     *
+     * @return bool Are they activated?
+     */
+    public function isActive()
+    {
+        return $this->id !== 0 && !$this->permission(Site::DEACTIVATED);
     }
 
     /**
@@ -460,10 +471,11 @@ class User
             array_unique(
                 array_merge(
                     array_keys($this->ranks),
-                    $ranks)
-                ),
-                array_keys($this->ranks)
-            );
+                    $ranks
+                )
+            ),
+            array_keys($this->ranks)
+        );
 
         // Save to the database
         foreach ($ranks as $rank) {
@@ -487,7 +499,7 @@ class User
 
         // Iterate over the ranks
         foreach ($remove as $rank) {
-            DB::table('ranks')
+            DB::table('user_ranks')
                 ->where('user_id', $this->id)
                 ->where('rank_id', $rank)
                 ->delete();
@@ -544,24 +556,9 @@ class User
      * Add a new friend.
      *
      * @param int $uid The ID of the friend.
-     *
-     * @return array Status indicator.
      */
     public function addFriend($uid)
     {
-        // Create the foreign object
-        $user = User::construct($uid);
-
-        // Validate that the user exists
-        if ($user->permission(Site::DEACTIVATED)) {
-            return [0, 'USER_NOT_EXIST'];
-        }
-
-        // Check if the user already has this user a friend
-        if ($this->isFriends($uid)) {
-            return [0, 'ALREADY_FRIENDS'];
-        }
-
         // Add friend
         DB::table('friends')
             ->insert([
@@ -569,9 +566,6 @@ class User
                 'friend_id' => $uid,
                 'friend_timestamp' => time(),
             ]);
-
-        // Return true because yay
-        return [1, $user->isFriends($this->id) ? 'FRIENDS' : 'NOT_MUTUAL'];
     }
 
     /**
@@ -579,38 +573,22 @@ class User
      *
      * @param int $uid The friend Id
      * @param bool $deleteRequest Delete the open request as well (remove you from their friends list).
-     *
-     * @return array Status indicator.
      */
     public function removeFriend($uid, $deleteRequest = false)
     {
-        // Create the foreign object
-        $user = User::construct($uid);
-
-        // Validate that the user exists
-        if ($user->permission(Site::DEACTIVATED)) {
-            return [0, 'USER_NOT_EXIST'];
-        }
-
-        // Prepare the statement
-        $rem = DBv2::prepare('DELETE FROM `{prefix}friends` WHERE `user_id` = :user AND `friend_id` = :friend');
-
         // Remove friend
-        $rem->execute([
-            'user' => $this->id,
-            'friend' => $uid,
-        ]);
+        DB::table('friends')
+            ->where('user_id', $this->id)
+            ->where('friend_id', $uid)
+            ->delete();
 
         // Attempt to remove the request
         if ($deleteRequest) {
-            $rem->execute([
-                'user' => $uid,
-                'friend' => $this->id,
-            ]);
+            DB::table('friends')
+                ->where('user_id', $uid)
+                ->where('friend_id', $this->id)
+                ->delete();
         }
-
-        // Return true because yay
-        return [1, 'REMOVED'];
     }
 
     /**
@@ -623,19 +601,16 @@ class User
     public function isFriends($with)
     {
         // Accepted from this user
-        $get = DBv2::prepare('SELECT * FROM `{prefix}friends` WHERE `user_id` = :user AND `friend_id` = :friend');
-        $get->execute([
-            'user' => $this->id,
-            'friend' => $with,
-        ]);
-        $user = $get->rowCount();
+        $user = DB::table('friends')
+            ->where('user_id', $this->id)
+            ->where('friend_id', $with)
+            ->count();
 
         // And the other user
-        $get->execute([
-            'user' => $with,
-            'friend' => $this->id,
-        ]);
-        $friend = $get->rowCount();
+        $friend = DB::table('friends')
+            ->where('user_id', $with)
+            ->where('friend_id', $this->id)
+            ->count();
 
         if ($user && $friend) {
             return 2; // Mutual friends
@@ -665,18 +640,16 @@ class User
             // Mutual
             case 2:
                 // Get all the current user's friends
-                $self = DBv2::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
-                $self->execute([
-                    'user' => $this->id,
-                ]);
-                $self = array_column($self->fetchAll(\PDO::FETCH_ASSOC), 'friend_id');
+                $self = DB::table('friends')
+                    ->where('user_id', $this->id)
+                    ->get(['friend_id']);
+                $self = array_column($self, 'friend_id');
 
                 // Get all the people that added this user as a friend
-                $others = DBv2::prepare('SELECT `user_id` FROM `{prefix}friends` WHERE `friend_id` = :user');
-                $others->execute([
-                    'user' => $this->id,
-                ]);
-                $others = array_column($others->fetchAll(\PDO::FETCH_ASSOC), 'user_id');
+                $others = DB::table('friends')
+                    ->where('friend_id', $this->id)
+                    ->get(['user_id']);
+                $others = array_column($others, 'user_id');
 
                 // Create a difference map
                 $users = array_intersect($self, $others);
@@ -684,29 +657,26 @@ class User
 
             // Non-mutual (from user perspective)
             case 1:
-                $users = DBv2::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
-                $users->execute([
-                    'user' => $this->id,
-                ]);
-                $users = array_column($users->fetchAll(\PDO::FETCH_ASSOC), 'friend_id');
+                $users = DB::table('friends')
+                    ->where('user_id', $this->id)
+                    ->get(['friend_id']);
+                $users = array_column($users, 'friend_id');
                 break;
 
             // All friend cases
             case 0:
             default:
                 // Get all the current user's friends
-                $self = DBv2::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
-                $self->execute([
-                    'user' => $this->id,
-                ]);
-                $self = array_column($self->fetchAll(\PDO::FETCH_ASSOC), 'friend_id');
+                $self = DB::table('friends')
+                    ->where('user_id', $this->id)
+                    ->get(['friend_id']);
+                $self = array_column($self, 'friend_id');
 
                 // Get all the people that added this user as a friend
-                $others = DBv2::prepare('SELECT `user_id` FROM `{prefix}friends` WHERE `friend_id` = :user');
-                $others->execute([
-                    'user' => $this->id,
-                ]);
-                $others = array_column($others->fetchAll(\PDO::FETCH_ASSOC), 'user_id');
+                $others = DB::table('friends')
+                    ->where('friend_id', $this->id)
+                    ->get(['user_id']);
+                $others = array_column($others, 'user_id');
 
                 // Create a difference map
                 $users = array_merge($others, $self);
@@ -715,18 +685,16 @@ class User
             // Open requests
             case -1:
                 // Get all the current user's friends
-                $self = DBv2::prepare('SELECT `friend_id` FROM `{prefix}friends` WHERE `user_id` = :user');
-                $self->execute([
-                    'user' => $this->id,
-                ]);
-                $self = array_column($self->fetchAll(\PDO::FETCH_ASSOC), 'friend_id');
+                $self = DB::table('friends')
+                    ->where('user_id', $this->id)
+                    ->get(['friend_id']);
+                $self = array_column($self, 'friend_id');
 
                 // Get all the people that added this user as a friend
-                $others = DBv2::prepare('SELECT `user_id` FROM `{prefix}friends` WHERE `friend_id` = :user');
-                $others->execute([
-                    'user' => $this->id,
-                ]);
-                $others = array_column($others->fetchAll(\PDO::FETCH_ASSOC), 'user_id');
+                $others = DB::table('friends')
+                    ->where('friend_id', $this->id)
+                    ->get(['user_id']);
+                $others = array_column($others, 'user_id');
 
                 // Create a difference map
                 $users = array_diff($others, $self);
@@ -753,16 +721,6 @@ class User
     }
 
     /**
-     * Check if the user is banned.
-     *
-     * @return array|bool Ban status.
-     */
-    public function checkBan()
-    {
-        return Bans::checkBan($this->id);
-    }
-
-    /**
      * Check if the user has a certaing permission flag.
      *
      * @param int $flag The permission flag.
@@ -785,12 +743,26 @@ class User
     }
 
     /**
-     *  Get the comments from the user's profile.
+     * Get the comments from the user's profile.
+     *
      * @return Comments
      */
     public function profileComments()
     {
-        return new Comments('profile-' . $this->id);
+        $commentIds = DB::table('comments')
+            ->where('comment_category', "profile-{$this->id}")
+            ->orderBy('comment_id', 'desc')
+            ->where('comment_reply_to', 0)
+            ->get(['comment_id']);
+        $commentIds = array_column($commentIds, 'comment_id');
+
+        $comments = [];
+
+        foreach ($commentIds as $comment) {
+            $comments[$comment] = new Comment($comment);
+        }
+
+        return $comments;
     }
 
     /**
@@ -808,23 +780,14 @@ class User
         // Create array and get values
         $profile = [];
 
-        $profileFields = DBv2::prepare('SELECT * FROM `{prefix}profilefields`');
-        $profileFields->execute();
-        $profileFields = $profileFields->fetchAll(\PDO::FETCH_ASSOC);
+        $profileFields = DB::table('profilefields')
+            ->get();
 
-        $profileValuesRaw = DBv2::prepare('SELECT * FROM `{prefix}user_profilefields` WHERE `user_id` = :user');
-        $profileValuesRaw->execute([
-            'user' => $this->id,
-        ]);
-        $profileValuesRaw = $profileValuesRaw->fetchAll(\PDO::FETCH_ASSOC);
+        $profileValuesRaw = DB::table('user_profilefields')
+            ->where('user_id', $this->id)
+            ->get();
 
-        $profileValueKeys = array_map(function ($a) {
-            return $a['field_name'];
-        }, $profileValuesRaw);
-        $profileValueVals = array_map(function ($a) {
-            return $a['field_value'];
-        }, $profileValuesRaw);
-        $profileValues = array_combine($profileValueKeys, $profileValueVals);
+        $profileValues = array_column($profileValuesRaw, 'field_value', 'field_name');
 
         // Check if anything was returned
         if (!$profileFields || !$profileValues) {
@@ -834,7 +797,7 @@ class User
         // Check if profile fields aren't fake
         foreach ($profileFields as $field) {
             // Completely strip all special characters from the field name
-            $fieldName = Utils::cleanString($field['field_name'], true, true);
+            $fieldName = clean_string($field->field_name, true, true);
 
             // Check if the user has the current field set otherwise continue
             if (!array_key_exists($fieldName, $profileValues)) {
@@ -843,23 +806,23 @@ class User
 
             // Assign field to output with value
             $profile[$fieldName] = [];
-            $profile[$fieldName]['name'] = $field['field_name'];
+            $profile[$fieldName]['name'] = $field->field_name;
             $profile[$fieldName]['value'] = $profileValues[$fieldName];
-            $profile[$fieldName]['islink'] = $field['field_link'];
+            $profile[$fieldName]['islink'] = $field->field_link;
 
             // If the field is set to be a link add a value for that as well
-            if ($field['field_link']) {
+            if ($field->field_link) {
                 $profile[$fieldName]['link'] = str_replace(
                     '{{ VAL }}',
                     $profileValues[$fieldName],
-                    $field['field_linkformat']
+                    $field->field_linkformat
                 );
             }
 
             // Check if we have additional options as well
-            if ($field['field_additional'] != null) {
+            if (!empty($field->field_additional)) {
                 // Decode the json of the additional stuff
-                $additional = json_decode($field['field_additional'], true);
+                $additional = json_decode($field->field_additional, true);
 
                 // Go over all additional forms
                 foreach ($additional as $subName => $subField) {
@@ -896,23 +859,14 @@ class User
         // Create array and get values
         $options = [];
 
-        $optionFields = DBv2::prepare('SELECT * FROM `{prefix}optionfields`');
-        $optionFields->execute();
-        $optionFields = $optionFields->fetchAll(\PDO::FETCH_ASSOC);
+        $optionFields = DB::table('optionfields')
+            ->get();
 
-        $optionValuesRaw = DBv2::prepare('SELECT * FROM `{prefix}user_optionfields` WHERE `user_id` = :user');
-        $optionValuesRaw->execute([
-            'user' => $this->id,
-        ]);
-        $optionValuesRaw = $optionValuesRaw->fetchAll(\PDO::FETCH_ASSOC);
+        $optionValuesRaw = DB::table('user_optionfields')
+            ->where('user_id', $this->id)
+            ->get();
 
-        $optionValueKeys = array_map(function ($a) {
-            return $a['field_name'];
-        }, $optionValuesRaw);
-        $optionValueVals = array_map(function ($a) {
-            return $a['field_value'];
-        }, $optionValuesRaw);
-        $optionValues = array_combine($optionValueKeys, $optionValueVals);
+        $optionValues = array_column($optionValuesRaw, 'field_value', 'field_name');
 
         // Check if anything was returned
         if (!$optionFields || !$optionValues) {
@@ -922,17 +876,17 @@ class User
         // Check if option fields aren't fake
         foreach ($optionFields as $field) {
             // Check if the user has the current field set otherwise continue
-            if (!array_key_exists($field['option_id'], $optionValues)) {
+            if (!array_key_exists($field->option_id, $optionValues)) {
                 continue;
             }
 
             // Make sure the user has the proper permissions to use this option
-            if (!$this->permission(constant('Sakura\Perms\Site::' . $field['option_permission']))) {
+            if (!$this->permission(constant('Sakura\Perms\Site::' . $field->option_permission))) {
                 continue;
             }
 
             // Assign field to output with value
-            $options[$field['option_id']] = $optionValues[$field['option_id']];
+            $options[$field->option_id] = $optionValues[$field->option_id];
         }
 
         // Assign cache
@@ -943,37 +897,99 @@ class User
     }
 
     /**
+     * Add premium in seconds.
+     *
+     * @param int $seconds The amount of seconds.
+     *
+     * @return int The new expiry date.
+     */
+    public function addPremium($seconds)
+    {
+        // Check if there's already a record of premium for this user in the database
+        $getUser = DB::table('premium')
+            ->where('user_id', $this->id)
+            ->get();
+
+        // Calculate the (new) start and expiration timestamp
+        $start = $getUser ? $getUser[0]->premium_start : time();
+        $expire = $getUser ? $getUser[0]->premium_expire + $seconds : time() + $seconds;
+
+        // If the user already exists do an update call, otherwise an insert call
+        if ($getUser) {
+            DB::table('premium')
+                ->where('user_id', $this->id)
+                ->update([
+                    'premium_expire' => $expire,
+                ]);
+        } else {
+            DB::table('premium')
+                ->insert([
+                    'user_id' => $this->id,
+                    'premium_start' => $start,
+                    'premium_expire' => $expire,
+                ]);
+        }
+
+        // Return the expiration timestamp
+        return $expire;
+    }
+
+    /**
      * Does this user have premium?
      *
-     * @return array Premium status information.
+     * @return int Returns the premium expiration date.
      */
     public function isPremium()
     {
+        // Get rank IDs from the db
+        $premiumRank = (int) Config::get('premium_rank_id');
+        $defaultRank = (int) Config::get('default_rank_id');
+
+        // Fetch expiration date
+        $expire = $this->premiumInfo()->expire;
 
         // Check if the user has static premium
-        if ($this->permission(Site::STATIC_PREMIUM)) {
-            return [2, 0, time() + 1];
+        if (!$expire
+            && $this->permission(Site::STATIC_PREMIUM)) {
+            $expire = time() + 1;
         }
 
+        // Check if the user has premium and isn't in the premium rank
+        if ($expire
+            && !$this->hasRanks([$premiumRank])) {
+            // Add the premium rank
+            $this->addRanks([$premiumRank]);
+
+            // Set it as default
+            if ($this->mainRankId == $defaultRank) {
+                $this->setMainRank($premiumRank);
+            }
+        } elseif (!$expire
+            && $this->hasRanks([$premiumRank])) {
+            $this->removeRanks([$premiumRank]);
+
+            if ($this->mainRankId == $premiumRank) {
+                $this->setMainRank($defaultRank);
+            }
+        }
+
+        return $expire;
+    }
+
+    public function premiumInfo()
+    {
         // Attempt to retrieve the premium record from the database
-        $getRecord = DBv2::prepare('SELECT * FROM `{prefix}premium` WHERE `user_id` = :user');
-        $getRecord->execute([
-            'user' => $this->id,
-        ]);
-        $getRecord = $getRecord->fetch();
+        $check = DB::table('premium')
+            ->where('user_id', $this->id)
+            ->where('premium_expire', '>', time())
+            ->get();
 
-        // If nothing was returned just return false
-        if (empty($getRecord)) {
-            return [0];
-        }
+        $return = new stdClass;
 
-        // Check if the Tenshi hasn't expired
-        if ($getRecord->premium_expire < time()) {
-            return [0, $getRecord->premium_start, $getRecord->premium_expire];
-        }
+        $return->start = $check ? $check[0]->premium_start : 0;
+        $return->expire = $check ? $check[0]->premium_expire : 0;
 
-        // Else return the start and expiration date
-        return [1, $getRecord->premium_start, $getRecord->premium_expire];
+        return $return;
     }
 
     /**
@@ -984,11 +1000,9 @@ class User
     public function getWarnings()
     {
         // Do the database query
-        $getWarnings = DBv2::prepare('SELECT * FROM `{prefix}warnings` WHERE `user_id` = :user');
-        $getWarnings->execute([
-            'user' => $this->id,
-        ]);
-        $getWarnings = $getWarnings->fetchAll(\PDO::FETCH_ASSOC);
+        $getWarnings = DB::table('warnings')
+            ->where('user_id', $this->id)
+            ->get();
 
         // Storage array
         $warnings = [];
@@ -996,39 +1010,38 @@ class User
         // Add special stuff
         foreach ($getWarnings as $warning) {
             // Check if it hasn't expired
-            if ($warning['warning_expires'] < time()) {
-                DBv2::prepare('DELETE FROM `{prefix}warnings` WHERE `warning_id` = :warn')
-                    ->execute([
-                    'warn' => $warning['warning_id'],
-                ]);
+            if ($warning->warning_expires < time()) {
+                DB::table('warnings')
+                    ->where('warning_id', $warning['warning_id'])
+                    ->delete();
                 continue;
             }
 
             // Text action
-            switch ($warning['warning_action']) {
+            switch ($warning->warning_action) {
                 default:
                 case '0':
-                    $warning['warning_action_text'] = 'Warning';
+                    $warning->warning_action_text = 'Warning';
                     break;
                 case '1':
-                    $warning['warning_action_text'] = 'Silence';
+                    $warning->warning_action_text = 'Silence';
                     break;
                 case '2':
-                    $warning['warning_action_text'] = 'Restriction';
+                    $warning->warning_action_text = 'Restriction';
                     break;
                 case '3':
-                    $warning['warning_action_text'] = 'Ban';
+                    $warning->warning_action_text = 'Ban';
                     break;
                 case '4':
-                    $warning['warning_action_text'] = 'Abyss';
+                    $warning->warning_action_text = 'Abyss';
                     break;
             }
 
             // Text expiration
-            $warning['warning_length'] = round(($warning['warning_expires'] - $warning['warning_issued']) / 60);
+            $warning->warning_length = round(($warning->warning_expires - $warning->warning_issued) / 60);
 
             // Add to array
-            $warnings[$warning['warning_id']] = $warning;
+            $warnings[$warning->warning_id] = $warning;
         }
 
         // Return all the warnings
@@ -1062,178 +1075,105 @@ class User
      */
     public function getUsernameHistory()
     {
-        // Do the database query
-        $changes = DBv2::prepare('SELECT * FROM `{prefix}username_history` WHERE `user_id` = :user ORDER BY `change_id` DESC');
-        $changes->execute([
-            'user' => $this->id,
-        ]);
-
-        // Return all the changes
-        return $changes->fetchAll(\PDO::FETCH_ASSOC);
+        return DB::table('username_history')
+            ->where('user_id', $this->id)
+            ->orderBy('change_id', 'desc')
+            ->get();
     }
 
     /**
      * Alter the user's username
      *
      * @param string $username The new username.
-     *
-     * @return array Status indicator.
+     * @param string $username_clean The new (clean) username.
      */
-    public function setUsername($username)
+    public function setUsername($username, $username_clean)
     {
-        // Create a cleaned version
-        $username_clean = Utils::cleanString($username, true);
-
-        // Check if the username is too short
-        if (strlen($username_clean) < Config::get('username_min_length')) {
-            return [0, 'TOO_SHORT'];
-        }
-
-        // Check if the username is too long
-        if (strlen($username_clean) > Config::get('username_max_length')) {
-            return [0, 'TOO_LONG'];
-        }
-
-        // Check if this username hasn't been used in the last amount of days set in the config
-        $getOld = DBv2::prepare('SELECT * FROM `{prefix}username_history` WHERE `username_old_clean` = :clean AND `change_time` > :time ORDER BY `change_id` DESC');
-        $getOld->execute([
-            'clean' => $username_clean,
-            'time' => (Config::get('old_username_reserve') * 24 * 60 * 60),
-        ]);
-        $getOld = $getOld->fetch();
-
-        // Check if anything was returned
-        if ($getOld && $getOld->user_id != $this->id) {
-            return [0, 'TOO_RECENT', $getOld['change_time']];
-        }
-
-        // Check if the username is already in use
-        $getInUse = DBv2::prepare('SELECT * FROM `{prefix}users` WHERE `username_clean` = :clean');
-        $getInUse->execute([
-            'clean' => $username_clean,
-        ]);
-        $getInUse = $getInUse->fetch();
-
-        // Check if anything was returned
-        if ($getInUse) {
-            return [0, 'IN_USE', $getInUse->user_id];
-        }
-
         // Insert into username_history table
-        DBv2::prepare('INSERT INTO `{prefix}username_history` (`change_time`, `user_id`, `username_new`, `username_new_clean`, `username_old`, `username_old_clean`) VALUES (:time, :user, :new, :new_clean, :old, :old_clean)')
-            ->execute([
-            'time' => time(),
-            'user' => $this->id,
-            'new' => $username,
-            'new_clean' => $username_clean,
-            'old' => $this->username,
-            'old_clean' => $this->usernameClean,
-        ]);
+        DB::table('username_history')
+            ->insert([
+                'change_time' => time(),
+                'user_id' => $this->id,
+                'username_new' => $username,
+                'username_new_clean' => $username_clean,
+                'username_old' => $this->username,
+                'username_old_clean' => $this->usernameClean,
+            ]);
 
         // Update userrow
-        DBv2::prepare('UPDATE `{prefix}users` SET `username` = :username, `username_clean` = :clean WHERE `user_id` = :id')
-            ->execute([
-            'username' => $username,
-            'clean' => $username_clean,
-            'id' => $this->id,
-        ]);
-
-        // Return success
-        return [1, 'SUCCESS', $username];
+        DB::table('users')
+            ->where('user_id', $this->id)
+            ->update([
+                'username' => $username,
+                'username_clean' => $username_clean,
+            ]);
     }
 
     /**
      * Alter a user's e-mail address
      *
      * @param string $email The new e-mail address.
-     *
-     * @return array Status indicator.
      */
-    public function setEMailAddress($email)
+    public function setMail($email)
     {
-        // Validate e-mail address
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return [0, 'INVALID'];
-        }
-
-        // Check if the username is already in use
-        $getInUse = DBv2::prepare('SELECT * FROM `{prefix}users` WHERE `email` = :email');
-        $getInUse->execute([
-            'email' => $email,
-        ]);
-        $getInUse = $getInUse->fetch();
-
-        // Check if anything was returned
-        if ($getInUse) {
-            return [0, 'IN_USE', $getInUse->user_id];
-        }
-
         // Update userrow
-        DBv2::prepare('UPDATE `{prefix}users` SET `email` = :email WHERE `user_id` = :id')
-            ->execute([
-            'email' => $email,
-            'id' => $this->id,
-        ]);
-
-        // Return success
-        return [1, 'SUCCESS', $email];
+        DB::table('users')
+            ->where('user_id', $this->id)
+            ->update([
+                'email' => $email,
+            ]);
     }
 
     /**
      * Change the user's password
      *
-     * @param string $old The old password.
-     * @param string $new The new password
-     * @param string $confirm The new one again.
-     *
-     * @return array Status indicator.
+     * @param string $password The new password.
      */
-    public function setPassword($old, $new, $confirm)
+    public function setPassword($password)
     {
-        // Validate password
-        switch ($this->passwordAlgo) {
-            // Disabled account
-            case 'disabled':
-                return [0, 'NO_LOGIN'];
-
-            // Default hashing method
-            default:
-                if (!Hashing::validatePassword($old, [
-                    $this->passwordAlgo,
-                    $this->passwordIter,
-                    $this->passwordSalt,
-                    $this->passwordHash,
-                ])) {
-                    return [0, 'INCORRECT_PASSWORD', $this->passwordChan];
-                }
-
-        }
-
-        // Check password entropy
-        if (Utils::pwdEntropy($new) < Config::get('min_entropy')) {
-            return [0, 'PASS_TOO_SHIT'];
-        }
-
-        // Passwords do not match
-        if ($new != $confirm) {
-            return [0, 'PASS_NOT_MATCH'];
-        }
-
         // Create hash
-        $password = Hashing::createHash($new);
+        $password = Hashing::createHash($password);
 
         // Update userrow
-        DBv2::prepare('UPDATE `{prefix}users` SET `password_hash` = :hash, `password_salt` = :salt, `password_algo` = :algo, `password_iter` = :iter, `password_chan` = :chan WHERE `user_id` = :id')
-            ->execute([
-            'hash' => $password[3],
-            'salt' => $password[2],
-            'algo' => $password[0],
-            'iter' => $password[1],
-            'chan' => time(),
-            'id' => $this->id,
-        ]);
+        DB::table('users')
+            ->where('user_id', $this->id)
+            ->update([
+                'password_hash' => $password[3],
+                'password_salt' => $password[2],
+                'password_algo' => $password[0],
+                'password_iter' => $password[1],
+                'password_chan' => time(),
+            ]);
+    }
 
-        // Return success
-        return [1, 'SUCCESS'];
+    /**
+     * Get all the notifications for this user.
+     *
+     * @param int $timeDifference The timeframe of alerts that should be fetched.
+     * @param bool $excludeRead Whether alerts that are marked as read should be included.
+     *
+     * @return array An array with Notification objects.
+     */
+    public function notifications($timeDifference = 0, $excludeRead = true)
+    {
+        $alertIds = DB::table('notifications')
+            ->where('user_id', $this->id);
+
+        if ($timeDifference) {
+            $alertIds->where('alert_timestamp', '>', time() - $timeDifference);
+        }
+
+        if ($excludeRead) {
+            $alertIds->where('alert_read', 0);
+        }
+
+        $alertIds = array_column($alertIds->get(['alert_id']), 'alert_id');
+        $alerts = [];
+
+        foreach ($alertIds as $alertId) {
+            $alerts[$alertId] = new Notification($alertId);
+        }
+
+        return $alerts;
     }
 }

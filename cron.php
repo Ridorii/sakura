@@ -6,14 +6,6 @@
 // Declare Namespace
 namespace Sakura;
 
-// Check if the script isn't executed by root
-if (function_exists('posix_getuid')) {
-    if (posix_getuid() === 0) {
-        trigger_error('Running cron as root is disallowed for security reasons.', E_USER_ERROR);
-        exit;
-    }
-}
-
 // Define that this page won't require templating
 define('SAKURA_NO_TPL', true);
 
@@ -35,9 +27,13 @@ DB::table('notifications')
 // Get expired premium accounts
 $expiredPremium = DB::table('premium')
     ->where('premium_expire', '<', time())
-    ->get();
+    ->get(['user_id']);
 
-// Process expired premium accounts, make this not stupid in the future
-foreach ($expiredPremium as $expired) {
-    Users::updatePremiumMeta($expired->user_id);
+foreach ($expiredPremium as $premium) {
+    DB::table('premium')
+        ->where('user_id', $premium->user_id)
+        ->delete();
+
+    User::construct($premium->user_id)
+        ->isPremium();
 }

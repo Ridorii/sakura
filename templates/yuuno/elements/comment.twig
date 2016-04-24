@@ -1,28 +1,28 @@
-            <li id="comment-{{ comment.comment_id }}">
+            <li id="comment-{{ comment.id }}">
                 <div class="comment">
-                    <a class="comment-avatar clean" href="{{ route('user.profile', comment.comment_poster.id) }}" style="background-image: url('{{ route('file.avatar', comment.comment_poster.id) }}');"><span style="color: {{ comment.comment_poster.colour }};">{{ comment.comment_poster.username }}</span></a>
+                    <a class="comment-avatar clean" href="{{ route('user.profile', comment.userData.id) }}" style="background-image: url('{{ route('file.avatar', comment.userData.id) }}');"><span style="color: {{ comment.userData.colour }};">{{ comment.userData.username }}</span></a>
                     <div class="comment-pointer"></div>
                     <div class="comment-content">
                         <div class="comment-controls">
                             <ul>
-                                {% if comment.comment_poster.id == user.id %}
-                                    <li><a href="{{ urls.format('COMMENT_DELETE', [comment.comment_id, comment.comment_category, php.sessionid])}}" class="clean fa fa-trash-o comment-deletion-link" title="Delete" id="comment-action-delete-{{ comment.comment_id }}"></a></li>
+                                {% if comment.userData.id == user.id %}
+                                    <li><a href="javascript:void(0);" onclick="commentDelete({{ comment.id }});" class="clean fa fa-trash-o" title="Delete"></a></li>
                                 {% else %}
-                                    <li><a href="{{ urls.format('USER_REPORT', [comment.comment_poster.id]) }}" class="clean fa fa-exclamation-circle" title="Report" id="comment-action-report-{{ comment.comment_id }}"></a></li>
+                                    <li><a href="{{ route('user.report', comment.userData.id) }}" class="clean fa fa-exclamation-circle" title="Report"></a></li>
                                 {% endif %}
-                                <li><a href="javascript:void(0);" onclick="commentReply({{ comment.comment_id }}, '{{ php.sessionid }}', '{{ comment.comment_category }}', '{{ urls.format('COMMENT_POST') }}', '{{ urls.format('IMAGE_AVATAR', [user.id]) }}');" class="clean fa fa-reply" title="Reply" id="comment-action-reply-{{ comment.comment_id }}"></a></li>
-                                <li class="shown voting like"><a href="{{ urls.format('COMMENT_VOTE', [comment.comment_id, 1, comment.comment_category, php.sessionid])}}" class="clean comment-like-link" id="comment-action-like-{{ comment.comment_id }}"><span class="fa fa-thumbs-up"></span> <span id="comment-{{ comment.comment_id }}-likes">{{ comment.comment_likes }}</span></a></li>
-                                <li class="shown voting dislike"><a id="comment-action-dislike-{{ comment.comment_id }}" href="{{ urls.format('COMMENT_VOTE', [comment.comment_id, 0, comment.comment_category, php.sessionid])}}" class="clean comment-dislike-link"><span class="fa fa-thumbs-down"></span> <span id="comment-{{ comment.comment_id }}-dislikes">{{ comment.comment_dislikes }}</span></a></li>
+                                <li><a href="javascript:void(0);" onclick="commentReply({{ comment.id }}, '{{ session_id() }}', '{{ route('file.avatar', user.id) }}');" class="clean fa fa-reply" title="Reply" id="comment-action-reply-{{ comment.id }}"></a></li>
+                                <li class="shown voting like"><a href="javascript:void(0);" onclick="commentVote({{ comment.id }}, 1);" class="clean"><span class="fa fa-thumbs-up"></span> <span id="comment-{{ comment.id }}-likes">{{ comment.upvotes }}</span></a></li>
+                                <li class="shown voting dislike"><a href="javascript:void(0);" onclick="commentVote({{ comment.id }}, 0);" class="clean"><span class="fa fa-thumbs-down"></span> <span id="comment-{{ comment.id }}-dislikes">{{ comment.downvotes }}</span></a></li>
                             </ul>
                             <div class="clear"></div>
                         </div>
                         <div class="comment-text">
-                            {{ comment.comment_text|raw|nl2br }}
+                            {{ comment.parsed|raw|nl2br }}
                         </div>
                     </div>
                 </div>
-                <ul>
-                    {% for comment in comment.comment_replies %}
+                <ul class="comment-replies">
+                    {% for comment in comment.replies %}
                         {% include 'elements/comment.twig' %}
                     {% endfor %}
                 </ul>

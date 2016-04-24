@@ -226,7 +226,7 @@ class Thread
             ->update([
                 'topic_hidden' => $this->hidden,
                 'topic_title' => $this->title,
-                'topic_limit' => $this->timeLimit,
+                'topic_time_limit' => $this->timeLimit,
                 'topic_status' => $this->status,
                 'topic_status_change' => $this->statusChange,
                 'topic_type' => $this->type,
@@ -377,12 +377,15 @@ class Thread
             ->where('forum_id', $this->forum)
             ->count();
 
+        // Adding a second to this to avoid own posts getting marked unread
+        $time = time() + 1;
+
         // If so update it
         if ($track) {
             DB::table('topics_track')
                 ->where('user_id', $user)
                 ->where('topic_id', $this->id)
-                ->update(['mark_time' => time()]);
+                ->update(['mark_time' => $time]);
         } else {
             // If not create a new record
             DB::table('topics_track')
@@ -390,7 +393,7 @@ class Thread
                     'user_id' => $user,
                     'topic_id' => $this->id,
                     'forum_id' => $this->forum,
-                    'mark_time' => time(),
+                    'mark_time' => $time,
                 ]);
         }
     }

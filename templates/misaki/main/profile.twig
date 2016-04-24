@@ -49,7 +49,7 @@
             <div id="userAvatar" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [profile.id]) }}');">{{ profile.username }}'s Avatar</div>
             <div class="userData">
                 <div class="headerLeft">
-                    <div class="profileUsername" style="color: {{ profile.colour }};"{% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0]['username_old'] }} before {{ profile.getUsernameHistory[0]['change_time']|date(sakura.dateFormat) }}."{% endif %}>
+                    <div class="profileUsername" style="color: {{ profile.colour }};"{% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0]['username_old'] }} before {{ profile.getUsernameHistory[0]['change_time']|date(config('date_format')) }}."{% endif %}>
                         {% if profileHidden %}Unknown user{% else %}{{ profile.username }}{% endif %}
                     </div>
                     <div class="profileUserTitle">
@@ -58,8 +58,8 @@
                 </div>
                 <div class="headerRight">
                 {% if not profileHidden %}
-                    <div>Joined <span title="{{ profile.dates.joined|date(sakura.dateFormat) }}">{{ profile.elapsed.joined }}</span></div>
-                    <div>{% if profile.dates.lastOnline < 1 %}User hasn't logged in yet.{% else %}Last Active <span title="{{ profile.dates.lastOnline|date(sakura.dateFormat) }}">{{ profile.elapsed.lastOnline }}</span>{% endif %}</div>
+                    <div>Joined <span title="{{ profile.dates.joined|date(config('date_format')) }}">{{ profile.elapsed.joined }}</span></div>
+                    <div>{% if profile.dates.lastOnline < 1 %}User hasn't logged in yet.{% else %}Last Active <span title="{{ profile.dates.lastOnline|date(config('date_format')) }}">{{ profile.elapsed.lastOnline }}</span>{% endif %}</div>
                 {% endif %}
                 </div>
             </div>
@@ -87,7 +87,7 @@
                         </div>
                     </div>
                     {% endif %}
-                    {% if session.checkLogin %}
+                    {% if user.isActive %}
                         <div class="profilePlatform userActions">
                             <div class="inner">
                                 <ul class="actions">
@@ -95,8 +95,8 @@
                                         <li class="edit"><a title="Edit your profile" href="{{ urls.format('SETTING_MODE', ['general', 'profile']) }}">Edit</a></li>
                                         <li class="settings"><a title="Change your settings" href="{{ urls.format('SETTINGS_INDEX') }}">Settings</a></li>
                                     {% else %}
-                                        <li class="{% if user.checkFriends(profile.id) == 2 %}mutualFriend{% elseif user.checkFriends(profile.id) == 1 %}pendingFriend{% else %}addFriend{% endif %}"><a href="{% if user.checkFriends(profile.id) == 0 %}{{ urls.format('FRIEND_ADD', [profile.id, php.sessionid, php.time, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [profile.id, php.sessionid, php.time, sakura.currentPage]) }}{% endif %}">{% if user.checkFriends(profile.id) == 0 %}Add friend{% else %}Friends{% endif %}</a></li>
-                                        <li class="report"><a href="{{ urls.format('USER_REPORT', [profile.id]) }}">Report</a></li>
+                                        <li class="{% if user.checkFriends(profile.id) == 2 %}mutualFriend{% elseif user.checkFriends(profile.id) == 1 %}pendingFriend{% else %}addFriend{% endif %}"><a href="{% if user.checkFriends(profile.id) == 0 %}{{ urls.format('FRIEND_ADD', [profile.id, session_id(), date().timestamp, sakura.currentPage]) }}{% else %}{{ urls.format('FRIEND_REMOVE', [profile.id, session_id(), date().timestamp, sakura.currentPage]) }}{% endif %}">{% if user.checkFriends(profile.id) == 0 %}Add friend{% else %}Friends{% endif %}</a></li>
+                                        <li class="report"><a href="{{ route('user.report', profile.id) }}">Report</a></li>
                                     {% endif %}
                                 </ul>
                             </div>
@@ -104,7 +104,7 @@
                     {% endif %}
                     <div class="profilePlatform userAccounts">
                         <div class="inner">
-                            {% if session.checkLogin %}
+                            {% if user.isActive %}
                                 {% if profile.profileFields %}
                                     {% for name,field in profile.profileFields %}
                                     <div class="field">
@@ -145,8 +145,6 @@
                         <div class="title">Account Standing</div>
                         {% if profileHidden %}
                             <div class="standing" style="color: #444;">Unknown</div>
-                        {% elseif profile.checkBan %}
-                            <h2 class="standing" style="color: #811;">Banned</h2>
                         {% elseif profile.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}
                             <h2 class="standing" style="color: #811;">Restricted</h2>
                         {% else %}

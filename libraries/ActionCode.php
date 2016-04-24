@@ -31,7 +31,11 @@ class ActionCode
         // Insert it
         DB::table('actioncodes')
             ->insert(
-                ['action' => $action, 'id' => $user, 'code' => $code]
+                [
+                    'code_action' => $action,
+                    'user_id' => $user,
+                    'action_code' => $code,
+                ]
             );
 
         // Return the code
@@ -74,7 +78,7 @@ class ActionCode
     public static function invalidate($code)
     {
         DB::table('actioncodes')
-            ->where('code_action', $code)
+            ->where('action_code', $code)
             ->delete();
     }
 }

@@ -2,10 +2,10 @@
 <html>
 	<head>
         <!-- META -->
-		<meta charset="{{ sakura.charset }}" />
+		<meta charset="{{ config('charset') }}" />
         <title>{{ page.title }}</title>
-        <meta name="description" content="{{ sakura.sitedesc }}" />
-        <meta name="keywords" content="{{ sakura.sitetags }}" />
+        <meta name="description" content="{{ config('sitedesc') }}" />
+        <meta name="keywords" content="{{ config('sitetags')|json_decode|join(', ') }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         {% if page.redirect %}
         <meta http-equiv="refresh" content="3; URL={{ page.redirect }}" />
@@ -21,6 +21,6 @@
             <a href="/register">Register</a>
         </div>
 		<a href="//{{ sakura.urls.main }}/">
-			<img class="logo" src="/content/pixel.png" alt="{{ sakura.sitename }}" />
+			<img class="logo" src="/content/pixel.png" alt="{{ config('sitename') }}" />
 		</a>
 		<br />

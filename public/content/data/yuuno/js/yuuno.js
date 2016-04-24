@@ -20,18 +20,18 @@ function notifyUI(content) {
     alert.className = 'notification-enter';
     alert.id = id;
     // Add the icon
-    if ((typeof content.img).toLowerCase() === 'undefined' || content.img == null || content.img.length < 2) {
+    if ((typeof content.image).toLowerCase() === 'undefined' || content.image == null || content.image.length < 2) {
         aIconCont = document.createElement('div');
         aIconCont.className = 'font-icon fa fa-info fa-4x';
     }
-    else if (content.img.substr(0, 5) == 'FONT:') {
+    else if (content.image.substr(0, 5) == 'FONT:') {
         aIconCont = document.createElement('div');
-        aIconCont.className = 'font-icon fa ' + content.img.replace('FONT:', '') + ' fa-4x';
+        aIconCont.className = 'font-icon fa ' + content.image.replace('FONT:', '') + ' fa-4x';
     }
     else {
         aIconCont = document.createElement('img');
         aIconCont.alt = id;
-        aIconCont.src = content.img;
+        aIconCont.src = content.image;
     }
     aIcon.appendChild(aIconCont);
     aIcon.className = 'notification-icon';
@@ -58,25 +58,6 @@ function notifyUI(content) {
     alert.appendChild(aClose);
     // Append the notification to the document
     cont.appendChild(alert);
-    // Play sound if request
-    if (content.sound) {
-        // Create the elements
-        var sound = document.createElement('audio');
-        var mp3 = document.createElement('source');
-        var ogg = document.createElement('source');
-        // Assign attribs
-        mp3.type = 'audio/mp3';
-        ogg.type = 'audio/ogg';
-        mp3.src = sakuraVars.content + '/sounds/notify.mp3';
-        ogg.src = sakuraVars.content + '/sounds/notify.ogg';
-        // Append
-        sound.appendChild(mp3);
-        sound.appendChild(ogg);
-        // Less loud
-        sound.volume = 0.5;
-        // And play
-        sound.play();
-    }
     // If keepalive is 0 keep the notification open forever
     if (content.timeout > 0) {
         // Set a timeout and close after an amount
@@ -111,7 +92,7 @@ function notifyRequest(session) {
     }
     // Create AJAX object
     var get = new AJAX();
-    get.setUrl('/settings.php?request-notifications=true&time=' + Sakura.epoch() + '&session=' + session);
+    get.setUrl('/notifications');
     // Add callbacks
     get.addCallback(200, function () {
         // Assign the parsed JSON
@@ -385,91 +366,6 @@ function replaceTag(tag) {
 // ^
 function safeTagsReplace(str) {
     return str.replace(/[&<>]/g, replaceTag);
-}
-// Open a comment reply field
-function commentReply(id, session, category, action, avatar) {
-    // Find subject post
-    var replyingTo = document.getElementById('comment-' + id);
-    // Check if it actually exists
-    if ((typeof replyingTo).toLowerCase() === 'undefined') {
-        return;
-    }
-    // Attempt to get previously created box
-    var replyBox = document.getElementById('comment-reply-container-' + id);
-    // Remove it if it already exists
-    if (replyBox) {
-        Sakura.removeById('comment-reply-container-' + id);
-        return;
-    }
-    // Container
-    var replyContainer = document.createElement('li');
-    replyContainer.id = 'comment-reply-container-' + id;
-    // Form
-    var replyForm = document.createElement('form');
-    replyForm.id = 'comment-reply-' + id;
-    replyForm.action = action;
-    replyForm.method = 'post';
-    // Session
-    var replyInput = document.createElement('input');
-    replyInput.type = 'hidden';
-    replyInput.name = 'session';
-    replyInput.value = session;
-    replyForm.appendChild(replyInput);
-    // Category
-    var replyInput = document.createElement('input');
-    replyInput.type = 'hidden';
-    replyInput.name = 'category';
-    replyInput.value = category;
-    replyForm.appendChild(replyInput);
-    // Reply ID
-    var replyInput = document.createElement('input');
-    replyInput.type = 'hidden';
-    replyInput.name = 'replyto';
-    replyInput.value = id.toString();
-    replyForm.appendChild(replyInput);
-    // Mode
-    var replyInput = document.createElement('input');
-    replyInput.type = 'hidden';
-    replyInput.name = 'mode';
-    replyInput.value = 'comment';
-    replyForm.appendChild(replyInput);
-    // Comment container
-    var replyDiv = document.createElement('div');
-    replyDiv.className = 'comment';
-    // Avatar
-    var replyAvatar = document.createElement('div');
-    replyAvatar.className = 'comment-avatar';
-    replyAvatar.style.backgroundImage = 'url(' + avatar + ')';
-    replyDiv.appendChild(replyAvatar);
-    // Pointer
-    var replyPoint = document.createElement('div');
-    replyPoint.className = 'comment-pointer';
-    replyDiv.appendChild(replyPoint);
-    // Textarea
-    var replyText = document.createElement('textarea');
-    replyText.className = 'comment-content';
-    replyText.name = 'comment';
-    replyDiv.appendChild(replyText);
-    // Submit
-    var replySubmit = document.createElement('input');
-    replySubmit.className = 'comment-submit';
-    replySubmit.type = 'submit';
-    replySubmit.name = 'submit';
-    replySubmit.value = "\uf1d8";
-    replyDiv.appendChild(replySubmit);
-    // Append to form
-    replyForm.appendChild(replyDiv);
-    // Append form to container
-    replyContainer.appendChild(replyForm);
-    // Insert the HTML
-    if (replyingTo.children[1].children.length > 0) {
-        replyingTo.children[1].insertBefore(replyContainer, replyingTo.children[1].firstChild);
-    }
-    else {
-        replyingTo.children[1].appendChild(replyContainer);
-    }
-    // Prepare AJAX submission
-    prepareAjaxForm(replyForm.id, 'Replying...');
 }
 // Inserting text into text box
 // Borrowed from http://stackoverflow.com/questions/1064089/inserting-a-text-where-cursor-is-using-javascript-jquery (therefore not in Typescript format, fix this later)

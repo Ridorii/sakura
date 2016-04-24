@@ -1,0 +1,18 @@
+<form method="post" action="{{ route('forums.thread.mod', thread.id) }}" style="display: inline-block;">
+    <input type="hidden" name="session" value="{{ session_id() }}" />
+    {% if forumSticky is defined %}
+        <button class="forumbtn" title="{{ forumSticky ? 'Unsticky' : 'Sticky' }}" name="action" value="sticky"><span class="fa fa-{{ forumSticky ? 'remove' : 'thumb-tack' }}"></span></button>
+    {% endif %}
+    {% if forumAnnounce is defined %}
+        <button class="forumbtn" title="{{ forumAnnounce ? 'Unannounce' : 'Announce' }}" name="action" value="announce"><span class="fa fa-{{ forumAnnounce ? 'remove' : 'bullhorn' }}"></span></button>
+    {% endif %}
+    {% if forumLock is defined %}
+        <button class="forumbtn" title="{{ forumLock ? 'Unlock' : 'Lock' }}" name="action" value="lock"><span class="fa fa-{{ forumLock ? 'unlock' : 'lock' }}"></span></button>
+    {% endif %}
+    {% if forumRestore is defined %}
+        <button class="forumbtn" title="Restore" name="action" value="restore"><span class="fa fa-history"></span></button>
+    {% endif %}
+    {% if forumTrash is defined or forumPrune is defined %}
+        <button class="forumbtn" title="{{ forumPrune ? 'Prune' : 'Trash' }}" name="action" value="delete"><span class="fa fa-{{ forumPrune ? 'bomb' : 'trash' }}"></span></button>
+    {% endif %}
+</form>

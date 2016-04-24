@@ -1,0 +1,47 @@
+{% extends 'settings/advanced/master.twig' %}
+
+{% set mode = 'Sessions' %}
+
+{% block description %}
+    <p>Session keys are a way of identifying yourself with the system without keeping your password in memory.</p>
+    <p>If someone finds one of your session keys they could possibly compromise your account, if you see any sessions here that shouldn't be here hit the Kill button to kill the selected session.</p>
+    <p>If you get logged out after clicking one you've most likely killed your current session, to make it easier to avoid this from happening your current session is highlighted.</p>
+{% endblock %}
+
+{% block settingsContent %}
+    <table class="settings-table">
+        <thead>
+            <tr><th style="width: 100px;">IP</th><th>Useragent</th><th style="width: 120px;">Login time</th><th></th></tr>
+        </thead>
+        <tfoot>
+            <tr><th>IP</th><th>Useragent</th><th>Login time</th><th></th></tr>
+        </tfoot>
+        <tbody>
+            {% for s in sessions %}
+            <tr {% if s.session_key == session.sessionId %} class="current-session"{% endif %}>
+                <td>
+                    {{ s.user_ip }}
+                </td>
+                <td>
+                    {{ s.user_agent }}
+                </td>
+                <td>
+                    <time datetime="{{ s.session_start|date('r') }}">{{ s.session_start|date(config('date_format')) }}</time>
+                </td>
+                <td style="width: 90px;">
+                    <form method="post" action="{{ route('settings.advanced.sessions') }}">
+                        <input type="hidden" name="id" value="{{ s.session_id }}" />
+                        <button class="inputStyling small" name="session" value="{{ session_id() }}">Kill</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="profile-save">
+        <form method="post" action="{{ route('settings.advanced.sessions') }}">
+            <input type="hidden" name="all" value="1" />
+            <button class="inputStyling" name="session" value="{{ session_id() }}">Kill all active sessions</button>
+        </form>
+    </div>
+{% endblock %}

@@ -7,11 +7,11 @@
 
 namespace Sakura\Forum;
 
-use Sakura\DB;
-use Sakura\User;
 use Sakura\BBcode;
 use Sakura\Config;
+use Sakura\DB;
 use Sakura\Net;
+use Sakura\User;
 
 /**
  * Used to serve, create and update posts.
@@ -116,7 +116,7 @@ class Post
         $postRow = DB::table('posts')
             ->where('post_id', $postId)
             ->get();
-        
+
         // Assign data if a row was returned
         if ($postRow) {
             $postRow = $postRow[0];
@@ -150,14 +150,6 @@ class Post
      */
     public static function create($subject, $text, User $poster, $thread = 0, $forum = 0)
     {
-        // Check if the data meets the requirements
-        if (strlen($subject) < Config::get('forum_title_min')
-            || strlen($subject) > Config::get('forum_title_max')
-            || strlen($text) < Config::get('forum_text_min')
-            || strlen($text) > Config::get('forum_text_max')) {
-            return null;
-        }
-
         // If no thread is specified create a new one
         if ($thread) {
             $thread = new Thread($thread);
@@ -176,7 +168,7 @@ class Post
                 'topic_id' => $thread->id,
                 'forum_id' => $thread->forum,
                 'poster_id' => $poster->id,
-                'poster_ip' => Net::IP(),
+                'poster_ip' => Net::ip(),
                 'post_time' => time(),
                 'post_subject' => $subject,
                 'post_text' => $text,
@@ -214,7 +206,7 @@ class Post
                 'topic_id' => $thread->id,
                 'forum_id' => $thread->forum,
                 'poster_id' => $this->poster->id,
-                'poster_ip' => Net::pton(Net::IP()),
+                'poster_ip' => Net::pton(Net::ip()),
                 'post_time' => $this->time,
                 'post_subject' => $this->subject,
                 'post_text' => $this->text,
@@ -225,5 +217,37 @@ class Post
 
         // Return a new post object
         return new Post($this->id);
+    }
+
+    public function delete()
+    {
+        DB::table('posts')
+            ->where('post_id', $this->id)
+            ->delete();
+    }
+
+    /**
+     * Check if a user has read this post before.
+     *
+     * @param mixed $user The id of the user in question.
+     *
+     * @return bool A boolean indicating the read status.
+     */
+    public function unread($user)
+    {
+        // Attempt to get track row from the database
+        $track = DB::table('topics_track')
+            ->where('user_id', $user)
+            ->where('topic_id', $this->thread)
+            ->where('mark_time', '>', $this->time)
+            ->count();
+
+        // If nothing was returned it's obvious that the status is unread
+        if (!$track) {
+            return true;
+        }
+
+        // Else just return false meaning everything is read
+        return false;
     }
 }

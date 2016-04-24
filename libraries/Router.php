@@ -8,8 +8,8 @@
 namespace Sakura;
 
 use Phroute\Phroute\Dispatcher;
-use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
+use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Phroute\Phroute\RouteCollector;
 
 /**
@@ -53,7 +53,8 @@ class Router
         'PATCH',
         'DELETE',
         'HEAD',
-        'ANY'
+        'OPTIONS',
+        'ANY',
     ];
 
     /**
@@ -67,7 +68,19 @@ class Router
         // Check if the method exists
         if (in_array($name = strtoupper($name), self::$methods)) {
             $path = isset($args[2]) && $args !== null ? [$args[0], $args[2]] : $args[0];
-            $handler = is_callable($args[1]) || is_array($args[1]) ? $args[1] : explode('@', ('Sakura\Controllers\\' . $args[1]));
+            $handler = is_callable($args[1]) || is_array($args[1])
+            ? $args[1]
+            : explode(
+                '@',
+                (
+                    'Sakura\\Controllers\\'
+                    . str_replace(
+                        '.',
+                        '\\',
+                        $args[1]
+                    )
+                )
+            );
             $filter = isset($args[3]) ? $args[3] : [];
 
             self::$router->addRoute($name, $path, $handler, $filter);
@@ -128,6 +141,29 @@ class Router
         }
 
         return self::$basePath . self::$router->route($name, $args);
+    }
+
+    /**
+     * Create group.
+     *
+     * @param array $filters The filters for this group.
+     * @param \Closure $callback The containers
+     */
+    public static function group($filters, $callback)
+    {
+        // Execute the inner function
+        self::$router->group($filters, $callback);
+    }
+
+    /**
+     * Create filter.
+     *
+     * string $name Identifier of the filter
+     * \Closure $method
+     */
+    public static function filter($name, $method)
+    {
+        self::$router->filter($name, $method);
     }
 
     /**

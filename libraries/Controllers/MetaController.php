@@ -9,10 +9,9 @@ namespace Sakura\Controllers;
 
 use Sakura\Config;
 use Sakura\DB;
-use Sakura\News;
+use Sakura\News\Category;
 use Sakura\Template;
 use Sakura\User;
-use Sakura\Users;
 
 /**
  * Meta page controllers (sections that aren't big enough to warrant a dedicated controller).
@@ -29,54 +28,62 @@ class MetaController extends Controller
      */
     public function index()
     {
+        // Get the newest user
+        $newestUserId = DB::table('users')
+            ->where('rank_main', '!=', Config::get('restricted_rank_id'))
+            ->where('rank_main', '!=', Config::get('deactive_rank_id'))
+            ->orderBy('user_id', 'desc')
+            ->limit(1)
+            ->get(['user_id']);
+        $newestUser = User::construct($newestUserId ? $newestUserId[0]->user_id : 0);
+
+        // Get all the currently online users
+        $timeRange = time() - Config::get('max_online_time');
+
+        // Create a storage variable
+        $onlineUsers = [];
+
+        // Get all online users
+        $getOnline = DB::table('users')
+            ->where('user_last_online', '>', $timeRange)
+            ->get(['user_id']);
+        $getOnline = array_column($getOnline, 'user_id');
+
+        foreach ($getOnline as $user) {
+            $user = User::construct($user);
+
+            // Do a second check
+            if (!$user->isOnline()) {
+                continue;
+            }
+
+            $onlineUsers[$user->id] = $user;
+        }
+
+        // Get news
+        $news = new Category(Config::get('site_news_category'));
+
         // Merge index specific stuff with the global render data
         Template::vars([
-            'news' => new News(Config::get('site_news_category')),
-            'newsCount' => Config::get('front_page_news_posts'),
+            'news' => $news->posts(Config::get('front_page_news_posts')),
             'stats' => [
-                'userCount' => DB::table('users')->where('password_algo', '!=', 'disabled')->whereNotIn('rank_main', [1, 10])->count(),
-                'newestUser' => User::construct(Users::getNewestUserId()),
+                'userCount' => DB::table('users')
+                    ->where('password_algo', '!=', 'disabled')
+                    ->whereNotIn('rank_main', [1, 10])
+                    ->count(),
+                'newestUser' => $newestUser,
                 'lastRegDate' => date_diff(
-                    date_create(date('Y-m-d', User::construct(Users::getNewestUserId())->registered)),
+                    date_create(date('Y-m-d', $newestUser->registered)),
                     date_create(date('Y-m-d'))
                 )->format('%a'),
                 'topicCount' => DB::table('topics')->count(),
                 'postCount' => DB::table('posts')->count(),
-                'onlineUsers' => Users::checkAllOnline(),
+                'onlineUsers' => $onlineUsers,
             ],
         ]);
 
         // Return the compiled page
-        return Template::render('main/index');
-    }
-
-    /**
-     * Handles the news pages.
-     *
-     * @return mixed HTML for the correct news section.
-     */
-    public function news()
-    {
-        // Get arguments
-        $args = func_get_args();
-        $category = isset($args[0]) && !is_numeric($args[0]) ? $args[0] : Config::get('site_news_category');
-        $post = isset($args[1]) && is_numeric($args[1]) ? $args[1] : (
-            isset($args[0]) && is_numeric($args[0]) ? $args[0] : 0
-        );
-
-        // Create news object
-        $news = new News($category);
-
-        // Set parse variables
-        Template::vars([
-            'news' => $news,
-            'postsPerPage' => Config::get('news_posts_per_page'),
-            'viewPost' => $post != 0,
-            'postExists' => $news->postExists($post),
-        ]);
-
-        // Print page contents
-        return Template::render('main/news');
+        return Template::render('meta/index');
     }
 
     /**
@@ -100,7 +107,7 @@ class MetaController extends Controller
         ]);
 
         // Print page contents
-        return Template::render('main/faq');
+        return Template::render('meta/faq');
     }
 
     /**
@@ -140,7 +147,7 @@ class MetaController extends Controller
         }
 
         // Return the compiled page
-        return Template::render('main/infopage');
+        return Template::render('meta/infopage');
     }
 
     /**
@@ -150,14 +157,6 @@ class MetaController extends Controller
      */
     public function search()
     {
-        // Set parse variables
-        Template::vars([
-            'page' => [
-                'title' => 'Search',
-            ],
-        ]);
-
-        // Print page contents
-        return Template::render('main/search');
+        return Template::render('meta/search');
     }
 }

@@ -6,7 +6,7 @@
 class Sakura {
     public static cookiePrefix: string = ""; // Cookie prefix, gets prepended to cookie names
     public static cookiePath: string = "/"; // Cookie path, can in most cases be left untouched
-    
+
     // Get or set a cookie value
     public static cookie(name: string, value: string = null): string {
         // If value is null only get the cookie's value
@@ -74,7 +74,7 @@ class Sakura {
     public static unique(string: string): number {
         // Store the already found character
         var used: string[] = [];
-        
+
         // The amount of characters we've already found
         var count: number = 0;
 
@@ -150,7 +150,7 @@ class Sakura {
             1: ['second', 'a']
         };
 
-        // 
+        //
         var timeKeys: string[] = Object.keys(times).reverse();
 
         // Iterate over the times

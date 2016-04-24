@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', '20160228');
+define('SAKURA_VERSION', 20160408);
 
 // Define Sakura Path
 define('ROOT', __DIR__ . '/');
@@ -23,56 +23,27 @@ set_time_limit(0);
 // Set internal encoding method
 mb_internal_encoding('utf-8');
 
-// Stop the execution if the PHP Version is older than 5.5.0
-if (version_compare(phpversion(), '5.5.0', '<')) {
-    throw new \Exception('Sakura requires at least PHP 5.5.0, please upgrade to a newer PHP version.');
+// Stop the execution if the PHP Version is older than 7.0.0
+if (version_compare(phpversion(), '7.0.0', '<')) {
+    throw new \Exception('Sakura requires at least PHP 7.0.0, please upgrade to a newer PHP version.');
 }
 
 // Check if the composer autoloader exists
 if (!file_exists(ROOT . 'vendor/autoload.php')) {
-    throw new \Exception('Autoloader not found, did you run composer?');
+    throw new \Exception('Autoloader not found, did you run composer install?');
 }
 
 // Require composer libraries
 require_once ROOT . 'vendor/autoload.php';
 
-// Setup the autoloader
-spl_autoload_register(function ($className) {
-    // Replace \ with /
-    $className = str_replace('\\', '/', $className);
-
-    // Create a throwaway count variable
-    $i = 1;
-
-    // Replace the sakura namespace with the libraries directory
-    $className = str_replace('Sakura/', 'libraries/', $className, $i);
-
-    // Require the file
-    require_once ROOT . $className . '.php';
-});
-
-// Include database extensions
-foreach (glob(ROOT . 'libraries/DBWrapper/*.php') as $driver) {
-    require_once $driver;
-}
-
-// Set Error handler
-set_error_handler(['Sakura\Utils', 'errorHandler']);
-
 // Load the local configuration
 Config::init(ROOT . 'config/config.ini');
 
+// Set Error handler
+set_error_handler('error_handler');
+
 // Change error reporting according to the dev configuration
 error_reporting(Config::local('dev', 'show_errors') ? -1 : 0);
-
-// Make the database connection
-DBv2::open(
-    Config::local('database', 'driver'),
-    Config::local('dsn'),
-    Config::local('database', 'username'),
-    Config::local('database', 'password'),
-    Config::local('database', 'prefix')
-);
 
 // Create a new database capsule
 $capsule = new \Illuminate\Database\Capsule\Manager;
@@ -87,12 +58,19 @@ $capsule->setAsGlobal();
 if (Config::get('no_cron_service')) {
     // If not do an "asynchronous" call to the cron.php script
     if (Config::get('no_cron_last') < (time() - Config::get('no_cron_interval'))) {
+        $phpDir = PHP_BINDIR;
+        $cronPath = ROOT . 'cron.php';
+
         // Check OS
         if (substr(strtolower(PHP_OS), 0, 3) == 'win') {
-            pclose(popen('start /B ' . PHP_BINDIR . '\php.exe ' . addslashes(ROOT . 'cron.php'), 'r'));
+            $cronPath = addslashes($cronPath);
+
+            pclose(popen("start /B {$phpDir}\php.exe {$cronPath}", 'r'));
         } else {
-            pclose(popen(PHP_BINDIR . '/php ' . ROOT . 'cron.php > /dev/null 2>/dev/null &', 'r'));
+            pclose(popen("{$phpDir}/php {$cronPath} > /dev/null 2>/dev/null &", 'r'));
         }
+
+        unset($phpDir, $cronPath);
 
         // Update last execution time
         Config::set('no_cron_last', time());
@@ -108,120 +86,44 @@ Router::init();
 // Include routes file
 include_once ROOT . 'routes.php';
 
-// Auth check
-$authCheck = Users::checkLogin();
-
-// Create a user object for the current logged in user
-$currentUser = User::construct($authCheck[0]);
-
-// Create the Urls object
-$urls = new Urls();
-
-// Prepare the name of the template to load (outside of SAKURA_NO_TPL because it's used in imageserve.php)
-$templateName =
-!defined('SAKURA_MANAGE')
-&& isset($currentUser->optionFields()['useMisaki'])
-&& $currentUser->optionFields()['useMisaki'] ?
-'misaki' : Config::get('site_style');
+// Initialise the current session
+ActiveUser::init(
+    intval($_COOKIE[Config::get('cookie_prefix') . 'id'] ?? 0),
+    $_COOKIE[Config::get('cookie_prefix') . 'session'] ?? ''
+);
 
 if (!defined('SAKURA_NO_TPL')) {
     // Start templating engine
-    Template::set($templateName);
+    Template::set(Config::get('site_style'));
 
     // Set base page rendering data
     Template::vars([
         'sakura' => [
-            'versionInfo' => [
-                'version' => SAKURA_VERSION,
-            ],
-
-            'dev' => [
-                'showChangelog' => Config::local('dev', 'show_changelog'),
-            ],
-
-            'cookie' => [
-                'prefix' => Config::get('cookie_prefix'),
-                'domain' => Config::get('cookie_domain'),
-                'path' => Config::get('cookie_path'),
-            ],
-
-            'contentPath' => Config::get('content_path'),
-            'resources' => Config::get('content_path') . '/data/' . $templateName,
-
-            'charset' => Config::get('charset'),
-            'siteName' => Config::get('sitename'),
-            'siteLogo' => Config::get('sitelogo'),
-            'siteDesc' => Config::get('sitedesc'),
-            'siteTags' => json_decode(Config::get('sitetags'), true),
-            'dateFormat' => 'r',
-            'currentPage' => (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null),
-            'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null),
-            'onlineTimeout' => Config::get('max_online_time'),
-            'announcementImage' => Config::get('header_announcement_image'),
-            'announcementLink' => Config::get('header_announcement_link'),
-            'trashForumId' => Config::get('forum_trash_id'),
-
-            'recaptchaPublic' => Config::get('recaptcha_public'),
-            'recaptchaEnabled' => Config::get('recaptcha'),
-
-            'disableRegistration' => Config::get('disable_registration'),
-            'lockAuth' => Config::get('lock_authentication'),
-            'requireActivation' => Config::get('require_activation'),
-            'minPwdEntropy' => Config::get('min_entropy'),
-            'minUsernameLength' => Config::get('username_min_length'),
-            'maxUsernameLength' => Config::get('username_max_length'),
-        ],
-        'php' => [
-            'sessionid' => \session_id(),
-            'time' => \time(),
-            'self' => $_SERVER['PHP_SELF'],
+            'currentPage' => $_SERVER['REQUEST_URI'] ?? null,
+            'referrer' => $_SERVER['HTTP_REFERER'] ?? null,
         ],
 
-        'session' => [
-            'checkLogin' => $authCheck,
-            'sessionId' => $authCheck[1],
-            'userId' => $authCheck[0],
-        ],
+        'session' => array_merge([
+            'sessionId' => ActiveUser::$session->sessionId,
+        ], $_SESSION),
 
-        'user' => $currentUser,
-        'urls' => $urls,
+        'user' => ActiveUser::$user,
 
         'get' => $_GET,
         'post' => $_POST,
+        'request' => $_REQUEST,
         'server' => $_SERVER,
     ]);
-
-    // Add the default render data
-    $renderData = [];
 
     // Site closing
     if (Config::get('site_closed')) {
         // Set parse variables
         Template::vars([
-            'page' => [
-                'message' => Config::get('site_closed_reason'),
-            ],
+            'message' => Config::get('site_closed_reason'),
         ]);
 
         // Print page contents
         echo Template::render('global/information');
-        exit;
-    }
-
-    // Ban checking
-    if ($authCheck && !in_array($_SERVER['PHP_SELF'], [$urls->format('AUTH_ACTION', [], false)]) && $ban = Bans::checkBan($currentUser->id)) {
-        // Additional render data
-        Template::vars([
-            'ban' => [
-                'reason' => $ban['reason'],
-                'issued' => $ban['issued'],
-                'expires' => $ban['expires'],
-                'issuer' => (User::construct($ban['issuer'])),
-            ],
-        ]);
-
-        // Print page contents
-        echo Template::render('main/banned');
         exit;
     }
 }

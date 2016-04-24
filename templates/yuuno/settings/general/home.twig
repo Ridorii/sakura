@@ -1,0 +1,25 @@
+{% extends 'settings/general/master.twig' %}
+
+{% set mode = 'Home' %}
+
+{% block description %}
+    <p>Welcome to the Settings Panel! From here you can monitor, view and update your profile and preferences.</p>
+{% endblock %}
+
+{% block settingsContent %}
+    <div style="margin: 5px;">
+        <h1 class="stylised">Common Tasks</h1>
+        <h2>Profile</h2>
+        <ul>
+            <li><a href="{{ route('settings.appearance.avatar') }}" class="default">Change Avatar</a></li>
+            <li><a href="{{ route('settings.appearance.userpage') }}" class="default">Change Userpage</a></li>
+            <li><a href="{{ route('settings.appearance.signature') }}" class="default">Change Signature</a></li>
+            <li><a href="{{ route('settings.general.profile') }}" class="default">Change Profile Details</a></li>
+        </ul>
+        <h2>Account</h2>
+        <ul>
+            <li><a href="{{ route('settings.advanced.sessions') }}" class="default">Manage Active Sessions</a></li>
+            <li><a href="{{ route('settings.account.password') }}" class="default">Change Password</a></li>
+        </ul>
+    </div>
+{% endblock %}

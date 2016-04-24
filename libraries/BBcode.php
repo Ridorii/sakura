@@ -7,9 +7,9 @@
 
 namespace Sakura;
 
-use JBBCode\Parser;
-use JBBCode\DefaultCodeDefinitionSet;
 use JBBCode\CodeDefinitionBuilder;
+use JBBCode\DefaultCodeDefinitionSet;
+use JBBCode\Parser;
 
 /**
  * Sakura wrapper for JBBCode.
@@ -70,41 +70,31 @@ class BBcode
         // Add the standard definitions
         self::$bbcode->addCodeDefinitionSet(new DefaultCodeDefinitionSet());
 
-        // Header tag
-        $builder = new CodeDefinitionBuilder('header', '<h1>{param}</h1>');
-        self::$bbcode->addCodeDefinition($builder->build());
+        $simpleCodes = [
+            ['header', '<h1>{param}</h1>'],
+            ['s', '<del>{param}</del>'],
+            ['spoiler', '<span class="spoiler">{param}</span>'],
+            ['box', '<div class="spoiler-box-container">
+            <div class="spoiler-box-title" onclick="Sakura.toggleClass(this.parentNode.children[1], \'hidden\');">'
+                . 'Click to open</div><div class="spoiler-box-content hidden">{param}</div></div>'],
+            ['box', '<div class="spoiler-box-container"><div class="spoiler-box-title"'
+                . ' onclick="Sakura.toggleClass(this.parentNode.children[1], \'hidden\');">{option}</div>'
+                . '<div class="spoiler-box-content hidden">{param}</div></div>'],
+            ['quote', '<blockquote><div class="quotee">Quote</div><div class="quote">{param}</div></blockquote>'],
+        ];
 
-        // Strike tag
-        $builder = new CodeDefinitionBuilder('s', '<del>{param}</del>');
-        self::$bbcode->addCodeDefinition($builder->build());
+        foreach ($simpleCodes as $code) {
+            $builder = new CodeDefinitionBuilder($code[0], $code[1]);
 
-        // Spoiler tag
-        $builder = new CodeDefinitionBuilder('spoiler', '<span class="spoiler">{param}</span>');
-        self::$bbcode->addCodeDefinition($builder->build());
+            if (strstr($code[1], '{option}')) {
+                $builder->setUseOption(true);
+            }
 
-        // Box tag
-        $builder = new CodeDefinitionBuilder('box', '<div class="spoiler-box-container"><div class="spoiler-box-title" onclick="Sakura.toggleClass(this.parentNode.children[1], \'hidden\');">Click to open</div><div class="spoiler-box-content hidden">{param}</div></div>');
-        self::$bbcode->addCodeDefinition($builder->build());
-
-        // Box tag
-        $builder = new CodeDefinitionBuilder('box', '<div class="spoiler-box-container"><div class="spoiler-box-title" onclick="Sakura.toggleClass(this.parentNode.children[1], \'hidden\');">{option}</div><div class="spoiler-box-content hidden">{param}</div></div>');
-        $builder->setUseOption(true);
-        self::$bbcode->addCodeDefinition($builder->build());
-
-        // Quote tag
-        $builder = new CodeDefinitionBuilder('quote', '<blockquote><div class="quotee">Quote</div><div class="quote">{param}</div></blockquote>');
-        self::$bbcode->addCodeDefinition($builder->build());
-
-        // Quote tag
-        $builder = new CodeDefinitionBuilder('quote', '<blockquote><div class="quotee">{option} wrote</div><div class="quote">{param}</div></blockquote>');
-        $builder->setUseOption(true);
-        self::$bbcode->addCodeDefinition($builder->build());
+            self::$bbcode->addCodeDefinition($builder->build());
+        }
 
         // Add special definitions (PHP files MUST have the same name as the definition class
         foreach (glob(ROOT . 'libraries/BBcodeDefinitions/*.php') as $ext) {
-            // Include the class
-            require_once $ext;
-            
             // Clean the file path
             $ext = str_replace(ROOT . 'libraries/', '', $ext);
             $ext = str_replace('.php', '', $ext);
@@ -149,7 +139,7 @@ class BBcode
 
         $parsed = nl2br(self::$bbcode->getAsHtml());
 
-        $parsed = Utils::fixCodeTags($parsed);
+        $parsed = self::fixCodeTags($parsed);
         $parsed = self::parseEmoticons($parsed);
 
         return $parsed;
@@ -187,5 +177,38 @@ class BBcode
         }
 
         return self::$bbcode->getAsText();
+    }
+
+    /**
+     * Clean up the contents of <code> tags.
+     *
+     * @param string $text Dirty
+     *
+     * @return string Clean
+     */
+    public static function fixCodeTags($text)
+    {
+        $parts = explode('<code>', $text);
+        $newStr = '';
+
+        if (count($parts) > 1) {
+            foreach ($parts as $p) {
+                $parts2 = explode('</code>', $p);
+                if (count($parts2) > 1) {
+                    $code = str_replace('<br />', '', $parts2[0]);
+                    $code = str_replace('<br/>', '', $code);
+                    $code = str_replace('<br>', '', $code);
+                    $code = str_replace('<', '&lt;', $code);
+                    $newStr .= '<code>' . $code . '</code>';
+                    $newStr .= $parts2[1];
+                } else {
+                    $newStr .= $p;
+                }
+            }
+        } else {
+            $newStr = $text;
+        }
+
+        return $newStr;
     }
 }

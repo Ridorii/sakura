@@ -24,7 +24,7 @@ class Perms
      * MANAGE permission mode, used for site management actions.
      */
     const MANAGE = 'permissions\permissions_manage';
-    
+
     /**
      * FORUM permission mode, used per forum.
      */
@@ -43,7 +43,7 @@ class Perms
      * @var string
      */
     protected $column = '';
-    
+
     /**
      * Constructor.
      *
@@ -94,34 +94,26 @@ class Perms
     public function rank($rid, $conditions = [], $perm = 0)
     {
         // Build statement
-        $stmt = "SELECT * FROM `{prefix}{$this->table}` WHERE `rank_id` = :rank AND `user_id` = 0";
+        $get = DB::table($this->table)
+            ->where('rank_id', $rid)
+            ->where('user_id', 0);
 
         // Append additional conditionals (DBWrapper v1 format, except OR is ignored)
         foreach ($conditions as $column => $value) {
-            $stmt .= " AND `{$column}` {$value[1]} :_retarded_{$column}";
+            $get->where($column, $value[1], $value[0]);
         }
-
-        // Prepare the statement
-        $get = DBv2::prepare($stmt);
-
-        // Bind rank
-        $get->bindParam('rank', $rid);
-
-        // Bind additionals
-        foreach ($conditions as $column => $value) {
-            $get->bindParam("_retarded_{$column}", $value[0]);
-        }
-
-        // Execute!
-        $get->execute();
 
         // Fetch from the db
-        $get = $get->fetch(\PDO::FETCH_ASSOC);
+        $get = $get->get();
 
         // Check if anything was returned
-        if ($get && array_key_exists($this->column, $get) && $get['rank_id']) {
-            // Perform a bitwise OR
-            $perm = $perm | bindec((string) $get[$this->column]);
+        if ($get) {
+            $get = get_object_vars($get[0]);
+
+            if (array_key_exists($this->column, $get) && $get['rank_id']) {
+                // Perform a bitwise OR
+                $perm = $perm | bindec((string) $get[$this->column]);
+            }
         }
 
         // Return the value
@@ -146,36 +138,28 @@ class Perms
         foreach (array_keys($user->ranks) as $rank) {
             $perm = $perm | $this->rank($rank, $conditions, $perm);
         }
-        
+
         // Build statement
-        $stmt = "SELECT * FROM `{prefix}{$this->table}` WHERE `rank_id` = 0 AND `user_id` = :user";
+        $get = DB::table($this->table)
+            ->where('rank_id', 0)
+            ->where('user_id', $uid);
 
         // Append additional conditionals (DBWrapper v1 format, except OR is ignored)
         foreach ($conditions as $column => $value) {
-            $stmt .= " AND `{$column}` {$value[1]} :_retarded_{$column}";
+            $get->where($column, $value[1], $value[0]);
         }
-
-        // Prepare the statement
-        $get = DBv2::prepare($stmt);
-
-        // Bind rank
-        $get->bindParam('user', $uid);
-
-        // Bind additionals
-        foreach ($conditions as $column => $value) {
-            $get->bindParam("_retarded_{$column}", $value[0]);
-        }
-
-        // Execute!
-        $get->execute();
 
         // Fetch from the db
-        $get = $get->fetch(\PDO::FETCH_ASSOC);
-        
+        $get = $get->get();
+
         // Check if anything was returned
-        if ($get && array_key_exists($this->column, $get) && $get['user_id']) {
-            // Perform a bitwise OR
-            $perm = $perm | bindec((string) $get[$this->column]);
+        if ($get) {
+            $get = get_object_vars($get[0]);
+
+            if (array_key_exists($this->column, $get) && $get['user_id']) {
+                // Perform a bitwise OR
+                $perm = $perm | bindec((string) $get[$this->column]);
+            }
         }
 
         // Return the value

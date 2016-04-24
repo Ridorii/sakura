@@ -2,10 +2,10 @@
 <html>
     <head>
         <!-- META -->
-        <meta charset="{{ sakura.charset }}" />
-        <title>{% block title %}{{ sakura.siteName }}{% endblock %}</title>
-        <meta name="description" content="{{ sakura.siteDesc }}" />
-        <meta name="keywords" content="{{ sakura.siteTags|join(', ') }}" />
+        <meta charset="{{ config('charset') }}" />
+        <title>{% block title %}{{ config('sitename') }}{% endblock %}</title>
+        <meta name="description" content="{{ config('sitedesc') }}" />
+        <meta name="keywords" content="{{ config('sitetags')|json_decode|join(', ') }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="msapplication-TileColor" content="#9475b2" />
         <meta name="msapplication-TileImage" content="/content/images/icons/ms-icon-144x144.png" />
@@ -32,7 +32,7 @@
         <link rel="stylesheet" type="text/css" href="{{ sakura.resources }}/css/misaki.css" />
 {{ block('css') }}
         <!-- JS -->
-        <script type="text/javascript" src="{{ sakura.contentPath }}/scripts/sakura.js"></script>
+        <script type="text/javascript" src="{{ config('content_path') }}/scripts/sakura.js"></script>
         <script type="text/javascript" src="{{ sakura.resources }}/js/misaki.js"></script>
         <script type="text/javascript">
 
@@ -42,20 +42,20 @@
                 "cookie": {
 
                     "prefix":   "{{ sakura.cookie.prefix }}",
-                    "domain":   "{{ sakura.cookie.domain }}",
-                    "path":     "{{ sakura.cookie.path }}"
+                    "domain":   "{{ config('cookie_domain') }}",
+                    "path":     "{{ config('cookie_prefix') }}"
 
                 },
 
-                "siteName":         "{{ sakura.siteName }}",
-                "content":          "{{ sakura.contentPath }}",
+                "siteName":         "{{ config('sitename') }}",
+                "content":          "{{ config('content_path') }}",
                 "resources":        "{{ sakura.resources }}",
-                "recaptchaEnabled": "{{ sakura.recaptchaEnabled }}",
+                "recaptchaEnabled": "{{ config('recaptcha') }}",
 
-                "minUserLen":       {{ sakura.minUsernameLength }},
-                "maxUserLen":       {{ sakura.maxUsernameLength }},
-                "minPwdEntropy":    {{ sakura.minPwdEntropy }},
-                "checkLogin":       {% if session.checkLogin %}true{% else %}false{% endif %}
+                "minUserLen":       {{ config('username_min_length') }},
+                "maxUserLen":       {{ config('username_max_length') }},
+                "minPwdEntropy":    {{ config('min_entropy') }},
+                "checkLogin":       {% if user.isActive %}true{% else %}false{% endif %}
 
             };
 
@@ -92,33 +92,33 @@
                     </ul>
                     <ul class="user-menu">
                         <li class="nav-usermenu">
-                            <a href="{% if session.checkLogin %}javascript:void(0);{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}">
+                            <a href="{% if user.isActive %}javascript:void(0);{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}">
                                 <div>
-                                    <div class="nav-username"{% if session.checkLogin %} style="color: {{ user.colour }};"{% endif %}>
-                                        {% if session.checkLogin %}{{ user.username }} <span class="nav-user-dropdown"></span>{% else %}Guest{% endif %}
+                                    <div class="nav-username"{% if user.isActive %} style="color: {{ user.colour }};"{% endif %}>
+                                        {% if user.isActive %}{{ user.username }} <span class="nav-user-dropdown"></span>{% else %}Guest{% endif %}
                                     </div>
                                     <div class="nav-userstats">
-                                        {% if session.checkLogin %}<span class="fa fa-envelope"></span> 0 / <span class="fa fa-user-plus"></span> 0 / <span class="fa fa-warning"></span> 0 / <span class="fa fa-reply"></span> 0{% else %}Please log in to proceed!{% endif %}
+                                        {% if user.isActive %}<span class="fa fa-envelope"></span> 0 / <span class="fa fa-user-plus"></span> 0 / <span class="fa fa-warning"></span> 0 / <span class="fa fa-reply"></span> 0{% else %}Please log in to proceed!{% endif %}
                                     </div>
                                 </div>
                             </a>
-                            {% if session.checkLogin %}
+                            {% if user.isActive %}
                                 <ul>
                                     <li><a href="{{ urls.format('USER_PROFILE', [user.id]) }}">My Profile</a></li>
                                     <li><a href="{{ urls.format('SETTING_CAT', ['messages']) }}">Private Messages</a></li>
                                     <li><a href="{{ urls.format('SETTINGS_INDEX') }}">User Settings</a></li>
                                     <li><a href="{{ urls.format('MANAGE_INDEX') }}">Site Management</a></li>
-                                    <li><a href="{{ urls.format('USER_LOGOUT', [php.time, php.sessionid, sakura.currentPage]) }}">Logout</a></li>
+                                    <li><a href="{{ urls.format('USER_LOGOUT', [date().timestamp, session_id(), sakura.currentPage]) }}">Logout</a></li>
                                 </ul>
                             {% endif %}
                         </li>
-                        <li><a href="{% if session.checkLogin %}{{ urls.format('USER_PROFILE', [user.id]) }}{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}"><img src="{{ sakura.contentPath }}/pixel.png" alt="{{ user.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}');" class="nav-avatar" /></a></li>
+                        <li><a href="{% if user.isActive %}{{ urls.format('USER_PROFILE', [user.id]) }}{% else %}{{ urls.format('SITE_LOGIN') }}{% endif %}"><img src="{{ config('content_path') }}/pixel.png" alt="{{ user.username }}" style="background-image: url('{{ urls.format('IMAGE_AVATAR', [user.id]) }}');" class="nav-avatar" /></a></li>
                     </ul>
                 </div>
 
-                {% if sakura.siteLogo or sakura.announcementImage %}
-                <div id="banner" style="background: url('{% if sakura.announcementImage %}{{ sakura.announcementImage }}{% else %}{{ sakura.siteLogo }}{% endif %}');">
-                    <a href="{% if sakura.announcementImage and sakura.announcementLink %}{{ sakura.announcementLink }}{% else %}{{ urls.format('SITE_HOME') }}{% endif %}"></a>
+                {% if config('sitelogo') or config('header_announcement_image') %}
+                <div id="banner" style="background: url('{% if config('header_announcement_image') %}{{ config('header_announcement_image') }}{% else %}{{ config('sitelogo') }}{% endif %}');">
+                    <a href="{% if config('header_announcement_image') and config('header_announcement_link') %}{{ config('header_announcement_link') }}{% else %}{{ urls.format('SITE_HOME') }}{% endif %}"></a>
                 </div>
                 {% endif %}
 

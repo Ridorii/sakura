@@ -37,14 +37,14 @@ class Session
      */
     public function __construct($userId, $sessionId = null)
     {
-        // Set the supposed session data
-        $this->userId = $userId;
-        $this->sessionId = $sessionId;
-
         // Check if a PHP session was already started and if not start one
         if (session_status() != PHP_SESSION_ACTIVE) {
             session_start();
         }
+
+        // Set the supposed session data
+        $this->userId = $userId;
+        $this->sessionId = $sessionId;
     }
 
     /**
@@ -63,9 +63,8 @@ class Session
         unset($this->sessionId);
 
         // Destroy the session
-        if (session_status() == PHP_SESSION_ACTIVE) {
-            session_destroy();
-        }
+        session_regenerate_id(true);
+        session_destroy();
     }
 
     /**
@@ -98,8 +97,8 @@ class Session
         DB::table('sessions')
             ->insert([
                 'user_id' => $this->userId,
-                'user_ip' => Net::pton(Net::IP()),
-                'user_agent' => Utils::cleanString(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'No user agent header.'),
+                'user_ip' => Net::pton(Net::ip()),
+                'user_agent' => clean_string(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'No user agent header.'),
                 'session_key' => $session,
                 'session_start' => time(),
                 'session_expire' => time() + 604800,
@@ -141,7 +140,7 @@ class Session
         if ($ipCheck) {
             // Split both IPs up
             $sessionIP = explode('.', $session[0]->user_ip);
-            $userIP = explode('.', Net::IP());
+            $userIP = explode('.', Net::ip());
 
             // Take 1 off the ipCheck variable so it's equal to the array keys
             $ipCheck = $ipCheck - 1;

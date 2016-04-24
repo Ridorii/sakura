@@ -20,7 +20,7 @@ class DynLoad {
             if (e.target['href']) {
                 // Prevent the default action
                 e.preventDefault();
-                
+
                 // Create a new ajax object
                 var loader: AJAX = new AJAX();
 

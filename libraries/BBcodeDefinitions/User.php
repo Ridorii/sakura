@@ -9,6 +9,8 @@ namespace Sakura\BBcodeDefinitions;
 
 use JBBCode\CodeDefinition;
 use JBBCode\ElementNode;
+use Sakura\Router;
+use Sakura\User as SakuraUser;
 
 /**
  * Username BBcode for JBBCode.
@@ -41,12 +43,13 @@ class User extends CodeDefinition
         $content = "";
 
         foreach ($el->getChildren() as $child) {
-            $content .= \Sakura\Utils::cleanString($child->getAsText(), true);
+            $content .= clean_string($child->getAsText(), true);
         }
 
-        $user = \Sakura\User::construct($content);
-        $urls = new \Sakura\Urls();
+        $user = SakuraUser::construct($content);
+        $profile = Router::route('user.profile', $user->id);
 
-        return '<a class="default username" href="' . $urls->format('USER_PROFILE', [$user->id]) . '" style="color: ' . $user->colour . '; text-shadow: 0 0 .3em ' . $user->colour . '; font-weight: bold;">' . $user->username . '</a>';
+        return "<a class='default username' href='{$profile} style='color: {$user->colour};
+         text-shadow: 0 0 .3em {$user->colour}; font-weight: bold;'>{$user->username}</a>";
     }
 }

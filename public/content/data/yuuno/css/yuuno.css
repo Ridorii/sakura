@@ -251,14 +251,8 @@ a.default:active {
     width: 334px;
 }
 
-.content-left .head,
-.news .head,
-.support .head,
-.viewforum .head,
-.viewtopic .head,
-.posting .head,
-.loginPage  .head,
-.messages .head {
+.content .head,
+.loginPage .head {
     margin: -1px -2px;
     padding: 4px 5px 5px;
     font-weight: 700;
@@ -1283,12 +1277,12 @@ a.default:active {
     }
 
     .content .content-right {
-        width: 100%;
+        width: 100% !important;
         min-height: 0;
     }
 
     .content .content-left {
-        width: 100%;
+        width: 100% !important;
         min-height: 0;
         border-top: 1px solid #9475B2;
     }
@@ -1321,13 +1315,12 @@ a.default:active {
 }
 
 .new-profile .new-profile-avatar {
-    margin: 0;
     height: 190px;
     width: 190px;
     margin: 0 2px;
     flex-grow: 0;
     flex-shrink: 0;
-    background: no-repeat center center / cover transparent;
+    background: no-repeat center center / cover #FFF;
 }
 
 .new-profile .new-profile-username {
@@ -1565,6 +1558,13 @@ a.default:active {
     margin-left: 2em;
     list-style: square;
 }
+.settings .content-left {
+    width: 850px;
+}
+.settings .content-right {
+    width: 174px;
+    text-align: right;
+}
 .settings .right-menu-nav > div {
     background: #C2AFFE;
     padding: 4px;
@@ -1580,7 +1580,7 @@ a.default:active {
     line-height: 25px;
     color: #22E;
     text-decoration: none;
-    padding-left: 10px;
+    padding: 0 10px;
 }
 
 .settings .right-menu-nav > a:hover {
@@ -2263,50 +2263,51 @@ textarea.inputStyling {
     vertical-align: middle;
 }
 
-.forum.posting .posting-subject {
+.posting-subject {
     padding: 3px 0 2px;
 }
 
-.forum.posting .posting-subject input {
+.posting-subject input {
     width: calc(100% - 10px);
 }
 
-.forum.posting .posting-bbcodes {
+.posting-bbcodes {
     padding: 4px 0 2px;
 }
 
-.forum.posting .posting-bbcode-description {
+.posting-bbcode-description {
     font: .9em/1.2em "SegoeUI", "Segoe UI", sans-serif;
     padding: 2px 0 3px;
 }
 
-.forum.posting .posting-text {
+.posting-text {
     padding: 2px 0 0;
     margin: 0 0 -1px;
 }
 
-.forum.posting .posting-emotes {
+.posting-emotes {
     text-align: center;
     padding: 10px 0;
 }
 
-.forum.posting .posting-emotes img {
+.posting-emotes img {
     vertical-align: middle;
     cursor: pointer;
     margin: 0 3px;
 }
 
-.forum.posting .posting-text textarea {
-    width: calc(100% - 10px);
-    min-height: 300px;
+.posting-text textarea {
+    min-width: calc(100% - 10px);
+    max-width: calc(100% - 10px);
+    min-height: 200px;
 }
 
-.forum.posting .posting-options > div {
+.posting-options > div {
     float: left;
     padding: 10px 10px 0;
 }
 
-.forum.posting .posting-buttons {
+.posting-buttons {
     text-align: center;
 }
 
@@ -2321,7 +2322,8 @@ textarea.inputStyling {
 /*
  * Pagination
  */
-.pagination a {
+.pagination a,
+.forumbtn {
     background: linear-gradient(0deg, #9475B2 10%, #C2AFFE 90%);
     color: #306;
     padding: 4px 8px;
@@ -2331,17 +2333,25 @@ textarea.inputStyling {
     display: inline-block;
     font-size: 1.3em;
     border: 1px solid #9475B2;
+    cursor: pointer;
 }
 
-.pagination a.current {
+button.forumbtn {
+    padding: 3px 6px;
+}
+
+.pagination a.current,
+.forumbtn.current {
     background: linear-gradient(0deg, #A586C3, #D3BFFF);
 }
 
-.pagination a:hover {
+.pagination a:hover,
+.forumbtn:hover {
     background: linear-gradient(0deg, #9475B2 30%, #C2AFFE 70%);
 }
 
-.pagination a:active {
+.pagination a:active,
+.forumbtn:active {
     background: linear-gradient(180deg, #9475B2 30%, #C2AFFE 70%);
 }
 
@@ -2507,4 +2517,28 @@ textarea.inputStyling {
 
 #comments ul > li > ul .comment > textarea.comment-content {
     height: 40px;
+}
+
+/*
+ * User container
+ */
+.user-container {
+    display: flex;
+    align-items: center;
+    background: no-repeat center center / cover transparent;
+}
+
+.user-container-avatar {
+    height: 100px;
+    width: 100px;
+    margin: 0 2px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    background: no-repeat center center / cover #FFF;
+}
+
+.user-container-info {
+    background: rgba(211, 191, 255, .8);
+    width: 100%;
+    padding: 0 5px;
 }
