@@ -92,9 +92,6 @@ ActiveUser::init(
     $_COOKIE[Config::get('cookie_prefix') . 'session'] ?? ''
 );
 
-// Create the Urls object
-$urls = new Urls();
-
 if (!defined('SAKURA_NO_TPL')) {
     // Start templating engine
     Template::set(Config::get('site_style'));
@@ -111,7 +108,6 @@ if (!defined('SAKURA_NO_TPL')) {
         ], $_SESSION),
 
         'user' => ActiveUser::$user,
-        'urls' => $urls,
 
         'get' => $_GET,
         'post' => $_POST,

@@ -12,7 +12,6 @@ use Sakura\Controllers\Controller as BaseController;
 use Sakura\Perms\Site;
 use Sakura\Router;
 use Sakura\Template;
-use Sakura\Urls;
 
 /**
  * Base controller (which other controllers should extend on).
@@ -22,24 +21,11 @@ use Sakura\Urls;
  */
 class Controller extends BaseController
 {
-    private $urls;
-
     public function __construct()
     {
-        $this->urls = new Urls();
-
         $navigation = $this->navigation();
 
         Template::vars(compact('navigation'));
-    }
-
-    public function go($location)
-    {
-        $location = explode('.', $location);
-
-        $url = $this->urls->format('SETTING_MODE', $location, null, false);
-
-        return header("Location: {$url}");
     }
 
     public function navigation()
