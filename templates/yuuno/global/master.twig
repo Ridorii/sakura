@@ -111,13 +111,10 @@
                 {% if profile is defined ? profile.background : (user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) and user.optionFields.profileBackgroundSiteWide and user.background) %}
                     <div id="userBackground" style="background-image: url('{{ route('file.background', (profile is defined ? profile : user).id) }}');"></div>
                 {% endif %}
-                {% if not user.isActive and sakura.currentPage != route('auth.login') %}
+                {% if not user.isActive and server['REQUEST_URI'] != route('auth.login') %}
                 <div class="headerLoginContainer">
                     <form method="post" action="{{ route('auth.login') }}" id="headerLoginForm">
-                        <input type="hidden" name="redirect" value="{{ sakura.currentPage }}" />
-                        <input type="hidden" name="session" value="{{ session_id() }}" />
-                        <input type="hidden" name="time" value="{{ date().timestamp }}" />
-                        <input type="hidden" name="mode" value="login" />
+                        <input type="hidden" name="redirect" value="{{ server['REQUEST_URI'] }}" />
                         <div>
                             <label for="headerLoginUserName">Username:</label>
                             <input type="text" id="headerLoginUserName" name="username" class="inputStyling" placeholder="Username" />
@@ -131,11 +128,8 @@
                             <label for="headerLoginRemember">Remember me</label>
                         </div>
                         <div>
-                            <input type="submit" id="headerLoginButton" name="submit" class="inputStyling small" value="Login" />
+                            <button class="inputStyling small" name="session" value="{{ session_id() }}"><i class="fa fa-sign-in"></i> Login</button>
                         </div>
-                    </form>
-                    <form method="get" action="{{ route('auth.register') }}">
-                        <button class="inputStyling small">Register</button>
                     </form>
                 </div>
                 {% endif %}

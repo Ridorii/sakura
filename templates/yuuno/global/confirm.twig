@@ -8,7 +8,7 @@
             <h1>{% block header %}Confirmation{% endblock %}</h1>
             <hr class="default" />
             {{ message }}
-            <form method="post" action="{{ sakura.currentPage }}" id="confirmationForm">
+            <form method="post" action="{{ server['REQUEST_URI'] }}" id="confirmationForm">
                 <input type="hidden" name="sessionid" value="{{ session_id() }}" />
                 <input type="hidden" name="timestamp" value="{{ date().timestamp }}" />
                 {% for key,value in conditions %}

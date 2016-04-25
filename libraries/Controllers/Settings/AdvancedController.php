@@ -82,8 +82,9 @@ class AdvancedController extends Controller
         $sessions = DB::table('sessions')
             ->where('user_id', ActiveUser::$user->id)
             ->get();
+        $active = ActiveUser::$session->sessionId;
 
-        Template::vars(compact('sessions'));
+        Template::vars(compact('sessions', 'active'));
 
         return Template::render('settings/advanced/sessions');
     }

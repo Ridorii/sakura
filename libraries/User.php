@@ -316,8 +316,6 @@ class User
             $this->email = $userRow->email;
             $this->mainRankId = $userRow->rank_main;
             $this->colour = $userRow->user_colour;
-            $this->registerIp = Net::ntop($userRow->register_ip);
-            $this->lastIp = Net::ntop($userRow->last_ip);
             $this->title = $userRow->user_title;
             $this->registered = $userRow->user_registered;
             $this->lastOnline = $userRow->user_last_online;
@@ -328,6 +326,31 @@ class User
             $this->header = $userRow->user_header;
             $this->page = $userRow->user_page;
             $this->signature = $userRow->user_signature;
+
+            // Temporary backwards compatible IP storage system
+            try {
+                $this->registerIp = Net::ntop($userRow->register_ip);
+            } catch (Exception $e) {
+                $this->registerIp = $userRow->register_ip;
+
+                DB::table('users')
+                    ->where('user_id', $this->id)
+                    ->update([
+                        'register_ip' => Net::pton($this->registerIp),
+                    ]);
+            }
+
+            try {
+                $this->lastIp = Net::ntop($userRow->last_ip);
+            } catch (Exception $e) {
+                $this->lastIp = $userRow->last_ip;
+
+                DB::table('users')
+                    ->where('user_id', $this->id)
+                    ->update([
+                        'last_ip' => Net::pton($this->lastIp),
+                    ]);
+            }
         }
 
         // Get all ranks

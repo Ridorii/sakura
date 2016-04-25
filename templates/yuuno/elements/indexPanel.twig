@@ -10,21 +10,6 @@
                 {% endif %}
             </div>
         </div>
-    {% else %}
-        {% if config('lock_authentication') %}
-            <div class="head">Whoops!</div>
-            You caught the site at the wrong moment! Right now registration <i>and</i> logging in is disabled for unspecified reasons. Sorry for the inconvenience but please try again later!
-            <div class="indexSidePanelLinks">
-                <a class="fa fa-lock" href="#" title="Authentication is locked"></a>
-            </div>
-        {% else %}
-            <div class="head">Welcome!</div>
-            Welcome to Flashii! This is a site for a bunch of friends to hang out, nothing special. Anyone is pretty much welcome to register so why not have a go?
-            <div class="indexSidePanelLinks">
-                <a class="fa fa-magic" href="{{ route('auth.register') }}" title="Register" id="indexSidePanelRegister"></a>
-                <a class="fa fa-sign-in" href="{{ route('auth.login') }}" title="Login" id="indexSidePanelLogin"></a>
-            </div>
-        {% endif %}
     {% endif %}
     <div class="head">Stats</div>
     We have <b>{{ stats.userCount }} user{% if stats.userCount != 1 %}s{% endif %}</b>,

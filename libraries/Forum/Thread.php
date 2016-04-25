@@ -347,6 +347,11 @@ class Thread
      */
     public function unread($user)
     {
+        // Return false if the user id is less than 1
+        if ($user < 1) {
+            return false;
+        }
+
         // Attempt to get track row from the database
         $track = DB::table('topics_track')
             ->where('user_id', $user)

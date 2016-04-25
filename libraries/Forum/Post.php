@@ -10,6 +10,7 @@ namespace Sakura\Forum;
 use Sakura\BBcode;
 use Sakura\Config;
 use Sakura\DB;
+use Sakura\Exception;
 use Sakura\Net;
 use Sakura\User;
 
@@ -124,13 +125,20 @@ class Post
             $this->thread = $postRow->topic_id;
             $this->forum = $postRow->forum_id;
             $this->poster = User::construct($postRow->poster_id);
-            $this->ip = $postRow->poster_ip;
             $this->time = $postRow->post_time;
             $this->subject = $postRow->post_subject;
             $this->text = $postRow->post_text;
             $this->editTime = $postRow->post_edit_time;
             $this->editReason = $postRow->post_edit_reason;
             $this->editUser = User::construct($postRow->post_edit_user);
+
+            // Temporary backwards compatible IP storage system
+            try {
+                $this->ip = Net::ntop($postRow->poster_ip);
+            } catch (Exception $e) {
+                $this->ip = $postRow->poster_ip;
+                $this->update();
+            }
         }
 
         // Parse the markup
@@ -168,7 +176,7 @@ class Post
                 'topic_id' => $thread->id,
                 'forum_id' => $thread->forum,
                 'poster_id' => $poster->id,
-                'poster_ip' => Net::ip(),
+                'poster_ip' => Net::pton(Net::ip()),
                 'post_time' => time(),
                 'post_subject' => $subject,
                 'post_text' => $text,
@@ -235,6 +243,11 @@ class Post
      */
     public function unread($user)
     {
+        // Return false if the user id is less than 1
+        if ($user < 1) {
+            return false;
+        }
+
         // Attempt to get track row from the database
         $track = DB::table('topics_track')
             ->where('user_id', $user)

@@ -133,51 +133,8 @@ class Session
             return 0;
         }
 
-        // IP Check
-        $ipCheck = false; // Forced disabled due to incompatibility with the Net class. -- Config::get('session_check');
-
-        // Origin checking
-        if ($ipCheck) {
-            // Split both IPs up
-            $sessionIP = explode('.', $session[0]->user_ip);
-            $userIP = explode('.', Net::ip());
-
-            // Take 1 off the ipCheck variable so it's equal to the array keys
-            $ipCheck = $ipCheck - 1;
-
-            // Check if the user's IP is similar to the session's registered IP
-            switch ($ipCheck) {
-                // 000.xxx.xxx.xxx
-                case 3:
-                    if ($userIP[3] !== $sessionIP[3]) {
-                        return 0;
-                    }
-
-                // xxx.000.xxx.xxx
-                case 2:
-                case 3:
-                    if ($userIP[2] !== $sessionIP[2]) {
-                        return 0;
-                    }
-
-                // xxx.xxx.000.xxx
-                case 1:
-                case 2:
-                case 3:
-                    if ($userIP[1] !== $sessionIP[1]) {
-                        return 0;
-                    }
-
-                // xxx.xxx.xxx.000
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                    if ($userIP[0] !== $sessionIP[0]) {
-                        return 0;
-                    }
-            }
-        }
+        /* completely removed the code for ip checking because it only worked with IPv4
+        good thing is i can probably do CIDR based checking */
 
         // If the remember flag is set extend the session time
         if ($session[0]->session_remember) {

@@ -1,4 +1,4 @@
-<form enctype="multipart/form-data" method="post" action="{{ sakura.currentPage }}" class="box">
+<form enctype="multipart/form-data" method="post" action="{{ server['REQUEST_URI'] }}" class="box">
     <input type="hidden" name="sessid" value="{{ session_id() }}" />
     <input type="hidden" name="timestamp" value="{{ date().timestamp }}" />
     <input type="hidden" name="mode" value="options" />

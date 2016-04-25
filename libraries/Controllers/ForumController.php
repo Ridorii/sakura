@@ -36,6 +36,7 @@ class ForumController extends Controller
     {
         // Get the most active threads
         $activeThreadsIds = DB::table('posts')
+            ->where('forum_id', '!=', Config::get('forum_trash_id'))
             ->groupBy('topic_id')
             ->orderByRaw('COUNT(*) DESC')
             ->limit(10)
@@ -69,6 +70,7 @@ class ForumController extends Controller
 
         // Get the latest posts
         $latestPostsIds = DB::table('posts')
+            ->where('forum_id', '!=', Config::get('forum_trash_id'))
             ->orderBy('post_id', 'desc')
             ->limit(10)
             ->get(['post_id']);
@@ -100,6 +102,7 @@ class ForumController extends Controller
 
         // Get the most active poster
         $activePosterId = DB::table('posts')
+            ->where('forum_id', '!=', Config::get('forum_trash_id'))
             ->where('post_time', '>', time() - (24 * 60 * 60))
             ->groupBy('poster_id')
             ->orderByRaw('COUNT(*) DESC')

@@ -75,6 +75,11 @@ function get_country_name($code)
         return 'Anonymous Proxy';
     }
 
+    // Catch proxy
+    if (strtolower($code) === 'a2') {
+        return 'Satellite Provider';
+    }
+
     return locale_get_display_region("-{$code}", 'en');
 }
 

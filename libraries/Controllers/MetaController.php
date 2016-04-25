@@ -69,15 +69,15 @@ class MetaController extends Controller
             'stats' => [
                 'userCount' => DB::table('users')
                     ->where('password_algo', '!=', 'disabled')
-                    ->whereNotIn('rank_main', [1, 10])
+                    ->whereNotIn('rank_main', [Config::get('deactive_rank_id'), Config::get('restricted_rank_id')])
                     ->count(),
                 'newestUser' => $newestUser,
                 'lastRegDate' => date_diff(
                     date_create(date('Y-m-d', $newestUser->registered)),
                     date_create(date('Y-m-d'))
                 )->format('%a'),
-                'topicCount' => DB::table('topics')->count(),
-                'postCount' => DB::table('posts')->count(),
+                'topicCount' => DB::table('topics')->where('forum_id', '!=', Config::get('forum_trash_id'))->count(),
+                'postCount' => DB::table('posts')->where('forum_id', '!=', Config::get('forum_trash_id'))->count(),
                 'onlineUsers' => $onlineUsers,
             ],
         ]);

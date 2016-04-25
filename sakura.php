@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', 20160408);
+define('SAKURA_VERSION', 20160425);
 
 // Define Sakura Path
 define('ROOT', __DIR__ . '/');
@@ -25,12 +25,12 @@ mb_internal_encoding('utf-8');
 
 // Stop the execution if the PHP Version is older than 7.0.0
 if (version_compare(phpversion(), '7.0.0', '<')) {
-    throw new \Exception('Sakura requires at least PHP 7.0.0, please upgrade to a newer PHP version.');
+    throw new Exception('Sakura requires at least PHP 7.0.0, please upgrade to a newer PHP version.');
 }
 
 // Check if the composer autoloader exists
 if (!file_exists(ROOT . 'vendor/autoload.php')) {
-    throw new \Exception('Autoloader not found, did you run composer install?');
+    throw new Exception('Autoloader not found, did you run composer install?');
 }
 
 // Require composer libraries
@@ -87,9 +87,10 @@ Router::init();
 include_once ROOT . 'routes.php';
 
 // Initialise the current session
+$cookiePrefix = Config::get('cookie_prefix');
 ActiveUser::init(
-    intval($_COOKIE[Config::get('cookie_prefix') . 'id'] ?? 0),
-    $_COOKIE[Config::get('cookie_prefix') . 'session'] ?? ''
+    intval($_COOKIE["{$cookiePrefix}id"] ?? 0),
+    $_COOKIE["{$cookiePrefix}session"] ?? ''
 );
 
 if (!defined('SAKURA_NO_TPL')) {
@@ -98,32 +99,11 @@ if (!defined('SAKURA_NO_TPL')) {
 
     // Set base page rendering data
     Template::vars([
-        'sakura' => [
-            'currentPage' => $_SERVER['REQUEST_URI'] ?? null,
-            'referrer' => $_SERVER['HTTP_REFERER'] ?? null,
-        ],
-
-        'session' => array_merge([
-            'sessionId' => ActiveUser::$session->sessionId,
-        ], $_SESSION),
-
-        'user' => ActiveUser::$user,
-
         'get' => $_GET,
+        'user' => ActiveUser::$user,
         'post' => $_POST,
-        'request' => $_REQUEST,
         'server' => $_SERVER,
+        'request' => $_REQUEST,
+        'session' => $_SESSION,
     ]);
-
-    // Site closing
-    if (Config::get('site_closed')) {
-        // Set parse variables
-        Template::vars([
-            'message' => Config::get('site_closed_reason'),
-        ]);
-
-        // Print page contents
-        echo Template::render('global/information');
-        exit;
-    }
 }

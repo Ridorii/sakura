@@ -12,8 +12,7 @@
                     Login
                 </div>
                 <form method="post" action="{{ route('auth.login') }}" id="loginForm">
-                    <input type="hidden" name="redirect" value="{{ sakura.referrer ? sakura.referrer : route('main.index') }}" />
-                    <input type="hidden" name="session" value="{{ session_id() }}" />
+                    <input type="hidden" name="redirect" value="{{ server['HTTP_REFERER'] ? server['HTTP_REFERER'] : route('main.index') }}" />
                     <div class="leftAlign">
                         <label for="loginUserName">Username:</label>
                     </div>
@@ -30,7 +29,7 @@
                         <input class="inputStyling" name="remember" type="checkbox" class="ignore-css" id="loginRemember" /><label for="loginRemember">Remember Me</a>
                     </div>
                     <div class="centreAlign">
-                        <button class="inputStyling" id="loginButton"><i class="fa fa-sign-in"></i> Login</button>
+                        <button class="inputStyling" id="loginButton" name="session" value="{{ session_id() }}"><i class="fa fa-sign-in"></i> Login</button>
                     </div>
                     <div class="subLinks centreAlign" style="line-height: 1.5em;">
                         <p><a href="{{ route('auth.register') }}" class="default">I don't have an account yet!</a></p>

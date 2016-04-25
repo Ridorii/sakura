@@ -18,7 +18,7 @@
         </tfoot>
         <tbody>
             {% for s in sessions %}
-            <tr {% if s.session_key == session.sessionId %} class="current-session"{% endif %}>
+            <tr {% if s.session_key == active %} class="current-session"{% endif %}>
                 <td>
                     {{ s.user_ip }}
                 </td>

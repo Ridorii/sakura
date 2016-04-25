@@ -56,7 +56,7 @@ class Net
      *
      * @param string $ip Printable IP string.
      *
-     * @throws \Exception Thrown if an invalid IP is supplied.
+     * @throws Exception Thrown if an invalid IP is supplied.
      *
      * @return string Unpacked IP address.
      */
@@ -76,7 +76,7 @@ class Net
         }
 
         // Throw an exception if an invalid IP was supplied
-        throw new \Exception("Invalid IP address supplied.");
+        throw new Exception("Invalid IP address supplied.");
     }
 
     /**
@@ -84,7 +84,7 @@ class Net
      *
      * @param string $bin The unpacked IP.
      *
-     * @throws \Exception Thrown if the unpacked IP is invalid.
+     * @throws Exception Thrown if the unpacked IP is invalid.
      *
      * @return string The packed IP.
      */
@@ -95,7 +95,7 @@ class Net
 
         // Throw an exception if it's not 4 or 16 bytes
         if ($len !== 4 && $len !== 16) {
-            throw new \Exception("Could not handle this IP type.");
+            throw new Exception("Could not handle this IP type.");
         }
 
         // Finally pack the IP

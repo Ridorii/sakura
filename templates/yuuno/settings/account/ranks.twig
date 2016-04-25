@@ -15,7 +15,7 @@
                     <a href="{{ route('members.rank', rank.id) }}" class="clean">{{ rank.name }}</a>
                 </td>
                 <td style="width: 90px;">
-                    <form method="post" action="{{ sakura.currentPage }}">
+                    <form method="post" action="{{ route('settings.account.ranks') }}">
                         <input type="hidden" name="session" value="{{ session_id() }}" />
                         <input type="hidden" name="rank" value="{{ rank.id }}" />
                         <button class="inputStyling small" name="mode" value="main">Set as main</button>
