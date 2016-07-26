@@ -17,5 +17,5 @@ use \Illuminate\Database\Capsule\Manager;
  */
 class DB extends Manager
 {
-    // This class solely exists as an alias (for now at least)
+    // This class solely exists as an alias
 }
