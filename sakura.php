@@ -1,6 +1,6 @@
 <?php
 /*
- * Sakura Community Management System
+ * Community Management System
  * (c) 2013-2016 Julian van de Groep <http://flash.moe>
  */
 
@@ -8,7 +8,7 @@
 namespace Sakura;
 
 // Define Sakura version
-define('SAKURA_VERSION', 20160425);
+define('SAKURA_VERSION', 20160726);
 
 // Define Sakura Path
 define('ROOT', __DIR__ . '/');
@@ -43,42 +43,19 @@ Config::init(ROOT . 'config/config.ini');
 set_error_handler('error_handler');
 
 // Change error reporting according to the dev configuration
-error_reporting(Config::local('dev', 'show_errors') ? -1 : 0);
+error_reporting(config('dev.show_errors') ? -1 : 0);
 
 // Create a new database capsule
-$capsule = new \Illuminate\Database\Capsule\Manager;
+$capsule = new DB;
 
 // Add the connection
-$capsule->addConnection(Config::local('database'));
+$capsule->addConnection(config('database'));
 
 // Make the capsule globally accessible
 $capsule->setAsGlobal();
 
-// Check if we the system has a cron service
-if (Config::get('no_cron_service')) {
-    // If not do an "asynchronous" call to the cron.php script
-    if (Config::get('no_cron_last') < (time() - Config::get('no_cron_interval'))) {
-        $phpDir = PHP_BINDIR;
-        $cronPath = ROOT . 'cron.php';
-
-        // Check OS
-        if (substr(strtolower(PHP_OS), 0, 3) == 'win') {
-            $cronPath = addslashes($cronPath);
-
-            pclose(popen("start /B {$phpDir}\php.exe {$cronPath}", 'r'));
-        } else {
-            pclose(popen("{$phpDir}/php {$cronPath} > /dev/null 2>/dev/null &", 'r'));
-        }
-
-        unset($phpDir, $cronPath);
-
-        // Update last execution time
-        Config::set('no_cron_last', time());
-    }
-}
-
 // Start output buffering
-ob_start(Config::get('use_gzip') ? 'ob_gzhandler' : null);
+ob_start(config('performance.compression') ? 'ob_gzhandler' : null);
 
 // Initialise the router
 Router::init();
@@ -87,23 +64,21 @@ Router::init();
 include_once ROOT . 'routes.php';
 
 // Initialise the current session
-$cookiePrefix = Config::get('cookie_prefix');
-ActiveUser::init(
-    intval($_COOKIE["{$cookiePrefix}id"] ?? 0),
-    $_COOKIE["{$cookiePrefix}session"] ?? ''
-);
+$cookiePrefix = config('cookie.prefix');
+// ActiveUser::init(
+//     intval($_COOKIE["{$cookiePrefix}id"] ?? 0),
+//     $_COOKIE["{$cookiePrefix}session"] ?? ''
+// );
 
-if (!defined('SAKURA_NO_TPL')) {
-    // Start templating engine
-    Template::set(Config::get('site_style'));
+// Start templating engine
+Template::set(config('general.design'));
 
-    // Set base page rendering data
-    Template::vars([
-        'get' => $_GET,
-        'user' => ActiveUser::$user,
-        'post' => $_POST,
-        'server' => $_SERVER,
-        'request' => $_REQUEST,
-        'session' => $_SESSION,
-    ]);
-}
+// Set base page rendering data
+Template::vars([
+    'get' => $_GET,
+    'user' => ActiveUser::$user,
+    'post' => $_POST,
+    'server' => $_SERVER,
+    'request' => $_REQUEST,
+    //'session' => $_SESSION,
+]);

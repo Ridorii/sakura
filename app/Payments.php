@@ -45,8 +45,8 @@ class Payments
         try {
             self::$paypal = new \PayPal\Rest\ApiContext(
                 new \PayPal\Auth\OAuthTokenCredential(
-                    Config::get('paypal_client_id'),
-                    Config::get('paypal_secret')
+                    config("paypal.client_id"),
+                    config("paypal.secret_id")
                 )
             );
         } catch (\Exception $e) {
@@ -55,7 +55,7 @@ class Payments
 
         // Set the configuration
         self::$paypal->setConfig([
-            'mode' => Config::get('paypal_mode'),
+            'mode' => config("paypal.mode"),
         ]);
 
         return true;

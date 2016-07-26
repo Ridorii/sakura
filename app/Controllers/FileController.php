@@ -46,9 +46,9 @@ class FileController extends Controller
     public function avatar($id = 0)
     {
         $noAvatar = ROOT . str_replace(
-            '{{ TPL }}',
+            '%tplname%',
             Template::$name,
-            Config::get('no_avatar_img')
+            config('user.avatar_none')
         );
         $none = [
             'name' => basename($noAvatar),
@@ -57,9 +57,9 @@ class FileController extends Controller
         ];
 
         $deactivePath = ROOT . str_replace(
-            '{{ TPL }}',
+            '%tplname%',
             Template::$name,
-            Config::get('deactivated_avatar_img')
+            config('user.avatar_inactive')
         );
         $deactive = [
             'name' => basename($deactivePath),
@@ -68,9 +68,9 @@ class FileController extends Controller
         ];
 
         $bannedPath = ROOT . str_replace(
-            '{{ TPL }}',
+            '%tplname%',
             Template::$name,
-            Config::get('banned_avatar_img')
+            config('user.avatar_ban')
         );
         $banned = [
             'name' => basename($bannedPath),
@@ -108,7 +108,7 @@ class FileController extends Controller
      */
     public function background($id = 0)
     {
-        $noBg = ROOT . Config::get('no_background_img');
+        $noBg = ROOT . "public/content/pixel.png";
         $none = [
             'name' => basename($noBg),
             'data' => file_get_contents($noBg),
@@ -143,7 +143,7 @@ class FileController extends Controller
      */
     public function header($id = 0)
     {
-        $noHeader = ROOT . Config::get('no_header_img');
+        $noHeader = ROOT . "public/content/pixel.png";
         $none = [
             'name' => basename($noHeader),
             'data' => file_get_contents($noHeader),

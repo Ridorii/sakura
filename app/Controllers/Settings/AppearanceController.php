@@ -63,11 +63,13 @@ class AppearanceController extends Controller
             return "Please upload a valid image!";
         }
 
+        $confp = $mode === 'header' ? 'cover' : $mode;
+
         // Check dimensions
-        $minWidth = Config::get("{$mode}_min_width");
-        $minHeight = Config::get("{$mode}_min_height");
-        $maxWidth = Config::get("{$mode}_max_width");
-        $maxHeight = Config::get("{$mode}_max_height");
+        $minWidth = config("file.{$confp}.min_width");
+        $minHeight = config("file.{$confp}.min_height");
+        $maxWidth = config("file.{$confp}.max_width");
+        $maxHeight = config("file.{$confp}.max_height");
 
         if ($meta[0] < $minWidth
             || $meta[1] < $minHeight
@@ -78,7 +80,7 @@ class AppearanceController extends Controller
         }
 
         // Check file size
-        $maxFileSize = Config::get("{$mode}_max_fsize");
+        $maxFileSize = config("file.{$confp}.max_file_size");
 
         if (filesize($tmpName) > $maxFileSize) {
             $maxSizeFmt = byte_symbol($maxFileSize);

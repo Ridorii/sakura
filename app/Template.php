@@ -65,7 +65,7 @@ class Template
         self::$name = $name;
 
         // Set reources path
-        self::$resources = Config::get('content_path') . '/data/' . self::$name;
+        self::$resources = '/content/data/' . self::$name;
 
         // Reinitialise
         self::init();
@@ -83,8 +83,8 @@ class Template
         $twigEnv = [];
 
         // Enable caching
-        if (Config::get('enable_tpl_cache')) {
-            $twigEnv['cache'] = ROOT . 'cache/twig';
+        if (config("performance.template_cache")) {
+            $twigEnv['cache'] = ROOT . config("performance.cache_dir") . 'twig';
         }
 
         // And now actually initialise the templating engine
@@ -99,13 +99,7 @@ class Template
         }));
 
         // Add config function
-        self::$engine->addFunction(new Twig_SimpleFunction('config', function ($name, $local = false) {
-            if ($local) {
-                $name = explode('.', $name);
-                return Config::local($name[0], $name[1]);
-            }
-            return Config::get($name);
-        }));
+        self::$engine->addFunction(new Twig_SimpleFunction('config', 'config'));
 
         // Add resource function
         self::$engine->addFunction(new Twig_SimpleFunction('resource', function ($path = "") {

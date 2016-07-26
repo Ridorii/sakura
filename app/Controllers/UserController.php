@@ -93,10 +93,10 @@ class UserController extends Controller
         }
 
         // Get the active rank
-        $rank = array_key_exists($rank, $ranks) ? $rank : ($rank ? 0 : intval(Config::get('default_rank_id')));
+        $rank = array_key_exists($rank, $ranks) ? $rank : ($rank ? 0 : intval(config("rank.regular")));
 
         // Get members per page
-        $membersPerPage = Config::get('members_per_page');
+        $membersPerPage = 30;
 
         // Set parse variables
         Template::vars(compact('ranks', 'rank', 'membersPerPage'));

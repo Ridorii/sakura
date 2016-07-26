@@ -36,7 +36,7 @@ class ForumController extends Controller
     {
         // Get the most active threads
         $activeThreadsIds = DB::table('posts')
-            ->where('forum_id', '!=', Config::get('forum_trash_id'))
+            ->where('forum_id', '!=', config('forum.trash'))
             ->groupBy('topic_id')
             ->orderByRaw('COUNT(*) DESC')
             ->limit(10)
@@ -70,7 +70,7 @@ class ForumController extends Controller
 
         // Get the latest posts
         $latestPostsIds = DB::table('posts')
-            ->where('forum_id', '!=', Config::get('forum_trash_id'))
+            ->where('forum_id', '!=', config('forum.trash'))
             ->orderBy('post_id', 'desc')
             ->limit(10)
             ->get(['post_id']);
@@ -102,7 +102,7 @@ class ForumController extends Controller
 
         // Get the most active poster
         $activePosterId = DB::table('posts')
-            ->where('forum_id', '!=', Config::get('forum_trash_id'))
+            ->where('forum_id', '!=', config('forum.trash'))
             ->where('post_time', '>', time() - (24 * 60 * 60))
             ->groupBy('poster_id')
             ->orderByRaw('COUNT(*) DESC')
@@ -378,7 +378,7 @@ class ForumController extends Controller
 
                 case 'delete':
                     // Get the id of the trash forum
-                    $trash = Config::get('forum_trash_id');
+                    $trash = config('forum.trash');
 
                     // Check if we're operating from the trash
                     if ($thread->forum == $trash) {
@@ -547,8 +547,8 @@ class ForumController extends Controller
 
         // Length
         $length = strlen($text);
-        $minLen = Config::get('forum_text_min');
-        $maxLen = Config::get('forum_text_max');
+        $minLen = config('forum.min_post_length');
+        $maxLen = config('forum.max_post_length');
         $tooShort = $length < $minLen;
         $tooLong = $length > $maxLen;
 
@@ -624,10 +624,10 @@ class ForumController extends Controller
             // Length
             $titleLength = strlen($title);
             $textLength = strlen($text);
-            $titleMin = Config::get('forum_title_min');
-            $titleMax = Config::get('forum_title_max');
-            $textMin = Config::get('forum_text_min');
-            $textMax = Config::get('forum_text_max');
+            $titleMin = config('forum.min_title_length');
+            $titleMax = config('forum.max_title_length');
+            $textMin = config('forum.min_post_length');
+            $textMax = config('forum.max_post_length');
 
             // Checks
             $titleTooShort = $titleLength < $titleMin;
@@ -740,10 +740,10 @@ class ForumController extends Controller
         // Length
         $titleLength = strlen($title);
         $textLength = strlen($text);
-        $titleMin = Config::get('forum_title_min');
-        $titleMax = Config::get('forum_title_max');
-        $textMin = Config::get('forum_text_min');
-        $textMax = Config::get('forum_text_max');
+        $titleMin = config('forum.min_title_length');
+        $titleMax = config('forum.max_title_length');
+        $textMin = config('forum.min_post_length');
+        $textMax = config('forum.max_post_length');
 
         // Checks
         $titleTooShort = $title !== null

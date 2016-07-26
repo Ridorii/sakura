@@ -25,7 +25,7 @@ class NewsController extends Controller
         // Check if the category is set
         if ($category === '') {
             // Fetch the default category from the config
-            $category = Config::get('site_news_category');
+            $category = config('general.news');
         }
 
         // Create the category object

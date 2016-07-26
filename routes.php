@@ -30,14 +30,10 @@ Router::filter('loginCheck', function () {
 
 // Maintenance check
 Router::filter('maintenance', function () {
-    if (Config::get('site_closed')) {
+    if (config('general.maintenance')) {
         ActiveUser::$session->destroy();
 
         http_response_code(503);
-
-        $message = Config::get('site_closed_reason');
-
-        Template::vars(compact('message'));
 
         return Template::render('global/maintenance');
     }

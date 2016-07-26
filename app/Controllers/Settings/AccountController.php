@@ -109,14 +109,14 @@ class AccountController extends Controller
             }
 
             // Check if the username is too short
-            if (strlen($username_clean) < Config::get('username_min_length')) {
+            if (strlen($username_clean) < config('user.name_min')) {
                 $message = "This username is too short!";
                 Template::vars(compact('redirect', 'message'));
                 return Template::render('global/information');
             }
 
             // Check if the username is too long
-            if (strlen($username_clean) > Config::get('username_max_length')) {
+            if (strlen($username_clean) > config('user.name_max')) {
                 $message = "This username is too long!";
                 Template::vars(compact('redirect', 'message'));
                 return Template::render('global/information');
@@ -125,7 +125,7 @@ class AccountController extends Controller
             // Check if this username hasn't been used in the last amount of days set in the config
             $getOld = DB::table('username_history')
                 ->where('username_old_clean', $username_clean)
-                ->where('change_time', '>', (Config::get('old_username_reserve') * 24 * 60 * 60))
+                ->where('change_time', '>', (config('user.name_reserve') * 24 * 60 * 60))
                 ->orderBy('change_id', 'desc')
                 ->get();
 
@@ -249,7 +249,7 @@ class AccountController extends Controller
             }
 
             // Check password entropy
-            if (password_entropy($password) < Config::get('min_entropy')) {
+            if (password_entropy($password) < config('user.pass_min_entropy')) {
                 $message = "Your password isn't strong enough!";
                 Template::vars(compact('redirect', 'message'));
                 return Template::render('global/information');
@@ -282,10 +282,11 @@ class AccountController extends Controller
         $mode = $_POST['mode'] ?? null;
 
         $locked = [
-            Config::get('deactive_rank_id'),
-            Config::get('default_rank_id'),
-            Config::get('premium_rank_id'),
-            Config::get('restricted_rank_id'),
+            config('rank.inactive'),
+            config('rank.regular'),
+            config('rank.premium'),
+            config('rank.alumni'),
+            config('rank.banned'),
         ];
 
         if ($session && $rank && $mode) {

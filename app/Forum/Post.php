@@ -8,7 +8,6 @@
 namespace Sakura\Forum;
 
 use Sakura\BBcode;
-use Sakura\Config;
 use Sakura\DB;
 use Sakura\Exception;
 use Sakura\Net;
@@ -196,14 +195,6 @@ class Post
      */
     public function update()
     {
-        // Check if the data meets the requirements
-        if (strlen($this->subject) < Config::get('forum_title_min')
-            || strlen($this->subject) > Config::get('forum_title_max')
-            || strlen($this->text) < Config::get('forum_text_min')
-            || strlen($this->text) > Config::get('forum_text_max')) {
-            return null;
-        }
-
         // Create a thread object
         $thread = new Thread($this->thread);
 

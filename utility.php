@@ -6,10 +6,24 @@
 use Sakura\Config;
 use Sakura\Net;
 
+// Sort of aias for Config::get
+function config($value)
+{
+    $split = explode('.', $value);
+    $key = array_pop($split);
+    $section = implode('.', $split);
+
+    try {
+        return Config::get($section, $key);
+    } catch (Exception $e) {
+        return Config::get($value);
+    }
+}
+
 function clean_string($string, $lower = false, $noSpecial = false, $replaceSpecial = '')
 {
     // Run common sanitisation function over string
-    $string = htmlentities($string, ENT_NOQUOTES | ENT_HTML401, Config::get('charset'));
+    $string = htmlentities($string, ENT_NOQUOTES | ENT_HTML401, 'utf-8');
     $string = stripslashes($string);
     $string = strip_tags($string);
 
@@ -65,22 +79,19 @@ function get_country_code()
 
 function get_country_name($code)
 {
-    // Catch XX
-    if (strtolower($code) === 'xx') {
-        return 'Unknown';
-    }
+    switch (strtolower($code)) {
+        case "xx":
+            return "Unknown";
 
-    // Catch proxy
-    if (strtolower($code) === 'a1') {
-        return 'Anonymous Proxy';
-    }
+        case "a1":
+            return "Anonymous Proxy";
 
-    // Catch proxy
-    if (strtolower($code) === 'a2') {
-        return 'Satellite Provider';
-    }
+        case "a2":
+            return "Satellite Provider";
 
-    return locale_get_display_region("-{$code}", 'en');
+        default:
+            return locale_get_display_region("-{$code}", 'en');
+    }
 }
 
 function password_entropy($password)
@@ -121,28 +132,28 @@ function send_mail($to, $subject, $body)
     $mail->isSMTP();
 
     // Set the SMTP server host
-    $mail->Host = Config::get('smtp_server');
+    $mail->Host = config('mail.smtp.server');
 
     // Do we require authentication?
-    $mail->SMTPAuth = Config::get('smtp_auth');
+    $mail->SMTPAuth = config('mail.smtp.auth');
 
     // Do we encrypt as well?
-    $mail->SMTPSecure = Config::get('smtp_secure');
+    $mail->SMTPSecure = config('mail.smtp.secure');
 
     // Set the port to the SMTP server
-    $mail->Port = Config::get('smtp_port');
+    $mail->Port = config('mail.smtp.port');
 
     // If authentication is required log in as well
-    if (Config::get('smtp_auth')) {
-        $mail->Username = Config::get('smtp_username');
-        $mail->Password = base64_decode(Config::get('smtp_password'));
+    if (config('mail.smtp.auth')) {
+        $mail->Username = config('mail.smtp.username');
+        $mail->Password = config('mail.smtp.password');
     }
 
     // Add a reply-to header
-    $mail->addReplyTo(Config::get('smtp_replyto_mail'), Config::get('smtp_replyto_name'));
+    $mail->addReplyTo(config('mail.smtp.reply_to'), config('mail.smtp.reply_name'));
 
     // Set a from address as well
-    $mail->setFrom(Config::get('smtp_from_email'), Config::get('smtp_from_name'));
+    $mail->setFrom(config('mail.smtp.from'), config('mail.smtp.name'));
 
     // Set the addressee
     foreach ($to as $email => $name) {
@@ -202,7 +213,7 @@ function error_handler($errno, $errstr, $errfile, $errline)
     ob_end_clean();
 
     // Check for dev mode
-    $detailed = Config::local('dev', 'show_errors');
+    $detailed = config('dev.show_errors');
 
     // Build page
     $errorPage = '<!DOCTYPE html>

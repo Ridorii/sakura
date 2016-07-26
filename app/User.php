@@ -445,7 +445,7 @@ class User
         }
 
         // Otherwise use the standard method
-        return $this->lastOnline > (time() - Config::get('max_online_time'));
+        return $this->lastOnline > (time() - 120);
     }
 
     /**
@@ -965,8 +965,8 @@ class User
     public function isPremium()
     {
         // Get rank IDs from the db
-        $premiumRank = (int) Config::get('premium_rank_id');
-        $defaultRank = (int) Config::get('default_rank_id');
+        $premiumRank = (int) config('rank.premium');
+        $defaultRank = (int) config('rank.regular');
 
         // Fetch expiration date
         $expire = $this->premiumInfo()->expire;

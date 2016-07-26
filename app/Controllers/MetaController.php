@@ -30,15 +30,14 @@ class MetaController extends Controller
     {
         // Get the newest user
         $newestUserId = DB::table('users')
-            ->where('rank_main', '!=', Config::get('restricted_rank_id'))
-            ->where('rank_main', '!=', Config::get('deactive_rank_id'))
+            ->whereNotIn('rank_main', [config('rank.banned'), config('rank.inactive')])
             ->orderBy('user_id', 'desc')
             ->limit(1)
             ->get(['user_id']);
         $newestUser = User::construct($newestUserId ? $newestUserId[0]->user_id : 0);
 
         // Get all the currently online users
-        $timeRange = time() - Config::get('max_online_time');
+        $timeRange = time() - 120;
 
         // Create a storage variable
         $onlineUsers = [];
@@ -61,23 +60,23 @@ class MetaController extends Controller
         }
 
         // Get news
-        $news = new Category(Config::get('site_news_category'));
+        $news = new Category(config('general.news'));
 
         // Merge index specific stuff with the global render data
         Template::vars([
-            'news' => $news->posts(Config::get('front_page_news_posts')),
+            'news' => $news->posts(3),
             'stats' => [
                 'userCount' => DB::table('users')
                     ->where('password_algo', '!=', 'disabled')
-                    ->whereNotIn('rank_main', [Config::get('deactive_rank_id'), Config::get('restricted_rank_id')])
+                    ->whereNotIn('rank_main', [config('rank.banned'), config('rank.inactive')])
                     ->count(),
                 'newestUser' => $newestUser,
                 'lastRegDate' => date_diff(
                     date_create(date('Y-m-d', $newestUser->registered)),
                     date_create(date('Y-m-d'))
                 )->format('%a'),
-                'topicCount' => DB::table('topics')->where('forum_id', '!=', Config::get('forum_trash_id'))->count(),
-                'postCount' => DB::table('posts')->where('forum_id', '!=', Config::get('forum_trash_id'))->count(),
+                'topicCount' => DB::table('topics')->where('forum_id', '!=', config('forum.trash'))->count(),
+                'postCount' => DB::table('posts')->where('forum_id', '!=', config('forum.trash'))->count(),
                 'onlineUsers' => $onlineUsers,
             ],
         ]);
@@ -112,6 +111,7 @@ class MetaController extends Controller
 
     /**
      * Handles the info pages.
+     * Deprecate this!!
      *
      * @param string $id The page ID from the database.
      *

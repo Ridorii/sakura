@@ -39,8 +39,8 @@ class CommentsController extends Controller
         // Checks
         $text = $_POST['text'] ?? '';
         $length = strlen($text);
-        $tooShort = $length < Config::get('comment_min_length');
-        $tooLong = $length > Config::get('comment_max_length');
+        $tooShort = $length < config('comments.min_length');
+        $tooLong = $length > config('comments.max_length');
 
         if ($tooShort || $tooLong) {
             $fill = $tooShort ? "short" : "long";

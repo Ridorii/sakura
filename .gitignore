@@ -1,9 +1,16 @@
-BingSiteAuth.xml
-google*.html
-/config/config.ini
-/cache/*
-!/cache/.sakura
+# Libraries
 /vendor
+/node_modules
+
+# Configuration
+/config/config.ini
+
+# Cache
+/cache/*
+!/cache/.gitkeep
+
+# OS specific shit
 [Tt]humbs.db
-Desktop.ini
+[Dd]esktop.ini
 $RECYCLE.BIN/
+.DS_Store

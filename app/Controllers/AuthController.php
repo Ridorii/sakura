@@ -94,14 +94,6 @@ class AuthController extends Controller
         // Preliminarily set login to failed
         $redirect = Router::route('auth.login');
 
-        // Check if authentication is disallowed
-        if (Config::get('lock_authentication')) {
-            $message = 'Logging in is disabled for security checkups! Try again later.';
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
-        }
-
         // Get request variables
         $username = isset($_REQUEST['username']) ? $_REQUEST['username'] : null;
         $password = isset($_REQUEST['password']) ? $_REQUEST['password'] : null;
@@ -175,20 +167,20 @@ class AuthController extends Controller
         // Generate a session key
         $sessionKey = $session->create($remember);
 
+        $cookiePrefix = config('cookie.prefix');
+
         // User ID cookie
         setcookie(
-            Config::get('cookie_prefix') . 'id',
+            "{$cookiePrefix}id",
             $user->id,
-            time() + 604800,
-            Config::get('cookie_path')
+            time() + 604800
         );
 
         // Session ID cookie
         setcookie(
-            Config::get('cookie_prefix') . 'session',
+            "{$cookiePrefix}session",
             $sessionKey,
-            time() + 604800,
-            Config::get('cookie_path')
+            time() + 604800
         );
 
         $this->touchRateLimit($user->id, true);
@@ -240,7 +232,7 @@ class AuthController extends Controller
         $redirect = Router::route('auth.register');
 
         // Check if authentication is disallowed
-        if (Config::get('lock_authentication') || Config::get('disable_registration')) {
+        if (config('user.disable_registration')) {
             $message = 'Registration is disabled for security checkups! Try again later.';
 
             Template::vars(compact('message', 'redirect'));
@@ -261,42 +253,9 @@ class AuthController extends Controller
         $username = isset($_POST['username']) ? $_POST['username'] : null;
         $password = isset($_POST['password']) ? $_POST['password'] : null;
         $email = isset($_POST['email']) ? $_POST['email'] : null;
-        $captcha = isset($_POST['g-recaptcha-response']) ? $_POST['g-recaptcha-response'] : null;
-        $terms = isset($_POST['tos']);
 
         // Append username and email to the redirection url
         $redirect .= "?username={$username}&email={$email}";
-
-        // Check if the user agreed to the ToS
-        if (!$terms) {
-            $message = 'You are required to agree to the Terms of Service.';
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
-        }
-
-        // Check if we require a captcha
-        if (Config::get('recaptcha')) {
-            // Get secret key from the config
-            $secret = Config::get('recaptcha_private');
-
-            // Attempt to verify the captcha
-            $response = Net::fetch("https://google.com/recaptcha/api/siteverify?secret={$secret}&response={$captcha}");
-
-            // Attempt to decode as json
-            if ($response) {
-                $response = json_decode($response);
-            }
-
-            if (!$response || !$response->success) {
-                $message = 'Captcha verification failed, please try again.';
-
-                Template::vars(compact('message', 'redirect'));
-
-                return Template::render('global/information');
-            }
-        }
 
         // Attempt to get account data
         $user = User::construct(clean_string($username, true, true));
@@ -312,7 +271,7 @@ class AuthController extends Controller
         }
 
         // Username too short
-        if (strlen($username) < Config::get('username_min_length')) {
+        if (strlen($username) < config('user.name_min')) {
             $message = 'Your name must be at least 3 characters long.';
 
             Template::vars(compact('message', 'redirect'));
@@ -321,7 +280,7 @@ class AuthController extends Controller
         }
 
         // Username too long
-        if (strlen($username) > Config::get('username_max_length')) {
+        if (strlen($username) > config('user.name_max')) {
             $message = 'Your name can\'t be longer than 16 characters.';
 
             Template::vars(compact('message', 'redirect'));
@@ -360,7 +319,7 @@ class AuthController extends Controller
         }
 
         // Check password entropy
-        if (password_entropy($password) < Config::get('min_entropy')) {
+        if (password_entropy($password) < config('user.pass_min_entropy')) {
             $message = 'Your password is too weak, try adding some special characters.';
 
             Template::vars(compact('message', 'redirect'));
@@ -369,8 +328,8 @@ class AuthController extends Controller
         }
 
         // Set a few variables
-        $requireActive = Config::get('require_activation');
-        $ranks = $requireActive ? [1] : [2];
+        $requireActive = config('user.require_activation');
+        $ranks = $requireActive ? [config('rank.inactive')] : [config('rank.regular')];
 
         // Create the user
         $user = User::create($username, $password, $email, $ranks);
@@ -385,7 +344,7 @@ class AuthController extends Controller
         $redirect = Router::route('auth.login');
         $message = $requireActive
         ? 'Your registration went through! An activation e-mail has been sent.'
-        : 'Your registration went through! Welcome to ' . Config::get('sitename') . '!';
+        : 'Your registration went through! Welcome to ' . config('general.name') . '!';
 
         Template::vars(compact('message', 'redirect'));
 
@@ -439,8 +398,8 @@ class AuthController extends Controller
         }
 
         // Get the ids for deactivated and default user ranks
-        $rankDefault = Config::get('default_rank_id');
-        $rankDeactive = Config::get('deactive_rank_id');
+        $rankDefault = config('rank.regular');
+        $rankDeactive = config('rank.inactive');
 
         // Add normal user, remove deactivated and set normal as default
         $user->addRanks([$rankDefault]);
@@ -448,7 +407,7 @@ class AuthController extends Controller
         $user->removeRanks([$rankDeactive]);
 
         $redirect = Router::route('auth.login');
-        $message = "Your account is activated, welcome to " . Config::get('sitename') . "!";
+        $message = "Your account is activated, welcome to " . config('general.name') . "!";
 
         Template::vars(compact('message', 'redirect'));
 
@@ -474,15 +433,6 @@ class AuthController extends Controller
     {
         // Preliminarily set registration to failed
         $redirect = Router::route('auth.reactivate');
-
-        // Check if authentication is disallowed
-        if (Config::get('lock_authentication')) {
-            $message = "You can't request a reactivation at this time, sorry!";
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
-        }
 
         // Validate session
         if (!isset($_POST['session']) || $_POST['session'] != session_id()) {
@@ -555,15 +505,6 @@ class AuthController extends Controller
         // Preliminarily set action to failed
         $redirect = Router::route('main.index');
 
-        // Check if authentication is disallowed
-        if (Config::get('lock_authentication')) {
-            $message = "You can't request a reactivation at this time, sorry!";
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
-        }
-
         // Validate session
         if (!isset($_POST['session']) || $_POST['session'] != session_id()) {
             $message = "Your session expired, refreshing the page will most likely fix this!";
@@ -603,7 +544,7 @@ class AuthController extends Controller
 
         if ($key && $password) {
             // Check password entropy
-            if (password_entropy($password) < Config::get('min_entropy')) {
+            if (password_entropy($password) < config('user.pass_min_entropy')) {
                 $message = "Your password doesn't meet the strength requirements!";
 
                 Template::vars(compact('message', 'redirect'));
@@ -661,11 +602,11 @@ class AuthController extends Controller
         // Generate activation key
         $activate = ActionCode::generate('ACTIVATE', $user->id);
 
-        $siteName = Config::get('sitename');
-        $baseUrl = "http://" . Config::get('url_main');
+        $siteName = config('general.name');
+        $baseUrl = "http://{$_SERVER['HTTP_HOST']}";
         $activateLink = Router::route('auth.activate') . "?u={$user->id}&k={$activate}";
         $profileLink = Router::route('user.profile', $user->id);
-        $signature = Config::get('mail_signature');
+        $signature = config('mail.signature');
 
         // Build the e-mail
         $message = "Welcome to {$siteName}!\r\n\r\n"
@@ -696,10 +637,10 @@ class AuthController extends Controller
         // Generate the verification key
         $verk = ActionCode::generate('LOST_PASS', $user->id);
 
-        $siteName = Config::get('sitename');
-        $baseUrl = "http://" . Config::get('url_main');
+        $siteName = config('general.name');
+        $baseUrl = "http://{$_SERVER['HTTP_HOST']}";
         $reactivateLink = Router::route('auth.resetpassword') . "?u={$user->id}&k={$verk}";
-        $signature = Config::get('mail_signature');
+        $signature = config('mail.signature');
 
         // Build the e-mail
         $message = "Hello {$user->username},\r\n\r\n"

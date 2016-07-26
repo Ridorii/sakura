@@ -43,8 +43,8 @@ class PremiumController extends Controller
      */
     public function index()
     {
-        $price = Config::get('premium_price_per_month');
-        $amountLimit = Config::get('premium_amount_max');
+        $price = config('premium.price_per_month');
+        $amountLimit = config('premium.max_months_at_once');
 
         Template::vars(compact('price', 'amountLimit'));
 
@@ -75,7 +75,7 @@ class PremiumController extends Controller
         }
 
         // Fetch the limit
-        $amountLimit = Config::get('premium_amount_max');
+        $amountLimit = config('premium.max_months_at_once');
 
         // Check months
         if ($months < 1
@@ -88,10 +88,10 @@ class PremiumController extends Controller
             return Template::render('global/information');
         }
 
-        $pricePerMonth = Config::get('premium_price_per_month');
+        $pricePerMonth = config('premium.price_per_month');
         $total = number_format($pricePerMonth * $months, 2, '.', '');
 
-        $siteName = Config::get('sitename');
+        $siteName = config('general.name');
         $multiMonths = $months !== 1 ? 's' : '';
 
         $siteUrl = 'http'

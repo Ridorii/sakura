@@ -4,32 +4,37 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "74d0e0231a20998b63636505d174d1d2",
+    "hash": "765ea465939a65048ac736e4fbc6c167",
     "content-hash": "1af681873ad63e53d42dfd445d67b388",
     "packages": [
         {
             "name": "corneltek/class-template",
-            "version": "2.1.2",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/c9s/ClassTemplate.git",
-                "reference": "4bdb46a6b1a5245118e7bf08b4cdacdfdaadb77b"
+                "reference": "31a6281e5664b00a3f9dd6141f112c908e9a29e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/c9s/ClassTemplate/zipball/4bdb46a6b1a5245118e7bf08b4cdacdfdaadb77b",
-                "reference": "4bdb46a6b1a5245118e7bf08b4cdacdfdaadb77b",
+                "url": "https://api.github.com/repos/c9s/ClassTemplate/zipball/31a6281e5664b00a3f9dd6141f112c908e9a29e9",
+                "reference": "31a6281e5664b00a3f9dd6141f112c908e9a29e9",
                 "shasum": ""
             },
             "require": {
-                "corneltek/codegen": "^2",
+                "corneltek/codegen": "^3.0.0",
                 "php": ">=5.3.0",
-                "twig/twig": "^1"
+                "twig/twig": "^1.22"
             },
             "require-dev": {
                 "corneltek/phpunit-testmore": "dev-master"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "ClassTemplate\\": "src/ClassTemplate/"
@@ -48,40 +53,45 @@
             ],
             "description": "Class template Utilities",
             "homepage": "http://github.com/c9s/ClassTemplate",
-            "time": "2015-09-06 05:04:14"
+            "time": "2016-06-10 16:07:48"
         },
         {
             "name": "corneltek/cliframework",
-            "version": "2.8.1",
+            "version": "3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/c9s/CLIFramework.git",
-                "reference": "7ca1239bb032f5cd1d746974954adde0233900ce"
+                "reference": "b776b4619aa4df24e3112d4e0535972276be80fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/c9s/CLIFramework/zipball/7ca1239bb032f5cd1d746974954adde0233900ce",
-                "reference": "7ca1239bb032f5cd1d746974954adde0233900ce",
+                "url": "https://api.github.com/repos/c9s/CLIFramework/zipball/b776b4619aa4df24e3112d4e0535972276be80fd",
+                "reference": "b776b4619aa4df24e3112d4e0535972276be80fd",
                 "shasum": ""
             },
             "require": {
-                "corneltek/class-template": "^2",
-                "corneltek/codegen": "^2",
-                "corneltek/getoptionkit": "^2",
-                "corneltek/universal": ">= 1.4",
+                "corneltek/class-template": "^3.0.0",
+                "corneltek/codegen": "^3.0.0",
+                "corneltek/getoptionkit": "^2.4",
+                "corneltek/universal": "^1.7",
                 "php": ">=5.3.0",
                 "pimple/pimple": "*",
-                "symfony/class-loader": "^2.7",
-                "symfony/finder": "^2.7"
+                "symfony/class-loader": "^2.8|3.0",
+                "symfony/finder": "^2.8|3.0"
             },
             "require-dev": {
                 "corneltek/phpunit-testmore": "dev-master",
-                "satooshi/php-coveralls": "dev-master"
+                "satooshi/php-coveralls": "^1"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
-                    "CLIFramework\\": "src/CLIFramework/"
+                    "CLIFramework\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -105,26 +115,26 @@
                 "getopt",
                 "zsh"
             ],
-            "time": "2015-11-07 11:01:47"
+            "time": "2016-06-11 12:24:41"
         },
         {
             "name": "corneltek/codegen",
-            "version": "2.7.1",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/c9s/CodeGen.git",
-                "reference": "b2a1835b4a0c63cb5f1c1c0a44176adbbfd46dcd"
+                "reference": "b7e7abb5d3eb339c30b751ff30c6b7caa3641880"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/c9s/CodeGen/zipball/b2a1835b4a0c63cb5f1c1c0a44176adbbfd46dcd",
-                "reference": "b2a1835b4a0c63cb5f1c1c0a44176adbbfd46dcd",
+                "url": "https://api.github.com/repos/c9s/CodeGen/zipball/b7e7abb5d3eb339c30b751ff30c6b7caa3641880",
+                "reference": "b7e7abb5d3eb339c30b751ff30c6b7caa3641880",
                 "shasum": ""
             },
             "require": {
                 "doctrine/inflector": "*",
                 "php": ">=5.3.0",
-                "twig/twig": "^1 >=1.21"
+                "twig/twig": "^1.21"
             },
             "require-dev": {
                 "corneltek/phpunit-testmore": "dev-master"
@@ -132,7 +142,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8.x-dev"
+                    "dev-master": "3.0.x-dev"
                 }
             },
             "autoload": {
@@ -147,26 +157,25 @@
             "authors": [
                 {
                     "name": "Yo-An Lin",
-                    "email": "yoanlin93@gmail.com",
-                    "homepage": "http://c9s.me"
+                    "email": "yoanlin93@gmail.com"
                 }
             ],
             "description": "PHP Code Generation Library",
             "homepage": "http://github.com/c9s/CodeGen",
-            "time": "2016-03-26 07:10:40"
+            "time": "2016-06-10 15:32:20"
         },
         {
             "name": "corneltek/getoptionkit",
-            "version": "2.2.5",
+            "version": "2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/c9s/GetOptionKit.git",
-                "reference": "977b11bf1f44a02398ecfc96cf2fc913cb9f017b"
+                "reference": "076cc41051d6417bf9304fe92f8d9793edac9910"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/c9s/GetOptionKit/zipball/977b11bf1f44a02398ecfc96cf2fc913cb9f017b",
-                "reference": "977b11bf1f44a02398ecfc96cf2fc913cb9f017b",
+                "url": "https://api.github.com/repos/c9s/GetOptionKit/zipball/076cc41051d6417bf9304fe92f8d9793edac9910",
+                "reference": "076cc41051d6417bf9304fe92f8d9793edac9910",
                 "shasum": ""
             },
             "require": {
@@ -174,12 +183,17 @@
             },
             "require-dev": {
                 "corneltek/phpunit-testmore": "dev-master",
-                "satooshi/php-coveralls": "dev-master"
+                "satooshi/php-coveralls": "^1"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.5.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
-                    "GetOptionKit\\": "src/GetOptionKit/"
+                    "GetOptionKit\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -189,26 +203,25 @@
             "authors": [
                 {
                     "name": "Yo-An Lin",
-                    "email": "cornelius.howl@gmail.com",
-                    "homepage": "http://c9s.me"
+                    "email": "cornelius.howl@gmail.com"
                 }
             ],
             "description": "Powerful command-line option toolkit",
             "homepage": "http://github.com/c9s/GetOptionKit",
-            "time": "2016-02-16 10:41:32"
+            "time": "2016-07-18 07:44:29"
         },
         {
             "name": "corneltek/universal",
-            "version": "1.7.2",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/c9s/Universal.git",
-                "reference": "7815546cc524f6eac84d8f7620510e9277252d78"
+                "url": "https://github.com/corneltek/Universal.git",
+                "reference": "7b69d656be18d6b1d01a5a672141c80b43b5c2f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/c9s/Universal/zipball/7815546cc524f6eac84d8f7620510e9277252d78",
-                "reference": "7815546cc524f6eac84d8f7620510e9277252d78",
+                "url": "https://api.github.com/repos/corneltek/Universal/zipball/7b69d656be18d6b1d01a5a672141c80b43b5c2f3",
+                "reference": "7b69d656be18d6b1d01a5a672141c80b43b5c2f3",
                 "shasum": ""
             },
             "require": {
@@ -216,9 +229,14 @@
             },
             "require-dev": {
                 "corneltek/phpunit-testmore": "dev-master",
-                "satooshi/php-coveralls": "dev-master"
+                "satooshi/php-coveralls": "^1"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.8.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Universal\\": "src/Universal/"
@@ -231,13 +249,12 @@
             "authors": [
                 {
                     "name": "Yo-An Lin",
-                    "email": "cornelius.howl@gmail.com",
-                    "homepage": "http://c9s.me"
+                    "email": "yoanlin93@gmail.com"
                 }
             ],
             "description": "Universal library for PHP",
-            "homepage": "http://github.com/c9s/Universal",
-            "time": "2015-11-07 10:32:02"
+            "homepage": "http://github.com/corneltek/Universal",
+            "time": "2016-06-11 11:51:45"
         },
         {
             "name": "doctrine/annotations",
@@ -710,16 +727,16 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v5.2.28",
+            "version": "v5.2.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
-                "reference": "1e156f8017490f5583ab161030bf839c77c95e54"
+                "reference": "7ec395833738b9059f829348ddc9a59d0118ac88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/1e156f8017490f5583ab161030bf839c77c95e54",
-                "reference": "1e156f8017490f5583ab161030bf839c77c95e54",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/7ec395833738b9059f829348ddc9a59d0118ac88",
+                "reference": "7ec395833738b9059f829348ddc9a59d0118ac88",
                 "shasum": ""
             },
             "require": {
@@ -749,20 +766,20 @@
             ],
             "description": "The Illuminate Container package.",
             "homepage": "http://laravel.com",
-            "time": "2016-03-16 17:19:17"
+            "time": "2016-05-29 02:18:23"
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.2.28",
+            "version": "v5.2.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "411b851962c211078ade7664a6976e77a78cd2a5"
+                "reference": "f4f44d7c6d20404da8dfc655bd3d6dd788dfdce5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/411b851962c211078ade7664a6976e77a78cd2a5",
-                "reference": "411b851962c211078ade7664a6976e77a78cd2a5",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/f4f44d7c6d20404da8dfc655bd3d6dd788dfdce5",
+                "reference": "f4f44d7c6d20404da8dfc655bd3d6dd788dfdce5",
                 "shasum": ""
             },
             "require": {
@@ -791,20 +808,20 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "http://laravel.com",
-            "time": "2016-03-07 20:37:17"
+            "time": "2016-05-31 21:36:13"
         },
         {
             "name": "illuminate/database",
-            "version": "v5.2.28",
+            "version": "v5.2.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "1ea9f36cef011a80b1623ea3566d57017e7913bc"
+                "reference": "c0746930dc6a6ff9b72945152609d61a3b3829c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/1ea9f36cef011a80b1623ea3566d57017e7913bc",
-                "reference": "1ea9f36cef011a80b1623ea3566d57017e7913bc",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/c0746930dc6a6ff9b72945152609d61a3b3829c6",
+                "reference": "c0746930dc6a6ff9b72945152609d61a3b3829c6",
                 "shasum": ""
             },
             "require": {
@@ -851,20 +868,20 @@
                 "orm",
                 "sql"
             ],
-            "time": "2016-04-01 18:17:22"
+            "time": "2016-06-06 13:12:46"
         },
         {
             "name": "illuminate/support",
-            "version": "v5.2.28",
+            "version": "v5.2.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "e4aa03c5f26db752e838354a7d71b85e6138f4ec"
+                "reference": "6e86ac2b4e3d0c42c2dc846dbac3e74d378a812b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/e4aa03c5f26db752e838354a7d71b85e6138f4ec",
-                "reference": "e4aa03c5f26db752e838354a7d71b85e6138f4ec",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/6e86ac2b4e3d0c42c2dc846dbac3e74d378a812b",
+                "reference": "6e86ac2b4e3d0c42c2dc846dbac3e74d378a812b",
                 "shasum": ""
             },
             "require": {
@@ -907,7 +924,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "http://laravel.com",
-            "time": "2016-03-30 18:18:45"
+            "time": "2016-05-30 02:40:53"
         },
         {
             "name": "jbbcode/jbbcode",
@@ -1052,22 +1069,23 @@
         },
         {
             "name": "paypal/rest-api-sdk-php",
-            "version": "v1.6.4",
+            "version": "1.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paypal/PayPal-PHP-SDK.git",
-                "reference": "06837d290c4906578cfd92786412dff330a1429c"
+                "reference": "d62e8db407827229c6c7aabfa54792d0113b99e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/06837d290c4906578cfd92786412dff330a1429c",
-                "reference": "06837d290c4906578cfd92786412dff330a1429c",
+                "url": "https://api.github.com/repos/paypal/PayPal-PHP-SDK/zipball/d62e8db407827229c6c7aabfa54792d0113b99e4",
+                "reference": "d62e8db407827229c6c7aabfa54792d0113b99e4",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
-                "php": ">=5.3.0"
+                "php": ">=5.3.0",
+                "psr/log": "1.0.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "3.7.*"
@@ -1096,20 +1114,20 @@
                 "rest",
                 "sdk"
             ],
-            "time": "2016-01-20 17:45:52"
+            "time": "2016-07-15 20:42:18"
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v5.2.14",
+            "version": "v5.2.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "e774bc9152de85547336e22b8926189e582ece95"
+                "reference": "1d85f9ef3ecfc42bbc4f3c70d5e37ca9a65f629a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/e774bc9152de85547336e22b8926189e582ece95",
-                "reference": "e774bc9152de85547336e22b8926189e582ece95",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/1d85f9ef3ecfc42bbc4f3c70d5e37ca9a65f629a",
+                "reference": "1d85f9ef3ecfc42bbc4f3c70d5e37ca9a65f629a",
                 "shasum": ""
             },
             "require": {
@@ -1120,8 +1138,7 @@
                 "phpunit/phpunit": "4.7.*"
             },
             "suggest": {
-                "league/oauth2-client": "Needed for XOAUTH2 authentication",
-                "league/oauth2-google": "Needed for Gmail XOAUTH2"
+                "league/oauth2-google": "Needed for Google XOAUTH2 authentication"
             },
             "type": "library",
             "autoload": {
@@ -1157,7 +1174,7 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-            "time": "2015-11-01 10:15:28"
+            "time": "2016-06-06 09:09:37"
         },
         {
             "name": "phroute/phroute",
@@ -1250,30 +1267,67 @@
             "time": "2015-09-11 15:10:35"
         },
         {
-            "name": "symfony/class-loader",
-            "version": "v2.8.4",
+            "name": "psr/log",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/class-loader.git",
-                "reference": "7d362c22710980730d46a5d039e788946a2938cb"
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/class-loader/zipball/7d362c22710980730d46a5d039e788946a2938cb",
-                "reference": "7d362c22710980730d46a5d039e788946a2938cb",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/fe0936ee26643249e916849d48e3a51d5f5e278b",
+                "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Psr\\Log\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for logging libraries",
+            "keywords": [
+                "log",
+                "psr",
+                "psr-3"
+            ],
+            "time": "2012-12-21 11:40:51"
+        },
+        {
+            "name": "symfony/class-loader",
+            "version": "v3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/class-loader.git",
+                "reference": "05ad69969796955102e42b12d13ad73fc6dadaaf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/class-loader/zipball/05ad69969796955102e42b12d13ad73fc6dadaaf",
+                "reference": "05ad69969796955102e42b12d13ad73fc6dadaaf",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9",
-                "symfony/polyfill-apcu": "~1.1"
+                "php": ">=5.5.9"
             },
             "require-dev": {
-                "symfony/finder": "~2.0,>=2.0.5|~3.0.0"
+                "symfony/finder": "~2.8|~3.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -1300,29 +1354,29 @@
             ],
             "description": "Symfony ClassLoader Component",
             "homepage": "https://symfony.com",
-            "time": "2016-03-10 19:33:53"
+            "time": "2015-11-26 07:02:09"
         },
         {
             "name": "symfony/finder",
-            "version": "v2.8.4",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "ca24cf2cd4e3826f571e0067e535758e73807aa1"
+                "reference": "3577eb98dba90721d1a0a3edfc6956ab8b1aecee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/ca24cf2cd4e3826f571e0067e535758e73807aa1",
-                "reference": "ca24cf2cd4e3826f571e0067e535758e73807aa1",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/3577eb98dba90721d1a0a3edfc6956ab8b1aecee",
+                "reference": "3577eb98dba90721d1a0a3edfc6956ab8b1aecee",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
+                "php": ">=5.5.9"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -1349,73 +1403,20 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2016-03-10 10:53:53"
-        },
-        {
-            "name": "symfony/polyfill-apcu",
-            "version": "v1.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-apcu.git",
-                "reference": "0c901e4e65a2f7ece68f0fd249b56d6ad3adc214"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-apcu/zipball/0c901e4e65a2f7ece68f0fd249b56d6ad3adc214",
-                "reference": "0c901e4e65a2f7ece68f0fd249b56d6ad3adc214",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill backporting apcu_* functions to lower PHP versions",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "apcu",
-                "compatibility",
-                "polyfill",
-                "portable",
-                "shim"
-            ],
-            "time": "2016-03-03 16:49:40"
+            "time": "2015-10-30 23:35:59"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.1.1",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "1289d16209491b584839022f29257ad859b8532d"
+                "reference": "dff51f72b0706335131b00a7f49606168c582594"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/1289d16209491b584839022f29257ad859b8532d",
-                "reference": "1289d16209491b584839022f29257ad859b8532d",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/dff51f72b0706335131b00a7f49606168c582594",
+                "reference": "dff51f72b0706335131b00a7f49606168c582594",
                 "shasum": ""
             },
             "require": {
@@ -1427,7 +1428,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev"
+                    "dev-master": "1.2-dev"
                 }
             },
             "autoload": {
@@ -1461,20 +1462,20 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-01-20 09:13:37"
+            "time": "2016-05-18 14:26:46"
         },
         {
             "name": "symfony/translation",
-            "version": "v3.0.4",
+            "version": "v3.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "f7a07af51ea067745a521dab1e3152044a2fb1f2"
+                "reference": "d63a94528530c3ea5ff46924c8001cec4a398609"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/f7a07af51ea067745a521dab1e3152044a2fb1f2",
-                "reference": "f7a07af51ea067745a521dab1e3152044a2fb1f2",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/d63a94528530c3ea5ff46924c8001cec4a398609",
+                "reference": "d63a94528530c3ea5ff46924c8001cec4a398609",
                 "shasum": ""
             },
             "require": {
@@ -1498,7 +1499,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -1525,20 +1526,20 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2016-03-25 01:41:20"
+            "time": "2016-06-29 05:41:56"
         },
         {
             "name": "twig/twig",
-            "version": "v1.24.0",
+            "version": "v1.24.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8"
+                "reference": "3566d311a92aae4deec6e48682dc5a4528c4a512"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
-                "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3566d311a92aae4deec6e48682dc5a4528c4a512",
+                "reference": "3566d311a92aae4deec6e48682dc5a4528c4a512",
                 "shasum": ""
             },
             "require": {
@@ -1586,7 +1587,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-01-25 21:22:18"
+            "time": "2016-05-30 09:11:59"
         }
     ],
     "packages-dev": [],

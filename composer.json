@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Sakura\\": "libraries/"
+            "Sakura\\": "app/"
         },
         "files": [
             "utility.php"

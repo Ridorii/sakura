@@ -22,7 +22,7 @@ class ServeCommand extends Command
         $document_root = addslashes(ROOT . 'public/');
         $router_proxy = addslashes(ROOT . 'server.php');
         $php_dir = PHP_BINDIR;
-        $host = Config::local('dev', 'host');
+        $host = config('dev.host');
 
         exec("{$php_dir}/php -S {$host} -t {$document_root} {$router_proxy}");
     }
