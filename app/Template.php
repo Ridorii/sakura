@@ -77,7 +77,7 @@ class Template
     public static function init()
     {
         // Initialise Twig Filesystem Loader
-        $twigLoader = new Twig_Loader_Filesystem(ROOT . 'templates/' . self::$name);
+        $twigLoader = new Twig_Loader_Filesystem(ROOT . 'views/' . self::$name);
 
         // Environment variable
         $twigEnv = [];
