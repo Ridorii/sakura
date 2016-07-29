@@ -1,0 +1,27 @@
+{% extends 'settings/account/master.twig' %}
+
+{% set mode = 'Username' %}
+
+{% block description %}
+    <p>Probably the biggest part of your identity on a site.</p>
+    <p><b>You can only change this once every 30 days so choose wisely.</b></p>
+{% endblock %}
+
+{% set eligible = user.getUsernameHistory ? (date().timestamp - user.getUsernameHistory()[0].change_time) > 2592000 : true %}
+
+{% block settingsContent %}
+    <form enctype="multipart/form-data" method="post" action="{{ route('settings.account.username') }}">
+        <h1 class="stylised" style="text-align: center; margin-top: 10px;{% if not eligible %} color: #c44;{% endif %}">You are {% if not eligible %}not {% endif %}eligible for a name change.</h1>
+        <h3 style="text-align: center;">{% if user.getUsernameHistory %}Your last name change was <time datetime="{{ user.getUsernameHistory[0]['change_time']|date('r') }}">{{ user.getUsernameHistory[0]['change_time']|date('D Y-m-d H:i:s T') }}</time>.{% else %}This is your first username change.{% endif %}</h3>
+        {% if eligible %}
+            <div class="profile-field">
+                <div><h2>Username</h2></div>
+                <div><input type="text" name="username" placeholder="Enter your new username (at least {{ config('username_min_length') }} and at most {{ config('username_max_length') }} characters!)" class="inputStyling"></div>
+            </div>
+            <div class="profile-save">
+                <button value="{{ session_id() }}" name="session" class="inputStyling">Save</button>
+                <button type="reset" class="inputStyling">Reset</button>
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}

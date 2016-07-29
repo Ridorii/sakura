@@ -5,8 +5,9 @@
 
 use Sakura\Config;
 use Sakura\Net;
+use Sakura\Router;
 
-// Sort of aias for Config::get
+// Sort of alias for Config::get
 function config($value)
 {
     $split = explode('.', $value);
@@ -18,6 +19,12 @@ function config($value)
     } catch (Exception $e) {
         return Config::get($value);
     }
+}
+
+// Alias for Router::route
+function route($name, $args = null)
+{
+    return Router::route($name, $args);
 }
 
 function clean_string($string, $lower = false, $noSpecial = false, $replaceSpecial = '')
@@ -69,7 +76,7 @@ function get_country_code()
     }
 
     // Check if the required header is set and return it
-    if (isset($_SERVER['HTTP_CF_IPCOUNTRY'])) {
+    if (isset($_SERVER['HTTP_CF_IPCOUNTRY']) && strlen($_SERVER['HTTP_CF_IPCOUNTRY']) === 2) {
         return $_SERVER['HTTP_CF_IPCOUNTRY'];
     }
 
@@ -96,7 +103,6 @@ function get_country_name($code)
 
 function password_entropy($password)
 {
-    // Decode utf-8 chars
     $password = utf8_decode($password);
 
     // Count the amount of unique characters in the password string and calculate the entropy
@@ -123,62 +129,31 @@ function byte_symbol($bytes)
     return $bytes;
 }
 
+// turn this function into a wrapped class!
 function send_mail($to, $subject, $body)
 {
-    // Initialise PHPMailer
-    $mail = new PHPMailer;
+    $transport = Swift_SmtpTransport::newInstance()
+        ->setHost(config('mail.smtp.server'))
+        ->setPort(config('mail.smtp.port'));
 
-    // Set to SMTP
-    $mail->isSMTP();
+    if (config('mail.smtp.secure')) {
+        $transport->setEncryption(config('mail.smtp.secure'));
+    }
 
-    // Set the SMTP server host
-    $mail->Host = config('mail.smtp.server');
-
-    // Do we require authentication?
-    $mail->SMTPAuth = config('mail.smtp.auth');
-
-    // Do we encrypt as well?
-    $mail->SMTPSecure = config('mail.smtp.secure');
-
-    // Set the port to the SMTP server
-    $mail->Port = config('mail.smtp.port');
-
-    // If authentication is required log in as well
     if (config('mail.smtp.auth')) {
-        $mail->Username = config('mail.smtp.username');
-        $mail->Password = config('mail.smtp.password');
+        $transport
+            ->setUsername(config('mail.smtp.username'))
+            ->setPassword(config('mail.smtp.password'));
     }
 
-    // Add a reply-to header
-    $mail->addReplyTo(config('mail.smtp.reply_to'), config('mail.smtp.reply_name'));
+    $mailer = Swift_Mailer::newInstance($transport);
 
-    // Set a from address as well
-    $mail->setFrom(config('mail.smtp.from'), config('mail.smtp.name'));
+    $message = Swift_message::newInstance($subject)
+        ->setFrom([config('mail.smtp.from') => config('mail.smtp.name')])
+        ->setBcc($to)
+        ->setBody($body);
 
-    // Set the addressee
-    foreach ($to as $email => $name) {
-        $mail->addBCC($email, $name);
-    }
-
-    // Subject line
-    $mail->Subject = $subject;
-
-    // Set body
-    $mail->Body = $body;
-
-    // Send the message
-    $send = $mail->send();
-
-    // Clear the addressee list
-    $mail->clearAddresses();
-
-    // If we got an error return the error
-    if (!$send) {
-        return $mail->ErrorInfo;
-    }
-
-    // Else just return whatever
-    return $send;
+    return $mailer->send($message);
 }
 
 function error_handler($errno, $errstr, $errfile, $errline)
@@ -190,23 +165,24 @@ function error_handler($errno, $errstr, $errfile, $errline)
     switch ($errno) {
         case E_ERROR:
         case E_USER_ERROR:
-            $error = '<b>FATAL ERROR</b>: ' . $errstr . ' on line ' . $errline . ' in ' . $errfile;
+            $error = "<b>FATAL ERROR</b>";
             break;
 
         case E_WARNING:
         case E_USER_WARNING:
-            $error = '<b>WARNING</b>: ' . $errstr . ' on line ' . $errline . ' in ' . $errfile;
+            $error = "<b>WARNING</b>";
             break;
 
         case E_NOTICE:
         case E_USER_NOTICE:
-            $error = '<b>NOTICE</b>: ' . $errstr . ' on line ' . $errline . ' in ' . $errfile;
+            $error = "<b>NOTICE</b>";
             break;
 
         default:
-            $error = '<b>Unknown error type</b> [' . $errno . ']: ' . $errstr . ' on line ' . $errline
-                . ' in ' . $errfile;
+            $error = "<b>Unknown error type</b> [{$errno}]";
     }
+
+    $error .= ": {$errstr} on line {$errline} in {$errfile}";
 
     // Truncate all previous outputs
     ob_clean();
@@ -215,11 +191,11 @@ function error_handler($errno, $errstr, $errfile, $errline)
     // Check for dev mode
     $detailed = config('dev.show_errors');
 
-    // Build page
+    // Build page (not even going to bother cleaning this one up)
     $errorPage = '<!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8" />
+        <meta charset="utf-8">
         <title>Sakura Internal Error</title>
         <style type="text/css">
             body { margin: 0; padding: 0; background: #EEE; color: #000;

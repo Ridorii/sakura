@@ -9,7 +9,6 @@ namespace Sakura\Controllers\Settings;
 
 use Sakura\ActiveUser;
 use Sakura\DB;
-use Sakura\Hashing;
 use Sakura\Perms\Site;
 use Sakura\Router;
 use Sakura\Template;
@@ -115,12 +114,7 @@ class AdvancedController extends Controller
             }
 
             // Check password
-            if (!Hashing::validatePassword($password, [
-                ActiveUser::$user->passwordAlgo,
-                ActiveUser::$user->passwordIter,
-                ActiveUser::$user->passwordSalt,
-                ActiveUser::$user->passwordHash,
-            ])) {
+            if (!password_verify($password, ActiveUser::$user->password)) {
                 $message = "Your password was invalid!";
                 Template::vars(compact('redirect', 'message'));
                 return Template::render('global/information');

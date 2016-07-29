@@ -12,13 +12,15 @@
         "ext-curl": "*",
         "ext-json": "*",
         "twig/twig": "*",
-        "phpmailer/phpmailer": "*",
         "paypal/rest-api-sdk-php": "*",
-        "jbbcode/jbbcode": "*",
-        "corneltek/cliframework": "*",
         "phroute/phroute": "^2.1",
         "illuminate/database": "5.2.*",
-        "doctrine/dbal": "~2.4"
+        "doctrine/dbal": "~2.4",
+        "golonka/bbcodeparser": "^2.2",
+        "nesbot/carbon": "^1.21",
+        "swiftmailer/swiftmailer": "^5.4",
+        "corneltek/cliframework": "^3.0",
+        "illuminate/filesystem": "^5.2"
     },
     "autoload": {
         "psr-4": {

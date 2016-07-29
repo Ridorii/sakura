@@ -7,8 +7,6 @@
 
 namespace Sakura;
 
-use Sakura\Hashing;
-
 /**
  * Used to generate and validate CSRF tokens.
  *
@@ -56,7 +54,7 @@ class CSRF
      */
     public static function generate()
     {
-        return bin2hex(\mcrypt_create_iv(self::RANDOM_SIZE, MCRYPT_DEV_URANDOM));
+        return bin2hex(random_bytes(self::RANDOM_SIZE));
     }
 
     /**
@@ -77,7 +75,6 @@ class CSRF
             return false;
         }
 
-        // Use the slowEquals function from the hashing lib to validate
-        return Hashing::slowEquals($token, $_SESSION[$id]);
+        return hash_equals($token, $_SESSION[$id]);
     }
 }

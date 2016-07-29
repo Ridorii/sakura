@@ -5,9 +5,9 @@
     "dev": "gulp watch"
   },
   "dependencies": {
+    "elixir-typescript": "^2.0.0",
     "gulp": "^3.9.1",
     "laravel-elixir": "^5.0.0",
-    "elixir-typescript": "^2.0.0",
     "turbolinks": "^5.0.0"
   }
 }

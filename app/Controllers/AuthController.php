@@ -11,7 +11,6 @@ use Sakura\ActionCode;
 use Sakura\ActiveUser;
 use Sakura\Config;
 use Sakura\DB;
-use Sakura\Hashing;
 use Sakura\Net;
 use Sakura\Perms\Site;
 use Sakura\Router;
@@ -125,30 +124,20 @@ class AuthController extends Controller
             return Template::render('global/information');
         }
 
-        // Validate password
-        switch ($user->passwordAlgo) {
-            // Disabled
-            case 'disabled':
-                $this->touchRateLimit($user->id);
-                $message = 'Logging into this account is disabled.';
-                Template::vars(compact('message', 'redirect'));
+        if (strlen($user->password) < 1) {
+            $message = 'Your password expired.';
+            $redirect = Router::route('auth.resetpassword');
+            Template::vars(compact('message', 'redirect'));
 
-                return Template::render('global/information');
+            return Template::render('global/information');
+        }
 
-            // Default hashing method
-            default:
-                if (!Hashing::validatePassword($password, [
-                    $user->passwordAlgo,
-                    $user->passwordIter,
-                    $user->passwordSalt,
-                    $user->passwordHash,
-                ])) {
-                    $this->touchRateLimit($user->id);
-                    $message = 'The password you entered was invalid.';
-                    Template::vars(compact('message', 'redirect'));
+        if (!password_verify($password, $user->password)) {
+            $this->touchRateLimit($user->id);
+            $message = 'The password you entered was invalid.';
+            Template::vars(compact('message', 'redirect'));
 
-                    return Template::render('global/information');
-                }
+            return Template::render('global/information');
         }
 
         // Check if the user has the required privs to log in
@@ -564,16 +553,13 @@ class AuthController extends Controller
             }
 
             // Hash the password
-            $pw = Hashing::createHash($password);
+            $password = password_hash($password, PASSWORD_BCRYPT);
 
             // Update the user
             DB::table('users')
                 ->where('user_id', $user->id)
                 ->update([
-                    'password_hash' => $pw[3],
-                    'password_salt' => $pw[2],
-                    'password_algo' => $pw[0],
-                    'password_iter' => $pw[1],
+                    'password' => $password,
                     'password_chan' => time(),
                 ]);
 

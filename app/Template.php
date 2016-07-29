@@ -43,13 +43,6 @@ class Template
     public static $name;
 
     /**
-     * The path to the client side resources
-     *
-     * @var string
-     */
-    public static $resources;
-
-    /**
      * The file extension used by template files
      */
     const FILE_EXT = '.twig';
@@ -64,9 +57,6 @@ class Template
         // Set variables
         self::$name = $name;
 
-        // Set reources path
-        self::$resources = '/content/data/' . self::$name;
-
         // Reinitialise
         self::init();
     }
@@ -77,14 +67,14 @@ class Template
     public static function init()
     {
         // Initialise Twig Filesystem Loader
-        $twigLoader = new Twig_Loader_Filesystem(ROOT . 'views/' . self::$name);
+        $twigLoader = new Twig_Loader_Filesystem(ROOT . 'resources/views/' . self::$name);
 
         // Environment variable
         $twigEnv = [];
 
         // Enable caching
         if (config("performance.template_cache")) {
-            $twigEnv['cache'] = ROOT . config("performance.cache_dir") . 'twig';
+            $twigEnv['cache'] = ROOT . config("performance.cache_dir") . 'views';
         }
 
         // And now actually initialise the templating engine
@@ -94,17 +84,10 @@ class Template
         self::$engine->addExtension(new Twig_Extension_StringLoader());
 
         // Add route function
-        self::$engine->addFunction(new Twig_SimpleFunction('route', function ($name, $args = null) {
-            return Router::route($name, $args);
-        }));
+        self::$engine->addFunction(new Twig_SimpleFunction('route', 'route'));
 
         // Add config function
         self::$engine->addFunction(new Twig_SimpleFunction('config', 'config'));
-
-        // Add resource function
-        self::$engine->addFunction(new Twig_SimpleFunction('resource', function ($path = "") {
-            return self::$resources . "/{$path}";
-        }));
 
         // Method of getting the currently active session id
         self::$engine->addFunction(new Twig_SimpleFunction('session_id', 'session_id'));
@@ -135,10 +118,6 @@ class Template
      */
     public static function render($file)
     {
-        try {
-            return self::$engine->render($file . self::FILE_EXT, self::$vars);
-        } catch (\Exception $e) {
-            return trigger_error($e->getMessage(), E_USER_ERROR);
-        }
+        return self::$engine->render($file . self::FILE_EXT, self::$vars);
     }
 }

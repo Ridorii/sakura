@@ -1,0 +1,99 @@
+{% extends 'global/master.twig' %}
+
+{% block title %}Support {{ config('general.name') }}{% endblock %}
+
+{% set persistentPremium = user.permission(constant('Sakura\\Perms\\Site::STATIC_PREMIUM')) %}
+
+{% set features = {
+    "money": "Helping us pay for the bills to survive",
+    "certificate": "A <span style='font-weight: bold; color: #EE9400'>special</span> name colour to stand out in the crowd",
+    "magic": "The ability to change your username once a month",
+    "pencil": "You can set a custom user title",
+    "lock": "Access to some exclusive forums",
+    "picture-o": "You get the ability to set a profile background"
+} %}
+
+{% block content %}
+    {% if get.fail %}
+        <div class="headerNotify">
+            <h1>The payment failed or was cancelled!</h1>
+            <p>Something went wrong while processing the transaction, your PayPal account wasn't charged.</p>
+        </div>
+    {% endif %}
+    <div class="content support">
+        <div class="head">Support {{ config('general.name') }}</div>
+        <div style="font-size: .9em; margin-bottom: 10px;">
+            <p>To keep the site and everything surrounding it running I need money to pay the bills, however instead of just having a donate button I decided on adding a premium system to the site which gives you a few extras. The premium rank is indentified on the site by Tenshi. More stuff that literally doesn't exist yet will be added to the list of featuring down the line but in order, the stuff that already exist can be seen further down on this page. With your help we can keep adding new stuff, get new hardware and keep the site awesome!</p>
+        </div>
+        {% if user.isPremium %}
+            <div class="sectionHeader">
+                Your current Tenshi tag
+            </div>
+            <div style="margin-bottom: 10px;">
+                <h3>{% if persistentPremium %}Your rank has persistent Tenshi.{% else %}Your Tenshi tag is valid till {{ user.premiumInfo.expire|date('D Y-m-d H:i:s T') }}.{% endif %}</h3>
+                <progress value="{{ persistentPremium ? 100 : (100 - (((date().timestamp - user.premiumInfo.start) / (user.premiumInfo.expire - user.premiumInfo.start)) * 100)) }}" max="100" style="width: 100%"></progress>
+            </div>
+        {% endif %}
+        <div class="sectionHeader">
+            Why should I get Tenshi?
+        </div>
+        <div class="featureParent">
+            {% for k,v in features %}
+                <div class="featureBox">
+                    <div class="featureBoxIcon fa fa-{{ k }}"></div>
+                    <div class="featureBoxDesc">{{ v|raw }}</div>
+                    <div class="clear"></div>
+                </div>
+            {% endfor %}
+            <div class="featureBox final">
+                <div class="featureBoxIcon fa fa-heart"></div>
+                <div class="featureBoxIcon right fa fa-heart"></div>
+                <div class="featureBoxDesc">The good feeling of helping the staff of your favourite site keep it up and awesome</div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="sectionHeader">
+            Payment Options
+            <div style="float: right; font-size: 10px; text-align: right;">
+                Our transactions are handled through PayPal.
+                <div class="paymentOptions fa">
+                    <div class="fa-cc-paypal"></div>
+                    <div class="fa-cc-visa"></div>
+                    <div class="fa-cc-mastercard"></div>
+                    <div class="fa-cc-discover"></div>
+                    <div class="fa-cc-amex"></div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+        {% if user.isActive and user.permission(constant('Sakura\\Perms\\Site::OBTAIN_PREMIUM')) %}
+            <div class="slider">
+                <input class="inputStyling" type="range" min="1" max="{{ amountLimit }}" value="1" onchange="document.getElementById('monthsNo').value = this.value; document.getElementById('monthNoBtn').innerHTML = this.value; document.getElementById('monthsTrailingS').innerHTML = (this.value == 1 ? '' : 's'); document.getElementById('totalAmount').innerHTML = (this.value * {{ price }}).formatMoney(2);">
+            </div>
+            <div class="checkout" style="line-height: 28px;">
+                <div style="float: left;">
+                    <h1 class="stylised">Total: &#8364;<span id="totalAmount"></span></h1>
+                </div>
+                <div style="float: right;">
+                    <button class="inputStyling" onclick="ajaxBusyView(true, 'Please wait...');document.getElementById('purchaseForm').submit();">Get <span id="monthNoBtn">1</span> month<span id="monthsTrailingS"></span> of Tenshi</button>
+                </div>
+                <div class="clear"></div>
+            </div>
+        {% elseif user.isActive %}
+            <h1 style="text-align: center; margin: 1em auto;" class="stylised">You can't get Tenshi at the current moment!</h1>
+        {% else %}
+            <h1 style="text-align: center; margin: 1em auto;" class="stylised">You need to be logged in to get Tenshi!</h1>
+        {% endif %}
+    </div>
+    {% if user.isActive and user.permission(constant('Sakura\\Perms\\Site::OBTAIN_PREMIUM')) %}
+        <form action="{{ route('premium.purchase') }}" method="post" id="purchaseForm" class="hidden">
+            <input type="hidden" name="mode" value="purchase">
+            <input type="hidden" name="time" value="{{ date().timestamp }}">
+            <input type="hidden" name="session" value="{{ session_id() }}">
+            <input type="hidden" name="months" id="monthsNo" value="1">
+        </form>
+        <script type="text/javascript">
+            window.onload = function() { document.getElementById('totalAmount').innerHTML = ({{ price }}).formatMoney(2); };
+        </script>
+    {% endif %}
+{% endblock %}

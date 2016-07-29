@@ -68,6 +68,11 @@ Router::group(['before' => 'maintenance'], function () {
         Router::get('/post/{id:i}', 'NewsController@post', 'news.post');
     });
 
+    // Chat
+    Router::group(['prefix' => 'chat'], function () {
+        Router::get('/redirect', 'ChatController@category', 'chat.redirect');
+    });
+
     // Forum
     Router::group(['prefix' => 'forum'], function () {
         // Post

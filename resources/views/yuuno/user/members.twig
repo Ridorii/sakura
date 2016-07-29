@@ -1,0 +1,116 @@
+{% extends 'global/master.twig' %}
+
+{% set sorts = ['boxes', 'rectangles', 'list'] %}
+{% set sort = get.sort in sorts ? get.sort : sorts[0] %}
+
+{% set notfound = rank == 0 %}
+
+{% set rankTitle %}
+{% if notfound %}Not found{% else %}{{ ranks[rank].name(true) }}{% endif %}
+{% endset %}
+
+{% set rankDescription %}
+{% if notfound %}The requested rank could not be found!{% else %}{{ ranks[rank].description }}{% endif %}
+{% endset %}
+
+{% set users = ranks[rank].users|batch(membersPerPage) %}
+
+{% set currPage = get.page|default(1) - 1 %}
+
+{% set paginationPages = users %}
+{% set paginationUrl %}{% if rank %}{{ route('members.rank', rank) }}{% else %}{{ route('members.index') }}{% endif %}{% endset %}
+
+{% block title %}{{ rankTitle }}{% endblock %}
+
+{% block content %}
+    <div class="headerNotify" style="margin-bottom: 1px;">
+        <h1 style="{% if rank %}text-shadow: 0 0 5px {{ ranks[rank].colour }}; color: {{ ranks[rank].colour }};{% else %}text-shadow: 0 0 5px #555;{% endif %}">{{ rankTitle }}</h1>
+        <h3>{{ rankDescription }}</h3>
+    </div>
+    <div class="membersPage" style="min-height: 500px;">
+        <div class="dropDown" style="margin: 0 auto; font-size: 1.5em; line-height: 1.5em; height: 30px;">
+            <div class="dropDownInner" style="float: left; color: #FFF;">
+                <a class="dropDownDesc">Rank:</a>
+                {% for r in ranks %}
+                    {% if not r.hidden or (r.hidden and rank == r.id) %}
+                        <a href="{{ route('members.rank', r.id) }}{{ server['QUERY_STRING'] ? '?' : '' }}{{ server['QUERY_STRING'] }}" style="color: {{ r.colour }};"{% if rank == r.id %} class="dropDownSelected"{% endif %}>{{ r.id == 0 ? 'Not found' : r.name(true) }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="dropDownInner" style="float: left;">
+                <a class="dropDownDesc">View:</a>
+                {% for s in sorts %}
+                <a href="?{{ server['QUERY_STRING'] }}{{ server['QUERY_STRING'] ? '&' : '' }}sort={{ s }}"{% if s == sort %} class="dropDownSelected"{% endif %}>{{ s|capitalize }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        {% if not users|length %}
+            <h1 class="stylised" style="margin: 2em 0;">This rank has no members!</h1>
+        {% elseif not notfound %}
+            <div class="membersPageList {{ sort }}">
+                {% if sort == sorts[2] %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Username</th>
+                            <th>Registered</th>
+                            <th>Last online</th>
+                            <th>User title</th>
+                            <th>Country</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>No.</th>
+                            <th>Username</th>
+                            <th>Registered</th>
+                            <th>Last online</th>
+                            <th>User title</th>
+                            <th>Country</th>
+                        </tr>
+                    </tfoot>
+                    {% for count,user in users[currPage] %}
+                    <tbody>
+                        <tr>
+                            <td>
+                                #{{ rank ? count + 1 : count }}
+                            </td>
+                            <td>
+                                <a href="{{ route('user.profile', user.id) }}" class="default" style="font-weight: bold; color: {{ user.colour }}; text-shadow: 0 0 5px {{ user.colour }};">{{ user.username }}</a>
+                            </td>
+                            <td>
+                                <time datetime="{{ user.registered|date('r') }}">{{ user.registered|date('D Y-m-d H:i:s T') }}</time>
+                            </td>
+                            <td>
+                                {% if user.lastOnline == 0 %}<i>Never logged in.</i>{% else %}<time datetime="{{ user.lastOnline|date('r') }}">{{ user.lastOnline|date('D Y-m-d H:i:s T') }}</time>{% endif %}
+                            </td>
+                            <td>
+                                {{ user.title }}
+                            </td>
+                            <td>
+                                <img src="/images/flags/{{ user.country|lower }}.png" alt="{% if user.country|lower == 'xx' %}?{% else %}{{ user.country(true) }}{% endif %}" title="{% if user.country|lower == 'xx' %}Unknown{% else %}{{ user.country(true) }}{% endif %}">
+                            </td>
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+                </table>
+                {% else %}
+                    {% for user in users[currPage] %}
+                        <a href="{{ route('user.profile', user.id) }}">{# These comment tags are here to prevent the link extending too far
+                            #}<div class="userBox" id="u{{ user.id }}">{#
+                                #}<img src="/pixel.png" alt="{{ user.username }}"  style="background: url('{{ route('file.avatar', user.id) }}') no-repeat center / contain;">{#
+                                #}<span class="userBoxUserName" style="color: {{ user.colour }};">{#
+                                    #}{{ user.username }}{#
+                                #}</span>{#
+                            #}</div>{#
+                        #}</a>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            {% if users|length > 1 %}
+                {% include 'elements/pagination.twig' %}
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

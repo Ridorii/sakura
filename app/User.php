@@ -219,7 +219,7 @@ class User
      *
      * @var array
      */
-    protected static $_userCache = [];
+    protected static $userCache = [];
 
     /**
      * Cached constructor.
@@ -232,13 +232,13 @@ class User
     public static function construct($uid, $forceRefresh = false)
     {
         // Check if a user object isn't present in cache
-        if ($forceRefresh || !array_key_exists($uid, self::$_userCache)) {
+        if ($forceRefresh || !array_key_exists($uid, self::$userCache)) {
             // If not create a new object and cache it
-            self::$_userCache[$uid] = new User($uid);
+            self::$userCache[$uid] = new User($uid);
         }
 
         // Return the cached object
-        return self::$_userCache[$uid];
+        return self::$userCache[$uid];
     }
 
     /**
@@ -256,17 +256,14 @@ class User
         // Set a few variables
         $usernameClean = clean_string($username, true);
         $emailClean = clean_string($email, true);
-        $password = Hashing::createHash($password);
+        $password = password_hash($password, PASSWORD_BCRYPT);
 
         // Insert the user into the database and get the id
         $userId = DB::table('users')
             ->insertGetId([
                 'username' => $username,
                 'username_clean' => $usernameClean,
-                'password_hash' => $password[3],
-                'password_salt' => $password[2],
-                'password_algo' => $password[0],
-                'password_iter' => $password[1],
+                'password' => $password,
                 'email' => $emailClean,
                 'rank_main' => 0,
                 'register_ip' => Net::pton(Net::ip()),
@@ -308,11 +305,7 @@ class User
             $this->id = $userRow->user_id;
             $this->username = $userRow->username;
             $this->usernameClean = $userRow->username_clean;
-            $this->passwordHash = $userRow->password_hash;
-            $this->passwordSalt = $userRow->password_salt;
-            $this->passwordAlgo = $userRow->password_algo;
-            $this->passwordIter = $userRow->password_iter;
-            $this->passwordChan = $userRow->password_chan;
+            $this->password = $userRow->password;
             $this->email = $userRow->email;
             $this->mainRankId = $userRow->rank_main;
             $this->colour = $userRow->user_colour;
@@ -1016,62 +1009,6 @@ class User
     }
 
     /**
-     * Get the open warnings on this user.
-     *
-     * @return array The warnings.
-     */
-    public function getWarnings()
-    {
-        // Do the database query
-        $getWarnings = DB::table('warnings')
-            ->where('user_id', $this->id)
-            ->get();
-
-        // Storage array
-        $warnings = [];
-
-        // Add special stuff
-        foreach ($getWarnings as $warning) {
-            // Check if it hasn't expired
-            if ($warning->warning_expires < time()) {
-                DB::table('warnings')
-                    ->where('warning_id', $warning['warning_id'])
-                    ->delete();
-                continue;
-            }
-
-            // Text action
-            switch ($warning->warning_action) {
-                default:
-                case '0':
-                    $warning->warning_action_text = 'Warning';
-                    break;
-                case '1':
-                    $warning->warning_action_text = 'Silence';
-                    break;
-                case '2':
-                    $warning->warning_action_text = 'Restriction';
-                    break;
-                case '3':
-                    $warning->warning_action_text = 'Ban';
-                    break;
-                case '4':
-                    $warning->warning_action_text = 'Abyss';
-                    break;
-            }
-
-            // Text expiration
-            $warning->warning_length = round(($warning->warning_expires - $warning->warning_issued) / 60);
-
-            // Add to array
-            $warnings[$warning->warning_id] = $warning;
-        }
-
-        // Return all the warnings
-        return $warnings;
-    }
-
-    /**
      * Parse the user's userpage.
      *
      * @return string The parsed page.
@@ -1155,16 +1092,13 @@ class User
     public function setPassword($password)
     {
         // Create hash
-        $password = Hashing::createHash($password);
+        $password = password_hash($password, PASSWORD_BCRYPT);
 
         // Update userrow
         DB::table('users')
             ->where('user_id', $this->id)
             ->update([
-                'password_hash' => $password[3],
-                'password_salt' => $password[2],
-                'password_algo' => $password[0],
-                'password_iter' => $password[1],
+                'password' => $password,
                 'password_chan' => time(),
             ]);
     }

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- META -->
+        <meta charset="utf-8">
+        <title>{{ title|default(config('general.name')) }}</title>
+        <meta name="description" content="{{ description|default(config('general.description')) }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+{% if redirect %}
+        <meta http-equiv="refresh" content="{{ redirectTimeout ? redirectTimeout : '3' }}; URL={{ redirect }}">
+{% endif %}
+{{ block('meta') }}
+        <!-- CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="/css/libraries.css">
+        <link rel="stylesheet" type="text/css" href="/css/yuuno.css">
+{{ block('css') }}
+        <!-- JS -->
+        <script type="text/javascript" src="/js/yuuno.js"></script>
+        <script type="text/javascript">
+            // Create an object so we can access certain settings from remote JavaScript files
+            var sakuraVars = {
+                "cookie": {
+                    "prefix":   "{{ config('cookie.prefix') }}"
+                },
+
+                "siteName":         "{{ config('general.name') }}",
+                "content":          "",
+                "recaptchaEnabled": false,
+
+                "minUserLen":       {{ config('user.name_min') }},
+                "maxUserLen":       {{ config('user.name_max') }},
+                "minPwdEntropy":    {{ config('user.pass_min_entropy') }},
+                "checkLogin":       {{ user.isActive ? 'true' : 'false' }}
+            };
+
+            // Set cookie prefix and path
+            Sakura.cookiePrefix = "{{ config('cookie.prefix') }}";
+
+            // Error reporter
+            window.onerror = function(msg, url, line, col, error) {
+                notifyUI({
+                    "title":    "An error has occurred!",
+                    "text":     "There was a problem while executing the JavaScript code for this page: " + msg + ", URL: " + url + ", Line: " + line + ", Column: " + col + ". Please report this to a developer.",
+                    "image":      "FONT:fa-warning"
+                });
+            }
+        </script>
+{{ block('js') }}
+    </head>
+    <body>
+        <div id="container">
+            <span id="top"></span>
+            <div class="header" id="header">
+                <a class="logo" href="{{ route('main.index') }}">{% if config('general.logo') %}<img src="{{ config('general.logo') }}" alt="{{ config('general.name') }}">{% else %}{{ config('general.name') }}{% endif %}</a>
+                <div class="menu fa">
+                    <div class="menu-nav" id="navMenuSite">
+                        <!-- Navigation menu, displayed on left side of the bar. -->
+                        <a class="menu-item fa-home" href="{{ route('main.index') }}" title="Home"></a>
+                        <a class="menu-item fa-newspaper-o" href="{{ route('news.category') }}" title="News"></a>
+                        <a class="menu-item fa-commenting" href="{{ route('chat.redirect') }}" title="Chat"></a>
+                        <a class="menu-item fa-list" href="{{ route('forums.index') }}" title="Forums"></a>
+                        <a class="menu-item fa-search" href="{{ route('main.search') }}" title="Search"></a>
+                        {% if user.isActive %}
+                            <a class="menu-item fa-users" href="{{ route('members.index') }}" title="Members"></a>
+                            <a class="menu-item fa-heart" href="{{ route('premium.index') }}" title="Support us"></a>
+                        {% endif %}
+                    </div>
+                    <div class="menu-ucp" id="navMenuUser">
+                        <!-- User menu, displayed on right side of the bar. -->
+                        {% if user.isActive %}
+                            <a class="menu-item avatar" href="{{ route('user.profile', user.id) }}" title="Logged in as {{ user.username }}" style="background-image: url('{{ route('file.avatar', user.id) }}'); width: auto; color: {{ user.colour }}; border-color: {{ user.colour }}; font-weight: 700;"></a>
+                            {#<a class="menu-item fa-envelope" href="#" title="Messages"></a>#}
+                            {% if user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
+                                <a class="menu-item fa-gavel" href="#" title="Manage"></a>
+                            {% endif %}
+                            <a class="menu-item fa-cogs" href="{{ route('settings.index') }}" title="Settings"></a>
+                            <a class="menu-item fa-sign-out" href="{{ route('auth.logout') }}?s={{ session_id() }}" title="Logout" id="headerLogoutLink"></a>
+                        {% else %}
+                            <a class="menu-item fa-magic" href="{{ route('auth.register') }}" title="Register"></a>
+                            <a class="menu-item fa-sign-in" href="{{ route('auth.login') }}" title="Login"></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div id="contentwrapper">
+                <div id="notifications"></div>
+                {% if profile is defined ? profile.background : (user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) and user.optionFields.profileBackgroundSiteWide and user.background) %}
+                    <div id="userBackground" style="background-image: url('{{ route('file.background', (profile is defined ? profile : user).id) }}');"></div>
+                {% endif %}
+                {% if not user.isActive and server['REQUEST_URI'] != route('auth.login') %}
+                <div class="headerLoginContainer">
+                    <form method="post" action="{{ route('auth.login') }}" id="headerLoginForm">
+                        <input type="hidden" name="redirect" value="{{ server['REQUEST_URI'] }}">
+                        <div>
+                            <label for="headerLoginUserName">Username:</label>
+                            <input type="text" id="headerLoginUserName" name="username" class="inputStyling" placeholder="Username">
+                        </div>
+                        <div>
+                            <label for="headerLoginPassword">Password:</label>
+                            <input type="password" id="headerLoginPassword" name="password" class="inputStyling" placeholder="Password">
+                        </div>
+                        <div>
+                            <input type="checkbox" name="remember" id="headerLoginRemember">
+                            <label for="headerLoginRemember">Remember me</label>
+                        </div>
+                        <div>
+                            <button class="inputStyling small" name="session" value="{{ session_id() }}"><i class="fa fa-sign-in"></i> Login</button>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+                {% if user.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}
+                    <div class="headerNotify" style="background: repeating-linear-gradient(-45deg, #B33, #B33 10px, #B00 10px, #B00 20px); color: #FFF; border: 1px solid #C00; box-shadow: 0 0 3px #C00;">
+                        <h1>Your account is currently in <span style="font-weight: 700 !important;">restricted mode</span>!</h1>
+                        <div>A staff member has set your account to restricted mode most likely due to violation of the rules. While restricted you won't be able to use most public features of the site. If you think this is a mistake please <a href="{{ route('main.infopage', 'contact') }}" style="color: inherit;">get in touch with one of our staff members</a>.</div>
+                    </div>
+                {% endif %}
+
+                <noscript>
+                    <div class="headerNotify">
+                        <h1>You have JavaScript disabled!</h1>
+                        <div>A lot of things are not going to work without it so I recommend you turn it on or use a capable browser.</div>
+                    </div>
+                </noscript>
+
+                {% if config('general.cover') %}
+                    <div class="headerAnnouncement" style="background-image: url('{{ config('cover') }}');"></div>
+                {% endif %}
+
+                {% block content %}
+                    <h1 class="stylised" style="text-align: center; margin: 2em auto;">There is nothing here!</h1>
+                {% endblock %}
+            </div>
+            <div class="footer">
+                <div class="ftsections">
+                    <div class="copycentre">Powered by <a href="https://github.com/flashwave/sakura/" target="_blank">Sakura</a>{% if config('dev.show_changelog', true) %} <a href="https://sakura.flash.moe/#r{{ constant('SAKURA_VERSION') }}" target="_blank">r{{ constant('SAKURA_VERSION') }}</a>{% endif %} &copy; 2013-2016 <a href="http://flash.moe/" target="_blank">Flashwave</a></div>
+                    <ul class="ftsection">
+                        <li class="fthead">General</li>
+                        <li><a href="{{ route('main.index') }}">Home</a></li>
+                        <li><a href="{{ route('news.category') }}">News</a></li>
+                        <li><a href="{{ route('main.search') }}">Search</a></li>
+                        <li><a href="{{ route('main.infopage', 'contact') }}">Contact</a></li>
+                        <li><a href="https://sakura.flash.moe" target="_blank">Changelog</a></li>
+                        <li><a href="{{ route('premium.index') }}">Support us</a></li>
+                    </ul>
+                    <ul class="ftsection">
+                        <li class="fthead">Community</li>
+                        <li><a href="{{ route('forums.index') }}">Forums</a></li>
+                        <li><a href="https://twitter.com/_flashii" target="_blank">Twitter</a></li>
+                        <li><a href="https://youtube.com/user/flashiinet" target="_blank">YouTube</a></li>
+                        <li><a href="https://steamcommunity.com/groups/flashiinet" target="_blank">Steam</a></li>
+                        <li><a href="https://github.com/flashii" target="_blank">GitHub</a></li>
+                    </ul>
+                    <ul class="ftsection">
+                        <li class="fthead">Information</li>
+                        <li><a href="{{ route('main.faq') }}">FAQ</a></li>
+                        <li><a href="{{ route('main.infopage', 'rules') }}">Rules</a></li>
+                        <li><a href="//fiistat.us" target="_blank">Server Status</a></li>
+                        <li><a href="{{ route('main.infopage', 'terms') }}">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            // Parse time elements
+            var timeElems = document.getElementsByTagName('time');
+
+            // Iterate over them
+            for (var timeElem in timeElems) {
+                console.log(timeElems[timeElem].dateTime);
+                // Attempt to parse it
+                var parsed = Date.parse(timeElems[timeElem].dateTime);
+
+                // If it can be parsed do DOM edits
+                if (!isNaN(parsed)) {
+                    timeElems[timeElem].title = timeElems[timeElem].innerText;
+                    timeElems[timeElem].innerText = Sakura.timeElapsed(Math.floor(parsed / 1000));
+                }
+            }
+
+            notifyRequest('{{ session_id() }}');
+
+            setInterval(function() {
+                notifyRequest('{{ session_id() }}');
+            }, 60000);
+
+            var friendClient = new AJAX();
+
+            friendClient.contentType("application/x-www-form-urlencoded");
+
+            function addFriend(id) {
+                var url = "{{ route('friends.add', 1) }}".replace(1, id);
+                friendMode(url, id);
+            }
+
+            function removeFriend(id) {
+                var url = "{{ route('friends.remove', 1) }}".replace(1, id);
+                friendMode(url, id);
+            }
+
+            function friendMode(url, id) {
+                var level = document.querySelectorAll('.friend-' + id + '-level'),
+                    toggle = document.querySelectorAll('.friend-' + id + '-toggle');
+
+                friendClient.setUrl(url);
+
+                friendClient.setSend({"session":"{{ session_id() }}"});
+
+                friendClient.addCallback(200, function () {
+                    var resp = JSON.parse(friendClient.response());
+
+                    friendClient.setRawSend("");
+
+                    if (resp.error) {
+                        ajaxBusyView(true, resp.error, 'fail');
+
+                        setTimeout(function () {
+                            ajaxBusyView(false);
+                        }, 1500);
+                    } else {
+                        ajaxBusyView(true, resp.message, 'ok');
+                        location.reload();
+                    }
+                });
+
+                friendClient.start(HTTPMethods.POST);
+            }
+        </script>
+        {% if config('dev.show_changelog', true) and stats %}
+        <script type="text/javascript">
+            // Column colours for actions
+            var changelogColours = [
+                'inherit', // Unknown
+                '#2A2', // Add
+                '#2AA', // Update
+                '#2AA', // Fix
+                '#A22', // Remove
+                '#62C', // Export
+                '#C44' // Revert
+            ];
+
+            function yuunoCreateChangelog() {
+                // Grab the index panel
+                var _panel = document.getElementById('indexPanel');
+
+                // Create the head container
+                var _cltitle = document.createElement('div');
+                _cltitle.className = 'head';
+                _cltitle.style.marginBottom = '1px';
+
+                // Create a link
+                var _cllink = document.createElement('a');
+                _cllink.className = 'underline';
+                _cllink.target = '_blank';
+                _cllink.href = 'https://sakura.flash.moe/#r{{ constant('SAKURA_VERSION') }}';
+
+                // Append everything
+                _cllink.appendChild(document.createTextNode('Changelog'));
+                _cltitle.appendChild(_cllink);
+                _panel.appendChild(_cltitle);
+
+                // Create changelog table
+                var _cltable = document.createElement('table');
+                _cltable.className = 'panelTable';
+                _cltable.style.borderSpacing = '0 1px';
+                _cltable.id = 'yuunoChangelogTable';
+
+                // Append it to indexPanel
+                indexPanel.appendChild(_cltable);
+            }
+
+            function yuunoAddToChangelog(object) {
+                _cltable = document.getElementById('yuunoChangelogTable');
+
+                // Create header
+                var _hr = document.createElement('tr');
+                var _hri = document.createElement('td');
+
+                // Set data
+                _hri.appendChild(document.createTextNode(object.date));
+                _hri.style.background = '#9475b2';
+                _hri.style.color = '#306';
+                _hri.style.fontWeight = '700';
+                _hri.style.fontSize = '1.2em';
+                _hri.setAttribute('colspan', '2');
+
+                // Append
+                _hr.appendChild(_hri);
+                _cltable.appendChild(_hr);
+
+                for (var _e in object.changes) {
+                    // Reassign _e
+                    _e = object.changes[_e];
+
+                    // Create elements
+                    var _clr = document.createElement('tr');
+                    var _clca = document.createElement('td');
+                    var _clcm = document.createElement('td');
+
+                    // Set data
+                    _clca.appendChild(document.createTextNode(_e.action.name));
+                    _clca.style.background = changelogColours[_e.action.id];
+                    _clca.style.borderBottom = '1px solid ' + changelogColours[_e.action.id];
+                    _clcm.style.borderBottom = '1px solid ' + changelogColours[_e.action.id];
+                    _clcm.appendChild(document.createTextNode(_e.message));
+
+                    // Append
+                    _clr.appendChild(_clca);
+                    _clr.appendChild(_clcm);
+                    _cltable.appendChild(_clr);
+                }
+            }
+
+            window.addEventListener("load", function () {
+                yuunoCreateChangelog();
+
+                var changelog = {},
+                    fetch = 0,
+                    clg = new AJAX();
+
+                    clg.addCallback(200, function () {
+                        yuunoAddToChangelog(JSON.parse(clg.response()));
+                        if (fetch < 2) {
+                            fetch++;
+                            clg.setUrl('https://sakura.flash.moe/api.php/' + fetch);
+                            clg.start(HTTPMethods.GET);
+                        }
+                    });
+
+                    clg.setUrl('https://sakura.flash.moe/api.php/' + fetch);
+                    clg.start(HTTPMethods.GET);
+            });
+        </script>
+        {% endif %}
+    </body>
+</html>

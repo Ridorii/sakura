@@ -8,7 +8,6 @@
 namespace Sakura\Console\Command;
 
 use CLIFramework\Command;
-use Sakura\Config;
 
 class ServeCommand extends Command
 {

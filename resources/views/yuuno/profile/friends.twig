@@ -1,0 +1,24 @@
+{% set friends = profile.friends(2)|batch(12) %}
+
+{% set paginationPages = friends %}
+{% set paginationUrl %}{{ route('user.profile', profile.id) }}{% endset %}
+
+<div class="new-profile-mode-title">
+    <h1 class="stylised">Friends</h1>
+</div>
+<div class="profile-friends">
+    {% for friend in friends[get.page|default(1) - 1] %}
+    <div class="friend-container" id="friendslist-friend-{{ friend.id }}">
+        <a class="friends-list-data clean" href="{{ route('user.profile', friend.id) }}">
+            <img src="{{ route('file.avatar', friend.id) }}" alt="{{ friend.username }}" class="friends-list-avatar default-avatar-setting" style="width: 150px; height: 150px;">
+            <div class="friends-list-name" style="color: {{ friend.colour }};">{{ friend.username }}</div>
+        </a>
+    </div>
+    {% endfor %}
+    <div class="clear"></div>
+</div>
+{% if friends|length > 1 %}
+<div style="text-align: right;">
+    {% include 'elements/pagination.twig' %}
+</div>
+{% endif %}

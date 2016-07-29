@@ -1,0 +1,28 @@
+{% extends 'master.twig' %}
+
+{% set banner_classes = "banner--insane landing__banner" %}
+{% set banner = "https://i.flash.moe/7131467636550.jpg" %}
+
+{% block banner_content %}
+    <div class="landing__inner">
+        <div class="landing__buttons">
+            <a href="{{ route('auth.register') }}" class="landing__button">register</a>
+            <a href="{{ route('auth.login') }}" class="landing__button">login</a>
+        </div>
+        <div class="landing__text">
+            <p>Welcome to my humble abode, it doesn't look like much but if you like rectangles this is the place for you.</p>
+            <p>Allow me to expound for five paragraphs on why you should join.</p>
+            <p>Paragraph 1.</p>
+            <p>Paragraph 2.</p>
+            <p>Paragraph 3.</p>
+            <p>Paragraph 4.</p>
+            <p>Paragraph 5.</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="platform">
+        stuff here
+    </div>
+{% endblock %}

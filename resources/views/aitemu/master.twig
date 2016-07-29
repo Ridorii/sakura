@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="description" content="{{ description|default(config('general.description')) }}">
+{{ block('meta') }}
+
+        <title>{{ title|default(config('general.name')) }}</title>
+
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Exo+2:200,200italic,300,300italic,400,400italic" rel="stylesheet" type="text/css">
+        {#<link href="{{ config('general.chat') }}/app.css" rel="stylesheet" type="text/css">#}
+        <link href="/css/libraries.css" rel="stylesheet" type="text/css" data-turbolinks-track>
+        <link href="/css/aitemu.css" rel="stylesheet" type="text/css" data-turbolinks-track>
+{{ block('css') }}
+
+        {#<script>
+            window["sakurakoSettings"] = route('chat.settings');
+        </script>#}
+        <script src="/js/libraries.js" data-turbolinks-track></script>
+        <script src="/js/aitemu.js" data-turbolinks-track></script>
+        {#<script src="{{ config('general.chat') }}/app.js"></script>#}
+{{ block('js') }}
+    </head>
+    <body>
+        <div class="container">
+            <div class="container__wrapper {{ wrapper_classes or '' }}">
+                <nav class="header">
+                    <div class="header__navigation">
+                        <a class="header__entry fa-home" href="{{ route('main.index') }}">home</a>
+                        <a class="header__entry fa-comments" href="{{ forums.index }}">forum</a>
+                        <a class="header__entry fa-commenting" href="{{ route('chat.redirect') }}">chat</a>
+                        <a class="header__entry fa-sign-out" href="{{ route('auth.logout') }}">logout</a>
+                    </div>
+                    {% if user.isActive %}
+                        <a class="header__user" href="{{ route('user.profile', user.id) }}" style="color: {{ user.colour }}">
+                            <div class="header__username">{{ user.username }}</div>
+                            <div class="header__avatar" style="background-image: url('{{ route('file.avatar', user.id) }}')"></div>
+                        </a>
+                    {% else %}
+                        <a class="header__user" href="{{ route('auth.login') }}">
+                            <div class="header__username">login</div>
+                            <div class="header__avatar" style="background-image: url('/images/no-avatar.png')"></div>
+                        </a>
+                    {% endif %}
+                </nav>
+
+                <noscript>
+                    <div class="banner" style="background-image: url('/images/enable-javascript.png')"></div>
+                </noscript>
+
+                <div class="banner {{ banner_large ? 'banner--large' : '' }} {{ banner_classes|default('') }}" style="background-image: url('{{ banner|default('/images/default-banner.png') }}')">
+                    {{ block('banner_content') }}
+                </div>
+
+                {{ block('content') }}
+
+                {#<div class="platform" id="chat-interface" data-turbolinks-permanent>
+                    @include('misc.chat')
+                </div>#}
+            </div>
+            <div class="container__footer">
+                <div class="container__footer-copyright">flash.moe 2013-{{ ''|date('Y') }}</div>
+                <div class="container__footer-links">
+                    <a href="#" class="container__footer-link">Terms of Service</a>
+                    <a href="#" class="container__footer-link">Rules</a>
+                    <a href="#" class="container__footer-link">Contact</a>
+                    <a href="#" class="container__footer-link">Status</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

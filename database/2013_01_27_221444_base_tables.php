@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Sakura\DB;
 
 // this is based on what is in the live flashii table at the
 // moment this migration was created to avoid merge conflicts.
@@ -14,702 +15,429 @@ class BaseTables extends Migration
      */
     public function up()
     {
-        Schema::create('actioncodes', function (Blueprint $table) {
-            $table->string('code_action', 255)
-                ->comment('Action identifier so the backend knows what to do.');
+        $schema = DB::getSchemaBuilder();
 
-            $table->bigInteger('user_id', 255)
-                ->unsigned()
-                ->comment('ID of the user that would be affected by this action');
+        $schema->create('actioncodes', function (Blueprint $table) {
+            $table->string('code_action', 255);
 
-            $table->string('action_code', 255)
-                ->comment('The URL key for using this code.');
+            $table->integer('user_id')
+                ->unsigned();
+
+            $table->string('action_code', 255);
         });
 
-        Schema::create('apikeys', function (Blueprint $table) {
-            $table->bigIncrements('id', 128)
-                ->unsigned()
-                ->comment('Automatically generated ID by MySQL for management.');
+        $schema->create('comment_votes', function (Blueprint $table) {
+            $table->integer('vote_comment')
+                ->unsigned();
 
-            $table->bigInteger('owner', 128)
-                ->unsigned()
-                ->comment('ID of user that owns this API key.');
+            $table->integer('vote_user')
+                ->unsigned();
 
-            $table->string('apikey', 32)
-                ->comment('The API key.');
+            $table->tinyInteger('vote_state')
+                ->unsigned();
         });
 
-        Schema::create('bans', function (Blueprint $table) {
-            $table->bigIncrements('ban_id', 255)
-                ->unsigned()
-                ->comment('Automatically generated ID by MySQL for management.');
+        $schema->create('comments', function (Blueprint $table) {
+            $table->increments('comment_id');
 
-            $table->bigInteger('user_id', 255)
-                ->unsigned()
-                ->comment('ID of user that was banned, 0 for just an IP ban.');
+            $table->string('comment_category', 32);
 
-            $table->integer('ban_begin', 11)
-                ->unsigned()
-                ->comment('Timestamp when the user was banned.');
+            $table->integer('comment_timestamp')
+                ->unsigned();
 
-            $table->integer('ban_end', 11)
-                ->unsigned()
-                ->comment('Timestamp when the user should regain access to the site.');
+            $table->integer('comment_poster')
+                ->unsigned();
 
-            $table->string('ban_reason', 512)
-                ->nullable()
-                ->default(null)
-                ->comment('Reason given for the ban.');
-
-            $table->bigInteger('ban_moderator', 255)
+            $table->integer('comment_reply_to')
                 ->unsigned()
-                ->comment('ID of moderator that banned this user,');
+                ->default(0);
+
+            $table->text('comment_text', 255);
         });
 
-        Schema::create('comment_votes', function (Blueprint $table) {
-            $table->bigInteger('vote_comment', 255)
-                ->unsigned()
-                ->comment('ID of the comment that was voted on.');
+        $schema->create('emoticons', function (Blueprint $table) {
+            $table->string('emote_string', 255);
 
-            $table->bigInteger('vote_user', 255)
-                ->unsigned()
-                ->comment('ID of the voter.');
-
-            $table->tinyInteger('vote_state', 1)
-                ->unsigned()
-                ->comment('0 = dislike, 1 = like.');
+            $table->string('emote_path', 255);
         });
 
-        Schema::create('comments', function (Blueprint $table) {
-            $table->bigIncrements('comment_id', 255)
-                ->unsigned()
-                ->comment('MySQL Generated ID used for sorting.');
+        $schema->create('error_log', function (Blueprint $table) {
+            $table->string('error_id', 32);
 
-            $table->string('comment_category', 32)
-                ->comment('Comment category.');
+            $table->string('error_timestamp', 128);
 
-            $table->integer('comment_timestamp', 11)
-                ->unsigned()
-                ->comment('Timestamp of when this comment was posted.');
+            $table->integer('error_revision')
+                ->unsigned();
 
-            $table->bigInteger('comment_poster', 255)
-                ->unsigned()
-                ->comment('User ID of the poster.');
+            $table->integer('error_type')
+                ->unsigned();
 
-            $table->bigInteger('comment_reply_to', 255)
-                ->unsigned()
-                ->default(0)
-                ->comment('ID of the comment this comment is a reply to');
+            $table->integer('error_line')
+                ->unsigned();
 
-            $table->text('comment_text', 255)
-                ->comment('Content of the comment.');
+            $table->string('error_string', 512);
+
+            $table->string('error_file', 512);
+
+            $table->text('error_backtrace');
         });
 
-        Schema::create('config', function (Blueprint $table) {
-            $table->string('config_name', 255)
-                ->unique()
-                ->comment('Array key for configuration value');
+        $schema->create('faq', function (Blueprint $table) {
+            $table->increments('faq_id');
 
-            $table->string('config_value', 255)
-                ->comment('The value, obviously.');
+            $table->string('faq_shorthand', 255);
+
+            $table->string('faq_question', 255);
+
+            $table->text('faq_answer');
         });
 
-        Schema::create('emoticons', function (Blueprint $table) {
-            $table->string('emote_string', 255)
-                ->comment('String to catch and replace');
+        $schema->create('forum_permissions', function (Blueprint $table) {
+            $table->integer('forum_id')
+                ->unsigned();
 
-            $table->string('emote_path', 255)
-                ->comment('Path to the image file relative to the content domain.');
+            $table->integer('rank_id')
+                ->unsigned();
+
+            $table->integer('user_id')
+                ->unsigned();
+
+            $table->string('forum_perms', 255);
         });
 
-        Schema::create('error_log', function (Blueprint $table) {
-            $table->string('error_id', 32)
-                ->comment('An ID that is created when an error occurs.');
+        $schema->create('forums', function (Blueprint $table) {
+            $table->increments('forum_id');
 
-            $table->string('error_timestamp', 128)
-                ->comment('A datestring from when the error occurred.');
+            $table->integer('forum_order')
+                ->unsigned();
 
-            $table->integer('error_revision', 16)
+            $table->string('forum_name', 255);
+
+            $table->text('forum_desc');
+
+            $table->string('forum_link', 255);
+
+            $table->integer('forum_category')
                 ->unsigned()
-                ->comment('Sakura Revision number.');
+                ->default(0);
 
-            $table->integer('error_type', 16)
+            $table->tinyInteger('forum_type')
                 ->unsigned()
-                ->comment('The PHP error type of this error.');
+                ->default(0);
 
-            $table->integer('error_line', 32)
-                ->unsigned()
-                ->comment('The line that caused this error.');
-
-            $table->string('error_string', 512)
-                ->comment("PHP's description of this error.");
-
-            $table->string('error_file', 512)
-                ->comment('The file in which this error occurred.');
-
-            $table->text('error_backtrace')
-                ->comment('A full base64 and json encoded backtrace containing all environment data.');
+            $table->string('forum_icon', 255);
         });
 
-        Schema::create('faq', function (Blueprint $table) {
-            $table->bigIncrements('faq_id', 128)
-                ->unsigned()
-                ->comment('MySQL Generated ID used for sorting.');
+        $schema->create('friends', function (Blueprint $table) {
+            $table->integer('user_id')
+                ->unsigned();
 
-            $table->string('faq_shorthand', 255)
-                ->comment('Used for linking directly to a question.');
-
-            $table->string('faq_question', 255)
-                ->comment('The question.');
-
-            $table->text('faq_answer')
-                ->comment('The answer.');
-        });
-
-        Schema::create('forum_permissions', function (Blueprint $table) {
-            $table->bigInteger('forum_id', 255)
-                ->unsigned()
-                ->comment('Forum ID');
-
-            $table->bigInteger('rank_id', 128)
-                ->unsigned()
-                ->comment('Rank ID, leave 0 for a user');
-
-            $table->bigInteger('user_id', 255)
-                ->unsigned()
-                ->comment('User ID, leave 0 for a rank');
-
-            $table->string('forum_perms', 255)
-                ->comment('Forum action permission string');
-        });
-
-        Schema::create('forums', function (Blueprint $table) {
-            $table->bigIncrements('forum_id', 255)
-                ->unsigned()
-                ->comment('MySQL Generated ID used for sorting.');
-
-            $table->bigInteger('forum_order', 255)
-                ->unsigned()
-                ->comment('Forum sorting order.');
-
-            $table->string('forum_name', 255)
-                ->comment('Display name of the forum.');
-
-            $table->text('forum_desc')
-                ->comment('Description of the forum.');
-
-            $table->string('forum_link', 255)
-                ->comment('If set forum will display as a link.');
-
-            $table->bigInteger('forum_category', 255)
-                ->unsigned()
-                ->default(0)
-                ->comment('ID of the category this forum falls under.');
-
-            $table->tinyInteger('forum_type', 4)
-                ->unsigned()
-                ->default(0)
-                ->comment('Forum type, 0 for regular board, 1 for category and 2 for link.');
-
-            $table->string('forum_icon', 255)
-                ->comment('Display icon for the forum.');
-        });
-
-        Schema::create('friends', function (Blueprint $table) {
-            $table->bigInteger('user_id', 255)
-                ->unsigned()
-                ->comment('ID of the user that added the friend.');
-
-            $table->bigInteger('friend_id', 255)
-                ->unsigned()
-                ->comment('ID of the user that was added as a friend.');
+            $table->integer('friend_id')
+                ->unsigned();
 
             $table->integer('friend_timestamp', 11)
-                ->unsigned()
-                ->comment('Timestamp of action.');
+                ->unsigned();
         });
 
-        Schema::create('infopages', function (Blueprint $table) {
-            $table->string('page_shorthand', 255)
-                ->comment('Name used for calling this page up in the /r/URL');
+        $schema->create('login_attempts', function (Blueprint $table) {
+            $table->increments('attempt_id');
 
-            $table->string('page_title', 255)
-                ->comment('Title displayed on the top of the page');
+            $table->tinyInteger('attempt_success')
+                ->unsigned();
 
-            $table->text('page_content')
-                ->comment('Content of the page');
+            $table->integer('attempt_timestamp')
+                ->unsigned();
+
+            $table->string('attempt_ip', 255);
+
+            $table->integer('user_id')
+                ->unsigned();
         });
 
-        Schema::create('login_attempts', function (Blueprint $table) {
-            $table->bigIncrements('attempt_id', 255)
-                ->unsigned()
-                ->comment('MySQL Generated ID used for sorting.');
+        $schema->create('news', function (Blueprint $table) {
+            $table->increments('news_id');
 
-            $table->tinyInteger('attempt_success', 1)
-                ->unsigned()
-                ->comment('Success boolean.');
+            $table->string('news_category', 255);
 
-            $table->integer('attempt_timestamp', 11)
-                ->unsigned()
-                ->comment('Unix timestamp of the event.');
+            $table->integer('user_id')
+                ->unsigned();
 
-            $table->string('attempt_ip', 255)
-                ->comment('IP that made this attempt.');
+            $table->integer('news_timestamp')
+                ->unsigned();
 
-            $table->bigInteger('user_id', 255)
-                ->unsigned()
-                ->comment('ID of the user that was attempted to log in to.');
+            $table->string('news_title', 255);
+
+            $table->text('news_content');
         });
 
-        Schema::create('messages', function (Blueprint $table) {
-            $table->bigIncrements('id', 128)
+        $schema->create('notifications', function (Blueprint $table) {
+            $table->increments('alert_id');
+
+            $table->integer('user_id')
                 ->unsigned()
-                ->comment('Automatically generated ID by MySQL for management.');
+                ->default(0);
 
-            $table->bigInteger('from_user', 255)
+            $table->integer('alert_timestamp')
                 ->unsigned()
-                ->comment('ID of the user that sent this message.');
+                ->default(0);
 
-            $table->bigInteger('to_user', 255)
+            $table->tinyInteger('alert_read')
                 ->unsigned()
-                ->comment('ID of user that should receive this message.');
+                ->default(0);
 
-            $table->string('read', 255)
-                ->comment('IDs of users who read this message.');
-
-            $table->string('deleted', 255)
-                ->comment('Indicator if one of the parties deleted the message, if it is already 1 the script will remove this row.');
-
-            $table->integer('timestamp', 11)
+            $table->tinyInteger('alert_sound')
                 ->unsigned()
-                ->comment('Timestamp of the time this message was sent');
+                ->default(0);
 
-            $table->string('subject', 255)
-                ->comment('Title of the message');
+            $table->string('alert_title', 255);
 
-            $table->text('content')
-                ->comment('Contents of the message.');
+            $table->string('alert_text', 255);
+
+            $table->string('alert_link', 255);
+
+            $table->string('alert_img', 255);
+
+            $table->integer('alert_timeout')
+                ->unsigned()
+                ->default(0);
         });
 
-        Schema::create('news', function (Blueprint $table) {
-            $table->bigIncrements('news_id', 255)
-                ->unsigned()
-                ->comment('Automatically generated ID by MySQL for management.');
-
-            $table->string('news_category', 255)
-                ->comment('Category ID.');
-
-            $table->bigInteger('user_id', 255)
-                ->unsigned()
-                ->comment('ID of user who posted this news message.');
-
-            $table->integer('news_timestamp', 11)
-                ->unsigned()
-                ->comment('News post timestamp.');
-
-            $table->string('news_title', 255)
-                ->comment('Title of the post.');
-
-            $table->text('news_content')
-                ->comment('Contents of the post');
-        });
-
-        Schema::create('notifications', function (Blueprint $table) {
-            $table->bigIncrements('alert_id', 255)
-                ->unsigned()
-                ->comment('Automatically generated ID by MySQL for management.');
-
-            $table->bigInteger('user_id', 255)
-                ->unsigned()
-                ->default(0)
-                ->comment('User ID this notification is intended for.');
-
-            $table->integer('alert_timestamp', 11)
-                ->unsigned()
-                ->default(0)
-                ->comment('Timestamp when this notification was created.');
-
-            $table->tinyInteger('alert_read', 1)
-                ->unsigned()
-                ->default(0)
-                ->comment('Toggle for unread and read.');
-
-            $table->tinyInteger('alert_sound', 1)
-                ->unsigned()
-                ->default(0)
-                ->comment('Toggle if a sound should be played upon receiving the notification.');
-
-            $table->string('alert_title', 255)
-                ->comment('Title displayed on the notification.');
-
-            $table->string('alert_text', 255)
-                ->comment('Text displayed.');
-
-            $table->string('alert_link', 255)
-                ->comment('Link (empty for no link).');
-
-            $table->string('alert_img', 255)
-                ->comment('Image path, prefix with font: to use a font class instead of an image.');
-
-            $table->integer('alert_timeout', 16)
-                ->unsigned()
-                ->default(0)
-                ->comment('How long the notification should stay on screen in milliseconds, 0 for forever.');
-        });
-
-        Schema::create('optionfields', function (Blueprint $table) {
+        $schema->create('optionfields', function (Blueprint $table) {
             $table->string('option_id', 255)
-                ->unique()
-                ->comment('Unique identifier for accessing this option.');
+                ->unique();
 
-            $table->string('option_name', 255)
-                ->comment('Description of the field in a proper way.');
+            $table->string('option_name', 255);
 
-            $table->string('option_description', 255)
-                ->comment('Longer description of the option.');
+            $table->string('option_description', 255);
 
-            $table->string('option_type', 255)
-                ->comment('Type attribute in the input element.');
+            $table->string('option_type', 255);
 
-            $table->string('option_permission', 255)
-                ->comment('The minimum permission level this option requires.');
+            $table->string('option_permission', 255);
         });
 
-        Schema::create('permissions', function (Blueprint $table) {
-            $table->bigInteger('rank_id', 255)
+        $schema->create('permissions', function (Blueprint $table) {
+            $table->integer('rank_id')
                 ->unsigned()
-                ->default(0)
-                ->comment('ID of the rank this permissions set is used for.');
+                ->default(0);
 
-            $table->bigInteger('user_id', 255)
+            $table->integer('user_id')
                 ->unsigned()
-                ->default(0)
-                ->comment('ID of the user this permissions set is used for.');
+                ->default(0);
 
             $table->string('permissions_site', 255)
-                ->default(0)
-                ->comment('Site permissions.');
+                ->default(0);
 
             $table->string('permissions_manage', 255)
-                ->default(0)
-                ->comment('Site management permissions');
+                ->default(0);
         });
 
-        Schema::create('posts', function (Blueprint $table) {
-            $table->bigIncrements('post_id', 255)
+        $schema->create('posts', function (Blueprint $table) {
+            $table->increments('post_id');
+
+            $table->integer('topic_id')
                 ->unsigned()
-                ->comment('MySQL Generated ID used for sorting.');
+                ->default(0);
 
-            $table->bigInteger('topic_id', 255)
+            $table->integer('forum_id')
                 ->unsigned()
-                ->default(0)
-                ->comment('ID of topic this post is a part of.');
+                ->default(0);
 
-            $table->bigInteger('forum_id', 255)
+            $table->integer('poster_id')
                 ->unsigned()
-                ->default(0)
-                ->comment('ID of forum this was posted in.');
+                ->default(0);
 
-            $table->bigInteger('poster_id', 255)
+            $table->string('poster_ip', 40);
+
+            $table->integer('post_time')
                 ->unsigned()
-                ->default(0)
-                ->comment('ID of poster of this post.');
+                ->default(0);
 
-            $table->string('poster_ip', 40)
-                ->comment('IP of poster.');
+            $table->string('post_subject', 255);
 
-            $table->integer('post_time', 11)
+            $table->text('post_text');
+
+            $table->integer('post_edit_time')
                 ->unsigned()
-                ->default(0)
-                ->comment('Time this post was made.');
+                ->default(0);
 
-            $table->string('post_subject', 255)
-                ->comment('Subject of the post.');
+            $table->string('post_edit_reason', 255);
 
-            $table->text('post_text')
-                ->comment('Contents of the post.');
-
-            $table->integer('post_edit_time', 11)
+            $table->integer('post_edit_user')
                 ->unsigned()
-                ->default(0)
-                ->comment('Time this post was last edited.');
-
-            $table->string('post_edit_reason', 255)
-                ->comment('Reason this was edited.');
-
-            // yup, integer, despite being bigint every else >.>
-            $table->integer('post_edit_user', 255)
-                ->unsigned()
-                ->default(0)
-                ->comment('ID of user that edited.');
+                ->default(0);
         });
 
-        Schema::create('premium', function (Blueprint $table) {
-            $table->bigInteger('user_id', 255)
+        $schema->create('premium', function (Blueprint $table) {
+            $table->integer('user_id')
                 ->unsigned()
-                ->unique()
-                ->comment('ID of the user that purchased Tenshi.');
+                ->unique();
 
-            $table->integer('premium_start', 11)
-                ->unsigned()
-                ->comment('Timestamp of first purchase.');
+            $table->integer('premium_start')
+                ->unsigned();
 
-            $table->integer('premium_expire', 11)
-                ->unsigned()
-                ->comment('Expiration timestamp.');
+            $table->integer('premium_expire')
+                ->unsigned();
         });
 
-        Schema::create('premium_log', function (Blueprint $table) {
-            $table->increments('transaction_id', 16)
-                ->unsigned()
-                ->comment('MySQL Generated ID used for sorting.');
+        $schema->create('profilefields', function (Blueprint $table) {
+            $table->increments('field_id')
+                ->unsigned();
 
-            $table->bigInteger('user_id', 255)
-                ->unsigned()
-                ->comment('User ID of purchaser');
+            $table->string('field_name', 255);
 
-            $table->float('transaction_amount')
-                ->comment('Amount that was transferred.');
+            $table->string('field_type', 255);
 
-            $table->integer('transaction_date', 11)
-                ->unsigned()
-                ->comment('Date when the purchase was made.');
+            $table->tinyInteger('field_link')
+                ->unsigned();
 
-            $table->string('transaction_comment', 255)
-                ->comment('A short description of the action taken.');
+            $table->string('field_linkformat', 255);
+
+            $table->string('field_description', 255);
+
+            $table->string('field_additional', 255);
         });
 
-        Schema::create('profilefields', function (Blueprint $table) {
-            $table->increments('field_id', 64)
-                ->unsigned()
-                ->comment('ID used for ordering on the userpage.');
+        $schema->create('ranks', function (Blueprint $table) {
+            $table->increments('rank_id');
 
-            $table->string('field_name', 255)
-                ->comment('Name of the field.');
+            $table->integer('rank_hierarchy')
+                ->unsigned();
 
-            $table->string('field_type', 255)
-                ->comment('Type attribute in the input element.');
-
-            $table->tinyInteger('field_link', 1)
-                ->unsigned()
-                ->comment('Set if this value should be put in a href.');
-
-            $table->string('field_linkformat', 255)
-                ->comment('If the form is a link how should it be formatted? {{ VAL }} gets replace with the value.');
-
-            $table->string('field_description', 255)
-                ->comment('Description of the field displayed in the control panel.');
-
-            $table->string('field_additional', 255)
-                ->comment('Undocumented JSON array containing special options if needed (probably only going to be used for the YouTube field).');
-        });
-
-        Schema::create('ranks', function (Blueprint $table) {
-            $table->bigIncrements('rank_id', 128)
-                ->unsigned()
-                ->comment('Automatically generated ID by MySQL for management.');
-
-            $table->integer('rank_hierarchy', 11)
-                ->unsigned()
-                ->comment('Rank hierarchy.');
-
-            $table->string('rank_name', 255)
-                ->comment('Display name of the rank.');
+            $table->string('rank_name', 255);
 
             $table->string('rank_multiple', 10)
                 ->nullable()
-                ->default(null)
-                ->comment('Used when addressing this rank as a multiple');
+                ->default(null);
 
-            $table->tinyInteger('rank_hidden', 1)
+            $table->tinyInteger('rank_hidden')
                 ->unsigned()
-                ->default(0)
-                ->comment("Don't show any public links to this rank.");
+                ->default(0);
 
-            $table->string('rank_colour', 255)
-                ->comment('Colour used for the username of a member of this rank.');
+            $table->string('rank_colour', 255);
 
-            $table->text('rank_description')
-                ->comment('A description of what a user of this rank can do/is supposed to do.');
+            $table->text('rank_description');
 
-            $table->string('rank_title', 64)
-                ->comment('Default user title if user has none set.');
+            $table->string('rank_title', 64);
         });
 
-        Schema::create('reports', function (Blueprint $table) {
-            $table->bigIncrements('id', 255)
-                ->unsigned()
-                ->comment('MySQL Generated ID used for sorting.');
+        $schema->create('sessions', function (Blueprint $table) {
+            $table->increments('session_id');
 
-            $table->integer('type', 32)
-                ->unsigned()
-                ->comment('Report type, entirely handled on the script side.');
+            $table->integer('user_id')
+                ->unsigned();
 
-            $table->bigInteger('issuer', 255)
-                ->unsigned()
-                ->comment('ID of the person who issued this report.');
-
-            // what the fuck
-            $table->bigInteger('subject', 255)
-                ->unsigned()
-                ->comment("ID pointing out what was reported (a more accurate description isn't possible due to the type column).");
-
-            $table->string('title', 255)
-                ->comment('A quick description of this report.');
-
-            $table->text('description')
-                ->comment('And a detailed description.');
-
-            $table->bigInteger('reviewed', 255)
-                ->unsigned()
-                ->default(0)
-                ->comment('ID of the moderator that reviewed this report.');
-        });
-
-        Schema::create('sessions', function (Blueprint $table) {
-            $table->bigIncrements('session_id', 255)
-                ->unsigned()
-                ->comment('Automatically generated ID by MySQL for management. ');
-
-            $table->bigInteger('user_id', 255)
-                ->unsigned()
-                ->comment('ID of the user this session is spawned for. ');
-
-            $table->string('user_ip', 255)
-                ->comment('IP of the user this session is spawned for.');
+            $table->string('user_ip', 255);
 
             $table->string('user_agent', 255)
                 ->nullable()
-                ->default(null)
-                ->comment('User agent of the user this session is spawned for.');
+                ->default(null);
 
-            $table->string('session_key', 255)
-                ->comment("Session key, allow direct access to the user's account. ");
+            $table->string('session_key', 255);
 
-            $table->integer('session_start', 16)
+            $table->integer('session_start')
+                ->unsigned();
+
+            $table->integer('session_expire')
+                ->unsigned();
+
+            $table->tinyInteger('session_remember')
                 ->unsigned()
-                ->comment('The timestamp for when the session was started. ');
-
-            $table->integer('session_expire', 16)
-                ->unsigned()
-                ->comment('The timestamp for when this session should end, -1 for permanent. ');
-
-            $table->tinyInteger('session_remember', 1)
-                ->unsigned()
-                ->default(0)
-                ->comment('If set to 1 session will be extended each time a page is loaded.');
+                ->default(0);
         });
 
-        Schema::create('topics', function (Blueprint $table) {
-            $table->bigIncrements('topic_id', 255)
-                ->unsigned()
-                ->comment('ID of forum this topic was created in.');
+        $schema->create('topics', function (Blueprint $table) {
+            $table->increments('topic_id');
 
-            $table->bigInteger('forum_id', 255)
+            $table->integer('forum_id')
                 ->unsigned()
-                ->default(0)
-                ->comment('ID of forum this topic was created in.');
+                ->default(0);
 
-            $table->tinyInteger('topic_hidden', 1)
+            $table->tinyInteger('topic_hidden')
                 ->unsigned()
-                ->default(0)
-                ->comment('Boolean to set the topic as hidden.');
+                ->default(0);
 
-            $table->string('topic_title', 255)
-                ->comment('Title of the topic.');
+            $table->string('topic_title', 255);
 
-            $table->integer('topic_time', 11)
+            $table->integer('topic_time')
                 ->unsigned()
-                ->default(0)
-                ->comment('Timestamp when the topic was created.');
+                ->default(0);
 
-            $table->integer('topic_time_limit', 11)
+            $table->integer('topic_time_limit')
                 ->unsigned()
-                ->default(0)
-                ->comment('After how long a topic should be locked.');
+                ->default(0);
 
-            $table->bigInteger('topic_views', 255)
+            $table->integer('topic_views')
                 ->unsigned()
-                ->default(0)
-                ->comment('Amount of times the topic has been viewed.');
+                ->default(0);
 
-            $table->tinyInteger('topic_status', 3)
+            $table->tinyInteger('topic_status')
                 ->unsigned()
-                ->default(0)
-                ->comment('Status of topic.');
+                ->default(0);
 
-            $table->integer('topic_status_change', 11)
+            $table->integer('topic_status_change')
                 ->unsigned()
-                ->default(0)
-                ->comment('Date the topic status was changed (used for deletion cooldown as well).');
+                ->default(0);
 
-            $table->tinyInteger('topic_type', 3)
+            $table->tinyInteger('topic_type')
                 ->unsigned()
-                ->default(0)
-                ->comment('Type of the topic.');
+                ->default(0);
 
-            $table->integer('topic_last_reply', 11)
+            $table->integer('topic_last_reply')
                 ->unsigned()
-                ->default(0)
-                ->comment('Timestamp of when the last reply made to this thread.');
+                ->default(0);
 
-            $table->bigInteger('topic_old_forum', 255)
+            $table->integer('topic_old_forum')
                 ->unsigned()
-                ->default(0)
-                ->comment('Pre-move forum id.');
+                ->default(0);
         });
 
-        Schema::create('topics_track', function (Blueprint $table) {
-            $table->bigInteger('user_id', 255)
-                ->unsigned()
-                ->comment('ID of the user this row applies to.');
+        $schema->create('topics_track', function (Blueprint $table) {
+            $table->integer('user_id')
+                ->unsigned();
 
-            $table->bigInteger('topic_id', 255)
-                ->unsigned()
-                ->comment('ID of the thread in question.');
+            $table->integer('topic_id')
+                ->unsigned();
 
-            $table->bigInteger('forum_id', 255)
-                ->unsigned()
-                ->comment('ID of the forum in question.');
+            $table->integer('forum_id')
+                ->unsigned();
 
-            $table->integer('mark_time', 11)
+            $table->integer('mark_time')
                 ->unsigned()
-                ->default(0)
-                ->comment('Timestamp of the event.');
+                ->default(0);
         });
 
-        Schema::create('uploads', function (Blueprint $table) {
-            $table->bigIncrements('file_id', 255)
-                ->unsigned()
-                ->comment('Automatically generated value for management');
+        $schema->create('uploads', function (Blueprint $table) {
+            $table->increments('file_id');
 
-            $table->bigInteger('user_id', 255)
-                ->unsigned()
-                ->comment('ID of the user that uploaded the file');
+            $table->integer('user_id')
+                ->unsigned();
 
             // this one's actually longblob
-            $table->binary('file_data')
-                ->comment('Contents of the file');
+            $table->binary('file_data');
 
-            $table->string('file_name', 255)
-                ->comment('Name of the file');
+            $table->string('file_name', 255);
 
-            $table->string('file_mime', 255)
-                ->comment('Static mime type of the file');
+            $table->string('file_mime', 255);
 
-            $table->integer('file_time', 11)
-                ->unsigned()
-                ->comment('Timestamp of when the file was uploaded');
+            $table->integer('file_time')
+                ->unsigned();
 
-            $table->integer('file_expire', 11)
-                ->unsigned()
-                ->comment('When should the file be removed, 0 for never');
+            $table->integer('file_expire')
+                ->unsigned();
         });
 
-        Schema::create('user_optionfields', function (Blueprint $table) {
-            $table->bigInteger('user_id', 255)
-                ->unsigned()
-                ->comment('User this field applies to');
+        $schema->create('user_optionfields', function (Blueprint $table) {
+            $table->integer('user_id')
+                ->unsigned();
+
+            $table->string('field_name', 255);
+
+            $table->string('field_value', 255);
+        });
+
+        $schema->create('user_profilefields', function (Blueprint $table) {
+            $table->integer('user_id')
+                ->unsigned();
 
             $table->string('field_name', 255)
                 ->comment('Identifier of the field');
@@ -718,181 +446,93 @@ class BaseTables extends Migration
                 ->comment('Value of the field');
         });
 
-        Schema::create('user_profilefields', function (Blueprint $table) {
-            $table->bigInteger('user_id', 255)
-                ->unsigned()
-                ->comment('User this field applies to');
-
-            $table->string('field_name', 255)
-                ->comment('Identifier of the field');
-
-            $table->string('field_value', 255)
-                ->comment('Value of the field');
-        });
-
-        Schema::create('user_ranks', function (Blueprint $table) {
-            $table->bigInteger('user_id', 255)
+        $schema->create('user_ranks', function (Blueprint $table) {
+            $table->integer('user_id')
                 ->unsigned();
 
-            $table->bigInteger('rank_id', 128)
+            $table->integer('rank_id')
                 ->unsigned();
         });
 
-        Schema::create('username_history', function (Blueprint $table) {
-            $table->increments('change_id', 11)
-                ->unsigned()
-                ->comment('Identifier');
+        $schema->create('username_history', function (Blueprint $table) {
+            $table->increments('change_id');
 
-            $table->integer('change_time', 11)
-                ->unsigned()
-                ->comment('Timestamp of change');
+            $table->integer('change_time')
+                ->unsigned();
 
-            $table->bigInteger('user_id', 255)
-                ->unsigned()
-                ->comment('User ID');
+            $table->integer('user_id')
+                ->unsigned();
 
-            $table->string('username_new', 255)
-                ->comment('New username');
+            $table->string('username_new', 255);
 
-            $table->string('username_new_clean', 255)
-                ->comment('Clean new username');
+            $table->string('username_new_clean', 255);
 
-            $table->string('username_old', 255)
-                ->comment('Old username');
+            $table->string('username_old', 255);
 
-            $table->string('username_old_clean', 255)
-                ->comment('Clean old username');
+            $table->string('username_old_clean', 255);
         });
 
-        Schema::create('users', function (Blueprint $table) {
-            $table->bigIncrements('user_id', 255)
-                ->unsigned()
-                ->comment('Automatically generated ID by MySQL for management. ');
+        $schema->create('users', function (Blueprint $table) {
+            $table->increments('user_id');
 
-            $table->string('username', 255)
-                ->comment('Username set at registration.');
+            $table->string('username', 255);
 
             $table->string('username_clean', 255)
-                ->unique()
-                ->comment('A more cleaned up version of the username for backend usage.');
+                ->unique();
 
-            $table->string('password_hash', 255)
-                ->comment('Hashing algo used for the password hash.');
+            $table->string('password', 60)
+                ->nullable()
+                ->default(null);
 
-            $table->string('password_salt', 255)
-                ->comment('Salt used for the password hash.');
+            $table->string('email', 255);
 
-            $table->string('password_algo', 255)
-                ->comment('Algorithm used for the password hash.');
-
-            $table->integer('password_iter', 11)
+            $table->mediumInteger('rank_main')
                 ->unsigned()
-                ->comment('Password hash iterations.');
-
-            $table->integer('password_chan', 11)
-                ->unsigned()
-                ->default(0)
-                ->comment('Last time the user changed their password.');
-
-            $table->string('email', 255)
-                ->comment('E-mail of the user for password restoring etc.');
-
-            $table->mediumInteger('rank_main', 4)
-                ->unsigned()
-                ->default(0)
-                ->comment('Main rank of the user.');
+                ->default(0);
 
             $table->string('user_colour', 255)
                 ->nullable()
-                ->default(null)
-                ->comment('Additional name colour, when empty colour defaults to group colour.');
+                ->default(null);
 
-            $table->string('register_ip', 255)
-                ->comment('IP used for the creation of this account.');
+            $table->string('register_ip', 255);
 
-            $table->string('last_ip', 255)
-                ->comment('Last IP that was used to log into this account.');
+            $table->string('last_ip', 255);
 
             $table->string('user_title', 64)
                 ->nullable()
-                ->default(null)
-                ->comment('Custom user title of the user, when empty reverts to their derault group name.');
+                ->default(null);
 
-            $table->integer('user_register', 11)
+            $table->integer('user_registered')
                 ->unsigned()
-                ->default(0)
-                ->comment('Timestamp of account creation.');
+                ->default(0);
 
-            $table->integer('user_last_online', 11)
+            $table->integer('user_last_online')
                 ->unsigned()
-                ->default(0)
-                ->comment('Last time anything was done on this account.');
+                ->default(0);
 
             $table->date('user_birthday')
-                ->default('0000-00-00')
-                ->comment('Birthdate of the user.');
+                ->default('0000-00-00');
 
             $table->char('user_country', 2)
-                ->default('XX')
-                ->comment("Contains ISO 3166 country code of user's registration location.");
+                ->default('XX');
 
-            $table->bigInteger('user_avatar', 255)
+            $table->integer('user_avatar')
                 ->unsigned()
-                ->default(0)
-                ->comment('ID of the avatar in the uploads table.');
+                ->default(0);
 
-            $table->bigInteger('user_background', 255)
+            $table->integer('user_background')
                 ->unsigned()
-                ->default(0)
-                ->comment('ID of the background in the uploads table.');
+                ->default(0);
 
-            $table->bigInteger('user_header', 255)
+            $table->integer('user_header')
                 ->unsigned()
-                ->default(0)
-                ->comment('ID of the profile header in the uploads table.');
+                ->default(0);
 
             $table->longText('user_page')
-                ->comment('Contents of the userpage.');
+                ->nullable();
 
             $table->text('user_signature')
-                ->comment('Signature displayed below forum posts.');
-
-            $table->string('password', 255)
-                ->nullable()
-                ->default(null);
-        });
-
-        Schema::create('warnings', function (Blueprint $table) {
-            $table->bigIncrements('warning_id', 255)
-                ->unsigned()
-                ->comment('Automatically generated ID by MySQL for management.');
-
-            $table->bigInteger('user_id', 255)
-                ->unsigned()
-                ->comment('ID of user that was warned.');
-
-            $table->bigInteger('moderator_id', 255)
-                ->unsigned()
-                ->comment('ID of the user that issued the warning.');
-
-            $table->integer('warning_issued', 16)
-                ->unsigned()
-                ->comment('Timestamp of the date the warning was issued.');
-
-            $table->integer('warning_expires', 16)
-                ->unsigned()
-                ->comment('Timstamp when the warning should expire, 0 for a permanent warning.');
-
-            $table->tinyInteger('warning_action', 1)
-                ->unsigned()
-                ->nullable()
-                ->default(null)
-                ->comment('Action taken.');
-
-            $table->string('warning_reason', 512)
-                ->nullable()
-                ->default(null)
-                ->comment('Reason for the warning.');
+                ->nullable();
         });
     }
 
@@ -903,39 +543,34 @@ class BaseTables extends Migration
      */
     public function down()
     {
-        Schema::drop('actioncodes');
-        Schema::drop('apikeys');
-        Schema::drop('bans');
-        Schema::drop('comment_votes');
-        Schema::drop('comments');
-        Schema::drop('config');
-        Schema::drop('emoticons');
-        Schema::drop('faq');
-        Schema::drop('forum_permissions');
-        Schema::drop('forums');
-        Schema::drop('friends');
-        Schema::drop('infopages');
-        Schema::drop('login_attempts');
-        Schema::drop('messages');
-        Schema::drop('news');
-        Schema::drop('notifications');
-        Schema::drop('optionfields');
-        Schema::drop('permissions');
-        Schema::drop('posts');
-        Schema::drop('premium');
-        Schema::drop('premium_log');
-        Schema::drop('profilefields');
-        Schema::drop('ranks');
-        Schema::drop('reports');
-        Schema::drop('sessions');
-        Schema::drop('topics');
-        Schema::drop('topics_track');
-        Schema::drop('uploads');
-        Schema::drop('user_optionfields');
-        Schema::drop('user_profilefields');
-        Schema::drop('user_ranks');
-        Schema::drop('username_history');
-        Schema::drop('users');
-        Schema::drop('warnings');
+        $schema = DB::getSchemaBuilder();
+
+        $schema->drop('actioncodes');
+        $schema->drop('comment_votes');
+        $schema->drop('comments');
+        $schema->drop('emoticons');
+        $schema->drop('faq');
+        $schema->drop('forum_permissions');
+        $schema->drop('forums');
+        $schema->drop('friends');
+        $schema->drop('login_attempts');
+        $schema->drop('messages');
+        $schema->drop('news');
+        $schema->drop('notifications');
+        $schema->drop('optionfields');
+        $schema->drop('permissions');
+        $schema->drop('posts');
+        $schema->drop('premium');
+        $schema->drop('profilefields');
+        $schema->drop('ranks');
+        $schema->drop('sessions');
+        $schema->drop('topics');
+        $schema->drop('topics_track');
+        $schema->drop('uploads');
+        $schema->drop('user_optionfields');
+        $schema->drop('user_profilefields');
+        $schema->drop('user_ranks');
+        $schema->drop('username_history');
+        $schema->drop('users');
     }
 }

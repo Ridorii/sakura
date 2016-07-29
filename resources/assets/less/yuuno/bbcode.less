@@ -1,0 +1,88 @@
+.bbcode {
+    line-height: 1.4;
+    word-wrap: break-word;
+
+    h1,
+    h2,
+    h3 {
+        text-shadow: 0 0 5px #8364A1;
+        color: #614390;
+    }
+
+    ul {
+        margin-left: 2em;
+        list-style: square;
+    }
+
+    .spoiler {
+        background: #000;
+
+        &:hover {
+            background: inherit;
+        }
+    }
+
+    blockquote {
+        border: 1px solid #9475b2;
+        border-bottom: 0;
+        border-right: 0;
+        background: #D8B9F6;
+        margin: .5em;
+
+        > .quotee {
+            font-weight: bold;
+            border-bottom: 1px solid #9475b2;
+            border-right: 1px solid #9475b2;
+            background: #B697d4;
+            padding-left: .5em;
+        }
+
+        > .quote {
+            margin-left: .5em;
+            padding-bottom: .2em;
+        }
+    }
+
+    a {
+        color: #22E;
+        text-decoration: none;
+
+        &:hover {
+            color: #22E;
+            text-decoration: underline;
+        }
+
+        &:active {
+            color: #E22;
+            text-decoration: underline;
+        }
+    }
+
+    .spoiler-box-container {
+        border: 1px solid #9475b2;
+        margin: .5em;
+
+        > .spoiler-box-title {
+            text-align: center;
+            background: #B697d4;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+
+        > .spoiler-box-content {
+            border-top: 1px solid #9475b2;
+        }
+    }
+
+    img {
+        width: auto;
+        height: auto;
+        max-height: 100%;
+        max-width: 100%;
+    }
+
+    code {
+        font-size: 1.1em;
+    }
+}

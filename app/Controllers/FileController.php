@@ -45,7 +45,7 @@ class FileController extends Controller
      */
     public function avatar($id = 0)
     {
-        $noAvatar = ROOT . str_replace(
+        $noAvatar = ROOT . 'public/' . str_replace(
             '%tplname%',
             Template::$name,
             config('user.avatar_none')
@@ -56,18 +56,7 @@ class FileController extends Controller
             'mime' => getimagesizefromstring($noAvatar)['mime'],
         ];
 
-        $deactivePath = ROOT . str_replace(
-            '%tplname%',
-            Template::$name,
-            config('user.avatar_inactive')
-        );
-        $deactive = [
-            'name' => basename($deactivePath),
-            'data' => file_get_contents($deactivePath),
-            'mime' => getimagesizefromstring($deactivePath)['mime'],
-        ];
-
-        $bannedPath = ROOT . str_replace(
+        $bannedPath = ROOT . 'public/' . str_replace(
             '%tplname%',
             Template::$name,
             config('user.avatar_ban')
@@ -80,15 +69,11 @@ class FileController extends Controller
 
         $user = User::construct($id);
 
-        if ($user->permission(Site::DEACTIVATED)) {
-            return $this->serve($deactive['data'], $deactive['mime'], $deactive['name']);
-        }
-
         if ($user->permission(Site::RESTRICTED)) {
             return $this->serve($banned['data'], $banned['mime'], $banned['name']);
         }
 
-        if (!$user->avatar) {
+        if ($user->id < 1 || !$user->avatar || $user->permission(Site::DEACTIVATED)) {
             return $this->serve($none['data'], $none['mime'], $none['name']);
         }
 
@@ -108,7 +93,7 @@ class FileController extends Controller
      */
     public function background($id = 0)
     {
-        $noBg = ROOT . "public/content/pixel.png";
+        $noBg = ROOT . "public/images/pixel.png";
         $none = [
             'name' => basename($noBg),
             'data' => file_get_contents($noBg),
@@ -143,7 +128,7 @@ class FileController extends Controller
      */
     public function header($id = 0)
     {
-        $noHeader = ROOT . "public/content/pixel.png";
+        $noHeader = ROOT . "public/images/pixel.png";
         $none = [
             'name' => basename($noHeader),
             'data' => file_get_contents($noHeader),

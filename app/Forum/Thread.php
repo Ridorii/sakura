@@ -104,21 +104,21 @@ class Thread
      *
      * @var array
      */
-    private $_posts = [];
+    private $postsCache = [];
 
     /**
      * A cached instance of opening post.
      *
      * @var Post
      */
-    private $_firstPost = null;
+    private $firstPostCache = null;
 
     /**
      * A cached instance of the last reply.
      *
      * @var Post
      */
-    private $_lastPost = null;
+    private $lastPostCache = null;
 
     /**
      * Constructor.
@@ -244,8 +244,8 @@ class Thread
      */
     public function posts()
     {
-        // Check if _posts is something
-        if (!count($this->_posts)) {
+        // Check if postsCache is something
+        if (!count($this->postsCache)) {
             // Get all rows with the thread id
             $postRows = DB::table('posts')
                 ->where('topic_id', $this->id)
@@ -259,9 +259,9 @@ class Thread
                 $posts[$post->post_id] = new Post($post->post_id);
             }
 
-            $this->_posts = $posts;
+            $this->postsCache = $posts;
         } else {
-            $posts = $this->_posts;
+            $posts = $this->postsCache;
         }
 
         // Return the post objects
@@ -276,8 +276,8 @@ class Thread
     public function firstPost()
     {
         // Check if the cache var is set
-        if ($this->_firstPost !== null) {
-            return $this->_firstPost;
+        if ($this->firstPostCache !== null) {
+            return $this->firstPostCache;
         }
 
         // Get the row from the database
@@ -291,7 +291,7 @@ class Thread
         $post = new Post($post ? $post[0]->post_id : 0);
 
         // Assign it to the cache var
-        $this->_firstPost = $post;
+        $this->firstPostCache = $post;
 
         // Return
         return $post;
@@ -305,8 +305,8 @@ class Thread
     public function lastPost()
     {
         // Check if the cache var is set
-        if ($this->_lastPost !== null) {
-            return $this->_lastPost;
+        if ($this->lastPostCache !== null) {
+            return $this->lastPostCache;
         }
 
         // Get the row from the database
@@ -320,7 +320,7 @@ class Thread
         $post = new Post($post ? $post[0]->post_id : 0);
 
         // Assign it to the cache var
-        $this->_lastPost = $post;
+        $this->lastPostCache = $post;
 
         // Return
         return $post;

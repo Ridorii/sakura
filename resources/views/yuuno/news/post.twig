@@ -1,0 +1,20 @@
+{% extends 'global/master.twig' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% set commentsCategory = 'news-' ~ post.category ~ '-' ~ post.id %}
+{% set comments = post.comments %}
+
+{% set newsHideTitle = true %}
+{% set newsHideCommentCount = true %}
+
+{% block content %}
+    <div class="content">
+        <div class="content-column news">
+            <div class="head">{{ post.title }}</div>
+            {% include 'elements/newsPost.twig' %}
+            {% include 'elements/comments.twig' %}
+        </div>
+    </div>
+{% endblock %}
+

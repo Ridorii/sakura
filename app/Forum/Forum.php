@@ -78,35 +78,35 @@ class Forum
      *
      * @var Post
      */
-    private $_firstPost = null;
+    private $firstPostCache = null;
 
     /**
      * A cached instance of the last post in this forum.
      *
      * @var Post
      */
-    private $_lastPost = null;
+    private $lastPostCache = null;
 
     /**
      * Cached instances of the subforums.
      *
      * @var array
      */
-    private $_forums = [];
+    private $forumsCache = [];
 
     /**
      * Cached instances of the threads in this forum.
      *
      * @var array
      */
-    private $_threads = [];
+    private $threadsCache = [];
 
     /**
      * The permission container.
      *
      * @var Perms
      */
-    private $_permissions;
+    private $permissionsCache;
 
     /**
      * Constructor.
@@ -121,7 +121,7 @@ class Forum
             ->get();
 
         // Create permissions object
-        $this->_permissions = new Perms(Perms::FORUM);
+        $this->permissionsCache = new Perms(Perms::FORUM);
 
         // Populate the variables
         if ($forumRow) {
@@ -159,9 +159,9 @@ class Forum
         }
 
         // Bitwise OR it with the permissions for this forum
-        $perm = $perm | $this->_permissions->user($user, ['forum_id' => [$this->id, '=']]);
+        $perm = $perm | $this->permissionsCache->user($user, ['forum_id' => [$this->id, '=']]);
 
-        return $raw ? $perm : $this->_permissions->check($flag, $perm);
+        return $raw ? $perm : $this->permissionsCache->check($flag, $perm);
     }
 
     /**
@@ -171,8 +171,8 @@ class Forum
      */
     public function forums()
     {
-        // Check if _forums is populated
-        if (!count($this->_forums)) {
+        // Check if forumsCache is populated
+        if (!count($this->forumsCache)) {
             // Get all rows with the category id set to the forum id
             $forumRows = DB::table('forums')
                 ->where('forum_category', $this->id)
@@ -187,9 +187,9 @@ class Forum
                 $forums[$forum->forum_id] = new Forum($forum->forum_id);
             }
 
-            $this->_forums = $forums;
+            $this->forumsCache = $forums;
         } else {
-            $forums = $this->_forums;
+            $forums = $this->forumsCache;
         }
 
         // Return the forum objects
@@ -203,8 +203,8 @@ class Forum
      */
     public function threads()
     {
-        // Check if _threads is populated
-        if (!count($this->_threads)) {
+        // Check if threadsCache is populated
+        if (!count($this->threadsCache)) {
             // Get all rows with the forum id for this forum
             $threadRows = DB::table('topics')
                 ->where('forum_id', $this->id)
@@ -220,9 +220,9 @@ class Forum
                 $threads[$thread->topic_id] = new Thread($thread->topic_id);
             }
 
-            $this->_threads = $threads;
+            $this->threadsCache = $threads;
         } else {
-            $threads = $this->_threads;
+            $threads = $this->threadsCache;
         }
 
         // Return the thread objects
@@ -236,8 +236,8 @@ class Forum
      */
     public function firstPost()
     {
-        // Check if _firstPost is set
-        if ($this->_firstPost === null) {
+        // Check if firstPostCache is set
+        if ($this->firstPostCache === null) {
             // Get the row
             $firstPost = DB::table('posts')
                 ->where('forum_id', $this->id)
@@ -249,12 +249,12 @@ class Forum
             $post = new Post(empty($firstPost) ? 0 : $firstPost[0]->post_id);
 
             // Assign it to a "cache" variable
-            $this->_firstPost = $post;
+            $this->firstPostCache = $post;
 
             // Return the post object
             return $post;
         } else {
-            return $this->_firstPost;
+            return $this->firstPostCache;
         }
     }
 
@@ -265,8 +265,8 @@ class Forum
      */
     public function lastPost()
     {
-        // Check if _lastPost is set
-        if ($this->_lastPost === null) {
+        // Check if lastPostCache is set
+        if ($this->lastPostCache === null) {
             // Get the row
             $lastPost = DB::table('posts')
                 ->where('forum_id', $this->id)
@@ -278,12 +278,12 @@ class Forum
             $post = new Post(empty($lastPost) ? 0 : $lastPost[0]->post_id);
 
             // Assign it to a "cache" variable
-            $this->_lastPost = $post;
+            $this->lastPostCache = $post;
 
             // Return the post object
             return $post;
         } else {
-            return $this->_lastPost;
+            return $this->lastPostCache;
         }
     }
 
