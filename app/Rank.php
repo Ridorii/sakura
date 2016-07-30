@@ -86,7 +86,7 @@ class Rank
      *
      * @var array
      */
-    protected static $_rankCache = [];
+    protected static $rankCache = [];
 
     /**
      * Cached constructor.
@@ -99,13 +99,13 @@ class Rank
     public static function construct($rid, $forceRefresh = false)
     {
         // Check if a rank object isn't present in cache
-        if ($forceRefresh || !array_key_exists($rid, self::$_rankCache)) {
+        if ($forceRefresh || !array_key_exists($rid, self::$rankCache)) {
             // If not create a new object and cache it
-            self::$_rankCache[$rid] = new Rank($rid);
+            self::$rankCache[$rid] = new Rank($rid);
         }
 
         // Return the cached object
-        return self::$_rankCache[$rid];
+        return self::$rankCache[$rid];
     }
 
     /**
@@ -115,7 +115,6 @@ class Rank
      */
     private function __construct($rankId)
     {
-
         // Get the rank database row
         $rankRow = DB::table('ranks')
             ->where('rank_id', $rankId)

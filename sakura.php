@@ -7,7 +7,7 @@
 namespace Sakura;
 
 // Define version and root path
-define('SAKURA_VERSION', 20160726);
+define('SAKURA_VERSION', 20160730);
 define('ROOT', __DIR__ . '/');
 
 // CLI mode
@@ -69,6 +69,6 @@ if (!defined('IN_CLI')) {
         'post' => $_POST,
         'server' => $_SERVER,
         'request' => $_REQUEST,
-        //'session' => $_SESSION,
+        'session' => $_SESSION,
     ]);
 }

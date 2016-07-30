@@ -17,13 +17,13 @@
         </div>
         {% if forum.type != 2 %}
         <div class="forumCount">
-            <div class="topics" title="Amount of threads in this forum.">{{ forum.threadCount }}</div>
+            <div class="topics" title="Amount of topics in this forum.">{{ forum.topicCount }}</div>
             <div class="posts" title="Amount of posts in this forum.">{{ forum.postCount }}</div>
         </div>
         <div class="forumLastPost">
             <div>
                 {% if forum.lastPost.id %}
-                    <a href="{{ route('forums.thread', forum.lastPost.thread) }}" class="default">{{ forum.lastPost.subject|slice(0, 30) }}{% if forum.lastPost.subject|length > 30 %}...{% endif %}</a><br>
+                    <a href="{{ route('forums.topic', forum.lastPost.topic) }}" class="default">{{ forum.lastPost.subject|slice(0, 30) }}{% if forum.lastPost.subject|length > 30 %}...{% endif %}</a><br>
                     <time datetime="{{ forum.lastPost.time|date('r') }}">{{ forum.lastPost.time|date(config('date_format')) }}</time> by {% if forum.lastPost.poster.id %}<a href="{{ route('user.profile', forum.lastPost.poster.id) }}" class="default" style="color: {{ forum.lastPost.poster.colour }}; text-shadow: 0 0 5px {% if forumlastPost.poster.colour != 'inherit' %}{{ forum.lastPost.poster.colour }}{% else %}#222{% endif %};">{{ forum.lastPost.poster.username }}</a>{% else %}[deleted user]{% endif %} <a href="{{ route('forums.post', forum.lastPost.id) }}" class="default fa fa-tag"></a>
                 {% else %}
                     There are no posts in this forum.<br>&nbsp;

@@ -7,17 +7,17 @@
 {% block content %}
     <div class="content homepage forum">
         <div class="content-right content-column">
-            <div id="forumIndexPopularThreads">
-                <div class="head">Popular threads</div>
+            <div id="forumIndexPopularTopics">
+                <div class="head">Popular topics</div>
                 <table class="panelTable" style="border-spacing: 0;">
                     <tr>
                         <th>Title</th>
                         <th>Last reply</th>
                     </tr>
-                    {% for _t in activeThreads %}
+                    {% for _t in activeTopics %}
                         <tr {% if _t.unread(user.id) %}style="font-weight: bold;"{% endif %}>
                             <td style="text-align: left; border-bottom: 1px solid #9475b2;">
-                                <a href="{{ route('forums.thread', _t.id) }}" class="default">{{ _t.title }}</a>
+                                <a href="{{ route('forums.topic', _t.id) }}" class="default">{{ _t.title }}</a>
                             </td>
                             <td class="rightAlign" style="border-bottom: 1px solid #9475b2;"><time datetime="{{ _t.lastPost.time|date('r') }}">{{ _t.lastPost.time|date('D Y-m-d H:i:s T') }}</time></td>
                         </tr>

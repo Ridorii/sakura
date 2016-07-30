@@ -23,6 +23,8 @@ class ServeCommand extends Command
         $php_dir = PHP_BINDIR;
         $host = config('dev.host');
 
+        $this->getLogger()->writeln("Starting Sakura development server on {$host}.");
+
         exec("{$php_dir}/php -S {$host} -t {$document_root} {$router_proxy}");
     }
 }

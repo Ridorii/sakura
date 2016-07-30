@@ -1,6 +1,6 @@
 <?php
 /**
- * Holds the thread object class.
+ * Holds the topic object class.
  *
  * @package Sakura
  */
@@ -10,22 +10,22 @@ namespace Sakura\Forum;
 use Sakura\DB;
 
 /**
- * Used to serve, create and update threads.
+ * Used to serve, create and update topics.
  *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
-class Thread
+class Topic
 {
     /**
-     * The ID of this thread.
+     * The ID of this topic.
      *
      * @var int
      */
     public $id = 0;
 
     /**
-     * The ID of the forum this thread is a part of.
+     * The ID of the forum this topic is a part of.
      *
      * @var int
      */
@@ -39,35 +39,35 @@ class Thread
     public $hidden = false;
 
     /**
-     * The title of the thread.
+     * The title of the topic.
      *
      * @var string
      */
     public $title = "";
 
     /**
-     * The UNIX timestamp of when this thread was created.
+     * The UNIX timestamp of when this topic was created.
      *
      * @var int
      */
     public $time = 0;
 
     /**
-     * The UNIX timestamp of when this thread should be autolocked (currently unused).
+     * The UNIX timestamp of when this topic should be autolocked (currently unused).
      *
      * @var int
      */
     public $timeLimit = 0;
 
     /**
-     * The amount of times this thread has been viewed.
+     * The amount of times this topic has been viewed.
      *
      * @var int
      */
     public $views = 0;
 
     /**
-     * The status of this thread.
+     * The status of this topic.
      * 0 - Unlocked
      * 1 - Locked
      *
@@ -83,9 +83,9 @@ class Thread
     public $statusChange = 0;
 
     /**
-     * The thread type
-     * 0 - Normal thread
-     * 1 - Sticky thread
+     * The topic type
+     * 0 - Normal topic
+     * 1 - Sticky topic
      * 2 - Announcement
      *
      * @var int
@@ -93,7 +93,7 @@ class Thread
     public $type = 0;
 
     /**
-     * The ID of the forum this thread was a part of before the last move.
+     * The ID of the forum this topic was a part of before the last move.
      *
      * @var int
      */
@@ -123,41 +123,41 @@ class Thread
     /**
      * Constructor.
      *
-     * @param mixed $threadId ID of the thread that should be constructed.
+     * @param mixed $topicId ID of the topic that should be constructed.
      */
-    public function __construct($threadId)
+    public function __construct($topicId)
     {
         // Attempt to get the database row
-        $threadRow = DB::table('topics')
-            ->where('topic_id', $threadId)
+        $topicRow = DB::table('topics')
+            ->where('topic_id', $topicId)
             ->get();
 
         // Assign data if a row was returned
-        if ($threadRow) {
-            $threadRow = $threadRow[0];
-            $this->id = $threadRow->topic_id;
-            $this->forum = $threadRow->forum_id;
-            $this->hidden = (bool) $threadRow->topic_hidden;
-            $this->title = $threadRow->topic_title;
-            $this->time = $threadRow->topic_time;
-            $this->timeLimit = $threadRow->topic_time_limit;
-            $this->views = $threadRow->topic_views;
-            $this->status = $threadRow->topic_status;
-            $this->statusChange = $threadRow->topic_status_change;
-            $this->type = $threadRow->topic_type;
-            $this->oldForum = $threadRow->topic_old_forum;
+        if ($topicRow) {
+            $topicRow = $topicRow[0];
+            $this->id = $topicRow->topic_id;
+            $this->forum = $topicRow->forum_id;
+            $this->hidden = (bool) $topicRow->topic_hidden;
+            $this->title = $topicRow->topic_title;
+            $this->time = $topicRow->topic_time;
+            $this->timeLimit = $topicRow->topic_time_limit;
+            $this->views = $topicRow->topic_views;
+            $this->status = $topicRow->topic_status;
+            $this->statusChange = $topicRow->topic_status_change;
+            $this->type = $topicRow->topic_type;
+            $this->oldForum = $topicRow->topic_old_forum;
         }
     }
 
     /**
-     * Create a new thread.
+     * Create a new topic.
      *
-     * @param mixed $forum ID of the forum this thread is part of.
-     * @param mixed $title Title of the thread.
-     * @param mixed $status Status of the thread.
-     * @param mixed $type Type of thread.
+     * @param mixed $forum ID of the forum this topic is part of.
+     * @param mixed $title Title of the topic.
+     * @param mixed $status Status of the topic.
+     * @param mixed $type Type of topic.
      *
-     * @return self The new thread instance.
+     * @return self The new topic instance.
      */
     public static function create($forum, $title, $status = 0, $type = 0)
     {
@@ -171,12 +171,12 @@ class Thread
                 'topic_type' => $type,
             ]);
 
-        // Return the thread object
-        return new Thread($id);
+        // Return the topic object
+        return new Topic($id);
     }
 
     /**
-     * Delete the current thread.
+     * Delete the current topic.
      */
     public function delete()
     {
@@ -185,14 +185,14 @@ class Thread
             ->where('topic_id', $this->id)
             ->delete();
 
-        // Delete thread meta
+        // Delete topic meta
         DB::table('topics')
             ->where('topic_id', $this->id)
             ->delete();
     }
 
     /**
-     * Move the thread.
+     * Move the topic.
      *
      * @param mixed $forum The new forum ID.
      * @param mixed $setOld Remember the forum ID prior to the move for restoration.
@@ -204,7 +204,7 @@ class Thread
             ->where('topic_id', $this->id)
             ->update(['forum_id' => $forum]);
 
-        // Update thread meta
+        // Update topic meta
         DB::table('topics')
             ->where('topic_id', $this->id)
             ->update([
@@ -214,9 +214,9 @@ class Thread
     }
 
     /**
-     * Update the thread data.
+     * Update the topic data.
      *
-     * @return self The updated thread.
+     * @return self The updated topic.
      */
     public function update()
     {
@@ -234,11 +234,11 @@ class Thread
             ]);
 
         // Return new object
-        return new Thread($this->id);
+        return new Topic($this->id);
     }
 
     /**
-     * Get the replies to this thread.
+     * Get the replies to this topic.
      *
      * @return array Array containing Post instances.
      */
@@ -246,7 +246,7 @@ class Thread
     {
         // Check if postsCache is something
         if (!count($this->postsCache)) {
-            // Get all rows with the thread id
+            // Get all rows with the topic id
             $postRows = DB::table('posts')
                 ->where('topic_id', $this->id)
                 ->get(['post_id']);
@@ -329,7 +329,7 @@ class Thread
     /**
      * Get the amount of replies.
      *
-     * @return int The number of replies to this thread.
+     * @return int The number of replies to this topic.
      */
     public function replyCount()
     {
@@ -339,7 +339,7 @@ class Thread
     }
 
     /**
-     * Check if a user has read this thread before.
+     * Check if a user has read this topic before.
      *
      * @param mixed $user The id of the user in question.
      *
@@ -414,7 +414,7 @@ class Thread
     }
 
     /**
-     * Update the timestamp of when this thread was last replied to.
+     * Update the timestamp of when this topic was last replied to.
      */
     public function lastUpdate()
     {

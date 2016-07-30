@@ -99,7 +99,7 @@
                     {% for user in users[currPage] %}
                         <a href="{{ route('user.profile', user.id) }}">{# These comment tags are here to prevent the link extending too far
                             #}<div class="userBox" id="u{{ user.id }}">{#
-                                #}<img src="/pixel.png" alt="{{ user.username }}"  style="background: url('{{ route('file.avatar', user.id) }}') no-repeat center / contain;">{#
+                                #}<img src="/images/pixel.png" alt="{{ user.username }}"  style="background: url('{{ route('file.avatar', user.id) }}') no-repeat center / contain;">{#
                                 #}<span class="userBoxUserName" style="color: {{ user.colour }};">{#
                                     #}{{ user.username }}{#
                                 #}</span>{#

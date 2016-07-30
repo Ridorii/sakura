@@ -86,11 +86,11 @@ Router::group(['before' => 'maintenance'], function () {
             });
         });
 
-        // Thread
-        Router::group(['prefix' => 'thread'], function () {
-            Router::get('/{id:i}', 'ForumController@thread', 'forums.thread');
-            Router::post('/{id:i}/mod', 'ForumController@threadModerate', 'forums.thread.mod');
-            Router::post('/{id:i}/reply', 'ForumController@threadReply', 'forums.thread.reply');
+        // Topic
+        Router::group(['prefix' => 'topic'], function () {
+            Router::get('/{id:i}', 'ForumController@topic', 'forums.topic');
+            Router::post('/{id:i}/mod', 'ForumController@topicModerate', 'forums.topic.mod');
+            Router::post('/{id:i}/reply', 'ForumController@topicReply', 'forums.topic.reply');
         });
 
         // Forum
@@ -98,8 +98,8 @@ Router::group(['before' => 'maintenance'], function () {
         Router::get('/{id:i}', 'ForumController@forum', 'forums.forum');
         Router::group(['before' => 'loginCheck'], function () {
             Router::get('/{id:i}/mark', 'ForumController@markForumRead', 'forums.mark');
-            Router::get('/{id:i}/new', 'ForumController@createThread', 'forums.new');
-            Router::post('/{id:i}/new', 'ForumController@createThread', 'forums.new');
+            Router::get('/{id:i}/new', 'ForumController@createTopic', 'forums.new');
+            Router::post('/{id:i}/new', 'ForumController@createTopic', 'forums.new');
         });
     });
 

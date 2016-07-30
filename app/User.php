@@ -442,6 +442,22 @@ class User
     }
 
     /**
+     * Updates the last IP and online time of the user
+     */
+    public function updateOnline()
+    {
+        $this->lastOnline = time();
+        $this->lastIp = Net::ip();
+
+        DB::table('users')
+            ->where('user_id', $this->id)
+            ->update([
+                'user_last_online' => $this->lastOnline,
+                'last_ip' => Net::pton($this->lastIp),
+            ]);
+    }
+
+    /**
      * Runs some checks to see if this user is activated.
      *
      * @return bool Are they activated?
@@ -454,7 +470,7 @@ class User
     /**
      * Get a few forum statistics.
      *
-     * @return array Post and thread counts.
+     * @return array Post and topic counts.
      */
     public function forumStats()
     {
@@ -462,7 +478,7 @@ class User
             ->where('poster_id', $this->id)
             ->count();
 
-        $threads = DB::table('posts')
+        $topics = DB::table('posts')
             ->where('poster_id', $this->id)
             ->distinct()
             ->groupBy('topic_id')
@@ -471,7 +487,7 @@ class User
 
         return [
             'posts' => $posts,
-            'topics' => $threads,
+            'topics' => $topics,
         ];
     }
 

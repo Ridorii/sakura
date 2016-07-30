@@ -66,14 +66,10 @@ class AppearanceController extends Controller
         $confp = $mode === 'header' ? 'cover' : $mode;
 
         // Check dimensions
-        $minWidth = config("file.{$confp}.min_width");
-        $minHeight = config("file.{$confp}.min_height");
         $maxWidth = config("file.{$confp}.max_width");
         $maxHeight = config("file.{$confp}.max_height");
 
-        if ($meta[0] < $minWidth
-            || $meta[1] < $minHeight
-            || $meta[0] > $maxWidth
+        if ($meta[0] > $maxWidth
             || $meta[1] > $maxHeight) {
             return "Your image has to be at least {$minWidth}x{$minHeight}"
                 . " and not bigger than {$maxWidth}x{$maxHeight}, yours was {$meta[0]}x{$meta[1]}!";

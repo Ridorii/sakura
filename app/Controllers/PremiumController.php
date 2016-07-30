@@ -33,6 +33,8 @@ class PremiumController extends Controller
      */
     public function __construct()
     {
+        parent::__construct();
+
         Payments::init();
     }
 

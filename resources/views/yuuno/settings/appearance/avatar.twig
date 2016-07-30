@@ -3,12 +3,12 @@
 {% set mode = 'Avatar' %}
 
 {% block description %}
-    <p>Maximum image size is {{ config('avatar_max_width') }}x{{ config('avatar_max_height') }}, minimum image size is {{ config('avatar_min_width') }}x{{ config('avatar_min_height') }}, maximum file size is {{ config('avatar_max_fsize')|byte_symbol }}.</p>
+    <p>Maximum image size is {{ config('file.avatar.max_width') }}x{{ config('file.avatar.max_height') }} and can't be larger than {{ config('file.avatar.max_file_size')|byte_symbol }}.</p>
 {% endblock %}
 
 {% block settingsContent %}
     <form enctype="multipart/form-data" method="post" action="{{ route('settings.appearance.avatar') }}">
-        <input type="hidden" name="MAX_FILE_SIZE" value="{{ config('avatar_max_fsize') }}">
+        <input type="hidden" name="MAX_FILE_SIZE" value="{{ config('file.avatar.max_file_size') }}">
         <div style="text-align: center;">
             <div>
                 <img src="{{ route('file.avatar', user.id) }}" alt="Your Avatar" class="default-avatar-setting">

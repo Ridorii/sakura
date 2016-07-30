@@ -48,7 +48,7 @@
         pForm = document.getElementById('postingForm'),
         pStopEdit = document.getElementById('postingStopEditing'),
         pMode = document.getElementById('previewMode'),
-        tTitle = document.getElementById('threadTitle'),
+        tTitle = document.getElementById('topicTitle'),
         rTitle = document.getElementById('previewTitle'),
         rText = document.getElementById('previewText'),
         lastParsed = Date.now(),
@@ -56,8 +56,8 @@
         parser = new AJAX(),
         postFetch = new AJAX(),
         parserActive = false,
-        op = {{ thread is defined ? thread.firstPost.id : 0 }},
-        threadName = "{{ thread is defined ? thread.firstPost.subject : '' }}";
+        op = {{ topic is defined ? topic.firstPost.id : 0 }},
+        topicName = "{{ topic is defined ? topic.firstPost.subject : '' }}";
 
     parser.setUrl("{{ route('helper.bbcode.parse') }}");
     parser.contentType("application/x-www-form-urlencoded");
@@ -152,7 +152,7 @@
     function editPost(id) {
         pText.disabled = true;
         pTitleCont.style.display = 'none';
-        rTitle.innerText = 'Re: ' + threadName;
+        rTitle.innerText = 'Re: ' + topicName;
 
         url = "{{ route('forums.post.raw', '1') }}".replace('1', id);
 
@@ -165,8 +165,8 @@
             pMode.innerText = 'Editing #' + id;
             if (id === op) {
                 pTitleCont.style.display = null;
-                pTitle.value = threadName;
-                rTitle.innerText = threadName;
+                pTitle.value = topicName;
+                rTitle.innerText = topicName;
             }
             pText.disabled = false;
             pText.focus();

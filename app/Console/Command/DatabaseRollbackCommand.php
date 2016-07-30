@@ -1,6 +1,6 @@
 <?php
 /**
- * Holds the migration command controller.
+ * Holds the migration rollback command controller.
  *
  * @package Sakura
  */
@@ -12,13 +12,11 @@ use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Filesystem\Filesystem;
 use Sakura\DB;
 
-class DatabaseMigrateCommand extends Command
+class DatabaseRollbackCommand extends Command
 {
-    const MIGRATIONS = "database/";
-
     public function brief()
     {
-        return 'Run the database migrations';
+        return 'Rollback the last database migration';
     }
 
     public function execute()
@@ -26,12 +24,7 @@ class DatabaseMigrateCommand extends Command
         $repository = DB::getMigrationRepository();
         $migrator = new Migrator($repository, $repository->getConnectionResolver(), new Filesystem);
 
-        if (!$migrator->repositoryExists()) {
-            $this->getLogger()->writeln("Run 'database-install' first!");
-            return;
-        }
-
-        $migrator->run(ROOT . self::MIGRATIONS);
+        $migrator->rollback();
 
         foreach ($migrator->getNotes() as $note) {
             $this->getLogger()->writeln(strip_tags($note));

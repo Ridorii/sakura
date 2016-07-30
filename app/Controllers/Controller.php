@@ -15,6 +15,25 @@ namespace Sakura\Controllers;
  */
 class Controller
 {
+    // Middleware to execute upon creating this class
+    protected $middleware = [
+        'UpdateLastOnline',
+    ];
+
+    // Used to except middleware in controllers that extend this one
+    protected $exceptMiddleware = [];
+
+    public function __construct()
+    {
+        // filter excepted middlewares
+        $middlewares = array_diff($this->middleware, $this->exceptMiddleware);
+
+        foreach ($middlewares as $middleware) {
+            $className = "Sakura\\Middleware\\{$middleware}";
+            (new $className)->run();
+        }
+    }
+
     public function json($object)
     {
         header('Content-Type: application/json; charset=utf-8');

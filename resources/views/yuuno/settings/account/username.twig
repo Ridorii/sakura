@@ -16,7 +16,7 @@
         {% if eligible %}
             <div class="profile-field">
                 <div><h2>Username</h2></div>
-                <div><input type="text" name="username" placeholder="Enter your new username (at least {{ config('username_min_length') }} and at most {{ config('username_max_length') }} characters!)" class="inputStyling"></div>
+                <div><input type="text" name="username" placeholder="Enter your new username (at least {{ config('user.name_min') }} and at most {{ config('user.name_max') }} characters!)" class="inputStyling"></div>
             </div>
             <div class="profile-save">
                 <button value="{{ session_id() }}" name="session" class="inputStyling">Save</button>

@@ -16,13 +16,13 @@
     {% endfor %}
 </div>
 {% if not forum.type and forum.id > 0 %}
-    {% set threads = forum.threads|batch(25) %}
+    {% set topics = forum.topics|batch(25) %}
 
-    {% set paginationPages = threads %}
+    {% set paginationPages = topics %}
     {% set paginationUrl %}{{ route('forums.forum', forum.id) }}{% endset %}
 
     {% include 'forum/elements/forumBtns.twig' %}
-    {% if forum.threads %}
+    {% if forum.topics %}
         <table class="topicList">
             <thead>
                 <tr>
@@ -43,7 +43,7 @@
                 </tr>
             </tfoot>
             <tbody>
-                {% for thread in threads[get.page|default(1) - 1] %}
+                {% for topic in topics[get.page|default(1) - 1] %}
                     {% include 'forum/elements/topicEntry.twig' %}
                 {% endfor %}
             </tbody>

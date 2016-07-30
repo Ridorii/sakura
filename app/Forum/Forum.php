@@ -95,11 +95,11 @@ class Forum
     private $forumsCache = [];
 
     /**
-     * Cached instances of the threads in this forum.
+     * Cached instances of the topics in this forum.
      *
      * @var array
      */
-    private $threadsCache = [];
+    private $topicsCache = [];
 
     /**
      * The permission container.
@@ -197,36 +197,36 @@ class Forum
     }
 
     /**
-     * Gets the threads in this forum.
+     * Gets the topics in this forum.
      *
-     * @return array Array containing all threads.
+     * @return array Array containing all topics.
      */
-    public function threads()
+    public function topics()
     {
-        // Check if threadsCache is populated
-        if (!count($this->threadsCache)) {
+        // Check if topicsCache is populated
+        if (!count($this->topicsCache)) {
             // Get all rows with the forum id for this forum
-            $threadRows = DB::table('topics')
+            $topicRows = DB::table('topics')
                 ->where('forum_id', $this->id)
                 ->orderBy('topic_type', 'desc')
                 ->orderBy('topic_last_reply', 'desc')
                 ->get(['topic_id']);
 
             // Create a storage array
-            $threads = [];
+            $topics = [];
 
-            // Create new objects for each thread
-            foreach ($threadRows as $thread) {
-                $threads[$thread->topic_id] = new Thread($thread->topic_id);
+            // Create new objects for each topic
+            foreach ($topicRows as $topic) {
+                $topics[$topic->topic_id] = new Topic($topic->topic_id);
             }
 
-            $this->threadsCache = $threads;
+            $this->topicsCache = $topics;
         } else {
-            $threads = $this->threadsCache;
+            $topics = $this->topicsCache;
         }
 
-        // Return the thread objects
-        return $threads;
+        // Return the topic objects
+        return $topics;
     }
 
     /**
@@ -288,11 +288,11 @@ class Forum
     }
 
     /**
-     * Counts the amount of threads in this forum.
+     * Counts the amount of topics in this forum.
      *
-     * @return int Number of threads in this forum.
+     * @return int Number of topics in this forum.
      */
-    public function threadCount()
+    public function topicCount()
     {
         return DB::table('topics')
             ->where('forum_id', $this->id)
@@ -332,9 +332,9 @@ class Forum
             }
         }
 
-        // Check each thread
-        foreach ($this->threads() as $thread) {
-            if ($thread->unread($user)) {
+        // Check each topic
+        foreach ($this->topics() as $topic) {
+            if ($topic->unread($user)) {
                 return true;
             }
         }
@@ -344,7 +344,7 @@ class Forum
     }
 
     /**
-     * Update the read status of all threads in this forum at once.
+     * Update the read status of all topics in this forum at once.
      *
      * @param int $user The id of the user in question.
      */
@@ -356,10 +356,10 @@ class Forum
             $forum->trackUpdateAll($user);
         }
 
-        // Iterate over every thread
-        foreach ($this->threads() as $thread) {
-            // Update every thread
-            $thread->trackUpdate($user);
+        // Iterate over every topic
+        foreach ($this->topics() as $topic) {
+            // Update every topic
+            $topic->trackUpdate($user);
         }
     }
 }

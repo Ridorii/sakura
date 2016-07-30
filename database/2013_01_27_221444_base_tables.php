@@ -97,10 +97,12 @@ class BaseTables extends Migration
                 ->unsigned();
 
             $table->integer('rank_id')
-                ->unsigned();
+                ->unsigned()
+                ->default(0);
 
             $table->integer('user_id')
-                ->unsigned();
+                ->unsigned()
+                ->default(0);
 
             $table->string('forum_perms', 255);
         });
@@ -113,9 +115,13 @@ class BaseTables extends Migration
 
             $table->string('forum_name', 255);
 
-            $table->text('forum_desc');
+            $table->text('forum_desc')
+                ->nullable()
+                ->default(null);
 
-            $table->string('forum_link', 255);
+            $table->string('forum_link', 255)
+                ->nullable()
+                ->default(null);
 
             $table->integer('forum_category')
                 ->unsigned()
@@ -125,7 +131,9 @@ class BaseTables extends Migration
                 ->unsigned()
                 ->default(0);
 
-            $table->string('forum_icon', 255);
+            $table->string('forum_icon', 255)
+                ->nullable()
+                ->default(null);
         });
 
         $schema->create('friends', function (Blueprint $table) {
@@ -313,7 +321,9 @@ class BaseTables extends Migration
                 ->unsigned()
                 ->default(0);
 
-            $table->string('rank_colour', 255);
+            $table->string('rank_colour', 255)
+                ->nullable()
+                ->default(null);
 
             $table->text('rank_description');
 
@@ -554,7 +564,6 @@ class BaseTables extends Migration
         $schema->drop('forums');
         $schema->drop('friends');
         $schema->drop('login_attempts');
-        $schema->drop('messages');
         $schema->drop('news');
         $schema->drop('notifications');
         $schema->drop('optionfields');

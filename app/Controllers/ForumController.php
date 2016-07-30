@@ -12,7 +12,7 @@ use Sakura\Config;
 use Sakura\DB;
 use Sakura\Forum\Forum;
 use Sakura\Forum\Post;
-use Sakura\Forum\Thread;
+use Sakura\Forum\Topic;
 use Sakura\Perms;
 use Sakura\Perms\Forum as ForumPerms;
 use Sakura\Router;
@@ -34,21 +34,22 @@ class ForumController extends Controller
      */
     public function index()
     {
-        // Get the most active threads
-        $activeThreadsIds = DB::table('posts')
+        // Get the most active topics
+        $activeTopicsIds = DB::table('posts')
             ->where('forum_id', '!=', config('forum.trash'))
             ->groupBy('topic_id')
             ->orderByRaw('COUNT(*) DESC')
             ->limit(10)
             ->get(['topic_id']);
-        $activeThreads = [];
+        $activeTopics = [];
 
-        while (list($_n, $_t) = each($activeThreadsIds)) {
-            // Create the thread object
-            $thread = new Thread($_t->topic_id);
+        // make this not disgusting
+        while (list($_n, $_t) = each($activeTopicsIds)) {
+            // Create the topic object
+            $topic = new Topic($_t->topic_id);
 
             // Create a forum object
-            $forum = new Forum($thread->forum);
+            $forum = new Forum($topic->forum);
 
             // Check if we have permission to view it
             if (!$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
@@ -60,12 +61,12 @@ class ForumController extends Controller
                     ->get(['topic_id']);
 
                 if ($fetch) {
-                    $activeThreadsIds[] = $fetch[0];
+                    $activeTopicsIds[] = $fetch[0];
                 }
                 continue;
             }
 
-            $activeThreads[$thread->id] = $thread;
+            $activeTopics[$topic->id] = $topic;
         }
 
         // Get the latest posts
@@ -115,7 +116,7 @@ class ForumController extends Controller
         // Create the forum object
         $forum = new Forum;
 
-        Template::vars(compact('forum', 'activeThreads', 'latestPosts', 'activePoster'));
+        Template::vars(compact('forum', 'activeTopics', 'latestPosts', 'activePoster'));
 
         // Return the compiled page
         return Template::render('forum/index');
@@ -245,7 +246,7 @@ class ForumController extends Controller
         // Set render data
         Template::vars([
             'page' => [
-                'message' => 'All threads have been marked as read.',
+                'message' => 'All topics have been marked as read.',
                 'redirect' => Router::route('forums.forum', $forum->id),
             ],
         ]);
@@ -255,24 +256,24 @@ class ForumController extends Controller
     }
 
     /**
-     * View a thread.
+     * View a topic.
      *
      * @return string
      */
-    public function thread($id = 0)
+    public function topic($id = 0)
     {
-        // Attempt to get the thread
-        $thread = new Thread($id);
+        // Attempt to get the topic
+        $topic = new Topic($id);
 
         // And attempt to get the forum
-        $forum = new Forum($thread->forum);
+        $forum = new Forum($topic->forum);
 
         // Check if the forum exists
-        if ($thread->id == 0 || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
+        if ($topic->id == 0 || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
             // Set render data
             Template::vars([
                 'page' => [
-                    'message' => 'This thread doesn\'t exist or you don\'t have access to it!',
+                    'message' => 'This topic doesn\'t exist or you don\'t have access to it!',
                     'redirect' => Router::route('forums.index'),
                 ],
             ]);
@@ -282,41 +283,41 @@ class ForumController extends Controller
         }
 
         // Update the tracking status
-        $thread->trackUpdate(ActiveUser::$user->id);
+        $topic->trackUpdate(ActiveUser::$user->id);
 
         // Update views
-        $thread->viewsUpdate();
+        $topic->viewsUpdate();
 
         // Set parse variables
-        Template::vars(compact('forum', 'thread'));
+        Template::vars(compact('forum', 'topic'));
 
         // Print page contents
-        return Template::render('forum/thread');
+        return Template::render('forum/topic');
     }
 
     /**
-     * Moderate a thread.
+     * Moderate a topic.
      *
      * @return string
      */
-    public function threadModerate($id = 0)
+    public function topicModerate($id = 0)
     {
-        // Attempt to get the thread
-        $thread = new Thread($id);
+        // Attempt to get the topic
+        $topic = new Topic($id);
 
         // And attempt to get the forum
-        $forum = new Forum($thread->forum);
+        $forum = new Forum($topic->forum);
 
         // Default stuff
         $message = 'Unknown moderation action.';
-        $redirect = Router::route('forums.thread', $thread->id);
+        $redirect = Router::route('forums.topic', $topic->id);
 
         // Check if the forum exists
-        if ($thread->id == 0
+        if ($topic->id == 0
             || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)
             || !isset($_POST['session'])
             || $_POST['session'] != session_id()) {
-            $message = 'This thread doesn\'t exist or you don\'t have access to it!';
+            $message = 'This topic doesn\'t exist or you don\'t have access to it!';
             $redirect = Router::route('forums.index');
         } else {
             // Take the action
@@ -332,14 +333,14 @@ class ForumController extends Controller
                     }
 
                     // Update the type
-                    $thread->type = $thread->type !== 1 ? 1 : 0;
+                    $topic->type = $topic->type !== 1 ? 1 : 0;
 
-                    $thread->update();
+                    $topic->update();
 
                     // Add page variable stuff
-                    $message = $thread->type
-                    ? 'Changed the thread to sticky!'
-                    : 'Reverted the thread back to normal!';
+                    $message = $topic->type
+                    ? 'Changed the topic to sticky!'
+                    : 'Reverted the topic back to normal!';
                     break;
 
                 case 'announce':
@@ -350,14 +351,14 @@ class ForumController extends Controller
                     }
 
                     // Update the type
-                    $thread->type = $thread->type !== 2 ? 2 : 0;
+                    $topic->type = $topic->type !== 2 ? 2 : 0;
 
-                    $thread->update();
+                    $topic->update();
 
                     // Add page variable stuff
-                    $message = $thread->type
-                    ? 'Changed the thread to into an announcement!'
-                    : 'Reverted the thread back to normal!';
+                    $message = $topic->type
+                    ? 'Changed the topic to into an announcement!'
+                    : 'Reverted the topic back to normal!';
                     break;
 
                 case 'lock':
@@ -368,12 +369,12 @@ class ForumController extends Controller
                     }
 
                     // Update the status
-                    $thread->status = $thread->status !== 1 ? 1 : 0;
+                    $topic->status = $topic->status !== 1 ? 1 : 0;
 
-                    $thread->update();
+                    $topic->update();
 
                     // Add page variable stuff
-                    $message = ($thread->status ? 'Locked' : 'Unlocked') . ' the thread!';
+                    $message = ($topic->status ? 'Locked' : 'Unlocked') . ' the topic!';
                     break;
 
                 case 'delete':
@@ -381,18 +382,18 @@ class ForumController extends Controller
                     $trash = config('forum.trash');
 
                     // Check if we're operating from the trash
-                    if ($thread->forum == $trash) {
+                    if ($topic->forum == $trash) {
                         // Check permission
                         if (!$forum->permission(ForumPerms::DELETE_ANY, ActiveUser::$user->id)) {
                             $message = "You're not allowed to do this!";
                             break;
                         }
 
-                        // Delete the thread
-                        $thread->delete();
+                        // Delete the topic
+                        $topic->delete();
 
                         // Set message
-                        $message = "Deleted the thread!";
+                        $message = "Deleted the topic!";
                         $redirect = Router::route('forums.forum', $trash);
                     } else {
                         // Check permission
@@ -401,23 +402,23 @@ class ForumController extends Controller
                             break;
                         }
 
-                        // Move the thread
-                        $thread->move($trash);
+                        // Move the topic
+                        $topic->move($trash);
 
                         // Trashed!
-                        $message = "Moved the thread to the trash!";
+                        $message = "Moved the topic to the trash!";
                     }
                     break;
 
                 case 'restore':
-                    // Check if this thread has record of being in a previous forum
-                    if ($thread->oldForum) {
-                        // Move the thread back
-                        $thread->move($thread->oldForum, false);
+                    // Check if this topic has record of being in a previous forum
+                    if ($topic->oldForum) {
+                        // Move the topic back
+                        $topic->move($topic->oldForum, false);
 
-                        $message = "Moved the thread back to it's old location!";
+                        $message = "Moved the topic back to it's old location!";
                     } else {
-                        $message = "This thread has never been moved!";
+                        $message = "This topic has never been moved!";
                     }
                     break;
             }
@@ -431,7 +432,7 @@ class ForumController extends Controller
     }
 
     /**
-     * Redirect to the position of a post in a thread.
+     * Redirect to the position of a post in a topic.
      *
      * @return mixed
      */
@@ -441,14 +442,14 @@ class ForumController extends Controller
         $post = new Post($id);
 
         // And attempt to get the forum
-        $thread = new Thread($post->thread);
+        $topic = new Topic($post->topic);
 
         // And attempt to get the forum
-        $forum = new Forum($thread->forum);
+        $forum = new Forum($topic->forum);
 
         // Check if the forum exists
         if ($post->id == 0
-            || $thread->id == 0
+            || $topic->id == 0
             || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
             $message = "This post doesn't exist or you don't have access to it!";
             $redirect = Router::route('forums.index');
@@ -459,11 +460,11 @@ class ForumController extends Controller
         }
 
         // Generate link
-        $threadLink = Router::route('forums.thread', $thread->id);
+        $topicLink = Router::route('forums.topic', $topic->id);
 
         // Get all post ids from the database
         $postIds = DB::table('posts')
-            ->where('topic_id', $thread->id)
+            ->where('topic_id', $topic->id)
             ->get(['post_id']);
         $postIds = array_column($postIds, 'post_id');
 
@@ -472,10 +473,10 @@ class ForumController extends Controller
 
         // Only append the page variable if it's more than 1
         if ($postAt > 1) {
-            $threadLink .= "?page={$postAt}";
+            $topicLink .= "?page={$postAt}";
         }
 
-        return header("Location: {$threadLink}#p{$post->id}");
+        return header("Location: {$topicLink}#p{$post->id}");
     }
 
     /**
@@ -489,14 +490,14 @@ class ForumController extends Controller
         $post = new Post($id);
 
         // And attempt to get the forum
-        $thread = new Thread($post->thread);
+        $topic = new Topic($post->topic);
 
         // And attempt to get the forum
-        $forum = new Forum($thread->forum);
+        $forum = new Forum($topic->forum);
 
         // Check if the forum exists
         if ($post->id == 0
-            || $thread->id == 0
+            || $topic->id == 0
             || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
             return "";
         }
@@ -505,22 +506,22 @@ class ForumController extends Controller
     }
 
     /**
-     * Reply to a thread.
+     * Reply to a topic.
      *
      * @return string
      */
-    public function threadReply($id = 0)
+    public function topicReply($id = 0)
     {
         $text = isset($_POST['text']) ? $_POST['text'] : null;
 
         // Attempt to get the forum
-        $thread = new Thread($id);
+        $topic = new Topic($id);
 
         // And attempt to get the forum
-        $forum = new Forum($thread->forum);
+        $forum = new Forum($topic->forum);
 
-        // Check if the thread exists
-        if ($thread->id == 0
+        // Check if the topic exists
+        if ($topic->id == 0
             || $forum->type !== 0
             || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
             $message = "This post doesn't exist or you don't have access to it!";
@@ -531,14 +532,14 @@ class ForumController extends Controller
             return Template::render('global/information');
         }
 
-        // Check if the thread exists
+        // Check if the topic exists
         if (!$forum->permission(ForumPerms::REPLY, ActiveUser::$user->id)
             || (
-                $thread->status === 1
+                $topic->status === 1
                 && !$forum->permission(ForumPerms::LOCK, ActiveUser::$user->id)
             )) {
-            $message = "You are not allowed to post in this thread!";
-            $redirect = Router::route('forums.thread', $thread->id);
+            $message = "You are not allowed to post in this topic!";
+            $redirect = Router::route('forums.topic', $topic->id);
 
             Template::vars(compact('message', 'redirect'));
 
@@ -555,7 +556,7 @@ class ForumController extends Controller
         // Check requirments
         if ($tooShort
             || $tooLong) {
-            $route = Router::route('forums.thread', $thread->id);
+            $route = Router::route('forums.topic', $topic->id);
 
             $message = "Your post is " . (
                 $tooShort
@@ -570,19 +571,19 @@ class ForumController extends Controller
                 $_SESSION['replyText'] = [];
             }
 
-            $_SESSION['replyText']["t{$thread->id}"] = $text;
+            $_SESSION['replyText']["t{$topic->id}"] = $text;
 
             return Template::render('global/information');
         }
 
-        unset($_SESSION['replyText']["t{$thread->id}"]);
+        unset($_SESSION['replyText']["t{$topic->id}"]);
 
         // Create the post
         $post = Post::create(
-            "Re: {$thread->title}",
+            "Re: {$topic->title}",
             $text,
             ActiveUser::$user,
-            $thread->id,
+            $topic->id,
             $forum->id
         );
 
@@ -594,11 +595,11 @@ class ForumController extends Controller
     }
 
     /**
-     * Create a thread.
+     * Create a topic.
      *
      * @return string
      */
-    public function createThread($id = 0)
+    public function createTopic($id = 0)
     {
         $title = isset($_POST['title']) ? $_POST['title'] : null;
         $text = isset($_POST['text']) ? $_POST['text'] : null;
@@ -686,7 +687,7 @@ class ForumController extends Controller
 
         Template::vars(compact('forum'));
 
-        return Template::render('forum/thread');
+        return Template::render('forum/topic');
     }
 
     /**
@@ -702,15 +703,15 @@ class ForumController extends Controller
         // Attempt to get the post
         $post = new Post($id);
 
-        // Attempt to get the thread
-        $thread = new Thread($post->thread);
+        // Attempt to get the topic
+        $topic = new Topic($post->topic);
 
         // And attempt to get the forum
-        $forum = new Forum($thread->forum);
+        $forum = new Forum($topic->forum);
 
         // Check permissions
         $noAccess = $post->id == 0
-        || $thread->id == 0
+        || $topic->id == 0
         || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id);
 
         $noEdit = (
@@ -718,14 +719,14 @@ class ForumController extends Controller
             ? !ActiveUser::$user->permission(ForumPerms::EDIT_OWN, Perms::FORUM)
             : !$forum->permission(ForumPerms::EDIT_ANY, ActiveUser::$user->id)
         ) || (
-            $thread->status === 1
+            $topic->status === 1
             && !$forum->permission(ForumPerms::LOCK, ActiveUser::$user->id)
         );
 
         // Check if the forum exists
         if ($noAccess || $noEdit) {
             if ($noDelete) {
-                $message = "You aren't allowed to edit posts in this thread!";
+                $message = "You aren't allowed to edit posts in this topic!";
                 $redirect = Router::route('forums.post', $post->id);
             } else {
                 $message = "This post doesn't exist or you don't have access to it!";
@@ -747,10 +748,10 @@ class ForumController extends Controller
 
         // Checks
         $titleTooShort = $title !== null
-        && $post->id === $thread->firstPost()->id
+        && $post->id === $topic->firstPost()->id
         && $titleLength < $titleMin;
         $titleTooLong = $title !== null
-        && $post->id === $thread->firstPost()->id
+        && $post->id === $topic->firstPost()->id
         && $titleLength > $titleMax;
         $textTooShort = $textLength < $textMin;
         $textTooLong = $textLength > $textMax;
@@ -787,11 +788,11 @@ class ForumController extends Controller
 
         unset($_SESSION['replyText']["t{$forum->id}"]);
 
-        if ($post->id !== $thread->firstPost()->id || $title === null) {
-            $title = "Re: {$thread->title}";
+        if ($post->id !== $topic->firstPost()->id || $title === null) {
+            $title = "Re: {$topic->title}";
         } else {
-            $thread->title = $title;
-            $thread->update();
+            $topic->title = $title;
+            $topic->update();
         }
 
         // Create the post
@@ -824,14 +825,14 @@ class ForumController extends Controller
         $post = new Post($id);
 
         // And attempt to get the forum
-        $thread = new Thread($post->thread);
+        $topic = new Topic($post->topic);
 
         // And attempt to get the forum
-        $forum = new Forum($thread->forum);
+        $forum = new Forum($topic->forum);
 
         // Check permissions
         $noAccess = $post->id == 0
-        || $thread->id == 0
+        || $topic->id == 0
         || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id);
 
         $noDelete = (
@@ -839,14 +840,14 @@ class ForumController extends Controller
             ? !ActiveUser::$user->permission(ForumPerms::DELETE_OWN, Perms::FORUM)
             : !$forum->permission(ForumPerms::DELETE_ANY, ActiveUser::$user->id)
         ) || (
-            $thread->status === 1
+            $topic->status === 1
             && !$forum->permission(ForumPerms::LOCK, ActiveUser::$user->id)
         );
 
         // Check if the forum exists
         if ($noAccess || $noDelete) {
             if ($noDelete) {
-                $message = "You aren't allowed to delete posts in this thread!";
+                $message = "You aren't allowed to delete posts in this topic!";
                 $redirect = Router::route('forums.post', $post->id);
             } else {
                 $message = "This post doesn't exist or you don't have access to it!";
@@ -863,17 +864,17 @@ class ForumController extends Controller
                 // Set message
                 $message = "Deleted the post!";
 
-                // Check if the thread only has 1 post
-                if ($thread->replyCount() === 1) {
-                    // Delete the entire thread
-                    $thread->delete();
+                // Check if the topic only has 1 post
+                if ($topic->replyCount() === 1) {
+                    // Delete the entire topic
+                    $topic->delete();
 
                     $redirect = Router::route('forums.forum', $forum->id);
                 } else {
                     // Just delete the post
                     $post->delete();
 
-                    $redirect = Router::route('forums.thread', $thread->id);
+                    $redirect = Router::route('forums.topic', $topic->id);
                 }
 
                 Template::vars(compact('message', 'redirect'));

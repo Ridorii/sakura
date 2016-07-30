@@ -11,7 +11,7 @@
         "php": ">=7.0.0",
         "ext-curl": "*",
         "ext-json": "*",
-        "twig/twig": "*",
+        "twig/twig": "~1.0",
         "paypal/rest-api-sdk-php": "*",
         "phroute/phroute": "^2.1",
         "illuminate/database": "5.2.*",
@@ -23,6 +23,9 @@
         "illuminate/filesystem": "^5.2"
     },
     "autoload": {
+        "classmap": [
+            "database"
+        ],
         "psr-4": {
             "Sakura\\": "app/"
         },

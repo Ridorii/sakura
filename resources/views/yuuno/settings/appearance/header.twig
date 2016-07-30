@@ -3,12 +3,12 @@
 {% set mode = 'Header' %}
 
 {% block description %}
-    <p>Maximum image size is {{ config('header_max_width') }}x{{ config('header_max_height') }}, minimum image size is {{ config('header_min_width') }}x{{ config('header_min_height') }}, maximum file size is {{ config('header_max_fsize')|byte_symbol }}.</p>
+    <p>Maximum image size is {{ config('file.cover.max_width') }}x{{ config('file.cover.max_height') }} and can't be larger than {{ config('file.cover.max_file_size')|byte_symbol }}.</p>
 {% endblock %}
 
 {% block settingsContent %}
     <form enctype="multipart/form-data" method="post" action="{{ route('settings.appearance.header') }}">
-        <input type="hidden" name="MAX_FILE_SIZE" value="{{ config('header_max_fsize') }}">
+        <input type="hidden" name="MAX_FILE_SIZE" value="{{ config('file.cover.max_file_size') }}">
         <div style="text-align: center;">
             <div>
                 <img src="{{ route('user.header', user.id) }}" alt="Your Header" class="default-avatar-setting" style="max-width: 90%; max-height: 90%;">

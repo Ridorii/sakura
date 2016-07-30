@@ -29,11 +29,11 @@ class Post
     public $id = 0;
 
     /**
-     * The id of the thread this post is a part of.
+     * The id of the topic this post is a part of.
      *
      * @var int
      */
-    public $thread = 0;
+    public $topic = 0;
 
     /**
      * The id of the forum this post is a part of.
@@ -121,7 +121,7 @@ class Post
         if ($postRow) {
             $postRow = $postRow[0];
             $this->id = $postRow->post_id;
-            $this->thread = $postRow->topic_id;
+            $this->topic = $postRow->topic_id;
             $this->forum = $postRow->forum_id;
             $this->poster = User::construct($postRow->poster_id);
             $this->time = $postRow->post_time;
@@ -147,33 +147,33 @@ class Post
     /**
      * Creating a new post.
      *
-     * @param string $subject The subject of the thread.
+     * @param string $subject The subject of the topic.
      * @param string $text The raw contents of the post.
      * @param User $poster The User object of the poster.
-     * @param int $thread The ID of the thread this post is a reply to.
+     * @param int $topic The ID of the topic this post is a reply to.
      * @param mixed $forum The forum this post is a reply in.
      *
      * @return null|self Either null, indicating a failure, or the Post object.
      */
-    public static function create($subject, $text, User $poster, $thread = 0, $forum = 0)
+    public static function create($subject, $text, User $poster, $topic = 0, $forum = 0)
     {
-        // If no thread is specified create a new one
-        if ($thread) {
-            $thread = new Thread($thread);
+        // If no topic is specified create a new one
+        if ($topic) {
+            $topic = new Topic($topic);
         } else {
-            $thread = Thread::create($forum, $subject);
+            $topic = Topic::create($forum, $subject);
         }
 
-        // Stop if the thread ID is 0
-        if ($thread->id == 0) {
+        // Stop if the topic ID is 0
+        if ($topic->id == 0) {
             return null;
         }
 
         // Insert the post
         $id = DB::table('posts')
             ->insertGetId([
-                'topic_id' => $thread->id,
-                'forum_id' => $thread->forum,
+                'topic_id' => $topic->id,
+                'forum_id' => $topic->forum,
                 'poster_id' => $poster->id,
                 'poster_ip' => Net::pton(Net::ip()),
                 'post_time' => time(),
@@ -182,7 +182,7 @@ class Post
             ]);
 
         // Update the last post date
-        $thread->lastUpdate();
+        $topic->lastUpdate();
 
         // Return the object
         return new Post($id);
@@ -195,15 +195,15 @@ class Post
      */
     public function update()
     {
-        // Create a thread object
-        $thread = new Thread($this->thread);
+        // Create a topic object
+        $topic = new Topic($this->topic);
 
         // Update the post
         DB::table('posts')
             ->where('post_id', $this->id)
             ->update([
-                'topic_id' => $thread->id,
-                'forum_id' => $thread->forum,
+                'topic_id' => $topic->id,
+                'forum_id' => $topic->forum,
                 'poster_id' => $this->poster->id,
                 'poster_ip' => Net::pton(Net::ip()),
                 'post_time' => $this->time,
@@ -242,7 +242,7 @@ class Post
         // Attempt to get track row from the database
         $track = DB::table('topics_track')
             ->where('user_id', $user)
-            ->where('topic_id', $this->thread)
+            ->where('topic_id', $this->topic)
             ->where('mark_time', '>', $this->time)
             ->count();
 

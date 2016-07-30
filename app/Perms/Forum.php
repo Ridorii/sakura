@@ -26,7 +26,7 @@ class Forum
     const REPLY = 2;
 
     /**
-     * Can this user create threads in this forum?
+     * Can this user create topics in this forum?
      */
     const CREATE_THREADS = 4;
 
@@ -41,12 +41,12 @@ class Forum
     const DELETE_OWN = 16;
 
     /**
-     * Can this user change threads to the sticky type?
+     * Can this user change topics to the sticky type?
      */
     const STICKY = 32;
 
     /**
-     * Can this user change threads to the announcement type?
+     * Can this user change topics to the announcement type?
      */
     const ANNOUNCEMENT = 64;
 
@@ -61,12 +61,12 @@ class Forum
     const DELETE_ANY = 256;
 
     /**
-     * Can this user toggle the locked status on threads in this forum?
+     * Can this user toggle the locked status on topics in this forum?
      */
     const LOCK = 512;
 
     /**
-     * Can this user move threads to other forums from/to this forum?
+     * Can this user move topics to other forums from/to this forum?
      */
     const MOVE = 1024;
 }

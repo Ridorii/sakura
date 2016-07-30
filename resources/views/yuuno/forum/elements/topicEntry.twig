@@ -1,27 +1,27 @@
 <tr>
-    <td class="topicIcon{% if thread.unread(user.id) %} unread{% endif %}{% if thread.type == 2 %} topicAnnouncement{% endif %}">
-        <div class="fa fa-2x fa-{% if thread.type == 1 %}thumb-tack{% elseif thread.type == 2 %}bullhorn{% elseif thread.status == 1 %}lock{% else %}navicon{% endif %}"></div>
+    <td class="topicIcon{% if topic.unread(user.id) %} unread{% endif %}{% if topic.type == 2 %} topicAnnouncement{% endif %}">
+        <div class="fa fa-2x fa-{% if topic.type == 1 %}thumb-tack{% elseif topic.type == 2 %}bullhorn{% elseif topic.status == 1 %}lock{% else %}navicon{% endif %}"></div>
     </td>
-    <td class="topicTitle{% if thread.type == 2 %} topicAnnouncement{% endif %}">
-        <a href="{{ route('forums.thread', thread.id) }}" class="default">{{ thread.title }}</a>
+    <td class="topicTitle{% if topic.type == 2 %} topicAnnouncement{% endif %}">
+        <a href="{{ route('forums.topic', topic.id) }}" class="default">{{ topic.title }}</a>
     </td>
-    <td class="topicAuthor{% if thread.type == 2 %} topicAnnouncement{% endif %}">
-        {% if thread.firstPost.poster.id %}
-            <a href="{{ route('user.profile', thread.firstPost.poster.id) }}" class="default" style="color: {{ thread.firstPost.poster.colour }}; text-shadow: 0 0 5px {% if thread.firstPost.poster.colour != 'inherit' %}{{ thread.firstPost.poster.colour }}{% else %}#222{% endif %};">{{ thread.firstPost.poster.username }}</a>
+    <td class="topicAuthor{% if topic.type == 2 %} topicAnnouncement{% endif %}">
+        {% if topic.firstPost.poster.id %}
+            <a href="{{ route('user.profile', topic.firstPost.poster.id) }}" class="default" style="color: {{ topic.firstPost.poster.colour }}; text-shadow: 0 0 5px {% if topic.firstPost.poster.colour != 'inherit' %}{{ topic.firstPost.poster.colour }}{% else %}#222{% endif %};">{{ topic.firstPost.poster.username }}</a>
         {% else %}
             [deleted user]
         {% endif %}
     </td>
-    <td class="topicCounts{% if thread.type == 2 %} topicAnnouncement{% endif %}">
-        <div class="replies" title="Amount of replies to this thread.">{{ thread.replyCount }}</div>
-        <div class="views" title="Amount of times this thread has been viewed.">{{ thread.views }}</div>
+    <td class="topicCounts{% if topic.type == 2 %} topicAnnouncement{% endif %}">
+        <div class="replies" title="Amount of replies to this topic.">{{ topic.replyCount }}</div>
+        <div class="views" title="Amount of times this topic has been viewed.">{{ topic.views }}</div>
     </td>
-    <td class="topicLast{% if thread.type == 2 %} topicAnnouncement{% endif %}">
-        {% if thread.lastPost.poster.id %}
-            <a href="{{ route('user.profile', thread.lastPost.poster.id) }}" class="default" style="color: {{ thread.lastPost.poster.colour }}; text-shadow: 0 0 5px {% if thread.lastPost.poster.colour != 'inherit' %}{{ thread.lastPost.poster.colour }}{% else %}#222{% endif %};">{{ thread.lastPost.poster.username }}</a>
+    <td class="topicLast{% if topic.type == 2 %} topicAnnouncement{% endif %}">
+        {% if topic.lastPost.poster.id %}
+            <a href="{{ route('user.profile', topic.lastPost.poster.id) }}" class="default" style="color: {{ topic.lastPost.poster.colour }}; text-shadow: 0 0 5px {% if topic.lastPost.poster.colour != 'inherit' %}{{ topic.lastPost.poster.colour }}{% else %}#222{% endif %};">{{ topic.lastPost.poster.username }}</a>
         {% else %}
             [deleted user]
-        {% endif %} <a href="{{ route('forums.post', thread.lastPost.id) }}" class="default fa fa-tag"></a><br>
-        <time datetime="{{ thread.lastPost.time|date('r') }}">{{ thread.lastPost.time|date('D Y-m-d H:i:s T') }}</time>
+        {% endif %} <a href="{{ route('forums.post', topic.lastPost.id) }}" class="default fa fa-tag"></a><br>
+        <time datetime="{{ topic.lastPost.time|date('r') }}">{{ topic.lastPost.time|date('D Y-m-d H:i:s T') }}</time>
     </td>
 </tr>

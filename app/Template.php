@@ -10,7 +10,6 @@ namespace Sakura;
 use Twig_Environment;
 use Twig_Extension_StringLoader;
 use Twig_Loader_Filesystem;
-use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 
 /**
@@ -48,6 +47,19 @@ class Template
     const FILE_EXT = '.twig';
 
     /**
+     * List of utility functions to add to templating
+     *
+     * @var array
+     */
+    protected static $utility = [
+        'route',
+        'config',
+        'session_id',
+        'json_decode',
+        'byte_symbol',
+    ];
+
+    /**
      * Set the template name.
      *
      * @param string $name The name of the template directory.
@@ -66,16 +78,19 @@ class Template
      */
     public static function init()
     {
+        $views_dir = ROOT . 'resources/views/';
+
         // Initialise Twig Filesystem Loader
-        $twigLoader = new Twig_Loader_Filesystem(ROOT . 'resources/views/' . self::$name);
+        $twigLoader = new Twig_Loader_Filesystem([$views_dir . self::$name, $views_dir . 'shared/']);
 
         // Environment variable
-        $twigEnv = [];
-
-        // Enable caching
-        if (config("performance.template_cache")) {
-            $twigEnv['cache'] = ROOT . config("performance.cache_dir") . 'views';
-        }
+        $twigEnv = [
+            'cache' => config("performance.template_cache")
+            ? realpath(ROOT . config("performance.cache_dir") . 'views')
+            : false,
+            'auto_reload' => true,
+            'debug' => config("dev.twig_debug"),
+        ];
 
         // And now actually initialise the templating engine
         self::$engine = new Twig_Environment($twigLoader, $twigEnv);
@@ -83,20 +98,10 @@ class Template
         // Load String template loader
         self::$engine->addExtension(new Twig_Extension_StringLoader());
 
-        // Add route function
-        self::$engine->addFunction(new Twig_SimpleFunction('route', 'route'));
-
-        // Add config function
-        self::$engine->addFunction(new Twig_SimpleFunction('config', 'config'));
-
-        // Method of getting the currently active session id
-        self::$engine->addFunction(new Twig_SimpleFunction('session_id', 'session_id'));
-
-        // json_decode filter (why doesn't this exist to begin with?)
-        self::$engine->addFilter(new Twig_SimpleFilter('json_decode', 'json_decode'));
-
-        // byte_symbol filter
-        self::$engine->addFilter(new Twig_SimpleFilter('byte_symbol', 'byte_symbol'));
+        // Add utility functions
+        foreach (self::$utility as $utility) {
+            self::$engine->addFunction(new Twig_SimpleFunction($utility, $utility));
+        }
     }
 
     /**

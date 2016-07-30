@@ -33,14 +33,6 @@ class ActiveUser
             && !$user->permission(Site::DEACTIVATED)) {
             // Assign the user object
             self::$user = $user;
-
-            // Update last online
-            DB::table('users')
-                ->where('user_id', self::$user->id)
-                ->update([
-                    'user_last_online' => time(),
-                    'last_ip' => Net::pton(Net::ip()),
-                ]);
         } else {
             self::$user = User::construct(0);
         }
