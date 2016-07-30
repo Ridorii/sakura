@@ -67,7 +67,6 @@ class MetaController extends Controller
             'news' => $news->posts(3),
             'stats' => [
                 'userCount' => DB::table('users')
-                    ->where('password_algo', '!=', 'disabled')
                     ->whereNotIn('rank_main', [config('rank.banned'), config('rank.inactive')])
                     ->count(),
                 'newestUser' => $newestUser,
