@@ -44,7 +44,6 @@ Router::group(['before' => 'maintenance'], function () {
     Router::get('/', 'MetaController@index', 'main.index');
     Router::get('/faq', 'MetaController@faq', 'main.faq');
     Router::get('/search', 'MetaController@search', 'main.search');
-    Router::get('/p/{id}', 'MetaController@infoPage', 'main.infopage');
 
     // Auth
     Router::group(['before' => 'logoutCheck'], function () {
@@ -62,6 +61,49 @@ Router::group(['before' => 'maintenance'], function () {
         Router::get('/logout', 'AuthController@logout', 'auth.logout');
     });
 
+    // Link compatibility layer, prolly remove this in like a year
+    Router::get('/r/{id}', function ($id) {
+        header("Location: /p/{$id}");
+    });
+    Router::get('/p/{id}', function ($id) {
+        $resolve = [
+            'terms' => 'info.terms',
+            'contact' => 'info.contact',
+            'rules' => 'info.rules',
+            'welcome' => 'info.welcome',
+            //'profileapi' => 'api.manage.index',
+            'chat' => 'chat.redirect',
+            //'irc' => 'chat.irc',
+            'feedback' => 'forums.index',
+            //'mcp' => 'manage.index',
+            //'mcptest' => 'manage.index',
+            //'report' => 'report.something',
+            //'osu' => 'eventual link to flashii team',
+            //'filehost' => '???',
+            //'fhscript' => '???',
+            //'fhmanager' => '???',
+            'everlastingness' => 'https://i.flash.moe/18661469927746.txt',
+            'fuckingdone' => 'https://i.flash.moe/18671469927761.txt',
+        ];
+
+        if (!array_key_exists($id, $resolve)) {
+            throw new \Phroute\Phroute\Exception\HttpRouteNotFoundException();
+        }
+
+        $link = $resolve[$id];
+
+        header("Location: " . (substr($link, 0, 4) === 'http' ? $link : route($link)));
+    });
+
+    // Info
+    Router::group(['prefix' => 'info'], function () {
+        Router::get('/terms', 'InfoController@terms', 'info.terms');
+        Router::get('/privacy', 'InfoController@privacy', 'info.privacy');
+        Router::get('/contact', 'InfoController@contact', 'info.contact');
+        Router::get('/rules', 'InfoController@rules', 'info.rules');
+        Router::get('/welcome', 'InfoController@welcome', 'info.welcome');
+    });
+
     // News
     Router::group(['prefix' => 'news'], function () {
         Router::get('/{category:c}?', 'NewsController@category', 'news.category');
@@ -70,7 +112,8 @@ Router::group(['before' => 'maintenance'], function () {
 
     // Chat
     Router::group(['prefix' => 'chat'], function () {
-        Router::get('/redirect', 'ChatController@category', 'chat.redirect');
+        Router::get('/redirect', 'ChatController@redirect', 'chat.redirect');
+        Router::get('/settings', 'ChatController@settings', 'chat.settings');
     });
 
     // Forum
@@ -88,9 +131,14 @@ Router::group(['before' => 'maintenance'], function () {
 
         // Topic
         Router::group(['prefix' => 'topic'], function () {
-            Router::get('/{id:i}', 'ForumController@topic', 'forums.topic');
-            Router::post('/{id:i}/mod', 'ForumController@topicModerate', 'forums.topic.mod');
-            Router::post('/{id:i}/reply', 'ForumController@topicReply', 'forums.topic.reply');
+            Router::get('/{id:i}', 'Forum.TopicController@view', 'forums.topic');
+            Router::get('/{id:i}/sticky', 'Forum.TopicController@sticky', 'forums.topic.sticky');
+            Router::get('/{id:i}/announce', 'Forum.TopicController@announce', 'forums.topic.announce');
+            Router::get('/{id:i}/lock', 'Forum.TopicController@lock', 'forums.topic.lock');
+            Router::get('/{id:i}/delete', 'Forum.TopicController@delete', 'forums.topic.delete');
+            Router::get('/{id:i}/restore', 'Forum.TopicController@restore', 'forums.topic.restore');
+            Router::get('/{id:i}/move', 'Forum.TopicController@move', 'forums.topic.move');
+            Router::post('/{id:i}/reply', 'Forum.TopicController@reply', 'forums.topic.reply');
         });
 
         // Forum

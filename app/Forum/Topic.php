@@ -135,17 +135,17 @@ class Topic
         // Assign data if a row was returned
         if ($topicRow) {
             $topicRow = $topicRow[0];
-            $this->id = $topicRow->topic_id;
-            $this->forum = $topicRow->forum_id;
-            $this->hidden = (bool) $topicRow->topic_hidden;
+            $this->id = intval($topicRow->topic_id);
+            $this->forum = intval($topicRow->forum_id);
+            $this->hidden = boolval($topicRow->topic_hidden);
             $this->title = $topicRow->topic_title;
-            $this->time = $topicRow->topic_time;
-            $this->timeLimit = $topicRow->topic_time_limit;
-            $this->views = $topicRow->topic_views;
-            $this->status = $topicRow->topic_status;
-            $this->statusChange = $topicRow->topic_status_change;
-            $this->type = $topicRow->topic_type;
-            $this->oldForum = $topicRow->topic_old_forum;
+            $this->time = intval($topicRow->topic_time);
+            $this->timeLimit = intval($topicRow->topic_time_limit);
+            $this->views = intval($topicRow->topic_views);
+            $this->status = intval($topicRow->topic_status);
+            $this->statusChange = intval($topicRow->topic_status_change);
+            $this->type = intval($topicRow->topic_type);
+            $this->oldForum = intval($topicRow->topic_old_forum);
         }
     }
 

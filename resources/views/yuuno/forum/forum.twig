@@ -6,8 +6,6 @@
 {% set forumNewLink %}{{ route('forums.new', forum.id) }}{% endset %}
 {% set forumMarkRead %}{{ route('forums.mark', forum.id) }}?s={{ session_id() }}{% endset %}
 
-{% block title %}{{ title }}{% endblock %}
-
 {% block content %}
     <div class="content homepage forum viewforum">
         <div class="content-column">

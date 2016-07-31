@@ -6,7 +6,7 @@
 
 {% set profileView = noUserpage and profileView == 'index' ? 'comments' : profileView %}
 
-{% block title %}{% if profileHidden %}User not found!{% else %}Profile of {{ profile.username }}{% endif %}{% endblock %}
+{% set title %}{% if profileHidden %}User not found!{% else %}Profile of {{ profile.username }}{% endif %}{% endset %}
 
 {% block js %}
     {% if not profileHidden %}

@@ -1,6 +1,6 @@
 {% extends 'global/master.twig' %}
 
-{% block title %}{{ page.category }} / {{ page.mode }}{% endblock %}
+{% set title %}{{ page.category }} / {{ page.mode }}{% endset %}
 
 {% block content %}
     <div class="content settings messages">

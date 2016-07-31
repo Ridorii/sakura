@@ -2,7 +2,7 @@
 
 {% set forumBackLink %}{{ route('forums.forum', forum.id) }}{% endset %}
 
-{% block title %}{% if topic is defined %}{{ topic.title }}{% else %}Creating topic in {{ forum.name }}{% endif %}{% endblock %}
+{% set title %}{% if topic is defined %}{{ topic.title }}{% else %}Creating topic in {{ forum.name }}{% endif %}{% endset %}
 
 {% if topic is defined %}
     {% if forum.permission(constant('Sakura\\Perms\\Forum::REPLY'), user.id)
@@ -38,13 +38,13 @@
             {% set forumRestore = true %}
         {% endif %}
 
-        {% if topic.forum != config('forum_trash_id') %}
+        {% if topic.forum != config('forum.trash') %}
             {% set forumTrash = true %}
         {% endif %}
     {% endif %}
 
     {% if forum.permission(constant('Sakura\\Perms\\Forum::DELETE_ANY'), user.id) %}
-        {% if topic.forum == config('forum_trash_id') %}
+        {% if topic.forum == config('forum.trash') %}
             {% set forumPrune = true %}
         {% endif %}
     {% endif %}

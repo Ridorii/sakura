@@ -1,6 +1,6 @@
 {% extends 'global/master.twig' %}
 
-{% block title %}{{ post.title }}{% endblock %}
+{% set title = post.title %}
 
 {% set commentsCategory = 'news-' ~ post.category ~ '-' ~ post.id %}
 {% set comments = post.comments %}

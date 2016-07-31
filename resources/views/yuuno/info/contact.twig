@@ -1,0 +1,26 @@
+{% extends 'info/master.twig' %}
+
+{% set title = 'Contact' %}
+
+{% block info %}
+    <h1>Contact</h1>
+    <p>Need to contact us? Here's a few ways to do so! We try to respond as soon as possible.</p>
+    <h3>E-mail</h3>
+    <ul>
+        {% for user, email in contact.mail %}
+            <li>{{ user }} - <a href="mailto:{{ email }}">{{ email }}</a></li>
+        {% endfor %}
+    </ul>
+    <h3>Twitter</h3>
+    <ul>
+        {% for handle, comment in contact.twit %}
+            <li>@<a href="https://twitter.com/{{ handle }}">{{ handle }}</a> - {{ comment }}</li>
+        {% endfor %}
+    </ul>
+    <h3>Repositories</h3>
+    <ul>
+        {% for link, name in contact.repo %}
+            <li><a href="{{ link }}">{{ link }}</a> - {{ name }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -114,7 +114,7 @@
                 {% if user.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}
                     <div class="headerNotify" style="background: repeating-linear-gradient(-45deg, #B33, #B33 10px, #B00 10px, #B00 20px); color: #FFF; border: 1px solid #C00; box-shadow: 0 0 3px #C00;">
                         <h1>Your account is currently in <span style="font-weight: 700 !important;">restricted mode</span>!</h1>
-                        <div>A staff member has set your account to restricted mode most likely due to violation of the rules. While restricted you won't be able to use most public features of the site. If you think this is a mistake please <a href="{{ route('main.infopage', 'contact') }}" style="color: inherit;">get in touch with one of our staff members</a>.</div>
+                        <div>A staff member has set your account to restricted mode most likely due to violation of the rules. While restricted you won't be able to use most public features of the site. If you think this is a mistake please <a href="{{ route('info.contact') }}" style="color: inherit;">get in touch with one of our staff members</a>.</div>
                     </div>
                 {% endif %}
 
@@ -141,7 +141,7 @@
                         <li><a href="{{ route('main.index') }}">Home</a></li>
                         <li><a href="{{ route('news.category') }}">News</a></li>
                         <li><a href="{{ route('main.search') }}">Search</a></li>
-                        <li><a href="{{ route('main.infopage', 'contact') }}">Contact</a></li>
+                        <li><a href="{{ route('info.contact') }}">Contact</a></li>
                         <li><a href="https://sakura.flash.moe" target="_blank">Changelog</a></li>
                         <li><a href="{{ route('premium.index') }}">Support us</a></li>
                     </ul>
@@ -156,9 +156,9 @@
                     <ul class="ftsection">
                         <li class="fthead">Information</li>
                         <li><a href="{{ route('main.faq') }}">FAQ</a></li>
-                        <li><a href="{{ route('main.infopage', 'rules') }}">Rules</a></li>
+                        <li><a href="{{ route('info.rules') }}">Rules</a></li>
                         <li><a href="//fiistat.us" target="_blank">Server Status</a></li>
-                        <li><a href="{{ route('main.infopage', 'terms') }}">Terms of Service</a></li>
+                        <li><a href="{{ route('info.terms') }}">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>

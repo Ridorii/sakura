@@ -177,8 +177,8 @@ class AuthController extends Controller
         $redirect = $user->lastOnline
         ? (isset($_REQUEST['redirect'])
             ? $_REQUEST['redirect']
-            : Router::route('main.index'))
-        : Router::route('main.infopage', 'welcome');
+            : route('main.index'))
+        : route('info.welcome');
 
         $message = 'Welcome' . ($user->lastOnline ? ' back' : '') . '!';
 

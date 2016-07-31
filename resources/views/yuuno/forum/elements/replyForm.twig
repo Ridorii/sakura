@@ -37,10 +37,10 @@
 </div>
 
 <script type="text/javascript">
-    var titleMax = {{ config('forum_title_max') }},
-        titleMin = {{ config('forum_title_min') }},
-        textMax = {{ config('forum_text_max') }},
-        textMin = {{ config('forum_text_min') }},
+    var titleMax = {{ config('forum.max_title_length') }},
+        titleMin = {{ config('forum.min_title_length') }},
+        textMax = {{ config('forum.max_post_length') }},
+        textMin = {{ config('forum.min_post_length') }},
         preview = document.getElementById('postingPreview'),
         pTitle = document.getElementById('postingTitle'),
         pTitleCont = document.getElementById('postingTitleContainer'),

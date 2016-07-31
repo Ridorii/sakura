@@ -113,7 +113,7 @@ class Forum
      *
      * @param int $forumId The ID of the forum that should be constructed.
      */
-    public function __construct($forumId = 0)
+    public function __construct(int $forumId = 0)
     {
         // Get the row from the database
         $forumRow = DB::table('forums')
@@ -126,15 +126,15 @@ class Forum
         // Populate the variables
         if ($forumRow) {
             $forumRow = $forumRow[0];
-            $this->id = $forumRow->forum_id;
-            $this->order = $forumRow->forum_order;
+            $this->id = intval($forumRow->forum_id);
+            $this->order = intval($forumRow->forum_order);
             $this->name = $forumRow->forum_name;
             $this->description = $forumRow->forum_desc;
             $this->link = $forumRow->forum_link;
-            $this->category = $forumRow->forum_category;
-            $this->type = $forumRow->forum_type;
+            $this->category = intval($forumRow->forum_category);
+            $this->type = intval($forumRow->forum_type);
             $this->icon = $forumRow->forum_icon;
-        } elseif ($forumId != 0) {
+        } elseif ($forumId !== 0) {
             $this->id = -1;
         }
     }

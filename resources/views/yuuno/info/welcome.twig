@@ -1,0 +1,9 @@
+{% extends 'info/master.twig' %}
+
+{% set title = 'Welcome!' %}
+
+{% block info %}
+    <h1>Welcome to {{ config('general.name') }}!</h1>
+    <p>Hey, thank you for registering!</p>
+    <p>Be sure to familiarise your with the <a href="{{ route('info.rules') }}">rules</a> and to <a href="{{ route('forums.index') }}">introduce</a> yourself on the forum!</p>
+{% endblock %}

@@ -1,18 +1,15 @@
-<form method="post" action="{{ route('forums.topic.mod', topic.id) }}" style="display: inline-block;">
-    <input type="hidden" name="session" value="{{ session_id() }}">
-    {% if forumSticky is defined %}
-        <button class="forumbtn" title="{{ forumSticky ? 'Unsticky' : 'Sticky' }}" name="action" value="sticky"><span class="fa fa-{{ forumSticky ? 'remove' : 'thumb-tack' }}"></span></button>
-    {% endif %}
-    {% if forumAnnounce is defined %}
-        <button class="forumbtn" title="{{ forumAnnounce ? 'Unannounce' : 'Announce' }}" name="action" value="announce"><span class="fa fa-{{ forumAnnounce ? 'remove' : 'bullhorn' }}"></span></button>
-    {% endif %}
-    {% if forumLock is defined %}
-        <button class="forumbtn" title="{{ forumLock ? 'Unlock' : 'Lock' }}" name="action" value="lock"><span class="fa fa-{{ forumLock ? 'unlock' : 'lock' }}"></span></button>
-    {% endif %}
-    {% if forumRestore is defined %}
-        <button class="forumbtn" title="Restore" name="action" value="restore"><span class="fa fa-history"></span></button>
-    {% endif %}
-    {% if forumTrash is defined or forumPrune is defined %}
-        <button class="forumbtn" title="{{ forumPrune ? 'Prune' : 'Trash' }}" name="action" value="delete"><span class="fa fa-{{ forumPrune ? 'bomb' : 'trash' }}"></span></button>
-    {% endif %}
-</form>
+{% if forumSticky is defined %}
+    <a class="forumbtn" title="{{ forumSticky ? 'Unsticky' : 'Sticky' }}" href="{{ route('forums.topic.sticky', topic.id) }}?session={{ session_id() }}"><span class="fa fa-{{ forumSticky ? 'remove' : 'thumb-tack' }}"></span></a>
+{% endif %}
+{% if forumAnnounce is defined %}
+    <a class="forumbtn" title="{{ forumAnnounce ? 'Unannounce' : 'Announce' }}" href="{{ route('forums.topic.announce', topic.id) }}?session={{ session_id() }}"><span class="fa fa-{{ forumAnnounce ? 'remove' : 'bullhorn' }}"></span></a>
+{% endif %}
+{% if forumLock is defined %}
+    <a class="forumbtn" title="{{ forumLock ? 'Unlock' : 'Lock' }}" href="{{ route('forums.topic.lock', topic.id) }}?session={{ session_id() }}"><span class="fa fa-{{ forumLock ? 'unlock' : 'lock' }}"></span></a>
+{% endif %}
+{% if forumRestore is defined %}
+    <a class="forumbtn" title="Restore" href="{{ route('forums.topic.restore', topic.id) }}?session={{ session_id() }}"><span class="fa fa-history"></span></a>
+{% endif %}
+{% if forumTrash is defined or forumPrune is defined %}
+    <a class="forumbtn" title="{{ forumPrune ? 'Prune' : 'Trash' }}" href="{{ route('forums.topic.delete', topic.id) }}?session={{ session_id() }}"><span class="fa fa-{{ forumPrune ? 'bomb' : 'trash' }}"></span></a>
+{% endif %}

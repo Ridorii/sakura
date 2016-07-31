@@ -4,7 +4,7 @@
  */
 
 /* Import bbcode specific style */
-@import('bbcode');
+@import "bbcode";
 
 /*
  * Animation Keyframes
@@ -1915,7 +1915,8 @@ a.default:active {
 input[type="submit"].inputStyling,
 input[type="button"].inputStyling,
 input[type="reset"].inputStyling,
-button.inputStyling {
+button.inputStyling,
+a.button {
     padding: 3px 10px;
     cursor: pointer;
     border: 0;
@@ -1933,7 +1934,8 @@ button.inputStyling {
 input[type="submit"].inputStyling.small,
 input[type="button"].inputStyling.small,
 input[type="reset"].inputStyling.small,
-button.inputStyling.small {
+button.inputStyling.small,
+a.button.small {
     padding: 0 4px 1px;
     margin: -2px 0 0;
     font-size: 16px;
@@ -1944,7 +1946,8 @@ button.inputStyling.small {
 input[type="submit"].inputStyling:hover,
 input[type="button"].inputStyling:hover,
 input[type="reset"].inputStyling:hover,
-button.inputStyling:hover {
+button.inputStyling:hover,
+a.button:hover {
     box-shadow: inset #222 0 0 3px;
     text-shadow: #F1F1F1 0 0 5px;
 }
@@ -1952,7 +1955,8 @@ button.inputStyling:hover {
 input[type="submit"].inputStyling:active,
 input[type="button"].inputStyling:active,
 input[type="reset"].inputStyling:active,
-button.inputStyling:active {
+button.inputStyling:active,
+a.button:active {
     box-shadow: inset #222 0 0 5px;
     text-shadow: #F1F1F1 0 0 3px;
     transition: text-shadow .2s, box-shadow .2s;
@@ -1961,7 +1965,8 @@ button.inputStyling:active {
 input[type="submit"][disabled=disabled].inputStyling,
 input[type="button"][disabled=disabled].inputStyling,
 input[type="reset"][disabled=disabled].inputStyling,
-button[disabled=disabled].inputStyling {
+button[disabled=disabled].inputStyling,
+a.button[disabled=disabled] {
     background: linear-gradient(180deg, #858585 0%, #858585 50%, #787878 50%) #858585 !important;
     box-shadow: inset #222 0 0 1px !important;
     text-shadow: #888 0 0 2px !important;

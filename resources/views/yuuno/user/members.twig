@@ -20,7 +20,7 @@
 {% set paginationPages = users %}
 {% set paginationUrl %}{% if rank %}{{ route('members.rank', rank) }}{% else %}{{ route('members.index') }}{% endif %}{% endset %}
 
-{% block title %}{{ rankTitle }}{% endblock %}
+{% set title = rankTitle %}
 
 {% block content %}
     <div class="headerNotify" style="margin-bottom: 1px;">

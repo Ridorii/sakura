@@ -109,47 +109,6 @@ class MetaController extends Controller
     }
 
     /**
-     * Handles the info pages.
-     * Deprecate this!!
-     *
-     * @param string $id The page ID from the database.
-     *
-     * @return mixed HTML for the info page.
-     */
-    public function infoPage($id = null)
-    {
-        // Set default variables
-        Template::vars([
-            'page' => [
-                'content' => '<h1>Unable to load the requested info page.</h1><p>Check the URL and try again.</p>',
-            ],
-        ]);
-
-        // Set page id
-        $id = strtolower($id);
-
-        // Get the page from the database
-        $ipData = DB::table('infopages')
-            ->where('page_shorthand', $id)
-            ->get();
-
-        // Get info page data from the database
-        if ($ipData) {
-            // Assign new proper variable
-            Template::vars([
-                'page' => [
-                    'id' => $id,
-                    'title' => $ipData[0]->page_title,
-                    'content' => $ipData[0]->page_content,
-                ],
-            ]);
-        }
-
-        // Return the compiled page
-        return Template::render('meta/infopage');
-    }
-
-    /**
      * Search page
      *
      * @return mixed HTML for the search page.

@@ -1,6 +1,6 @@
 {% extends 'global/master.twig' %}
 
-{% block title %}Support {{ config('general.name') }}{% endblock %}
+{% set title %}Support {{ config('general.name') }}{% endset %}
 
 {% set persistentPremium = user.permission(constant('Sakura\\Perms\\Site::STATIC_PREMIUM')) %}
 

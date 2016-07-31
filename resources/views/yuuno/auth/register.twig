@@ -1,6 +1,6 @@
 {% extends 'global/master.twig' %}
 
-{% block title %}Register{% endblock %}
+{% set title = 'Register' %}
 
 {% block content %}
     {% if config('user.disable_registration') %}
@@ -40,7 +40,7 @@
                     <input class="inputStyling" type="password" id="registerPassword" name="password" onkeyup="registerVarCheck(this.id, 'password');" placeholder="Using special characters is recommended">
                 </div>
                 <div class="subLinks centreAlign">
-                    <input class="inputStyling" name="tos" type="checkbox" id="registerToS"><label for="registerToS">I agree to the <a class="default" href="{{ route('main.infopage', 'terms') }}" target="_blank">Terms of Service</a>.
+                    <input class="inputStyling" name="tos" type="checkbox" id="registerToS"><label for="registerToS">I agree to the <a class="default" href="{{ route('info.terms') }}" target="_blank">Terms of Service</a>.
                 </div>
                 <div class="centreAlign">
                     <input class="inputStyling" type="submit" name="submit" value="Register" id="registerAccBtn">

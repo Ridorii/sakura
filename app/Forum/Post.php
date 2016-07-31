@@ -120,14 +120,14 @@ class Post
         // Assign data if a row was returned
         if ($postRow) {
             $postRow = $postRow[0];
-            $this->id = $postRow->post_id;
-            $this->topic = $postRow->topic_id;
-            $this->forum = $postRow->forum_id;
+            $this->id = intval($postRow->post_id);
+            $this->topic = intval($postRow->topic_id);
+            $this->forum = intval($postRow->forum_id);
             $this->poster = User::construct($postRow->poster_id);
-            $this->time = $postRow->post_time;
+            $this->time = intval($postRow->post_time);
             $this->subject = $postRow->post_subject;
             $this->text = $postRow->post_text;
-            $this->editTime = $postRow->post_edit_time;
+            $this->editTime = intval($postRow->post_edit_time);
             $this->editReason = $postRow->post_edit_reason;
             $this->editUser = User::construct($postRow->post_edit_user);
 

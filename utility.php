@@ -6,6 +6,7 @@
 use Sakura\Config;
 use Sakura\Net;
 use Sakura\Router;
+use Sakura\Template;
 
 // Sort of alias for Config::get
 function config($value)
@@ -25,6 +26,19 @@ function config($value)
 function route($name, $args = null)
 {
     return Router::route($name, $args);
+}
+
+// Checking if a parameter is equal to session_id()
+function session_check($param = 'session')
+{
+    return isset($_REQUEST[$param]) && $_REQUEST[$param] === session_id();
+}
+
+// Alias for Template::vars and Template::render
+function view($name, $vars = [])
+{
+    Template::vars($vars);
+    return Template::render($name);
 }
 
 function clean_string($string, $lower = false, $noSpecial = false, $replaceSpecial = '')

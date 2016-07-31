@@ -268,7 +268,9 @@ class BaseTables extends Migration
                 ->unsigned()
                 ->default(0);
 
-            $table->string('post_edit_reason', 255);
+            $table->string('post_edit_reason', 255)
+                ->nullable()
+                ->default(null);
 
             $table->integer('post_edit_user')
                 ->unsigned()
@@ -559,6 +561,7 @@ class BaseTables extends Migration
         $schema->drop('comment_votes');
         $schema->drop('comments');
         $schema->drop('emoticons');
+        $schema->drop('error_log');
         $schema->drop('faq');
         $schema->drop('forum_permissions');
         $schema->drop('forums');
