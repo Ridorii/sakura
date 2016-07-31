@@ -523,7 +523,8 @@ class BaseTables extends Migration
                 ->default(0);
 
             $table->date('user_birthday')
-                ->default('0000-00-00');
+                ->nullable()
+                ->default(null);
 
             $table->char('user_country', 2)
                 ->default('XX');
