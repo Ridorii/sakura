@@ -156,7 +156,7 @@ class BaseTables extends Migration
             $table->integer('attempt_timestamp')
                 ->unsigned();
 
-            $table->string('attempt_ip', 255);
+            $table->binary('attempt_ip');
 
             $table->integer('user_id')
                 ->unsigned();
@@ -254,7 +254,7 @@ class BaseTables extends Migration
                 ->unsigned()
                 ->default(0);
 
-            $table->string('poster_ip', 40);
+            $table->binary('poster_ip');
 
             $table->integer('post_time')
                 ->unsigned()
@@ -338,7 +338,7 @@ class BaseTables extends Migration
             $table->integer('user_id')
                 ->unsigned();
 
-            $table->string('user_ip', 255);
+            $table->binary('user_ip');
 
             $table->string('user_agent', 255)
                 ->nullable()
@@ -506,9 +506,9 @@ class BaseTables extends Migration
                 ->nullable()
                 ->default(null);
 
-            $table->string('register_ip', 255);
+            $table->binary('register_ip');
 
-            $table->string('last_ip', 255);
+            $table->binary('last_ip');
 
             $table->string('user_title', 64)
                 ->nullable()
