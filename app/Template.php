@@ -10,6 +10,7 @@ namespace Sakura;
 use Twig_Environment;
 use Twig_Extension_StringLoader;
 use Twig_Loader_Filesystem;
+use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 
 /**
@@ -51,10 +52,18 @@ class Template
      *
      * @var array
      */
-    protected static $utility = [
+    protected static $utilityFunctions = [
         'route',
         'config',
         'session_id',
+    ];
+
+    /**
+     * List of utility filters to add to templating
+     *
+     * @var array
+     */
+    protected static $utilityFilters = [
         'json_decode',
         'byte_symbol',
     ];
@@ -99,8 +108,13 @@ class Template
         self::$engine->addExtension(new Twig_Extension_StringLoader());
 
         // Add utility functions
-        foreach (self::$utility as $utility) {
-            self::$engine->addFunction(new Twig_SimpleFunction($utility, $utility));
+        foreach (self::$utilityFunctions as $function) {
+            self::$engine->addFunction(new Twig_SimpleFunction($function, $function));
+        }
+
+        // Add utility filters
+        foreach (self::$utilityFilters as $filter) {
+            self::$engine->addFilter(new Twig_SimpleFilter($filter, $filter));
         }
     }
 

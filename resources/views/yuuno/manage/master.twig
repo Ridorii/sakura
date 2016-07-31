@@ -1,0 +1,27 @@
+{% extends 'master.twig' %}
+
+{% set title = category ~ ' / ' ~ mode %}
+
+{% block content %}
+    <div class="content settings messages">
+    <div class="content-right content-column">
+        <div class="head">
+            Navigation
+        </div>
+        <div class="right-menu-nav">
+            {% for name, links in navigation %}
+                <div>{{ name }}</div>
+                {% for name,link in links %}
+                    <a href="{{ link }}">{{ name }}</a>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="content-left content-column">
+        <div class="head">{{ title }}</div>
+        <div class="settings-explanation">{{ block('description') }}</div>
+        {{ block('manageContent') }}
+    </div>
+    <div class="clear"></div>
+</div>
+{% endblock %}

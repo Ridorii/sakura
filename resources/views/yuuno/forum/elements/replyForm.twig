@@ -53,14 +53,14 @@
         rText = document.getElementById('previewText'),
         lastParsed = Date.now(),
         lastKeystroke = Date.now(),
-        parser = new AJAX(),
-        postFetch = new AJAX(),
+        parser = new Sakura.AJAX(),
+        postFetch = new Sakura.AJAX(),
         parserActive = false,
         op = {{ topic is defined ? topic.firstPost.id : 0 }},
         topicName = "{{ topic is defined ? topic.firstPost.subject : '' }}";
 
-    parser.setUrl("{{ route('helper.bbcode.parse') }}");
-    parser.contentType("application/x-www-form-urlencoded");
+    parser.SetUrl("{{ route('helper.bbcode.parse') }}");
+    parser.ContentType("application/x-www-form-urlencoded");
 
     pText.addEventListener("focus", function () {
         preview.style.display = null;
@@ -89,10 +89,10 @@
             } else {
                 parserActive = true;
 
-                parser.setSend({"text":text});
+                parser.SetSend({"text":text});
 
-                parser.addCallback(200, function () {
-                    rText.innerHTML = parser.response();
+                parser.AddCallback(200, function () {
+                    rText.innerHTML = parser.Response();
 
                     var codeBlocks = rText.querySelectorAll("pre code");
 
@@ -105,7 +105,7 @@
                     parserActive = false;
                 });
 
-                parser.start(HTTPMethods.POST);
+                parser.Start(Sakura.HTTPMethod.POST);
             }
         }
     }, 1000);
@@ -156,10 +156,10 @@
 
         url = "{{ route('forums.post.raw', '1') }}".replace('1', id);
 
-        postFetch.setUrl(url);
+        postFetch.SetUrl(url);
 
-        postFetch.addCallback(200, function () {
-            pText.value = postFetch.response();
+        postFetch.AddCallback(200, function () {
+            pText.value = postFetch.Response();
             pStopEdit.style.display = null;
             pForm.action = "{{ route('forums.post.edit', '1') }}".replace('1', id);
             pMode.innerText = 'Editing #' + id;
@@ -172,7 +172,7 @@
             pText.focus();
         });
 
-        postFetch.start(HTTPMethods.GET);
+        postFetch.Start(Sakura.HTTPMethod.GET);
     }
 
     function stopEdit() {

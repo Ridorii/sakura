@@ -21,8 +21,8 @@
                         <div class="friends-list-name" style="color: {{ friend.colour }};">{{ friend.username }}</div>
                     </a>
                     <div class="friends-list-actions">
-                        <a class="add fa fa-check" title="Add friend" href="javascript:void(0);" onclick="addFriend({{ friend.id }});"></a>
-                        <a class="remove fa fa-remove" title="Remove friend" href="javascript:void(0);" onclick="removeFriend({{ friend.id }});"></a>
+                        <a class="add fa fa-check" title="Add friend" href="javascript:void(0);" onclick="Sakura.Friend.Add({{ friend.id }});"></a>
+                        <a class="remove fa fa-remove" title="Remove friend" href="javascript:void(0);" onclick="Sakura.Friend.Remove({{ friend.id }});"></a>
                         <div class="clear"></div>
                     </div>
                 </div>

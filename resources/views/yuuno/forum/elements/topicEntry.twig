@@ -22,6 +22,6 @@
         {% else %}
             [deleted user]
         {% endif %} <a href="{{ route('forums.post', topic.lastPost.id) }}" class="default fa fa-tag"></a><br>
-        <time datetime="{{ topic.lastPost.time|date('r') }}">{{ topic.lastPost.time|date('D Y-m-d H:i:s T') }}</time>
+        <time class="time-ago" datetime="{{ topic.lastPost.time|date('r') }}">{{ topic.lastPost.time|date('D Y-m-d H:i:s T') }}</time>
     </td>
 </tr>

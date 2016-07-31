@@ -1,4 +1,4 @@
-{% extends 'global/master.twig' %}
+{% extends 'master.twig' %}
 
 {% set title = 'Forums' %}
 
@@ -17,7 +17,7 @@
                             <td style="text-align: left; border-bottom: 1px solid #9475b2;">
                                 <a href="{{ route('forums.topic', _t.id) }}" class="default">{{ _t.title }}</a>
                             </td>
-                            <td class="rightAlign" style="border-bottom: 1px solid #9475b2;"><time datetime="{{ _t.lastPost.time|date('r') }}">{{ _t.lastPost.time|date('D Y-m-d H:i:s T') }}</time></td>
+                            <td class="rightAlign" style="border-bottom: 1px solid #9475b2;"><time class="time-ago" datetime="{{ _t.lastPost.time|date('r') }}">{{ _t.lastPost.time|date('D Y-m-d H:i:s T') }}</time></td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -36,7 +36,7 @@
                                 by
                                 <a href="{{ route('user.profile', _p.poster.id) }}" class="default"><span style="color: {{ _p.poster.colour }};">{{ _p.poster.username }}</span></a>
                             </td>
-                            <td class="rightAlign" style="border-bottom: 1px solid #9475b2;"><time datetime="{{ _p.time|date('r') }}">{{ _p.time|date('D Y-m-d H:i:s T') }}</time></td>
+                            <td class="rightAlign" style="border-bottom: 1px solid #9475b2;"><time class="time-ago" datetime="{{ _p.time|date('r') }}">{{ _p.time|date('D Y-m-d H:i:s T') }}</time></td>
                         </tr>
                     {% endfor %}
                 </table>

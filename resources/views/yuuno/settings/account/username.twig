@@ -12,7 +12,7 @@
 {% block settingsContent %}
     <form enctype="multipart/form-data" method="post" action="{{ route('settings.account.username') }}">
         <h1 class="stylised" style="text-align: center; margin-top: 10px;{% if not eligible %} color: #c44;{% endif %}">You are {% if not eligible %}not {% endif %}eligible for a name change.</h1>
-        <h3 style="text-align: center;">{% if user.getUsernameHistory %}Your last name change was <time datetime="{{ user.getUsernameHistory[0]['change_time']|date('r') }}">{{ user.getUsernameHistory[0]['change_time']|date('D Y-m-d H:i:s T') }}</time>.{% else %}This is your first username change.{% endif %}</h3>
+        <h3 style="text-align: center;">{% if user.getUsernameHistory %}Your last name change was <time class="time-ago" datetime="{{ user.getUsernameHistory[0]['change_time']|date('r') }}">{{ user.getUsernameHistory[0]['change_time']|date('D Y-m-d H:i:s T') }}</time>.{% else %}This is your first username change.{% endif %}</h3>
         {% if eligible %}
             <div class="profile-field">
                 <div><h2>Username</h2></div>

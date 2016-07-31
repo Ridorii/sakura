@@ -101,7 +101,7 @@ function notifyClose(id: string): void {
 
     // Remove after 410 ms
     setTimeout(() => {
-        Sakura.removeById(id);
+        (new Sakura.DOM(id, Sakura.DOMSelector.ID)).Remove();
     }, 410);
 }
 
@@ -122,13 +122,13 @@ function notifyRequest(session: string): void {
     }
 
     // Create AJAX object
-    var get: any = new AJAX();
-    get.setUrl('/notifications');
+    var get = new Sakura.AJAX();
+    get.SetUrl('/notifications');
 
     // Add callbacks
-    get.addCallback(200, () => {
+    get.AddCallback(200, () => {
         // Assign the parsed JSON
-        var data: Notification = JSON.parse(get.response());
+        var data: Notification = JSON.parse(get.Response());
 
         // Check if nothing went wrong
         if ((typeof data).toLowerCase() === 'undefined') {
@@ -142,7 +142,7 @@ function notifyRequest(session: string): void {
         }
     });
 
-    get.start(HTTPMethods.GET);
+    get.Start(Sakura.HTTPMethod.GET);
 }
 
 // Show the full page busy window
@@ -216,7 +216,7 @@ function ajaxBusyView(show: boolean, message: string = null, type: string = null
                 if (parseInt(cont.style.opacity) > 0) {
                     cont.style.opacity = (parseInt(cont.style.opacity) - 0.1).toString();
                 } else {
-                    Sakura.removeById('ajaxBusy');
+                    (new Sakura.DOM('ajaxBusy', Sakura.DOMSelector.ID)).Remove();
                     clearInterval(out);
                 }
             }, 10);
@@ -227,29 +227,29 @@ function ajaxBusyView(show: boolean, message: string = null, type: string = null
 // Making a post request using AJAX
 function ajaxPost(url: string, data: Object, callback: Function) {
     // Create AJAX
-    var request: any = new AJAX();
+    var request = new Sakura.AJAX;
 
     // Set url
-    request.setUrl(url);
+    request.SetUrl(url);
 
     // Add callbacks
-    request.addCallback(200, function() {
-        callback.call(request.response())
+    request.AddCallback(200, function() {
+        callback.call(request.Response())
     });
-    request.addCallback(0, function() {
+    request.AddCallback(0, function() {
         ajaxBusyView(false);
 
         throw "POST Request failed";
     });
 
     // Add header
-    request.addHeader('Content-Type', 'application/x-www-form-urlencoded');
+    request.AddHeader('Content-Type', 'application/x-www-form-urlencoded');
 
     // Set the post data
-    request.setSend(data);
+    request.SetSend(data);
 
     // Make the request
-    request.start(HTTPMethods.POST);
+    request.Start(Sakura.HTTPMethod.POST);
 
     // Return the AJAX object
     return request;
@@ -399,7 +399,7 @@ function submitPostHandler(data: string, busyView: boolean, resetCaptcha: boolea
 
 // Check if a password is within the minimum entropy value
 function checkPwdEntropy(pwd: string): boolean {
-    return (Sakura.entropy(pwd) >= sakuraVars.minPwdEntropy);
+    return (Sakura.Legacy.entropy(pwd) >= sakuraVars.minPwdEntropy);
 }
 
 // Check registration variables
@@ -420,12 +420,12 @@ function registerVarCheck(id: string, mode: string, option: any = null): void {
             break;
 
         case 'email':
-            check = Sakura.validateEmail(input.value);
+            check = Sakura.Legacy.validateEmail(input.value);
             break;
 
         case 'username':
         default:
-            check = Sakura.stringLength(input.value, sakuraVars.minUserLen, sakuraVars.maxUserLen);
+            check = Sakura.Legacy.stringLength(input.value, sakuraVars.minUserLen, sakuraVars.maxUserLen);
             break;
     }
 

@@ -75,8 +75,8 @@ Router::group(['before' => 'maintenance'], function () {
             'chat' => 'chat.redirect',
             //'irc' => 'chat.irc',
             'feedback' => 'forums.index',
-            //'mcp' => 'manage.index',
-            //'mcptest' => 'manage.index',
+            'mcp' => 'manage.index',
+            'mcptest' => 'manage.index',
             //'report' => 'report.something',
             //'osu' => 'eventual link to flashii team',
             //'filehost' => '???',
@@ -120,12 +120,12 @@ Router::group(['before' => 'maintenance'], function () {
     Router::group(['prefix' => 'forum'], function () {
         // Post
         Router::group(['prefix' => 'post'], function () {
-            Router::get('/{id:i}', 'ForumController@post', 'forums.post');
+            Router::get('/{id:i}', 'Forum.PostController@find', 'forums.post');
             Router::group(['before' => 'loginCheck'], function () {
-                Router::get('/{id:i}/raw', 'ForumController@postRaw', 'forums.post.raw');
-                Router::get('/{id:i}/delete', 'ForumController@deletePost', 'forums.post.delete');
-                Router::post('/{id:i}/delete', 'ForumController@deletePost', 'forums.post.delete');
-                Router::post('/{id:i}/edit', 'ForumController@editPost', 'forums.post.edit');
+                Router::get('/{id:i}/raw', 'Forum.PostController@raw', 'forums.post.raw');
+                Router::get('/{id:i}/delete', 'Forum.PostController@delete', 'forums.post.delete');
+                Router::post('/{id:i}/delete', 'Forum.PostController@delete', 'forums.post.delete');
+                Router::post('/{id:i}/edit', 'Forum.PostController@edit', 'forums.post.edit');
             });
         });
 
@@ -142,12 +142,12 @@ Router::group(['before' => 'maintenance'], function () {
         });
 
         // Forum
-        Router::get('/', 'ForumController@index', 'forums.index');
-        Router::get('/{id:i}', 'ForumController@forum', 'forums.forum');
+        Router::get('/', 'Forum.ForumController@index', 'forums.index');
+        Router::get('/{id:i}', 'Forum.ForumController@forum', 'forums.forum');
         Router::group(['before' => 'loginCheck'], function () {
-            Router::get('/{id:i}/mark', 'ForumController@markForumRead', 'forums.mark');
-            Router::get('/{id:i}/new', 'ForumController@createTopic', 'forums.new');
-            Router::post('/{id:i}/new', 'ForumController@createTopic', 'forums.new');
+            Router::get('/{id:i}/mark', 'Forum.ForumController@markRead', 'forums.mark');
+            Router::get('/{id:i}/new', 'Forum.TopicController@create', 'forums.new');
+            Router::post('/{id:i}/new', 'Forum.TopicController@create', 'forums.new');
         });
     });
 
@@ -308,16 +308,26 @@ Router::group(['before' => 'maintenance'], function () {
         });
     });
 
+    // Settings
+    Router::group(['prefix' => 'manage', 'before' => 'loginCheck'], function () {
+        Router::get('/', function () {
+            $route = Router::route('manage.overview');
+            return header("Location: {$route}");
+        }, 'manage.index');
+
+        // Overview section
+        Router::group(['prefix' => 'overview'], function () {
+            Router::get('/', function () {
+                $route = Router::route('manage.overview.index');
+                return header("Location: {$route}");
+            }, 'manage.overview');
+
+            Router::get('/index', 'Manage.OverviewController@index', 'manage.overview.index');
+            Router::get('/data', 'Manage.OverviewController@data', 'manage.overview.data');
+        });
+    });
 // Management
     /*
- * General
- * - Dashboard
- * - Info pages (possibly deprecate with wiki)
- * Configuration
- * - General
- * - Files
- * - User
- * - Mail
  * Forums
  * - Manage
  * - Settings

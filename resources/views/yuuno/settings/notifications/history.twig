@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <div class="notif-hist-time">
-                        <time datetime="{{ alert.time|date('r') }}">{{ alert.time|date('D Y-m-d H:i:s T') }}</time>
+                        <time class="time-ago" datetime="{{ alert.time|date('r') }}">{{ alert.time|date('D Y-m-d H:i:s T') }}</time>
                     </div>
                 </div>
                 <div class="clear"></div>

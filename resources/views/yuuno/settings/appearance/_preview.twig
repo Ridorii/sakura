@@ -1,11 +1,11 @@
 <script type="text/javascript">
-    var parser = new AJAX(),
+    var parser = new Sakura.AJAX(),
         textMax = {{ maxLength }},
         form = document.getElementById("settingsEditor"),
         preview = document.getElementById("settingsPreview");
 
-    parser.setUrl("{{ route('helper.bbcode.parse') }}");
-    parser.contentType("application/x-www-form-urlencoded");
+    parser.SetUrl("{{ route('helper.bbcode.parse') }}");
+    parser.ContentType("application/x-www-form-urlencoded");
 
     function settingsPreview() {
         var text = form.value;
@@ -15,10 +15,10 @@
         } else if (text.length > textMax) {
             preview.innerHTML = "<span style='color: red;'>Too long!</span>";
         } else {
-            parser.setSend({"text":text});
+            parser.SetSend({"text":text});
 
-            parser.addCallback(200, function () {
-                preview.innerHTML = parser.response();
+            parser.AddCallback(200, function () {
+                preview.innerHTML = parser.Response();
 
                 var codeBlocks = preview.querySelectorAll("pre code");
 
@@ -29,7 +29,7 @@
                 }
             });
 
-            parser.start(HTTPMethods.POST);
+            parser.Start(Sakura.HTTPMethod.POST);
         }
     }
 </script>

@@ -26,22 +26,22 @@
 
 {% block js %}
     <script type="text/javascript">
-        var commentClient = new AJAX();
+        var commentClient = new Sakura.AJAX();
 
-        commentClient.contentType("application/x-www-form-urlencoded");
+        commentClient.ContentType("application/x-www-form-urlencoded");
 
         function commentPost(element, url) {
             var text = element.querySelector('[name="text"]'),
                 session = element.querySelector('[name="session"]');
 
-            commentClient.setSend({"text":text.value,"session":session.value});
+            commentClient.SetSend({"text":text.value,"session":session.value});
 
             text.value = '';
 
-            commentClient.setUrl(url);
+            commentClient.SetUrl(url);
 
-            commentClient.addCallback(200, function () {
-                var resp = JSON.parse(commentClient.response());
+            commentClient.AddCallback(200, function () {
+                var resp = JSON.parse(commentClient.Response());
 
                 if (resp.error) {
                     ajaxBusyView(true, resp.error, 'fail');
@@ -53,10 +53,10 @@
                     commentAdd(resp);
                 }
 
-                commentClient.setRawSend("");
+                commentClient.SetRawSend("");
             });
 
-            commentClient.start(HTTPMethods.POST);
+            commentClient.Start(Sakura.HTTPMethod.POST);
         }
 
         function commentAdd(obj) {
@@ -84,7 +84,7 @@
 
             var controlsInner = document.createElement('ul');
 
-            if (Sakura.cookie('id') == obj.user) {
+            if (Sakura.Cookies.Get(sakuraVars.cookie.prefix + 'id') == obj.user) {
                 var controlsTrashContainer = document.createElement('li');
                 var controlsTrash = document.createElement('a');
                 controlsTrash.href = 'javascript:void(0);';
@@ -197,7 +197,7 @@
 
             // Remove it if it already exists
             if (replyBox) {
-                Sakura.removeById('comment-reply-container-' + id);
+                (new Sakura.DOM('comment-reply-container-' + id, Sakura.DOMSelector.ID)).Remove();
                 return;
             }
 
@@ -250,10 +250,10 @@
         function commentDelete(id) {
             var url = "{{ route('comments.comment.delete', 1) }}".replace(1, id);
 
-            commentClient.setUrl(url);
+            commentClient.SetUrl(url);
 
-            commentClient.addCallback(200, function () {
-                var resp = JSON.parse(commentClient.response());
+            commentClient.AddCallback(200, function () {
+                var resp = JSON.parse(commentClient.Response());
 
                 if (resp.error) {
                     ajaxBusyView(true, resp.error, 'fail');
@@ -262,11 +262,11 @@
                         ajaxBusyView(false);
                     }, 1500);
                 } else {
-                    Sakura.removeById("comment-" + id);
+                    (new Sakura.DOM("comment-" + id, Sakura.DOMSelector.ID)).Remove();
                 }
             });
 
-            commentClient.start(HTTPMethods.POST);
+            commentClient.Start(Sakura.HTTPMethod.POST);
         }
 
         function commentVote(id, vote) {
@@ -274,12 +274,12 @@
                 upvotes = document.getElementById("comment-" + id + "-likes"),
                 downvotes = document.getElementById("comment-" + id + "-dislikes");
 
-            commentClient.setSend({"vote":vote});
+            commentClient.SetSend({"vote":vote});
 
-            commentClient.setUrl(url);
+            commentClient.SetUrl(url);
 
-            commentClient.addCallback(200, function () {
-                var resp = JSON.parse(commentClient.response());
+            commentClient.AddCallback(200, function () {
+                var resp = JSON.parse(commentClient.Response());
 
                 if (resp.error) {
                     ajaxBusyView(true, resp.error, 'fail');
@@ -292,10 +292,10 @@
                     downvotes.innerText = resp.downvotes;
                 }
 
-                commentClient.setRawSend("");
+                commentClient.SetRawSend("");
             });
 
-            commentClient.start(HTTPMethods.POST);
+            commentClient.Start(Sakura.HTTPMethod.POST);
         }
     </script>
 {% endblock %}

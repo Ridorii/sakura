@@ -1,4 +1,4 @@
-{% extends 'global/master.twig' %}
+{% extends 'master.twig' %}
 
 {% set sorts = ['boxes', 'rectangles', 'list'] %}
 {% set sort = get.sort in sorts ? get.sort : sorts[0] %}
@@ -80,10 +80,10 @@
                                 <a href="{{ route('user.profile', user.id) }}" class="default" style="font-weight: bold; color: {{ user.colour }}; text-shadow: 0 0 5px {{ user.colour }};">{{ user.username }}</a>
                             </td>
                             <td>
-                                <time datetime="{{ user.registered|date('r') }}">{{ user.registered|date('D Y-m-d H:i:s T') }}</time>
+                                <time class="time-ago" datetime="{{ user.registered|date('r') }}">{{ user.registered|date('D Y-m-d H:i:s T') }}</time>
                             </td>
                             <td>
-                                {% if user.lastOnline == 0 %}<i>Never logged in.</i>{% else %}<time datetime="{{ user.lastOnline|date('r') }}">{{ user.lastOnline|date('D Y-m-d H:i:s T') }}</time>{% endif %}
+                                {% if user.lastOnline == 0 %}<i>Never logged in.</i>{% else %}<time class="time-ago" datetime="{{ user.lastOnline|date('r') }}">{{ user.lastOnline|date('D Y-m-d H:i:s T') }}</time>{% endif %}
                             </td>
                             <td>
                                 {{ user.title }}

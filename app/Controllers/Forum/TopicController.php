@@ -1,6 +1,6 @@
 <?php
 /**
- * Holds the controller for topic.
+ * Holds the controller for topics.
  *
  * @package Sakura
  */
@@ -9,9 +9,9 @@ namespace Sakura\Controllers\Forum;
 
 use Sakura\ActiveUser;
 use Sakura\Forum\Forum;
+use Sakura\Forum\Post;
 use Sakura\Forum\Topic;
 use Sakura\Perms\Forum as ForumPerms;
-use Sakura\Template;
 
 /**
  * Topic controller.
@@ -23,35 +23,22 @@ class TopicController extends Controller
 {
     public function view($id = 0)
     {
-        // Attempt to get the topic
         $topic = new Topic($id);
-
-        // And attempt to get the forum
         $forum = new Forum($topic->forum);
 
         // Check if the forum exists
-        if ($topic->id === 0 || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
-            // Set render data
-            Template::vars([
-                'message' => "This topic doesn't exist or you don't have access to it!",
-                'redirect' => route('forums.index'),
-            ]);
+        if ($topic->id === 0
+            || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
+            $message = "This topic doesn't exist or you don't have access to it!";
+            $redirect = route('forums.index');
 
-            // Print page contents
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        // Update the tracking status
         $topic->trackUpdate(ActiveUser::$user->id);
-
-        // Update views
         $topic->viewsUpdate();
 
-        // Set parse variables
-        Template::vars(compact('forum', 'topic'));
-
-        // Print page contents
-        return Template::render('forum/topic');
+        return view('forum/topic', compact('forum', 'topic'));
     }
 
     private function modBase($id)
@@ -59,7 +46,9 @@ class TopicController extends Controller
         $topic = new Topic($id);
         $forum = new Forum($topic->forum);
 
-        if ($topic->id !== 0 || $forum->permission(ForumPerms::VIEW, ActiveUser::$user->id) || session_check()) {
+        if ($topic->id !== 0
+            || $forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)
+            || session_check()) {
             return compact('topic', 'forum');
         }
 
@@ -240,9 +229,7 @@ class TopicController extends Controller
             $message = "This post doesn't exist or you don't have access to it!";
             $redirect = route('forums.index');
 
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Check if the topic exists
@@ -254,9 +241,7 @@ class TopicController extends Controller
             $message = "You are not allowed to post in this topic!";
             $redirect = route('forums.topic', $topic->id);
 
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Length
@@ -269,7 +254,7 @@ class TopicController extends Controller
         // Check requirments
         if ($tooShort
             || $tooLong) {
-            $route = Router::route('forums.topic', $topic->id);
+            $route = route('forums.topic', $topic->id);
 
             $message = "Your post is " . (
                 $tooShort
@@ -278,15 +263,13 @@ class TopicController extends Controller
             );
             $redirect = "{$route}#reply";
 
-            Template::vars(compact('message', 'redirect'));
-
             if (!isset($_SESSION['replyText'])) {
                 $_SESSION['replyText'] = [];
             }
 
             $_SESSION['replyText']["t{$topic->id}"] = $text;
 
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         unset($_SESSION['replyText']["t{$topic->id}"]);
@@ -305,5 +288,91 @@ class TopicController extends Controller
 
         // Head to the post
         return header("Location: {$postLink}");
+    }
+
+    public function create($id = 0)
+    {
+        $title = $_POST['title'] ?? null;
+        $text = $_POST['text'] ?? null;
+
+        // And attempt to get the forum
+        $forum = new Forum($id);
+
+        // Check if the forum exists
+        if ($forum->id === 0
+            || $forum->type !== 0
+            || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)
+            || !$forum->permission(ForumPerms::REPLY, ActiveUser::$user->id)
+            || !$forum->permission(ForumPerms::CREATE_THREADS, ActiveUser::$user->id)) {
+            $message = "This forum doesn't exist or you don't have access to it!";
+            $redirect = route('forums.index');
+
+            return view('global/information', compact('message', 'redirect'));
+        }
+
+        if ($text && $title) {
+            // Length
+            $titleLength = strlen($title);
+            $textLength = strlen($text);
+            $titleMin = config('forum.min_title_length');
+            $titleMax = config('forum.max_title_length');
+            $textMin = config('forum.min_post_length');
+            $textMax = config('forum.max_post_length');
+
+            // Checks
+            $titleTooShort = $titleLength < $titleMin;
+            $titleTooLong = $titleLength > $titleMax;
+            $textTooShort = $textLength < $textMin;
+            $textTooLong = $textLength > $textMax;
+
+            // Check requirments
+            if ($titleTooShort
+                || $titleTooLong
+                || $textTooShort
+                || $textTooLong) {
+                $message = "";
+
+                if ($titleTooShort) {
+                    $message = "This title is too short, it has to be longer than {$titleMin} characters!";
+                } elseif ($titleTooLong) {
+                    $message = "This title is too long, keep it under {$titleMax} characters!";
+                } elseif ($textTooShort) {
+                    $message = "Please make your post a little bit longer, at least {$textMin} characters!";
+                } elseif ($textTooLong) {
+                    $message = "Your post is too long, you're gonna have to cut a little!"
+                        . " Can't be more than {$textMax} characters.";
+                }
+
+                $redirect = route('forums.new', $forum->id);
+
+                if (!isset($_SESSION['replyText'])) {
+                    $_SESSION['replyText'] = [];
+                }
+
+                $_SESSION['replyText']["f{$forum->id}"]["title"] = $title;
+                $_SESSION['replyText']["f{$forum->id}"]["text"] = $text;
+
+                return view('global/information', compact('message', 'redirect'));
+            }
+
+            unset($_SESSION['replyText']["f{$forum->id}"]);
+
+            // Create the post
+            $post = Post::create(
+                $title,
+                $text,
+                ActiveUser::$user,
+                0,
+                $forum->id
+            );
+
+            // Go to the post
+            $postLink = route('forums.post', $post->id);
+
+            // Head to the post
+            return header("Location: {$postLink}");
+        }
+
+        return view('forum/topic', compact('forum'));
     }
 }
