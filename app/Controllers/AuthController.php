@@ -124,7 +124,7 @@ class AuthController extends Controller
             return Template::render('global/information');
         }
 
-        if (strlen($user->password) < 1) {
+        if ($user->passwordExpired()) {
             $message = 'Your password expired.';
             $redirect = Router::route('auth.resetpassword');
             Template::vars(compact('message', 'redirect'));
@@ -132,7 +132,7 @@ class AuthController extends Controller
             return Template::render('global/information');
         }
 
-        if (!password_verify($password, $user->password)) {
+        if (!$user->verifyPassword($password)) {
             $this->touchRateLimit($user->id);
             $message = 'The password you entered was invalid.';
             Template::vars(compact('message', 'redirect'));
@@ -552,16 +552,7 @@ class AuthController extends Controller
                 return Template::render('global/information');
             }
 
-            // Hash the password
-            $password = password_hash($password, PASSWORD_BCRYPT);
-
-            // Update the user
-            DB::table('users')
-                ->where('user_id', $user->id)
-                ->update([
-                    'password' => $password,
-                    'password_chan' => time(),
-                ]);
+            $user->setPassword($password);
 
             $message = "Changed your password! You may now log in.";
             $redirect = Router::route('auth.login');

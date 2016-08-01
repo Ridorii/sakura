@@ -36,15 +36,15 @@ class Notification
         if ($data) {
             $data = $data[0];
 
-            $this->id = $data->alert_id;
-            $this->user = $data->user_id;
-            $this->time = $data->alert_timestamp;
+            $this->id = intval($data->alert_id);
+            $this->user = intval($data->user_id);
+            $this->time = intval($data->alert_timestamp);
             $this->read = intval($data->alert_read) !== 0;
             $this->title = $data->alert_title;
             $this->text = $data->alert_text;
             $this->link = $data->alert_link;
             $this->image = $data->alert_img;
-            $this->timeout = $data->alert_timeout;
+            $this->timeout = intval($data->alert_timeout);
         }
     }
 

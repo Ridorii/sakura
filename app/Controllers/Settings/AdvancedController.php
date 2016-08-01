@@ -114,7 +114,7 @@ class AdvancedController extends Controller
             }
 
             // Check password
-            if (!password_verify($password, ActiveUser::$user->password)) {
+            if (!ActiveUser::$user->passwordVerify($password)) {
                 $message = "Your password was invalid!";
                 Template::vars(compact('redirect', 'message'));
                 return Template::render('global/information');

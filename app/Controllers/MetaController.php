@@ -12,6 +12,7 @@ use Sakura\DB;
 use Sakura\News\Category;
 use Sakura\Template;
 use Sakura\User;
+use Sakura\UserTest;
 
 /**
  * Meta page controllers (sections that aren't big enough to warrant a dedicated controller).
@@ -28,6 +29,10 @@ class MetaController extends Controller
      */
     public function index()
     {
+        $test = new UserTest(1);
+
+        echo $test->country(true);
+
         // Get the newest user
         $newestUserId = DB::table('users')
             ->whereNotIn('rank_main', [config('rank.banned'), config('rank.inactive')])

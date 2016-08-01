@@ -41,6 +41,25 @@ function view($name, $vars = [])
     return Template::render($name);
 }
 
+// Convert camel case to snake case
+function camel_to_snake($text)
+{
+    return ltrim(strtolower(preg_replace('#[A-Z]#', '_$0', $text)), '_');
+}
+
+// Convert snake case to camel case
+function snake_to_camel($text)
+{
+    $split = explode('_', $text);
+    $name = array_shift($split);
+
+    foreach ($split as $part) {
+        $name .= ucfirst($part);
+    }
+
+    return $name;
+}
+
 function clean_string($string, $lower = false, $noSpecial = false, $replaceSpecial = '')
 {
     // Run common sanitisation function over string
