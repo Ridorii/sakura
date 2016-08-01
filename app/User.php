@@ -45,28 +45,7 @@ class User
      *
      * @var string
      */
-    public $passwordHash = '';
-
-    /**
-     * The user's password salt.
-     *
-     * @var string
-     */
-    public $passwordSalt = '';
-
-    /**
-     * The user's password algorithm.
-     *
-     * @var string
-     */
-    public $passwordAlgo = 'disabled';
-
-    /**
-     * The password iterations.
-     *
-     * @var int
-     */
-    public $passwordIter = 0;
+    public $password = '';
 
     /**
      * UNIX timestamp of last time the password was changed.
@@ -306,6 +285,7 @@ class User
             $this->username = $userRow->username;
             $this->usernameClean = $userRow->username_clean;
             $this->password = $userRow->password;
+            $this->passwordChan = $userRow->passwordChan;
             $this->email = $userRow->email;
             $this->mainRankId = $userRow->rank_main;
             $this->colour = $userRow->user_colour;
@@ -1117,6 +1097,28 @@ class User
                 'password' => $password,
                 'password_chan' => time(),
             ]);
+    }
+
+    /**
+     * Check if password expired
+     *
+     * @return bool
+     */
+    public function passwordExpired()
+    {
+        return strlen($this->password) < 1;
+    }
+
+    /**
+     * Verify the user's password
+     *
+     * @param string $password
+     *
+     * @return bool
+     */
+    public function verifyPassword($password)
+    {
+        return password_verify($password, $this->password);
     }
 
     /**
