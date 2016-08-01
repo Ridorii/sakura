@@ -188,7 +188,9 @@ class Router
         try {
             return self::$dispatcher->dispatch($method, $url);
         } catch (HttpMethodNotAllowedException $e) {
+            http_response_code(403);
         } catch (HttpRouteNotFoundException $e) {
+            http_response_code(404);
         }
 
         // Default to the not found page
