@@ -285,7 +285,7 @@ class User
             $this->username = $userRow->username;
             $this->usernameClean = $userRow->username_clean;
             $this->password = $userRow->password;
-            $this->passwordChan = $userRow->passwordChan;
+            $this->passwordChan = $userRow->password_chan;
             $this->email = $userRow->email;
             $this->mainRankId = $userRow->rank_main;
             $this->colour = $userRow->user_colour;
