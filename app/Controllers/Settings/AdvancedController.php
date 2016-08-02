@@ -10,8 +10,6 @@ namespace Sakura\Controllers\Settings;
 use Sakura\ActiveUser;
 use Sakura\DB;
 use Sakura\Perms\Site;
-use Sakura\Router;
-use Sakura\Template;
 
 /**
  * Advanced settings.
@@ -26,26 +24,15 @@ class AdvancedController extends Controller
         // Check permission
         if (!ActiveUser::$user->permission(Site::MANAGE_SESSIONS)) {
             $message = "You aren't allowed to manage sessions.";
-            $redirect = Router::route('settings.general.home');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = route('settings.index');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        $session = $_POST['session'] ?? null;
         $id = $_POST['id'] ?? null;
         $all = isset($_POST['all']);
 
-        if ($session && ($id || $all)) {
-            $redirect = Router::route('settings.advanced.sessions');
-
-            // Check if the CSRF session matches
-            if ($session !== session_id()) {
-                $message = "Your session expired, not the one you were intending to let expire though!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
-            }
+        if (session_check() && ($id || $all)) {
+            $redirect = route('settings.advanced.sessions');
 
             // End all sessions
             if ($all) {
@@ -54,8 +41,7 @@ class AdvancedController extends Controller
                     ->delete();
 
                 $message = "Deleted all active session associated with your account!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
+                return view('global/information', compact('message', 'redirect'));
             }
 
             // Create the session statement
@@ -66,16 +52,14 @@ class AdvancedController extends Controller
             // Check if the session exists
             if (!$session->count()) {
                 $message = "This session doesn't exist!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
+                return view('global/information', compact('message', 'redirect'));
             }
 
             // Delete it
             $session->delete();
 
             $message = "Deleted the session!";
-            Template::vars(compact('redirect', 'message'));
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         $sessions = DB::table('sessions')
@@ -83,9 +67,7 @@ class AdvancedController extends Controller
             ->get();
         $active = ActiveUser::$session->sessionId;
 
-        Template::vars(compact('sessions', 'active'));
-
-        return Template::render('settings/advanced/sessions');
+        return view('settings/advanced/sessions', compact('sessions', 'active'));
     }
 
     public function deactivate()
@@ -93,31 +75,18 @@ class AdvancedController extends Controller
         // Check permission
         if (!ActiveUser::$user->permission(Site::DEACTIVATE_ACCOUNT)) {
             $message = "You aren't allowed to deactivate your account.";
-            $redirect = Router::route('settings.general.home');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        $session = $_POST['session'] ?? null;
         $password = $_POST['password'] ?? null;
 
-        if ($session && $password) {
-            $redirect = Router::route('settings.advanced.deactivate');
-
-            // Verify session
-            if ($session !== session_id()) {
-                $message = "Session verification failed!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
-            }
+        if (session_check() && $password) {
+            $redirect = route('settings.advanced.deactivate');
 
             // Check password
             if (!ActiveUser::$user->verifyPassword($password)) {
                 $message = "Your password was invalid!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
+                return view('global/information', compact('message', 'redirect'));
             }
 
             // Deactivate account
@@ -128,12 +97,11 @@ class AdvancedController extends Controller
             // Destroy all active sessions
             ActiveUser::$session->destroyAll();
 
-            $redirect = Router::route('main.index');
+            $redirect = route('main.index');
             $message = "Farewell!";
-            Template::vars(compact('redirect', 'message'));
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        return Template::render('settings/advanced/deactivate');
+        return view('settings/advanced/deactivate');
     }
 }

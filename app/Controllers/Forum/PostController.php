@@ -12,6 +12,7 @@ use Sakura\DB;
 use Sakura\Forum\Forum;
 use Sakura\Forum\Post;
 use Sakura\Forum\Topic;
+use Sakura\Perms;
 use Sakura\Perms\Forum as ForumPerms;
 
 /**
@@ -178,8 +179,6 @@ class PostController extends Controller
 
     public function delete($id = 0)
     {
-        $action = isset($_POST['yes']) && session_check();
-
         $post = new Post($id);
         $topic = new Topic($post->topic);
         $forum = new Forum($topic->forum);
@@ -211,8 +210,8 @@ class PostController extends Controller
             return view('global/information', compact('message', 'redirect'));
         }
 
-        if ($action !== null) {
-            if ($action) {
+        if (session_check('sessionid')) {
+            if (isset($_POST['yes'])) {
                 // Set message
                 $message = "Deleted the post!";
 

@@ -111,7 +111,7 @@
                     {% if user.isActive %}
                     <div class="new-profile-actions">
                         {% if user.id == profile.id %}
-                        <a class="fa fa-pencil-square-o" title="Edit your profile" href="{{ route('settings.general.profile') }}"></a>
+                        <a class="fa fa-pencil-square-o" title="Edit your profile" href="{{ route('settings.account.profile') }}"></a>
                         {% else %}
                         {% if user.isFriends(profile.id) != 0 %}<a class="fa fa-{% if user.isFriends(profile.id) == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
                         <a class="fa fa-user-{% if user.isFriends(profile.id) == 0 %}plus{% else %}times{% endif %}" title="{% if user.isFriends(profile.id) == 0 %}Add {{ profile.username }} as a friend{% else %}Remove friend{% endif %}" href="javascript:void(0);" onclick="Sakura.Friend.{% if user.isFriends(profile.id) == 0 %}Add({{ profile.id }}){% else %}Remove({{ profile.id }}){% endif %}"></a>

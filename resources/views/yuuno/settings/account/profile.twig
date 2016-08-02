@@ -1,0 +1,140 @@
+{% extends 'settings/account/master.twig' %}
+
+{% set mode = 'Profile' %}
+
+{% block description %}
+    <p>These are the external account links etc. on your profile, shouldn't need any additional explanation for this one.</p>
+{% endblock %}
+
+{% set months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+] %}
+
+{% set fields = {
+    "website": {
+        "title": "Website",
+        "type": "url",
+        "placeholder": "The url of your site, personal blog, anything you want!",
+        "name": "profile_website",
+        "value": user.website,
+    },
+    "twitter": {
+        "title": "Twitter",
+        "type": "text",
+        "placeholder": "The true shitpost platform.",
+        "name": "profile_twitter",
+        "value": user.twitter,
+    },
+    "github": {
+        "title": "GitHub",
+        "type": "text",
+        "placeholder": "So we can find you on there too!",
+        "name": "profile_github",
+        "value": user.github,
+    },
+    "skype": {
+        "title": "Skype",
+        "type": "text",
+        "placeholder": "Because people still use it for some reason...",
+        "name": "profile_skype",
+        "value": user.skype,
+    },
+    "discord": {
+        "title": "Discord",
+        "type": "text",
+        "placeholder": "Somehow way better than Skype.",
+        "name": "profile_discord",
+        "value": user.discord,
+    },
+    "youtube": {
+        "title": "YouTube",
+        "type": "text",
+        "placeholder": "Share your room tours with the world!",
+        "name": "profile_youtube",
+        "value": user.youtube,
+    },
+    "steam": {
+        "title": "Steam",
+        "type": "text",
+        "placeholder": "Something something video games.",
+        "name": "profile_steam",
+        "value": user.steam,
+    },
+    "osu": {
+        "title": "osu!",
+        "type": "text",
+        "placeholder": "Click circles like a mad motherfucker!",
+        "name": "profile_osu",
+        "value": user.osu,
+    },
+    "lastfm": {
+        "title": "Last.fm",
+        "type": "text",
+        "placeholder": "Somehow WAYLT threads made for a good business model.",
+        "name": "profile_lastfm",
+        "value": user.lastfm,
+    },
+} %}
+
+{% set birthday = user.birthday|split('-') %}
+
+{% block settingsContent %}
+    <form enctype="multipart/form-data" method="post" action="{{ route('settings.account.profile') }}">
+        {% for id, vars in fields %}
+            <div class="profile-field {{ id }}">
+                <div>
+                    <h2>{{ vars.title }}</h2>
+                </div>
+                <div>
+                    <input class="inputStyling"
+                        {% for name, value in vars %}
+                            {% if name != 'title' %}
+                                {{ name }}="{{ value }}"
+                            {% endif %}
+                        {% endfor %}
+                    >
+                </div>
+            </div>
+        {% endfor %}
+        <div class="profile-field birthday">
+            <div>
+                <h2>Birthday</h2>
+            </div>
+            <div style="text-align: center;">
+                Day: <select name="birthday_day">
+                    <option value="0"{% if not birthday[2] %} selected="selected"{% endif %}>--</option>
+                    {% for i in 1..31 %}
+                        <option{% if birthday[2] == i %} selected="selected"{% endif %}>{{ i }}</option>
+                    {% endfor %}
+                </select>
+                Month: <select name="birthday_month">
+                    <option value="0"{% if not birthday[1] %} selected="selected"{% endif %}>--</option>
+                    {% for i in 1..12 %}
+                        <option value="{{ i }}"{% if birthday[1] == i %} selected="selected"{% endif %}>{{ months[i - 1] }}</option>
+                    {% endfor %}
+                </select>
+                Year: <select name="birthday_year">
+                    <option value="0"{% if not birthday[0] %} selected="selected"{% endif %}>----</option>
+                    {% for i in "now"|date('Y')..("now"|date('Y') - 100) %}
+                        <option{% if birthday[0] == i %} selected="selected"{% endif %}>{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="profile-save">
+            <button name="session" value="{{ session_id() }}" class="inputStyling">Save</button>
+            <button type="reset" class="inputStyling">Reset</button>
+        </div>
+    </form>
+{% endblock %}

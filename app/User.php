@@ -166,6 +166,83 @@ class User
     public $signature = '';
 
     /**
+     * Whether the user's background should be displayed sitewide.
+     *
+     * @var bool
+     */
+    public $backgroundSitewide = false;
+
+    /**
+     * The user's website url.
+     *
+     * @var string
+     */
+    public $website = '';
+
+    /**
+     * The user's twitter handle.
+     *
+     * @var string
+     */
+    public $twitter = '';
+
+    /**
+     * The user's github username.
+     *
+     * @var string
+     */
+    public $github = '';
+
+    /**
+     * The user's skype username.
+     *
+     * @var string
+     */
+    public $skype = '';
+
+    /**
+     * The user's discord tag.
+     *
+     * @var string
+     */
+    public $discord = '';
+
+    /**
+     * The user's youtube channel id/name.
+     *
+     * @var string
+     */
+    public $youtube = '';
+
+    /**
+     * The thing that indicates if it's an id or a name.
+     *
+     * @var int
+     */
+    public $youtubeType = 0;
+
+    /**
+     * The user's steam community username.
+     *
+     * @var string
+     */
+    public $steam = '';
+
+    /**
+     * The user's osu! username.
+     *
+     * @var string
+     */
+    public $osu = '';
+
+    /**
+     * The user's lastfm username.
+     *
+     * @var string
+     */
+    public $lastfm = '';
+
+    /**
      * The user's birthday.
      *
      * @var string
@@ -178,20 +255,6 @@ class User
      * @var Perms
      */
     private $permissions;
-
-    /**
-     * The user's option fields.
-     *
-     * @var array
-     */
-    private $optionFields = null;
-
-    /**
-     * The user's profile fields.
-     *
-     * @var array
-     */
-    private $profileFields = null;
 
     /**
      * The User instance cache array.
@@ -281,24 +344,35 @@ class User
         // Populate the variables
         if ($userRow) {
             $userRow = $userRow[0];
-            $this->id = $userRow->user_id;
+            $this->id = intval($userRow->user_id);
             $this->username = $userRow->username;
             $this->usernameClean = $userRow->username_clean;
             $this->password = $userRow->password;
-            $this->passwordChan = $userRow->password_chan;
+            $this->passwordChan = intval($userRow->password_chan);
             $this->email = $userRow->email;
-            $this->mainRankId = $userRow->rank_main;
+            $this->mainRankId = intval($userRow->rank_main);
             $this->colour = $userRow->user_colour;
             $this->title = $userRow->user_title;
-            $this->registered = $userRow->user_registered;
-            $this->lastOnline = $userRow->user_last_online;
+            $this->registered = intval($userRow->user_registered);
+            $this->lastOnline = intval($userRow->user_last_online);
             $this->birthday = $userRow->user_birthday;
             $this->country = $userRow->user_country;
-            $this->avatar = $userRow->user_avatar;
-            $this->background = $userRow->user_background;
-            $this->header = $userRow->user_header;
+            $this->avatar = intval($userRow->user_avatar);
+            $this->background = intval($userRow->user_background);
+            $this->header = intval($userRow->user_header);
             $this->page = $userRow->user_page;
             $this->signature = $userRow->user_signature;
+            $this->backgroundSitewide = boolval($userRow->user_background_sitewide);
+            $this->website = $userRow->user_website;
+            $this->twitter = $userRow->user_twitter;
+            $this->github = $userRow->user_github;
+            $this->skype = $userRow->user_skype;
+            $this->discord = $userRow->user_discord;
+            $this->youtube = $userRow->user_youtube;
+            $this->youtubeType = intval($userRow->user_youtube_type);
+            $this->steam = $userRow->user_steam;
+            $this->osu = $userRow->user_osu;
+            $this->lastfm = $userRow->user_lastfm;
 
             // Temporary backwards compatible IP storage system
             try {
@@ -775,137 +849,6 @@ class User
         }
 
         return $comments;
-    }
-
-    /**
-     * Get the user's profile fields.
-     *
-     * @return array The profile fields.
-     */
-    public function profileFields()
-    {
-        // Check if we have cached data
-        if ($this->profileFields) {
-            return $this->profileFields;
-        }
-
-        // Create array and get values
-        $profile = [];
-
-        $profileFields = DB::table('profilefields')
-            ->get();
-
-        $profileValuesRaw = DB::table('user_profilefields')
-            ->where('user_id', $this->id)
-            ->get();
-
-        $profileValues = array_column($profileValuesRaw, 'field_value', 'field_name');
-
-        // Check if anything was returned
-        if (!$profileFields || !$profileValues) {
-            return $profile;
-        }
-
-        // Check if profile fields aren't fake
-        foreach ($profileFields as $field) {
-            // Completely strip all special characters from the field name
-            $fieldName = clean_string($field->field_name, true, true);
-
-            // Check if the user has the current field set otherwise continue
-            if (!array_key_exists($fieldName, $profileValues)) {
-                continue;
-            }
-
-            // Assign field to output with value
-            $profile[$fieldName] = [];
-            $profile[$fieldName]['name'] = $field->field_name;
-            $profile[$fieldName]['value'] = $profileValues[$fieldName];
-            $profile[$fieldName]['islink'] = $field->field_link;
-
-            // If the field is set to be a link add a value for that as well
-            if ($field->field_link) {
-                $profile[$fieldName]['link'] = str_replace(
-                    '{{ VAL }}',
-                    $profileValues[$fieldName],
-                    $field->field_linkformat
-                );
-            }
-
-            // Check if we have additional options as well
-            if (!empty($field->field_additional)) {
-                // Decode the json of the additional stuff
-                $additional = json_decode($field->field_additional, true);
-
-                // Go over all additional forms
-                foreach ($additional as $subName => $subField) {
-                    // Check if the user has the current field set otherwise continue
-                    if (!array_key_exists($subName, $profileValues)) {
-                        continue;
-                    }
-
-                    // Assign field to output with value
-                    $profile[$fieldName][$subName] = $profileValues[$subName];
-                }
-            }
-        }
-
-        // Assign cache
-        $this->profileFields = $profile;
-
-        // Return appropiate profile data
-        return $profile;
-    }
-
-    /**
-     * Get a user's option fields.
-     *
-     * @return array The array containing the fields.
-     */
-    public function optionFields()
-    {
-        // Check if we have cached data
-        if ($this->optionFields) {
-            return $this->optionFields;
-        }
-
-        // Create array and get values
-        $options = [];
-
-        $optionFields = DB::table('optionfields')
-            ->get();
-
-        $optionValuesRaw = DB::table('user_optionfields')
-            ->where('user_id', $this->id)
-            ->get();
-
-        $optionValues = array_column($optionValuesRaw, 'field_value', 'field_name');
-
-        // Check if anything was returned
-        if (!$optionFields || !$optionValues) {
-            return $options;
-        }
-
-        // Check if option fields aren't fake
-        foreach ($optionFields as $field) {
-            // Check if the user has the current field set otherwise continue
-            if (!array_key_exists($field->option_id, $optionValues)) {
-                continue;
-            }
-
-            // Make sure the user has the proper permissions to use this option
-            if (!$this->permission(constant('Sakura\Perms\Site::' . $field->option_permission))) {
-                continue;
-            }
-
-            // Assign field to output with value
-            $options[$field->option_id] = $optionValues[$field->option_id];
-        }
-
-        // Assign cache
-        $this->optionFields = $options;
-
-        // Return appropiate option data
-        return $options;
     }
 
     /**

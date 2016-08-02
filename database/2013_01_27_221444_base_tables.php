@@ -3,9 +3,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Sakura\DB;
 
-// this is based on what is in the live flashii table at the
-// moment this migration was created to avoid merge conflicts.
-
 class BaseTables extends Migration
 {
     /**
@@ -451,11 +448,9 @@ class BaseTables extends Migration
             $table->integer('user_id')
                 ->unsigned();
 
-            $table->string('field_name', 255)
-                ->comment('Identifier of the field');
+            $table->string('field_name', 255);
 
-            $table->string('field_value', 255)
-                ->comment('Value of the field');
+            $table->string('field_value', 255);
         });
 
         $schema->create('user_ranks', function (Blueprint $table) {

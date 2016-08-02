@@ -8,12 +8,9 @@
 namespace Sakura\Controllers\Settings;
 
 use Sakura\ActiveUser;
-use Sakura\Config;
 use Sakura\DB;
 use Sakura\File;
 use Sakura\Perms\Site;
-use Sakura\Router;
-use Sakura\Template;
 
 /**
  * Appearance settings.
@@ -117,18 +114,13 @@ class AppearanceController extends Controller
         // Check permission
         if (!ActiveUser::$user->permission(Site::CHANGE_AVATAR)) {
             $message = "You aren't allowed to change your avatar.";
-            $redirect = Router::route('settings.general.home');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = route('settings.index');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        $session = $_POST['session'] ?? null;
-
-        if ($session) {
+        if (session_check()) {
             $avatar = $_FILES['avatar'] ?? null;
-            $redirect = Router::route('settings.appearance.avatar');
+            $redirect = route('settings.appearance.avatar');
 
             if ($avatar && $avatar['error'] !== UPLOAD_ERR_NO_FILE) {
                 $upload = $this->handleUpload('avatar', $_FILES['avatar']);
@@ -138,12 +130,10 @@ class AppearanceController extends Controller
                 $message = "Deleted your avatar!";
             }
 
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        return Template::render('settings/appearance/avatar');
+        return view('settings/appearance/avatar');
     }
 
     public function background()
@@ -151,18 +141,13 @@ class AppearanceController extends Controller
         // Check permission
         if (!ActiveUser::$user->permission(Site::CHANGE_BACKGROUND)) {
             $message = "You aren't allowed to change your background.";
-            $redirect = Router::route('settings.general.home');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = route('settings.index');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        $session = $_POST['session'] ?? null;
-
-        if ($session) {
+        if (session_check()) {
             $background = $_FILES['background'] ?? null;
-            $redirect = Router::route('settings.appearance.background');
+            $redirect = route('settings.appearance.background');
 
             if ($background && $background['error'] !== UPLOAD_ERR_NO_FILE) {
                 $upload = $this->handleUpload('background', $_FILES['background']);
@@ -172,12 +157,10 @@ class AppearanceController extends Controller
                 $message = "Deleted your background!";
             }
 
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        return Template::render('settings/appearance/background');
+        return view('settings/appearance/background');
     }
 
     public function header()
@@ -185,18 +168,13 @@ class AppearanceController extends Controller
         // Check permission
         if (!ActiveUser::$user->permission(Site::CHANGE_HEADER)) {
             $message = "You aren't allowed to change your profile header.";
-            $redirect = Router::route('settings.general.home');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = route('settings.index');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        $session = $_POST['session'] ?? null;
-
-        if ($session) {
+        if (session_check()) {
             $header = $_FILES['header'] ?? null;
-            $redirect = Router::route('settings.appearance.header');
+            $redirect = route('settings.appearance.header');
 
             if ($header && $header['error'] !== UPLOAD_ERR_NO_FILE) {
                 $upload = $this->handleUpload('header', $_FILES['header']);
@@ -206,12 +184,10 @@ class AppearanceController extends Controller
                 $message = "Deleted your header!";
             }
 
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        return Template::render('settings/appearance/header');
+        return view('settings/appearance/header');
     }
 
     public function userpage()
@@ -220,50 +196,34 @@ class AppearanceController extends Controller
         if (!(
             ActiveUser::$user->page
             && ActiveUser::$user->permission(Site::CHANGE_USERPAGE)
-        ) || !ActiveUser::$user->permission(Site::CREATE_USERPAGE)) {
+        ) && !ActiveUser::$user->permission(Site::CREATE_USERPAGE)) {
             $message = "You aren't allowed to change your userpage.";
-            $redirect = Router::route('settings.general.home');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = route('settings.index');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        $session = $_POST['session'] ?? null;
         $userpage = $_POST['userpage'] ?? null;
+        $maxLength = config('user.page_max');
 
-        $maxLength = 65535;
-
-        if ($session && $userpage) {
-            $redirect = Router::route('settings.appearance.userpage');
-
-            if ($session !== session_id()) {
-                $message = 'Your session expired!';
-                Template::vars(compact('message', 'redirect'));
-                return Template::render('global/information');
-            }
+        if (session_check() && $userpage) {
+            $redirect = route('settings.appearance.userpage');
 
             if (strlen($userpage) > $maxLength) {
                 $message = 'Your userpage is too long, shorten it a little!';
-                Template::vars(compact('message', 'redirect'));
-                return Template::render('global/information');
+            } else {
+                DB::table('users')
+                    ->where('user_id', ActiveUser::$user->id)
+                    ->update([
+                        'user_page' => $userpage,
+                    ]);
+
+                $message = 'Updated your userpage!';
             }
 
-            // Update database
-            DB::table('users')
-                ->where('user_id', ActiveUser::$user->id)
-                ->update([
-                    'user_page' => $userpage,
-                ]);
-
-            $message = 'Updated your userpage!';
-            Template::vars(compact('message', 'redirect'));
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        Template::vars(compact('maxLength'));
-
-        return Template::render('settings/appearance/userpage');
+        return view('settings/appearance/userpage', compact('maxLength'));
     }
 
     public function signature()
@@ -271,47 +231,31 @@ class AppearanceController extends Controller
         // Check permission
         if (!ActiveUser::$user->permission(Site::CHANGE_SIGNATURE)) {
             $message = "You aren't allowed to change your signature.";
-            $redirect = Router::route('settings.general.home');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = route('settings.index');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        $session = $_POST['session'] ?? null;
         $signature = $_POST['signature'] ?? null;
+        $maxLength = config('user.signature_max');
 
-        $maxLength = 500;
-
-        if ($session && $signature) {
-            $redirect = Router::route('settings.appearance.signature');
-
-            if ($session !== session_id()) {
-                $message = 'Your session expired!';
-                Template::vars(compact('message', 'redirect'));
-                return Template::render('global/information');
-            }
+        if (session_check() && $signature) {
+            $redirect = route('settings.appearance.signature');
 
             if (strlen($signature) > $maxLength) {
                 $message = 'Your signature is too long, shorten it a little!';
-                Template::vars(compact('message', 'redirect'));
-                return Template::render('global/information');
+            } else {
+                DB::table('users')
+                    ->where('user_id', ActiveUser::$user->id)
+                    ->update([
+                        'user_signature' => $signature,
+                    ]);
+
+                $message = 'Updated your signature!';
             }
 
-            // Update database
-            DB::table('users')
-                ->where('user_id', ActiveUser::$user->id)
-                ->update([
-                    'user_signature' => $signature,
-                ]);
-
-            $message = 'Updated your signature!';
-            Template::vars(compact('message', 'redirect'));
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        Template::vars(compact('maxLength'));
-
-        return Template::render('settings/appearance/signature');
+        return view('settings/appearance/signature', compact('maxLength'));
     }
 }

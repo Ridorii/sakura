@@ -206,22 +206,29 @@ Router::group(['before' => 'maintenance'], function () {
     // Settings
     Router::group(['prefix' => 'settings', 'before' => 'loginCheck'], function () {
         Router::get('/', function () {
-            $route = Router::route('settings.general.home');
+            $route = Router::route('settings.account.profile');
             return header("Location: {$route}");
         }, 'settings.index');
 
-        // General section
-        Router::group(['prefix' => 'general'], function () {
+        // Account section
+        Router::group(['prefix' => 'account'], function () {
             Router::get('/', function () {
-                $route = Router::route('settings.general.home');
+                $route = Router::route('settings.account.profile');
                 return header("Location: {$route}");
             });
 
-            Router::get('/home', 'Settings.GeneralController@home', 'settings.general.home');
-            Router::get('/profile', 'Settings.GeneralController@profile', 'settings.general.profile');
-            Router::post('/profile', 'Settings.GeneralController@profile', 'settings.general.profile');
-            Router::get('/options', 'Settings.GeneralController@options', 'settings.general.options');
-            Router::post('/options', 'Settings.GeneralController@options', 'settings.general.options');
+            Router::get('/profile', 'Settings.AccountController@profile', 'settings.account.profile');
+            Router::post('/profile', 'Settings.AccountController@profile', 'settings.account.profile');
+            Router::get('/email', 'Settings.AccountController@email', 'settings.account.email');
+            Router::post('/email', 'Settings.AccountController@email', 'settings.account.email');
+            Router::get('/username', 'Settings.AccountController@username', 'settings.account.username');
+            Router::post('/username', 'Settings.AccountController@username', 'settings.account.username');
+            Router::get('/title', 'Settings.AccountController@title', 'settings.account.title');
+            Router::post('/title', 'Settings.AccountController@title', 'settings.account.title');
+            Router::get('/password', 'Settings.AccountController@password', 'settings.account.password');
+            Router::post('/password', 'Settings.AccountController@password', 'settings.account.password');
+            Router::get('/ranks', 'Settings.AccountController@ranks', 'settings.account.ranks');
+            Router::post('/ranks', 'Settings.AccountController@ranks', 'settings.account.ranks');
         });
 
         // Friends section
@@ -233,17 +240,6 @@ Router::group(['before' => 'maintenance'], function () {
 
             Router::get('/listing', 'Settings.FriendsController@listing', 'settings.friends.listing');
             Router::get('/requests', 'Settings.FriendsController@requests', 'settings.friends.requests');
-        });
-
-        // Groups section
-        Router::group(['prefix' => 'groups'], function () {
-            Router::get('/', function () {
-                $route = Router::route('settings.groups.listing');
-                return header("Location: {$route}");
-            });
-
-            Router::get('/listing', 'Settings.GroupsController@listing', 'settings.groups.listing');
-            Router::get('/invites', 'Settings.GroupsController@invites', 'settings.groups.invites');
         });
 
         // Notifications section
@@ -275,25 +271,6 @@ Router::group(['before' => 'maintenance'], function () {
             Router::post('/signature', 'Settings.AppearanceController@signature', 'settings.appearance.signature');
         });
 
-        // Account section
-        Router::group(['prefix' => 'account'], function () {
-            Router::get('/', function () {
-                $route = Router::route('settings.account.email');
-                return header("Location: {$route}");
-            });
-
-            Router::get('/email', 'Settings.AccountController@email', 'settings.account.email');
-            Router::post('/email', 'Settings.AccountController@email', 'settings.account.email');
-            Router::get('/username', 'Settings.AccountController@username', 'settings.account.username');
-            Router::post('/username', 'Settings.AccountController@username', 'settings.account.username');
-            Router::get('/title', 'Settings.AccountController@title', 'settings.account.title');
-            Router::post('/title', 'Settings.AccountController@title', 'settings.account.title');
-            Router::get('/password', 'Settings.AccountController@password', 'settings.account.password');
-            Router::post('/password', 'Settings.AccountController@password', 'settings.account.password');
-            Router::get('/ranks', 'Settings.AccountController@ranks', 'settings.account.ranks');
-            Router::post('/ranks', 'Settings.AccountController@ranks', 'settings.account.ranks');
-        });
-
         // Advanced section
         Router::group(['prefix' => 'advanced'], function () {
             Router::get('/', function () {
@@ -311,7 +288,7 @@ Router::group(['before' => 'maintenance'], function () {
     // Settings
     Router::group(['prefix' => 'manage', 'before' => 'loginCheck'], function () {
         Router::get('/', function () {
-            $route = Router::route('manage.overview');
+            $route = Router::route('manage.overview.index');
             return header("Location: {$route}");
         }, 'manage.index');
 
@@ -320,7 +297,7 @@ Router::group(['before' => 'maintenance'], function () {
             Router::get('/', function () {
                 $route = Router::route('manage.overview.index');
                 return header("Location: {$route}");
-            }, 'manage.overview');
+            });
 
             Router::get('/index', 'Manage.OverviewController@index', 'manage.overview.index');
             Router::get('/data', 'Manage.OverviewController@data', 'manage.overview.data');

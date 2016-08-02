@@ -23,29 +23,38 @@ class Controller extends BaseController
 {
     public function __construct()
     {
-        $navigation = $this->navigation();
-
-        Template::vars(compact('navigation'));
+        Template::vars(['navigation' => $this->navigation()]);
     }
 
     public function navigation()
     {
         $nav = [];
 
-        // General
-        $nav["General"]["Home"] = Router::route('settings.general.home');
+        // Account
         if (ActiveUser::$user->permission(Site::ALTER_PROFILE)) {
-            $nav["General"]["Profile"] = Router::route('settings.general.profile');
+            $nav["Account"]["Profile"] = Router::route('settings.account.profile');
         }
-        $nav["General"]["Options"] = Router::route('settings.general.options');
+        if (ActiveUser::$user->permission(Site::CHANGE_EMAIL)) {
+            $nav["Account"]["E-mail address"] = Router::route('settings.account.email');
+        }
+        if (ActiveUser::$user->permission(Site::CHANGE_USERNAME)) {
+            $nav["Account"]["Username"] = Router::route('settings.account.username');
+        }
+        if (ActiveUser::$user->permission(Site::CHANGE_USERTITLE)) {
+            $nav["Account"]["Title"] = Router::route('settings.account.title');
+        }
+        if (ActiveUser::$user->permission(Site::CHANGE_PASSWORD)) {
+            $nav["Account"]["Password"] = Router::route('settings.account.password');
+        }
+        if (ActiveUser::$user->permission(Site::ALTER_RANKS)) {
+            $nav["Account"]["Ranks"] = Router::route('settings.account.ranks');
+        }
 
         // Friends
         if (ActiveUser::$user->permission(Site::MANAGE_FRIENDS)) {
             $nav["Friends"]["Listing"] = Router::route('settings.friends.listing');
             $nav["Friends"]["Requests"] = Router::route('settings.friends.requests');
         }
-
-        // Groups
 
         // Notifications
         $nav["Notifications"]["History"] = Router::route('settings.notifications.history');
@@ -68,23 +77,6 @@ class Controller extends BaseController
         }
         if (ActiveUser::$user->permission(Site::CHANGE_SIGNATURE)) {
             $nav["Appearance"]["Signature"] = Router::route('settings.appearance.signature');
-        }
-
-        // Account
-        if (ActiveUser::$user->permission(Site::CHANGE_EMAIL)) {
-            $nav["Account"]["E-mail address"] = Router::route('settings.account.email');
-        }
-        if (ActiveUser::$user->permission(Site::CHANGE_USERNAME)) {
-            $nav["Account"]["Username"] = Router::route('settings.account.username');
-        }
-        if (ActiveUser::$user->permission(Site::CHANGE_USERTITLE)) {
-            $nav["Account"]["Title"] = Router::route('settings.account.title');
-        }
-        if (ActiveUser::$user->permission(Site::CHANGE_PASSWORD)) {
-            $nav["Account"]["Password"] = Router::route('settings.account.password');
-        }
-        if (ActiveUser::$user->permission(Site::ALTER_RANKS)) {
-            $nav["Account"]["Ranks"] = Router::route('settings.account.ranks');
         }
 
         // Advanced

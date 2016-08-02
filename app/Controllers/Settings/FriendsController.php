@@ -9,8 +9,6 @@ namespace Sakura\Controllers\Settings;
 
 use Sakura\ActiveUser;
 use Sakura\Perms\Site;
-use Sakura\Router;
-use Sakura\Template;
 
 /**
  * Friends settings.
@@ -25,14 +23,11 @@ class FriendsController extends Controller
         // Check permission
         if (!ActiveUser::$user->permission(Site::MANAGE_FRIENDS)) {
             $message = "You aren't allowed to manage friends.";
-            $redirect = Router::route('settings.general.home');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = route('settings.index');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        return Template::render('settings/friends/listing');
+        return view('settings/friends/listing');
     }
 
     public function requests()
@@ -40,13 +35,10 @@ class FriendsController extends Controller
         // Check permission
         if (!ActiveUser::$user->permission(Site::MANAGE_FRIENDS)) {
             $message = "You aren't allowed to manage friends.";
-            $redirect = Router::route('settings.general.home');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = route('settings.index');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        return Template::render('settings/friends/requests');
+        return view('settings/friends/requests');
     }
 }

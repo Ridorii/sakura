@@ -8,11 +8,8 @@
 namespace Sakura\Controllers\Settings;
 
 use Sakura\ActiveUser;
-use Sakura\Config;
 use Sakura\DB;
 use Sakura\Perms\Site;
-use Sakura\Router;
-use Sakura\Template;
 
 /**
  * Account settings.
@@ -22,43 +19,98 @@ use Sakura\Template;
  */
 class AccountController extends Controller
 {
+    public function profile()
+    {
+        // Check permission
+        if (!ActiveUser::$user->permission(Site::ALTER_PROFILE)) {
+            $message = "You aren't allowed to edit your profile!";
+            $redirect = route('settings.index');
+            return view('global/information', compact('message', 'redirect'));
+        }
+
+        if (session_check()) {
+            $redirect = route('settings.account.profile');
+            $save = [];
+            $allowed = [
+                'website',
+                'twitter',
+                'github',
+                'skype',
+                'discord',
+                'youtube',
+                'steam',
+                'osu',
+                'lastfm',
+            ];
+
+            foreach ($allowed as $field) {
+                $save["user_{$field}"] = $_POST["profile_{$field}"] ?? null;
+            }
+
+            DB::table('users')
+                ->where('user_id', ActiveUser::$user->id)
+                ->update($save);
+
+            // Birthdays
+            if (isset($_POST['birthday_day'], $_POST['birthday_month'], $_POST['birthday_year'])) {
+                $day = intval($_POST['birthday_day']);
+                $month = intval($_POST['birthday_month']);
+                $year = intval($_POST['birthday_year']);
+
+                if (!$day && !$month && !$year) {
+                    $birthdate = null;
+                } else {
+                    if (!checkdate($month, $day, $year ? $year : 1)
+                        || $year > date("Y")
+                        || ($year != 0 && $year < (date("Y") - 100))) {
+                        $message = "Your birthdate was invalid, everything else was saved though!";
+
+                        return view('global/information', compact('message', 'redirect'));
+                    }
+
+                    // Combine it into a YYYY-MM-DD format
+                    $birthdate = implode('-', compact('year', 'month', 'day'));
+                }
+
+                DB::table('users')
+                    ->where('user_id', ActiveUser::$user->id)
+                    ->update([
+                        'user_birthday' => $birthdate,
+                    ]);
+            }
+
+            $message = "Updated your profile!";
+
+            return view('global/information', compact('message', 'redirect'));
+        }
+
+        return view('settings/account/profile');
+    }
+
     public function email()
     {
         // Check permission
         if (!ActiveUser::$user->permission(Site::CHANGE_EMAIL)) {
             $message = "You aren't allowed to change your e-mail address.";
-            $redirect = Router::route('settings.general.home');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = route('settings.index');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        $session = $_POST['session'] ?? null;
         $email = $_POST['email'] ?? null;
 
-        if ($session && $email) {
-            $redirect = Router::route('settings.account.email');
-
-            // Check if the CSRF session matches
-            if ($session !== session_id()) {
-                $message = "Your session expired!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
-            }
+        if (session_check() && $email) {
+            $redirect = route('settings.account.email');
 
             // Validate e-mail address
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $message = "The e-mail address you supplied is invalid!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
+                return view('global/information', compact('redirect', 'message'));
             }
 
             // Check the MX record of the email
             if (!check_mx_record($email)) {
                 $message = 'No valid MX-Record found on the e-mail address you supplied.';
-                Template::vars(compact('message', 'redirect'));
-                return Template::render('global/information');
+                return view('global/information', compact('redirect', 'message'));
             }
 
             // Check if the e-mail has already been used
@@ -67,18 +119,16 @@ class AccountController extends Controller
                 ->count();
             if ($emailCheck) {
                 $message = 'Someone already used this e-mail!';
-                Template::vars(compact('message', 'redirect'));
-                return Template::render('global/information');
+                return view('global/information', compact('redirect', 'message'));
             }
 
             ActiveUser::$user->setMail($email);
 
             $message = 'Changed your e-mail address!';
-            Template::vars(compact('message', 'redirect'));
-            return Template::render('global/information');
+            return view('global/information', compact('redirect', 'message'));
         }
 
-        return Template::render('settings/account/email');
+        return view('settings/account/email');
     }
 
     public function username()
@@ -86,39 +136,26 @@ class AccountController extends Controller
         // Check permission
         if (!ActiveUser::$user->permission(Site::CHANGE_USERNAME)) {
             $message = "You aren't allowed to change your username.";
-            $redirect = Router::route('settings.general.home');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = route('settings.index');
+            return view('global/information', compact('redirect', 'message'));
         }
 
-        $session = $_POST['session'] ?? null;
         $username = $_POST['username'] ?? null;
 
-        if ($session && $username) {
-            $redirect = Router::route('settings.account.username');
+        if (session_check() && $username) {
+            $redirect = route('settings.account.username');
             $username_clean = clean_string($username, true);
-
-            // Check if the CSRF session matches
-            if ($session !== session_id()) {
-                $message = "Your session expired!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
-            }
 
             // Check if the username is too short
             if (strlen($username_clean) < config('user.name_min')) {
                 $message = "This username is too short!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
+                return view('global/information', compact('redirect', 'message'));
             }
 
             // Check if the username is too long
             if (strlen($username_clean) > config('user.name_max')) {
                 $message = "This username is too long!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
+                return view('global/information', compact('redirect', 'message'));
             }
 
             // Check if this username hasn't been used in the last amount of days set in the config
@@ -131,8 +168,7 @@ class AccountController extends Controller
             // Check if anything was returned
             if ($getOld && $getOld[0]->user_id != ActiveUser::$user->id) {
                 $message = "The username you tried to use is reserved, try again later!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
+                return view('global/information', compact('redirect', 'message'));
             }
 
             // Check if the username is already in use
@@ -143,18 +179,16 @@ class AccountController extends Controller
             // Check if anything was returned
             if ($getInUse) {
                 $message = "Someone is already using this name!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
+                return view('global/information', compact('redirect', 'message'));
             }
 
             ActiveUser::$user->setUsername($username, $username_clean);
 
             $message = "Changed your username!";
-            Template::vars(compact('redirect', 'message'));
-            return Template::render('global/information');
+            return view('global/information', compact('redirect', 'message'));
         }
 
-        return Template::render('settings/account/username');
+        return view('settings/account/username');
     }
 
     public function title()
@@ -162,36 +196,23 @@ class AccountController extends Controller
         // Check permission
         if (!ActiveUser::$user->permission(Site::CHANGE_USERTITLE)) {
             $message = "You aren't allowed to change your title.";
-            $redirect = Router::route('settings.general.home');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = route('settings.index');
+            return view('global/information', compact('redirect', 'message'));
         }
 
-        $session = $_POST['session'] ?? null;
         $title = $_POST['title'] ?? null;
 
-        if ($session && $title !== null) {
-            $redirect = Router::route('settings.account.title');
-
-            // Check if the CSRF session matches
-            if ($session !== session_id()) {
-                $message = "Your session expired!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
-            }
+        if (session_check() && $title !== null) {
+            $redirect = route('settings.account.title');
 
             if (strlen($title) > 64) {
                 $message = "This title is too long!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
+                return view('global/information', compact('redirect', 'message'));
             }
 
             if ($title === ActiveUser::$user->title) {
                 $message = "This is already your title!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
+                return view('global/information', compact('redirect', 'message'));
             }
 
             // Update database
@@ -202,11 +223,10 @@ class AccountController extends Controller
                 ]);
 
             $message = "Changed your title!";
-            Template::vars(compact('redirect', 'message'));
-            return Template::render('global/information');
+            return view('global/information', compact('redirect', 'message'));
         }
 
-        return Template::render('settings/account/title');
+        return view('settings/account/title');
     }
 
     public function password()
@@ -214,49 +234,35 @@ class AccountController extends Controller
         // Check permission
         if (!ActiveUser::$user->permission(Site::CHANGE_PASSWORD)) {
             $message = "You aren't allowed to change your password.";
-            $redirect = Router::route('settings.general.home');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = route('settings.index');
+            return view('global/information', compact('redirect', 'message'));
         }
 
-        $session = $_POST['session'] ?? null;
         $current = $_POST['current'] ?? null;
         $password = $_POST['password'] ?? null;
 
-        if ($session && $current && $password) {
-            $redirect = Router::route('settings.account.password');
-
-            // Check if the CSRF session matches
-            if ($session !== session_id()) {
-                $message = "Your session expired!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
-            }
+        if (session_check() && $current && $password) {
+            $redirect = route('settings.account.password');
 
             // Check current password
             if (!password_verify($current, ActiveUser::$user->password)) {
                 $message = "Your password was invalid!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
+                return view('global/information', compact('redirect', 'message'));
             }
 
             // Check password entropy
             if (password_entropy($password) < config('user.pass_min_entropy')) {
                 $message = "Your password isn't strong enough!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
+                return view('global/information', compact('redirect', 'message'));
             }
 
             ActiveUser::$user->setPassword($password);
 
             $message = "Changed your password!";
-            Template::vars(compact('redirect', 'message'));
-            return Template::render('global/information');
+            return view('global/information', compact('redirect', 'message'));
         }
 
-        return Template::render('settings/account/password');
+        return view('settings/account/password');
     }
 
     public function ranks()
@@ -264,14 +270,10 @@ class AccountController extends Controller
         // Check permission
         if (!ActiveUser::$user->permission(Site::ALTER_RANKS)) {
             $message = "You aren't allowed to manage your ranks.";
-            $redirect = Router::route('settings.general.home');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = route('settings.index');
+            return view('global/information', compact('redirect', 'message'));
         }
 
-        $session = $_POST['session'] ?? null;
         $rank = $_POST['rank'] ?? null;
         $mode = $_POST['mode'] ?? null;
 
@@ -283,46 +285,33 @@ class AccountController extends Controller
             config('rank.banned'),
         ];
 
-        if ($session && $rank && $mode) {
-            $redirect = Router::route('settings.account.ranks');
-
-            // Check if the CSRF session matches
-            if ($session !== session_id()) {
-                $message = "Your session expired!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
-            }
+        if (session_check() && $rank && $mode) {
+            $redirect = route('settings.account.ranks');
 
             // Check if user has this rank
             if (!ActiveUser::$user->hasRanks([$rank])) {
                 $message = "You aren't a part of this rank!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
+                return view('global/information', compact('redirect', 'message'));
             }
 
             if ($mode == 'remove') {
                 if (in_array($rank, $locked)) {
                     $message = "You aren't allowed to remove this rank from your account!";
-                    Template::vars(compact('redirect', 'message'));
-                    return Template::render('global/information');
+                    return view('global/information', compact('redirect', 'message'));
                 }
 
                 ActiveUser::$user->removeRanks([$rank]);
 
                 $message = "Removed the rank from your account!";
-                Template::vars(compact('redirect', 'message'));
-                return Template::render('global/information');
+                return view('global/information', compact('redirect', 'message'));
             }
 
             ActiveUser::$user->setMainRank($rank);
 
             $message = "Changed your main rank!";
-            Template::vars(compact('redirect', 'message'));
-            return Template::render('global/information');
+            return view('global/information', compact('redirect', 'message'));
         }
 
-        Template::vars(compact('locked'));
-
-        return Template::render('settings/account/ranks');
+        return view('settings/account/ranks', compact('locked'));
     }
 }
