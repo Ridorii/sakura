@@ -162,7 +162,7 @@ function send_mail($to, $subject, $body)
 
     $mailer = Swift_Mailer::newInstance($transport);
 
-    $message = Swift_message::newInstance($subject)
+    $message = Swift_Message::newInstance($subject)
         ->setFrom([config('mail.smtp.from') => config('mail.smtp.name')])
         ->setBcc($to)
         ->setBody($body);
