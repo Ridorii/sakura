@@ -496,9 +496,13 @@ class BaseTables extends Migration
                 ->nullable()
                 ->default(null);
 
+            $table->integer('password_chan')
+                ->unsigned()
+                ->default(0);
+
             $table->string('email', 255);
 
-            $table->mediumInteger('rank_main')
+            $table->integer('rank_main')
                 ->unsigned()
                 ->default(0);
 
