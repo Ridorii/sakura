@@ -47,9 +47,6 @@ class MoveOptionsAndProfileIntoUsers extends Migration
                 ->nullable()
                 ->default(null);
 
-            $table->tinyInteger('user_youtube_type')
-                ->default(0);
-
             $table->string('user_steam', 255)
                 ->nullable()
                 ->default(null);
@@ -82,7 +79,6 @@ class MoveOptionsAndProfileIntoUsers extends Migration
                 'user_skype',
                 'user_discord',
                 'user_youtube',
-                'user_youtube_type',
                 'user_steam',
                 'user_osu',
                 'user_lastfm',

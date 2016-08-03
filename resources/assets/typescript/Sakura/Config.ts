@@ -3,6 +3,7 @@ namespace Sakura
     export class Config
     {
         public static Revision: number = 0;
+        public static UserId: number = 0;
         public static SessionId: string = "";
         public static UserNameMinLength: number = 3;
         public static UserNameMaxLength: number = 16;

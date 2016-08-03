@@ -215,13 +215,6 @@ class User
     public $youtube = '';
 
     /**
-     * The thing that indicates if it's an id or a name.
-     *
-     * @var int
-     */
-    public $youtubeType = 0;
-
-    /**
      * The user's steam community username.
      *
      * @var string
@@ -369,7 +362,6 @@ class User
             $this->skype = $userRow->user_skype;
             $this->discord = $userRow->user_discord;
             $this->youtube = $userRow->user_youtube;
-            $this->youtubeType = intval($userRow->user_youtube_type);
             $this->steam = $userRow->user_steam;
             $this->osu = $userRow->user_osu;
             $this->lastfm = $userRow->user_lastfm;
@@ -1089,7 +1081,7 @@ class User
         $alerts = [];
 
         foreach ($alertIds as $alertId) {
-            $alerts[$alertId] = new Notification($alertId);
+            $alerts[] = new Notification($alertId);
         }
 
         return $alerts;

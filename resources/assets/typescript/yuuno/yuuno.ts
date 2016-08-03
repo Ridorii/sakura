@@ -114,37 +114,6 @@ function notifyOpen(id: string): void {
     }
 }
 
-// Request notifications
-function notifyRequest(session: string): void {
-    // Check if the document isn't hidden
-    if (document.hidden) {
-        return;
-    }
-
-    // Create AJAX object
-    var get = new Sakura.AJAX();
-    get.SetUrl('/notifications');
-
-    // Add callbacks
-    get.AddCallback(200, () => {
-        // Assign the parsed JSON
-        var data: Notification = JSON.parse(get.Response());
-
-        // Check if nothing went wrong
-        if ((typeof data).toLowerCase() === 'undefined') {
-            // Inform the user
-            throw "No or invalid data was returned";
-        }
-
-        // Create an object for every notification
-        for (var id in data) {
-            notifyUI(data[id]);
-        }
-    });
-
-    get.Start(Sakura.HTTPMethod.GET);
-}
-
 // Show the full page busy window
 function ajaxBusyView(show: boolean, message: string = null, type: string = null): void {
     // Get elements

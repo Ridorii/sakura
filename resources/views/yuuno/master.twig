@@ -167,6 +167,7 @@
             UserNameMaxLength: {{ config('user.name_max') }},
             PasswordMinEntropy: {{ config('user.pass_min_entropy') }},
             LoggedIn: {{ user.isActive ? 'true' : 'false' }},
+            UserId: {{ user.id }},
             SessionId: "{{ session_id() }}",
         });
 
@@ -175,12 +176,6 @@
         {% if config('dev.show_changelog', true) and stats %}
             Sakura.Changelog.Build(new Sakura.DOM('indexPanel', Sakura.DOMSelector.ID));
         {% endif %}
-
-        notifyRequest(Sakura.Config.SessionId);
-
-        setInterval(function() {
-            notifyRequest(Sakura.Config.SessionId);
-        }, 60000);
         </script>
     </body>
 </html>

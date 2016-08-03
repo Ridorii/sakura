@@ -6,6 +6,7 @@ namespace Sakura
             console.log(this.Supported());
             TimeAgo.Init();
             Friend.Init();
+            Notifications.Init();
         }
 
         public static Supported(): boolean {

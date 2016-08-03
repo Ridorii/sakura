@@ -34,7 +34,7 @@ class Controller
         }
     }
 
-    public function json($object, $operators = JSON_FORCE_OBJECT | JSON_NUMERIC_CHECK | JSON_BIGINT_AS_STRING)
+    public function json($object, $operators = null)
     {
         header('Content-Type: application/json; charset=utf-8');
         return json_encode($object, $operators);

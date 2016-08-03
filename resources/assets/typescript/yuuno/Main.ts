@@ -5,6 +5,7 @@ namespace Yuuno
         public static Startup()
         {
             Sakura.Main.Startup();
+            Notifications.RegisterDisplay();
         }
     }
 }
