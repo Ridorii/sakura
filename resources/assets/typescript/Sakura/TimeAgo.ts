@@ -6,7 +6,7 @@ namespace Sakura
 
         public static Init(): void
         {
-            var watchElements: NodeListOf<Element> = document.getElementsByClassName(this.WatchClass);
+            var watchElements: NodeListOf<Element> = DOM.Class(this.WatchClass);
 
             for (var _i in watchElements) {
                 if ((typeof watchElements[_i]).toLowerCase() !== 'object') {

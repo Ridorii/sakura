@@ -68,14 +68,14 @@
         </div>
         {% if user.isActive and user.permission(constant('Sakura\\Perms\\Site::OBTAIN_PREMIUM')) %}
             <div class="slider">
-                <input class="inputStyling" type="range" min="1" max="{{ amountLimit }}" value="1" onchange="document.getElementById('monthsNo').value = this.value; document.getElementById('monthNoBtn').innerHTML = this.value; document.getElementById('monthsTrailingS').innerHTML = (this.value == 1 ? '' : 's'); document.getElementById('totalAmount').innerHTML = (this.value * {{ price }}).formatMoney(2);">
+                <input class="inputStyling" type="range" min="1" max="{{ amountLimit }}" value="1" onchange="document.getElementById('monthsNo').value = this.value; document.getElementById('monthNoBtn').innerText = this.value; document.getElementById('monthsTrailingS').innerText = (this.value == 1 ? '' : 's'); document.getElementById('totalAmount').innerText = (this.value * {{ price }});">
             </div>
             <div class="checkout" style="line-height: 28px;">
                 <div style="float: left;">
                     <h1 class="stylised">Total: &#8364;<span id="totalAmount"></span></h1>
                 </div>
                 <div style="float: right;">
-                    <button class="inputStyling" onclick="ajaxBusyView(true, 'Please wait...');document.getElementById('purchaseForm').submit();">Get <span id="monthNoBtn">1</span> month<span id="monthsTrailingS"></span> of Tenshi</button>
+                    <button class="inputStyling" onclick="Yuuno.Busy.Show(Yuuno.BusyMode.BUSY, 'Please wait...');document.getElementById('purchaseForm').submit();">Get <span id="monthNoBtn">1</span> month<span id="monthsTrailingS"></span> of Tenshi</button>
                 </div>
                 <div class="clear"></div>
             </div>
@@ -93,7 +93,7 @@
             <input type="hidden" name="months" id="monthsNo" value="1">
         </form>
         <script type="text/javascript">
-            window.onload = function() { document.getElementById('totalAmount').innerHTML = ({{ price }}).formatMoney(2); };
+            window.onload = function() { document.getElementById('totalAmount').innerText = {{ price }}; };
         </script>
     {% endif %}
 {% endblock %}

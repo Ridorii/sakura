@@ -18,37 +18,17 @@
 
         <script type="text/javascript" src="/js/app.js"></script>
         <script type="text/javascript" src="/js/yuuno.js"></script>
-        <script type="text/javascript">
-            // Create an object so we can access certain settings from remote JavaScript files
-            var sakuraVars = {
-                "cookie": {
-                    "prefix":   "{{ config('cookie.prefix') }}"
-                },
-
-                "siteName":         "{{ config('general.name') }}",
-                "content":          "",
-                "recaptchaEnabled": false,
-
-                "minUserLen":       {{ config('user.name_min') }},
-                "maxUserLen":       {{ config('user.name_max') }},
-                "minPwdEntropy":    {{ config('user.pass_min_entropy') }},
-                "checkLogin":       {{ user.isActive ? 'true' : 'false' }}
-            };
-
-            // Error reporter
-            window.onerror = function(msg, url, line, col, error) {
-                notifyUI({
-                    "title":    "An error has occurred!",
-                    "text":     "There was a problem while executing the JavaScript code for this page: " + msg + ", URL: " + url + ", Line: " + line + ", Column: " + col + ". Please report this to a developer.",
-                    "image":      "FONT:fa-warning"
-                });
-            }
-        </script>
 {{ block('js') }}
     </head>
     <body>
         <div id="container">
             <span id="top"></span>
+            <div id="busy-window" class="ajax-busy hidden">
+                <div class="ajax-inner">
+                    <h2 id="busy-status"></h2>
+                    <div class="fa fa-4x fa-refresh fa-spin" id="busy-icon"></div>
+                </div>
+            </div>
             <div class="header" id="header">
                 <a class="logo" href="{{ route('main.index') }}">{% if config('general.logo') %}<img src="{{ config('general.logo') }}" alt="{{ config('general.name') }}">{% else %}{{ config('general.name') }}{% endif %}</a>
                 <div class="menu fa">
@@ -154,7 +134,7 @@
                         <li class="fthead">Information</li>
                         <li><a href="{{ route('main.faq') }}">FAQ</a></li>
                         <li><a href="{{ route('info.rules') }}">Rules</a></li>
-                        <li><a href="//fiistat.us" target="_blank">Server Status</a></li>
+                        <li><a href="{{ route('status.index') }}">Server Status</a></li>
                         <li><a href="{{ route('info.terms') }}">Terms of Service</a></li>
                     </ul>
                 </div>
@@ -163,9 +143,6 @@
         <script type="text/javascript">
         Sakura.Config.Set({
             Revision: {{ constant('SAKURA_VERSION') }},
-            UserNameMinLength: {{ config('user.name_min') }},
-            UserNameMaxLength: {{ config('user.name_max') }},
-            PasswordMinEntropy: {{ config('user.pass_min_entropy') }},
             LoggedIn: {{ user.isActive ? 'true' : 'false' }},
             UserId: {{ user.id }},
             SessionId: "{{ session_id() }}",
@@ -173,8 +150,20 @@
 
         Yuuno.Main.Startup();
 
-        {% if config('dev.show_changelog', true) and stats %}
-            Sakura.Changelog.Build(new Sakura.DOM('indexPanel', Sakura.DOMSelector.ID));
+        {% if config('dev.show_changelog') and stats %}
+            Sakura.Changelog.Build(Sakura.DOM.ID('indexPanel'));
+        {% endif %}
+
+        {% if config('dev.show_errors') %}
+            window.addEventListener("error", function () {
+                Yuuno.Notifications.Display({
+                    id: -(Date.now()),
+                    title: "Something happened!",
+                    text: "Check the console for more info.",
+                    image: "FONT:fa-bomb",
+                    link: null,
+                });
+            });
         {% endif %}
         </script>
     </body>

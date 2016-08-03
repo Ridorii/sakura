@@ -18,7 +18,7 @@
         {#<script>
             window["sakurakoSettings"] = route('chat.settings');
         </script>#}
-        <script src="/js/libraries.js" data-turbolinks-track></script>
+        <!-- we'll disable turbolinks for now script src="/js/libraries.js" data-turbolinks-track></script-->
         <script src="/js/aitemu.js" data-turbolinks-track></script>
         {#<script src="{{ config('general.chat') }}/app.js"></script>#}
 {{ block('js') }}
@@ -29,7 +29,7 @@
                 <nav class="header">
                     <div class="header__navigation">
                         <a class="header__entry fa-home" href="{{ route('main.index') }}">home</a>
-                        <a class="header__entry fa-comments" href="{{ forums.index }}">forum</a>
+                        <a class="header__entry fa-comments" href="{{ route('forums.index') }}">forum</a>
                         <a class="header__entry fa-commenting" href="{{ route('chat.redirect') }}">chat</a>
                         <a class="header__entry fa-sign-out" href="{{ route('auth.logout') }}">logout</a>
                     </div>

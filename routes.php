@@ -104,6 +104,11 @@ Router::group(['before' => 'maintenance'], function () {
         Router::get('/welcome', 'InfoController@welcome', 'info.welcome');
     });
 
+    // Status
+    Router::group(['prefix' => 'status'], function () {
+        Router::get('/', 'StatusController@index', 'status.index');
+    });
+
     // News
     Router::group(['prefix' => 'news'], function () {
         Router::get('/{category:c}?', 'NewsController@category', 'news.category');

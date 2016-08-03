@@ -4,19 +4,17 @@ namespace Sakura
     {
         private static Client: AJAX;
         private static IntervalContainer: number;
-        public static DisplayMethod: Function = (alert: INotification) => {
-            console.log(alert);
-        };
+        public static DisplayMethod: Function = Notifications.Display;
 
         public static Init(): void
         {
-            this.Client = new AJAX;
-            this.Client.SetUrl("/notifications");
-            this.Client.AddCallback(200, (client: AJAX) => {
+            Notifications.Client = new AJAX;
+            Notifications.Client.SetUrl("/notifications");
+            Notifications.Client.AddCallback(200, (client: AJAX) => {
                 Notifications.Load(<INotification[]>client.JSON());
             });
-            this.Poll();
-            this.Start();
+            Notifications.Poll();
+            Notifications.Start();
         }
 
         public static Poll(): void
@@ -32,7 +30,7 @@ namespace Sakura
                 }
 
                 Notifications.Poll();
-            }, 5000);
+            }, 60000);
         }
 
         public static Stop(): void
@@ -46,6 +44,11 @@ namespace Sakura
             for (var i in alerts) {
                 this.DisplayMethod(alerts[i]);
             }
+        }
+
+        public static Display(alert: INotification): void
+        {
+            console.log(alert);
         }
     }
 }

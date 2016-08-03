@@ -3,7 +3,7 @@ namespace Sakura
     export class Changelog
     {
         private static Client: AJAX;
-        private static Element: DOM;
+        private static Element: HTMLDivElement;
         private static Fetch: number = 0;
         private static Colours: string[] = [
             'inherit', // Unknown
@@ -15,25 +15,25 @@ namespace Sakura
             '#C44', // Revert
         ];
 
-        public static Build(target: DOM)
+        public static Build(target: HTMLElement)
         {
             this.Client = new AJAX;
-            this.Element = DOM.Create('table', 'changelog panelTable');
+            this.Element = <HTMLDivElement>DOM.Create('table', 'changelog panelTable');
 
-            this.Element.Element.style.borderSpacing = '0 1px';
+            this.Element.style.borderSpacing = '0 1px';
 
-            var title: DOM = DOM.Create('div', 'head'),
-                link: DOM = DOM.Create('a', 'underline');
+            var title: HTMLDivElement = <HTMLDivElement>DOM.Create('div', 'head'),
+                link: HTMLLinkElement = <HTMLLinkElement>DOM.Create('a', 'underline');
 
-            title.Element.style.marginBottom = '1px';
+            title.style.marginBottom = '1px';
 
-            link.Text('Changelog');
-            (<HTMLLinkElement>link.Element).href = Config.ChangelogUrl + '#r' + Config.Revision;
-            (<HTMLLinkElement>link.Element).target = '_blank';
+            link.innerText = 'Changelog';
+            link.href = Config.ChangelogUrl + '#r' + Config.Revision;
+            link.target = '_blank';
 
-            title.Append(link);
-            target.Append(title);
-            target.Append(this.Element);
+            DOM.Append(title, link);
+            DOM.Append(target, title);
+            DOM.Append(target, this.Element);
 
             this.Client.SetUrl(Config.ChangelogUrl + Config.ChangelogApi);
 
@@ -53,34 +53,33 @@ namespace Sakura
 
         private static Add(changelog: IChangelogDate)
         {
-            var header: DOM = DOM.Create('tr', 'changelog__row changelog__row--header'),
-                headerInner: DOM = DOM.Create('th', 'changelog__header');
+            var header: HTMLTableRowElement = <HTMLTableRowElement>DOM.Create('tr', 'changelog__row changelog__row--header'),
+                headerInner: HTMLTableHeaderCellElement = <HTMLTableHeaderCellElement>DOM.Create('th', 'changelog__header');
 
-            headerInner.Text(changelog.date);
-            headerInner.Element.style.fontSize = '1.2em';
-            (<HTMLTableHeaderCellElement>headerInner.Element).colSpan = 2;
+            headerInner.innerText = changelog.date;
+            headerInner.style.fontSize = '1.2em';
+            headerInner.colSpan = 2;
 
-            header.Append(headerInner);
-            this.Element.Append(header);
+            DOM.Append(header, headerInner);
+            DOM.Append(this.Element, header);
 
             for (var _i in changelog.changes)
             {
                 var change: IChangelogChange = changelog.changes[_i],
-                    row: DOM = DOM.Create('tr', 'changelog__row'),
-                    action: DOM = DOM.Create('td', 'changelog__column'),
-                    message: DOM = DOM.Create('td', 'changelog__column');
+                    row: HTMLTableRowElement = <HTMLTableRowElement>DOM.Create('tr', 'changelog__row'),
+                    action: HTMLTableCellElement = <HTMLTableCellElement>DOM.Create('td', 'changelog__column'),
+                    message: HTMLTableCellElement = <HTMLTableCellElement>DOM.Create('td', 'changelog__column');
 
-                action.Text(change.action.name);
-                action.Element.style.backgroundColor = this.Colours[change.action.id];
-                action.Element.style.borderBottom = '1px solid ' + this.Colours[change.action.id];
+                action.innerText = change.action.name;
+                action.style.backgroundColor = this.Colours[change.action.id];
+                action.style.borderBottom = '1px solid ' + this.Colours[change.action.id];
 
-                message.Text(change.message);
-                message.Element.style.borderBottom = '1px solid ' + this.Colours[change.action.id];
+                message.innerText = change.message;
+                message.style.borderBottom = '1px solid ' + this.Colours[change.action.id];
 
-                row.Append(action);
-                row.Append(message);
-
-                this.Element.Append(row);
+                DOM.Append(row, action);
+                DOM.Append(row, message);
+                DOM.Append(this.Element, row);
             }
         }
     }

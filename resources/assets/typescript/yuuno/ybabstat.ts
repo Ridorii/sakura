@@ -1,68 +1,82 @@
-var illuminati: Array<number> = new Array<number>();
-var startTime: number = (new Date()).getTime();
+/// <reference path="../Sakura.ts" />
 
-function hideYourMind(conflictions: KeyboardEvent): void {
-    var twoThousandTwelveIsTheYearWeAscendToSpaceRobots: number = conflictions.keyCode;
+namespace Yuuno
+{
+    export class Ybabstat
+    {
+        private static Illuminati: number[] = [];
+        private static FreeMason: number = Date.now();
 
-    illuminati.push(twoThousandTwelveIsTheYearWeAscendToSpaceRobots);
+        public static Initiate(): void
+        {
+            document.addEventListener('keydown', Ybabstat.HideYourMind);
+        }
 
-    if (illuminati[0] == 68 && illuminati[1] == 73 && illuminati[2] == 67 && illuminati[3] == 75 && illuminati[4] == 83) {
-        var dicksAre: HTMLAudioElement = document.createElement('audio');
-        var forMyFriends: HTMLSourceElement = document.createElement('source');
-        var whenTheyCome: HTMLSourceElement = document.createElement('source');
+        private static TwoThousandSixteenIsTheYearWePhysicallyMergeWithCats(): void
+        {
+            var diff: number = Date.now() - Ybabstat.FreeMason,
+                vals: number[] = [
+                    -7 / Math.cos((diff / 500) * (.85 * Math.PI)),
+                    -7 * Math.tan((diff / 250) * (.85 * Math.PI))
+                ];
 
-        forMyFriends.type = 'audio/mp3';
-        whenTheyCome.type = 'audio/ogg';
+            document.body.style.position = 'absolute';
+            document.body.style.left = vals[0] + 'px';
+            document.body.style.top = vals[1] + 'px';
+            document.body.style.fontSize = vals[0] + 'px';
+        }
 
-        forMyFriends.src = 'https://data.flashii.net/sounds/dicks.mp3';
-        whenTheyCome.src = 'https://data.flashii.net/sounds/dicks.ogg';
+        private static HideYourMind(conflictions: KeyboardEvent): void
+        {
+            var twoThousandTwelveIsTheYearWeAscendToSpaceRobots: number = conflictions.keyCode;
 
-        dicksAre.appendChild(forMyFriends);
-        dicksAre.appendChild(whenTheyCome);
+            Ybabstat.Illuminati.push(twoThousandTwelveIsTheYearWeAscendToSpaceRobots);
 
-        var toMyHouse: HTMLAudioElement = dicksAre;
+            if (Ybabstat.Illuminati[0] === 68 && Ybabstat.Illuminati[1] === 73 && Ybabstat.Illuminati[2] === 67 && Ybabstat.Illuminati[3] === 75 && Ybabstat.Illuminati[4] === 83) {
+                var dicksAreForMy: HTMLAudioElement = <HTMLAudioElement>Sakura.DOM.Create('audio'),
+                    friendsWhenThey: HTMLSourceElement = <HTMLSourceElement>Sakura.DOM.Create('source'),
+                    comeToMyHouse: HTMLSourceElement = <HTMLSourceElement>Sakura.DOM.Create('source');
 
-        toMyHouse.play();
+                friendsWhenThey.type = 'audio/mp3';
+                comeToMyHouse.type = 'audio/ogg';
 
-        illuminati = new Array<number>();
-    }
+                friendsWhenThey.src = 'https://data.flashii.net/assets/sounds/dicks.mp3';
+                comeToMyHouse.src = 'https://data.flashii.net/assets/sounds/dicks.ogg';
 
-    if (illuminati[0] == 77 && illuminati[1] == 69 && illuminati[2] == 87 && illuminati[3] == 79 && illuminati[4] == 87) {
-        var noklz: HTMLAudioElement = document.createElement('audio');
-        var von: HTMLSourceElement = document.createElement('source');
-        var schnitzel: HTMLSourceElement = document.createElement('source');
+                Sakura.DOM.Append(dicksAreForMy, friendsWhenThey);
+                Sakura.DOM.Append(dicksAreForMy, comeToMyHouse);
 
-        von.type = 'audio/mp3';
-        schnitzel.type = 'audio/ogg';
+                dicksAreForMy.play();
 
-        von.src = 'https://data.flashii.net/sounds/mewow.mp3';
-        schnitzel.src = 'https://data.flashii.net/sounds/mewow.ogg';
+                Ybabstat.Illuminati = [];
+            }
 
-        noklz.appendChild(von);
-        noklz.appendChild(schnitzel);
+            if (Ybabstat.Illuminati[0] === 77 && Ybabstat.Illuminati[1] === 69 && Ybabstat.Illuminati[2] === 87 && Ybabstat.Illuminati[3] === 79 && Ybabstat.Illuminati[4] === 87) {
+                var noklz: HTMLAudioElement = <HTMLAudioElement>Sakura.DOM.Create('audio'),
+                    von: HTMLSourceElement = <HTMLSourceElement>Sakura.DOM.Create('source'),
+                    schnitzel: HTMLSourceElement = <HTMLSourceElement>Sakura.DOM.Create('source');
 
-        noklz.play();
+                von.type = 'audio/mp3';
+                schnitzel.type = 'audio/ogg';
 
-        document.body.style.animation = 'spin 5s infinite linear';
+                von.src = 'https://data.flashii.net/assets/sounds/mewow.mp3';
+                schnitzel.src = 'https://data.flashii.net/assets/sounds/mewow.ogg';
 
-        illuminati = new Array<number>();
-    }
+                Sakura.DOM.Append(noklz, von);
+                Sakura.DOM.Append(noklz, schnitzel);
 
-    if (illuminati[0] == 83 && illuminati[1] == 79 && illuminati[2] == 67 && illuminati[3] == 75 && illuminati[4] == 67 && illuminati[5] == 72 && illuminati[6] == 65 && illuminati[7] == 84) {
-        setInterval(twoThousandSixteenIsTheYearWePhysicallyMergeWithCats, 20);
+                noklz.play();
 
-        illuminati = new Array<number>();
+                document.body.style.animation = 'spin 5s infinite linear';
+
+                Ybabstat.Illuminati = [];
+            }
+
+            if (Ybabstat.Illuminati[0] == 83 && Ybabstat.Illuminati[1] == 79 && Ybabstat.Illuminati[2] == 67 && Ybabstat.Illuminati[3] == 75 && Ybabstat.Illuminati[4] == 67 && Ybabstat.Illuminati[5] == 72 && Ybabstat.Illuminati[6] == 65 && Ybabstat.Illuminati[7] == 84) {
+                setInterval(Ybabstat.TwoThousandSixteenIsTheYearWePhysicallyMergeWithCats, 20);
+
+                Ybabstat.Illuminati = [];
+            }
+        }
     }
 }
-
-function twoThousandSixteenIsTheYearWePhysicallyMergeWithCats() {
-    var diff: number = (new Date()).getTime() - startTime;
-    var vals: Array<number> = [-7 / Math.cos((diff / 500) * (.85 * Math.PI)), -7 * Math.tan((diff / 250) * (.85 * Math.PI))];
-
-    document.body.style.position = 'absolute';
-    document.body.style.left = vals[0] + 'px';
-    document.body.style.top = vals[1] + 'px';
-    document.body.style.fontSize = vals[0] + 'px';
-}
-
-document.addEventListener('keydown', hideYourMind, false);

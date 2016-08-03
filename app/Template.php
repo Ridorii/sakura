@@ -90,10 +90,20 @@ class Template
         $views_dir = ROOT . 'resources/views/';
 
         // Initialise Twig Filesystem Loader
-        $twigLoader = new Twig_Loader_Filesystem([$views_dir . self::$name, $views_dir . 'shared/']);
+        $loader = new Twig_Loader_Filesystem();
+
+        foreach (glob("{$views_dir}*") as $dir) {
+            $key = basename($dir);
+
+            if ($key === self::$name) {
+                $key = '__main__';
+            }
+
+            $loader->addPath($dir, $key);
+        }
 
         // Environment variable
-        $twigEnv = [
+        $env = [
             'cache' => config("performance.template_cache")
             ? realpath(ROOT . config("performance.cache_dir") . 'views')
             : false,
@@ -102,7 +112,7 @@ class Template
         ];
 
         // And now actually initialise the templating engine
-        self::$engine = new Twig_Environment($twigLoader, $twigEnv);
+        self::$engine = new Twig_Environment($loader, $env);
 
         // Load String template loader
         self::$engine->addExtension(new Twig_Extension_StringLoader());

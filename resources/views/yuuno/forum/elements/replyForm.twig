@@ -24,7 +24,7 @@
         <div class="posting-buttons">
             <div style="float: left;">
                 {% for code,meta in bbcode %}
-                    <button onclick="insertBBcode('postingText', '{{ code }}'{% if meta[2] %}, true{% endif %});" type="button"{% if meta[0] %} title="{{ meta[0] }}"{% endif %} class="forumbtn{% if meta[1] %} fa fa-{{ meta[1] }}{% endif %}">{% if not meta[1] %}{{ code }}{% endif %}</button>
+                    <button onclick="Yuuno.Editor.InsertBBCode(Sakura.DOM.ID('postingText'), '{{ code }}'{% if meta[2] %}, true{% endif %});" type="button"{% if meta[0] %} title="{{ meta[0] }}"{% endif %} class="forumbtn{% if meta[1] %} fa fa-{{ meta[1] }}{% endif %}">{% if not meta[1] %}{{ code }}{% endif %}</button>
                 {% endfor %}
             </div>
             <div style="float: right;">

@@ -44,11 +44,7 @@
                 var resp = JSON.parse(commentClient.Response());
 
                 if (resp.error) {
-                    ajaxBusyView(true, resp.error, 'fail');
-
-                    setTimeout(function () {
-                        ajaxBusyView(false);
-                    }, 1500);
+                    Yuuno.Busy.Show(Yuuno.BusyMode.FAIL, resp.error, 1500);
                 } else {
                     commentAdd(resp);
                 }
@@ -197,7 +193,7 @@
 
             // Remove it if it already exists
             if (replyBox) {
-                (new Sakura.DOM('comment-reply-container-' + id, Sakura.DOMSelector.ID)).Remove();
+                Sakura.DOM.Remove('comment-reply-container-' + id);
                 return;
             }
 
@@ -256,13 +252,9 @@
                 var resp = JSON.parse(commentClient.Response());
 
                 if (resp.error) {
-                    ajaxBusyView(true, resp.error, 'fail');
-
-                    setTimeout(function () {
-                        ajaxBusyView(false);
-                    }, 1500);
+                    Yuuno.Busy.Show(Yuuno.BusyMode.FAIL, resp.error, 1500);
                 } else {
-                    (new Sakura.DOM("comment-" + id, Sakura.DOMSelector.ID)).Remove();
+                    Sakura.DOM.Remove('comment-' + id);
                 }
             });
 
@@ -282,11 +274,7 @@
                 var resp = JSON.parse(commentClient.Response());
 
                 if (resp.error) {
-                    ajaxBusyView(true, resp.error, 'fail');
-
-                    setTimeout(function () {
-                        ajaxBusyView(false);
-                    }, 1500);
+                    Yuuno.Busy.Show(Yuuno.BusyMode.FAIL, resp.error, 1500);
                 } else {
                     upvotes.innerText = resp.upvotes;
                     downvotes.innerText = resp.downvotes;

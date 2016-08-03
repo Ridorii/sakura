@@ -1,5 +1,3 @@
-declare var ajaxBusyView: any;
-
 namespace Sakura
 {
     export class Friend
@@ -28,18 +26,22 @@ namespace Sakura
             this.Client.SetSend({ "session": Config.SessionId });
             this.Client.AddCallback(200, (client: AJAX) => {
                 var response: IFriendResponse = <IFriendResponse>client.JSON(),
-                    error: string = response.error || null;
+                    alert: INotification = {
+                        id: -(Date.now()),
+                        user: Config.UserId,
+                        time: Math.round(Date.now() / 1000),
+                        read: false,
+                        title: response.error || response.message,
+                        text: "",
+                        link: null,
+                        image: "FONT:fa-user-plus",
+                        timeout: 60000
+                    };
 
-                if (error !== null) {
-                    ajaxBusyView(true, error, 'fail');
+                Notifications.DisplayMethod.call(this, alert);
 
-                    setTimeout(() => {
-                        ajaxBusyView(false);
-                    }, 1500);
-                } else {
-                    ajaxBusyView(true, response.message, 'ok');
-                    location.reload();
-                }
+                // replace this with a thing that just updates the dom
+                window.location.reload();
             });
             this.Client.Start(HTTPMethod.POST);
         }
