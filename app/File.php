@@ -91,7 +91,7 @@ class File
             ]);
 
         // Save the file data
-        file_put_contents(config('file.uploads_dir') . $id . ".bin", $data);
+        file_put_contents(ROOT . config('file.uploads_dir') . $id . ".bin", $data);
 
         // Return a new File object
         return new File($id);
@@ -114,7 +114,7 @@ class File
             $fileRow = $fileRow[0];
             $this->id = $fileRow->file_id;
             $this->user = User::construct($fileRow->user_id);
-            $this->data = file_get_contents(config('file.uploads_dir') . $fileRow->file_id . ".bin");
+            $this->data = file_get_contents(ROOT . config('file.uploads_dir') . $fileRow->file_id . ".bin");
             $this->name = $fileRow->file_name;
             $this->mime = $fileRow->file_mime;
             $this->time = $fileRow->file_time;
@@ -127,7 +127,7 @@ class File
      */
     public function delete()
     {
-        unlink(config('file.uploads_dir') . $this->id . ".bin");
+        unlink(ROOT . config('file.uploads_dir') . $this->id . ".bin");
 
         DB::table('uploads')
             ->where('file_id', $this->id)
