@@ -1,0 +1,161 @@
+{% extends '@aitemu/master.twig' %}
+
+{% set title = 'profile / ' ~ profile.username %}
+{% set banner_large = true %}
+{% set banner = profile.header ? route('user.header', profile.id) : null %}
+{% set wrapper_classes = "profile" %}
+{% set banner_classes = "profile__banner" %}
+
+{% set hierarchies = {
+    'founder': {
+        'display': profile.id == 2,
+        'icon': 'fa-cog',
+        'text': 'Founder',
+    },
+    'staff': {
+        'display': false,
+        'icon': 'fa-gavel',
+        'text': 'Staff',
+    },
+    'developer': {
+        'display': false,
+        'icon': 'fa-code',
+        'text': 'Developer',
+    },
+    'contributor': {
+        'display': false,
+        'icon': 'fa-heart',
+        'text': 'Contributor',
+    },
+    'premium': {
+        'display': false,
+        'icon': 'fa-heart',
+        'text': 'Contributor',
+    },
+    'banned': {
+        'display': false,
+        'icon': 'fa-trash',
+        'text': 'Banned',
+    },
+} %}
+
+{% set youtubeIsChannelId = profile.youtube|slice(0, 2) == 'UC' and profile.youtube|length == 24 %}
+
+{% set fields = {
+    "website": {
+        "title": "Website",
+        "icon": "fa-globe",
+        "value": profile.website,
+        "link": "%s",
+    },
+    "twitter": {
+        "title": "Twitter",
+        "icon": "fa-twitter",
+        "value": profile.twitter,
+        "link": "https://twitter.com/%s",
+        "disp": "@%s",
+    },
+    "github": {
+        "title": "GitHub",
+        "icon": "fa-github",
+        "value": profile.github,
+        "link": "https://github.com/%s",
+    },
+    "skype": {
+        "title": "Skype",
+        "icon": "fa-skype",
+        "value": profile.skype,
+        "link": "skype:%s?userinfo",
+    },
+    "discord": {
+        "title": "Discord",
+        "icon": "fa-gamepad",
+        "value": profile.discord,
+    },
+    "youtube": {
+        "title": "YouTube",
+        "icon": "fa-youtube-play",
+        "value": profile.youtube,
+        "link": "https://youtube.com/" ~ (youtubeIsChannelId ? 'channel/' : '') ~ "%s",
+        "disp": youtubeIsChannelId ? profile.username ~ "'s channel" : "%s",
+    },
+    "steam": {
+        "title": "Steam",
+        "icon": "fa-steam",
+        "value": profile.steam,
+        "link": "https://steamcommunity.com/id/%s",
+    },
+    "osu": {
+        "title": "osu!",
+        "icon": "fa-dot-circle-o",
+        "value": profile.osu,
+        "link": "https://osu.ppy.sh/u/%s",
+    },
+    "lastfm": {
+        "title": "Last.fm",
+        "icon": "fa-lastfm",
+        "value": profile.lastfm,
+        "link": "http://last.fm/user/%s",
+    },
+} %}
+
+{% block banner_content %}
+    <div class="banner__bottom profile__header">
+        <div class="profile__header-sub profile__names">
+            <div class="profile__title">{{ profile.title }}</div>
+            <div class="profile__username" style="color: {{ profile.colour }}">{{ profile.username }}</div>
+        </div>
+        <div class="profile__header-sub profile__dates">
+            <div class="profile__date--joined">Joined {# $user->joined()->format('r') #}</div>
+            <div class="profile__date--last">Last seen {# $user->lastSeen()->format('r') #}</div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="profile__content">
+        <div class="profile__container profile__container--left">
+            <div class="profile__avatar" style="background-image: url('{{ route('file.avatar', profile.id) }}');"></div>
+            <div class="platform profile__platform profile__hierarchies">{#
+                #}{% for id, data in hierarchies %}{#
+                    #}{% if data.display %}
+                        <div class="profile__hierarchy profile__hierarchy--{{ id }}">
+                            <div class="profile__hierarchy-icon {{ data.icon }}"></div>
+                            <div class="profile__hierarchy-text">{{ data.text }}</div>
+                        </div>
+                    {% endif %}{#
+                #}{% endfor %}{#
+            #}</div>
+            <div class="platform profile__platform profile__accounts">{#
+                #}{% for id, data in fields %}{#
+                    #}{% if data.value != null %}
+                        <a class="profile__account profile__account--{{ id }}"{% if data.link %} href="{{ data.link|format(data.value) }}"{% endif %}>
+                            <div class="profile__account-icon fa-fw {{ data.icon }}"></div>
+                            <div class="profile__account-text">{{ (data.disp ? data.disp : '%s')|format(data.value) }}</div>
+                        </a>
+                    {% endif %}{#
+                #}{% endfor %}{#
+            #}</div>
+        </div>
+        <div class="profile__container profile__container--right">
+            <div class="platform profile__platform profile__section profile__section--userpage">
+                welcome to my userpage
+            </div>
+            <div class="platform profile__platform profile__section profile__section--groups">
+                listing of groups
+            </div>
+            <div class="platform profile__platform profile__section profile__section--friends">
+                listing of friends
+            </div>
+            <div class="platform profile__platform profile__section profile__section--achievements">
+                listing of achievements
+            </div>
+            <div class="platform profile__platform profile__section profile__section--comments">
+                profile comments
+            </div>
+            <div class="platform profile__platform profile__section profile__section--forum">
+                listing of forum posts and created topics
+            </div>
+        </div>
+    </div>
+{% endblock %}

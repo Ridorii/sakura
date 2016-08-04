@@ -1,20 +1,9 @@
 .profile {
     text-shadow: 0 @text-shadow-distance @text-shadow-size fade(@grey-0, @text-shadow-opacity);
 
-    &__banner {
-        display: flex;
-        flex-flow: column-reverse;
-    }
-
     &__header {
-        height: 60px;
-        background: fade(@grey-0, 80%);
         padding-left: @avatar-big + (@general-spacing * 4);
         padding-right: @general-spacing * 2;
-        display: inline-flex;
-        flex-flow: row;
-        align-items: center;
-        line-height: 1;
     }
 
     &__names {
@@ -24,17 +13,17 @@
     }
 
     &__username {
-        font-size: 2em;
+        font-size: @font-size--profile-username;
     }
 
     &__title {
-        font-size: .9em;
+        font-size: @font-size--profile-title;
     }
 
     &__dates {
         font-weight: 300;
         text-align: right;
-        font-size: .7em;
+        font-size: @font-size--profile-dates;
         line-height: 1.3em;
     }
 
@@ -57,6 +46,10 @@
     &__platform {
         text-align: left;
         margin: @general-spacing auto 0;
+
+        &:empty {
+            display: none;
+        }
     }
 
     &__avatar {

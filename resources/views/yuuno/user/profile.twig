@@ -8,6 +8,8 @@
 
 {% set youtubeIsChannelId = profile.youtube|slice(0, 2) == 'UC' and profile.youtube|length == 24 %}
 
+{% set canViewSecret = user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
+
 {% set fields = {
     "website": {
         "title": "Website",
@@ -54,6 +56,19 @@
         "title": "Last.fm",
         "value": profile.lastfm,
         "link": "http://last.fm/user/%s",
+    },
+    "email": {
+        "title": "E-mail address",
+        "value": canViewSecret ? profile.email : null,
+        "link": "mailto:%s"
+    },
+    "registerip": {
+        "title": "Register IP",
+        "value": canViewSecret ? profile.registerIp : null,
+    },
+    "lastip": {
+        "title": "Last IP",
+        "value": canViewSecret ? profile.lastIp : null,
     },
 } %}
 
@@ -209,45 +224,28 @@
                             </tr>
                         </table>
                         <hr class="default">
-                        {% if profile.profileFields or user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
-                            {% if user.isActive %}
-                                <table style="width: 100%;">
-                                {% for id, data in fields %}
-                                    {% if data.value != null %}
-                                        <tr>
-                                            <td style="text-align: left; font-weight: bold;">
-                                                {{ data.title }}
-                                            </td>
-                                            <td style="text-align: right;">
-                                                {% if data.link %}
-                                                    <a href="{{ data.link|format(data.value) }}" class="default">{{ (data.disp ? data.disp : '%s')|format(data.value) }}</a>
-                                                {% else %}
-                                                    {{ (data.disp ? data.disp : '%s')|format(data.value) }}
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endif %}
-                                {% endfor %}
-                                {% if user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
+                        {% if user.isActive %}
+                            <table style="width: 100%;">
+                            {% for id, data in fields %}
+                                {% if data.value != null %}
                                     <tr>
-                                        <td style="text-align: left; font-weight: bold;">E-mail address</td>
-                                        <td style="text-align: right;"><a href="mailto:{{ profile.email }}" class="default">{{ profile.email }}</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: left; font-weight: bold;">Register IP</td>
-                                        <td style="text-align: right;">{{ profile.registerIp }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: left; font-weight: bold;">Last IP</td>
-                                        <td style="text-align: right;">{{ profile.lastIp }}</td>
+                                        <td style="text-align: left; font-weight: bold;">
+                                            {{ data.title }}
+                                        </td>
+                                        <td style="text-align: right;">
+                                            {% if data.link %}
+                                                <a href="{{ data.link|format(data.value) }}" class="default">{{ (data.disp ? data.disp : '%s')|format(data.value) }}</a>
+                                            {% else %}
+                                                {{ (data.disp ? data.disp : '%s')|format(data.value) }}
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                 {% endif %}
-                                </table>
-                            {% else %}
-                                <b>Log in to view the full profile!</b>
-                            {% endif %}
+                            {% endfor %}
+                            </table>
+                        {% else %}
+                            <b>Log in to view the full profile!</b>
                         {% endif %}
-                        <hr class="default">
                         <b>Account Standing</b>
                         {% if profile.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) %}
                             <h2 style="color: #888; text-shadow: 0 0 7px #888; margin-top: 0;">Deactivated</h2>

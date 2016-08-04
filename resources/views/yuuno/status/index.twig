@@ -5,12 +5,92 @@
 {% set banner_large = true %}
 
 {% block banner_content %}
-    {# ignore this, it's temporary #}
-    <div style="display:flex;width:100%;height:100%;"><div class="fa-4x" style="align-self:center;padding:1em"><span class="fa fa-check"></span> I can write in here too!</div></div>
+    <div class="banner__bottom">
+        <div class="status__overall status__overall--good">
+            <span class="status__overall-icon"></span> <span class="status__overall-text">all services are go!</span>
+        </div>
+        <div class="status__last-update">
+            this is a static design preview
+        </div>
+    </div>
 {% endblock %}
 
 {% block content %}
-    <div class="platform">
-        all services are operational and i haven't designed this yet
+    <div class="platform status__response">
+        <div class="status__services">
+            <div class="status__service status__service--good status__service--selected">
+                <div class="status__service-icon"></div>
+                <div class="status__service-name">main site</div>
+            </div>
+            <div class="status__service status__service--good">
+                <div class="status__service-icon"></div>
+                <div class="status__service-name">test site</div>
+            </div>
+            <div class="status__service status__service--bad">
+                <div class="status__service-icon"></div>
+                <div class="status__service-name">api</div>
+            </div>
+            <div class="status__service status__service--good">
+                <div class="status__service-icon"></div>
+                <div class="status__service-name">chat server</div>
+            </div>
+            <div class="status__service status__service--good">
+                <div class="status__service-icon"></div>
+                <div class="status__service-name">chat client</div>
+            </div>
+            <div class="status__service status__service--bad">
+                <div class="status__service-icon"></div>
+                <div class="status__service-name">irc gateway</div>
+            </div>
+            <div class="status__service status__service--bad">
+                <div class="status__service-icon"></div>
+                <div class="status__service-name">tekkit</div>
+            </div>
+        </div>
+        <div class="status__graph">graph goes here</div>
+    </div>
+    <div class="platform status__incidents">
+        <div class="status__incident">
+            <div class="status__incident-date">Aug 4, 2016</div>
+            <div class="status__updates">
+                <div class="status__update status__update--good">
+                    <div class="status__update-meta">
+                        <div class="status__update-time">9:01 UTC</div>
+                        <div class="status__update-state">Resolved</div>
+                    </div>
+                    <div class="status__update-text">
+                        That fixed it for some reason.
+                    </div>
+                </div>
+                <div class="status__update status__update--busy">
+                    <div class="status__update-meta">
+                        <div class="status__update-time">8:45 UTC</div>
+                        <div class="status__update-state">Monitoring</div>
+                    </div>
+                    <div class="status__update-text">
+                        Dropkicking the server out of the window.
+                    </div>
+                </div>
+                <div class="status__update status__update--bad">
+                    <div class="status__update-meta">
+                        <div class="status__update-time">8:30 UTC</div>
+                        <div class="status__update-state">Investigating</div>
+                    </div>
+                    <div class="status__update-text">
+                        Having connectivity issues with the server.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="status__incident">
+            <div class="status__incident-date">Aug 3, 2016</div>
+            <div class="status__updates">
+                <div class="status__update status__update">
+                    <div class="status__update-text">
+                        No incidents occurred.
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

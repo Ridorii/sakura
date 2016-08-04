@@ -60,7 +60,7 @@ class UserController extends Controller
         Template::vars(compact('profile'));
 
         // Print page contents
-        return Template::render('user/profile');
+        return Template::render((isset($_GET['new']) ? '@aitemu/' : '') . 'user/profile');
     }
 
     /**

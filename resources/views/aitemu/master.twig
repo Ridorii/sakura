@@ -30,7 +30,7 @@
                     <div class="header__navigation">
                         <a class="header__entry fa-home" href="{{ route('main.index') }}">home</a>
                         <a class="header__entry fa-comments" href="{{ route('forums.index') }}">forum</a>
-                        <a class="header__entry fa-commenting" href="{{ route('chat.redirect') }}">chat</a>
+                        <a class="header__entry fa-cog" href="{{ route('settings.index') }}">settings</a>
                         <a class="header__entry fa-sign-out" href="{{ route('auth.logout') }}">logout</a>
                     </div>
                     {% if user.isActive %}
@@ -63,10 +63,10 @@
             <div class="container__footer">
                 <div class="container__footer-copyright">flash.moe 2013-{{ ''|date('Y') }}</div>
                 <div class="container__footer-links">
-                    <a href="#" class="container__footer-link">Terms of Service</a>
-                    <a href="#" class="container__footer-link">Rules</a>
-                    <a href="#" class="container__footer-link">Contact</a>
-                    <a href="#" class="container__footer-link">Status</a>
+                    <a href="{{ route('info.terms') }}" class="container__footer-link">Terms of Service</a>
+                    <a href="{{ route('info.rules') }}" class="container__footer-link">Rules</a>
+                    <a href="{{ route('info.contact') }}" class="container__footer-link">Contact</a>
+                    <a href="{{ route('status.index') }}" class="container__footer-link">Status</a>
                 </div>
             </div>
         </div>
