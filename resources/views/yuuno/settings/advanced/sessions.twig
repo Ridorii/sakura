@@ -26,7 +26,7 @@
                     {{ s.user_agent }}
                 </td>
                 <td>
-                    <time class="time-ago" datetime="{{ s.session_start|date('r') }}">{{ s.session_start|date('D Y-m-d H:i:s T') }}</time>
+                    <time class="time-ago" datetime="{{ s.session_start|date('r') }}">{{ s.session_start|date(config('general.date_format')) }}</time>
                 </td>
                 <td style="width: 90px;">
                     <form method="post" action="{{ route('settings.advanced.sessions') }}">

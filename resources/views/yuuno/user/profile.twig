@@ -144,16 +144,16 @@
                     <div class="new-profile-info">
                         <div class="default-avatar-setting new-profile-avatar" style="background-image: url({{ route('file.avatar', profile.id) }}); box-shadow: 0 0 5px #{% if profile.isOnline %}484{% else %}844{% endif %};"></div>
                         <div class="new-profile-username">
-                            <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px {% if profile.colour != 'inherit' %}{{ profile.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;" {% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0].username_old }} before {{ profile.getUsernameHistory[0].change_time|date('D Y-m-d H:i:s T') }}." {% endif %}>{{ profile.username }}</h1>
+                            <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px {% if profile.colour != 'inherit' %}{{ profile.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;" {% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0].username_old }} before {{ profile.getUsernameHistory[0].change_time|date(config('general.date_format')) }}." {% endif %}>{{ profile.username }}</h1>
                             {% if profile.isPremium %}<img src="/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;"> {% endif %}<img src="/images/flags/{{ profile.country|lower }}.png" alt="{{ profile.country }}" style="vertical-align: middle;" title="{{ profile.country(true) }}"> <span style="font-size: .8em;">{{ profile.title }}</span>
                         </div>
                         <div class="new-profile-dates">
-                            <b>Joined</b> <time class="time-ago" datetime="{{ profile.registered|date('r') }}">{{ profile.registered|date('D Y-m-d H:i:s T') }}</time>
+                            <b>Joined</b> <time class="time-ago" datetime="{{ profile.registered|date('r') }}">{{ profile.registered|date(config('general.date_format')) }}</time>
                             <br>
                             {% if profile.lastOnline < 1 %}
                             <b>{{ profile.username }} hasn't logged in yet.</b>
                             {% else %}
-                            <b>Last online</b> <time class="time-ago" datetime="{{ profile.lastOnline|date('r') }}">{{ profile.lastOnline|date('D Y-m-d H:i:s T') }}</time>
+                            <b>Last online</b> <time class="time-ago" datetime="{{ profile.lastOnline|date('r') }}">{{ profile.lastOnline|date(config('general.date_format')) }}</time>
                             {% endif %}
                             {% if profile.birthday != '0000-00-00' and profile.birthday|split('-')[0] > 0 %}
                             <br><b>Age</b> <span title="{{ profile.birthday }}">{{ profile.birthday(true) }} years old</span>&nbsp;
@@ -164,7 +164,7 @@
                 <div class="new-profile-interactions">
                     <div class="new-profile-navigation">
                         {% if not noUserpage %}
-                        <a class="fa fa-file-text-o" title="View {{ profile.username }}'s user page" href="#_userpage" onclick="profileMode('userpage');"></a>
+                            <a class="fa fa-file-text-o" title="View {{ profile.username }}'s user page" href="#_userpage" onclick="profileMode('userpage');"></a>
                         {% endif %}
                         <a class="fa fa-list" title="View {{ profile.username }}'s topics" href="#_topics" onclick="profileMode('topics');"></a>
                         <a class="fa fa-reply" title="View {{ profile.username }}'s posts" href="#_posts" onclick="profileMode('posts');"></a>

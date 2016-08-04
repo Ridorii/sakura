@@ -24,12 +24,12 @@ mb_internal_encoding('utf-8');
 
 // Check the PHP version
 if (version_compare(phpversion(), '7.0.0', '<')) {
-    throw new Exception('Sakura requires at least PHP 7.0.0, please upgrade to a newer PHP version.');
+    die('Sakura requires at least PHP 7.0.0, please upgrade to a newer PHP version.');
 }
 
 // Check if the composer autoloader exists
 if (!file_exists(ROOT . 'vendor/autoload.php')) {
-    throw new Exception('Autoloader not found, did you run composer install?');
+    die('Autoloader not found, did you run composer install?');
 }
 
 // Include the autoloader

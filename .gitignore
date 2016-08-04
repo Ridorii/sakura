@@ -19,3 +19,7 @@ $RECYCLE.BIN/
 # Compiled/copied assets
 /public/js
 /public/css
+
+# User assets
+/uploads/*
+!/uploads/.gitkeep

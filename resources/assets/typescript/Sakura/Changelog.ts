@@ -28,7 +28,7 @@ namespace Sakura
             title.style.marginBottom = '1px';
 
             link.innerText = 'Changelog';
-            link.href = Config.ChangelogUrl + '#r' + Config.Revision;
+            link.href = Config.ChangelogUrl;
             link.target = '_blank';
 
             DOM.Append(title, link);

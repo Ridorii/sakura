@@ -84,7 +84,7 @@ class AppearanceController extends Controller
         $userId = ActiveUser::$user->id;
         $ext = image_type_to_extension($meta[2]);
 
-        $filename = "{$mode}_{$userId}.{$ext}";
+        $filename = "{$mode}_{$userId}{$ext}";
 
         // Create the file
         $file = File::create(file_get_contents($tmpName), $filename, ActiveUser::$user);
@@ -106,7 +106,11 @@ class AppearanceController extends Controller
 
     public function deleteFile($mode)
     {
-        (new File(ActiveUser::$user->{$mode}))->delete();
+        $fileId = ActiveUser::$user->{$mode};
+
+        if ($fileId) {
+            (new File($fileId))->delete();
+        }
     }
 
     public function avatar()

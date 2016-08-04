@@ -2,7 +2,6 @@ namespace Sakura
 {
     export class Config
     {
-        public static Revision: number = 0;
         public static UserId: number = 0;
         public static SessionId: string = "";
         public static LoggedIn: boolean = false;

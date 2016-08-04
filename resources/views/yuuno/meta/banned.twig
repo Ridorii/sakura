@@ -18,8 +18,8 @@
                 <br>
                 <h2>Additional information</h2>
                 <ul style="margin-left: 30px;">
-                    <li>You were banned on {{ ban.issued|date('D Y-m-d H:i:s T') }}.</li>
-                    <li>{% if ban.expires %}This ban expires on {{ ban.expires|date('D Y-m-d H:i:s T') }}.{% else %}<b>You are permanently banned.</b>{% endif %}</li>
+                    <li>You were banned on {{ ban.issued|date(config('general.date_format')) }}.</li>
+                    <li>{% if ban.expires %}This ban expires on {{ ban.expires|date(config('general.date_format')) }}.{% else %}<b>You are permanently banned.</b>{% endif %}</li>
                     {% if ban.expires %}
                     <li>You were banned by <a href="{{ route('user.profile', ban.issuer.id) }}" class="default">{{ ban.issuer.username }}</a>.</li>
                     {% endif %}

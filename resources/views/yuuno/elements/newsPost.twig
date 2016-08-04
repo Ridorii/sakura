@@ -12,6 +12,6 @@
 </div>
 <div class="clear"></div>
 <div class="news-post-time">
-    Posted <time class="time-ago" datetime="{{ post.time|date('r') }}">{{ post.time|date('D Y-m-d H:i:s T') }}</time>
+    Posted <time class="time-ago" datetime="{{ post.time|date('r') }}">{{ post.time|date(config('general.date_format')) }}</time>
     {% if newsHideCommentCount is not defined %}<a class="default" href="{{ route('news.post', post.id) }}#comments">{{ post.commentCount }} comment{% if post.commentCount != 1 %}s{% endif %}</a>{% endif %}
 </div>

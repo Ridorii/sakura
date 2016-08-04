@@ -7,6 +7,7 @@
 
 namespace Sakura;
 
+use Carbon\Carbon;
 use Sakura\Perms;
 use Sakura\Perms\Site;
 use stdClass;
@@ -426,6 +427,26 @@ class User
 
         // Init the permissions
         $this->permissions = new Perms(Perms::SITE);
+    }
+
+    /**
+     * Get a Carbon object of the registration date
+     *
+     * @return Carbon
+     */
+    public function registerDate()
+    {
+        return Carbon::createFromTimestamp($this->registered);
+    }
+
+    /**
+     * Get a Carbon object of the last online date
+     *
+     * @return Carbon
+     */
+    public function lastDate()
+    {
+        return Carbon::createFromTimestamp($this->lastOnline);
     }
 
     /**

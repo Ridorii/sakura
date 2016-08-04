@@ -84,12 +84,14 @@ class File
         $id = DB::table('uploads')
             ->insertGetId([
                 'user_id' => $user->id,
-                'file_data' => $data,
                 'file_name' => $name,
                 'file_mime' => $mime,
                 'file_time' => time(),
                 'file_expire' => $expire,
             ]);
+
+        // Save the file data
+        file_put_contents(config('file.uploads_dir') . $id . ".bin", $data);
 
         // Return a new File object
         return new File($id);
@@ -112,7 +114,7 @@ class File
             $fileRow = $fileRow[0];
             $this->id = $fileRow->file_id;
             $this->user = User::construct($fileRow->user_id);
-            $this->data = $fileRow->file_data;
+            $this->data = file_get_contents(config('file.uploads_dir') . $fileRow->file_id . ".bin");
             $this->name = $fileRow->file_name;
             $this->mime = $fileRow->file_mime;
             $this->time = $fileRow->file_time;
@@ -125,6 +127,8 @@ class File
      */
     public function delete()
     {
+        unlink(config('file.uploads_dir') . $this->id . ".bin");
+
         DB::table('uploads')
             ->where('file_id', $this->id)
             ->delete();

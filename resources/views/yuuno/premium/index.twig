@@ -30,7 +30,7 @@
                 Your current Tenshi tag
             </div>
             <div style="margin-bottom: 10px;">
-                <h3>{% if persistentPremium %}Your rank has persistent Tenshi.{% else %}Your Tenshi tag is valid till {{ user.premiumInfo.expire|date('D Y-m-d H:i:s T') }}.{% endif %}</h3>
+                <h3>{% if persistentPremium %}Your rank has persistent Tenshi.{% else %}Your Tenshi tag is valid till {{ user.premiumInfo.expire|date(config('general.date_format')) }}.{% endif %}</h3>
                 <progress value="{{ persistentPremium ? 100 : (100 - (((date().timestamp - user.premiumInfo.start) / (user.premiumInfo.expire - user.premiumInfo.start)) * 100)) }}" max="100" style="width: 100%"></progress>
             </div>
         {% endif %}

@@ -106,8 +106,8 @@
             <div class="profile__username" style="color: {{ profile.colour }}">{{ profile.username }}</div>
         </div>
         <div class="profile__header-sub profile__dates">
-            <div class="profile__date--joined">Joined {# $user->joined()->format('r') #}</div>
-            <div class="profile__date--last">Last seen {# $user->lastSeen()->format('r') #}</div>
+            <div class="profile__date--joined">Joined {{ profile.registerDate.format('r') }}</div>
+            <div class="profile__date--last">Last seen {{ profile.lastDate.format('r') }}</div>
         </div>
     </div>
 {% endblock %}
