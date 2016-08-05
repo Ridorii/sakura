@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the comment object.
- *
  * @package Sakura
  */
 
@@ -9,23 +8,75 @@ namespace Sakura;
 
 /**
  * Comment object.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class Comment
 {
+    /**
+     * The comment identifier.
+     * @var int
+     */
     public $id = 0;
+
+    /**
+     * The category this comment belongs to.
+     * @var string
+     */
     public $category = "";
+
+    /**
+     * The timestamp this comment was posted at.
+     * @var int
+     */
     public $time = 0;
+
+    /**
+     * The Id of the user that posted this comment.
+     * @var int
+     */
     public $user = 0;
+
+    /**
+     * The Id of the comment this comment is replying to.
+     * @var int
+     */
     public $reply = 0;
+
+    /**
+     * The content of this comment.
+     * @var string
+     */
     public $text = "";
+
+    /**
+     * The upvotes this comment has received.
+     * @var int
+     */
     public $upvotes = 0;
+
+    /**
+     * The downvotes this comment has received.
+     * @var int
+     */
     public $downvotes = 0;
+
+    /**
+     * A cache of reply objects.
+     * @var array
+     */
     private $replyCache = [];
+
+    /**
+     * A cache of the parsed text content.
+     * @var string
+     */
     private $parsedCache = "";
 
+    /**
+     * Constructor.
+     * @var int $id
+     */
     public function __construct($id = 0)
     {
         // Get comment data from the database
@@ -48,6 +99,9 @@ class Comment
         }
     }
 
+    /**
+     * Saving changes made to this comment.
+     */
     public function save()
     {
         // Create submission data, insert and update take the same format
@@ -70,6 +124,9 @@ class Comment
         }
     }
 
+    /**
+     * Delete this comment.
+     */
     public function delete()
     {
         foreach ($this->replies() as $reply) {
@@ -83,6 +140,9 @@ class Comment
         $this->id = 0;
     }
 
+    /**
+     * Gets and caches the upvotes.
+     */
     private function getVotes()
     {
         $votes = DB::table('comment_votes')
@@ -101,6 +161,10 @@ class Comment
         }
     }
 
+    /**
+     * Gets the parsed comment text
+     * @return string
+     */
     public function parsed()
     {
         if (!$this->parsedCache) {
@@ -110,6 +174,10 @@ class Comment
         return $this->parsedCache;
     }
 
+    /**
+     * Get the replies to this comment.
+     * @return array
+     */
     public function replies()
     {
         if (!$this->replyCache) {
@@ -127,11 +195,20 @@ class Comment
         return $this->replyCache;
     }
 
+    /**
+     * Gets the user object of the poster.
+     * @return User
+     */
     public function userData()
     {
         return User::construct($this->user);
     }
 
+    /**
+     * Casts a vote on a comment.
+     * @param int $user
+     * @param bool $vote
+     */
     public function vote($user, $vote)
     {
         $vote = $vote ? '1' : '0';

@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the account section controller.
- *
  * @package Sakura
  */
 
@@ -13,12 +12,15 @@ use Sakura\Perms\Site;
 
 /**
  * Account settings.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class AccountController extends Controller
 {
+    /**
+     * Renders the profile changing page.
+     * @return string
+     */
     public function profile()
     {
         // Check permission
@@ -87,6 +89,10 @@ class AccountController extends Controller
         return view('settings/account/profile');
     }
 
+    /**
+     * Renders the e-mail changing page.
+     * @return string
+     */
     public function email()
     {
         // Check permission
@@ -131,6 +137,10 @@ class AccountController extends Controller
         return view('settings/account/email');
     }
 
+    /**
+     * Renders the username changing page.
+     * @return string
+     */
     public function username()
     {
         // Check permission
@@ -191,6 +201,10 @@ class AccountController extends Controller
         return view('settings/account/username');
     }
 
+    /**
+     * Renders the user title changing page.
+     * @return string
+     */
     public function title()
     {
         // Check permission
@@ -229,6 +243,10 @@ class AccountController extends Controller
         return view('settings/account/title');
     }
 
+    /**
+     * Renders the password changing page.
+     * @return string
+     */
     public function password()
     {
         // Check permission
@@ -265,6 +283,10 @@ class AccountController extends Controller
         return view('settings/account/password');
     }
 
+    /**
+     * Renders the rank management page.
+     * @return string
+     */
     public function ranks()
     {
         // Check permission

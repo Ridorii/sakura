@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the advanced section controller.
- *
  * @package Sakura
  */
 
@@ -13,12 +12,15 @@ use Sakura\Perms\Site;
 
 /**
  * Advanced settings.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class AdvancedController extends Controller
 {
+    /**
+     * Renders the session management page.
+     * @return string
+     */
     public function sessions()
     {
         // Check permission
@@ -70,6 +72,10 @@ class AdvancedController extends Controller
         return view('settings/advanced/sessions', compact('sessions', 'active'));
     }
 
+    /**
+     * Renders the deactivation page.
+     * @return string
+     */
     public function deactivate()
     {
         // Check permission

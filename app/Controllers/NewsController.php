@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the news controller.
- *
  * @package Sakura
  */
 
@@ -14,12 +13,16 @@ use Sakura\Template;
 
 /**
  * News controller.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class NewsController extends Controller
 {
+    /**
+     * Shows all posts in a specific category.
+     * @param string $category
+     * @return string
+     */
     public function category($category = '')
     {
         // Check if the category is set
@@ -44,6 +47,11 @@ class NewsController extends Controller
         return Template::render('news/category');
     }
 
+    /**
+     * Returns a news post.
+     * @param int $id
+     * @return string
+     */
     public function post($id = 0)
     {
         // Create the post object

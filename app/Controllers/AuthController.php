@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the auth controllers.
- *
  * @package Sakura
  */
 
@@ -20,7 +19,6 @@ use Sakura\User;
 
 /**
  * Authentication controllers.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -28,7 +26,6 @@ class AuthController extends Controller
 {
     /**
      * Touch the login rate limit.
-     *
      * @param $user int The ID of the user that attempted to log in.
      * @param $sucess bool Whether the login attempt was successful.
      */
@@ -45,7 +42,6 @@ class AuthController extends Controller
 
     /**
      * End the current session.
-     *
      * @return string
      */
     public function logout()
@@ -75,7 +71,6 @@ class AuthController extends Controller
 
     /**
      * Get the login page.
-     *
      * @return string
      */
     public function loginGet()
@@ -85,7 +80,6 @@ class AuthController extends Controller
 
     /**
      * Do a login attempt.
-     *
      * @return string
      */
     public function loginPost()
@@ -189,7 +183,6 @@ class AuthController extends Controller
 
     /**
      * Get the registration page.
-     *
      * @return string
      */
     public function registerGet()
@@ -212,7 +205,6 @@ class AuthController extends Controller
 
     /**
      * Do a registration attempt.
-     *
      * @return string
      */
     public function registerPost()
@@ -342,7 +334,6 @@ class AuthController extends Controller
 
     /**
      * Do a activation attempt.
-     *
      * @return string
      */
     public function activate()
@@ -405,7 +396,6 @@ class AuthController extends Controller
 
     /**
      * Get the reactivation request form.
-     *
      * @return string
      */
     public function reactivateGet()
@@ -415,7 +405,6 @@ class AuthController extends Controller
 
     /**
      * Do a reactivation preparation attempt.
-     *
      * @return string
      */
     public function reactivatePost()
@@ -476,7 +465,6 @@ class AuthController extends Controller
 
     /**
      * Get the password reset forum.
-     *
      * @return string
      */
     public function resetPasswordGet()
@@ -486,7 +474,6 @@ class AuthController extends Controller
 
     /**
      * Do a password reset attempt.
-     *
      * @return string
      */
     public function resetPasswordPost()
@@ -571,7 +558,6 @@ class AuthController extends Controller
 
     /**
      * Send the activation e-mail
-     *
      * @param User $user
      */
     private function sendActivationMail($user)
@@ -606,7 +592,6 @@ class AuthController extends Controller
 
     /**
      * Send the activation e-mail
-     *
      * @param User $user
      */
     private function sendPasswordMail($user)

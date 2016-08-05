@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the friends controller.
- *
  * @package Sakura
  */
 
@@ -15,12 +14,18 @@ use Sakura\User;
 
 /**
  * Friendly controller.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class FriendsController extends Controller
 {
+    /**
+     * Add a notification.
+     * @param User $friend
+     * @param User $user
+     * @param string $title
+     * @param string $text
+     */
     private function addNotification($friend, $user, $title, $text = "")
     {
         $alert = new Notification;
@@ -36,6 +41,11 @@ class FriendsController extends Controller
         $alert->save();
     }
 
+    /**
+     * Add a friend.
+     * @param int $id
+     * @return string
+     */
     public function add($id = 0)
     {
         $user = ActiveUser::$user;
@@ -95,6 +105,11 @@ class FriendsController extends Controller
         return $this->json(compact('message', 'level'));
     }
 
+    /**
+     * Removes a friend.
+     * @param int $id
+     * @return string
+     */
     public function remove($id = 0)
     {
         $user = ActiveUser::$user;

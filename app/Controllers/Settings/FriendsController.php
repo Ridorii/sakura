@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the friends section controller.
- *
  * @package Sakura
  */
 
@@ -12,12 +11,15 @@ use Sakura\Perms\Site;
 
 /**
  * Friends settings.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class FriendsController extends Controller
 {
+    /**
+     * Gets friends listing
+     * @return string
+     */
     public function listing()
     {
         // Check permission
@@ -30,6 +32,10 @@ class FriendsController extends Controller
         return view('settings/friends/listing');
     }
 
+    /**
+     * Gets friend requests listing
+     * @return string
+     */
     public function requests()
     {
         // Check permission

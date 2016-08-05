@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the file server.
- *
  * @package Sakura
  */
 
@@ -11,7 +10,6 @@ use finfo;
 
 /**
  * Used for storing files served through Sakura.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -25,55 +23,47 @@ class File
 
     /**
      * User instance of the user that uploaded this file.
-     *
      * @var User
      */
     public $user = null;
 
     /**
      * Data of the file.
-     *
      * @var string
      */
     public $data = null;
 
     /**
      * Original filename of the file.
-     *
      * @var string
      */
     public $name = null;
 
     /**
      * Mime type of the file.
-     *
      * @var string
      */
     public $mime = null;
 
     /**
-     * The UNIX timestamp of when this file was created.
-     *
+     * The timestamp of when this file was created.
      * @var int
      */
     public $time = 0;
 
     /**
      * The UNIX timestamp of when this file should automatically remove itself (currently unused).
-     *
      * @var int
      */
     public $expire = 0;
 
     /**
      * Create a new file.
-     *
-     * @param string $data Contents of the file.
-     * @param string $name Name of the file.
-     * @param User $user User instance of the user creating this file.
-     * @param int $expire UNIX timestamp of when this file should automatically remove itself.
-     *
-     * @return File The created file instance for the file.
+     * @param string $data
+     * @param string $name
+     * @param User $user
+     * @param int $expire
+     * @return File
      */
     public static function create($data, $name, User $user, $expire = 0)
     {
@@ -99,8 +89,7 @@ class File
 
     /**
      * Constructor.
-     *
-     * @param int $fileId ID of the file that should be constructed.
+     * @param int $fileId
      */
     public function __construct($fileId)
     {

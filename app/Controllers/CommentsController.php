@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the comments controller.
- *
  * @package Sakura
  */
 
@@ -14,12 +13,17 @@ use Sakura\Perms\Site;
 
 /**
  * Handles comment stuff.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class CommentsController extends Controller
 {
+    /**
+     * Posts a comment.
+     * @param string $category
+     * @param int $reply
+     * @return string
+     */
     public function post($category = '', $reply = 0)
     {
         $session = $_POST['session'] ?? '';
@@ -64,6 +68,11 @@ class CommentsController extends Controller
         return $this->json($comment);
     }
 
+    /**
+     * Delete a comment.
+     * @param int $id
+     * @return string
+     */
     public function delete($id = 0)
     {
         // Check if the user can delete comments
@@ -91,6 +100,11 @@ class CommentsController extends Controller
         return $this->json(compact('deleted'));
     }
 
+    /**
+     * Cast a vote.
+     * @param int $id
+     * @return string
+     */
     public function vote($id = 0)
     {
         $vote = $_REQUEST['vote'] ?? 0;

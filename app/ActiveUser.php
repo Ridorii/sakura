@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds information about the currently active session
- *
  * @package Sakura
  */
 
@@ -11,15 +10,28 @@ use Sakura\Perms\Site;
 
 /**
  * Information about the current active user and session.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class ActiveUser
 {
+    /**
+     * The user object of the currently active user.
+     * @var User
+     */
     public static $user = null;
+
+    /**
+     * The currently active session object.
+     * @var Session
+     */
     public static $session = null;
 
+    /**
+     * Attempt to validate a session.
+     * @param int $userId
+     * @param string $sessionId
+     */
     public static function init($userId, $sessionId)
     {
         // Create a session object

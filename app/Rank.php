@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the rank object class.
- *
  * @package Sakura
  */
 
@@ -12,7 +11,6 @@ use Sakura\Perms\Site;
 
 /**
  * Serves Rank data.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -20,81 +18,69 @@ class Rank
 {
     /**
      * ID of the rank.
-     *
      * @var int
      */
     public $id = 0;
 
     /**
      * Name of the rank.
-     *
      * @var string
      */
     public $name = 'Rank';
 
     /**
      * Global hierarchy of the rank.
-     *
      * @var int
      */
     public $hierarchy = 0;
 
     /**
      * Text that should be append to the name to make it address multiple.
-     *
      * @var string
      */
     public $multiple = '';
 
     /**
      * The rank's username colour.
-     *
      * @var string
      */
     public $colour = 'inherit';
 
     /**
      * Description of the rank.
-     *
      * @var string
      */
     public $description = '';
 
     /**
      * User title of the rank.
-     *
      * @var string
      */
     public $title = '';
 
     /**
      * Indicates if this rank should be hidden.
-     *
      * @var bool
      */
     private $hidden = true;
 
     /**
      * Permission container.
-     *
      * @var Perms
      */
     private $permissions;
 
     /**
      * Instance cache container.
-     *
      * @var array
      */
     protected static $rankCache = [];
 
     /**
      * Cached constructor.
-     *
-     * @param int $rid ID of the rank.
-     * @param bool $forceRefresh Force a cache refresh.
-     *
-     * @return Rank The requested rank object.
+     * @param int $rid
+     * @param bool $forceRefresh
+     * @return Rank
      */
     public static function construct($rid, $forceRefresh = false)
     {
@@ -110,8 +96,7 @@ class Rank
 
     /**
      * Constructor.
-     *
-     * @param int $rankId ID of the rank that should be constructed.
+     * @param int $rankId
      */
     private function __construct($rankId)
     {
@@ -139,10 +124,8 @@ class Rank
 
     /**
      * Get the name of the rank.
-     *
-     * @param bool $multi Should the multiple sense be appended?
-     *
-     * @return string The rank's name.
+     * @param bool $multi
+     * @return string
      */
     public function name($multi = false)
     {
@@ -151,8 +134,7 @@ class Rank
 
     /**
      * Indicates if the rank is hidden.
-     *
-     * @return bool Hidden status.
+     * @return bool
      */
     public function hidden()
     {
@@ -161,10 +143,8 @@ class Rank
 
     /**
      * Check permissions.
-     *
-     * @param int $flag Permission flag that should be checked.
-     *
-     * @return bool Success indicator.
+     * @param int $flag
+     * @return bool
      */
     public function permission($flag)
     {
@@ -179,10 +159,8 @@ class Rank
 
     /**
      * Returns all users that are part of this rank.
-     *
-     * @param bool $justIds Makes this function only return the user ids when set to a positive value.
-     *
-     * @return array Either just the user IDs of the users or with objects.
+     * @param bool $justIds
+     * @return array
      */
     public function users($justIds = false)
     {

@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the CSRF token handler.
- *
  * @package Sakura
  */
 
@@ -9,7 +8,6 @@ namespace Sakura;
 
 /**
  * Used to generate and validate CSRF tokens.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -27,10 +25,8 @@ class CSRF
 
     /**
      * Create a new CSRF token.
-     *
-     * @param mixed $id The ID for this token.
-     *
-     * @return string The token.
+     * @param mixed $id
+     * @return string
      */
     public static function create($id)
     {
@@ -49,8 +45,7 @@ class CSRF
 
     /**
      * Generate a CSRF token.
-     *
-     * @return string Cryptographically secure random string.
+     * @return string
      */
     public static function generate()
     {
@@ -59,11 +54,9 @@ class CSRF
 
     /**
      * Validate a CSRF token.
-     *
-     * @param mixed $token The token.
-     * @param mixed $id The ID.
-     *
-     * @return bool Indicator if it was right or not.
+     * @param string $token
+     * @param string $id
+     * @return bool
      */
     public static function validate($token, $id)
     {

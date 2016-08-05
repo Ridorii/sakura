@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the forum pages controllers.
- *
  * @package Sakura
  */
 
@@ -18,12 +17,15 @@ use Sakura\User;
 
 /**
  * Forum page controllers.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class ForumController extends Controller
 {
+    /**
+     * Renders the forum index
+     * @return string
+     */
     public function index()
     {
         // Get the most active topics
@@ -104,6 +106,10 @@ class ForumController extends Controller
         return view('forum/index', compact('forum', 'activeTopics', 'latestPosts', 'activePoster'));
     }
 
+    /**
+     * Renders a forum.
+     * @return string
+     */
     public function forum($id = 0)
     {
         $forum = new Forum($id);
@@ -133,6 +139,11 @@ class ForumController extends Controller
         return view('forum/forum', compact('forum'));
     }
 
+    /**
+     * Marks an entire forum as read.
+     * @param int $id
+     * @return string
+     */
     public function markRead($id = 0)
     {
         $redirect = route('forums.index');

@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the meta page controllers.
- *
  * @package Sakura
  */
 
@@ -15,7 +14,6 @@ use Sakura\User;
 
 /**
  * Meta page controllers (sections that aren't big enough to warrant a dedicated controller).
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -23,8 +21,7 @@ class MetaController extends Controller
 {
     /**
      * Serves the site index.
-     *
-     * @return mixed HTML for the index.
+     * @return string
      */
     public function index()
     {
@@ -86,8 +83,7 @@ class MetaController extends Controller
 
     /**
      * Displays the FAQ.
-     *
-     * @return mixed HTML for the FAQ.
+     * @return string
      */
     public function faq()
     {
@@ -109,9 +105,8 @@ class MetaController extends Controller
     }
 
     /**
-     * Search page
-     *
-     * @return mixed HTML for the search page.
+     * Search page.
+     * @return string
      */
     public function search()
     {

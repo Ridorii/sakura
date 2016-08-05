@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the notification controllers.
- *
  * @package Sakura
  */
 
@@ -13,7 +12,6 @@ use Sakura\Perms\Site;
 
 /**
  * Notification stuff.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -21,8 +19,7 @@ class NotificationsController extends Controller
 {
     /**
      * Get the notification JSON object for the currently authenticated user.
-     *
-     * @return string The JSON object.
+     * @return string
      */
     public function notifications()
     {
@@ -31,10 +28,9 @@ class NotificationsController extends Controller
 
     /**
      * Mark a notification as read.
-     *
-     * @param int The ID of the notification.
-     *
-     * @return string Not entirely set on this one yet but 1 for success and 0 for fail.
+     * Not entirely set on this one yet but 1 for success and 0 for fail.
+     * @param int
+     * @return string
      */
     public function mark($id = 0)
     {

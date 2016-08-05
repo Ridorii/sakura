@@ -1,7 +1,6 @@
 <?php
 /**
  * Notification object.
- *
  * @package Sakura
  */
 
@@ -9,22 +8,69 @@ namespace Sakura;
 
 /**
  * Notification!
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class Notification
 {
+    /**
+     * The identifier.
+     * @var int
+     */
     public $id = 0;
+
+    /**
+     * The id of the user this notification is intended for.
+     * @var int
+     */
     public $user = 0;
+
+    /**
+     * The timestamp when this notification was created.
+     * @var int
+     */
     public $time = 0;
+
+    /**
+     * Whether the user has already read this notification.
+     * @var bool
+     */
     public $read = false;
+
+    /**
+     * Title of the notification.
+     * @var string
+     */
     public $title = "Notification";
+
+    /**
+     * The rest of the content
+     * @var string
+     */
     public $text = "";
+
+    /**
+     * The url this notification should link to when clicked on.
+     * @var string
+     */
     public $link = "";
+
+    /**
+     * The image url to display.
+     * @var string
+     */
     public $image = "";
+
+    /**
+     * The amount of time this notification should be displayed for
+     * @var int
+     */
     public $timeout = 0;
 
+    /**
+     * The constructor.
+     * @param int $id
+     */
     public function __construct($id = 0)
     {
         // Get notification data from the database
@@ -48,6 +94,9 @@ class Notification
         }
     }
 
+    /**
+     * Saving changes to this notification.
+     */
     public function save()
     {
         // Create submission data, insert and update take the same format
@@ -73,12 +122,19 @@ class Notification
         }
     }
 
+    /**
+     * Toggle the read status
+     */
     public function toggleRead()
     {
         // Set read to the negative value of itself
         $this->read = !$this->read;
     }
 
+    /**
+     * Get the user object.
+     * @return User
+     */
     public function userData()
     {
         return User::construct($this->user);

@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the user page controllers.
- *
  * @package Sakura
  */
 
@@ -18,7 +17,6 @@ use Sakura\User;
 
 /**
  * Everything that is just for serving user data.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -26,10 +24,8 @@ class UserController extends Controller
 {
     /**
      * Display the profile of a user.
-     *
-     * @param mixed $id The user ID.
-     *
-     * @return bool|string The profile page.
+     * @param int $id
+     * @return string
      */
     public function profile($id = 0)
     {
@@ -65,10 +61,8 @@ class UserController extends Controller
 
     /**
      * Display the memberlist.
-     *
-     * @param int $rank Optional rank ID.
-     *
-     * @return bool|string The memberlist.
+     * @param int $rank
+     * @return string
      */
     public function members($rank = null)
     {
@@ -105,6 +99,10 @@ class UserController extends Controller
         return Template::render('user/members');
     }
 
+    /**
+     * Report a user.
+     * @param int $id
+     */
     public function report($id = 0)
     {
         return Template::render('user/report');

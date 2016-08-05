@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the user object class.
- *
  * @package Sakura
  */
 
@@ -14,7 +13,6 @@ use stdClass;
 
 /**
  * Everything you'd ever need from a specific user.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -22,248 +20,213 @@ class User
 {
     /**
      * The User's ID.
-     *
      * @var int
      */
     public $id = 0;
 
     /**
      * The user's username.
-     *
      * @var string
      */
     public $username = 'User';
 
     /**
      * A cleaned version of the username.
-     *
      * @var string
      */
     public $usernameClean = 'user';
 
     /**
      * The user's password hash.
-     *
      * @var string
      */
     public $password = '';
 
     /**
      * UNIX timestamp of last time the password was changed.
-     *
      * @var int
      */
     public $passwordChan = 0;
 
     /**
      * The user's e-mail address.
-     *
      * @var string
      */
     public $email = 'user@sakura';
 
     /**
      * The rank object of the user's main rank.
-     *
      * @var Rank
      */
     public $mainRank = null;
 
     /**
      * The ID of the main rank.
-     *
      * @var int
      */
     public $mainRankId = 1;
 
     /**
      * The index of rank objects.
-     *
      * @var array
      */
     public $ranks = [];
 
     /**
      * The user's username colour.
-     *
      * @var string
      */
     public $colour = '';
 
     /**
      * The IP the user registered from.
-     *
      * @var string
      */
     public $registerIp = '0.0.0.0';
 
     /**
      * The IP the user was last active from.
-     *
      * @var string
      */
     public $lastIp = '0.0.0.0';
 
     /**
      * A user's title.
-     *
      * @var string
      */
     public $title = '';
 
     /**
      * The UNIX timestamp of when the user registered.
-     *
      * @var int
      */
     public $registered = 0;
 
     /**
      * The UNIX timestamp of when the user was last online.
-     *
      * @var int
      */
     public $lastOnline = 0;
 
     /**
      * The 2 character country code of a user.
-     *
      * @var string
      */
     public $country = 'XX';
 
     /**
      * The File id of the user's avatar.
-     *
      * @var int
      */
     public $avatar = 0;
 
     /**
      * The File id of the user's background.
-     *
      * @var int
      */
     public $background = 0;
 
     /**
      * The File id of the user's header.
-     * @var mixed
+     * @var int
      */
     public $header = 0;
 
     /**
      * The raw userpage of the user.
-     *
      * @var string
      */
     public $page = '';
 
     /**
      * The raw signature of the user.
-     *
      * @var string
      */
     public $signature = '';
 
     /**
      * Whether the user's background should be displayed sitewide.
-     *
      * @var bool
      */
     public $backgroundSitewide = false;
 
     /**
      * The user's website url.
-     *
      * @var string
      */
     public $website = '';
 
     /**
      * The user's twitter handle.
-     *
      * @var string
      */
     public $twitter = '';
 
     /**
      * The user's github username.
-     *
      * @var string
      */
     public $github = '';
 
     /**
      * The user's skype username.
-     *
      * @var string
      */
     public $skype = '';
 
     /**
      * The user's discord tag.
-     *
      * @var string
      */
     public $discord = '';
 
     /**
      * The user's youtube channel id/name.
-     *
      * @var string
      */
     public $youtube = '';
 
     /**
      * The user's steam community username.
-     *
      * @var string
      */
     public $steam = '';
 
     /**
      * The user's osu! username.
-     *
      * @var string
      */
     public $osu = '';
 
     /**
      * The user's lastfm username.
-     *
      * @var string
      */
     public $lastfm = '';
 
     /**
      * The user's birthday.
-     *
      * @var string
      */
     private $birthday = '0000-00-00';
 
     /**
      * The user's permission container.
-     *
      * @var Perms
      */
     private $permissions;
 
     /**
      * The User instance cache array.
-     *
      * @var array
      */
     protected static $userCache = [];
 
     /**
      * Cached constructor.
-     *
-     * @param int|string $uid The user ID or clean username.
-     * @param bool $forceRefresh Force a recreation.
-     *
-     * @return User Returns a user object.
+     * @param int|string $uid
+     * @param bool $forceRefresh
+     * @return User
      */
     public static function construct($uid, $forceRefresh = false)
     {
@@ -279,13 +242,11 @@ class User
 
     /**
      * Create a new user.
-     *
-     * @param string $username The username of the user.
-     * @param string $password The password of the user.
-     * @param string $email The e-mail, used primarily for activation.
-     * @param array $ranks The ranks assigned to the user on creation.
-     *
-     * @return User The newly created user's object.
+     * @param string $username
+     * @param string $password
+     * @param string $email
+     * @param array $ranks
+     * @return User
      */
     public static function create($username, $password, $email, $ranks = [2])
     {
@@ -323,9 +284,8 @@ class User
     }
 
     /**
-     * The actual constructor
-     *
-     * @param int|string $userId The user ID or clean username.
+     * The actual constructor.
+     * @param int|string $userId
      */
     private function __construct($userId)
     {
@@ -430,8 +390,7 @@ class User
     }
 
     /**
-     * Get a Carbon object of the registration date
-     *
+     * Get a Carbon object of the registration date.
      * @return Carbon
      */
     public function registerDate()
@@ -440,8 +399,7 @@ class User
     }
 
     /**
-     * Get a Carbon object of the last online date
-     *
+     * Get a Carbon object of the last online date.
      * @return Carbon
      */
     public function lastDate()
@@ -451,10 +409,8 @@ class User
 
     /**
      * Get the user's birthday.
-     *
-     * @param bool $age Just get the age.
-     *
-     * @return int|string Return the birthday.
+     * @param bool $age
+     * @return int|string
      */
     public function birthday($age = false)
     {
@@ -477,10 +433,8 @@ class User
 
     /**
      * Get the user's country.
-     *
-     * @param bool $long Get the full country name.
-     *
-     * @return string The country.
+     * @param bool $long
+     * @return string
      */
     public function country($long = false)
     {
@@ -489,8 +443,7 @@ class User
 
     /**
      * Check if a user is online.
-     *
-     * @return bool Are they online?
+     * @return bool
      */
     public function isOnline()
     {
@@ -509,7 +462,7 @@ class User
     }
 
     /**
-     * Updates the last IP and online time of the user
+     * Updates the last IP and online time of the user.
      */
     public function updateOnline()
     {
@@ -526,8 +479,7 @@ class User
 
     /**
      * Runs some checks to see if this user is activated.
-     *
-     * @return bool Are they activated?
+     * @return bool
      */
     public function isActive()
     {
@@ -536,8 +488,7 @@ class User
 
     /**
      * Get a few forum statistics.
-     *
-     * @return array Post and topic counts.
+     * @return array
      */
     public function forumStats()
     {
@@ -560,8 +511,7 @@ class User
 
     /**
      * Add ranks to a user.
-     *
-     * @param array $ranks Array containing the rank IDs.
+     * @param array $ranks
      */
     public function addRanks($ranks)
     {
@@ -588,8 +538,7 @@ class User
 
     /**
      * Remove a set of ranks from a user.
-     *
-     * @param array $ranks Array containing the IDs of ranks to remove.
+     * @param array $ranks
      */
     public function removeRanks($ranks)
     {
@@ -607,10 +556,8 @@ class User
 
     /**
      * Change the main rank of a user.
-     *
-     * @param int $rank The ID of the new main rank.
-     *
-     * @return bool Always true.
+     * @param int $rank
+     * @return bool
      */
     public function setMainRank($rank)
     {
@@ -627,10 +574,8 @@ class User
 
     /**
      * Check if a user has a certain set of rank.
-     *
-     * @param array $ranks Ranks IDs to check.
-     *
-     * @return bool Successful?
+     * @param array $ranks
+     * @return bool
      */
     public function hasRanks($ranks)
     {
@@ -653,8 +598,7 @@ class User
 
     /**
      * Add a new friend.
-     *
-     * @param int $uid The ID of the friend.
+     * @param int $uid
      */
     public function addFriend($uid)
     {
@@ -669,9 +613,8 @@ class User
 
     /**
      * Remove a friend.
-     *
-     * @param int $uid The friend Id
-     * @param bool $deleteRequest Delete the open request as well (remove you from their friends list).
+     * @param int $uid
+     * @param bool $deleteRequest
      */
     public function removeFriend($uid, $deleteRequest = false)
     {
@@ -692,10 +635,9 @@ class User
 
     /**
      * Check if this user is friends with another user.
-     *
-     * @param int $with ID of the other user.
-     *
-     * @return int 0 = no, 1 = pending request, 2 = mutual
+     * 0 = no, 1 = pending request, 2 = mutual.
+     * @param int $with
+     * @return int
      */
     public function isFriends($with)
     {
@@ -723,11 +665,9 @@ class User
 
     /**
      * Get all the friends from this user.
-     *
-     * @param int $level Friend level; (figure out what the levels are at some point)
-     * @param bool $noObj Just return IDs.
-     *
-     * @return array The array with either the objects or the ids.
+     * @param int $level
+     * @param bool $noObj
+     * @return array
      */
     public function friends($level = 0, $noObj = false)
     {
@@ -821,11 +761,9 @@ class User
 
     /**
      * Check if the user has a certaing permission flag.
-     *
-     * @param int $flag The permission flag.
-     * @param string $mode The permission mode.
-     *
-     * @return bool Success?
+     * @param int $flag
+     * @param string $mode
+     * @return bool
      */
     public function permission($flag, $mode = null)
     {
@@ -843,8 +781,7 @@ class User
 
     /**
      * Get the comments from the user's profile.
-     *
-     * @return Comments
+     * @return array
      */
     public function profileComments()
     {
@@ -866,10 +803,8 @@ class User
 
     /**
      * Add premium in seconds.
-     *
-     * @param int $seconds The amount of seconds.
-     *
-     * @return int The new expiry date.
+     * @param int $seconds
+     * @return int
      */
     public function addPremium($seconds)
     {
@@ -904,8 +839,7 @@ class User
 
     /**
      * Does this user have premium?
-     *
-     * @return int Returns the premium expiration date.
+     * @return int
      */
     public function isPremium()
     {
@@ -944,6 +878,10 @@ class User
         return $expire;
     }
 
+    /**
+     * Gets the start and end date of this user's premium tag.
+     * @return stdClass
+     */
     public function premiumInfo()
     {
         // Attempt to retrieve the premium record from the database
@@ -962,8 +900,7 @@ class User
 
     /**
      * Parse the user's userpage.
-     *
-     * @return string The parsed page.
+     * @return string
      */
     public function userPage()
     {
@@ -971,9 +908,8 @@ class User
     }
 
     /**
-     * Parse a user's signature
-     *
-     * @return string The parsed signature.
+     * Parse a user's signature.
+     * @return string
      */
     public function signature()
     {
@@ -982,8 +918,7 @@ class User
 
     /**
      * Get a user's username history.
-     *
-     * @return array The history.
+     * @return array
      */
     public function getUsernameHistory()
     {
@@ -994,10 +929,9 @@ class User
     }
 
     /**
-     * Alter the user's username
-     *
-     * @param string $username The new username.
-     * @param string $username_clean The new (clean) username.
+     * Alter the user's username.
+     * @param string $username
+     * @param string $username_clean
      */
     public function setUsername($username, $username_clean)
     {
@@ -1022,9 +956,8 @@ class User
     }
 
     /**
-     * Alter a user's e-mail address
-     *
-     * @param string $email The new e-mail address.
+     * Alter a user's e-mail address.
+     * @param string $email
      */
     public function setMail($email)
     {
@@ -1037,9 +970,8 @@ class User
     }
 
     /**
-     * Change the user's password
-     *
-     * @param string $password The new password.
+     * Change the user's password.
+     * @param string $password
      */
     public function setPassword($password)
     {
@@ -1056,8 +988,7 @@ class User
     }
 
     /**
-     * Check if password expired
-     *
+     * Check if password expired.
      * @return bool
      */
     public function passwordExpired()
@@ -1066,10 +997,8 @@ class User
     }
 
     /**
-     * Verify the user's password
-     *
+     * Verify the user's password.
      * @param string $password
-     *
      * @return bool
      */
     public function verifyPassword($password)
@@ -1079,11 +1008,9 @@ class User
 
     /**
      * Get all the notifications for this user.
-     *
-     * @param int $timeDifference The timeframe of alerts that should be fetched.
-     * @param bool $excludeRead Whether alerts that are marked as read should be included.
-     *
-     * @return array An array with Notification objects.
+     * @param int $timeDifference
+     * @param bool $excludeRead
+     * @return array
      */
     public function notifications($timeDifference = 0, $excludeRead = true)
     {

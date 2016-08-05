@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the migration reset command controller.
- *
  * @package Sakura
  */
 
@@ -12,13 +11,25 @@ use Illuminate\Database\Migrations\Migrator;
 use Illuminate\Filesystem\Filesystem;
 use Sakura\DB;
 
+/**
+ * Resets the entire database.
+ * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
+ */
 class DatabaseResetCommand extends Command
 {
+    /**
+     * A quick description of this command.
+     * @return string.
+     */
     public function brief()
     {
         return 'Rollback all database migrations';
     }
 
+    /**
+     * Does the resetting.
+     */
     public function execute()
     {
         $repository = DB::getMigrationRepository();

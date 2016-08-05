@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the payments handler.
- *
  * @package Sakura
  */
 
@@ -19,7 +18,6 @@ use \PayPal\Api\Transaction;
 
 /**
  * Sakura PayPal API wrapper.
- *
  * @package Sakura
  * @author Kamil Rakowski <admin@krakow.pw>
  * @author Julian van de Groep <me@flash.moe>
@@ -28,19 +26,16 @@ class Payments
 {
     /**
      * Container for the PayPal API
-     *
      * @var \PayPal\Rest\ApiContext
      */
     private static $paypal;
 
     /**
      * Initialise the wrapper.
-     *
-     * @return bool Always true.
+     * @return bool
      */
     public static function init()
     {
-
         // Set PayPal object
         try {
             self::$paypal = new \PayPal\Rest\ApiContext(
@@ -63,17 +58,14 @@ class Payments
 
     /**
      * Create a new transaction.
-     *
-     * @param float $total The total amount of money.
-     * @param string $itemName The name of the item being purchased.
-     * @param string $transDescription The description of the item.
-     * @param string $returnUrl The URL that PayPal will redirect back to.
-     *
-     * @return bool|null|string If successful; the PayPal approval link.
+     * @param float $total
+     * @param string $itemName
+     * @param string $transDescription
+     * @param string $returnUrl
+     * @return bool|null|string
      */
     public static function createTransaction($total, $itemName, $transDescription, $returnUrl)
     {
-
         // Create the payer object
         $payer = new Payer();
 
@@ -147,15 +139,12 @@ class Payments
 
     /**
      * Complete the PayPal transaction.
-     *
-     * @param string $paymentId ID of the payment.
-     * @param string $payerId ID of the payer.
-     *
-     * @return bool Success indicator.
+     * @param string $paymentId
+     * @param string $payerId
+     * @return bool
      */
     public static function completeTransaction($paymentId, $payerId)
     {
-
         // Attempt to get the payment
         $payment = Payment::get($paymentId, self::$paypal);
 

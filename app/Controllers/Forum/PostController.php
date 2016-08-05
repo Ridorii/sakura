@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the controller for posts.
- *
  * @package Sakura
  */
 
@@ -17,12 +16,16 @@ use Sakura\Perms\Forum as ForumPerms;
 
 /**
  * Topic controller.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class PostController extends Controller
 {
+    /**
+     * Finds the topic a post is associated with.
+     * @param int $id
+     * @return string
+     */
     public function find($id = 0)
     {
         $post = new Post($id);
@@ -58,6 +61,11 @@ class PostController extends Controller
         return header("Location: {$topicLink}#p{$post->id}");
     }
 
+    /**
+     * Gets the raw contents of a post.
+     * @param int $id
+     * @return string
+     */
     public function raw($id = 0)
     {
         $post = new Post($id);
@@ -74,6 +82,11 @@ class PostController extends Controller
         return $post->text;
     }
 
+    /**
+     * Edit a post.
+     * @param int $id
+     * @return string
+     */
     public function edit($id = 0)
     {
         $title = $_POST['title'] ?? null;
@@ -177,6 +190,11 @@ class PostController extends Controller
         return header("Location: {$postLink}");
     }
 
+    /**
+     * Deletes a post.
+     * @param int $id
+     * @return string
+     */
     public function delete($id = 0)
     {
         $post = new Post($id);

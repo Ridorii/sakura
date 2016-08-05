@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the BBcode handler.
- *
  * @package Sakura
  */
 
@@ -9,15 +8,13 @@ namespace Sakura;
 
 /**
  * BBcode handler.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class BBcode
 {
     /**
-     * Holds the bbcode parsers
-     *
+     * Holds the bbcode parsers.
      * @var array
      */
     public static $parsers = [
@@ -140,7 +137,6 @@ class BBcode
 
     /**
      * Parse the emoticons.
-     *
      * @param string $text
      * @return string
      */
@@ -163,7 +159,6 @@ class BBcode
 
     /**
      * Convert the parsed text to HTML.
-     *
      * @param string $text
      * @return string
      */

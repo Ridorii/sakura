@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the configuration manager.
- *
  * @package Sakura
  */
 
@@ -9,23 +8,20 @@ namespace Sakura;
 
 /**
  * Handles the configuration settings of Sakura.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class Config
 {
     /**
-     * Storage for the parsed config file
-     *
+     * Storage for the parsed config file.
      * @var array
      */
     private static $config = [];
 
     /**
      * Initialiser, parses the configuration.
-     *
-     * @param string $path Path to the configuration file.
+     * @param string $path
      */
     public static function init($path)
     {
@@ -46,11 +42,9 @@ class Config
 
     /**
      * Get a value from the configuration.
-     *
-     * @param string $key Configuration section.
-     * @param string $subkey Configuration key.
-     *
-     * @return array|string Configuration value.
+     * @param string $section
+     * @param string $key
+     * @return array|string
      */
     public static function get($section, $key = null)
     {

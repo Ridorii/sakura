@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the setup command controller.
- *
  * @package Sakura
  */
 
@@ -12,13 +11,25 @@ use Sakura\DB;
 use Sakura\Net;
 use Sakura\User;
 
+/**
+ * The command that handles setting up the base data.
+ * @package Sakura
+ * @author Julian van de Groep <me@flash.moe>
+ */
 class SetupCommand extends Command
 {
+    /**
+     * A quick description of this command.
+     * @return string.
+     */
     public function brief()
     {
         return 'Adds the required data to the tables, only needed once after the initial migration.';
     }
 
+    /**
+     * Adds data to the database required to get everything running.
+     */
     public function execute()
     {
         // Check if the users table has user with id 1

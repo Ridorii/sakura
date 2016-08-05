@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the post object class.
- *
  * @package Sakura
  */
 
@@ -15,7 +14,6 @@ use Sakura\User;
 
 /**
  * Used to serve, create and update posts.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -23,92 +21,79 @@ class Post
 {
     /**
      * The ID of the post.
-     *
      * @var int
      */
     public $id = 0;
 
     /**
      * The id of the topic this post is a part of.
-     *
      * @var int
      */
     public $topic = 0;
 
     /**
      * The id of the forum this post is a part of.
-     *
      * @var int
      */
     public $forum = 0;
 
     /**
      * The User object of the poster.
-     *
      * @var User
      */
     public $poster = null;
 
     /**
      * The IP address from which this post was created.
-     *
      * @var string
      */
     public $ip = "";
 
     /**
      * The UNIX timestamp from when this post was created.
-     *
      * @var int
      */
     public $time = 0;
 
     /**
      * The subject of this post.
-     *
      * @var string
      */
     public $subject = "";
 
     /**
      * The raw contents of this post.
-     *
      * @var string
      */
     public $text = "";
 
     /**
      * The parsed contents of this post.
-     *
      * @var string
      */
     public $parsed = "";
 
     /**
      * The UNIX timestamp of the last time this post was edited.
-     *
      * @var int
      */
     public $editTime = 0;
 
     /**
      * The reason why this post was edited.
-     *
      * @var string
      */
     public $editReason = "";
 
     /**
      * The User object of the user that last edited this post.
-     *
      * @var User
      */
     public $editUser = null;
 
     /**
      * Constructor.
-     *
-     * @param int $postId ID of the post that should be constructed.
+     * @param int $postId
      */
     public function __construct($postId)
     {
@@ -146,14 +131,12 @@ class Post
 
     /**
      * Creating a new post.
-     *
-     * @param string $subject The subject of the topic.
-     * @param string $text The raw contents of the post.
-     * @param User $poster The User object of the poster.
-     * @param int $topic The ID of the topic this post is a reply to.
-     * @param mixed $forum The forum this post is a reply in.
-     *
-     * @return null|self Either null, indicating a failure, or the Post object.
+     * @param string $subject
+     * @param string $text
+     * @param User $poster
+     * @param int $topic
+     * @param int $forum
+     * @return Post
      */
     public static function create($subject, $text, User $poster, $topic = 0, $forum = 0)
     {
@@ -190,8 +173,7 @@ class Post
 
     /**
      * Commit the changes to the Database.
-     *
-     * @return null|Post Either null, indicating a failure, or the Post object.
+     * @return Post
      */
     public function update()
     {
@@ -218,6 +200,9 @@ class Post
         return new Post($this->id);
     }
 
+    /**
+     * delete this.
+     */
     public function delete()
     {
         DB::table('posts')
@@ -227,10 +212,8 @@ class Post
 
     /**
      * Check if a user has read this post before.
-     *
-     * @param mixed $user The id of the user in question.
-     *
-     * @return bool A boolean indicating the read status.
+     * @param mixed $user
+     * @return bool
      */
     public function unread($user)
     {

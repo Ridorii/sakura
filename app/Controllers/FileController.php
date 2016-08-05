@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the file controller.
- *
  * @package Sakura
  */
 
@@ -15,7 +14,6 @@ use Sakura\User;
 
 /**
  * File controller, handles user uploads like avatars.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -23,7 +21,9 @@ class FileController extends Controller
 {
     /**
      * The base for serving a file.
-     *
+     * @param string $data
+     * @param string $mime
+     * @param string $name
      * @return string
      */
     private function serve($data, $mime, $name)
@@ -40,7 +40,7 @@ class FileController extends Controller
 
     /**
      * Attempt to get an avatar.
-     *
+     * @param int $id
      * @return string
      */
     public function avatar($id = 0)
@@ -88,7 +88,7 @@ class FileController extends Controller
 
     /**
      * Attempt to get a background.
-     *
+     * @param int $id
      * @return string
      */
     public function background($id = 0)
@@ -123,7 +123,7 @@ class FileController extends Controller
 
     /**
      * Attempt to get a profile header.
-     *
+     * @param int $id
      * @return string
      */
     public function header($id = 0)

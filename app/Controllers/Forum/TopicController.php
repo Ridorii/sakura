@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the controller for topics.
- *
  * @package Sakura
  */
 
@@ -15,12 +14,16 @@ use Sakura\Perms\Forum as ForumPerms;
 
 /**
  * Topic controller.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class TopicController extends Controller
 {
+    /**
+     * Views a topic.
+     * @param int $id
+     * @return string
+     */
     public function view($id = 0)
     {
         $topic = new Topic($id);
@@ -41,6 +44,11 @@ class TopicController extends Controller
         return view('forum/topic', compact('forum', 'topic'));
     }
 
+    /**
+     * Checks if a user can moderate the topic.
+     * @param int $id
+     * @return array
+     */
     private function modBase($id)
     {
         $topic = new Topic($id);
@@ -55,6 +63,11 @@ class TopicController extends Controller
         return false;
     }
 
+    /**
+     * Sticky a topic.
+     * @param int $id
+     * @return string
+     */
     public function sticky($id)
     {
         $modBase = $this->modBase($id);
@@ -78,6 +91,11 @@ class TopicController extends Controller
         return view('global/information', compact('message', 'redirect'));
     }
 
+    /**
+     * Announce a topic.
+     * @param int $id
+     * @return string
+     */
     public function announce($id)
     {
         $modBase = $this->modBase($id);
@@ -101,6 +119,11 @@ class TopicController extends Controller
         return view('global/information', compact('message', 'redirect'));
     }
 
+    /**
+     * Lock a topic.
+     * @param int $id
+     * @return string
+     */
     public function lock($id)
     {
         $modBase = $this->modBase($id);
@@ -123,6 +146,11 @@ class TopicController extends Controller
         return view('global/information', compact('message', 'redirect'));
     }
 
+    /**
+     * Delete an entire topic.
+     * @param int $id
+     * @return string
+     */
     public function delete($id)
     {
         $modBase = $this->modBase($id);
@@ -157,6 +185,11 @@ class TopicController extends Controller
         return view('global/information', compact('message', 'redirect'));
     }
 
+    /**
+     * Restore a topic to its previous location.
+     * @param int $id
+     * @return string
+     */
     public function restore($id)
     {
         $modBase = $this->modBase($id);
@@ -183,6 +216,11 @@ class TopicController extends Controller
         return view('global/information', compact('message', 'redirect'));
     }
 
+    /**
+     * Move a topic.
+     * @param int $id
+     * @return string
+     */
     public function move($id)
     {
         $modBase = $this->modBase($id);
@@ -212,6 +250,11 @@ class TopicController extends Controller
         return view('global/information', compact('message', 'redirect'));
     }
 
+    /**
+     * Reply to a topic.
+     * @param int $id
+     * @return string
+     */
     public function reply($id = 0)
     {
         $text = $_POST['text'] ?? null;
@@ -290,6 +333,11 @@ class TopicController extends Controller
         return header("Location: {$postLink}");
     }
 
+    /**
+     * Create a topic.
+     * @param int $id
+     * @return string
+     */
     public function create($id = 0)
     {
         $title = $_POST['title'] ?? null;

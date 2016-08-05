@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the appearance section controller.
- *
  * @package Sakura
  */
 
@@ -14,12 +13,17 @@ use Sakura\Perms\Site;
 
 /**
  * Appearance settings.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class AppearanceController extends Controller
 {
+    /**
+     * Handles file uploads.
+     * @param string $mode
+     * @param array $file
+     * @return array
+     */
     private function handleUpload($mode, $file)
     {
         // Handle errors
@@ -104,6 +108,10 @@ class AppearanceController extends Controller
         return null;
     }
 
+    /**
+     * Deletes a file.
+     * @param string $mode
+     */
     public function deleteFile($mode)
     {
         $fileId = ActiveUser::$user->{$mode};
@@ -113,6 +121,10 @@ class AppearanceController extends Controller
         }
     }
 
+    /**
+     * Renders the avatar changing page
+     * @return string
+     */
     public function avatar()
     {
         // Check permission
@@ -140,6 +152,10 @@ class AppearanceController extends Controller
         return view('settings/appearance/avatar');
     }
 
+    /**
+     * Renders the background changing page.
+     * @return string
+     */
     public function background()
     {
         // Check permission
@@ -167,6 +183,10 @@ class AppearanceController extends Controller
         return view('settings/appearance/background');
     }
 
+    /**
+     * Renders the banner changing page.
+     * @return string
+     */
     public function header()
     {
         // Check permission
@@ -194,6 +214,9 @@ class AppearanceController extends Controller
         return view('settings/appearance/header');
     }
 
+    /**
+     * Renders the userpage editing page.
+     */
     public function userpage()
     {
         // Check permission
@@ -230,6 +253,10 @@ class AppearanceController extends Controller
         return view('settings/appearance/userpage', compact('maxLength'));
     }
 
+    /**
+     * Renders the signature changing page.
+     * @return string
+     */
     public function signature()
     {
         // Check permission

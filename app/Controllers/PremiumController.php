@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the premium pages controllers.
- *
  * @package Sakura
  */
 
@@ -17,7 +16,6 @@ use Sakura\Template;
 
 /**
  * Premium pages controller.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -34,14 +32,12 @@ class PremiumController extends Controller
     public function __construct()
     {
         parent::__construct();
-
         Payments::init();
     }
 
     /**
      * Returns the premium purchase index.
-     *
-     * @return mixed
+     * @return string
      */
     public function index()
     {
@@ -55,8 +51,7 @@ class PremiumController extends Controller
 
     /**
      * Handles a purchase request.
-     *
-     * @return mixed
+     * @return string
      */
     public function purchase()
     {
@@ -132,8 +127,7 @@ class PremiumController extends Controller
 
     /**
      * Handles the data returned by PayPal.
-     *
-     * @return mixed
+     * @return string
      */
     public function handle()
     {
@@ -170,8 +164,7 @@ class PremiumController extends Controller
 
     /**
      * Presents the user with a thank you <3.
-     *
-     * @return mixed
+     * @return string
      */
     public function complete()
     {

@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the alias class for the Illuminate database thing.
- *
  * @package Sakura
  */
 
@@ -13,12 +12,15 @@ use Illuminate\Database\Migrations\DatabaseMigrationRepository;
 
 /**
  * The Illuminate (Laravel) database wrapper.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class DB extends Manager
 {
+    /**
+     * Gets the migration repository (surprise surprise).
+     * @return DatabaseMigrationRepository
+     */
     public static function getMigrationRepository()
     {
         $resolver = new ConnectionResolver(['database' => self::connection()]);
@@ -27,6 +29,10 @@ class DB extends Manager
         return $repository;
     }
 
+    /**
+     * Get the migration schema builder.
+     * @return \Illuminate\Database\Schema\Builder
+     */
     public static function getSchemaBuilder()
     {
         return self::connection()->getSchemaBuilder();

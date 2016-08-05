@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the session handler.
- *
  * @package Sakura
  */
 
@@ -9,7 +8,6 @@ namespace Sakura;
 
 /**
  * User session handler.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -17,23 +15,20 @@ class Session
 {
     /**
      * The ID of the user this session is from.
-     *
      * @var int
      */
     public $userId = 0;
 
     /**
      * The ID of the session.
-     *
      * @var string
      */
     public $sessionId = "";
 
     /**
      * Constructor.
-     *
-     * @param int $userId The ID of the user.
-     * @param int $sessionId The active session ID.
+     * @param int $userId
+     * @param int $sessionId
      */
     public function __construct($userId, $sessionId = null)
     {
@@ -83,10 +78,8 @@ class Session
 
     /**
      * Create a new session.
-     *
-     * @param boolean $permanent Is this a permanent session?
-     *
-     * @return string The session key.
+     * @param boolean $permanent
+     * @return string
      */
     public function create($permanent)
     {
@@ -111,8 +104,8 @@ class Session
 
     /**
      * Validate the session.
-     *
-     * @return int Success indicator; 0 = false, 1 = active, 2 = permanent.
+     * 0 = false, 1 = active, 2 = permanent.
+     * @return int
      */
     public function validate()
     {

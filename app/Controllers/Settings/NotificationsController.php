@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the notifications section controller.
- *
  * @package Sakura
  */
 
@@ -9,12 +8,15 @@ namespace Sakura\Controllers\Settings;
 
 /**
  * Notification settings.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class NotificationsController extends Controller
 {
+    /**
+     * Get the notification history.
+     * @return string
+     */
     public function history()
     {
         return view('settings/notifications/history');

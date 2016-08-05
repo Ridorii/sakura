@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the news post object.
- *
  * @package Sakura
  */
 
@@ -13,23 +12,68 @@ use Sakura\User;
 
 /**
  * News post object.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class Post
 {
+    /**
+     * The format the comment categories should follow.
+     */
     const COMMENT_CATEGORY_FORMAT = "news-%s-%u";
 
+    /**
+     * The id of this news post.
+     * @var int
+     */
     public $id = 0;
+
+    /**
+     * The category this post is part of.
+     * @var string
+     */
     public $category = "";
+
+    /**
+     * The user who made this post.
+     * @var int
+     */
     public $user = 0;
+
+    /**
+     * The timestamp when this post was made.
+     * @var int
+     */
     public $time = 0;
+
+    /**
+     * The title of this news post.
+     * @var string
+     */
     public $title = "";
+
+    /**
+     * The content of this news post.
+     * @var string
+     */
     public $text = "";
+
+    /**
+     * A cache of the amount of comments this post has.
+     * @var int
+     */
     private $commentCountCache = 0;
+
+    /**
+     * A cache of comments.
+     * @var array
+     */
     private $commentsCache = [];
 
+    /**
+     * Constructor.
+     * @param int $id
+     */
     public function __construct($id = 0)
     {
         // Get comment data from the database
@@ -50,6 +94,9 @@ class Post
         }
     }
 
+    /**
+     * Saving changes to this news post.
+     */
     public function save()
     {
         // Create submission data, insert and update take the same format
@@ -72,6 +119,9 @@ class Post
         }
     }
 
+    /**
+     * Deleting this news post.
+     */
     public function delete()
     {
         DB::table('news')
@@ -81,11 +131,19 @@ class Post
         $this->id = 0;
     }
 
+    /**
+     * Get the user object of the poster.
+     * @return User
+     */
     public function userData()
     {
         return User::construct($this->user);
     }
 
+    /**
+     * Count the amount of comments this post has.
+     * @return int
+     */
     public function commentCount()
     {
         if (!$this->commentCountCache) {
@@ -97,6 +155,10 @@ class Post
         return $this->commentCountCache;
     }
 
+    /**
+     * Get the comments on this post.
+     * @return array
+     */
     public function comments()
     {
         if (!$this->commentsCache) {

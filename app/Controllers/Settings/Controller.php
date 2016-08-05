@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the base settings controller.
- *
  * @package Sakura
  */
 
@@ -15,17 +14,23 @@ use Sakura\Template;
 
 /**
  * Base controller (which other controllers should extend on).
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class Controller extends BaseController
 {
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         Template::vars(['navigation' => $this->navigation()]);
     }
 
+    /**
+     * Generates the navigation.
+     * @return array
+     */
     public function navigation()
     {
         $nav = [];

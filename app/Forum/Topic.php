@@ -1,7 +1,6 @@
 <?php
 /**
  * Holds the topic object class.
- *
  * @package Sakura
  */
 
@@ -11,7 +10,6 @@ use Sakura\DB;
 
 /**
  * Used to serve, create and update topics.
- *
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
@@ -19,49 +17,42 @@ class Topic
 {
     /**
      * The ID of this topic.
-     *
      * @var int
      */
     public $id = 0;
 
     /**
      * The ID of the forum this topic is a part of.
-     *
      * @var int
      */
     public $forum = 0;
 
     /**
      * Is this forum hidden from the listing?
-     *
      * @var bool
      */
     public $hidden = false;
 
     /**
      * The title of the topic.
-     *
      * @var string
      */
     public $title = "";
 
     /**
      * The UNIX timestamp of when this topic was created.
-     *
      * @var int
      */
     public $time = 0;
 
     /**
      * The UNIX timestamp of when this topic should be autolocked (currently unused).
-     *
      * @var int
      */
     public $timeLimit = 0;
 
     /**
      * The amount of times this topic has been viewed.
-     *
      * @var int
      */
     public $views = 0;
@@ -70,14 +61,12 @@ class Topic
      * The status of this topic.
      * 0 - Unlocked
      * 1 - Locked
-     *
      * @var int
      */
     public $status = 0;
 
     /**
      * The UNIX timestamp of when the status was last changed.
-     *
      * @var int
      */
     public $statusChange = 0;
@@ -87,43 +76,37 @@ class Topic
      * 0 - Normal topic
      * 1 - Sticky topic
      * 2 - Announcement
-     *
      * @var int
      */
     public $type = 0;
 
     /**
      * The ID of the forum this topic was a part of before the last move.
-     *
      * @var int
      */
     public $oldForum = 0;
 
     /**
      * The post object cache.
-     *
      * @var array
      */
     private $postsCache = [];
 
     /**
      * A cached instance of opening post.
-     *
      * @var Post
      */
     private $firstPostCache = null;
 
     /**
      * A cached instance of the last reply.
-     *
      * @var Post
      */
     private $lastPostCache = null;
 
     /**
      * Constructor.
-     *
-     * @param mixed $topicId ID of the topic that should be constructed.
+     * @param int $topicId
      */
     public function __construct($topicId)
     {
@@ -151,13 +134,11 @@ class Topic
 
     /**
      * Create a new topic.
-     *
-     * @param mixed $forum ID of the forum this topic is part of.
-     * @param mixed $title Title of the topic.
-     * @param mixed $status Status of the topic.
-     * @param mixed $type Type of topic.
-     *
-     * @return self The new topic instance.
+     * @param int $forum
+     * @param string $title
+     * @param int $status
+     * @param int $type
+     * @return Topic
      */
     public static function create($forum, $title, $status = 0, $type = 0)
     {
@@ -193,9 +174,8 @@ class Topic
 
     /**
      * Move the topic.
-     *
-     * @param mixed $forum The new forum ID.
-     * @param mixed $setOld Remember the forum ID prior to the move for restoration.
+     * @param int $forum
+     * @param bool $setOld
      */
     public function move($forum, $setOld = true)
     {
@@ -215,8 +195,7 @@ class Topic
 
     /**
      * Update the topic data.
-     *
-     * @return self The updated topic.
+     * @return Topic
      */
     public function update()
     {
@@ -239,8 +218,7 @@ class Topic
 
     /**
      * Get the replies to this topic.
-     *
-     * @return array Array containing Post instances.
+     * @return array
      */
     public function posts()
     {
@@ -270,8 +248,7 @@ class Topic
 
     /**
      * Get the opening post.
-     *
-     * @return Post A Post instance of the opening post.
+     * @return Post
      */
     public function firstPost()
     {
@@ -299,8 +276,7 @@ class Topic
 
     /**
      * Get the latest reply.
-     *
-     * @return Post A Post instance of the latest reply.
+     * @return Post
      */
     public function lastPost()
     {
@@ -328,8 +304,7 @@ class Topic
 
     /**
      * Get the amount of replies.
-     *
-     * @return int The number of replies to this topic.
+     * @return int
      */
     public function replyCount()
     {
@@ -340,10 +315,8 @@ class Topic
 
     /**
      * Check if a user has read this topic before.
-     *
-     * @param mixed $user The id of the user in question.
-     *
-     * @return bool A boolean indicating the read status.
+     * @param int $user
+     * @return bool
      */
     public function unread($user)
     {
@@ -370,8 +343,7 @@ class Topic
 
     /**
      * Update the read status.
-     *
-     * @param mixed $user The id of the user in question.
+     * @param int $user
      */
     public function trackUpdate($user)
     {
