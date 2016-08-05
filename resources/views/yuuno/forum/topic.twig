@@ -100,7 +100,7 @@
                                             <a class="fa fa-user-{% if user.isFriends(post.poster.id) == 0 %}plus{% else %}times{% endif %} forum-friend-toggle friend-{{ post.poster.id }}-toggle" title="{% if user.isFriends(post.poster.id) == 0 %}Add {{ post.poster.username }} as a friend{% else %}Remove friend{% endif %}" href="javascript:void(0);" onclick="Sakura.Friend.{% if user.isFriends(post.poster.id) == 0 %}Add({{ post.poster.id }}){% else %}Remove({{ post.poster.id }}){% endif %}"></a>
                                             <a class="fa fa-flag" title="Report {{ post.poster.username }}" href="{{ route('user.report', post.poster.id) }}"></a>
                                         {% endif %}
-                                        <a class="fa fa-reply" title="Quote this post" href="javascript:void(0);" onclick="quotePost({{ post.id }});"></a>
+                                        <a class="fa fa-reply" title="Quote this post" href="javascript:void(0);" onclick="Sakura.Editor.QuotePost({{ post.id }}, '{{ post.poster.username }}', pText);"></a>
                                     </div>
                                     {% endif %}
                                 </div>

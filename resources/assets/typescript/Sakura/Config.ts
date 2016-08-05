@@ -7,6 +7,10 @@ namespace Sakura
         public static LoggedIn: boolean = false;
         public static ChangelogUrl: string = "https://sakura.flash.moe/";
         public static ChangelogApi: string = "api.php/";
+        public static ForumTitleMin: number = 0;
+        public static ForumTitleMax: number = 0;
+        public static ForumTextMin: number = 0;
+        public static ForumTextMax: number = 0;
 
         public static Set(config: Object): void
         {
