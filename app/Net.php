@@ -201,26 +201,35 @@ class Net
     }
 
     /**
-     * Fetch a remote file.
+     * Make a web request.
      * @param string $url
-     * @return mixed
+     * @param string $method
+     * @param mixed $params
+     * @return string
      */
-    public static function fetch($url)
+    public static function request($url, $method = 'GET', $params = null)
     {
-        // Create a curl instance
         $curl = curl_init();
 
-        // Set options
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 2);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 4);
-        curl_setopt($curl, CURLOPT_USERAGENT, 'Sakura/' . SAKURA_VERSION);
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CONNECTTIMEOUT => 2,
+            CURLOPT_TIMEOUT => 4,
+            CURLOPT_USERAGENT => 'Sakura/' . SAKURA_VERSION,
+        ]);
 
-        // Execute
+        switch (strtolower($method)) {
+            case 'post':
+                curl_setopt_array($curl, [
+                    CURLOPT_POST => is_array($params) ? count($params) : 1,
+                    CURLOPT_POSTFIELDS => is_array($params) ? http_build_query($params) : $params,
+                ]);
+                break;
+        }
+
         $curl = curl_exec($curl);
 
-        // Return the data
         return $curl;
     }
 }

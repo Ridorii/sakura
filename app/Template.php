@@ -121,6 +121,15 @@ class Template
     }
 
     /**
+     * Checks if twig is available.
+     * @return bool
+     */
+    public static function available()
+    {
+        return self::$engine !== null && self::$name !== null;
+    }
+
+    /**
      * Merge the parse variables.
      * @param array $vars
      */

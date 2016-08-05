@@ -15,6 +15,9 @@ if (php_sapi_name() === 'cli') {
     define('IN_CLI', true);
 }
 
+// Turn error reporting on regardless of anything
+error_reporting(-1);
+
 // Override expiration variables
 ignore_user_abort(true);
 set_time_limit(0);
@@ -35,11 +38,12 @@ if (!file_exists(ROOT . 'vendor/autoload.php')) {
 // Include the autoloader
 require_once ROOT . 'vendor/autoload.php';
 
+// Register the handlers
+set_exception_handler(['Sakura\ExceptionHandler', 'exception']);
+set_error_handler(['Sakura\ExceptionHandler', 'error']);
+
 // Load the configuration
 Config::init(ROOT . 'config/config.ini');
-
-set_error_handler('error_handler');
-error_reporting(config('dev.show_errors') ? -1 : 0);
 
 // Start the database module
 $capsule = new DB;

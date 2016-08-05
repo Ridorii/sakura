@@ -172,11 +172,10 @@ class Router
             return self::$dispatcher->dispatch($method, $url);
         } catch (HttpMethodNotAllowedException $e) {
             http_response_code(403);
+            return view('errors/403');
         } catch (HttpRouteNotFoundException $e) {
             http_response_code(404);
+            return view('errors/404');
         }
-
-        // Default to the not found page
-        return Template::render('global/notfound');
     }
 }
