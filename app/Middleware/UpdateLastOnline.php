@@ -13,7 +13,7 @@ use Sakura\ActiveUser;
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
-class UpdateLastOnline implements Middleware
+class UpdateLastOnline implements MiddlewareInterface
 {
     /**
      * Update the last online information for the active user.

@@ -11,7 +11,7 @@ namespace Sakura\Middleware;
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
-interface Middleware
+interface MiddlewareInterface
 {
     /**
      * Runs the middleware task.

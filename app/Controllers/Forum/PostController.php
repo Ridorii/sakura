@@ -219,10 +219,10 @@ class PostController extends Controller
         if ($noAccess || $noDelete) {
             if ($noDelete) {
                 $message = "You aren't allowed to delete posts in this topic!";
-                $redirect = Router::route('forums.post', $post->id);
+                $redirect = route('forums.post', $post->id);
             } else {
                 $message = "This post doesn't exist or you don't have access to it!";
-                $redirect = Router::route('forums.index');
+                $redirect = route('forums.index');
             }
 
             return view('global/information', compact('message', 'redirect'));
