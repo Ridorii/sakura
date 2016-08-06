@@ -100,11 +100,10 @@ class Post
         // Attempt to get the database row
         $postRow = DB::table('posts')
             ->where('post_id', $postId)
-            ->get();
+            ->first();
 
         // Assign data if a row was returned
         if ($postRow) {
-            $postRow = $postRow[0];
             $this->id = intval($postRow->post_id);
             $this->topic = intval($postRow->topic_id);
             $this->forum = intval($postRow->forum_id);

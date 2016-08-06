@@ -26,13 +26,11 @@ class ActionCode
 
         // Insert it
         DB::table('actioncodes')
-            ->insert(
-                [
-                    'code_action' => $action,
-                    'user_id' => $user,
-                    'action_code' => $code,
-                ]
-            );
+            ->insert([
+                'code_action' => $action,
+                'user_id' => $user,
+                'action_code' => $code,
+            ]);
 
         // Return the code
         return $code;

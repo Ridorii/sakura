@@ -292,12 +292,11 @@ class User
         // Get the user database row
         $userRow = DB::table('users')
             ->where('user_id', $userId)
-            ->orWhere('username_clean', clean_string($userId, true, true))
-            ->get();
+            ->orWhere('username_clean', clean_string($userId, true))
+            ->first();
 
         // Populate the variables
         if ($userRow) {
-            $userRow = $userRow[0];
             $this->id = intval($userRow->user_id);
             $this->username = $userRow->username;
             $this->usernameClean = $userRow->username_clean;
@@ -500,7 +499,6 @@ class User
             ->where('poster_id', $this->id)
             ->distinct()
             ->groupBy('topic_id')
-            ->orderBy('post_time')
             ->count();
 
         return [

@@ -96,11 +96,10 @@ class File
         // Attempt to get the database row
         $fileRow = DB::table('uploads')
             ->where('file_id', $fileId)
-            ->get();
+            ->first();
 
         // If anything was returned populate the variables
         if ($fileRow) {
-            $fileRow = $fileRow[0];
             $this->id = $fileRow->file_id;
             $this->user = User::construct($fileRow->user_id);
             $this->data = file_get_contents(ROOT . config('file.uploads_dir') . $fileRow->file_id . ".bin");
@@ -116,7 +115,11 @@ class File
      */
     public function delete()
     {
-        unlink(ROOT . config('file.uploads_dir') . $this->id . ".bin");
+        $filename = ROOT . config('file.uploads_dir') . $this->id . ".bin";
+
+        if (file_exists($filename)) {
+            unlink($filename);
+        }
 
         DB::table('uploads')
             ->where('file_id', $this->id)

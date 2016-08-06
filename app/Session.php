@@ -113,7 +113,7 @@ class Session
         $session = DB::table('sessions')
             ->where('user_id', $this->userId)
             ->where('session_key', $this->sessionId)
-            ->get();
+            ->first();
 
         // Check if we actually got something in return
         if (!$session) {
@@ -121,7 +121,7 @@ class Session
         }
 
         // Check if the session expired
-        if ($session[0]->session_expire < time()) {
+        if ($session->session_expire < time()) {
             // ...and return false
             return 0;
         }
@@ -130,13 +130,13 @@ class Session
         good thing is i can probably do CIDR based checking */
 
         // If the remember flag is set extend the session time
-        if ($session[0]->session_remember) {
+        if ($session->session_remember) {
             DB::table('sessions')
                 ->where('session_id', $session[0]->session_id)
                 ->update(['session_expire' => time() + 604800]);
         }
 
         // Return 2 if the remember flag is set and return 1 if not
-        return $session[0]->session_remember ? 2 : 1;
+        return $session->session_remember ? 2 : 1;
     }
 }

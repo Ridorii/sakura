@@ -103,11 +103,10 @@ class Rank
         // Get the rank database row
         $rankRow = DB::table('ranks')
             ->where('rank_id', $rankId)
-            ->get();
+            ->first();
 
         // Check if the rank actually exists
         if ($rankRow) {
-            $rankRow = $rankRow[0];
             $this->id = $rankRow->rank_id;
             $this->name = $rankRow->rank_name;
             $this->hierarchy = $rankRow->rank_hierarchy;

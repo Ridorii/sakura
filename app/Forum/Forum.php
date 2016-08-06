@@ -103,14 +103,13 @@ class Forum
         // Get the row from the database
         $forumRow = DB::table('forums')
             ->where('forum_id', $forumId)
-            ->get();
+            ->first();
 
         // Create permissions object
         $this->permissionsCache = new Perms(Perms::FORUM);
 
         // Populate the variables
         if ($forumRow) {
-            $forumRow = $forumRow[0];
             $this->id = intval($forumRow->forum_id);
             $this->order = intval($forumRow->forum_order);
             $this->name = $forumRow->forum_name;
@@ -223,10 +222,10 @@ class Forum
                 ->where('forum_id', $this->id)
                 ->orderBy('post_id')
                 ->limit(1)
-                ->get(['post_id']);
+                ->first(['post_id']);
 
             // Create the post object
-            $post = new Post(empty($firstPost) ? 0 : $firstPost[0]->post_id);
+            $post = new Post($firstPost->post_id ?? 0);
 
             // Assign it to a "cache" variable
             $this->firstPostCache = $post;
@@ -251,10 +250,10 @@ class Forum
                 ->where('forum_id', $this->id)
                 ->orderBy('post_id', 'desc')
                 ->limit(1)
-                ->get(['post_id']);
+                ->first(['post_id']);
 
             // Create the post object
-            $post = new Post(empty($lastPost) ? 0 : $lastPost[0]->post_id);
+            $post = new Post($lastPost->post_id ?? 0);
 
             // Assign it to a "cache" variable
             $this->lastPostCache = $post;

@@ -76,12 +76,10 @@ class Notification
         // Get notification data from the database
         $data = DB::table('notifications')
             ->where('alert_id', $id)
-            ->get();
+            ->first();
 
         // Check if anything was returned and assign data
         if ($data) {
-            $data = $data[0];
-
             $this->id = intval($data->alert_id);
             $this->user = intval($data->user_id);
             $this->time = intval($data->alert_timestamp);

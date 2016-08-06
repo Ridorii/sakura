@@ -82,12 +82,10 @@ class Comment
         // Get comment data from the database
         $data = DB::table('comments')
             ->where('comment_id', $id)
-            ->get();
+            ->first();
 
         // Check if anything was returned and assign data
         if ($data) {
-            $data = $data[0];
-
             $this->id = $data->comment_id;
             $this->category = $data->comment_category;
             $this->time = $data->comment_timestamp;

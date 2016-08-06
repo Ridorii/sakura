@@ -88,7 +88,7 @@ class Template
             $key = basename($dir);
 
             if ($key === self::$name) {
-                $key = '__main__';
+                $loader->addPath($dir, '__main__');
             }
 
             $loader->addPath($dir, $key);

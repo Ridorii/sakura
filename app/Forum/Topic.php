@@ -113,11 +113,10 @@ class Topic
         // Attempt to get the database row
         $topicRow = DB::table('topics')
             ->where('topic_id', $topicId)
-            ->get();
+            ->first();
 
         // Assign data if a row was returned
         if ($topicRow) {
-            $topicRow = $topicRow[0];
             $this->id = intval($topicRow->topic_id);
             $this->forum = intval($topicRow->forum_id);
             $this->hidden = boolval($topicRow->topic_hidden);
@@ -262,10 +261,10 @@ class Topic
             ->where('topic_id', $this->id)
             ->orderBy('post_id')
             ->limit(1)
-            ->get(['post_id']);
+            ->first(['post_id']);
 
         // Create the post class
-        $post = new Post($post ? $post[0]->post_id : 0);
+        $post = new Post($post->post_id ?? 0);
 
         // Assign it to the cache var
         $this->firstPostCache = $post;
@@ -290,10 +289,10 @@ class Topic
             ->where('topic_id', $this->id)
             ->orderBy('post_id', 'desc')
             ->limit(1)
-            ->get(['post_id']);
+            ->first(['post_id']);
 
         // Create the post class
-        $post = new Post($post ? $post[0]->post_id : 0);
+        $post = new Post($post->post_id ?? 0);
 
         // Assign it to the cache var
         $this->lastPostCache = $post;

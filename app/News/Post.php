@@ -79,12 +79,10 @@ class Post
         // Get comment data from the database
         $data = DB::table('news')
             ->where('news_id', $id)
-            ->get();
+            ->first();
 
         // Check if anything was returned and assign data
         if ($data) {
-            $data = $data[0];
-
             $this->id = $data->news_id;
             $this->category = $data->news_category;
             $this->user = $data->user_id;
