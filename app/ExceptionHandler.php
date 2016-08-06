@@ -64,7 +64,7 @@ class ExceptionHandler
         http_response_code(500);
 
         try {
-            $debug = config('dev.show_errorsa');
+            $debug = config('dev.show_errors');
         } catch (Exception $ex) {
             $debug = false;
         }
