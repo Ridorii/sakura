@@ -6,7 +6,7 @@
 
 namespace Sakura\Controllers;
 
-use Sakura\BBcode;
+use Sakura\BBCode\Parser as BBParser;
 
 /**
  * Helper controller.
@@ -21,6 +21,6 @@ class HelperController extends Controller
      */
     public function bbcodeParse()
     {
-        return BBcode::toHTML(htmlentities($_POST['text'] ?? ''));
+        return BBParser::toHTML(htmlentities($_POST['text'] ?? ''));
     }
 }

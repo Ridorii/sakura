@@ -125,7 +125,7 @@ class Post
         }
 
         // Parse the markup
-        $this->parsed = BBcode::toHTML(htmlentities($this->text));
+        $this->parsed = BBCode\Parser::toHTML(htmlentities($this->text));
     }
 
     /**
