@@ -3,7 +3,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Sakura\DB;
 
-class FilesBelongOnTheFilesystem extends Migration
+class RecordLoginCountry extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class FilesBelongOnTheFilesystem extends Migration
     {
         $schema = DB::getSchemaBuilder();
 
-        $schema->table('uploads', function (Blueprint $table) {
-            $table->dropColumn('file_data');
+        $schema->table('sessions', function (Blueprint $table) {
+            $table->char('session_country', 2)
+                ->default('XX');
         });
     }
 
@@ -26,8 +27,8 @@ class FilesBelongOnTheFilesystem extends Migration
     {
         $schema = DB::getSchemaBuilder();
 
-        $schema->table('uploads', function (Blueprint $table) {
-            $table->binary('file_data');
+        $schema->table('sessions', function (Blueprint $table) {
+            $table->dropColumn('session_country');
         });
     }
 }

@@ -205,6 +205,12 @@ class User
     public $lastfm = '';
 
     /**
+     * The user's selected design.
+     * @var string
+     */
+    private $design = '';
+
+    /**
      * The user's birthday.
      * @var string
      */
@@ -325,6 +331,7 @@ class User
             $this->steam = $userRow->user_steam;
             $this->osu = $userRow->user_osu;
             $this->lastfm = $userRow->user_lastfm;
+            $this->design = $userRow->user_design;
 
             // Temporary backwards compatible IP storage system
             try {
@@ -1059,5 +1066,14 @@ class User
         }
 
         return $sessions;
+    }
+
+    /**
+     * Gets the user's selected design.
+     * @return string
+     */
+    public function design()
+    {
+        return Template::exists($this->design) ? $this->design : config('general.design');
     }
 }

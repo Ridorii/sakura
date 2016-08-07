@@ -20,16 +20,14 @@ use Twig_SimpleFunction;
 class Template
 {
     /**
-     * The variables passed on to the templating engine.
-     * @var array
+     * The file extension used by template files.
      */
-    private static $vars = [];
+    const FILE_EXT = '.twig';
 
     /**
-     * The templating engine.
-     * @var Twig_Environment
+     * The path relative to ROOT.
      */
-    private static $engine;
+    const VIEWS_DIR = 'resources/views/';
 
     /**
      * The template name.
@@ -38,9 +36,16 @@ class Template
     public static $name;
 
     /**
-     * The file extension used by template files.
+     * The templating engine.
+     * @var Twig_Environment
      */
-    const FILE_EXT = '.twig';
+    private static $engine;
+
+    /**
+     * The variables passed on to the templating engine.
+     * @var array
+     */
+    private static $vars = [];
 
     /**
      * List of utility functions to add to templating.
@@ -79,7 +84,7 @@ class Template
      */
     public static function init()
     {
-        $views_dir = ROOT . 'resources/views/';
+        $views_dir = ROOT . self::VIEWS_DIR;
 
         // Initialise Twig Filesystem Loader
         $loader = new Twig_Loader_Filesystem();
@@ -141,10 +146,19 @@ class Template
     /**
      * Render a template file.
      * @param string $file
-     * @return bool|string
+     * @return string
      */
     public static function render($file)
     {
         return self::$engine->render($file . self::FILE_EXT, self::$vars);
+    }
+
+    /**
+     * Checks if a template directory exists.
+     * @return bool
+     */
+    public static function exists($name)
+    {
+        return ctype_alnum($name) && file_exists(ROOT . self::VIEWS_DIR . $name . "/");
     }
 }

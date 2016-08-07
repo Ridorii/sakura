@@ -67,7 +67,7 @@ if (!defined('IN_CLI')) {
     );
 
     // Start templating engine and set base variables
-    Template::set(config('general.design'));
+    Template::set(CurrentSession::$user->design());
     Template::vars([
         'get' => $_GET,
         'user' => CurrentSession::$user,
