@@ -6,7 +6,7 @@
 
 namespace Sakura\Controllers\Forum;
 
-use Sakura\ActiveUser;
+use Sakura\CurrentSession;
 use Sakura\DB;
 use Sakura\Forum\Forum;
 use Sakura\Forum\Post;
@@ -35,7 +35,7 @@ class PostController extends Controller
         // Check if the forum exists
         if ($post->id === 0
             || $topic->id === 0
-            || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
+            || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
             $message = "This post doesn't exist or you don't have access to it!";
             $redirect = route('forums.index');
 
@@ -75,7 +75,7 @@ class PostController extends Controller
         // Check if the forum exists
         if ($post->id === 0
             || $topic->id === 0
-            || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
+            || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
             return "";
         }
 
@@ -99,15 +99,15 @@ class PostController extends Controller
         // Check permissions
         $noAccess = $post->id === 0
         || $topic->id === 0
-        || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id);
+        || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id);
 
         $noEdit = (
-            $post->poster->id === ActiveUser::$user->id
-            ? !ActiveUser::$user->permission(ForumPerms::EDIT_OWN, Perms::FORUM)
-            : !$forum->permission(ForumPerms::EDIT_ANY, ActiveUser::$user->id)
+            $post->poster->id === CurrentSession::$user->id
+            ? !CurrentSession::$user->permission(ForumPerms::EDIT_OWN, Perms::FORUM)
+            : !$forum->permission(ForumPerms::EDIT_ANY, CurrentSession::$user->id)
         ) || (
             $topic->status === 1
-            && !$forum->permission(ForumPerms::LOCK, ActiveUser::$user->id)
+            && !$forum->permission(ForumPerms::LOCK, CurrentSession::$user->id)
         );
 
         // Check if the forum exists
@@ -182,7 +182,7 @@ class PostController extends Controller
         $post->text = $text;
         $post->editTime = time();
         $post->editReason = '';
-        $post->editUser = ActiveUser::$user;
+        $post->editUser = CurrentSession::$user;
         $post = $post->update();
 
         $postLink = route('forums.post', $post->id);
@@ -204,15 +204,15 @@ class PostController extends Controller
         // Check permissions
         $noAccess = $post->id === 0
         || $topic->id === 0
-        || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id);
+        || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id);
 
         $noDelete = (
-            $post->poster->id === ActiveUser::$user->id
-            ? !ActiveUser::$user->permission(ForumPerms::DELETE_OWN, Perms::FORUM)
-            : !$forum->permission(ForumPerms::DELETE_ANY, ActiveUser::$user->id)
+            $post->poster->id === CurrentSession::$user->id
+            ? !CurrentSession::$user->permission(ForumPerms::DELETE_OWN, Perms::FORUM)
+            : !$forum->permission(ForumPerms::DELETE_ANY, CurrentSession::$user->id)
         ) || (
             $topic->status === 1
-            && !$forum->permission(ForumPerms::LOCK, ActiveUser::$user->id)
+            && !$forum->permission(ForumPerms::LOCK, CurrentSession::$user->id)
         );
 
         // Check if the forum exists

@@ -6,7 +6,7 @@
 
 namespace Sakura\Controllers\Settings;
 
-use Sakura\ActiveUser;
+use Sakura\CurrentSession;
 use Sakura\Perms\Site;
 
 /**
@@ -23,7 +23,7 @@ class FriendsController extends Controller
     public function listing()
     {
         // Check permission
-        if (!ActiveUser::$user->permission(Site::MANAGE_FRIENDS)) {
+        if (!CurrentSession::$user->permission(Site::MANAGE_FRIENDS)) {
             $message = "You aren't allowed to manage friends.";
             $redirect = route('settings.index');
             return view('global/information', compact('message', 'redirect'));
@@ -39,7 +39,7 @@ class FriendsController extends Controller
     public function requests()
     {
         // Check permission
-        if (!ActiveUser::$user->permission(Site::MANAGE_FRIENDS)) {
+        if (!CurrentSession::$user->permission(Site::MANAGE_FRIENDS)) {
             $message = "You aren't allowed to manage friends.";
             $redirect = route('settings.index');
             return view('global/information', compact('message', 'redirect'));

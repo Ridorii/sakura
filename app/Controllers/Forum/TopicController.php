@@ -6,7 +6,7 @@
 
 namespace Sakura\Controllers\Forum;
 
-use Sakura\ActiveUser;
+use Sakura\CurrentSession;
 use Sakura\Forum\Forum;
 use Sakura\Forum\Post;
 use Sakura\Forum\Topic;
@@ -31,14 +31,14 @@ class TopicController extends Controller
 
         // Check if the forum exists
         if ($topic->id === 0
-            || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
+            || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
             $message = "This topic doesn't exist or you don't have access to it!";
             $redirect = route('forums.index');
 
             return view('global/information', compact('message', 'redirect'));
         }
 
-        $topic->trackUpdate(ActiveUser::$user->id);
+        $topic->trackUpdate(CurrentSession::$user->id);
         $topic->viewsUpdate();
 
         return view('forum/topic', compact('forum', 'topic'));
@@ -55,7 +55,7 @@ class TopicController extends Controller
         $forum = new Forum($topic->forum);
 
         if ($topic->id !== 0
-            || $forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)
+            || $forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)
             || session_check()) {
             return compact('topic', 'forum');
         }
@@ -78,7 +78,7 @@ class TopicController extends Controller
             extract($modBase);
             $redirect = route('forums.topic', $topic->id);
 
-            if ($forum->permission(ForumPerms::STICKY, ActiveUser::$user->id)) {
+            if ($forum->permission(ForumPerms::STICKY, CurrentSession::$user->id)) {
                 $topic->type = $topic->type !== 1 ? 1 : 0;
                 $topic->update();
                 $message = $topic->type
@@ -106,7 +106,7 @@ class TopicController extends Controller
             extract($modBase);
             $redirect = route('forums.topic', $topic->id);
 
-            if ($forum->permission(ForumPerms::ANNOUNCEMENT, ActiveUser::$user->id)) {
+            if ($forum->permission(ForumPerms::ANNOUNCEMENT, CurrentSession::$user->id)) {
                 $topic->type = $topic->type !== 2 ? 2 : 0;
                 $topic->update();
                 $message = $topic->type
@@ -134,7 +134,7 @@ class TopicController extends Controller
             extract($modBase);
             $redirect = route('forums.topic', $topic->id);
 
-            if ($forum->permission(ForumPerms::LOCK, ActiveUser::$user->id)) {
+            if ($forum->permission(ForumPerms::LOCK, CurrentSession::$user->id)) {
                 $topic->status = $topic->status !== 1 ? 1 : 0;
                 $topic->update();
                 $message = ($topic->status ? 'Locked' : 'Unlocked') . ' the topic!';
@@ -163,7 +163,7 @@ class TopicController extends Controller
 
             // Check if we're operating from the trash
             if ($topic->forum === $trash) {
-                if ($forum->permission(ForumPerms::DELETE_ANY, ActiveUser::$user->id)) {
+                if ($forum->permission(ForumPerms::DELETE_ANY, CurrentSession::$user->id)) {
                     $topic->delete();
                     $message = "Deleted the topic!";
                     $redirect = route('forums.forum', $trash);
@@ -173,7 +173,7 @@ class TopicController extends Controller
             } else {
                 $redirect = route('forums.topic', $topic->id);
 
-                if ($forum->permission(ForumPerms::MOVE, ActiveUser::$user->id)) {
+                if ($forum->permission(ForumPerms::MOVE, CurrentSession::$user->id)) {
                     $topic->move($trash);
                     $message = "Moved the topic to the trash!";
                 } else {
@@ -200,7 +200,7 @@ class TopicController extends Controller
             extract($modBase);
             $redirect = route('forums.topic', $topic->id);
 
-            if ($forum->permission(ForumPerms::MOVE, ActiveUser::$user->id)) {
+            if ($forum->permission(ForumPerms::MOVE, CurrentSession::$user->id)) {
                 if ($topic->oldForum) {
                     $topic->move($topic->oldForum, false);
 
@@ -231,11 +231,11 @@ class TopicController extends Controller
             extract($modBase);
             $redirect = route('forums.topic', $topic->id);
 
-            if ($forum->permission(ForumPerms::MOVE, ActiveUser::$user->id)) {
+            if ($forum->permission(ForumPerms::MOVE, CurrentSession::$user->id)) {
                 $dest_forum = new Forum($_REQUEST['forum_id'] ?? 0);
 
                 if ($dest_forum->id === 0
-                    || $dest_forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
+                    || $dest_forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
                     $topic->move($dest_forum->id);
 
                     $message = "Moved to the topic to {$dest_forum->name}!";
@@ -268,7 +268,7 @@ class TopicController extends Controller
         // Check if the topic exists
         if ($topic->id === 0
             || $forum->type !== 0
-            || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
+            || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
             $message = "This post doesn't exist or you don't have access to it!";
             $redirect = route('forums.index');
 
@@ -276,10 +276,10 @@ class TopicController extends Controller
         }
 
         // Check if the topic exists
-        if (!$forum->permission(ForumPerms::REPLY, ActiveUser::$user->id)
+        if (!$forum->permission(ForumPerms::REPLY, CurrentSession::$user->id)
             || (
                 $topic->status === 1
-                && !$forum->permission(ForumPerms::LOCK, ActiveUser::$user->id)
+                && !$forum->permission(ForumPerms::LOCK, CurrentSession::$user->id)
             )) {
             $message = "You are not allowed to post in this topic!";
             $redirect = route('forums.topic', $topic->id);
@@ -321,7 +321,7 @@ class TopicController extends Controller
         $post = Post::create(
             "Re: {$topic->title}",
             $text,
-            ActiveUser::$user,
+            CurrentSession::$user,
             $topic->id,
             $forum->id
         );
@@ -349,9 +349,9 @@ class TopicController extends Controller
         // Check if the forum exists
         if ($forum->id === 0
             || $forum->type !== 0
-            || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)
-            || !$forum->permission(ForumPerms::REPLY, ActiveUser::$user->id)
-            || !$forum->permission(ForumPerms::CREATE_THREADS, ActiveUser::$user->id)) {
+            || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)
+            || !$forum->permission(ForumPerms::REPLY, CurrentSession::$user->id)
+            || !$forum->permission(ForumPerms::CREATE_THREADS, CurrentSession::$user->id)) {
             $message = "This forum doesn't exist or you don't have access to it!";
             $redirect = route('forums.index');
 
@@ -409,7 +409,7 @@ class TopicController extends Controller
             $post = Post::create(
                 $title,
                 $text,
-                ActiveUser::$user,
+                CurrentSession::$user,
                 0,
                 $forum->id
             );

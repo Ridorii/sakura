@@ -6,7 +6,7 @@
 
 namespace Sakura\Controllers\Settings;
 
-use Sakura\ActiveUser;
+use Sakura\CurrentSession;
 use Sakura\DB;
 use Sakura\Perms\Site;
 
@@ -24,7 +24,7 @@ class AccountController extends Controller
     public function profile()
     {
         // Check permission
-        if (!ActiveUser::$user->permission(Site::ALTER_PROFILE)) {
+        if (!CurrentSession::$user->permission(Site::ALTER_PROFILE)) {
             $message = "You aren't allowed to edit your profile!";
             $redirect = route('settings.index');
             return view('global/information', compact('message', 'redirect'));
@@ -50,7 +50,7 @@ class AccountController extends Controller
             }
 
             DB::table('users')
-                ->where('user_id', ActiveUser::$user->id)
+                ->where('user_id', CurrentSession::$user->id)
                 ->update($save);
 
             // Birthdays
@@ -75,7 +75,7 @@ class AccountController extends Controller
                 }
 
                 DB::table('users')
-                    ->where('user_id', ActiveUser::$user->id)
+                    ->where('user_id', CurrentSession::$user->id)
                     ->update([
                         'user_birthday' => $birthdate,
                     ]);
@@ -96,7 +96,7 @@ class AccountController extends Controller
     public function email()
     {
         // Check permission
-        if (!ActiveUser::$user->permission(Site::CHANGE_EMAIL)) {
+        if (!CurrentSession::$user->permission(Site::CHANGE_EMAIL)) {
             $message = "You aren't allowed to change your e-mail address.";
             $redirect = route('settings.index');
             return view('global/information', compact('message', 'redirect'));
@@ -128,7 +128,7 @@ class AccountController extends Controller
                 return view('global/information', compact('redirect', 'message'));
             }
 
-            ActiveUser::$user->setMail($email);
+            CurrentSession::$user->setMail($email);
 
             $message = 'Changed your e-mail address!';
             return view('global/information', compact('redirect', 'message'));
@@ -144,7 +144,7 @@ class AccountController extends Controller
     public function username()
     {
         // Check permission
-        if (!ActiveUser::$user->permission(Site::CHANGE_USERNAME)) {
+        if (!CurrentSession::$user->permission(Site::CHANGE_USERNAME)) {
             $message = "You aren't allowed to change your username.";
             $redirect = route('settings.index');
             return view('global/information', compact('redirect', 'message'));
@@ -176,7 +176,7 @@ class AccountController extends Controller
                 ->get();
 
             // Check if anything was returned
-            if ($getOld && $getOld[0]->user_id != ActiveUser::$user->id) {
+            if ($getOld && $getOld[0]->user_id != CurrentSession::$user->id) {
                 $message = "The username you tried to use is reserved, try again later!";
                 return view('global/information', compact('redirect', 'message'));
             }
@@ -192,7 +192,7 @@ class AccountController extends Controller
                 return view('global/information', compact('redirect', 'message'));
             }
 
-            ActiveUser::$user->setUsername($username, $username_clean);
+            CurrentSession::$user->setUsername($username, $username_clean);
 
             $message = "Changed your username!";
             return view('global/information', compact('redirect', 'message'));
@@ -208,7 +208,7 @@ class AccountController extends Controller
     public function title()
     {
         // Check permission
-        if (!ActiveUser::$user->permission(Site::CHANGE_USERTITLE)) {
+        if (!CurrentSession::$user->permission(Site::CHANGE_USERTITLE)) {
             $message = "You aren't allowed to change your title.";
             $redirect = route('settings.index');
             return view('global/information', compact('redirect', 'message'));
@@ -224,14 +224,14 @@ class AccountController extends Controller
                 return view('global/information', compact('redirect', 'message'));
             }
 
-            if ($title === ActiveUser::$user->title) {
+            if ($title === CurrentSession::$user->title) {
                 $message = "This is already your title!";
                 return view('global/information', compact('redirect', 'message'));
             }
 
             // Update database
             DB::table('users')
-                ->where('user_id', ActiveUser::$user->id)
+                ->where('user_id', CurrentSession::$user->id)
                 ->update([
                     'user_title' => $title,
                 ]);
@@ -250,7 +250,7 @@ class AccountController extends Controller
     public function password()
     {
         // Check permission
-        if (!ActiveUser::$user->permission(Site::CHANGE_PASSWORD)) {
+        if (!CurrentSession::$user->permission(Site::CHANGE_PASSWORD)) {
             $message = "You aren't allowed to change your password.";
             $redirect = route('settings.index');
             return view('global/information', compact('redirect', 'message'));
@@ -263,7 +263,7 @@ class AccountController extends Controller
             $redirect = route('settings.account.password');
 
             // Check current password
-            if (!password_verify($current, ActiveUser::$user->password)) {
+            if (!password_verify($current, CurrentSession::$user->password)) {
                 $message = "Your password was invalid!";
                 return view('global/information', compact('redirect', 'message'));
             }
@@ -274,7 +274,7 @@ class AccountController extends Controller
                 return view('global/information', compact('redirect', 'message'));
             }
 
-            ActiveUser::$user->setPassword($password);
+            CurrentSession::$user->setPassword($password);
 
             $message = "Changed your password!";
             return view('global/information', compact('redirect', 'message'));
@@ -290,7 +290,7 @@ class AccountController extends Controller
     public function ranks()
     {
         // Check permission
-        if (!ActiveUser::$user->permission(Site::ALTER_RANKS)) {
+        if (!CurrentSession::$user->permission(Site::ALTER_RANKS)) {
             $message = "You aren't allowed to manage your ranks.";
             $redirect = route('settings.index');
             return view('global/information', compact('redirect', 'message'));
@@ -311,7 +311,7 @@ class AccountController extends Controller
             $redirect = route('settings.account.ranks');
 
             // Check if user has this rank
-            if (!ActiveUser::$user->hasRanks([$rank])) {
+            if (!CurrentSession::$user->hasRanks([$rank])) {
                 $message = "You aren't a part of this rank!";
                 return view('global/information', compact('redirect', 'message'));
             }
@@ -322,13 +322,13 @@ class AccountController extends Controller
                     return view('global/information', compact('redirect', 'message'));
                 }
 
-                ActiveUser::$user->removeRanks([$rank]);
+                CurrentSession::$user->removeRanks([$rank]);
 
                 $message = "Removed the rank from your account!";
                 return view('global/information', compact('redirect', 'message'));
             }
 
-            ActiveUser::$user->setMainRank($rank);
+            CurrentSession::$user->setMainRank($rank);
 
             $message = "Changed your main rank!";
             return view('global/information', compact('redirect', 'message'));

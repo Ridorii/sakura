@@ -1032,4 +1032,32 @@ class User
 
         return $alerts;
     }
+
+    /**
+     * Invalidate all sessions related to this user.
+     */
+    public function purgeSessions()
+    {
+        DB::table('sessions')
+            ->where('user_id', $this->id)
+            ->delete();
+    }
+
+    /**
+     * Get all a user's sessions
+     * @return array
+     */
+    public function sessions()
+    {
+        $sessions = [];
+        $ids = array_column(DB::table('sessions')
+                ->where('user_id', $this->id)
+                ->get(['session_id']), 'session_id');
+
+        foreach ($ids as $id) {
+            $sessions[$id] = new Session($id);
+        }
+
+        return $sessions;
+    }
 }

@@ -7,8 +7,8 @@
 namespace Sakura\Controllers;
 
 use Exception;
-use Sakura\ActiveUser;
 use Sakura\Config;
+use Sakura\CurrentSession;
 use Sakura\Payments;
 use Sakura\Perms\Site;
 use Sakura\Router;
@@ -56,13 +56,12 @@ class PremiumController extends Controller
     public function purchase()
     {
         // Get values from post
-        $session = isset($_POST['session']) ? $_POST['session'] : '';
         $months = isset($_POST['months']) ? $_POST['months'] : 0;
 
         // Check if the session is valid
-        if ($session !== session_id()
-            || ActiveUser::$user->permission(Site::DEACTIVATED)
-            || !ActiveUser::$user->permission(Site::OBTAIN_PREMIUM)) {
+        if (!session_check()
+            || CurrentSession::$user->permission(Site::DEACTIVATED)
+            || !CurrentSession::$user->permission(Site::OBTAIN_PREMIUM)) {
             $message = "You are not allowed to get premium!";
             $redirect = Router::route('premium.index');
 
@@ -157,7 +156,7 @@ class PremiumController extends Controller
             return header("Location: {$failRoute}");
         }
 
-        ActiveUser::$user->addPremium(self::PERIOD_PER_PAYMENT * $months);
+        CurrentSession::$user->addPremium(self::PERIOD_PER_PAYMENT * $months);
 
         return header("Location: {$successRoute}");
     }

@@ -6,8 +6,8 @@
 
 namespace Sakura\Controllers\Forum;
 
-use Sakura\ActiveUser;
 use Sakura\Config;
+use Sakura\CurrentSession;
 use Sakura\DB;
 use Sakura\Forum\Forum;
 use Sakura\Forum\Post;
@@ -43,7 +43,7 @@ class ForumController extends Controller
             $forum = new Forum($topic->forum);
 
             // Check if we have permission to view it
-            if (!$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
+            if (!$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
                 $fetch = DB::table('posts')
                     ->groupBy('topic_id')
                     ->orderByRaw('COUNT(*) DESC')
@@ -73,7 +73,7 @@ class ForumController extends Controller
             $forum = new Forum($post->forum);
 
             // Check if we have permission to view it
-            if (!$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
+            if (!$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
                 $fetch = DB::table('posts')
                     ->orderBy('post_id', 'desc')
                     ->skip(11 + $_n)
@@ -124,7 +124,7 @@ class ForumController extends Controller
 
         // Check if the forum exists
         if ($forum->id < 0
-            || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
+            || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
             return view('global/information', compact('message', 'redirect'));
         }
 
@@ -157,12 +157,12 @@ class ForumController extends Controller
 
         // Check if the forum exists
         if ($forum->id < 1
-            || !$forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
+            || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
             $message = "The forum you tried to access does not exist.";
             return view('global/information', compact('message', 'redirect'));
         }
 
-        $forum->trackUpdateAll(ActiveUser::$user->id);
+        $forum->trackUpdateAll(CurrentSession::$user->id);
 
         $message = 'All topics have been marked as read!';
         $redirect = route('forums.forum', $forum->id);

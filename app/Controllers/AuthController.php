@@ -7,13 +7,12 @@
 namespace Sakura\Controllers;
 
 use Sakura\ActionCode;
-use Sakura\ActiveUser;
 use Sakura\Config;
+use Sakura\CurrentSession;
 use Sakura\DB;
 use Sakura\Net;
 use Sakura\Perms\Site;
 use Sakura\Router;
-use Sakura\Session;
 use Sakura\Template;
 use Sakura\User;
 
@@ -46,10 +45,8 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        if (!ActiveUser::$session->validate()
-            || !isset($_REQUEST['s'])
-            || $_REQUEST['s'] != session_id()) {
-            $message = 'Something happened! This probably happened because you went here without being logged in.';
+        if (!session_check('s')) {
+            $message = 'Validation failed, this logout attempt was possibly forged.';
             $redirect = (isset($_REQUEST['redirect']) ? $_REQUEST['redirect'] : Router::route('main.index'));
 
             Template::vars(compact('message', 'redirect'));
@@ -58,7 +55,7 @@ class AuthController extends Controller
         }
 
         // Destroy the active session
-        ActiveUser::$session->destroy();
+        CurrentSession::stop();
 
         // Return true indicating a successful logout
         $message = 'Goodbye!';
@@ -144,11 +141,14 @@ class AuthController extends Controller
             return Template::render('global/information');
         }
 
-        // Create a new session
-        $session = new Session($user->id);
-
         // Generate a session key
-        $sessionKey = $session->create($remember);
+        $session = CurrentSession::create(
+            $user->id,
+            Net::ip(),
+            get_country_code(),
+            clean_string($_SERVER['HTTP_USER_AGENT'] ?? ''),
+            $remember
+        );
 
         $cookiePrefix = config('cookie.prefix');
 
@@ -162,7 +162,7 @@ class AuthController extends Controller
         // Session ID cookie
         setcookie(
             "{$cookiePrefix}session",
-            $sessionKey,
+            $session->key,
             time() + 604800
         );
 
@@ -222,7 +222,7 @@ class AuthController extends Controller
         }
 
         // Check if authentication is disallowed
-        if (!isset($_POST['session']) || $_POST['session'] != session_id()) {
+        if (!session_check()) {
             $message = "Your session expired, refreshing the page will most likely fix this!";
 
             Template::vars(compact('message', 'redirect'));
@@ -413,7 +413,7 @@ class AuthController extends Controller
         $redirect = Router::route('auth.reactivate');
 
         // Validate session
-        if (!isset($_POST['session']) || $_POST['session'] != session_id()) {
+        if (!session_check()) {
             $message = "Your session expired, refreshing the page will most likely fix this!";
 
             Template::vars(compact('message', 'redirect'));
@@ -482,7 +482,7 @@ class AuthController extends Controller
         $redirect = Router::route('main.index');
 
         // Validate session
-        if (!isset($_POST['session']) || $_POST['session'] != session_id()) {
+        if (!session_check()) {
             $message = "Your session expired, refreshing the page will most likely fix this!";
 
             Template::vars(compact('message', 'redirect'));

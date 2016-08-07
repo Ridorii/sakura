@@ -6,8 +6,8 @@
 
 namespace Sakura\Controllers\Settings;
 
-use Sakura\ActiveUser;
 use Sakura\Controllers\Controller as BaseController;
+use Sakura\CurrentSession;
 use Sakura\Perms\Site;
 use Sakura\Router;
 use Sakura\Template;
@@ -36,27 +36,27 @@ class Controller extends BaseController
         $nav = [];
 
         // Account
-        if (ActiveUser::$user->permission(Site::ALTER_PROFILE)) {
+        if (CurrentSession::$user->permission(Site::ALTER_PROFILE)) {
             $nav["Account"]["Profile"] = Router::route('settings.account.profile');
         }
-        if (ActiveUser::$user->permission(Site::CHANGE_EMAIL)) {
+        if (CurrentSession::$user->permission(Site::CHANGE_EMAIL)) {
             $nav["Account"]["E-mail address"] = Router::route('settings.account.email');
         }
-        if (ActiveUser::$user->permission(Site::CHANGE_USERNAME)) {
+        if (CurrentSession::$user->permission(Site::CHANGE_USERNAME)) {
             $nav["Account"]["Username"] = Router::route('settings.account.username');
         }
-        if (ActiveUser::$user->permission(Site::CHANGE_USERTITLE)) {
+        if (CurrentSession::$user->permission(Site::CHANGE_USERTITLE)) {
             $nav["Account"]["Title"] = Router::route('settings.account.title');
         }
-        if (ActiveUser::$user->permission(Site::CHANGE_PASSWORD)) {
+        if (CurrentSession::$user->permission(Site::CHANGE_PASSWORD)) {
             $nav["Account"]["Password"] = Router::route('settings.account.password');
         }
-        if (ActiveUser::$user->permission(Site::ALTER_RANKS)) {
+        if (CurrentSession::$user->permission(Site::ALTER_RANKS)) {
             $nav["Account"]["Ranks"] = Router::route('settings.account.ranks');
         }
 
         // Friends
-        if (ActiveUser::$user->permission(Site::MANAGE_FRIENDS)) {
+        if (CurrentSession::$user->permission(Site::MANAGE_FRIENDS)) {
             $nav["Friends"]["Listing"] = Router::route('settings.friends.listing');
             $nav["Friends"]["Requests"] = Router::route('settings.friends.requests');
         }
@@ -65,30 +65,30 @@ class Controller extends BaseController
         $nav["Notifications"]["History"] = Router::route('settings.notifications.history');
 
         // Appearance
-        if (ActiveUser::$user->permission(Site::CHANGE_AVATAR)) {
+        if (CurrentSession::$user->permission(Site::CHANGE_AVATAR)) {
             $nav["Appearance"]["Avatar"] = Router::route('settings.appearance.avatar');
         }
-        if (ActiveUser::$user->permission(Site::CHANGE_BACKGROUND)) {
+        if (CurrentSession::$user->permission(Site::CHANGE_BACKGROUND)) {
             $nav["Appearance"]["Background"] = Router::route('settings.appearance.background');
         }
-        if (ActiveUser::$user->permission(Site::CHANGE_HEADER)) {
+        if (CurrentSession::$user->permission(Site::CHANGE_HEADER)) {
             $nav["Appearance"]["Header"] = Router::route('settings.appearance.header');
         }
         if ((
-            ActiveUser::$user->page
-            && ActiveUser::$user->permission(Site::CHANGE_USERPAGE)
-        ) || ActiveUser::$user->permission(Site::CREATE_USERPAGE)) {
+            CurrentSession::$user->page
+            && CurrentSession::$user->permission(Site::CHANGE_USERPAGE)
+        ) || CurrentSession::$user->permission(Site::CREATE_USERPAGE)) {
             $nav["Appearance"]["Userpage"] = Router::route('settings.appearance.userpage');
         }
-        if (ActiveUser::$user->permission(Site::CHANGE_SIGNATURE)) {
+        if (CurrentSession::$user->permission(Site::CHANGE_SIGNATURE)) {
             $nav["Appearance"]["Signature"] = Router::route('settings.appearance.signature');
         }
 
         // Advanced
-        if (ActiveUser::$user->permission(Site::MANAGE_SESSIONS)) {
+        if (CurrentSession::$user->permission(Site::MANAGE_SESSIONS)) {
             $nav["Advanced"]["Sessions"] = Router::route('settings.advanced.sessions');
         }
-        if (ActiveUser::$user->permission(Site::DEACTIVATE_ACCOUNT)) {
+        if (CurrentSession::$user->permission(Site::DEACTIVATE_ACCOUNT)) {
             $nav["Advanced"]["Deactivate"] = Router::route('settings.advanced.deactivate');
         }
 

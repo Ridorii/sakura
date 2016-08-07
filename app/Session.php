@@ -1,129 +1,166 @@
 <?php
 /**
- * Holds the session handler.
+ * Holds the session object.
  * @package Sakura
  */
 
 namespace Sakura;
 
 /**
- * User session handler.
+ * Session object.
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
 class Session
 {
     /**
-     * The ID of the user this session is from.
+     * Session storage id.
      * @var int
      */
-    public $userId = 0;
+    public $id = 0;
 
     /**
-     * The ID of the session.
+     * User id.
+     * @var int
+     */
+    public $user = 0;
+
+    /**
+     * IP address this session was started from.
      * @var string
      */
-    public $sessionId = "";
+    public $ip = '';
 
     /**
-     * Constructor.
-     * @param int $userId
-     * @param int $sessionId
+     * Country this session was started from.
+     * @var string
      */
-    public function __construct($userId, $sessionId = null)
+    public $country = '';
+
+    /**
+     * User agent this session was started from.
+     * @var string
+     */
+    public $agent = '';
+
+    /**
+     * Session secret key.
+     * @var string
+     */
+    public $key = '';
+
+    /**
+     * Timestamp from when this session was created.
+     * @var int
+     */
+    public $start = 0;
+
+    /**
+     * Timestamp on which this session will invalidate.
+     * @var int
+     */
+    public $expire = 0;
+
+    /**
+     * Whether to extend the session's lifetime.
+     * @var bool
+     */
+    public $remember = false;
+
+    /**
+     * Constructor, $id can be a number or the secret key.
+     * @param mixed $id
+     */
+    public function __construct($id)
     {
-        // Check if a PHP session was already started and if not start one
-        if (session_status() != PHP_SESSION_ACTIVE) {
-            session_start();
+        $data = DB::table('sessions');
+
+        if (is_numeric($id)) {
+            $data->where('session_id', $id);
+        } else {
+            $data->where('session_key', $id);
         }
 
-        // Set the supposed session data
-        $this->userId = $userId;
-        $this->sessionId = $sessionId;
+        $data = $data->first();
+
+        if ($data) {
+            $this->id = intval($data->session_id);
+            $this->user = intval($data->user_id);
+            $this->ip = Net::ntop($data->user_ip);
+            $this->country = $data->session_country;
+            $this->agent = $data->user_agent;
+            $this->key = $data->session_key;
+            $this->start = intval($data->session_start);
+            $this->expire = intval($data->session_expire);
+            $this->remember = boolval($data->session_remember);
+        }
     }
 
     /**
-     * Destroy the active session.
+     * Create a new session
+     * @param int $user
+     * @param string $ip
+     * @param string $country
+     * @param string $agent
+     * @param bool $remember
+     * @param int $length
+     * @return Session
      */
-    public function destroy()
+    public static function create($user, $ip, $country, $agent = null, $remember = false, $length = 604800)
     {
-        // Invalidate the session key
-        DB::table('sessions')
-            ->where('session_key', $this->sessionId)
-            ->where('user_id', $this->userId)
-            ->delete();
+        $start = time();
+        $key = bin2hex(random_bytes(64));
 
-        // Unset userId and sessionId
-        unset($this->userId);
-        unset($this->sessionId);
-
-        // Destroy the session
-        session_regenerate_id(true);
-        session_destroy();
-    }
-
-    /**
-     * Destroy all sessions from this user.
-     */
-    public function destroyAll()
-    {
-        // Delete all database entries with this user in it
-        DB::table('sessions')
-            ->where('user_id', $this->userId)
-            ->delete();
-
-        // Destroy this session to finish it off
-        $this->destroy();
-    }
-
-    /**
-     * Create a new session.
-     * @param boolean $permanent
-     * @return string
-     */
-    public function create($permanent)
-    {
-        // Generate session key
-        $session = hash('sha256', $this->userId . base64_encode('sakura' . mt_rand(0, 99999999)) . time());
-
-        // Insert the session into the database
-        DB::table('sessions')
-            ->insert([
-                'user_id' => $this->userId,
-                'user_ip' => Net::pton(Net::ip()),
-                'user_agent' => clean_string(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'No user agent header.'),
-                'session_key' => $session,
-                'session_start' => time(),
-                'session_expire' => time() + 604800,
-                'session_remember' => $permanent ? '1' : '0',
+        $id = DB::table('sessions')
+            ->insertGetId([
+                'user_id' => $user,
+                'user_ip' => Net::pton($ip),
+                'user_agent' => $agent,
+                'session_key' => $key,
+                'session_start' => $start,
+                'session_expire' => $start + $length,
+                'session_remember' => $remember ? 1 : 0,
+                'session_country' => $country,
             ]);
 
-        // Return the session key
-        return $session;
+        return new Session($id);
+    }
+
+    /**
+     * Delete this session.
+     */
+    public function delete()
+    {
+        DB::table('sessions')
+            ->where('session_id', $this->id)
+            ->delete();
     }
 
     /**
      * Validate the session.
-     * 0 = false, 1 = active, 2 = permanent.
-     * @return int
+     * @param int $user
+     * @param string $ip
+     * @return bool
      */
-    public function validate()
+    public function validate($user, $ip = null)
     {
         // Get session from database
         $session = DB::table('sessions')
-            ->where('user_id', $this->userId)
-            ->where('session_key', $this->sessionId)
+            ->where([
+                'session_key' => $this->key,
+                'user_id' => $user,
+            ])
             ->first();
 
         // Check if we actually got something in return
         if (!$session) {
-            return 0;
+            return false;
         }
 
         // Check if the session expired
         if ($session->session_expire < time()) {
-            // ...and return false
-            return 0;
+            $this->delete();
+            return false;
         }
 
         /* completely removed the code for ip checking because it only worked with IPv4
@@ -132,11 +169,21 @@ class Session
         // If the remember flag is set extend the session time
         if ($session->session_remember) {
             DB::table('sessions')
-                ->where('session_id', $session[0]->session_id)
+                ->where('session_id', $session->session_id)
                 ->update(['session_expire' => time() + 604800]);
         }
 
         // Return 2 if the remember flag is set and return 1 if not
-        return $session->session_remember ? 2 : 1;
+        return true;
+    }
+
+    /**
+     * Get the country.
+     * @param bool $long
+     * @return string
+     */
+    public function country($long = false)
+    {
+        return $long ? get_country_name($this->country) : $this->country;
     }
 }

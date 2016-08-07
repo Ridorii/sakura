@@ -8,7 +8,7 @@ namespace Sakura;
 
 // Check if logged out
 Router::filter('logoutCheck', function () {
-    if (ActiveUser::$user->isActive()) {
+    if (CurrentSession::$user->isActive()) {
         $message = "You must be logged out to do that!";
 
         Template::vars(compact('message'));
@@ -19,7 +19,7 @@ Router::filter('logoutCheck', function () {
 
 // Check if logged in
 Router::filter('loginCheck', function () {
-    if (!ActiveUser::$user->isActive()) {
+    if (!CurrentSession::$user->isActive()) {
         $message = "You must be logged in to do that!";
 
         Template::vars(compact('message'));
@@ -31,7 +31,7 @@ Router::filter('loginCheck', function () {
 // Maintenance check
 Router::filter('maintenance', function () {
     if (config('general.maintenance')) {
-        ActiveUser::$session->destroy();
+        CurrentSession::stop();
 
         http_response_code(503);
 

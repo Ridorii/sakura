@@ -6,7 +6,7 @@
 
 namespace Sakura\Middleware;
 
-use Sakura\ActiveUser;
+use Sakura\CurrentSession;
 
 /**
  * Updates when the last online time of a user.
@@ -20,8 +20,8 @@ class UpdateLastOnline implements MiddlewareInterface
      */
     public function run()
     {
-        if (ActiveUser::$user->id !== 0) {
-            ActiveUser::$user->updateOnline();
+        if (CurrentSession::$user->id !== 0) {
+            CurrentSession::$user->updateOnline();
         }
     }
 }

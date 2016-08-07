@@ -6,8 +6,8 @@
 
 namespace Sakura\Controllers;
 
-use Sakura\ActiveUser;
 use Sakura\Config;
+use Sakura\CurrentSession;
 use Sakura\DB;
 use Sakura\Perms\Site;
 use Sakura\Rank;
@@ -67,7 +67,7 @@ class UserController extends Controller
     public function members($rank = null)
     {
         // Check permission
-        if (!ActiveUser::$user->permission(Site::VIEW_MEMBERLIST)) {
+        if (!CurrentSession::$user->permission(Site::VIEW_MEMBERLIST)) {
             return Template::render('global/restricted');
         }
 

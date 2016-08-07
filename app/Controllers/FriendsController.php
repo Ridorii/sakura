@@ -6,7 +6,7 @@
 
 namespace Sakura\Controllers;
 
-use Sakura\ActiveUser;
+use Sakura\CurrentSession;
 use Sakura\Notification;
 use Sakura\Perms\Site;
 use Sakura\Router;
@@ -48,12 +48,10 @@ class FriendsController extends Controller
      */
     public function add($id = 0)
     {
-        $user = ActiveUser::$user;
-
-        $session = $_POST['session'] ?? '';
+        $user = CurrentSession::$user;
 
         // Check if the user can comment
-        if ($session !== session_id()) {
+        if (session_check()) {
             $error = "Your session expired, refresh the page!";
             return $this->json(compact('error'));
         }
@@ -112,12 +110,10 @@ class FriendsController extends Controller
      */
     public function remove($id = 0)
     {
-        $user = ActiveUser::$user;
-
-        $session = $_POST['session'] ?? '';
+        $user = CurrentSession::$user;
 
         // Check if the user can comment
-        if ($session !== session_id()) {
+        if (session_check()) {
             $error = "Your session expired, refresh the page!";
             return $this->json(compact('error'));
         }

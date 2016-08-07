@@ -60,16 +60,17 @@ if (!defined('IN_CLI')) {
 
     // Initialise the current session
     $cookiePrefix = config('cookie.prefix');
-    ActiveUser::init(
+    CurrentSession::start(
         intval($_COOKIE["{$cookiePrefix}id"] ?? 0),
-        $_COOKIE["{$cookiePrefix}session"] ?? ''
+        $_COOKIE["{$cookiePrefix}session"] ?? '',
+        Net::ip()
     );
 
     // Start templating engine and set base variables
     Template::set(config('general.design'));
     Template::vars([
         'get' => $_GET,
-        'user' => ActiveUser::$user,
+        'user' => CurrentSession::$user,
         'post' => $_POST,
         'server' => $_SERVER,
         'request' => $_REQUEST,

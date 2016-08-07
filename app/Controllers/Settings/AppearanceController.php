@@ -6,7 +6,7 @@
 
 namespace Sakura\Controllers\Settings;
 
-use Sakura\ActiveUser;
+use Sakura\CurrentSession;
 use Sakura\DB;
 use Sakura\File;
 use Sakura\Perms\Site;
@@ -85,13 +85,13 @@ class AppearanceController extends Controller
             return "Your image is not allowed to be larger than {$maxSizeFmt}!";
         }
 
-        $userId = ActiveUser::$user->id;
+        $userId = CurrentSession::$user->id;
         $ext = image_type_to_extension($meta[2]);
 
         $filename = "{$mode}_{$userId}{$ext}";
 
         // Create the file
-        $file = File::create(file_get_contents($tmpName), $filename, ActiveUser::$user);
+        $file = File::create(file_get_contents($tmpName), $filename, CurrentSession::$user);
 
         // Delete the old file
         $this->deleteFile($mode);
@@ -100,7 +100,7 @@ class AppearanceController extends Controller
 
         // Save new avatar
         DB::table('users')
-            ->where('user_id', ActiveUser::$user->id)
+            ->where('user_id', CurrentSession::$user->id)
             ->update([
                 $column => $file->id,
             ]);
@@ -114,7 +114,7 @@ class AppearanceController extends Controller
      */
     public function deleteFile($mode)
     {
-        $fileId = ActiveUser::$user->{$mode};
+        $fileId = CurrentSession::$user->{$mode};
 
         if ($fileId) {
             (new File($fileId))->delete();
@@ -128,7 +128,7 @@ class AppearanceController extends Controller
     public function avatar()
     {
         // Check permission
-        if (!ActiveUser::$user->permission(Site::CHANGE_AVATAR)) {
+        if (!CurrentSession::$user->permission(Site::CHANGE_AVATAR)) {
             $message = "You aren't allowed to change your avatar.";
             $redirect = route('settings.index');
             return view('global/information', compact('message', 'redirect'));
@@ -159,7 +159,7 @@ class AppearanceController extends Controller
     public function background()
     {
         // Check permission
-        if (!ActiveUser::$user->permission(Site::CHANGE_BACKGROUND)) {
+        if (!CurrentSession::$user->permission(Site::CHANGE_BACKGROUND)) {
             $message = "You aren't allowed to change your background.";
             $redirect = route('settings.index');
             return view('global/information', compact('message', 'redirect'));
@@ -190,7 +190,7 @@ class AppearanceController extends Controller
     public function header()
     {
         // Check permission
-        if (!ActiveUser::$user->permission(Site::CHANGE_HEADER)) {
+        if (!CurrentSession::$user->permission(Site::CHANGE_HEADER)) {
             $message = "You aren't allowed to change your profile header.";
             $redirect = route('settings.index');
             return view('global/information', compact('message', 'redirect'));
@@ -221,9 +221,9 @@ class AppearanceController extends Controller
     {
         // Check permission
         if (!(
-            ActiveUser::$user->page
-            && ActiveUser::$user->permission(Site::CHANGE_USERPAGE)
-        ) && !ActiveUser::$user->permission(Site::CREATE_USERPAGE)) {
+            CurrentSession::$user->page
+            && CurrentSession::$user->permission(Site::CHANGE_USERPAGE)
+        ) && !CurrentSession::$user->permission(Site::CREATE_USERPAGE)) {
             $message = "You aren't allowed to change your userpage.";
             $redirect = route('settings.index');
             return view('global/information', compact('message', 'redirect'));
@@ -239,7 +239,7 @@ class AppearanceController extends Controller
                 $message = 'Your userpage is too long, shorten it a little!';
             } else {
                 DB::table('users')
-                    ->where('user_id', ActiveUser::$user->id)
+                    ->where('user_id', CurrentSession::$user->id)
                     ->update([
                         'user_page' => $userpage,
                     ]);
@@ -260,7 +260,7 @@ class AppearanceController extends Controller
     public function signature()
     {
         // Check permission
-        if (!ActiveUser::$user->permission(Site::CHANGE_SIGNATURE)) {
+        if (!CurrentSession::$user->permission(Site::CHANGE_SIGNATURE)) {
             $message = "You aren't allowed to change your signature.";
             $redirect = route('settings.index');
             return view('global/information', compact('message', 'redirect'));
@@ -276,7 +276,7 @@ class AppearanceController extends Controller
                 $message = 'Your signature is too long, shorten it a little!';
             } else {
                 DB::table('users')
-                    ->where('user_id', ActiveUser::$user->id)
+                    ->where('user_id', CurrentSession::$user->id)
                     ->update([
                         'user_signature' => $signature,
                     ]);

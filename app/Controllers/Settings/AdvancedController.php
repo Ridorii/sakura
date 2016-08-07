@@ -6,9 +6,9 @@
 
 namespace Sakura\Controllers\Settings;
 
-use Sakura\ActiveUser;
-use Sakura\DB;
+use Sakura\CurrentSession;
 use Sakura\Perms\Site;
+use Sakura\Session;
 
 /**
  * Advanced settings.
@@ -24,7 +24,7 @@ class AdvancedController extends Controller
     public function sessions()
     {
         // Check permission
-        if (!ActiveUser::$user->permission(Site::MANAGE_SESSIONS)) {
+        if (!CurrentSession::$user->permission(Site::MANAGE_SESSIONS)) {
             $message = "You aren't allowed to manage sessions.";
             $redirect = route('settings.index');
             return view('global/information', compact('message', 'redirect'));
@@ -38,21 +38,16 @@ class AdvancedController extends Controller
 
             // End all sessions
             if ($all) {
-                DB::table('sessions')
-                    ->where('user_id', ActiveUser::$user->id)
-                    ->delete();
-
+                CurrentSession::$user->purgeSessions();
                 $message = "Deleted all active session associated with your account!";
                 return view('global/information', compact('message', 'redirect'));
             }
 
             // Create the session statement
-            $session = DB::table('sessions')
-                ->where('user_id', ActiveUser::$user->id)
-                ->where('session_id', $id);
+            $session = new Session($id);
 
             // Check if the session exists
-            if (!$session->count()) {
+            if ($session->id < 1 || $session->user !== CurrentSession::$user->id) {
                 $message = "This session doesn't exist!";
                 return view('global/information', compact('message', 'redirect'));
             }
@@ -64,10 +59,8 @@ class AdvancedController extends Controller
             return view('global/information', compact('message', 'redirect'));
         }
 
-        $sessions = DB::table('sessions')
-            ->where('user_id', ActiveUser::$user->id)
-            ->get();
-        $active = ActiveUser::$session->sessionId;
+        $sessions = CurrentSession::$user->sessions();
+        $active = CurrentSession::$session->id;
 
         return view('settings/advanced/sessions', compact('sessions', 'active'));
     }
@@ -79,7 +72,7 @@ class AdvancedController extends Controller
     public function deactivate()
     {
         // Check permission
-        if (!ActiveUser::$user->permission(Site::DEACTIVATE_ACCOUNT)) {
+        if (!CurrentSession::$user->permission(Site::DEACTIVATE_ACCOUNT)) {
             $message = "You aren't allowed to deactivate your account.";
             return view('global/information', compact('message', 'redirect'));
         }
@@ -90,18 +83,18 @@ class AdvancedController extends Controller
             $redirect = route('settings.advanced.deactivate');
 
             // Check password
-            if (!ActiveUser::$user->verifyPassword($password)) {
+            if (!CurrentSession::$user->verifyPassword($password)) {
                 $message = "Your password was invalid!";
                 return view('global/information', compact('message', 'redirect'));
             }
 
             // Deactivate account
-            ActiveUser::$user->removeRanks(array_keys(ActiveUser::$user->ranks));
-            ActiveUser::$user->addRanks([1]);
-            ActiveUser::$user->setMainRank(1);
+            CurrentSession::$user->removeRanks(array_keys(CurrentSession::$user->ranks));
+            CurrentSession::$user->addRanks([1]);
+            CurrentSession::$user->setMainRank(1);
 
             // Destroy all active sessions
-            ActiveUser::$session->destroyAll();
+            CurrentSession::$user->purgeSessions();
 
             $redirect = route('main.index');
             $message = "Farewell!";
