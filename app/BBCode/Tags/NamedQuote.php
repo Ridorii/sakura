@@ -6,7 +6,11 @@
 
 namespace Sakura\BBCode\Tags;
 
+use Sakura\ActiveUser;
 use Sakura\BBCode\TagBase;
+use Sakura\Forum\Forum;
+use Sakura\Forum\Post;
+use Sakura\Perms\Forum as ForumPerms;
 
 /**
  * Named quote tag.
@@ -16,14 +20,33 @@ use Sakura\BBCode\TagBase;
 class NamedQuote extends TagBase
 {
     /**
-     * The pattern to match.
-     * @var string
+     * Parses the bbcode.
+     * @param string $text
+     * @return string
      */
-    public static $pattern = "/\[quote\=(.*?)\](.*)\[\/quote\]/s";
+    public static function parse($text)
+    {
+        return preg_replace_callback(
+            '/\[quote\=(#?)(.*?)\](.*)\[\/quote\]/s',
+            function ($matches) {
+                $quoting = $matches[2];
+                $content = $matches[3];
 
-    /**
-     * The string to replace it with.
-     * @var string
-     */
-    public static $replace = "<blockquote><small>$1</small>$2</blockquote>";
+                if ($matches[1] === '#') {
+                    $post = new Post(intval($matches[2]));
+                    $forum = new Forum($post->forum);
+
+                    if ($post->id !== 0 && $forum->permission(ForumPerms::VIEW, ActiveUser::$user->id)) {
+                        $link = route('forums.post', $post->id);
+
+                        $quoting = "<a href='{$link}' style='color: {$post->poster->colour}'>{$post->poster->username}</a>";
+                        $content = $post->parsed;
+                    }
+                }
+
+                return "<blockquote><small>{$quoting}</small>{$content}</blockquote>";
+            },
+            $text
+        );
+    }
 }
