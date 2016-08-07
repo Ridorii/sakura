@@ -6,7 +6,7 @@
 
 namespace Sakura\Forum;
 
-use Sakura\BBcode;
+use Sakura\BBCode\Parser as BBParser;
 use Sakura\DB;
 use Sakura\Exception;
 use Sakura\Net;
@@ -125,7 +125,7 @@ class Post
         }
 
         // Parse the markup
-        $this->parsed = BBCode\Parser::toHTML(htmlentities($this->text));
+        $this->parsed = BBParser::toHTML(htmlentities($this->text));
     }
 
     /**
