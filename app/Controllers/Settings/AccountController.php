@@ -192,7 +192,7 @@ class AccountController extends Controller
                 return view('global/information', compact('redirect', 'message'));
             }
 
-            CurrentSession::$user->setUsername($username, $username_clean);
+            CurrentSession::$user->setUsername($username);
 
             $message = "Changed your username!";
             return view('global/information', compact('redirect', 'message'));
