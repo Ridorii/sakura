@@ -533,6 +533,8 @@ class User
 
         // Save to the database
         foreach ($ranks as $rank) {
+            $this->ranks[$rank] = Rank::construct($rank);
+
             DB::table('user_ranks')
                 ->insert([
                     'rank_id' => $rank,
@@ -552,6 +554,8 @@ class User
 
         // Iterate over the ranks
         foreach ($remove as $rank) {
+            unset($this->ranks[$rank]);
+
             DB::table('user_ranks')
                 ->where('user_id', $this->id)
                 ->where('rank_id', $rank)
@@ -562,19 +566,17 @@ class User
     /**
      * Change the main rank of a user.
      * @param int $rank
-     * @return bool
      */
     public function setMainRank($rank)
     {
-        // If it does exist update their row
+        $this->mainRankId = $rank;
+        $this->mainRank = $this->ranks[$rank];
+
         DB::table('users')
             ->where('user_id', $this->id)
             ->update([
-                'rank_main' => $rank,
+                'rank_main' => $this->mainRankId,
             ]);
-
-        // Return true if everything was successful
-        return true;
     }
 
     /**
@@ -816,11 +818,11 @@ class User
         // Check if there's already a record of premium for this user in the database
         $getUser = DB::table('premium')
             ->where('user_id', $this->id)
-            ->get();
+            ->first();
 
         // Calculate the (new) start and expiration timestamp
-        $start = $getUser ? $getUser[0]->premium_start : time();
-        $expire = $getUser ? $getUser[0]->premium_expire + $seconds : time() + $seconds;
+        $start = $getUser ? $getUser->premium_start : time();
+        $expire = $getUser ? $getUser->premium_expire + $seconds : time() + $seconds;
 
         // If the user already exists do an update call, otherwise an insert call
         if ($getUser) {
@@ -856,14 +858,12 @@ class User
         $expire = $this->premiumInfo()->expire;
 
         // Check if the user has static premium
-        if (!$expire
-            && $this->permission(Site::STATIC_PREMIUM)) {
+        if (!$expire && $this->permission(Site::STATIC_PREMIUM)) {
             $expire = time() + 1;
         }
 
         // Check if the user has premium and isn't in the premium rank
-        if ($expire
-            && !$this->hasRanks([$premiumRank])) {
+        if ($expire && !$this->hasRanks([$premiumRank])) {
             // Add the premium rank
             $this->addRanks([$premiumRank]);
 
@@ -871,8 +871,7 @@ class User
             if ($this->mainRankId == $defaultRank) {
                 $this->setMainRank($premiumRank);
             }
-        } elseif (!$expire
-            && $this->hasRanks([$premiumRank])) {
+        } elseif (!$expire && $this->hasRanks([$premiumRank])) {
             $this->removeRanks([$premiumRank]);
 
             if ($this->mainRankId == $premiumRank) {
@@ -893,12 +892,12 @@ class User
         $check = DB::table('premium')
             ->where('user_id', $this->id)
             ->where('premium_expire', '>', time())
-            ->get();
+            ->first();
 
         $return = new stdClass;
 
-        $return->start = $check ? $check[0]->premium_start : 0;
-        $return->expire = $check ? $check[0]->premium_expire : 0;
+        $return->start = $check->premium_start ?? 0;
+        $return->expire = $check->premium_expire ?? 0;
 
         return $return;
     }
@@ -936,11 +935,11 @@ class User
     /**
      * Alter the user's username.
      * @param string $username
-     * @param string $username_clean
      */
-    public function setUsername($username, $username_clean)
+    public function setUsername($username)
     {
-        // Insert into username_history table
+        $username_clean = clean_string($username, true);
+
         DB::table('username_history')
             ->insert([
                 'change_time' => time(),
@@ -951,12 +950,14 @@ class User
                 'username_old_clean' => $this->usernameClean,
             ]);
 
-        // Update userrow
+        $this->username = $username;
+        $this->usernameClean = $username_clean;
+
         DB::table('users')
             ->where('user_id', $this->id)
             ->update([
-                'username' => $username,
-                'username_clean' => $username_clean,
+                'username' => $this->username,
+                'username_clean' => $this->usernameClean,
             ]);
     }
 
@@ -966,11 +967,12 @@ class User
      */
     public function setMail($email)
     {
-        // Update userrow
+        $this->email = $email;
+
         DB::table('users')
             ->where('user_id', $this->id)
             ->update([
-                'email' => $email,
+                'email' => $this->email,
             ]);
     }
 
@@ -981,14 +983,15 @@ class User
     public function setPassword($password)
     {
         // Create hash
-        $password = password_hash($password, PASSWORD_BCRYPT);
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
+        $this->passwordChan = time();
 
         // Update userrow
         DB::table('users')
             ->where('user_id', $this->id)
             ->update([
-                'password' => $password,
-                'password_chan' => time(),
+                'password' => $this->password,
+                'password_chan' => $this->passwordChan,
             ]);
     }
 
