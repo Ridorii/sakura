@@ -49,7 +49,7 @@ namespace Yuuno
             Sakura.DOM.Append(inner, text);
             Sakura.DOM.Append(container, inner);
 
-            close.setAttribute('onclick', 'Yuuno.Notifications.CloseAlert(this.parentNode.id);');
+            close.setAttribute('onclick', (alert.id ? 'Sakura.Notifications.Delete(' + alert.id + ');' : '') + 'Yuuno.Notifications.CloseAlert(this.parentNode.id)');
 
             Sakura.DOM.Append(close, closeIcon);
             Sakura.DOM.Append(container, close);
@@ -58,7 +58,12 @@ namespace Yuuno
 
             if (alert.timeout > 0) {
                 setTimeout(() => {
-                    Notifications.CloseAlert(id);
+                    if (Sakura.DOM.ID(id)) {
+                        if (alert.id) {
+                            Sakura.Notifications.Delete(alert.id);
+                        }
+                        Notifications.CloseAlert(id);
+                    }
                 }, alert.timeout);
             }
         }

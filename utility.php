@@ -23,9 +23,15 @@ function config($value)
 }
 
 // Alias for Router::route
-function route($name, $args = null)
+function route($name, $args = null, $full = false)
 {
-    return Router::route($name, $args);
+    return ($full ? full_domain() : '') . Router::route($name, $args);
+}
+
+// Getting the full domain (+protocol) of the current host, only works for http
+function full_domain()
+{
+    return 'http' . ($_SERVER['HTTPS'] ?? false ? 's' : '') . '://' . $_SERVER['HTTP_HOST'];
 }
 
 // Checking if a parameter is equal to session_id()

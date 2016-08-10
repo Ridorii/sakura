@@ -17,6 +17,13 @@ namespace Sakura
             Notifications.Start();
         }
 
+        public static Delete(id: number): void
+        {
+            var deleter: AJAX = new AJAX;
+            deleter.SetUrl("/notifications/" + id + "/mark");
+            deleter.Start(HTTPMethod.GET);
+        }
+
         public static Poll(): void
         {
             this.Client.Start(HTTPMethod.GET);

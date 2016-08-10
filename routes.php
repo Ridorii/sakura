@@ -79,9 +79,6 @@ Router::group(['before' => 'maintenance'], function () {
             'mcptest' => 'manage.index',
             //'report' => 'report.something',
             //'osu' => 'eventual link to flashii team',
-            //'filehost' => '???',
-            //'fhscript' => '???',
-            //'fhmanager' => '???',
             'everlastingness' => 'https://i.flash.moe/18661469927746.txt',
             'fuckingdone' => 'https://i.flash.moe/18671469927761.txt',
         ];
@@ -119,7 +116,12 @@ Router::group(['before' => 'maintenance'], function () {
     Router::group(['prefix' => 'chat'], function () {
         Router::get('/redirect', 'ChatController@redirect', 'chat.redirect');
         Router::get('/settings', 'ChatController@settings', 'chat.settings');
+        Router::get('/auth', 'ChatController@auth', 'chat.auth');
+        Router::get('/resolve', 'Chatcontroller@resolve', 'chat.resolve');
     });
+
+    // Authentication for the "old" chat
+    Router::get('/web/sock-auth.php', 'ChatController@authLegacy');
 
     // Forum
     Router::group(['prefix' => 'forum'], function () {

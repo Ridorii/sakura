@@ -1079,4 +1079,16 @@ class User
     {
         return Template::exists($this->design) ? $this->design : config('general.design');
     }
+
+    /**
+     * Gets the user's proper (highest) hierarchy.
+     * @return int
+     */
+    public function hierarchy()
+    {
+        return DB::table('ranks')
+            ->join('user_ranks', 'ranks.rank_id', '=', 'user_ranks.rank_id')
+            ->where('user_id', $this->id)
+            ->max('ranks.rank_hierarchy');
+    }
 }
