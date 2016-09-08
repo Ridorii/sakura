@@ -226,14 +226,8 @@ Router::group(['before' => 'maintenance'], function () {
 
             Router::get('/profile', 'Settings.AccountController@profile', 'settings.account.profile');
             Router::post('/profile', 'Settings.AccountController@profile', 'settings.account.profile');
-            Router::get('/email', 'Settings.AccountController@email', 'settings.account.email');
-            Router::post('/email', 'Settings.AccountController@email', 'settings.account.email');
-            Router::get('/username', 'Settings.AccountController@username', 'settings.account.username');
-            Router::post('/username', 'Settings.AccountController@username', 'settings.account.username');
-            Router::get('/title', 'Settings.AccountController@title', 'settings.account.title');
-            Router::post('/title', 'Settings.AccountController@title', 'settings.account.title');
-            Router::get('/password', 'Settings.AccountController@password', 'settings.account.password');
-            Router::post('/password', 'Settings.AccountController@password', 'settings.account.password');
+            Router::get('/details', 'Settings.AccountController@details', 'settings.account.details');
+            Router::post('/details', 'Settings.AccountController@details', 'settings.account.details');
             Router::get('/ranks', 'Settings.AccountController@ranks', 'settings.account.ranks');
             Router::post('/ranks', 'Settings.AccountController@ranks', 'settings.account.ranks');
         });

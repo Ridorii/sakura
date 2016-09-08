@@ -90,197 +90,142 @@ class AccountController extends Controller
     }
 
     /**
-     * Renders the e-mail changing page.
+     * Details such as email, username and password.
      * @return string
      */
-    public function email()
+    public function details()
     {
-        // Check permission
-        if (!CurrentSession::$user->permission(Site::CHANGE_EMAIL)) {
-            $message = "You aren't allowed to change your e-mail address.";
-            $redirect = route('settings.index');
-            return view('global/information', compact('message', 'redirect'));
+        $user = CurrentSession::$user;
+
+        // Check permissions
+        $edit_email = $user->permission(Site::CHANGE_EMAIL);
+        $edit_usern = $user->permission(Site::CHANGE_USERNAME);
+        $edit_title = $user->permission(Site::CHANGE_USERTITLE);
+        $edit_passw = $user->permission(Site::CHANGE_PASSWORD);
+        $last_name_change = 0;
+
+        if ($edit_usern) {
+            $last_name_change = $user->getUsernameHistory()[0]->change_time ?? 0;
         }
 
-        $email = $_POST['email'] ?? null;
+        // Check eligibility for username changes
+        $username_allow = $edit_usern && (time() - $last_name_change) > 2592000;
 
-        if (session_check() && $email) {
-            $redirect = route('settings.account.email');
+        if (isset($_POST['session']) && session_check()) {
+            $redirect = route('settings.account.details');
+            $email = $_POST['email'] ?? null;
 
-            // Validate e-mail address
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $message = "The e-mail address you supplied is invalid!";
-                return view('global/information', compact('redirect', 'message'));
+            if ($email) {
+                // Validate e-mail address
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $message = "The e-mail address you supplied is invalid!";
+                    return view('global/information', compact('redirect', 'message'));
+                }
+
+                // Check the MX record of the email
+                if (!check_mx_record($email)) {
+                    $message = 'No valid MX-Record found on the e-mail address you supplied.';
+                    return view('global/information', compact('redirect', 'message'));
+                }
+
+                // Check if the e-mail has already been used
+                $emailCheck = DB::table('users')
+                    ->where('email', $email)
+                    ->count();
+                if ($emailCheck) {
+                    $message = 'Someone already used this e-mail!';
+                    return view('global/information', compact('redirect', 'message'));
+                }
+
+                $user->setMail($email);
             }
 
-            // Check the MX record of the email
-            if (!check_mx_record($email)) {
-                $message = 'No valid MX-Record found on the e-mail address you supplied.';
-                return view('global/information', compact('redirect', 'message'));
+            $username = $_POST['username'] ?? null;
+
+            if ($username) {
+                $username_clean = clean_string($username, true);
+
+                // Check if the username is too short
+                if (strlen($username_clean) < config('user.name_min')) {
+                    $message = "This username is too short!";
+                    return view('global/information', compact('redirect', 'message'));
+                }
+
+                // Check if the username is too long
+                if (strlen($username_clean) > config('user.name_max')) {
+                    $message = "This username is too long!";
+                    return view('global/information', compact('redirect', 'message'));
+                }
+
+                // Check if this username hasn't been used in the last amount of days set in the config
+                $getOld = DB::table('username_history')
+                    ->where('username_old_clean', $username_clean)
+                    ->where('change_time', '>', (config('user.name_reserve') * 24 * 60 * 60))
+                    ->orderBy('change_id', 'desc')
+                    ->first();
+
+                // Check if anything was returned
+                if ($getOld && $getOld->user_id != $user->id) {
+                    $message = "The username you tried to use is reserved, try again later!";
+                    return view('global/information', compact('redirect', 'message'));
+                }
+
+                // Check if the username is already in use
+                $getInUse = DB::table('users')
+                    ->where('username_clean', $username_clean)
+                    ->count();
+
+                // Check if anything was returned
+                if ($getInUse) {
+                    $message = "Someone is already using this name!";
+                    return view('global/information', compact('redirect', 'message'));
+                }
+
+                $user->setUsername($username);
             }
 
-            // Check if the e-mail has already been used
-            $emailCheck = DB::table('users')
-                ->where('email', $email)
-                ->count();
-            if ($emailCheck) {
-                $message = 'Someone already used this e-mail!';
-                return view('global/information', compact('redirect', 'message'));
+            $title = $_POST['title'] ?? null;
+
+            if ($title) {
+                if (strlen($title) > 64) {
+                    $message = "This title is too long!";
+                    return view('global/information', compact('redirect', 'message'));
+                }
+
+                if ($title !== $user->title) {
+                    // Update database
+                    DB::table('users')
+                        ->where('user_id', $user->id)
+                        ->update([
+                            'user_title' => $title,
+                        ]);
+                }
             }
 
-            CurrentSession::$user->setMail($email);
+            $password = $_POST['password'] ?? null;
 
-            $message = 'Changed your e-mail address!';
+            if ($password) {
+                // Check password entropy
+                if (password_entropy($password) < config('user.pass_min_entropy')) {
+                    $message = "Your password isn't strong enough!";
+                    return view('global/information', compact('redirect', 'message'));
+                }
+
+                $user->setPassword($password);
+            }
+
+            $message = "Saved!";
             return view('global/information', compact('redirect', 'message'));
         }
 
-        return view('settings/account/email');
-    }
-
-    /**
-     * Renders the username changing page.
-     * @return string
-     */
-    public function username()
-    {
-        // Check permission
-        if (!CurrentSession::$user->permission(Site::CHANGE_USERNAME)) {
-            $message = "You aren't allowed to change your username.";
-            $redirect = route('settings.index');
-            return view('global/information', compact('redirect', 'message'));
-        }
-
-        $username = $_POST['username'] ?? null;
-
-        if (session_check() && $username) {
-            $redirect = route('settings.account.username');
-            $username_clean = clean_string($username, true);
-
-            // Check if the username is too short
-            if (strlen($username_clean) < config('user.name_min')) {
-                $message = "This username is too short!";
-                return view('global/information', compact('redirect', 'message'));
-            }
-
-            // Check if the username is too long
-            if (strlen($username_clean) > config('user.name_max')) {
-                $message = "This username is too long!";
-                return view('global/information', compact('redirect', 'message'));
-            }
-
-            // Check if this username hasn't been used in the last amount of days set in the config
-            $getOld = DB::table('username_history')
-                ->where('username_old_clean', $username_clean)
-                ->where('change_time', '>', (config('user.name_reserve') * 24 * 60 * 60))
-                ->orderBy('change_id', 'desc')
-                ->get();
-
-            // Check if anything was returned
-            if ($getOld && $getOld[0]->user_id != CurrentSession::$user->id) {
-                $message = "The username you tried to use is reserved, try again later!";
-                return view('global/information', compact('redirect', 'message'));
-            }
-
-            // Check if the username is already in use
-            $getInUse = DB::table('users')
-                ->where('username_clean', $username_clean)
-                ->get();
-
-            // Check if anything was returned
-            if ($getInUse) {
-                $message = "Someone is already using this name!";
-                return view('global/information', compact('redirect', 'message'));
-            }
-
-            CurrentSession::$user->setUsername($username);
-
-            $message = "Changed your username!";
-            return view('global/information', compact('redirect', 'message'));
-        }
-
-        return view('settings/account/username');
-    }
-
-    /**
-     * Renders the user title changing page.
-     * @return string
-     */
-    public function title()
-    {
-        // Check permission
-        if (!CurrentSession::$user->permission(Site::CHANGE_USERTITLE)) {
-            $message = "You aren't allowed to change your title.";
-            $redirect = route('settings.index');
-            return view('global/information', compact('redirect', 'message'));
-        }
-
-        $title = $_POST['title'] ?? null;
-
-        if (session_check() && $title !== null) {
-            $redirect = route('settings.account.title');
-
-            if (strlen($title) > 64) {
-                $message = "This title is too long!";
-                return view('global/information', compact('redirect', 'message'));
-            }
-
-            if ($title === CurrentSession::$user->title) {
-                $message = "This is already your title!";
-                return view('global/information', compact('redirect', 'message'));
-            }
-
-            // Update database
-            DB::table('users')
-                ->where('user_id', CurrentSession::$user->id)
-                ->update([
-                    'user_title' => $title,
-                ]);
-
-            $message = "Changed your title!";
-            return view('global/information', compact('redirect', 'message'));
-        }
-
-        return view('settings/account/title');
-    }
-
-    /**
-     * Renders the password changing page.
-     * @return string
-     */
-    public function password()
-    {
-        // Check permission
-        if (!CurrentSession::$user->permission(Site::CHANGE_PASSWORD)) {
-            $message = "You aren't allowed to change your password.";
-            $redirect = route('settings.index');
-            return view('global/information', compact('redirect', 'message'));
-        }
-
-        $current = $_POST['current'] ?? null;
-        $password = $_POST['password'] ?? null;
-
-        if (session_check() && $current && $password) {
-            $redirect = route('settings.account.password');
-
-            // Check current password
-            if (!password_verify($current, CurrentSession::$user->password)) {
-                $message = "Your password was invalid!";
-                return view('global/information', compact('redirect', 'message'));
-            }
-
-            // Check password entropy
-            if (password_entropy($password) < config('user.pass_min_entropy')) {
-                $message = "Your password isn't strong enough!";
-                return view('global/information', compact('redirect', 'message'));
-            }
-
-            CurrentSession::$user->setPassword($password);
-
-            $message = "Changed your password!";
-            return view('global/information', compact('redirect', 'message'));
-        }
-
-        return view('settings/account/password');
+        return view('settings/account/details', compact(
+            'edit_email',
+            'edit_usern',
+            'edit_title',
+            'edit_passw',
+            'last_name_change',
+            'username_allow'
+        ));
     }
 
     /**
