@@ -54,9 +54,6 @@ class Controller extends BaseController
             $nav["Friends"]["Requests"] = route('settings.friends.requests');
         }
 
-        // Notifications
-        $nav["Notifications"]["History"] = route('settings.notifications.history');
-
         // Appearance
         if (CurrentSession::$user->permission(Site::CHANGE_AVATAR)) {
             $nav["Appearance"]["Avatar"] = route('settings.appearance.avatar');

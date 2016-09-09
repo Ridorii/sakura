@@ -7,23 +7,19 @@
 {% endblock %}
 
 {% block settingsContent %}
-    <table class="settings-table">
-        <tbody>
-            {% for rank in user.ranks %}
-            <tr {% if rank.id == user.mainRankId %} class="current-session" {% endif %}>
-                <td style="font-weight: bold; color: {{ rank.colour }}; text-shadow: 0 0 7px {{ rank.colour }}; text-align: left;">
-                    <a href="{{ route('members.rank', rank.id) }}" class="clean">{{ rank.name }}</a>
-                </td>
-                <td style="width: 90px;">
-                    <form method="post" action="{{ route('settings.account.ranks') }}">
-                        <input type="hidden" name="session" value="{{ session_id() }}">
-                        <input type="hidden" name="rank" value="{{ rank.id }}">
-                        <button class="inputStyling small" name="mode" value="main">Set as main</button>
-                        <button class="inputStyling small" name="mode" value="remove" {% if rank.id in locked %}disabled="disabled"{% endif %}>Remove</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="friends-list">
+        {% for rank in user.ranks %}
+            <form method="post" action="{{ route('settings.account.ranks') }}" class="friend-container {% if rank.id == user.mainRankId %}active{% endif %}">
+                <input type="hidden" name="session" value="{{ session_id() }}">
+                <input type="hidden" name="rank" value="{{ rank.id }}">
+                <button class="friends-list-data clean" name="mode" value="main">
+                    <div class="friends-list-name" style="color: {{ rank.colour }};">{{ rank.name }}</div>
+                </button>
+                <div class="friends-list-actions">
+                    <button title="{% if rank.id in locked %}You can't leave this rank{% else %}Leave rank{% endif %}" class="remove fill fa fa-{% if rank.id in locked %}shield{% else %}remove{% endif %}" name="mode" value="remove" {% if rank.id in locked %}disabled{% endif %}></button>
+                    <div class="clear"></div>
+                </div>
+            </form>
+        {% endfor %}
+    </div>
 {% endblock %}

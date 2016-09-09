@@ -1689,7 +1689,17 @@ a.default:active {
     text-align: center;
 }
 
-.settings .friends-list > div:not(:last-child) {
+.settings .friends-list button {
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.settings .friends-list > div:not(:last-child),
+.settings .friends-list > form {
     display: inline-block;
     border: 1px solid #9475B2;
     text-align: center;
@@ -1701,28 +1711,42 @@ a.default:active {
     transition: background .2s, box-shadow .2s;
 }
 
-.settings .friends-list > div:not(:last-child):hover {
+.settings .friends-list > div:not(:last-child):hover,
+.settings .friends-list > form:hover {
     margin-bottom: 6px;
     background: #C2AFFE;
     box-shadow: inset 0 0 2px #9475B2;
 }
 
-.settings .friends-list > div > .friends-list-data {
+.settings .friends-list > form:hover {
+    margin-bottom: 4px;
+}
+
+.settings .friends-list > .active {
+    background: #C2AFFE;
+    box-shadow: inset 0 0 2px #9475B2;
+}
+
+.settings .friends-list > div > .friends-list-data,
+.settings .friends-list > form > .friends-list-data {
     display: block;
 }
 
-.settings .friends-list > div > .friends-list-data > .friends-list-name {
+.settings .friends-list > div > .friends-list-data > .friends-list-name,
+.settings .friends-list > form > .friends-list-data > .friends-list-name {
     font-size: 1.2em;
     line-height: 1.5em;
     padding-bottom: 4px;
 }
 
-.settings .friends-list > div > .friends-list-actions {
+.settings .friends-list > div > .friends-list-actions,
+.settings .friends-list > form > .friends-list-actions {
     display: none;
     background: linear-gradient(0deg, #9475B2, transparent) transparent;
 }
 
-.settings .friends-list > div > .friends-list-actions > a {
+.settings .friends-list > div > .friends-list-actions > a,
+.settings .friends-list > form > .friends-list-actions > button {
     color: #222;
     font-size: 2em;
     line-height: 1em;
@@ -1732,31 +1756,38 @@ a.default:active {
     float: left;
 }
 
-.settings .friends-list > div:hover > .friends-list-actions {
+.settings .friends-list > div:hover > .friends-list-actions,
+.settings .friends-list > form:hover > .friends-list-actions {
     display: block;
 }
 
-.settings .friends-list > div > .friends-list-actions > .remove:hover {
+.settings .friends-list > div > .friends-list-actions > .remove:hover,
+.settings .friends-list > form > .friends-list-actions > .remove:hover {
     color: #D00;
 }
 
-.settings .friends-list > div > .friends-list-actions > .remove:active {
+.settings .friends-list > div > .friends-list-actions > .remove:active,
+.settings .friends-list > form > .friends-list-actions > .remove:active {
     color: #A00;
 }
 
-.settings .friends-list > div > .friends-list-actions > .add:hover {
+.settings .friends-list > div > .friends-list-actions > .add:hover,
+.settings .friends-list > form > .friends-list-actions > .add:hover {
     color: #0D0;
 }
 
-.settings .friends-list > div > .friends-list-actions > .add:active {
+.settings .friends-list > div > .friends-list-actions > .add:active,
+.settings .friends-list > form > .friends-list-actions > .add:active {
     color: #0A0;
 }
 
-.settings .friends-list > div > .friends-list-actions > a {
+.settings .friends-list > div > .friends-list-actions > a,
+.settings .friends-list > form > .friends-list-actions > button {
     width: 50%;
 }
 
-.settings .friends-list > div > .friends-list-actions > .fill {
+.settings .friends-list > div > .friends-list-actions > .fill,
+.settings .friends-list > form > .friends-list-actions > .fill {
     width: 100%;
 }
 
@@ -1766,7 +1797,12 @@ a.default:active {
         margin-bottom: 6px;
     }
 
-    .settings .friends-list > div > .friends-list-actions {
+    .settings .friends-list > form {
+        margin-bottom: 4px;
+    }
+
+    .settings .friends-list > div > .friends-list-actions,
+    .settings .friends-list > form > .friends-list-actions {
         display: block;
     }
 

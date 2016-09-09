@@ -9,22 +9,18 @@ namespace Sakura;
 // Check if logged out
 Router::filter('logoutCheck', function () {
     if (CurrentSession::$user->isActive()) {
-        $message = "You must be logged out to do that!";
-
-        Template::vars(compact('message'));
-
-        return Template::render('global/information');
+        return view('global/information', [
+            'message' => "You must be logged out to do that!",
+        ]);
     }
 });
 
 // Check if logged in
 Router::filter('loginCheck', function () {
     if (!CurrentSession::$user->isActive()) {
-        $message = "You must be logged in to do that!";
-
-        Template::vars(compact('message'));
-
-        return Template::render('global/information');
+        return view('global/information', [
+            'message' => "You must be logged in to do that!",
+        ]);
     }
 });
 
@@ -32,10 +28,8 @@ Router::filter('loginCheck', function () {
 Router::filter('maintenance', function () {
     if (config('general.maintenance')) {
         CurrentSession::stop();
-
         http_response_code(503);
-
-        return Template::render('global/maintenance');
+        return view('global/maintenance');
     }
 });
 

@@ -48,6 +48,7 @@ class Parser
         Tags\Code::class,
         Tags\ListTag::class,
         Tags\User::class,
+        Tags\Markdown::class,
 
         // Newline must always be last
         Tags\Newline::class,
