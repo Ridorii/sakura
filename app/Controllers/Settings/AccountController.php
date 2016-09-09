@@ -81,9 +81,8 @@ class AccountController extends Controller
                     ]);
             }
 
-            $message = "Updated your profile!";
-
-            return view('global/information', compact('message', 'redirect'));
+            header("Location: {$redirect}");
+            return;
         }
 
         return view('settings/account/profile');
@@ -214,8 +213,8 @@ class AccountController extends Controller
                 $user->setPassword($password);
             }
 
-            $message = "Saved!";
-            return view('global/information', compact('redirect', 'message'));
+            header("Location: {$redirect}");
+            return;
         }
 
         return view('settings/account/details', compact(
@@ -275,8 +274,8 @@ class AccountController extends Controller
 
             CurrentSession::$user->setMainRank($rank);
 
-            $message = "Changed your main rank!";
-            return view('global/information', compact('redirect', 'message'));
+            header("Location: {$redirect}");
+            return;
         }
 
         return view('settings/account/ranks', compact('locked'));

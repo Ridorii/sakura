@@ -55,8 +55,8 @@ class AdvancedController extends Controller
             // Delete it
             $session->delete();
 
-            $message = "Deleted the session!";
-            return view('global/information', compact('message', 'redirect'));
+            header("Location: {$redirect}");
+            return;
         }
 
         $sessions = CurrentSession::$user->sessions();
