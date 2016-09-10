@@ -1,6 +1,7 @@
 {% extends 'settings/appearance/master.twig' %}
 
 {% set mode = 'Background' %}
+{% set showBG = true %}
 
 {% block description %}
     <p>Maximum image size is {{ config('file.background.max_width') }}x{{ config('file.background.max_height') }} and can't be larger than {{ config('file.background.max_file_size')|byte_symbol }}.</p>
@@ -10,9 +11,6 @@
     <form enctype="multipart/form-data" method="post" action="{{ route('settings.appearance.background') }}">
         <input type="hidden" name="MAX_FILE_SIZE" value="{{ config('file.background.max_file_size') }}">
         <div style="text-align: center;">
-            <div>
-                <img src="{{ route('file.background', user.id) }}" alt="Your Background" class="default-avatar-setting" style="max-width: 90%; max-height: 90%;">
-            </div>
             <div>
                 <input type="file" name="background">
                 <div style="font-size: .8em;">

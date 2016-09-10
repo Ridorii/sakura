@@ -63,7 +63,7 @@
             </div>
             <div id="contentwrapper">
                 <div id="notifications"></div>
-                {% if profile is defined ? profile.background : (user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) and user.backgroundSitewide and user.background) %}
+                {% if profile is defined ? profile.background : (user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) and (user.backgroundSitewide or showBG) and user.background) %}
                     <div id="userBackground" style="background-image: url('{{ route('file.background', (profile is defined ? profile : user).id) }}');"></div>
                 {% endif %}
                 {% if not user.isActive and server['REQUEST_URI'] != route('auth.login') %}
