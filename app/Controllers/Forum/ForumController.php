@@ -6,6 +6,8 @@
 
 namespace Sakura\Controllers\Forum;
 
+use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
+use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Sakura\Config;
 use Sakura\CurrentSession;
 use Sakura\DB;
@@ -114,26 +116,22 @@ class ForumController extends Controller
     {
         $forum = new Forum($id);
 
-        $redirect = route('forums.index');
-        $message = "The forum you tried to access does not exist!";
-
         // Redirect forum id 0 to the main page
         if ($forum->id === 0) {
-            return header("Location: {$redirect}");
+            header("Location: " . route('forums.index'));
+            return;
         }
 
         // Check if the forum exists
         if ($forum->id < 0
             || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpRouteNotFoundException();
         }
 
         // Check if the forum isn't a link
         if ($forum->type === 2) {
-            $message = "The forum you tried to access is a link. You're being redirected.";
-            $redirect = $forum->link;
-
-            return view('global/information', compact('message', 'redirect'));
+            header("Location: {$forum->link}");
+            return;
         }
 
         return view('forum/forum', compact('forum'));
@@ -146,11 +144,8 @@ class ForumController extends Controller
      */
     public function markRead($id = 0)
     {
-        $redirect = route('forums.index');
-
         if (!session_check('s')) {
-            $message = "Your session expired! Go back and try again.";
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpMethodNotAllowedException();
         }
 
         $forum = new Forum($id);
@@ -158,15 +153,11 @@ class ForumController extends Controller
         // Check if the forum exists
         if ($forum->id < 1
             || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
-            $message = "The forum you tried to access does not exist.";
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpRouteNotFoundException();
         }
 
         $forum->trackUpdateAll(CurrentSession::$user->id);
 
-        $message = 'All topics have been marked as read!';
-        $redirect = route('forums.forum', $forum->id);
-
-        return view('global/information', compact('message', 'redirect'));
+        header("Location: " . route('forums.forum', $forum->id));
     }
 }

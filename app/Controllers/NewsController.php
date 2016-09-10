@@ -6,10 +6,10 @@
 
 namespace Sakura\Controllers;
 
+use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Sakura\Config;
 use Sakura\News\Category;
 use Sakura\News\Post;
-use Sakura\Template;
 
 /**
  * News controller.
@@ -35,16 +35,10 @@ class NewsController extends Controller
         $category = new Category($category);
 
         if (!$category->posts()) {
-            $message = "This news category doesn't exist!";
-
-            Template::vars(compact('message'));
-
-            return Template::render('global/information');
+            throw new HttpRouteNotFoundException();
         }
 
-        Template::vars(compact('category'));
-
-        return Template::render('news/category');
+        return view('news/category', compact('category'));
     }
 
     /**
@@ -58,15 +52,9 @@ class NewsController extends Controller
         $post = new Post($id);
 
         if (!$post->id) {
-            $message = "This news post doesn't exist!";
-
-            Template::vars(compact('message'));
-
-            return Template::render('global/information');
+            throw new HttpRouteNotFoundException();
         }
 
-        Template::vars(compact('post'));
-
-        return Template::render('news/post');
+        return view('news/post', compact('post'));
     }
 }

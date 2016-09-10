@@ -11,8 +11,6 @@ use Sakura\CurrentSession;
 use Sakura\DB;
 use Sakura\Perms\Site;
 use Sakura\Rank;
-use Sakura\Router;
-use Sakura\Template;
 use Sakura\User;
 
 /**
@@ -38,25 +36,17 @@ class UserController extends Controller
             $check = DB::table('username_history')
                 ->where('username_old_clean', clean_string($id, true, true))
                 ->orderBy('change_id', 'desc')
-                ->get();
+                ->first();
 
             // Redirect if so
             if ($check) {
                 $message = "This user changed their username! Redirecting you to their new profile.";
-                $redirect = Router::route('user.profile', $check[0]->user_id);
-
-                Template::vars(compact('message', 'redirect'));
-
-                // Print page contents
-                return Template::render('global/information');
+                $redirect = route('user.profile', $check->user_id);
+                return view('global/information', compact('message', 'redirect'));
             }
         }
 
-        // Set parse variables
-        Template::vars(compact('profile'));
-
-        // Print page contents
-        return Template::render((isset($_GET['new']) ? '@aitemu/' : '') . 'user/profile');
+        return view((isset($_GET['new']) ? '@aitemu/' : '') . 'user/profile', compact('profile'));
     }
 
     /**
@@ -68,7 +58,7 @@ class UserController extends Controller
     {
         // Check permission
         if (!CurrentSession::$user->permission(Site::VIEW_MEMBERLIST)) {
-            return Template::render('global/restricted');
+            return view('global/restricted');
         }
 
         // Get all ranks
@@ -92,11 +82,7 @@ class UserController extends Controller
         // Get members per page
         $membersPerPage = 30;
 
-        // Set parse variables
-        Template::vars(compact('ranks', 'rank', 'membersPerPage'));
-
-        // Render the template
-        return Template::render('user/members');
+        return view('user/members', compact('ranks', 'rank', 'membersPerPage'));
     }
 
     /**
@@ -105,6 +91,6 @@ class UserController extends Controller
      */
     public function report($id = 0)
     {
-        return Template::render('user/report');
+        return view('user/report');
     }
 }

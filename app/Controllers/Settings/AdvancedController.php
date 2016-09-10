@@ -6,6 +6,7 @@
 
 namespace Sakura\Controllers\Settings;
 
+use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
 use Sakura\CurrentSession;
 use Sakura\Perms\Site;
 use Sakura\Session;
@@ -25,9 +26,7 @@ class AdvancedController extends Controller
     {
         // Check permission
         if (!CurrentSession::$user->permission(Site::MANAGE_SESSIONS)) {
-            $message = "You aren't allowed to manage sessions.";
-            $redirect = route('settings.index');
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpMethodNotAllowedException();
         }
 
         $id = $_POST['id'] ?? null;
@@ -73,8 +72,7 @@ class AdvancedController extends Controller
     {
         // Check permission
         if (!CurrentSession::$user->permission(Site::DEACTIVATE_ACCOUNT)) {
-            $message = "You aren't allowed to deactivate your account.";
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpMethodNotAllowedException();
         }
 
         $password = $_POST['password'] ?? null;

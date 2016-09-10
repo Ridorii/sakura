@@ -14,12 +14,6 @@
 } %}
 
 {% block content %}
-    {% if get.fail %}
-        <div class="headerNotify">
-            <h1>The payment failed or was cancelled!</h1>
-            <p>Something went wrong while processing the transaction, your PayPal account wasn't charged.</p>
-        </div>
-    {% endif %}
     <div class="content support">
         <div class="head">Support {{ config('general.name') }}</div>
         <div style="font-size: .9em; margin-bottom: 10px;">

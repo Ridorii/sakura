@@ -6,6 +6,7 @@
 
 namespace Sakura\Controllers\Settings;
 
+use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
 use Sakura\CurrentSession;
 use Sakura\DB;
 use Sakura\File;
@@ -129,9 +130,7 @@ class AppearanceController extends Controller
     {
         // Check permission
         if (!CurrentSession::$user->permission(Site::CHANGE_AVATAR)) {
-            $message = "You aren't allowed to change your avatar.";
-            $redirect = route('settings.index');
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpMethodNotAllowedException();
         }
 
         if (session_check()) {
@@ -160,9 +159,7 @@ class AppearanceController extends Controller
     {
         // Check permission
         if (!CurrentSession::$user->permission(Site::CHANGE_BACKGROUND)) {
-            $message = "You aren't allowed to change your background.";
-            $redirect = route('settings.index');
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpMethodNotAllowedException();
         }
 
         if (session_check()) {
@@ -191,9 +188,7 @@ class AppearanceController extends Controller
     {
         // Check permission
         if (!CurrentSession::$user->permission(Site::CHANGE_HEADER)) {
-            $message = "You aren't allowed to change your profile header.";
-            $redirect = route('settings.index');
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpMethodNotAllowedException();
         }
 
         if (session_check()) {
@@ -224,9 +219,7 @@ class AppearanceController extends Controller
             CurrentSession::$user->page
             && CurrentSession::$user->permission(Site::CHANGE_USERPAGE)
         ) && !CurrentSession::$user->permission(Site::CREATE_USERPAGE)) {
-            $message = "You aren't allowed to change your userpage.";
-            $redirect = route('settings.index');
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpMethodNotAllowedException();
         }
 
         $userpage = $_POST['userpage'] ?? null;
@@ -261,9 +254,7 @@ class AppearanceController extends Controller
     {
         // Check permission
         if (!CurrentSession::$user->permission(Site::CHANGE_SIGNATURE)) {
-            $message = "You aren't allowed to change your signature.";
-            $redirect = route('settings.index');
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpMethodNotAllowedException();
         }
 
         $signature = $_POST['signature'] ?? null;

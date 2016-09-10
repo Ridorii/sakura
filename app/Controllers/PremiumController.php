@@ -7,12 +7,11 @@
 namespace Sakura\Controllers;
 
 use Exception;
+use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
 use Sakura\Config;
 use Sakura\CurrentSession;
 use Sakura\Payments;
 use Sakura\Perms\Site;
-use Sakura\Router;
-use Sakura\Template;
 
 /**
  * Premium pages controller.
@@ -43,10 +42,7 @@ class PremiumController extends Controller
     {
         $price = config('premium.price_per_month');
         $amountLimit = config('premium.max_months_at_once');
-
-        Template::vars(compact('price', 'amountLimit'));
-
-        return Template::render('premium/index');
+        return view('premium/index', compact('price', 'amountLimit'));
     }
 
     /**
@@ -62,12 +58,7 @@ class PremiumController extends Controller
         if (!session_check()
             || CurrentSession::$user->permission(Site::DEACTIVATED)
             || !CurrentSession::$user->permission(Site::OBTAIN_PREMIUM)) {
-            $message = "You are not allowed to get premium!";
-            $redirect = Router::route('premium.index');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            throw new HttpMethodNotAllowedException();
         }
 
         // Fetch the limit
@@ -76,12 +67,8 @@ class PremiumController extends Controller
         // Check months
         if ($months < 1
             || $months > $amountLimit) {
-            $message = "An incorrect amount of months was specified, stop messing with the source.";
-            $redirect = Router::route('premium.index');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            header("Location: " . route('premium.error'));
+            return;
         }
 
         $pricePerMonth = config('premium.price_per_month');
@@ -94,7 +81,7 @@ class PremiumController extends Controller
             . (isset($_SERVER['HTTPS']) ? 's' : '')
             . "://{$_SERVER['SERVER_NAME']}"
             . ($_SERVER['SERVER_PORT'] != 80 ? ":{$_SERVER['SERVER_PORT']}" : '');
-        $handlerRoute = Router::route('premium.handle');
+        $handlerRoute = route('premium.handle');
 
         $itemName = "{$siteName} Premium - {$months} month{$multiMonths}";
         $transactionName = "{$siteName} premium purchase";
@@ -110,12 +97,8 @@ class PremiumController extends Controller
 
         // Attempt to create a transaction
         if (!$transaction) {
-            $message = "Something went wrong while preparing the transaction.";
-            $redirect = Router::route('premium.index');
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            header("Location: " . route('premium.error'));
+            return;
         }
 
         // Store the amount of months in the global session array
@@ -135,8 +118,8 @@ class PremiumController extends Controller
         $payer = isset($_GET['PayerID']) ? $_GET['PayerID'] : null;
         $months = isset($_SESSION['premiumMonths']) ? $_SESSION['premiumMonths'] : null;
 
-        $successRoute = Router::route('premium.complete');
-        $failRoute = Router::route('premium.index') . "?fail=true";
+        $successRoute = route('premium.complete');
+        $failRoute = route('premium.error');
 
         if (!$success
             || !$payment
@@ -167,6 +150,15 @@ class PremiumController extends Controller
      */
     public function complete()
     {
-        return Template::render('premium/complete');
+        return view('premium/complete');
+    }
+
+    /**
+     * Errors.
+     * @return string
+     */
+    public function error()
+    {
+        return view('premium/error');
     }
 }

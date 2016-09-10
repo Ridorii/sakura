@@ -6,6 +6,7 @@
 
 namespace Sakura\Controllers\Settings;
 
+use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
 use Sakura\CurrentSession;
 use Sakura\DB;
 use Sakura\Perms\Site;
@@ -25,9 +26,7 @@ class AccountController extends Controller
     {
         // Check permission
         if (!CurrentSession::$user->permission(Site::ALTER_PROFILE)) {
-            $message = "You aren't allowed to edit your profile!";
-            $redirect = route('settings.index');
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpMethodNotAllowedException();
         }
 
         if (session_check()) {
@@ -235,9 +234,7 @@ class AccountController extends Controller
     {
         // Check permission
         if (!CurrentSession::$user->permission(Site::ALTER_RANKS)) {
-            $message = "You aren't allowed to manage your ranks.";
-            $redirect = route('settings.index');
-            return view('global/information', compact('redirect', 'message'));
+            throw new HttpMethodNotAllowedException();
         }
 
         $rank = $_POST['rank'] ?? null;

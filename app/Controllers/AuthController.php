@@ -12,8 +12,6 @@ use Sakura\CurrentSession;
 use Sakura\DB;
 use Sakura\Net;
 use Sakura\Perms\Site;
-use Sakura\Router;
-use Sakura\Template;
 use Sakura\User;
 
 /**
@@ -47,11 +45,8 @@ class AuthController extends Controller
     {
         if (!session_check('s')) {
             $message = 'Validation failed, this logout attempt was possibly forged.';
-            $redirect = (isset($_REQUEST['redirect']) ? $_REQUEST['redirect'] : Router::route('main.index'));
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = $_REQUEST['redirect'] ?? route('main.index');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Destroy the active session
@@ -59,30 +54,22 @@ class AuthController extends Controller
 
         // Return true indicating a successful logout
         $message = 'Goodbye!';
-        $redirect = Router::route('auth.login');
-
-        Template::vars(compact('message', 'redirect'));
-
-        return Template::render('global/information');
+        $redirect = route('auth.login');
+        return view('global/information', compact('message', 'redirect'));
     }
 
     /**
-     * Get the login page.
+     * Login page.
      * @return string
      */
-    public function loginGet()
+    public function login()
     {
-        return Template::render('auth/login');
-    }
+        if (!session_check()) {
+            return view('auth/login');
+        }
 
-    /**
-     * Do a login attempt.
-     * @return string
-     */
-    public function loginPost()
-    {
         // Preliminarily set login to failed
-        $redirect = Router::route('auth.login');
+        $redirect = route('auth.login');
 
         // Get request variables
         $username = $_REQUEST['username'] ?? null;
@@ -98,9 +85,7 @@ class AuthController extends Controller
 
         if ($rates > 4) {
             $message = 'Your have hit the login rate limit, try again later.';
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Get account data
@@ -110,35 +95,27 @@ class AuthController extends Controller
         if ($user->id === 0) {
             $this->touchRateLimit($user->id);
             $message = 'The user you tried to log into does not exist.';
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         if ($user->passwordExpired()) {
             $message = 'Your password expired.';
-            $redirect = Router::route('auth.resetpassword');
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = route('auth.resetpassword');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         if (!$user->verifyPassword($password)) {
             $this->touchRateLimit($user->id);
             $message = 'The password you entered was invalid.';
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Check if the user has the required privs to log in
         if ($user->permission(Site::DEACTIVATED)) {
             $this->touchRateLimit($user->id);
             $message = 'Your account is deactivated, activate it first!';
-            $redirect = Router::route('auth.reactivate');
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            $redirect = route('auth.reactivate');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Generate a session key
@@ -168,72 +145,51 @@ class AuthController extends Controller
 
         $this->touchRateLimit($user->id, true);
 
-        $redirect = $user->lastOnline
-        ? (isset($_REQUEST['redirect'])
-            ? $_REQUEST['redirect']
-            : route('main.index'))
-        : route('info.welcome');
+        $redirect = $user->lastOnline ? ($_REQUEST['redirect'] ?? route('main.index')) : route('info.welcome');
 
         $message = 'Welcome' . ($user->lastOnline ? ' back' : '') . '!';
 
-        Template::vars(compact('message', 'redirect'));
-
-        return Template::render('global/information');
-    }
-
-    /**
-     * Get the registration page.
-     * @return string
-     */
-    public function registerGet()
-    {
-        // Attempt to check if a user has already registered from the current IP
-        $getUserIP = DB::table('users')
-            ->where('register_ip', Net::pton(Net::ip()))
-            ->orWhere('last_ip', Net::pton(Net::ip()))
-            ->get();
-
-        if ($getUserIP) {
-            Template::vars([
-                'haltRegistration' => count($getUserIP) > 1,
-                'haltName' => $getUserIP[array_rand($getUserIP)]->username,
-            ]);
-        }
-
-        return Template::render('auth/register');
+        return view('global/information', compact('message', 'redirect'));
     }
 
     /**
      * Do a registration attempt.
      * @return string
      */
-    public function registerPost()
+    public function register()
     {
         // Preliminarily set registration to failed
-        $redirect = Router::route('auth.register');
+        $redirect = route('auth.register');
 
         // Check if authentication is disallowed
         if (config('user.disable_registration')) {
             $message = 'Registration is disabled for security checkups! Try again later.';
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
-        // Check if authentication is disallowed
         if (!session_check()) {
-            $message = "Your session expired, refreshing the page will most likely fix this!";
+            // Attempt to check if a user has already registered from the current IP
+            $getUserIP = DB::table('users')
+                ->where('register_ip', Net::pton(Net::ip()))
+                ->orWhere('last_ip', Net::pton(Net::ip()))
+                ->get();
 
-            Template::vars(compact('message', 'redirect'));
+            $vars = [];
 
-            return Template::render('global/information');
+            if ($getUserIP) {
+                $vars = [
+                    'haltRegistration' => count($getUserIP) > 1,
+                    'haltName' => $getUserIP[array_rand($getUserIP)]->username,
+                ];
+            }
+
+            return view('auth/register', $vars);
         }
 
         // Grab forms
-        $username = isset($_POST['username']) ? $_POST['username'] : null;
-        $password = isset($_POST['password']) ? $_POST['password'] : null;
-        $email = isset($_POST['email']) ? $_POST['email'] : null;
+        $username = $_POST['username'] ?? null;
+        $password = $_POST['password'] ?? null;
+        $email = $_POST['email'] ?? null;
 
         // Append username and email to the redirection url
         $redirect .= "?username={$username}&email={$email}";
@@ -245,46 +201,31 @@ class AuthController extends Controller
         if ($user && $user->id !== 0) {
             $message = "{$user->username} is already a member here!"
                 . " If this is you please use the password reset form instead of making a new account.";
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Username too short
         if (strlen($username) < config('user.name_min')) {
             $message = 'Your name must be at least 3 characters long.';
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Username too long
         if (strlen($username) > config('user.name_max')) {
             $message = 'Your name can\'t be longer than 16 characters.';
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Check if the given email address is formatted properly
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $message = 'Your e-mail address is formatted incorrectly.';
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Check the MX record of the email
         if (!check_mx_record($email)) {
             $message = 'No valid MX-Record found on the e-mail address you supplied.';
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Check if the e-mail has already been used
@@ -293,19 +234,13 @@ class AuthController extends Controller
             ->count();
         if ($emailCheck) {
             $message = 'Someone already registered using this email!';
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Check password entropy
         if (password_entropy($password) < config('user.pass_min_entropy')) {
             $message = 'Your password is too weak, try adding some special characters.';
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Set a few variables
@@ -322,14 +257,12 @@ class AuthController extends Controller
         }
 
         // Return true with a specific message if needed
-        $redirect = Router::route('auth.login');
+        $redirect = route('auth.login');
         $message = $requireActive
         ? 'Your registration went through! An activation e-mail has been sent.'
         : 'Your registration went through! Welcome to ' . config('general.name') . '!';
 
-        Template::vars(compact('message', 'redirect'));
-
-        return Template::render('global/information');
+        return view('global/information', compact('message', 'redirect'));
     }
 
     /**
@@ -339,11 +272,11 @@ class AuthController extends Controller
     public function activate()
     {
         // Preliminarily set activation to failed
-        $redirect = Router::route('main.index');
+        $redirect = route('main.index');
 
         // Attempt to get the required GET parameters
-        $userId = isset($_GET['u']) ? $_GET['u'] : 0;
-        $key = isset($_GET['k']) ? $_GET['k'] : "";
+        $userId = $_GET['u'] ?? 0;
+        $key = $_GET['k'] ?? "";
 
         // Attempt to create a user object
         $user = User::construct($userId);
@@ -351,19 +284,13 @@ class AuthController extends Controller
         // Quit if the user ID is 0
         if ($user->id === 0) {
             $message = "This user does not exist! Contact us if you think this isn't right.";
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Check if the user is already active
         if (!$user->permission(Site::DEACTIVATED)) {
             $message = "Your account is already activated! Why are you here?";
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Validate the activation key
@@ -371,10 +298,7 @@ class AuthController extends Controller
 
         if (!$action) {
             $message = "Invalid activation code! Contact us if you think this isn't right.";
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Get the ids for deactivated and default user ranks
@@ -386,40 +310,24 @@ class AuthController extends Controller
         $user->setMainRank($rankDefault);
         $user->removeRanks([$rankDeactive]);
 
-        $redirect = Router::route('auth.login');
+        $redirect = route('auth.login');
         $message = "Your account is activated, welcome to " . config('general.name') . "!";
-
-        Template::vars(compact('message', 'redirect'));
-
-        return Template::render('global/information');
-    }
-
-    /**
-     * Get the reactivation request form.
-     * @return string
-     */
-    public function reactivateGet()
-    {
-        return Template::render('auth/reactivate');
+        return view('global/information', compact('message', 'redirect'));
     }
 
     /**
      * Do a reactivation preparation attempt.
      * @return string
      */
-    public function reactivatePost()
+    public function reactivate()
     {
-        // Preliminarily set registration to failed
-        $redirect = Router::route('auth.reactivate');
-
         // Validate session
         if (!session_check()) {
-            $message = "Your session expired, refreshing the page will most likely fix this!";
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('auth/reactivate');
         }
+
+        // Preliminarily set registration to failed
+        $redirect = route('auth.reactivate');
 
         // Grab forms
         $username = isset($_POST['username']) ? clean_string($_POST['username'], true) : null;
@@ -434,10 +342,7 @@ class AuthController extends Controller
         // Check if user exists
         if (!$getUser) {
             $message = "User not found! Double check your username and e-mail address!";
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Create user object
@@ -446,56 +351,37 @@ class AuthController extends Controller
         // Check if a user is activated
         if (!$user->permission(Site::DEACTIVATED)) {
             $message = "Your account is already activated! Why are you here?";
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Send activation e-mail to user
         $this->sendActivationMail($user);
 
-        $redirect = Router::route('auth.login');
+        $redirect = route('auth.login');
         $message = "Sent the e-mail! Make sure to check your spam folder as well!";
-
-        Template::vars(compact('message', 'redirect'));
-
-        return Template::render('global/information');
-    }
-
-    /**
-     * Get the password reset forum.
-     * @return string
-     */
-    public function resetPasswordGet()
-    {
-        return Template::render('auth/resetpassword');
+        return view('global/information', compact('message', 'redirect'));
     }
 
     /**
      * Do a password reset attempt.
      * @return string
      */
-    public function resetPasswordPost()
+    public function resetPassword()
     {
-        // Preliminarily set action to failed
-        $redirect = Router::route('main.index');
-
         // Validate session
         if (!session_check()) {
-            $message = "Your session expired, refreshing the page will most likely fix this!";
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('auth/resetpassword');
         }
 
+        // Preliminarily set action to failed
+        $redirect = route('main.index');
+
         // Attempt to get the various required GET parameters
-        $userId = isset($_POST['user']) ? $_POST['user'] : 0;
-        $key = isset($_POST['key']) ? $_POST['key'] : "";
-        $password = isset($_POST['password']) ? $_POST['password'] : "";
-        $userName = isset($_POST['username']) ? clean_string($_POST['username'], true) : "";
-        $email = isset($_POST['email']) ? clean_string($_POST['email'], true) : null;
+        $userId = $_POST['user'] ?? 0;
+        $key = $_POST['key'] ?? "";
+        $password = $_POST['password'] ?? "";
+        $userName = clean_string($_POST['username'] ?? "", true);
+        $email = clean_string($_POST['email'] ?? "", true);
 
         // Create user object
         $user = User::construct($userId ? $userId : $userName);
@@ -503,29 +389,20 @@ class AuthController extends Controller
         // Quit if the user ID is 0
         if ($user->id === 0 || ($email !== null ? $email !== $user->email : false)) {
             $message = "This user does not exist! Contact us if you think this isn't right.";
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         // Check if the user is active
         if ($user->permission(Site::DEACTIVATED)) {
             $message = "Your account is deactivated, go activate it first...";
-
-            Template::vars(compact('message', 'redirect'));
-
-            return Template::render('global/information');
+            return view('global/information', compact('message', 'redirect'));
         }
 
         if ($key && $password) {
             // Check password entropy
             if (password_entropy($password) < config('user.pass_min_entropy')) {
                 $message = "Your password doesn't meet the strength requirements!";
-
-                Template::vars(compact('message', 'redirect'));
-
-                return Template::render('global/information');
+                return view('global/information', compact('message', 'redirect'));
             }
 
             // Validate the activation key
@@ -533,27 +410,22 @@ class AuthController extends Controller
 
             if (!$action) {
                 $message = "Invalid verification code! Contact us if you think this isn't right.";
-
-                Template::vars(compact('message', 'redirect'));
-
-                return Template::render('global/information');
+                return view('global/information', compact('message', 'redirect'));
             }
 
             $user->setPassword($password);
 
             $message = "Changed your password! You may now log in.";
-            $redirect = Router::route('auth.login');
+            $redirect = route('auth.login');
         } else {
             // Send the e-mail
             $this->sendPasswordMail($user);
 
             $message = "Sent the e-mail, keep an eye on your spam folder as well!";
-            $redirect = Router::route('main.index');
+            $redirect = route('main.index');
         }
 
-        Template::vars(compact('message', 'redirect'));
-
-        return Template::render('global/information');
+        return view('global/information', compact('message', 'redirect'));
     }
 
     /**
@@ -567,8 +439,8 @@ class AuthController extends Controller
 
         $siteName = config('general.name');
         $baseUrl = "http://{$_SERVER['HTTP_HOST']}";
-        $activateLink = Router::route('auth.activate') . "?u={$user->id}&k={$activate}";
-        $profileLink = Router::route('user.profile', $user->id);
+        $activateLink = route('auth.activate') . "?u={$user->id}&k={$activate}";
+        $profileLink = route('user.profile', $user->id);
         $signature = config('mail.signature');
 
         // Build the e-mail
@@ -601,7 +473,7 @@ class AuthController extends Controller
 
         $siteName = config('general.name');
         $baseUrl = "http://{$_SERVER['HTTP_HOST']}";
-        $reactivateLink = Router::route('auth.resetpassword') . "?u={$user->id}&k={$verk}";
+        $reactivateLink = route('auth.resetpassword') . "?u={$user->id}&k={$verk}";
         $signature = config('mail.signature');
 
         // Build the e-mail

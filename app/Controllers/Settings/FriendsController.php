@@ -6,6 +6,7 @@
 
 namespace Sakura\Controllers\Settings;
 
+use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
 use Sakura\CurrentSession;
 use Sakura\Perms\Site;
 
@@ -24,9 +25,7 @@ class FriendsController extends Controller
     {
         // Check permission
         if (!CurrentSession::$user->permission(Site::MANAGE_FRIENDS)) {
-            $message = "You aren't allowed to manage friends.";
-            $redirect = route('settings.index');
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpMethodNotAllowedException();
         }
 
         return view('settings/friends/listing');
@@ -40,9 +39,7 @@ class FriendsController extends Controller
     {
         // Check permission
         if (!CurrentSession::$user->permission(Site::MANAGE_FRIENDS)) {
-            $message = "You aren't allowed to manage friends.";
-            $redirect = route('settings.index');
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpMethodNotAllowedException();
         }
 
         return view('settings/friends/requests');

@@ -6,6 +6,8 @@
 
 namespace Sakura\Controllers\Forum;
 
+use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
+use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Sakura\CurrentSession;
 use Sakura\DB;
 use Sakura\Forum\Forum;
@@ -36,10 +38,7 @@ class PostController extends Controller
         if ($post->id === 0
             || $topic->id === 0
             || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
-            $message = "This post doesn't exist or you don't have access to it!";
-            $redirect = route('forums.index');
-
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpRouteNotFoundException();
         }
 
         $topicLink = route('forums.topic', $topic->id);
@@ -112,15 +111,7 @@ class PostController extends Controller
 
         // Check if the forum exists
         if ($noAccess || $noEdit) {
-            if ($noDelete) {
-                $message = "You aren't allowed to edit posts in this topic!";
-                $redirect = route('forums.post', $post->id);
-            } else {
-                $message = "This post doesn't exist or you don't have access to it!";
-                $redirect = route('forums.index');
-            }
-
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpMethodNotAllowedException();
         }
 
         $titleLength = strlen($title);
@@ -217,22 +208,11 @@ class PostController extends Controller
 
         // Check if the forum exists
         if ($noAccess || $noDelete) {
-            if ($noDelete) {
-                $message = "You aren't allowed to delete posts in this topic!";
-                $redirect = route('forums.post', $post->id);
-            } else {
-                $message = "This post doesn't exist or you don't have access to it!";
-                $redirect = route('forums.index');
-            }
-
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpMethodNotAllowedException();
         }
 
         if (session_check('sessionid')) {
             if (isset($_POST['yes'])) {
-                // Set message
-                $message = "Deleted the post!";
-
                 // Check if the topic only has 1 post
                 if ($topic->replyCount() === 1) {
                     // Delete the entire topic
@@ -245,12 +225,12 @@ class PostController extends Controller
 
                     $redirect = route('forums.topic', $topic->id);
                 }
-
-                return view('global/information', compact('message', 'redirect'));
+            } else {
+                $redirect = route('forums.post', $post->id);
             }
 
-            $postLink = route('forums.post', $post->id);
-            return header("Location: {$postLink}");
+            header("Location: {$redirect}");
+            return;
         }
 
         $message = "Are you sure?";

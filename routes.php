@@ -6,21 +6,20 @@
 // Define namespace
 namespace Sakura;
 
+use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
+use Phroute\Phroute\Exception\HttpRouteNotFoundException;
+
 // Check if logged out
 Router::filter('logoutCheck', function () {
     if (CurrentSession::$user->isActive()) {
-        return view('global/information', [
-            'message' => "You must be logged out to do that!",
-        ]);
+        throw new HttpRouteNotFoundException();
     }
 });
 
 // Check if logged in
 Router::filter('loginCheck', function () {
     if (!CurrentSession::$user->isActive()) {
-        return view('global/information', [
-            'message' => "You must be logged in to do that!",
-        ]);
+        throw new HttpMethodNotAllowedException();
     }
 });
 
@@ -29,7 +28,7 @@ Router::filter('maintenance', function () {
     if (config('general.maintenance')) {
         CurrentSession::stop();
         http_response_code(503);
-        return view('global/maintenance');
+        return view('errors/503');
     }
 });
 
@@ -41,14 +40,14 @@ Router::group(['before' => 'maintenance'], function () {
 
     // Auth
     Router::group(['before' => 'logoutCheck'], function () {
-        Router::get('/login', 'AuthController@loginGet', 'auth.login');
-        Router::post('/login', 'AuthController@loginPost', 'auth.login');
-        Router::get('/register', 'AuthController@registerGet', 'auth.register');
-        Router::post('/register', 'AuthController@registerPost', 'auth.register');
-        Router::get('/resetpassword', 'AuthController@resetPasswordGet', 'auth.resetpassword');
-        Router::post('/resetpassword', 'AuthController@resetPasswordPost', 'auth.resetpassword');
-        Router::get('/reactivate', 'AuthController@reactivateGet', 'auth.reactivate');
-        Router::post('/reactivate', 'AuthController@reactivatePost', 'auth.reactivate');
+        Router::get('/login', 'AuthController@login', 'auth.login');
+        Router::post('/login', 'AuthController@login', 'auth.login');
+        Router::get('/register', 'AuthController@register', 'auth.register');
+        Router::post('/register', 'AuthController@register', 'auth.register');
+        Router::get('/resetpassword', 'AuthController@resetPassword', 'auth.resetpassword');
+        Router::post('/resetpassword', 'AuthController@resetPassword', 'auth.resetpassword');
+        Router::get('/reactivate', 'AuthController@reactivate', 'auth.reactivate');
+        Router::post('/reactivate', 'AuthController@reactivate', 'auth.reactivate');
         Router::get('/activate', 'AuthController@activate', 'auth.activate');
     });
     Router::group(['before' => 'loginCheck'], function () {
@@ -192,6 +191,7 @@ Router::group(['before' => 'maintenance'], function () {
     // Premium
     Router::group(['prefix' => 'support', 'before' => 'loginCheck'], function () {
         Router::get('/', 'PremiumController@index', 'premium.index');
+        Router::get('/error', 'PremiumController@error', 'premium.error');
         Router::get('/handle', 'PremiumController@handle', 'premium.handle');
         Router::get('/complete', 'PremiumController@complete', 'premium.complete');
         Router::post('/purchase', 'PremiumController@purchase', 'premium.purchase');
