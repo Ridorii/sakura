@@ -67,7 +67,7 @@ Router::group(['before' => 'maintenance'], function () {
             'welcome' => 'info.welcome',
             //'profileapi' => 'api.manage.index',
             'chat' => 'chat.redirect',
-            //'irc' => 'chat.irc',
+            'irc' => 'chat.irc',
             'feedback' => 'forums.index',
             'mcp' => 'manage.index',
             'mcptest' => 'manage.index',
@@ -111,7 +111,8 @@ Router::group(['before' => 'maintenance'], function () {
         Router::get('/redirect', 'ChatController@redirect', 'chat.redirect');
         Router::get('/settings', 'ChatController@settings', 'chat.settings');
         Router::get('/auth', 'ChatController@auth', 'chat.auth');
-        Router::get('/resolve', 'Chatcontroller@resolve', 'chat.resolve');
+        Router::get('/resolve', 'ChatController@resolve', 'chat.resolve');
+        Router::get('/irc', 'ChatController@irc', 'chat.irc');
     });
 
     // Authentication for the "old" chat

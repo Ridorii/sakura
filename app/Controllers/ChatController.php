@@ -80,7 +80,7 @@ class ChatController extends Controller
             );
         }
 
-        return $info;
+        return $this->json($info);
     }
 
     /**
@@ -88,6 +88,15 @@ class ChatController extends Controller
      * @return string
      */
     public function auth()
+    {
+        return;
+    }
+
+    /**
+     * IRC page.
+     * @return string
+     */
+    public function irc()
     {
         return;
     }
