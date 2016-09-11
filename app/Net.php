@@ -6,6 +6,9 @@
 
 namespace Sakura;
 
+use Sakura\Exceptions\NetAddressTypeException;
+use Sakura\Exceptions\NetInvalidAddressException;
+
 /**
  * Networking methods.
  * @package Sakura
@@ -49,7 +52,7 @@ class Net
     /**
      * Converts a printable IP address into an unpacked binary string.
      * @param string $ip
-     * @throws Exception
+     * @throws NetInvalidAddressException
      * @return string
      */
     public static function pton($ip)
@@ -68,13 +71,13 @@ class Net
         }
 
         // Throw an exception if an invalid IP was supplied
-        throw new Exception("Invalid IP address supplied.");
+        throw new NetInvalidAddressException;
     }
 
     /**
      * Converts a binary unpacked IP to a printable packed IP.
      * @param string $bin
-     * @throws Exception
+     * @throws NetAddressTypeException
      * @return string
      */
     public static function ntop($bin)
@@ -84,7 +87,7 @@ class Net
 
         // Throw an exception if it's not 4 or 16 bytes
         if ($len !== 4 && $len !== 16) {
-            throw new Exception("Could not handle this IP type.");
+            throw new NetAddressTypeException;
         }
 
         // Finally pack the IP

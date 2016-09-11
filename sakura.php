@@ -50,12 +50,14 @@ $capsule = new DB;
 $capsule->addConnection(config('database'));
 $capsule->setAsGlobal();
 
+class_alias(Router\Collection::class, 'Router');
+
 if (!defined('IN_CLI')) {
     // Start output buffering
     ob_start(config('performance.compression') ? 'ob_gzhandler' : null);
 
     // Initialise the router and include the routes file
-    Router::init();
+    Routerv1::init();
     include_once ROOT . 'routes.php';
 
     // Initialise the current session
@@ -77,3 +79,31 @@ if (!defined('IN_CLI')) {
         'session' => $_SESSION,
     ]);
 }
+
+// use Sakura\Router\Route;
+// use Sakura\Router\Router;
+
+// Router::add(
+//     Route::path('/')
+//         ->methods('GET')
+//         ->controller(Controllers\MetaController::class)
+//         ->action('index')
+//         ->name('main.index'),
+//     Route::path('/test')
+//         ->controller(Controllers\MetaController::class)
+//         ->group(
+//             Route::path('faq')
+//                 ->methods('GET')
+//                 ->action('faq')
+//                 ->group(
+//                     Route::path('sub')
+//                         ->methods(['GET', 'POST'])
+//                         ->action('search')
+//                         ->name('main.search')
+//                 )
+//         )
+// );
+
+// echo Router::url('main.search');
+// header('Content-Type: text/plain');
+// exit;

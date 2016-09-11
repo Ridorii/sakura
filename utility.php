@@ -5,7 +5,7 @@
 
 use Sakura\Config;
 use Sakura\Net;
-use Sakura\Router;
+use Sakura\Routerv1;
 use Sakura\Template;
 
 // Sort of alias for Config::get
@@ -22,10 +22,10 @@ function config($value)
     }
 }
 
-// Alias for Router::route
+// Alias for Routerv1::route
 function route($name, $args = null, $full = false)
 {
-    return ($full ? full_domain() : '') . Router::route($name, $args);
+    return ($full ? full_domain() : '') . Routerv1::route($name, $args);
 }
 
 // Getting the full domain (+protocol) of the current host, only works for http

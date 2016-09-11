@@ -9,7 +9,6 @@ namespace Sakura\Controllers;
 use Sakura\CurrentSession;
 use Sakura\Notification;
 use Sakura\Perms\Site;
-use Sakura\Router;
 use Sakura\User;
 
 /**
@@ -34,9 +33,9 @@ class FriendsController extends Controller
         $alert->time = time();
         $alert->title = $title;
         $alert->text = $text;
-        $alert->image = Router::route('file.avatar', $user->id);
+        $alert->image = route('file.avatar', $user->id);
         $alert->timeout = 60000;
-        $alert->link = Router::route('user.profile', $user->id);
+        $alert->link = route('user.profile', $user->id);
 
         $alert->save();
     }

@@ -16,7 +16,7 @@ use Phroute\Phroute\RouteCollector;
  * @package Sakura
  * @author Julian van de Groep <me@flash.moe>
  */
-class Router
+class Routerv1
 {
     /**
      * Container for RouteCollector.

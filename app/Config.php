@@ -6,6 +6,10 @@
 
 namespace Sakura;
 
+use Sakura\Exceptions\ConfigNonExistentException;
+use Sakura\Exceptions\ConfigParseException;
+use Sakura\Exceptions\ConfigValueNotFoundException;
+
 /**
  * Handles the configuration settings of Sakura.
  * @package Sakura
@@ -21,13 +25,15 @@ class Config
 
     /**
      * Initialiser, parses the configuration.
+     * @throws ConfigNonExistentException
+     * @throws ConfigParseException
      * @param string $path
      */
     public static function init($path)
     {
         // Check if the configuration file exists
         if (!file_exists($path)) {
-            throw new Exception('Configuration file does not exist');
+            throw new ConfigNonExistentException;
         }
 
         // Attempt to load the configuration file
@@ -36,7 +42,7 @@ class Config
         if (is_array($config)) {
             self::$config = $config;
         } else {
-            throw new Exception('Failed to parse configuration');
+            throw new ConfigParseException;
         }
     }
 
@@ -44,6 +50,7 @@ class Config
      * Get a value from the configuration.
      * @param string $section
      * @param string $key
+     * @throws ConfigValueNotFoundException
      * @return array|string
      */
     public static function get($section, $key = null)
@@ -59,6 +66,6 @@ class Config
             return self::$config[$section];
         }
 
-        throw new Exception("Couldn't find configuration value");
+        throw new ConfigValueNotFoundException;
     }
 }
