@@ -50,8 +50,6 @@ $capsule = new DB;
 $capsule->addConnection(config('database'));
 $capsule->setAsGlobal();
 
-class_alias(Router\Collection::class, 'Router');
-
 if (!defined('IN_CLI')) {
     // Start output buffering
     ob_start(config('performance.compression') ? 'ob_gzhandler' : null);

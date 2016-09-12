@@ -4,6 +4,7 @@
  */
 
 use Sakura\Config;
+use Sakura\Exceptions\ConfigValueNotFoundException;
 use Sakura\Net;
 use Sakura\Routerv1;
 use Sakura\Template;
@@ -17,8 +18,12 @@ function config($value)
 
     try {
         return Config::get($section, $key);
-    } catch (Exception $e) {
-        return Config::get($value);
+    } catch (ConfigValueNotFoundException $e) {
+        try {
+            return Config::get($value);
+        } catch (ConfigValueNotFoundException $e) {
+            return null;
+        }
     }
 }
 

@@ -170,10 +170,10 @@ class Route
      * @throws RouterNonExistentControllerException
      * @return mixed
      */
-    public function fire()
+    public function fire($params = [])
     {
         if (is_callable($this->action)) {
-            return call_user_func($this->action);
+            return call_user_func_array($this->action, $params);
         }
 
         if (!class_exists($this->controller)
@@ -181,6 +181,6 @@ class Route
             throw new RouterNonExistentControllerException;
         }
 
-        return (new $this->controller)->{$this->action}();
+        return (new $this->controller)->{$this->action}(...$params);
     }
 }

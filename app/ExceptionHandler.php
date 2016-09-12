@@ -29,11 +29,7 @@ class ExceptionHandler
      */
     public static function exception(Throwable $ex)
     {
-        try {
-            $report = config('dev.report_host');
-        } catch (Exception $ex) {
-            $report = null;
-        }
+        $report = config('dev.report_host');
 
         if ($report !== null) {
             self::report($ex, $report);
@@ -63,13 +59,9 @@ class ExceptionHandler
     {
         http_response_code(500);
 
-        try {
-            $debug = config('dev.show_errors');
-        } catch (Exception $ex) {
-            $debug = false;
-        }
+        $debug = config('dev.show_errors');
 
-        if ($debug) {
+        if (true) {
             header('Content-Type: text/plain');
             echo $ex;
         } else {
