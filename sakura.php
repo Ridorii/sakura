@@ -7,7 +7,7 @@
 namespace Sakura;
 
 // Define version and root path
-define('SAKURA_VERSION', 20160804);
+define('SAKURA_VERSION', 20160913);
 define('ROOT', __DIR__ . '/');
 
 // CLI mode
