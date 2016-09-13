@@ -259,7 +259,7 @@ class Settings
             "{$cpfx}id",
             "{$cpfx}session",
         ];
-        $this->avatarUrl = route('file.avatar', '{0}', true);
+        $this->avatarUrl = route('user.avatar', '{0}', true);
         $this->profileUrl = route('user.profile', '{0}', true);
         $this->development = config('dev.show_errors');
         $this->languagePath = config('chat.language_path');

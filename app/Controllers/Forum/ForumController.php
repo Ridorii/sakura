@@ -118,7 +118,7 @@ class ForumController extends Controller
 
         // Redirect forum id 0 to the main page
         if ($forum->id === 0) {
-            header("Location: " . route('forums.index'));
+            redirect(route('forums.index'));
             return;
         }
 
@@ -130,7 +130,7 @@ class ForumController extends Controller
 
         // Check if the forum isn't a link
         if ($forum->type === 2) {
-            header("Location: {$forum->link}");
+            redirect($forum->link);
             return;
         }
 
@@ -158,6 +158,6 @@ class ForumController extends Controller
 
         $forum->trackUpdateAll(CurrentSession::$user->id);
 
-        header("Location: " . route('forums.forum', $forum->id));
+        redirect(route('forums.forum', $forum->id));
     }
 }

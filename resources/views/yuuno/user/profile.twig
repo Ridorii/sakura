@@ -142,7 +142,7 @@
             <div class="new-profile-container">
                 <div class="new-profile-header" style="background-image: url({{ route('user.header', profile.id) }});">
                     <div class="new-profile-info">
-                        <div class="default-avatar-setting new-profile-avatar" style="background-image: url({{ route('file.avatar', profile.id) }}); box-shadow: 0 0 5px #{% if profile.isOnline %}484{% else %}844{% endif %};"></div>
+                        <div class="default-avatar-setting new-profile-avatar" style="background-image: url({{ route('user.avatar', profile.id) }}); box-shadow: 0 0 5px #{% if profile.isOnline %}484{% else %}844{% endif %};"></div>
                         <div class="new-profile-username">
                             <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px {% if profile.colour != 'inherit' %}{{ profile.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;" {% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0].username_old }} before {{ profile.getUsernameHistory[0].change_time|date(config('general.date_format')) }}." {% endif %}>{{ profile.username }}</h1>
                             {% if profile.isPremium %}<img src="/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;"> {% endif %}<img src="/images/flags/{{ profile.country|lower }}.png" alt="{{ profile.country }}" style="vertical-align: middle;" title="{{ profile.country(true) }}"> <span style="font-size: .8em;">{{ profile.title }}</span>

@@ -47,7 +47,7 @@
                     <div class="menu-ucp" id="navMenuUser">
                         <!-- User menu, displayed on right side of the bar. -->
                         {% if user.isActive %}
-                            <a class="menu-item avatar" href="{{ route('user.profile', user.id) }}" title="Logged in as {{ user.username }}" style="background-image: url('{{ route('file.avatar', user.id) }}'); width: auto; color: {{ user.colour }}; border-color: {{ user.colour }}; font-weight: 700;"></a>
+                            <a class="menu-item avatar" href="{{ route('user.profile', user.id) }}" title="Logged in as {{ user.username }}" style="background-image: url('{{ route('user.avatar', user.id) }}'); width: auto; color: {{ user.colour }}; border-color: {{ user.colour }}; font-weight: 700;"></a>
                             {#<a class="menu-item fa-envelope" href="#" title="Messages"></a>#}
                             {% if user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
                                 <a class="menu-item fa-gavel" href="{{ route('manage.index') }}" title="Manage"></a>
@@ -64,7 +64,7 @@
             <div id="contentwrapper">
                 <div id="notifications"></div>
                 {% if profile is defined ? profile.background : (user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) and (user.backgroundSitewide or showBG) and user.background) %}
-                    <div id="userBackground" style="background-image: url('{{ route('file.background', (profile is defined ? profile : user).id) }}');"></div>
+                    <div id="userBackground" style="background-image: url('{{ route('user.background', (profile is defined ? profile : user).id) }}');"></div>
                 {% endif %}
                 {% if not user.isActive and server['REQUEST_URI'] != route('auth.login') %}
                 <div class="headerLoginContainer">

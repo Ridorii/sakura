@@ -92,6 +92,12 @@ class Post
     public $editUser = null;
 
     /**
+     * Post deleted?
+     * @var bool
+     */
+    public $deleted = false;
+
+    /**
      * Constructor.
      * @param int $postId
      */
@@ -114,6 +120,7 @@ class Post
             $this->editTime = intval($postRow->post_edit_time);
             $this->editReason = $postRow->post_edit_reason;
             $this->editUser = User::construct($postRow->post_edit_user);
+            $this->deleted = boolval($postRow->post_deleted);
 
             // Temporary backwards compatible IP storage system
             try {
@@ -200,9 +207,33 @@ class Post
     }
 
     /**
+     * Undo deletion.
+     */
+    public function restore()
+    {
+        DB::table('posts')
+            ->where('post_id', $this->id)
+            ->update([
+                'post_deleted' => 0,
+            ]);
+    }
+
+    /**
      * delete this.
      */
     public function delete()
+    {
+        DB::table('posts')
+            ->where('post_id', $this->id)
+            ->update([
+                'post_deleted' => 1,
+            ]);
+    }
+
+    /**
+     * DELETE THIS.
+     */
+    public function purge()
     {
         DB::table('posts')
             ->where('post_id', $this->id)

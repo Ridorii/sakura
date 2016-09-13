@@ -1,7 +1,7 @@
 <div id="indexPanel">
     {% if user.isActive %}
         <div class="user-container" style="background-image: url({{ route('user.header', user.id) }});">
-            <div class="default-avatar-setting user-container-avatar" style="background-image: url({{ route('file.avatar', user.id) }}); box-shadow: 0 0 5px {{ user.colour }};"><a href="{{ route('settings.appearance.avatar') }}" class="clean" style="display: block; height: 100%; width: 100%;"></a></div>
+            <div class="default-avatar-setting user-container-avatar" style="background-image: url({{ route('user.avatar', user.id) }}); box-shadow: 0 0 5px {{ user.colour }};"><a href="{{ route('user.profile', user.id) }}" class="clean" style="display: block; height: 100%; width: 100%;"></a></div>
             <div class="user-container-info">
                 <a href="{{ route('user.profile', user.id) }}" class="clean"><h1 style="color: {{ user.colour }}; text-shadow: 0 0 7px {% if user.colour != 'inherit' %}{{ user.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;">{{ user.username }}</h1></a>
                 {% set friendRequests = user.friends(-1, true)|length %}

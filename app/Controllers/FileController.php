@@ -6,8 +6,15 @@
 
 namespace Sakura\Controllers;
 
+use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
+use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Sakura\Config;
+use Sakura\CurrentSession;
+use Sakura\DB;
+use Sakura\Exceptions\FileException;
 use Sakura\File;
+use Sakura\Perms;
+use Sakura\Perms\Manage;
 use Sakura\Perms\Site;
 use Sakura\Template;
 use Sakura\User;
@@ -20,6 +27,15 @@ use Sakura\User;
 class FileController extends Controller
 {
     /**
+     * Possible modes.
+     */
+    const MODES = [
+        'avatar',
+        'background',
+        'header',
+    ];
+
+    /**
      * The base for serving a file.
      * @param string $data
      * @param string $mime
@@ -28,126 +44,171 @@ class FileController extends Controller
      */
     private function serve($data, $mime, $name)
     {
-        // Add original filename
         header("Content-Disposition: inline; filename={$name}");
-
-        // Set content type
         header("Content-Type: {$mime}");
-
-        // Return image data
         return $data;
     }
 
     /**
-     * Attempt to get an avatar.
-     * @param int $id
-     * @return string
+     * Handles file uploads.
+     * @param string $mode
+     * @param array $file
+     * @return array
      */
-    public function avatar($id = 0)
+    private function upload($mode, $file, $user)
     {
-        $noAvatar = ROOT . 'public/' . str_replace(
-            '%tplname%',
-            Template::$name,
-            config('user.avatar_none')
-        );
-        $none = [
-            'name' => basename($noAvatar),
-            'data' => file_get_contents($noAvatar),
-            'mime' => getimagesizefromstring($noAvatar)['mime'],
-        ];
+        $error = null;
 
-        $bannedPath = ROOT . 'public/' . str_replace(
-            '%tplname%',
-            Template::$name,
-            config('user.avatar_ban')
-        );
-        $banned = [
-            'name' => basename($bannedPath),
-            'data' => file_get_contents($bannedPath),
-            'mime' => getimagesizefromstring($bannedPath)['mime'],
-        ];
+        // Handle errors
+        switch ($file['error']) {
+            case UPLOAD_ERR_OK:
+                break;
 
-        $user = User::construct($id);
+            case UPLOAD_ERR_INI_SIZE:
+            case UPLOAD_ERR_FORM_SIZE:
+                throw new FileException("Your file was too large!");
 
-        if ($user->permission(Site::RESTRICTED)) {
-            return $this->serve($banned['data'], $banned['mime'], $banned['name']);
+            case UPLOAD_ERR_PARTIAL:
+                throw new FileException("The upload failed!");
+
+            case UPLOAD_ERR_NO_TMP_DIR:
+            case UPLOAD_ERR_CANT_WRITE:
+                throw new FileException("Wasn't able to save the file, contact a staff member!");
+
+            case UPLOAD_ERR_EXTENSION:
+            default:
+                throw new FileException("Something prevented the file upload!");
         }
 
-        if ($user->id < 1 || !$user->avatar || $user->permission(Site::DEACTIVATED)) {
-            return $this->serve($none['data'], $none['mime'], $none['name']);
+        // Get the temp filename
+        $tmpName = $file['tmp_name'];
+
+        // Get the image meta data
+        $meta = getimagesize($tmpName);
+
+        // Check if image
+        if (!$meta
+            || (
+                $meta[2] !== IMAGETYPE_GIF
+                && $meta[2] !== IMAGETYPE_JPEG
+                && $meta[2] !== IMAGETYPE_PNG
+            )
+        ) {
+            throw new FileException("Please upload a valid image!");
         }
 
-        $serve = new File($user->avatar);
+        // Check dimensions
+        $maxWidth = config("file.{$mode}.max_width");
+        $maxHeight = config("file.{$mode}.max_height");
 
-        if (!$serve->id) {
-            return $this->serve($none['data'], $none['mime'], $none['name']);
+        if ($meta[0] > $maxWidth
+            || $meta[1] > $maxHeight) {
+            throw new FileException("Your image can't be bigger than {$maxWidth}x{$maxHeight}" .
+                ", yours was {$meta[0]}x{$meta[1]}!");
         }
 
-        return $this->serve($serve->data, $serve->mime, $serve->name);
+        // Check file size
+        $maxFileSize = config("file.{$mode}.max_file_size");
+
+        if (filesize($tmpName) > $maxFileSize) {
+            $maxSizeFmt = byte_symbol($maxFileSize);
+
+            throw new FileException("Your image is not allowed to be larger than {$maxSizeFmt}!");
+        }
+
+        $userId = $user->id;
+        $ext = image_type_to_extension($meta[2]);
+
+        $filename = "{$mode}_{$userId}{$ext}";
+
+        // Create the file
+        $file = File::create(file_get_contents($tmpName), $filename, $user);
+
+        // Delete the old file
+        $this->delete($mode, $user);
+
+        $column = "user_{$mode}";
+
+        // Save new avatar
+        DB::table('users')
+            ->where('user_id', $user->id)
+            ->update([
+                $column => $file->id,
+            ]);
     }
 
     /**
-     * Attempt to get a background.
-     * @param int $id
-     * @return string
+     * Deletes a file.
+     * @param string $mode
      */
-    public function background($id = 0)
+    public function delete($mode, $user)
     {
-        $noBg = ROOT . "public/images/pixel.png";
-        $none = [
-            'name' => basename($noBg),
-            'data' => file_get_contents($noBg),
-            'mime' => getimagesizefromstring($noBg)['mime'],
-        ];
+        $fileId = $user->{$mode};
 
-        if (!$id) {
-            return $this->serve($none['data'], $none['mime'], $none['name']);
+        if ($fileId) {
+            (new File($fileId))->delete();
         }
-
-        $user = User::construct($id);
-
-        if ($user->permission(Site::DEACTIVATED)
-            || $user->permission(Site::RESTRICTED)
-            || !$user->background) {
-            return $this->serve($none['data'], $none['mime'], $none['name']);
-        }
-
-        $serve = new File($user->background);
-
-        if (!$serve->id) {
-            return $this->serve($none['data'], $none['mime'], $none['name']);
-        }
-
-        return $this->serve($serve->data, $serve->mime, $serve->name);
     }
 
     /**
-     * Attempt to get a profile header.
-     * @param int $id
+     * Catchall serve.
+     * @param string $method
+     * @param array $params
+     * @todo add a specific permission for mods to override uploads.
      * @return string
      */
-    public function header($id = 0)
+    public function __call($method, $params)
     {
-        $noHeader = ROOT . "public/images/pixel.png";
-        $none = [
-            'name' => basename($noHeader),
-            'data' => file_get_contents($noHeader),
-            'mime' => getimagesizefromstring($noHeader)['mime'],
-        ];
-
-        if (!$id) {
-            return $this->serve($none['data'], $none['mime'], $none['name']);
+        if (!in_array($method, self::MODES)) {
+            throw new HttpRouteNotFoundException;
         }
 
-        $user = User::construct($id);
+        $user = User::construct($params[0] ?? 0);
+
+        if (session_check()) {
+            if (!CurrentSession::$user->permission(Manage::USE_MANAGE, Perms::MANAGE)
+                && ($user->id !== CurrentSession::$user->id
+                    || !$user->permission(constant("Sakura\Perms\Site::CHANGE_" . strtoupper($method)))
+                    || $user->permission(Site::DEACTIVATED)
+                    || $user->permission(Site::RESTRICTED))
+            ) {
+                throw new HttpMethodNotAllowedException;
+            }
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $error = null;
+
+                try {
+                    $this->upload($method, $_FILES['file'] ?? null, $user);
+                } catch (FileException $e) {
+                    $error = $e->getMessage();
+                }
+
+                return $this->json(compact('error'));
+            } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+                $this->delete($method, $user);
+                return;
+            }
+        }
+
+        $noFile = ROOT . 'public/' . str_replace(
+            '%tplname%',
+            Template::$name,
+            config("user.{$method}_none")
+        );
+        $none = [
+            'name' => basename($noFile),
+            'data' => file_get_contents($noFile),
+            'mime' => getimagesizefromstring($noFile)['mime'],
+        ];
 
         if ($user->permission(Site::DEACTIVATED)
             || $user->permission(Site::RESTRICTED)
-            || !$user->header) {
+            || !$user->{$method}) {
             return $this->serve($none['data'], $none['mime'], $none['name']);
         }
 
-        $serve = new File($user->header);
+        $serve = new File($user->{$method});
 
         if (!$serve->id) {
             return $this->serve($none['data'], $none['mime'], $none['name']);

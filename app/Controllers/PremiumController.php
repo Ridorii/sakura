@@ -67,7 +67,7 @@ class PremiumController extends Controller
         // Check months
         if ($months < 1
             || $months > $amountLimit) {
-            header("Location: " . route('premium.error'));
+            redirect(route('premium.error'));
             return;
         }
 
@@ -97,14 +97,14 @@ class PremiumController extends Controller
 
         // Attempt to create a transaction
         if (!$transaction) {
-            header("Location: " . route('premium.error'));
+            redirect(route('premium.error'));
             return;
         }
 
         // Store the amount of months in the global session array
         $_SESSION['premiumMonths'] = (int) $months;
 
-        return header("Location: {$transaction}");
+        redirect($transaction);
     }
 
     /**
@@ -125,7 +125,8 @@ class PremiumController extends Controller
             || !$payment
             || !$payer
             || !$months) {
-            return header("Location: {$failRoute}");
+            redirect($failRoute);
+            return;
         }
 
         // Attempt to complete the transaction
@@ -136,12 +137,13 @@ class PremiumController extends Controller
         }
 
         if (!$finalise) {
-            return header("Location: {$failRoute}");
+            redirect($failRoute);
+            return;
         }
 
         CurrentSession::$user->addPremium(self::PERIOD_PER_PAYMENT * $months);
 
-        return header("Location: {$successRoute}");
+        redirect($successRoute);
     }
 
     /**

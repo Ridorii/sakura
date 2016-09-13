@@ -6,6 +6,8 @@
 
 namespace Sakura\Controllers\Forum;
 
+use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
+use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Sakura\CurrentSession;
 use Sakura\Forum\Forum;
 use Sakura\Forum\Post;
@@ -22,6 +24,7 @@ class TopicController extends Controller
     /**
      * Views a topic.
      * @param int $id
+     * @throws HttpRouteNotFoundException
      * @return string
      */
     public function view($id = 0)
@@ -32,10 +35,7 @@ class TopicController extends Controller
         // Check if the forum exists
         if ($topic->id === 0
             || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
-            $message = "This topic doesn't exist or you don't have access to it!";
-            $redirect = route('forums.index');
-
-            return view('global/information', compact('message', 'redirect'));
+            throw new HttpRouteNotFoundException;
         }
 
         $topic->trackUpdate(CurrentSession::$user->id);
@@ -47,6 +47,7 @@ class TopicController extends Controller
     /**
      * Checks if a user can moderate the topic.
      * @param int $id
+     * @throws HttpRouteNotFoundException
      * @return array
      */
     private function modBase($id)
@@ -60,194 +61,136 @@ class TopicController extends Controller
             return compact('topic', 'forum');
         }
 
-        return false;
+        throw new HttpRouteNotFoundException;
     }
 
     /**
      * Sticky a topic.
      * @param int $id
+     * @throws HttpMethodNotAllowedException
      * @return string
      */
     public function sticky($id)
     {
-        $modBase = $this->modBase($id);
-        $redirect = route('forums.index');
-        $message = "This forum doesn't exist or you don't have access to it.";
+        extract($this->modBase($id));
 
-        if ($modBase !== false) {
-            extract($modBase);
-            $redirect = route('forums.topic', $topic->id);
-
-            if ($forum->permission(ForumPerms::STICKY, CurrentSession::$user->id)) {
-                $topic->type = $topic->type !== 1 ? 1 : 0;
-                $topic->update();
-                $message = $topic->type
-                ? 'Changed the topic to sticky!' : 'Reverted the topic back to normal!';
-            } else {
-                $message = "You aren't allowed to sticky topics!";
-            }
+        if (!$forum->permission(ForumPerms::STICKY, CurrentSession::$user->id)) {
+            throw new HttpMethodNotAllowedException;
         }
 
-        return view('global/information', compact('message', 'redirect'));
+        $topic->type = $topic->type !== 1 ? 1 : 0;
+        $topic->update();
+
+        redirect(route('forums.topic', $topic->id));
     }
 
     /**
      * Announce a topic.
      * @param int $id
+     * @throws HttpMethodNotAllowedException
      * @return string
      */
     public function announce($id)
     {
-        $modBase = $this->modBase($id);
-        $redirect = route('forums.index');
-        $message = "This forum doesn't exist or you don't have access to it.";
+        extract($this->modBase($id));
 
-        if ($modBase !== false) {
-            extract($modBase);
-            $redirect = route('forums.topic', $topic->id);
-
-            if ($forum->permission(ForumPerms::ANNOUNCEMENT, CurrentSession::$user->id)) {
-                $topic->type = $topic->type !== 2 ? 2 : 0;
-                $topic->update();
-                $message = $topic->type
-                ? 'Changed the topic to an announcement!' : 'Reverted the topic back to normal!';
-            } else {
-                $message = "You aren't allowed to announce topics!";
-            }
+        if (!$forum->permission(ForumPerms::ANNOUNCEMENT, CurrentSession::$user->id)) {
+            throw new HttpMethodNotAllowedException;
         }
 
-        return view('global/information', compact('message', 'redirect'));
+        $topic->type = $topic->type !== 2 ? 2 : 0;
+        $topic->update();
+
+        redirect(route('forums.topic', $topic->id));
     }
 
     /**
      * Lock a topic.
      * @param int $id
+     * @throws HttpMethodNotAllowedException
      * @return string
      */
     public function lock($id)
     {
-        $modBase = $this->modBase($id);
-        $redirect = route('forums.index');
-        $message = "This forum doesn't exist or you don't have access to it.";
+        extract($this->modBase($id));
 
-        if ($modBase !== false) {
-            extract($modBase);
-            $redirect = route('forums.topic', $topic->id);
-
-            if ($forum->permission(ForumPerms::LOCK, CurrentSession::$user->id)) {
-                $topic->status = $topic->status !== 1 ? 1 : 0;
-                $topic->update();
-                $message = ($topic->status ? 'Locked' : 'Unlocked') . ' the topic!';
-            } else {
-                $message = "You aren't allowed to lock topics!";
-            }
+        if (!$forum->permission(ForumPerms::LOCK, CurrentSession::$user->id)) {
+            throw new HttpMethodNotAllowedException;
         }
 
-        return view('global/information', compact('message', 'redirect'));
+        $topic->status = $topic->status !== 1 ? 1 : 0;
+        $topic->update();
+
+        redirect(route('forums.topic', $topic->id));
     }
 
     /**
      * Delete an entire topic.
      * @param int $id
+     * @throws HttpMethodNotAllowedException
      * @return string
      */
     public function delete($id)
     {
-        $modBase = $this->modBase($id);
-        $redirect = route('forums.index');
-        $message = "This forum doesn't exist or you don't have access to it.";
+        extract($this->modBase($id));
 
-        if ($modBase !== false) {
-            extract($modBase);
-            $trash = config('forum.trash');
+        $trash = intval(config('forum.trash'));
 
-            // Check if we're operating from the trash
-            if ($topic->forum === $trash) {
-                if ($forum->permission(ForumPerms::DELETE_ANY, CurrentSession::$user->id)) {
-                    $topic->delete();
-                    $message = "Deleted the topic!";
-                    $redirect = route('forums.forum', $trash);
-                } else {
-                    $message = "You aren't allowed to delete topics!";
-                }
-            } else {
-                $redirect = route('forums.topic', $topic->id);
-
-                if ($forum->permission(ForumPerms::MOVE, CurrentSession::$user->id)) {
-                    $topic->move($trash);
-                    $message = "Moved the topic to the trash!";
-                } else {
-                    $message = "You're not allowed to do this!";
-                }
-            }
+        if ($topic->forum === $trash
+            && $forum->permission(ForumPerms::DELETE_ANY, CurrentSession::$user->id)) {
+            $redirect = route('forums.forum', $trash);
+            $topic->delete();
+        } elseif ($forum->permission(ForumPerms::MOVE, CurrentSession::$user->id)) {
+            $redirect = route('forums.topic', $topic->id);
+            $topic->move($trash);
+        } else {
+            throw new HttpMethodNotAllowedException;
         }
 
-        return view('global/information', compact('message', 'redirect'));
+        redirect($redirect);
     }
 
     /**
      * Restore a topic to its previous location.
      * @param int $id
+     * @throws HttpMethodNotAllowedException
      * @return string
      */
     public function restore($id)
     {
-        $modBase = $this->modBase($id);
-        $redirect = route('forums.index');
-        $message = "This forum doesn't exist or you don't have access to it.";
+        extract($this->modBase($id));
 
-        if ($modBase !== false) {
-            extract($modBase);
-            $redirect = route('forums.topic', $topic->id);
-
-            if ($forum->permission(ForumPerms::MOVE, CurrentSession::$user->id)) {
-                if ($topic->oldForum) {
-                    $topic->move($topic->oldForum, false);
-
-                    $message = "Moved the topic back to it's old location!";
-                } else {
-                    $message = "This topic has never been moved!";
-                }
-            } else {
-                $message = "You aren't allowed to move threads!";
-            }
+        if (!$forum->permission(ForumPerms::MOVE, CurrentSession::$user->id)) {
+            throw new HttpMethodNotAllowedException;
         }
 
-        return view('global/information', compact('message', 'redirect'));
+        if ($topic->oldForum) {
+            $topic->move($topic->oldForum, false);
+        }
+
+        redirect(route('forums.topic', $topic->id));
     }
 
     /**
      * Move a topic.
      * @param int $id
+     * @throws HttpMethodNotAllowedException
      * @return string
      */
     public function move($id)
     {
-        $modBase = $this->modBase($id);
-        $redirect = route('forums.index');
-        $message = "This forum doesn't exist or you don't have access to it.";
+        extract($this->modBase($id));
+        $dest_forum = new Forum($_REQUEST['forum_id'] ?? 0);
 
-        if ($modBase !== false) {
-            extract($modBase);
-            $redirect = route('forums.topic', $topic->id);
-
-            if ($forum->permission(ForumPerms::MOVE, CurrentSession::$user->id)) {
-                $dest_forum = new Forum($_REQUEST['forum_id'] ?? 0);
-
-                if ($dest_forum->id === 0
-                    || $dest_forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
-                    $topic->move($dest_forum->id);
-
-                    $message = "Moved to the topic to {$dest_forum->name}!";
-                } else {
-                    $message = "The destination forum doesn't exist or you don't have access to it.";
-                }
-            } else {
-                $message = "You aren't allowed to move threads!";
-            }
+        if (!$forum->permission(ForumPerms::MOVE, CurrentSession::$user->id)
+            || $dest_forum->id === 0
+            || $dest_forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
+            throw new HttpMethodNotAllowedException;
         }
 
-        return view('global/information', compact('message', 'redirect'));
+        $topic->move($dest_forum->id);
+
+        redirect(route('forums.topic', $topic->id));
     }
 
     /**
@@ -330,7 +273,7 @@ class TopicController extends Controller
         $postLink = route('forums.post', $post->id);
 
         // Head to the post
-        return header("Location: {$postLink}");
+        redirect($postLink);
     }
 
     /**
@@ -418,7 +361,8 @@ class TopicController extends Controller
             $postLink = route('forums.post', $post->id);
 
             // Head to the post
-            return header("Location: {$postLink}");
+            redirect($postLink);
+            return;
         }
 
         return view('forum/topic', compact('forum'));

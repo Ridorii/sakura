@@ -163,7 +163,18 @@ Routerv1::group(['before' => 'maintenance'], function () {
     Routerv1::group(['prefix' => 'u'], function () {
         Routerv1::get('/{id}', 'UserController@profile', 'user.profile');
         Routerv1::get('/{id}/report', 'UserController@report', 'user.report');
+
+        Routerv1::get('/{id}/avatar', 'FileController@avatar', 'user.avatar');
+        Routerv1::post('/{id}/avatar', 'FileController@avatar', 'user.avatar');
+        Routerv1::delete('/{id}/avatar', 'FileController@avatar', 'user.avatar');
+
+        Routerv1::get('/{id}/background', 'FileController@background', 'user.background');
+        Routerv1::post('/{id}/background', 'FileController@background', 'user.background');
+        Routerv1::delete('/{id}/background', 'FileController@background', 'user.background');
+
         Routerv1::get('/{id}/header', 'FileController@header', 'user.header');
+        Routerv1::post('/{id}/header', 'FileController@header', 'user.header');
+        Routerv1::delete('/{id}/header', 'FileController@header', 'user.header');
     });
 
     // Notifications
@@ -184,10 +195,6 @@ Routerv1::group(['before' => 'maintenance'], function () {
         Routerv1::post('/{id:i}/add', 'FriendsController@add', 'friends.add');
         Routerv1::post('/{id:i}/remove', 'FriendsController@remove', 'friends.remove');
     });
-
-    // Files
-    Routerv1::get('/a/{id}', 'FileController@avatar', 'file.avatar');
-    Routerv1::get('/bg/{id}', 'FileController@background', 'file.background');
 
     // Premium
     Routerv1::group(['prefix' => 'support', 'before' => 'loginCheck'], function () {
@@ -256,12 +263,6 @@ Routerv1::group(['before' => 'maintenance'], function () {
                 return header("Location: {$route}");
             });
 
-            Routerv1::get('/avatar', 'Settings.AppearanceController@avatar', 'settings.appearance.avatar');
-            Routerv1::post('/avatar', 'Settings.AppearanceController@avatar', 'settings.appearance.avatar');
-            Routerv1::get('/background', 'Settings.AppearanceController@background', 'settings.appearance.background');
-            Routerv1::post('/background', 'Settings.AppearanceController@background', 'settings.appearance.background');
-            Routerv1::get('/header', 'Settings.AppearanceController@header', 'settings.appearance.header');
-            Routerv1::post('/header', 'Settings.AppearanceController@header', 'settings.appearance.header');
             Routerv1::get('/userpage', 'Settings.AppearanceController@userpage', 'settings.appearance.userpage');
             Routerv1::post('/userpage', 'Settings.AppearanceController@userpage', 'settings.appearance.userpage');
             Routerv1::get('/signature', 'Settings.AppearanceController@signature', 'settings.appearance.signature');

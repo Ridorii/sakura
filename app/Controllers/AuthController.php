@@ -51,8 +51,7 @@ class AuthController extends Controller
         CurrentSession::stop();
 
         // Return true indicating a successful logout
-        header('Location: ' . route('auth.login'));
-        return;
+        redirect(route('auth.login'));
     }
 
     /**

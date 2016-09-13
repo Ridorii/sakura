@@ -80,7 +80,7 @@ class AccountController extends Controller
                     ]);
             }
 
-            header("Location: {$redirect}");
+            redirect($redirect);
             return;
         }
 
@@ -212,7 +212,7 @@ class AccountController extends Controller
                 $user->setPassword($password);
             }
 
-            header("Location: {$redirect}");
+            redirect($redirect);
             return;
         }
 
@@ -271,7 +271,7 @@ class AccountController extends Controller
 
             CurrentSession::$user->setMainRank($rank);
 
-            header("Location: {$redirect}");
+            redirect($redirect);
             return;
         }
 

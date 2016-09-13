@@ -54,7 +54,7 @@ class AdvancedController extends Controller
             // Delete it
             $session->delete();
 
-            header("Location: {$redirect}");
+            redirect($redirect);
             return;
         }
 
@@ -94,9 +94,7 @@ class AdvancedController extends Controller
             // Destroy all active sessions
             CurrentSession::$user->purgeSessions();
 
-            $redirect = route('main.index');
-            $message = "Farewell!";
-            return view('global/information', compact('message', 'redirect'));
+            return view('settings/advanced/deactivate_bye');
         }
 
         return view('settings/advanced/deactivate');

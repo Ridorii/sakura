@@ -13,7 +13,7 @@
 {% if notfound %}The requested rank could not be found!{% else %}{{ ranks[rank].description }}{% endif %}
 {% endset %}
 
-{% set users = ranks[rank].users|batch(membersPerPage) %}
+{% set users = ranks[rank].users|batch(30) %}
 
 {% set currPage = get.page|default(1) - 1 %}
 
@@ -99,7 +99,7 @@
                     {% for user in users[currPage] %}
                         <a href="{{ route('user.profile', user.id) }}">{# These comment tags are here to prevent the link extending too far
                             #}<div class="userBox" id="u{{ user.id }}">{#
-                                #}<img src="/images/pixel.png" alt="{{ user.username }}"  style="background: url('{{ route('file.avatar', user.id) }}') no-repeat center / contain;">{#
+                                #}<img src="/images/pixel.png" alt="{{ user.username }}"  style="background: url('{{ route('user.avatar', user.id) }}') no-repeat center / contain;">{#
                                 #}<span class="userBoxUserName" style="color: {{ user.colour }};">{#
                                     #}{{ user.username }}{#
                                 #}</span>{#

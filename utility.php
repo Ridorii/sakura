@@ -73,6 +73,13 @@ function clean_string($string, $lower = false, $noSpecial = false, $replaceSpeci
     return $string;
 }
 
+// Redirect with turbolinks header
+function redirect($url)
+{
+    header("Turbolinks-Location: {$url}");
+    header("Location: {$url}");
+}
+
 function check_mx_record($email)
 {
     // Get the domain from the e-mail address
@@ -126,12 +133,10 @@ function get_country_name($code)
     }
 }
 
+// Count the amount of unique characters in the password string and calculate the entropy
 function password_entropy($password)
 {
-    $password = utf8_decode($password);
-
-    // Count the amount of unique characters in the password string and calculate the entropy
-    return count(count_chars($password, 1)) * log(256, 2);
+    return count(count_chars(utf8_decode($password), 1)) * log(256, 2);
 }
 
 function byte_symbol($bytes)

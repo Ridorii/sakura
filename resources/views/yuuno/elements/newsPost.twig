@@ -2,7 +2,7 @@
 <div class="news-body">
     <a class="no-underline" href="{{ route('user.profile', post.userData.id) }}">
         <div class="news-poster">
-            <img src="{{ route('file.avatar', post.userData.id) }}" alt="{{ post.userData.username }}" class="default-avatar-setting">
+            <img src="{{ route('user.avatar', post.userData.id) }}" alt="{{ post.userData.username }}" class="default-avatar-setting">
             <h1 style="color: {{ post.userData.colour }}; text-shadow: 0 0 7px {% if post.userData.colour != 'inherit' %}{{ post.userData.colour }}{% else %}#222{% endif %}; padding: 0 0 10px;">{{ post.userData.username }}</h1>
         </div>
     </a>

@@ -55,15 +55,6 @@ class Controller extends BaseController
         }
 
         // Appearance
-        if (CurrentSession::$user->permission(Site::CHANGE_AVATAR)) {
-            $nav["Appearance"]["Avatar"] = route('settings.appearance.avatar');
-        }
-        if (CurrentSession::$user->permission(Site::CHANGE_BACKGROUND)) {
-            $nav["Appearance"]["Background"] = route('settings.appearance.background');
-        }
-        if (CurrentSession::$user->permission(Site::CHANGE_HEADER)) {
-            $nav["Appearance"]["Header"] = route('settings.appearance.header');
-        }
         if ((
             CurrentSession::$user->page
             && CurrentSession::$user->permission(Site::CHANGE_USERPAGE)

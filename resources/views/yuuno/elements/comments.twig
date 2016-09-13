@@ -2,7 +2,7 @@
     <div class="comment-input-section">
         {% if user.isActive %}
             <div class="comment">
-                <div class="comment-avatar" style="background-image: url('{{ route('file.avatar', user.id) }}');"></div>
+                <div class="comment-avatar" style="background-image: url('{{ route('user.avatar', user.id) }}');"></div>
                 <div class="comment-pointer"></div>
                 <textarea class="comment-content" name="text" placeholder="Join the conversation..."></textarea>
                 <button class="comment-submit new" name="session" value="{{ session_id() }}" onclick="commentPost(this.parentNode, '{{ route('comments.category.post', commentsCategory) }}');">&#xf1d8;</button>
@@ -65,7 +65,7 @@
             var avatar = document.createElement('a');
             avatar.className = 'comment-avatar clean';
             avatar.href = "{{ route('user.profile', 1) }}".replace(1, obj.user);
-            avatar.style.backgroundImage = "url('{{ route('file.avatar', 1) }}')".replace(1, obj.user);
+            avatar.style.backgroundImage = "url('{{ route('user.avatar', 1) }}')".replace(1, obj.user);
             inner.appendChild(avatar);
 
             var pointer = document.createElement('div');
@@ -104,7 +104,7 @@
             controlsReply.href = 'javascript:void(0);';
             controlsReply.title = 'Reply';
             controlsReply.className = 'clean fa fa-reply';
-            controlsReply.setAttribute('onclick', 'commentReply(' + obj.id + ', "{{ session_id() }}", "{{ route("file.avatar", user.id) }}");');
+            controlsReply.setAttribute('onclick', 'commentReply(' + obj.id + ', "{{ session_id() }}", "{{ route("user.avatar", user.id) }}");');
             controlsReplyContainer.appendChild(controlsReply);
             controlsInner.appendChild(controlsReplyContainer);
 

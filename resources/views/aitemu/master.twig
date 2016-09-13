@@ -36,7 +36,7 @@
                     {% if user.isActive %}
                         <a class="header__user" href="{{ route('user.profile', user.id) }}" style="color: {{ user.colour }}">
                             <div class="header__username">{{ user.username }}</div>
-                            <div class="header__avatar" style="background-image: url('{{ route('file.avatar', user.id) }}')"></div>
+                            <div class="header__avatar" style="background-image: url('{{ route('user.avatar', user.id) }}')"></div>
                         </a>
                     {% else %}
                         <a class="header__user" href="{{ route('auth.login') }}">

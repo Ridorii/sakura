@@ -57,7 +57,7 @@ class PostController extends Controller
             $topicLink .= "?page={$postAt}";
         }
 
-        return header("Location: {$topicLink}#p{$post->id}");
+        redirect("{$topicLink}#p{$post->id}");
     }
 
     /**
@@ -178,7 +178,7 @@ class PostController extends Controller
 
         $postLink = route('forums.post', $post->id);
 
-        return header("Location: {$postLink}");
+        redirect($postLink);
     }
 
     /**
@@ -211,30 +211,19 @@ class PostController extends Controller
             throw new HttpMethodNotAllowedException();
         }
 
-        if (session_check('sessionid')) {
-            if (isset($_POST['yes'])) {
-                // Check if the topic only has 1 post
-                if ($topic->replyCount() === 1) {
-                    // Delete the entire topic
-                    $topic->delete();
+        // Check if the topic only has 1 post
+        if ($topic->replyCount() === 1) {
+            // Delete the entire topic
+            $topic->delete();
 
-                    $redirect = route('forums.forum', $forum->id);
-                } else {
-                    // Just delete the post
-                    $post->delete();
+            $redirect = route('forums.forum', $forum->id);
+        } else {
+            // Just delete the post (replace this with soft deleting)
+            $post->purge();
 
-                    $redirect = route('forums.topic', $topic->id);
-                }
-            } else {
-                $redirect = route('forums.post', $post->id);
-            }
-
-            header("Location: {$redirect}");
-            return;
+            $redirect = route('forums.topic', $topic->id);
         }
 
-        $message = "Are you sure?";
-
-        return view('global/confirm', compact('message'));
+        redirect($redirect);
     }
 }

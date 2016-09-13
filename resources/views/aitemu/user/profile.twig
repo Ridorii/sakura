@@ -115,7 +115,7 @@
 {% block content %}
     <div class="profile__content">
         <div class="profile__container profile__container--left">
-            <div class="profile__avatar" style="background-image: url('{{ route('file.avatar', profile.id) }}');"></div>
+            <div class="profile__avatar" style="background-image: url('{{ route('user.avatar', profile.id) }}');"></div>
             <div class="platform profile__platform profile__hierarchies">{#
                 #}{% for id, data in hierarchies %}{#
                     #}{% if data.display %}

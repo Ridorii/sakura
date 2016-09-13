@@ -80,7 +80,7 @@
                         <tr class="post" id="p{{ post.id }}">
                             <td class="userpanel">
                                 {% if not post.poster.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) or post.poster.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}<a href="{{ route('user.profile', post.poster.id) }}" class="default username" style="color: {{ post.poster.colour }}; text-shadow: 0 0 5px {% if post.poster.colour != 'inherit' %}{{ post.poster.colour }}{% else %}#222{% endif %};" title="Go to {{ post.poster.username }}'s profile">{{ post.poster.username }}</a>
-                                <img src="{{ route('file.avatar', post.poster.id) }}" alt="{{ post.poster.username }}" class="avatar" style="box-shadow: 0 3px 7px #{% if post.poster.isOnline %}484{% else %}844{% endif %};">
+                                <img src="{{ route('user.avatar', post.poster.id) }}" alt="{{ post.poster.username }}" class="avatar" style="box-shadow: 0 3px 7px #{% if post.poster.isOnline %}484{% else %}844{% endif %};">
                                 {% else %}
                                 <a class="username">[deleted user]</a>
                                 {% endif %}
@@ -136,7 +136,7 @@
                     <tr class="post" id="postingPreview" style="display: none;">
                         <td class="userpanel">
                             <a class="default username" href="{{ route('user.profile', user.id) }}" style="color: {{ user.colour }}; text-shadow: 0 0 5px {% if user.colour != 'inherit' %}{{ user.colour }}{% else %}#222{% endif %};" title="Go to {{ user.username }}'s profile">{{ user.username }}</a>
-                            <img src="{{ route('file.avatar', user.id) }}" alt="{{ user.username }}" class="avatar" style="box-shadow: 0 3px 7px #484;">
+                            <img src="{{ route('user.avatar', user.id) }}" alt="{{ user.username }}" class="avatar" style="box-shadow: 0 3px 7px #484;">
                             <div class="userdata">
                                 <div class="usertitle">{{ user.title }}</div>
                                 <img src="/images/tenshi.png" alt="Tenshi"{% if not user.isPremium %} style="opacity: 0;"{% endif %}> <img src="/images/flags/{{ user.country|lower }}.png" alt="{{ user.country(true) }}">{% if user.id == (topic.posts|first).poster.id %} <img src="/images/op.png" alt="OP" title="Original Poster">{% endif %}

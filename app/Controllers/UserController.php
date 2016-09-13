@@ -6,6 +6,7 @@
 
 namespace Sakura\Controllers;
 
+use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
 use Sakura\Config;
 use Sakura\CurrentSession;
 use Sakura\DB;
@@ -31,7 +32,7 @@ class UserController extends Controller
         $profile = User::construct($id);
 
         // If the user id is zero check if there was a namechange
-        if ($profile->id == 0) {
+        if ($profile->id === 0) {
             // Fetch from username_history
             $check = DB::table('username_history')
                 ->where('username_old_clean', clean_string($id, true, true))
@@ -40,9 +41,8 @@ class UserController extends Controller
 
             // Redirect if so
             if ($check) {
-                $message = "This user changed their username! Redirecting you to their new profile.";
-                $redirect = route('user.profile', $check->user_id);
-                return view('global/information', compact('message', 'redirect'));
+                redirect(route('user.profile', $check->user_id));
+                return;
             }
         }
 
@@ -52,13 +52,14 @@ class UserController extends Controller
     /**
      * Display the memberlist.
      * @param int $rank
+     * @throws HttpMethodNotAllowedException
      * @return string
      */
     public function members($rank = null)
     {
         // Check permission
         if (!CurrentSession::$user->permission(Site::VIEW_MEMBERLIST)) {
-            return view('global/restricted');
+            throw new HttpMethodNotAllowedException;
         }
 
         // Get all ranks
@@ -79,10 +80,7 @@ class UserController extends Controller
         // Get the active rank
         $rank = array_key_exists($rank, $ranks) ? $rank : ($rank ? 0 : intval(config("rank.regular")));
 
-        // Get members per page
-        $membersPerPage = 30;
-
-        return view('user/members', compact('ranks', 'rank', 'membersPerPage'));
+        return view('user/members', compact('ranks', 'rank'));
     }
 
     /**

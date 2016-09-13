@@ -36,7 +36,7 @@ class ChatController extends Controller
      */
     public function redirect()
     {
-        header('Location: ' . config('chat.webclient'));
+        redirect(config('chat.webclient'));
     }
 
     /**

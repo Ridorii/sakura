@@ -33,7 +33,7 @@ class FriendsController extends Controller
         $alert->time = time();
         $alert->title = $title;
         $alert->text = $text;
-        $alert->image = route('file.avatar', $user->id);
+        $alert->image = route('user.avatar', $user->id);
         $alert->timeout = 60000;
         $alert->link = route('user.profile', $user->id);
 
