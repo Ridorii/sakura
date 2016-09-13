@@ -46,7 +46,7 @@ class UserController extends Controller
             }
         }
 
-        return view((isset($_GET['new']) ? '@aitemu/' : '') . 'user/profile', compact('profile'));
+        return view('user/profile', compact('profile'));
     }
 
     /**
