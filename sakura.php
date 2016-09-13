@@ -94,7 +94,7 @@ if (!defined('IN_CLI')) {
 //                 ->methods('GET')
 //                 ->action('faq')
 //                 ->group(
-//                     Route::path('sub')
+//                     Route::path('sub/{meow}/{cock}?')
 //                         ->methods(['GET', 'POST'])
 //                         ->action('search')
 //                         ->name('main.search')

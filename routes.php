@@ -52,6 +52,7 @@ Routerv1::group(['before' => 'maintenance'], function () {
     });
     Routerv1::group(['before' => 'loginCheck'], function () {
         Routerv1::get('/logout', 'AuthController@logout', 'auth.logout');
+        Routerv1::post('/logout', 'AuthController@logout', 'auth.logout');
     });
 
     // Link compatibility layer, prolly remove this in like a year

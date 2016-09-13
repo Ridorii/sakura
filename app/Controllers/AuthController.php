@@ -43,19 +43,16 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        if (!session_check('s')) {
-            $message = 'Validation failed, this logout attempt was possibly forged.';
-            $redirect = $_REQUEST['redirect'] ?? route('main.index');
-            return view('global/information', compact('message', 'redirect'));
+        if (!session_check()) {
+            return view('auth/logout');
         }
 
         // Destroy the active session
         CurrentSession::stop();
 
         // Return true indicating a successful logout
-        $message = 'Goodbye!';
-        $redirect = route('auth.login');
-        return view('global/information', compact('message', 'redirect'));
+        header('Location: ' . route('auth.login'));
+        return;
     }
 
     /**

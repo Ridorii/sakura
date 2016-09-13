@@ -53,7 +53,7 @@
                                 <a class="menu-item fa-gavel" href="{{ route('manage.index') }}" title="Manage"></a>
                             {% endif %}
                             <a class="menu-item fa-cogs" href="{{ route('settings.index') }}" title="Settings"></a>
-                            <a class="menu-item fa-sign-out" href="{{ route('auth.logout') }}?s={{ session_id() }}" title="Logout" id="headerLogoutLink"></a>
+                            <a class="menu-item fa-sign-out" href="{{ route('auth.logout') }}" title="Logout"></a>
                         {% else %}
                             <a class="menu-item fa-magic" href="{{ route('auth.register') }}" title="Register"></a>
                             <a class="menu-item fa-sign-in" href="{{ route('auth.login') }}" title="Login"></a>
