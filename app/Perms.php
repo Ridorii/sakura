@@ -94,15 +94,13 @@ class Perms
         }
 
         // Fetch from the db
-        $get = $get->get();
+        $get = $get->first();
 
         // Check if anything was returned
         if ($get) {
-            $get = get_object_vars($get[0]);
-
-            if (array_key_exists($this->column, $get) && $get['rank_id']) {
+            if (property_exists($get, $this->column) && $get->rank_id) {
                 // Perform a bitwise OR
-                $perm = $perm | bindec((string) $get[$this->column]);
+                $perm = $perm | bindec((string) $get->{$this->column});
             }
         }
 
@@ -138,15 +136,13 @@ class Perms
         }
 
         // Fetch from the db
-        $get = $get->get();
+        $get = $get->first();
 
         // Check if anything was returned
         if ($get) {
-            $get = get_object_vars($get[0]);
-
-            if (array_key_exists($this->column, $get) && $get['user_id']) {
+            if (property_exists($get, $this->column) && $get->user_id) {
                 // Perform a bitwise OR
-                $perm = $perm | bindec((string) $get[$this->column]);
+                $perm = $perm | bindec((string) $get->{$this->column});
             }
         }
 

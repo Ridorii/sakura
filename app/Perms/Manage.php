@@ -22,4 +22,9 @@ class Manage
      * Can this user toggle the restriction status of users?
      */
     const CAN_RESTRICT_USERS = 2;
+
+    /**
+     * Can this user alter other user's profile images?
+     */
+    const CHANGE_IMAGES = 4;
 }

@@ -117,37 +117,37 @@ class SetupCommand extends Command
             [
                 'rank_id' => config('rank.inactive'),
                 'permissions_site' => '00000000000000000000000000000001',
-                'permissions_manage' => '00',
+                'permissions_manage' => '000',
             ],
             [
                 'rank_id' => config('rank.regular'),
                 'permissions_site' => '11110000111111111100111101101100',
-                'permissions_manage' => '00',
+                'permissions_manage' => '000',
             ],
             [
                 'rank_id' => config('rank.mod'),
                 'permissions_site' => '11110001111111111111111111111100',
-                'permissions_manage' => '11',
+                'permissions_manage' => '111',
             ],
             [
                 'rank_id' => config('rank.admin'),
                 'permissions_site' => '11110111111111111111111111111100',
-                'permissions_manage' => '11',
+                'permissions_manage' => '111',
             ],
             [
                 'rank_id' => config('rank.bot'),
                 'permissions_site' => '11110000111111111100111101101100',
-                'permissions_manage' => '00',
+                'permissions_manage' => '000',
             ],
             [
                 'rank_id' => config('rank.premium'),
                 'permissions_site' => '11110001111111111111111111111100',
-                'permissions_manage' => '00',
+                'permissions_manage' => '000',
             ],
             [
                 'rank_id' => config('rank.banned'),
                 'permissions_site' => '11110000000011010100101000100010',
-                'permissions_manage' => '00',
+                'permissions_manage' => '000',
             ],
         ];
 

@@ -164,7 +164,7 @@ class FileController extends Controller
         $user = User::construct($params[0] ?? 0);
 
         if (session_check()) {
-            if (!CurrentSession::$user->permission(Manage::USE_MANAGE, Perms::MANAGE)
+            if (!CurrentSession::$user->permission(Manage::CHANGE_IMAGES, Perms::MANAGE)
                 && ($user->id !== CurrentSession::$user->id
                     || !$user->permission(constant("Sakura\Perms\Site::CHANGE_" . strtoupper($method)))
                     || $user->permission(Site::DEACTIVATED)
