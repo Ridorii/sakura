@@ -61,7 +61,7 @@ class ExceptionHandler
 
         $debug = config('dev.show_errors');
 
-        if (true) {
+        if ($debug) {
             header('Content-Type: text/plain');
             echo $ex;
         } else {

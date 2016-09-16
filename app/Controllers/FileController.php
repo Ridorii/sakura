@@ -57,8 +57,6 @@ class FileController extends Controller
      */
     private function upload($mode, $file, $user)
     {
-        $error = null;
-
         // Handle errors
         switch ($file['error']) {
             case UPLOAD_ERR_OK:
