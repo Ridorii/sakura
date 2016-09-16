@@ -233,6 +233,10 @@ Routerv1::group(['before' => 'maintenance'], function () {
             Routerv1::post('/details', 'Settings.AccountController@details', 'settings.account.details');
             Routerv1::get('/ranks', 'Settings.AccountController@ranks', 'settings.account.ranks');
             Routerv1::post('/ranks', 'Settings.AccountController@ranks', 'settings.account.ranks');
+            Routerv1::get('/userpage', 'Settings.AccountController@userpage', 'settings.account.userpage');
+            Routerv1::post('/userpage', 'Settings.AccountController@userpage', 'settings.account.userpage');
+            Routerv1::get('/signature', 'Settings.AccountController@signature', 'settings.account.signature');
+            Routerv1::post('/signature', 'Settings.AccountController@signature', 'settings.account.signature');
         });
 
         // Friends section
@@ -254,19 +258,6 @@ Routerv1::group(['before' => 'maintenance'], function () {
             });
 
             Routerv1::get('/history', 'Settings.NotificationsController@history', 'settings.notifications.history');
-        });
-
-        // Appearance section
-        Routerv1::group(['prefix' => 'appearance'], function () {
-            Routerv1::get('/', function () {
-                $route = Routerv1::route('settings.appearance.avatar');
-                return header("Location: {$route}");
-            });
-
-            Routerv1::get('/userpage', 'Settings.AppearanceController@userpage', 'settings.appearance.userpage');
-            Routerv1::post('/userpage', 'Settings.AppearanceController@userpage', 'settings.appearance.userpage');
-            Routerv1::get('/signature', 'Settings.AppearanceController@signature', 'settings.appearance.signature');
-            Routerv1::post('/signature', 'Settings.AppearanceController@signature', 'settings.appearance.signature');
         });
 
         // Advanced section

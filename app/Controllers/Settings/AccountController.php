@@ -277,4 +277,75 @@ class AccountController extends Controller
 
         return view('settings/account/ranks', compact('locked'));
     }
+    /**
+     * Renders the userpage editing page.
+     */
+    public function userpage()
+    {
+        // Check permission
+        if (!(
+            CurrentSession::$user->page
+            && CurrentSession::$user->permission(Site::CHANGE_USERPAGE)
+        ) && !CurrentSession::$user->permission(Site::CREATE_USERPAGE)) {
+            throw new HttpMethodNotAllowedException();
+        }
+
+        $userpage = $_POST['userpage'] ?? null;
+        $maxLength = config('user.page_max');
+
+        if (session_check() && $userpage) {
+            $redirect = route('settings.account.userpage');
+
+            if (strlen($userpage) > $maxLength) {
+                $message = 'Your userpage is too long, shorten it a little!';
+            } else {
+                DB::table('users')
+                    ->where('user_id', CurrentSession::$user->id)
+                    ->update([
+                        'user_page' => $userpage,
+                    ]);
+
+                $message = 'Updated your userpage!';
+            }
+
+            return view('global/information', compact('message', 'redirect'));
+        }
+
+        return view('settings/account/userpage', compact('maxLength'));
+    }
+
+    /**
+     * Renders the signature changing page.
+     * @return string
+     */
+    public function signature()
+    {
+        // Check permission
+        if (!CurrentSession::$user->permission(Site::CHANGE_SIGNATURE)) {
+            throw new HttpMethodNotAllowedException();
+        }
+
+        $signature = $_POST['signature'] ?? null;
+        $maxLength = config('user.signature_max');
+
+        if (session_check() && $signature) {
+            $redirect = route('settings.account.signature');
+
+            if (strlen($signature) > $maxLength) {
+                $message = 'Your signature is too long, shorten it a little!';
+            } else {
+                DB::table('users')
+                    ->where('user_id', CurrentSession::$user->id)
+                    ->update([
+                        'user_signature' => $signature,
+                    ]);
+
+                $message = 'Updated your signature!';
+            }
+
+            return view('global/information', compact('message', 'redirect'));
+        }
+
+        return view('settings/account/signature', compact('maxLength'));
+    }
 }

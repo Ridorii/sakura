@@ -47,22 +47,20 @@ class Controller extends BaseController
         if (CurrentSession::$user->permission(Site::ALTER_RANKS)) {
             $nav["Account"]["Ranks"] = route('settings.account.ranks');
         }
+        if ((
+            CurrentSession::$user->page
+            && CurrentSession::$user->permission(Site::CHANGE_USERPAGE)
+        ) || CurrentSession::$user->permission(Site::CREATE_USERPAGE)) {
+            $nav["Account"]["Userpage"] = route('settings.account.userpage');
+        }
+        if (CurrentSession::$user->permission(Site::CHANGE_SIGNATURE)) {
+            $nav["Account"]["Signature"] = route('settings.account.signature');
+        }
 
         // Friends
         if (CurrentSession::$user->permission(Site::MANAGE_FRIENDS)) {
             $nav["Friends"]["Listing"] = route('settings.friends.listing');
             $nav["Friends"]["Requests"] = route('settings.friends.requests');
-        }
-
-        // Appearance
-        if ((
-            CurrentSession::$user->page
-            && CurrentSession::$user->permission(Site::CHANGE_USERPAGE)
-        ) || CurrentSession::$user->permission(Site::CREATE_USERPAGE)) {
-            $nav["Appearance"]["Userpage"] = route('settings.appearance.userpage');
-        }
-        if (CurrentSession::$user->permission(Site::CHANGE_SIGNATURE)) {
-            $nav["Appearance"]["Signature"] = route('settings.appearance.signature');
         }
 
         // Advanced
