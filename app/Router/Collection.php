@@ -66,7 +66,7 @@ class Collection
 
         if (!array_key_exists($method, $this->paths)
             || !array_key_exists($path, $this->paths[$method])) {
-            throw new Exception;
+            throw new \Exception;
         }
 
         return $this->paths[$method][$path]->fire();

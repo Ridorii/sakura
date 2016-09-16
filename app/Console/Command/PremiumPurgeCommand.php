@@ -8,6 +8,7 @@ namespace Sakura\Console\Command;
 
 use CLIFramework\Command;
 use Sakura\DB;
+use Sakura\User;
 
 /**
  * Starts up a development server.
