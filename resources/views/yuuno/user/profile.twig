@@ -170,6 +170,9 @@
                         <a class="fa fa-reply" title="View {{ profile.username }}'s posts" href="#_posts" onclick="profileMode('posts');"></a>
                         <a class="fa fa-star" title="View {{ profile.username }}'s friends" href="#_friends" onclick="profileMode('friends');"></a>
                         <a class="fa fa-comments-o" title="View {{ profile.username }}'s profile comments" href="#_comments" onclick="profileMode('comments');"></a>
+                        {% if (profile.isActive and profile.id == user.id) or user.permission(constant('Sakura\\Perms\\Manage::CHANGE_IMAGES'), constant('Sakura\\Perms::MANAGE')) %}
+                            <a class="fa fa-picture-o" title="Edit your avatar, background and header" href="#_images" onclick="profileMode('images');"></a>
+                        {% endif %}
                     </div>
                     {% if user.isActive %}
                     <div class="new-profile-actions">
@@ -206,6 +209,9 @@
                         </div>
                         <div id="profile-mode-comments" class="hidden">
                             {% include 'profile/comments.twig' %}
+                        </div>
+                        <div id="profile-mode-images" class="hidden">
+                            {% include 'profile/images.twig' %}
                         </div>
                     </div>
                     <div class="new-profile-data">

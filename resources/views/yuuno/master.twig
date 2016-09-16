@@ -49,6 +49,7 @@
                         {% if user.isActive %}
                             <a class="menu-item avatar" href="{{ route('user.profile', user.id) }}" title="Logged in as {{ user.username }}" style="background-image: url('{{ route('user.avatar', user.id) }}'); width: auto; color: {{ user.colour }}; border-color: {{ user.colour }}; font-weight: 700;"></a>
                             {#<a class="menu-item fa-envelope" href="#" title="Messages"></a>#}
+                            <a class="menu-item fa-bell" href="javascript:;" title="Notifications"></a>
                             {% if user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
                                 <a class="menu-item fa-gavel" href="{{ route('manage.index') }}" title="Manage"></a>
                             {% endif %}
@@ -62,7 +63,7 @@
                 </div>
             </div>
             <div id="contentwrapper">
-                <div id="notifications"></div>
+                <div id="notifications" class="alerts"></div>
                 {% if profile is defined ? profile.background : (user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) and (user.backgroundSitewide or showBG) and user.background) %}
                     <div id="userBackground" style="background-image: url('{{ route('user.background', (profile is defined ? profile : user).id) }}');"></div>
                 {% endif %}
@@ -112,7 +113,7 @@
             </div>
             <div class="footer">
                 <div class="ftsections">
-                    <div class="copycentre">Powered by <a href="https://github.com/flashwave/sakura/">Sakura</a> &copy; 2013-2016 <a href="http://flash.moe/">Flashwave</a></div>
+                    <div class="copycentre">Powered by <a href="https://github.com/flashwave/sakura/">Sakura</a> &copy; 2013-2016 <a href="http://aitemu.moe/">Aitemu</a></div>
                     <ul class="ftsection">
                         <li class="fthead">General</li>
                         <li><a href="{{ route('main.index') }}">Home</a></li>
@@ -128,7 +129,7 @@
                         <li><a href="https://twitter.com/_flashii">Twitter</a></li>
                         <li><a href="https://youtube.com/user/flashiinet">YouTube</a></li>
                         <li><a href="https://steamcommunity.com/groups/flashiinet">Steam</a></li>
-                        <li><a href="https://github.com/flashii">GitHub</a></li>
+                        <li><a href="https://github.com/aitemu">GitHub</a></li>
                     </ul>
                     <ul class="ftsection">
                         <li class="fthead">Information</li>

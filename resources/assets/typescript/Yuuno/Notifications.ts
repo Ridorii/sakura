@@ -16,23 +16,24 @@ namespace Yuuno
         public static Display(alert: Sakura.INotification): void
         {
             var id = 'yuuno-alert-' + Date.now(),
-                container: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div', 'notification-enter', id),
-                iconContent: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div'),
-                icon: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div', 'notification-icon'),
-                inner: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div', 'notification-content'),
-                title: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div', 'notification-title'),
-                text: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div', 'notification-text'),
-                close: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div', 'notification-close'),
-                closeIcon: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div');
+                container: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div', 'alert alert--enter', id),
+                iconContent: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div', 'alert__icon-inner'),
+                icon: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div', 'alert__icon'),
+                inner: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div', 'alert__content'),
+                title: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div', 'alert__title'),
+                text: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div', 'alert__text'),
+                close: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div', 'alert__close'),
+                closeIcon: HTMLDivElement = <HTMLDivElement>Sakura.DOM.Create('div', 'alert__close-inner');
 
             if (alert.image === null) {
-                Sakura.DOM.AddClass(iconContent, ['font-icon', 'fa', 'fa-info', 'fa-4x']);
+                Sakura.DOM.AddClass(iconContent, ['alert__icon-inner--font', 'fa', 'fa-info', 'fa-4x']);
             } else if (alert.image.substring(0, 5) == 'FONT:') {
-                Sakura.DOM.AddClass(iconContent, ['font-icon', 'fa', alert.image.replace('FONT:', ''), 'fa-4x']);
+                Sakura.DOM.AddClass(iconContent, ['alert__icon-inner--font', 'fa', alert.image.replace('FONT:', ''), 'fa-4x']);
             } else {
                 iconContent.style.background = "url(0) no-repeat center center / cover transparent".replace('0', alert.image);
                 iconContent.style.width = "100%";
                 iconContent.style.height = "100%";
+                iconContent.className += " alert__icon-inner--image";
             }
 
             Sakura.DOM.Append(icon, iconContent);
@@ -71,7 +72,7 @@ namespace Yuuno
         private static CloseAlert(id: string): void
         {
             var element: HTMLElement = Sakura.DOM.ID(id);
-            Sakura.DOM.AddClass(element, ['notification-exit']);
+            Sakura.DOM.AddClass(element, ['alert--exit']);
             setTimeout(() => {
                 Sakura.DOM.Remove(element);
             }, 410);
