@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block settingsContent %}
-    <form enctype="multipart/form-data" method="post" action="{{ route('settings.account.details') }}">
+    <form enctype="multipart/form-data" method="post" action="javascript:;" onsubmit="updateSettings(this, '{{ route('settings.account.details') }}');">
         {% if edit_email %}
             <div class="profile-field">
                 <div><h2>E-mail address</h2></div>

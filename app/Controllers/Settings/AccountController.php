@@ -30,7 +30,6 @@ class AccountController extends Controller
         }
 
         if (session_check()) {
-            $redirect = route('settings.account.profile');
             $save = [];
             $allowed = [
                 'website',
@@ -64,9 +63,9 @@ class AccountController extends Controller
                     if (!checkdate($month, $day, $year ? $year : 1)
                         || $year > date("Y")
                         || ($year != 0 && $year < (date("Y") - 100))) {
-                        $message = "Your birthdate was invalid, everything else was saved though!";
-
-                        return view('global/information', compact('message', 'redirect'));
+                        return $this->json(
+                            ['error' => "Your birthdate was invalid, everything else was saved though!"]
+                        );
                     }
 
                     // Combine it into a YYYY-MM-DD format
@@ -80,8 +79,7 @@ class AccountController extends Controller
                     ]);
             }
 
-            redirect($redirect);
-            return;
+            return $this->json(['error' => null]);
         }
 
         return view('settings/account/profile');
@@ -110,20 +108,21 @@ class AccountController extends Controller
         $username_allow = $edit_usern && (time() - $last_name_change) > 2592000;
 
         if (isset($_POST['session']) && session_check()) {
-            $redirect = route('settings.account.details');
             $email = $_POST['email'] ?? null;
 
             if ($email) {
                 // Validate e-mail address
                 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    $message = "The e-mail address you supplied is invalid!";
-                    return view('global/information', compact('redirect', 'message'));
+                    return $this->json(
+                        ['error' => "The e-mail address you supplied is invalid!"]
+                    );
                 }
 
                 // Check the MX record of the email
                 if (!check_mx_record($email)) {
-                    $message = 'No valid MX-Record found on the e-mail address you supplied.';
-                    return view('global/information', compact('redirect', 'message'));
+                    return $this->json(
+                        ['error' => 'No valid MX-Record found on the e-mail address you supplied.']
+                    );
                 }
 
                 // Check if the e-mail has already been used
@@ -131,8 +130,9 @@ class AccountController extends Controller
                     ->where('email', $email)
                     ->count();
                 if ($emailCheck) {
-                    $message = 'Someone already used this e-mail!';
-                    return view('global/information', compact('redirect', 'message'));
+                    return $this->json(
+                        ['error' => 'Someone already used this e-mail!']
+                    );
                 }
 
                 $user->setMail($email);
@@ -145,14 +145,16 @@ class AccountController extends Controller
 
                 // Check if the username is too short
                 if (strlen($username_clean) < config('user.name_min')) {
-                    $message = "This username is too short!";
-                    return view('global/information', compact('redirect', 'message'));
+                    return $this->json(
+                        ['error' => 'This username is too short!']
+                    );
                 }
 
                 // Check if the username is too long
                 if (strlen($username_clean) > config('user.name_max')) {
-                    $message = "This username is too long!";
-                    return view('global/information', compact('redirect', 'message'));
+                    return $this->json(
+                        ['error' => 'This username is too long!']
+                    );
                 }
 
                 // Check if this username hasn't been used in the last amount of days set in the config
@@ -164,8 +166,9 @@ class AccountController extends Controller
 
                 // Check if anything was returned
                 if ($getOld && $getOld->user_id != $user->id) {
-                    $message = "The username you tried to use is reserved, try again later!";
-                    return view('global/information', compact('redirect', 'message'));
+                    return $this->json(
+                        ['error' => 'The username you tried to use is reserved, try again later!']
+                    );
                 }
 
                 // Check if the username is already in use
@@ -175,8 +178,9 @@ class AccountController extends Controller
 
                 // Check if anything was returned
                 if ($getInUse) {
-                    $message = "Someone is already using this name!";
-                    return view('global/information', compact('redirect', 'message'));
+                    return $this->json(
+                        ['error' => 'Someone is already using this name!']
+                    );
                 }
 
                 $user->setUsername($username);
@@ -186,8 +190,9 @@ class AccountController extends Controller
 
             if ($title) {
                 if (strlen($title) > 64) {
-                    $message = "This title is too long!";
-                    return view('global/information', compact('redirect', 'message'));
+                    return $this->json(
+                        ['error' => 'This title is too long!']
+                    );
                 }
 
                 if ($title !== $user->title) {
@@ -205,15 +210,15 @@ class AccountController extends Controller
             if ($password) {
                 // Check password entropy
                 if (password_entropy($password) < config('user.pass_min_entropy')) {
-                    $message = "Your password isn't strong enough!";
-                    return view('global/information', compact('redirect', 'message'));
+                    return $this->json(
+                        ['error' => "Your password isn't strong enough!"]
+                    );
                 }
 
                 $user->setPassword($password);
             }
 
-            redirect($redirect);
-            return;
+            return $this->json(['error' => null]);
         }
 
         return view('settings/account/details', compact(

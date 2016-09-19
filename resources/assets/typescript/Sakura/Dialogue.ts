@@ -46,6 +46,8 @@ namespace Sakura
             DOM.Append(text, DOM.Text(this.Text));
             DOM.Append(container, text);
 
+            var firstBtn: HTMLButtonElement = null;
+
             for (var btnId in buttons) {
                 var btnType: DialogueButton = buttons[btnId],
                     btnText: string = DialogueButton[btnType],
@@ -58,12 +60,17 @@ namespace Sakura
                 });
 
                 DOM.Append(buttonCont, button);
+
+                if (firstBtn === null) {
+                    firstBtn = button;
+                }
             }
 
             DOM.Append(container, buttonCont);
 
             DOM.Append(DOM.ID('dialogues'), container);
             this.Reference = container;
+            firstBtn.focus();
         }
 
         public Close(): void

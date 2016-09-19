@@ -90,7 +90,7 @@
 {% set birthday = user.birthday|split('-') %}
 
 {% block settingsContent %}
-    <form enctype="multipart/form-data" method="post" action="{{ route('settings.account.profile') }}">
+    <form enctype="multipart/form-data" method="post" action="javascript:;" onsubmit="updateSettings(this, '{{ route('settings.account.profile') }}');">
         {% for id, vars in fields %}
             <div class="profile-field {{ id }}">
                 <div>
