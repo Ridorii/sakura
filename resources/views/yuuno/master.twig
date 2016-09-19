@@ -64,6 +64,7 @@
             </div>
             <div id="contentwrapper">
                 <div id="notifications" class="alerts"></div>
+                <div id="dialogues" class="dialogues"></div>
                 {% if profile is defined ? profile.background : (user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) and (user.backgroundSitewide or showBG) and user.background) %}
                     <div id="userBackground" style="background-image: url('{{ route('user.background', (profile is defined ? profile : user).id) }}');"></div>
                 {% endif %}
