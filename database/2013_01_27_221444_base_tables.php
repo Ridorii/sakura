@@ -48,7 +48,7 @@ class BaseTables extends Migration
                 ->unsigned()
                 ->default(0);
 
-            $table->text('comment_text', 255);
+            $table->text('comment_text');
         });
 
         $schema->create('emoticons', function (Blueprint $table) {

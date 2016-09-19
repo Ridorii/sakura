@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b52ed9a48bc73bde0940da07200c9f92",
-    "content-hash": "ee30eebf11e0d54fe7b19abbd4f134ea",
+    "hash": "13c2ef04ff1ab1ec56de6ba0e0b6d618",
+    "content-hash": "0271a89a85f0cb235b06b4473e71a45c",
     "packages": [
         {
             "name": "corneltek/class-template",
@@ -1017,6 +1017,58 @@
             "description": "The Illuminate Support package.",
             "homepage": "http://laravel.com",
             "time": "2016-08-05 14:49:58"
+        },
+        {
+            "name": "matto1990/lastfm-api",
+            "version": "v1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/matto1990/PHP-Last.fm-API.git",
+                "reference": "a02fadc09ebb6cfedc4236b622b02c254247a94e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/matto1990/PHP-Last.fm-API/zipball/a02fadc09ebb6cfedc4236b622b02c254247a94e",
+                "reference": "a02fadc09ebb6cfedc4236b622b02c254247a94e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "php": ">=5.3.3",
+                "phpunit/phpunit": "~4.8",
+                "vlucas/phpdotenv": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LastFmApi\\": "src/lastfmapi/",
+                    "Tests\\": "tests"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marcos",
+                    "email": "devilcius@gmail.com"
+                },
+                {
+                    "name": "Matt",
+                    "email": "matt@oakes.ws"
+                }
+            ],
+            "description": "Last.fm webservice client",
+            "homepage": "https://github.com/matto1990/PHP-Last.fm-API",
+            "keywords": [
+                "api",
+                "last.fm",
+                "webservice client"
+            ],
+            "time": "2016-07-22 13:10:12"
         },
         {
             "name": "nesbot/carbon",
