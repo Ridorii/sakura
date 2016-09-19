@@ -76,6 +76,28 @@
     {% if not profileHidden %}
     <script type="text/javascript">
         window.addEventListener('load', function () {
+            {% if profile.lastfm %}
+            var np = new Sakura.AJAX();
+            np.SetUrl("{{ route('user.nowplaying', user.id) }}");
+            np.AddCallback(200, function () {
+                var data = np.JSON(),
+                    artist = Sakura.DOM.ID('np-artist'),
+                    track = Sakura.DOM.ID('np-track'),
+                    state = Sakura.DOM.ID('np-state'),
+                    by = Sakura.DOM.ID('np-by');
+
+                console.log(data);
+                artist.href = data.artist_url;
+                artist.textContent = data.artist;
+                track.href = data.track_url;
+                track.textContent = data.track;
+                state.className = 'fa ' + (data.listening ? 'fa-play-circle' : 'fa-history');
+                by.className = data.track === '' || data.artist === '' ? 'hidden' : '';
+            });
+            setInterval(function () { np.Start(Sakura.HTTPMethod.GET); }, 20000);
+            np.Start(Sakura.HTTPMethod.GET);
+            {% endif %}
+
             // Check if location.hash is set
             if (location.hash) {
                 var open = location.hash.slice(2);
@@ -191,6 +213,19 @@
                 </div>
                 <div class="new-profile-content">
                     <div class="new-profile-mode">
+                        {% if profile.lastfm %}
+                        <div class="np">
+                            <div class="np-icon">
+                                <span class="fa fa-music"></span>
+                            </div>
+                            <div class="np-text">
+                                <span class="fa fa-ellipsis-h" id="np-state"></span>
+                                <a href="#" id="np-track"></a>
+                                <span id="np-by" class="hidden">by</span>
+                                <a href="#" id="np-artist"></a>
+                            </div>
+                        </div>
+                        {% endif %}
                         <noscript><h1 class="stylised" style="text-align: center;">Please enable Javascript!</h1></noscript>
                         <div id="profile-mode-userpage" class="hidden">
                             {% include 'profile/userpage.twig' %}

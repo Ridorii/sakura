@@ -7,6 +7,7 @@
 namespace Sakura\Controllers;
 
 use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
+use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Sakura\Config;
 use Sakura\CurrentSession;
 use Sakura\DB;
@@ -47,6 +48,34 @@ class UserController extends Controller
         }
 
         return view('user/profile', compact('profile'));
+    }
+
+    /**
+     * Last listened to.
+     * @param int $id
+     * @throws HttpRouteNotFoundException
+     * @return string
+     */
+    public function nowPlaying($id)
+    {
+        $user = User::construct($id);
+
+        if ($user->id === 0) {
+            throw new HttpRouteNotFoundException;
+        }
+
+        $user->updateLastTrack();
+
+        $artist_url = 'http://last.fm/music/' . urlencode($user->musicArtist);
+        $track_url = $artist_url . '/_/' . urlencode($user->musicTrack);
+
+        return $this->json([
+            'track' => $user->musicTrack,
+            'track_url' => $track_url,
+            'artist' => $user->musicArtist,
+            'artist_url' => $artist_url,
+            'listening' => $user->musicListening,
+        ]);
     }
 
     /**

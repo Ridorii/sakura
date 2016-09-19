@@ -7,6 +7,9 @@
 namespace Sakura;
 
 use Carbon\Carbon;
+use LastFmApi\Api\AuthApi;
+use LastFmApi\Api\UserApi;
+use LastFmApi\Exception\LastFmApiExeption;
 use Sakura\Perms;
 use Sakura\Perms\Site;
 use stdClass;
@@ -211,6 +214,30 @@ class User
     private $design = '';
 
     /**
+     * Title of the track this user last listened to.
+     * @var string
+     */
+    public $musicTrack;
+
+    /**
+     * Artist of the track this user last listened to.
+     * @var string
+     */
+    public $musicArtist;
+
+    /**
+     * Last time this was updated.
+     * @var int
+     */
+    public $musicCheck;
+
+    /**
+     * Whether the user is actively listening.
+     * @var bool
+     */
+    public $musicListening;
+
+    /**
      * The user's birthday.
      * @var string
      */
@@ -332,11 +359,15 @@ class User
             $this->osu = $userRow->user_osu;
             $this->lastfm = $userRow->user_lastfm;
             $this->design = $userRow->user_design;
+            $this->musicTrack = $userRow->user_music_track;
+            $this->musicArtist = $userRow->user_music_artist;
+            $this->musicListening = boolval($userRow->user_music_listening);
+            $this->musicCheck = intval($userRow->user_music_check);
 
             // Temporary backwards compatible IP storage system
             try {
                 $this->registerIp = Net::ntop($userRow->register_ip);
-            } catch (Exception $e) {
+            } catch (NetAddressTypeException $e) {
                 $this->registerIp = $userRow->register_ip;
 
                 DB::table('users')
@@ -348,7 +379,7 @@ class User
 
             try {
                 $this->lastIp = Net::ntop($userRow->last_ip);
-            } catch (Exception $e) {
+            } catch (NetAddressTypeException $e) {
                 $this->lastIp = $userRow->last_ip;
 
                 DB::table('users')
@@ -1090,5 +1121,44 @@ class User
             ->join('user_ranks', 'ranks.rank_id', '=', 'user_ranks.rank_id')
             ->where('user_id', $this->id)
             ->max('ranks.rank_hierarchy');
+    }
+
+    /**
+     * Update last listened data.
+     */
+    public function updateLastTrack()
+    {
+        if (strlen($this->lastfm) < 1
+            || $this->musicCheck + config('user.music_update') > time()) {
+            return;
+        }
+
+        $lfm = new UserApi(
+            new AuthApi('setsession', ['apiKey' => config('lastfm.api_key')])
+        );
+
+        try {
+            $last = $lfm->getRecentTracks(['user' => $this->lastfm, 'limit' => '1']);
+        } catch (LastFmApiExeption $e) {
+            return;
+        }
+
+        if (count($last) < 1) {
+            return;
+        }
+
+        $this->musicCheck = time();
+        $this->musicListening = isset($last[0]['nowplaying']);
+        $this->musicTrack = $last[0]['name'] ?? null;
+        $this->musicArtist = $last[0]['artist']['name'] ?? null;
+
+        DB::table('users')
+            ->where('user_id', $this->id)
+            ->update([
+                'user_music_check' => $this->musicCheck,
+                'user_music_listening' => $this->musicListening,
+                'user_music_track' => $this->musicTrack,
+                'user_music_artist' => $this->musicArtist,
+            ]);
     }
 }

@@ -164,6 +164,8 @@ Routerv1::group(['before' => 'maintenance'], function () {
         Routerv1::get('/{id}', 'UserController@profile', 'user.profile');
         Routerv1::get('/{id}/report', 'UserController@report', 'user.report');
 
+        Routerv1::get('/{id}/nowplaying', 'UserController@nowPlaying', 'user.nowplaying');
+
         Routerv1::get('/{id}/avatar', 'FileController@avatar', 'user.avatar');
         Routerv1::post('/{id}/avatar', 'FileController@avatar', 'user.avatar');
         Routerv1::delete('/{id}/avatar', 'FileController@avatar', 'user.avatar');

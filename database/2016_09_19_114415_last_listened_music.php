@@ -14,23 +14,17 @@ class LastListenedMusic extends Migration
         $schema = DB::getSchemaBuilder();
 
         $schema->table('users', function (Blueprint $table) {
-            $table->text('user_last_track')
+            $table->text('user_music_track')
                 ->nullable();
 
-            $table->string('user_last_track_url', 255)
-                ->nullable()
-                ->default(null);
-
-            $table->text('user_last_artist')
+            $table->text('user_music_artist')
                 ->nullable();
 
-            $table->string('user_last_artist_url', 255)
-                ->nullable()
-                ->default(null);
+            $table->integer('user_music_check')
+                ->default(0);
 
-            $table->string('user_last_cover', 255)
-                ->nullable()
-                ->default(null);
+            $table->boolean('user_music_listening')
+                ->default(false);
         });
     }
 
@@ -44,11 +38,10 @@ class LastListenedMusic extends Migration
 
         $schema->table('users', function (Blueprint $table) {
             $table->dropColumn([
-                'user_last_track',
-                'user_last_track_url',
-                'user_last_artist',
-                'user_last_artist_url',
-                'user_last_cover',
+                'user_music_track',
+                'user_music_artist',
+                'user_music_check',
+                'user_music_listening',
             ]);
         });
     }
