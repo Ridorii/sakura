@@ -62,6 +62,33 @@
 {% block js %}
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js"></script>
     <script type="text/javascript">
+        function deletePost(id) {
+            var confirm = new Sakura.Dialogue;
+            confirm.SetType(Sakura.DialogueType.Confirm);
+            confirm.Text = "Are you sure?";
+            confirm.AddCallback(Sakura.DialogueButton.Yes, function () {
+                var deleter = new Sakura.AJAX;
+                deleter.SetUrl("{{ route('forums.post.delete', 1) }}".replace('1', id));
+                deleter.AddCallback(200, function () {
+                    Sakura.DOM.Remove(Sakura.DOM.ID('p' + id));
+                });
+                deleter.AddCallback(0, function () {
+                    var error = new Sakura.Dialogue;
+                    error.Text = "Deletion failed!";
+                    error.AddCallback(Sakura.DialogueButton.Ok, function () {
+                        this.Close();
+                    });
+                    error.Display();
+                });
+                deleter.Start(Sakura.HTTPMethod.DELETE);
+                this.Close();
+            });
+            confirm.AddCallback(Sakura.DialogueButton.No, function () {
+                this.Close();
+            });
+            confirm.Display();
+        }
+
         hljs.initHighlightingOnLoad();
     </script>
 {% endblock %}
@@ -93,7 +120,7 @@
                                             <a class="fa fa-pencil-square-o" title="Edit this post" href="javascript:void(0);" onclick="editPost({{ post.id }});"></a>
                                         {% endif %}
                                         {% if (user.id == post.poster.id and forum.permission(constant('Sakura\\Perms\\Forum::DELETE_OWN'), user.id)) or forum.permission(constant('Sakura\\Perms\\Forum::DELETE_ANY'), user.id) %}
-                                            <a class="fa fa-trash" title="Delete this post" href="{{ route('forums.post.delete', post.id) }}"></a>
+                                            <a class="fa fa-trash" title="Delete this post" href="javascript:;" onclick="deletePost({{ post.id }})"></a>
                                         {% endif %}
                                         {% if not (post.poster.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) or post.poster.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) or user.id == post.poster.id) %}
                                             <a class="fa fa-{% if user.isFriends(post.poster.id) == 2 %}heart{% else %}star{% endif %} friend-{{ post.poster.id }}-level" title="You are friends" {% if user.isFriends(post.poster.id) == 0 %}style="display: none;"{% endif %}></a>

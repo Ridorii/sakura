@@ -215,15 +215,9 @@ class PostController extends Controller
         if ($topic->replyCount() === 1) {
             // Delete the entire topic
             $topic->delete();
-
-            $redirect = route('forums.forum', $forum->id);
         } else {
             // Just delete the post (replace this with soft deleting)
             $post->purge();
-
-            $redirect = route('forums.topic', $topic->id);
         }
-
-        redirect($redirect);
     }
 }

@@ -124,9 +124,8 @@ Routerv1::group(['before' => 'maintenance'], function () {
         Routerv1::group(['prefix' => 'post'], function () {
             Routerv1::get('/{id:i}', 'Forum.PostController@find', 'forums.post');
             Routerv1::group(['before' => 'loginCheck'], function () {
+                Routerv1::delete('/{id:i}', 'Forum.PostController@delete', 'forums.post.delete');
                 Routerv1::get('/{id:i}/raw', 'Forum.PostController@raw', 'forums.post.raw');
-                Routerv1::get('/{id:i}/delete', 'Forum.PostController@delete', 'forums.post.delete');
-                Routerv1::post('/{id:i}/delete', 'Forum.PostController@delete', 'forums.post.delete');
                 Routerv1::post('/{id:i}/edit', 'Forum.PostController@edit', 'forums.post.edit');
             });
         });

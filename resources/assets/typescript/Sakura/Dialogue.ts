@@ -6,6 +6,7 @@ namespace Sakura
         private Type: DialogueType = DialogueType.Info;
         private Callbacks: Dictionary<DialogueButton, Function> = new Dictionary<DialogueButton, Function>();
         public static Container: string = "dialogues";
+        public Reference: HTMLDivElement;
 
         public SetType(type: DialogueType): void
         {
@@ -62,6 +63,13 @@ namespace Sakura
             DOM.Append(container, buttonCont);
 
             DOM.Append(DOM.ID('dialogues'), container);
+            this.Reference = container;
+        }
+
+        public Close(): void
+        {
+            DOM.Remove(this.Reference);
+            this.Reference = null;
         }
     }
 }
