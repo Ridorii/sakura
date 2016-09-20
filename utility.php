@@ -3,8 +3,6 @@
  * A set of utility helper functions
  */
 
-use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
-use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Sakura\Config;
 use Sakura\Exceptions\ConfigValueNotFoundException;
 use Sakura\Net;
@@ -52,20 +50,6 @@ function view($name, $vars = [])
 {
     Template::vars($vars);
     return Template::render($name);
-}
-
-// Abort response
-function abort($status = 200)
-{
-    http_response_code($status);
-
-    switch ($status) {
-        case 403:
-            throw new HttpMethodNotAllowedException;
-
-        case 404:
-            throw new HttpRouteNotFoundException;
-    }
 }
 
 function clean_string($string, $lower = false, $noSpecial = false, $replaceSpecial = '')
