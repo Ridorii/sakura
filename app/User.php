@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use LastFmApi\Api\AuthApi;
 use LastFmApi\Api\UserApi;
 use LastFmApi\Exception\LastFmApiExeption;
+use Sakura\Exceptions\NetAddressTypeException;
 use Sakura\Perms;
 use Sakura\Perms\Site;
 use stdClass;

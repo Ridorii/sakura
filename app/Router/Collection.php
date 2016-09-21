@@ -81,7 +81,7 @@ class Collection
     public function url($name, $params = [])
     {
         if (!array_key_exists($name, $this->names)) {
-            throw new Exception;
+            throw new \Exception;
         }
 
         return parse_url('/' . $this->names[$name]->path, PHP_URL_PATH);
