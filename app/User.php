@@ -44,7 +44,7 @@ class User
      * The user's password hash.
      * @var string
      */
-    public $password = '';
+    private $password = '';
 
     /**
      * UNIX timestamp of last time the password was changed.
