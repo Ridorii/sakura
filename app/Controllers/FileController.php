@@ -152,7 +152,6 @@ class FileController extends Controller
      * Catchall serve.
      * @param string $method
      * @param array $params
-     * @todo add a specific permission for mods to override uploads.
      * @return string
      */
     public function __call($method, $params)
