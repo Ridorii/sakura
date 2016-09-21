@@ -70,7 +70,10 @@ class AdvancedController extends Controller
      */
     public function deactivate()
     {
-        // Check permission
+        if (CurrentSession::$user->permission(Site::DEACTIVATED)) {
+            return view('settings/advanced/deactivate_bye');
+        }
+
         if (!CurrentSession::$user->permission(Site::DEACTIVATE_ACCOUNT)) {
             throw new HttpMethodNotAllowedException();
         }

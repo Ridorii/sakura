@@ -6,22 +6,7 @@
 // Define namespace
 namespace Sakura;
 
-use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
 use Phroute\Phroute\Exception\HttpRouteNotFoundException;
-
-// Check if logged out
-Routerv1::filter('logoutCheck', function () {
-    if (CurrentSession::$user->isActive()) {
-        throw new HttpRouteNotFoundException();
-    }
-});
-
-// Check if logged in
-Routerv1::filter('loginCheck', function () {
-    if (!CurrentSession::$user->isActive()) {
-        throw new HttpMethodNotAllowedException();
-    }
-});
 
 // Maintenance check
 Routerv1::filter('maintenance', function () {
@@ -39,25 +24,21 @@ Routerv1::group(['before' => 'maintenance'], function () {
     Routerv1::get('/search', 'MetaController@search', 'main.search');
 
     // Auth
-    Routerv1::group(['before' => 'logoutCheck'], function () {
-        Routerv1::get('/login', 'AuthController@login', 'auth.login');
-        Routerv1::post('/login', 'AuthController@login', 'auth.login');
-        Routerv1::get('/register', 'AuthController@register', 'auth.register');
-        Routerv1::post('/register', 'AuthController@register', 'auth.register');
-        Routerv1::get('/resetpassword', 'AuthController@resetPassword', 'auth.resetpassword');
-        Routerv1::post('/resetpassword', 'AuthController@resetPassword', 'auth.resetpassword');
-        Routerv1::get('/reactivate', 'AuthController@reactivate', 'auth.reactivate');
-        Routerv1::post('/reactivate', 'AuthController@reactivate', 'auth.reactivate');
-        Routerv1::get('/activate', 'AuthController@activate', 'auth.activate');
-    });
-    Routerv1::group(['before' => 'loginCheck'], function () {
-        Routerv1::get('/logout', 'AuthController@logout', 'auth.logout');
-        Routerv1::post('/logout', 'AuthController@logout', 'auth.logout');
-    });
+    Routerv1::get('/login', 'AuthController@login', 'auth.login');
+    Routerv1::post('/login', 'AuthController@login', 'auth.login');
+    Routerv1::get('/register', 'AuthController@register', 'auth.register');
+    Routerv1::post('/register', 'AuthController@register', 'auth.register');
+    Routerv1::get('/resetpassword', 'AuthController@resetPassword', 'auth.resetpassword');
+    Routerv1::post('/resetpassword', 'AuthController@resetPassword', 'auth.resetpassword');
+    Routerv1::get('/reactivate', 'AuthController@reactivate', 'auth.reactivate');
+    Routerv1::post('/reactivate', 'AuthController@reactivate', 'auth.reactivate');
+    Routerv1::get('/activate', 'AuthController@activate', 'auth.activate');
+    Routerv1::get('/logout', 'AuthController@logout', 'auth.logout');
+    Routerv1::post('/logout', 'AuthController@logout', 'auth.logout');
 
     // Link compatibility layer, prolly remove this in like a year
     Routerv1::get('/r/{id}', function ($id) {
-        header("Location: /p/{$id}");
+        redirect("/p/{$id}");
     });
     Routerv1::get('/p/{id}', function ($id) {
         $resolve = [
@@ -83,7 +64,7 @@ Routerv1::group(['before' => 'maintenance'], function () {
 
         $link = $resolve[$id];
 
-        header("Location: " . (substr($link, 0, 4) === 'http' ? $link : route($link)));
+        redirect(substr($link, 0, 4) === 'http' ? $link : route($link));
     });
 
     // Info
@@ -123,11 +104,9 @@ Routerv1::group(['before' => 'maintenance'], function () {
         // Post
         Routerv1::group(['prefix' => 'post'], function () {
             Routerv1::get('/{id:i}', 'Forum.PostController@find', 'forums.post');
-            Routerv1::group(['before' => 'loginCheck'], function () {
-                Routerv1::delete('/{id:i}', 'Forum.PostController@delete', 'forums.post.delete');
-                Routerv1::get('/{id:i}/raw', 'Forum.PostController@raw', 'forums.post.raw');
-                Routerv1::post('/{id:i}/edit', 'Forum.PostController@edit', 'forums.post.edit');
-            });
+            Routerv1::delete('/{id:i}', 'Forum.PostController@delete', 'forums.post.delete');
+            Routerv1::get('/{id:i}/raw', 'Forum.PostController@raw', 'forums.post.raw');
+            Routerv1::post('/{id:i}/edit', 'Forum.PostController@edit', 'forums.post.edit');
         });
 
         // Topic
@@ -145,15 +124,13 @@ Routerv1::group(['before' => 'maintenance'], function () {
         // Forum
         Routerv1::get('/', 'Forum.ForumController@index', 'forums.index');
         Routerv1::get('/{id:i}', 'Forum.ForumController@forum', 'forums.forum');
-        Routerv1::group(['before' => 'loginCheck'], function () {
-            Routerv1::get('/{id:i}/mark', 'Forum.ForumController@markRead', 'forums.mark');
-            Routerv1::get('/{id:i}/new', 'Forum.TopicController@create', 'forums.new');
-            Routerv1::post('/{id:i}/new', 'Forum.TopicController@create', 'forums.new');
-        });
+        Routerv1::get('/{id:i}/mark', 'Forum.ForumController@markRead', 'forums.mark');
+        Routerv1::get('/{id:i}/new', 'Forum.TopicController@create', 'forums.new');
+        Routerv1::post('/{id:i}/new', 'Forum.TopicController@create', 'forums.new');
     });
 
     // Members
-    Routerv1::group(['prefix' => 'members', 'before' => 'loginCheck'], function () {
+    Routerv1::group(['prefix' => 'members'], function () {
         Routerv1::get('/', 'UserController@members', 'members.index');
         Routerv1::get('/{rank:i}', 'UserController@members', 'members.rank');
     });
@@ -185,20 +162,20 @@ Routerv1::group(['before' => 'maintenance'], function () {
     });
 
     // Comments
-    Routerv1::group(['prefix' => 'comments', 'before' => 'loginCheck'], function () {
+    Routerv1::group(['prefix' => 'comments'], function () {
         Routerv1::post('/{category:c}/post/{reply:i}?', 'CommentsController@post', 'comments.category.post');
         Routerv1::post('/{id:i}/delete', 'CommentsController@delete', 'comments.comment.delete');
         Routerv1::post('/{id:i}/vote', 'CommentsController@vote', 'comments.comment.vote');
     });
 
     // Comments
-    Routerv1::group(['prefix' => 'friends', 'before' => 'loginCheck'], function () {
+    Routerv1::group(['prefix' => 'friends'], function () {
         Routerv1::post('/{id:i}/add', 'FriendsController@add', 'friends.add');
         Routerv1::post('/{id:i}/remove', 'FriendsController@remove', 'friends.remove');
     });
 
     // Premium
-    Routerv1::group(['prefix' => 'support', 'before' => 'loginCheck'], function () {
+    Routerv1::group(['prefix' => 'support'], function () {
         Routerv1::get('/', 'PremiumController@index', 'premium.index');
         Routerv1::get('/error', 'PremiumController@error', 'premium.error');
         Routerv1::get('/handle', 'PremiumController@handle', 'premium.handle');
@@ -209,23 +186,21 @@ Routerv1::group(['before' => 'maintenance'], function () {
     // Helpers
     Routerv1::group(['prefix' => 'helper'], function () {
         // BBcode
-        Routerv1::group(['prefix' => 'bbcode', 'before' => 'loginCheck'], function () {
+        Routerv1::group(['prefix' => 'bbcode'], function () {
             Routerv1::post('/parse', 'HelperController@bbcodeParse', 'helper.bbcode.parse');
         });
     });
 
     // Settings
-    Routerv1::group(['prefix' => 'settings', 'before' => 'loginCheck'], function () {
+    Routerv1::group(['prefix' => 'settings'], function () {
         Routerv1::get('/', function () {
-            $route = Routerv1::route('settings.account.profile');
-            return header("Location: {$route}");
+            redirect(route('settings.account.profile'));
         }, 'settings.index');
 
         // Account section
         Routerv1::group(['prefix' => 'account'], function () {
             Routerv1::get('/', function () {
-                $route = Routerv1::route('settings.account.profile');
-                return header("Location: {$route}");
+                redirect(route('settings.account.profile'));
             });
 
             Routerv1::get('/profile', 'Settings.AccountController@profile', 'settings.account.profile');
@@ -243,8 +218,7 @@ Routerv1::group(['before' => 'maintenance'], function () {
         // Friends section
         Routerv1::group(['prefix' => 'friends'], function () {
             Routerv1::get('/', function () {
-                $route = Routerv1::route('settings.friends.listing');
-                return header("Location: {$route}");
+                redirect(route('settings.account.listing'));
             });
 
             Routerv1::get('/listing', 'Settings.FriendsController@listing', 'settings.friends.listing');
@@ -254,8 +228,7 @@ Routerv1::group(['before' => 'maintenance'], function () {
         // Notifications section
         Routerv1::group(['prefix' => 'notifications'], function () {
             Routerv1::get('/', function () {
-                $route = Routerv1::route('settings.notifications.history');
-                return header("Location: {$route}");
+                redirect(route('settings.account.history'));
             });
 
             Routerv1::get('/history', 'Settings.NotificationsController@history', 'settings.notifications.history');
@@ -264,8 +237,7 @@ Routerv1::group(['before' => 'maintenance'], function () {
         // Advanced section
         Routerv1::group(['prefix' => 'advanced'], function () {
             Routerv1::get('/', function () {
-                $route = Routerv1::route('settings.advanced.sessions');
-                return header("Location: {$route}");
+                redirect(route('settings.account.sessions'));
             });
 
             Routerv1::get('/sessions', 'Settings.AdvancedController@sessions', 'settings.advanced.sessions');
@@ -276,44 +248,19 @@ Routerv1::group(['before' => 'maintenance'], function () {
     });
 
     // Settings
-    Routerv1::group(['prefix' => 'manage', 'before' => 'loginCheck'], function () {
+    Routerv1::group(['prefix' => 'manage'], function () {
         Routerv1::get('/', function () {
-            $route = Routerv1::route('manage.overview.index');
-            return header("Location: {$route}");
+            redirect(route('manage.overview.index'));
         }, 'manage.index');
 
         // Overview section
         Routerv1::group(['prefix' => 'overview'], function () {
             Routerv1::get('/', function () {
-                $route = Routerv1::route('manage.overview.index');
-                return header("Location: {$route}");
+                redirect(route('manage.overview.index'));
             });
 
             Routerv1::get('/index', 'Manage.OverviewController@index', 'manage.overview.index');
             Routerv1::get('/data', 'Manage.OverviewController@data', 'manage.overview.data');
         });
     });
-// Management
-    /*
- * Forums
- * - Manage
- * - Settings
- * Comments
- * - Manage
- * Users
- * - Manage users
- * - Manage ranks
- * - Profile fields
- * - Option fields
- * - Bans and restrictions
- * - Warnings
- * Permissions
- * - Site
- * - Management
- * - Forum
- * Logs
- * - Actions
- * - Management
- * - Errors
- */
 });
