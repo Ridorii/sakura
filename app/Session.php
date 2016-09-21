@@ -163,8 +163,10 @@ class Session
             return false;
         }
 
-        /* completely removed the code for ip checking because it only worked with IPv4
+        if ($ip !== null) {
+            /* completely removed the code for ip checking because it only worked with IPv4
         good thing is i can probably do CIDR based checking */
+        }
 
         // If the remember flag is set extend the session time
         if ($session->session_remember) {

@@ -77,31 +77,3 @@ if (!defined('IN_CLI')) {
         'session' => $_SESSION,
     ]);
 }
-
-// use Sakura\Router\Route;
-// use Sakura\Router\Router;
-
-// Router::add(
-//     Route::path('/')
-//         ->methods('GET')
-//         ->controller(Controllers\MetaController::class)
-//         ->action('index')
-//         ->name('main.index'),
-//     Route::path('/test')
-//         ->controller(Controllers\MetaController::class)
-//         ->group(
-//             Route::path('faq')
-//                 ->methods('GET')
-//                 ->action('faq')
-//                 ->group(
-//                     Route::path('sub/{meow}/{cock}?')
-//                         ->methods(['GET', 'POST'])
-//                         ->action('search')
-//                         ->name('main.search')
-//                 )
-//         )
-// );
-
-// echo Router::url('main.search');
-// header('Content-Type: text/plain');
-// exit;

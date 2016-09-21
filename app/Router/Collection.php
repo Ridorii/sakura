@@ -84,6 +84,10 @@ class Collection
             throw new \Exception;
         }
 
+        if (count($params)) {
+            //
+        }
+
         return parse_url('/' . $this->names[$name]->path, PHP_URL_PATH);
     }
 }
