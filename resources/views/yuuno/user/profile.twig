@@ -78,7 +78,7 @@
         window.addEventListener('load', function () {
             {% if profile.lastfm %}
             var np = new Sakura.AJAX();
-            np.SetUrl("{{ route('user.nowplaying', user.id) }}");
+            np.SetUrl("{{ route('user.nowplaying', profile.id) }}");
             np.AddCallback(200, function () {
                 var data = np.JSON(),
                     artist = Sakura.DOM.ID('np-artist'),

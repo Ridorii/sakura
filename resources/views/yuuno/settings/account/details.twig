@@ -6,25 +6,6 @@
     <p>Alter the details of your account, leave fields blank to leave them unchanged.</p>
 {% endblock %}
 
-{% block js %}
-    {{ parent() }}
-    <script>
-        function updateSettingsConfirm(form, action) {
-            var dialogue = new Sakura.Dialogue;
-            dialogue.Text = "Are you sure?";
-            dialogue.SetType(Sakura.DialogueType.Confirm);
-            dialogue.AddCallback(Sakura.DialogueButton.No, function () {
-                this.Close();
-            });
-            dialogue.AddCallback(Sakura.DialogueButton.Yes, function () {
-                updateSettings(form, action);
-                this.Close();
-            });
-            dialogue.Display();
-        }
-    </script>
-{% endblock %}
-
 {% block settingsContent %}
     <form enctype="multipart/form-data" method="post" action="javascript:;" onsubmit="updateSettingsConfirm(this, '{{ route('settings.account.details') }}');">
         {% if edit_email %}

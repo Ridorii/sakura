@@ -2,6 +2,50 @@
 
 {% set title = category ~ ' / ' ~ mode %}
 
+{% block js %}
+<script>
+    function updateSettings(form, action, text) {
+        var forms = {},
+            dialogue = new Sakura.Dialogue,
+            updater = new Sakura.AJAX;
+
+        dialogue.AddCallback(Sakura.DialogueButton.Ok, function () {
+            this.Close();
+        });
+
+        for (var a = 0; a < form.elements.length; a++) {
+            forms[form.elements.item(a).name] = form.elements.item(a).value;
+        }
+
+        updater.SetUrl(action);
+        updater.Form();
+        updater.SetSend(forms);
+        updater.AddCallback(0, function () {
+            var resp = updater.JSON();
+            dialogue.Text = resp.error || text || 'Updated!';
+            dialogue.Display();
+        });
+        updater.Start(Sakura.HTTPMethod.POST);
+
+        return false;
+    }
+
+    function updateSettingsConfirm(form, action) {
+        var dialogue = new Sakura.Dialogue;
+        dialogue.Text = "Are you sure?";
+        dialogue.SetType(Sakura.DialogueType.Confirm);
+        dialogue.AddCallback(Sakura.DialogueButton.No, function () {
+            this.Close();
+        });
+        dialogue.AddCallback(Sakura.DialogueButton.Yes, function () {
+            updateSettings(form, action);
+            this.Close();
+        });
+        dialogue.Display();
+    }
+</script>
+{% endblock %}
+
 {% block content %}
     <div class="content settings messages {% if showBG %}background-transparent{% endif %}">
         <div class="content-right content-column">
