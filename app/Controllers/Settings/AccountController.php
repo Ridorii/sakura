@@ -188,7 +188,7 @@ class AccountController extends Controller
 
             $title = $_POST['title'] ?? null;
 
-            if ($title) {
+            if ($title !== null) {
                 if (strlen($title) > 64) {
                     return $this->json(
                         ['error' => 'This title is too long!']
