@@ -17,7 +17,6 @@
 # Compiled/copied assets
 /public/js
 /public/css
-/public/favicon.ico
 
 # User assets
 /uploads/*
