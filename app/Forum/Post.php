@@ -71,7 +71,7 @@ class Post
      * The parsed contents of this post.
      * @var string
      */
-    public $parsed = "";
+    public $parsed = null;
 
     /**
      * The UNIX timestamp of the last time this post was edited.
@@ -117,6 +117,7 @@ class Post
             $this->time = intval($postRow->post_time);
             $this->subject = $postRow->post_subject;
             $this->text = $postRow->post_text;
+            $this->parsed = $postRow->post_text_parsed;
             $this->editTime = intval($postRow->post_edit_time);
             $this->editReason = $postRow->post_edit_reason;
             $this->editUser = User::construct($postRow->post_edit_user);
@@ -129,10 +130,12 @@ class Post
                 $this->ip = $postRow->poster_ip;
                 $this->update();
             }
-        }
 
-        // Parse the markup
-        $this->parsed = BBParser::toHTML(htmlentities($this->text));
+            if (strlen($this->parsed) < 1) {
+                $this->parsed = BBParser::toHTML(htmlentities($this->text));
+                $this->update();
+            }
+        }
     }
 
     /**
@@ -168,6 +171,7 @@ class Post
                 'post_time' => time(),
                 'post_subject' => $subject,
                 'post_text' => $text,
+                'post_text_parsed' => BBParser::toHTML(htmlentities($text)),
             ]);
 
         // Update the last post date
@@ -197,6 +201,7 @@ class Post
                 'post_time' => $this->time,
                 'post_subject' => $this->subject,
                 'post_text' => $this->text,
+                'post_text_parsed' => BBParser::toHTML(htmlentities($this->text)),
                 'post_edit_time' => $this->editTime,
                 'post_edit_reason' => $this->editReason,
                 'post_edit_user' => $this->editUser->id,
