@@ -25,5 +25,5 @@ class Italics extends TagBase
      * The string to replace it with.
      * @var string
      */
-    public static $replace = "<i>$1</i>";
+    public static $replace = "<i class='bbcode__italics'>$1</i>";
 }

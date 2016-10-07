@@ -69,9 +69,13 @@ class ExceptionHandler
         http_response_code(500);
 
         $debug = config('dev.show_errors');
+        $cli = php_sapi_name() === 'cli';
 
-        if ($debug) {
-            header('Content-Type: text/plain');
+        if ($cli || $debug) {
+            if (!$cli) {
+                header('Content-Type: text/plain');
+            }
+
             echo $ex;
         } else {
             if (!self::$disableTemplate && Template::available()) {

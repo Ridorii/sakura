@@ -25,5 +25,5 @@ class Image extends TagBase
      * The string to replace it with.
      * @var string
      */
-    public static $replace = "<img src='$1' alt='$1'>";
+    public static $replace = "<img class='bbcode__image' src='$1' alt='$1'>";
 }

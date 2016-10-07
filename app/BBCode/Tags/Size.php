@@ -7,6 +7,7 @@
 namespace Sakura\BBCode\Tags;
 
 use Sakura\BBCode\TagBase;
+use Sakura\User;
 
 /**
  * Size tag.
@@ -44,7 +45,7 @@ class Size extends TagBase
      * @param string $text
      * @return string
      */
-    public static function parse($text)
+    public static function parse($text, User $poster)
     {
         return preg_replace_callback(
             '/\[size\=([a-z0-9]+)\](.*?)\[\/size\]/s',
@@ -62,7 +63,7 @@ class Size extends TagBase
                 }
 
                 // we'll just use per cent for now, don't let this make it to production though
-                return "<div style='font-size: {$size}%'>{$matches[2]}</div>";
+                return "<div style='font-size: {$size}%' class='bbcode__size'>{$matches[2]}</div>";
             },
             $text
         );

@@ -26,5 +26,5 @@ class YouTube extends TagBase
      * @var string
      */
     public static $replace = "<iframe width='560' height='315' src='https://www.youtube-nocookie.com/embed/$1'"
-        . " frameborder='0' allowfullscreen></iframe>";
+        . " frameborder='0' allowfullscreen class='bbcode__youtube'></iframe>";
 }

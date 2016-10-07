@@ -25,5 +25,5 @@ class Strike extends TagBase
      * The string to replace it with.
      * @var string
      */
-    public static $replace = "<del>$1</del>";
+    public static $replace = "<del class='bbcode__strike'>$1</del>";
 }

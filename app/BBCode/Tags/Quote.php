@@ -25,5 +25,5 @@ class Quote extends TagBase
      * The string to replace it with.
      * @var string
      */
-    public static $replace = "<blockquote>$1</blockquote>";
+    public static $replace = "<blockquote class='bbcode__quote'>$1</blockquote>";
 }

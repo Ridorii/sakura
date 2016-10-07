@@ -11,3 +11,6 @@ require_once 'vendor/autoload.php';
 ExceptionHandler::register();
 Config::load(path('config/config.ini'));
 DB::connect(config('database'));
+
+Routerv1::init();
+include_once path('routes.php');

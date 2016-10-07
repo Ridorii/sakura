@@ -25,5 +25,5 @@ class Bold extends TagBase
      * The string to replace it with.
      * @var string
      */
-    public static $replace = "<b>$1</b>";
+    public static $replace = "<b class='bbcode__bold'>$1</b>";
 }

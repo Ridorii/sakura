@@ -6,6 +6,8 @@
 
 namespace Sakura\BBCode;
 
+use Sakura\User;
+
 /**
  * Interface for tags.
  * @package Sakura
@@ -30,7 +32,7 @@ class TagBase
      * @param string $text
      * @return string
      */
-    public static function parse($text)
+    public static function parse($text, User $poster)
     {
         return preg_replace(static::$pattern, static::$replace, $text);
     }

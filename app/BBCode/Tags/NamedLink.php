@@ -25,5 +25,5 @@ class NamedLink extends TagBase
      * The string to replace it with.
      * @var string
      */
-    public static $replace = "<a href='$1'>$2</a>";
+    public static $replace = "<a href='$1' class='bbcode__link bbcode__link--named'>$2</a>";
 }

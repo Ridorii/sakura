@@ -25,5 +25,5 @@ class Colour extends TagBase
      * The string to replace it with.
      * @var string
      */
-    public static $replace = "<span style='color: $1'>$2</span>";
+    public static $replace = "<span style='color: $1' class='bbcode__colour'>$2</span>";
 }

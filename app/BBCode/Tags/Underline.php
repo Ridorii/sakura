@@ -25,5 +25,5 @@ class Underline extends TagBase
      * The string to replace it with.
      * @var string
      */
-    public static $replace = "<u>$1</u>";
+    public static $replace = "<u class='bbcode__underline'>$1</u>";
 }

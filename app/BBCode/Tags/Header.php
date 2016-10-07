@@ -25,5 +25,5 @@ class Header extends TagBase
      * The string to replace it with.
      * @var string
      */
-    public static $replace = "<h1>$1</h1>";
+    public static $replace = "<h1 class='bbcode__header'>$1</h1>";
 }

@@ -7,6 +7,7 @@
 namespace Sakura\BBCode\Tags;
 
 use Sakura\BBCode\TagBase;
+use Sakura\User;
 
 /**
  * Box tag.
@@ -20,16 +21,16 @@ class Box extends TagBase
      * @param string $text
      * @return string
      */
-    public static function parse($text)
+    public static function parse($text, User $poster)
     {
         return preg_replace_callback(
             '/\[box(?:\=(.*?))?\](.*?)\[\/box\]/s',
             function ($matches) {
                 $title = strlen($matches[1]) ? $matches[1] : 'Click to open';
 
-                return "<div class='spoiler-box-container'>"
-                    . "<div class='spoiler-box-title' onclick='alert(\"reimplement the toggle system\");'>{$title}</div>"
-                    . "<div class='spoiler-box-content hidden'>{$matches[2]}</div>"
+                return "<div class='bbcode__box'>"
+                    . "<div class='bbcode__box-title' onclick='alert(\"implement the toggle system\");'>{$title}</div>"
+                    . "<div class='bbcode__box-content bbcode__box-content--hidden'>{$matches[2]}</div>"
                     . "</div>";
             },
             $text

@@ -25,5 +25,5 @@ class Spoiler extends TagBase
      * The string to replace it with.
      * @var string
      */
-    public static $replace = "<span class='spoiler'>$1</span>";
+    public static $replace = "<span class='bbcode__spoiler'>$1</span>";
 }

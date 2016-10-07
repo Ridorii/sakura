@@ -7,6 +7,7 @@
 namespace Sakura\BBCode\Tags;
 
 use Sakura\BBCode\TagBase;
+use Sakura\User;
 
 /**
  * Align tag.
@@ -20,7 +21,7 @@ class Align extends TagBase
      * @param string $text
      * @return string
      */
-    public static function parse($text)
+    public static function parse($text, User $poster)
     {
         return preg_replace_callback(
             '/\[align\=(left|center|centre|right)\](.*?)\[\/align\]/s',
@@ -29,7 +30,7 @@ class Align extends TagBase
                     $matches[1] = 'center';
                 }
 
-                return "<div style='text-align: {$matches[1]}'>{$matches[2]}</div>";
+                return "<div style='text-align: {$matches[1]}' class='bbcode__align'>{$matches[2]}</div>";
             },
             $text
         );

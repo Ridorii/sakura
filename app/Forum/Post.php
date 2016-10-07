@@ -132,7 +132,7 @@ class Post
             }
 
             if (strlen($this->parsed) < 1) {
-                $this->parsed = BBParser::toHTML(htmlentities($this->text));
+                $this->parsed = BBParser::toHTML(htmlentities($this->text), $this->poster);
                 $this->update();
             }
         }
@@ -171,7 +171,7 @@ class Post
                 'post_time' => time(),
                 'post_subject' => $subject,
                 'post_text' => $text,
-                'post_text_parsed' => BBParser::toHTML(htmlentities($text)),
+                'post_text_parsed' => BBParser::toHTML(htmlentities($text), $this->poster),
             ]);
 
         // Update the last post date
@@ -183,9 +183,10 @@ class Post
 
     /**
      * Commit the changes to the Database.
+     * @param bool $ignoreIp
      * @return Post
      */
-    public function update()
+    public function update($ignoreIp = false)
     {
         // Create a topic object
         $topic = new Topic($this->topic);
@@ -197,11 +198,11 @@ class Post
                 'topic_id' => $topic->id,
                 'forum_id' => $topic->forum,
                 'poster_id' => $this->poster->id,
-                'poster_ip' => Net::pton(Net::ip()),
+                'poster_ip' => Net::pton($ignoreIp ? $this->ip : Net::ip()),
                 'post_time' => $this->time,
                 'post_subject' => $this->subject,
                 'post_text' => $this->text,
-                'post_text_parsed' => BBParser::toHTML(htmlentities($this->text)),
+                'post_text_parsed' => BBParser::toHTML(htmlentities($this->text), $this->poster),
                 'post_edit_time' => $this->editTime,
                 'post_edit_reason' => $this->editReason,
                 'post_edit_user' => $this->editUser->id,

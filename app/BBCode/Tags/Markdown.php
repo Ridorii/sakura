@@ -8,6 +8,7 @@ namespace Sakura\BBCode\Tags;
 
 use Parsedown;
 use Sakura\BBCode\TagBase;
+use Sakura\User;
 
 /**
  * Markdown!
@@ -27,7 +28,7 @@ class Markdown extends TagBase
      * @param string $text
      * @return string
      */
-    public static function parse($text)
+    public static function parse($text, User $poster)
     {
         return preg_replace_callback(
             '/\[md\](.*?)\[\/md\]/s',
@@ -41,7 +42,7 @@ class Markdown extends TagBase
                     ->setMarkupEscaped(true)
                     ->text($matches[1]);
 
-                return "<div class='markdown'>{$parsed}</div>";
+                return "<div class='markdown bbcode__markdown'>{$parsed}</div>";
             },
             $text
         );

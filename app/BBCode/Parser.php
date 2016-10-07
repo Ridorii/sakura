@@ -7,6 +7,7 @@
 namespace Sakura\BBCode;
 
 use Sakura\DB;
+use Sakura\User;
 
 /**
  * BBcode handler.
@@ -47,7 +48,7 @@ class Parser
         Tags\Box::class,
         Tags\Code::class,
         Tags\ListTag::class,
-        Tags\User::class,
+        Tags\UserTag::class,
         Tags\Markdown::class,
 
         // Newline must always be last
@@ -59,7 +60,7 @@ class Parser
      * @param string $text
      * @return string
      */
-    public static function parseEmoticons($text)
+    public static function parseEmoticons($text, User $poster = null)
     {
         // Get emoticons from the database
         $emotes = DB::table('emoticons')
@@ -81,12 +82,12 @@ class Parser
      * @param string $text
      * @return string
      */
-    public static function toHTML($text)
+    public static function toHTML($text, User $poster)
     {
         $text = self::parseEmoticons($text);
 
         foreach (self::$parsers as $parser) {
-            $text = call_user_func([$parser, 'parse'], $text);
+            $text = call_user_func_array([$parser, 'parse'], [$text, $poster]);
         }
 
         return $text;
