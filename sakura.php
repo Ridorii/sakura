@@ -10,11 +10,6 @@ namespace Sakura;
 define('SAKURA_VERSION', 20160913);
 define('ROOT', __DIR__ . '/');
 
-// CLI mode
-if (php_sapi_name() === 'cli') {
-    define('IN_CLI', true);
-}
-
 // Turn error reporting on regardless of anything
 error_reporting(-1);
 
@@ -39,8 +34,8 @@ if (!file_exists(ROOT . 'vendor/autoload.php')) {
 require_once ROOT . 'vendor/autoload.php';
 
 // Register the handlers
-set_exception_handler(['Sakura\ExceptionHandler', 'exception']);
-set_error_handler(['Sakura\ExceptionHandler', 'error']);
+set_exception_handler([ExceptionHandler::class, 'exception']);
+set_error_handler([ExceptionHandler::class, 'error']);
 
 // Load the configuration
 Config::init(ROOT . 'config/config.ini');
@@ -49,31 +44,3 @@ Config::init(ROOT . 'config/config.ini');
 $capsule = new DB;
 $capsule->addConnection(config('database'));
 $capsule->setAsGlobal();
-
-if (!defined('IN_CLI')) {
-    // Start output buffering
-    ob_start(config('performance.compression') ? 'ob_gzhandler' : null);
-
-    // Initialise the router and include the routes file
-    Routerv1::init();
-    include_once ROOT . 'routes.php';
-
-    // Initialise the current session
-    $cookiePrefix = config('cookie.prefix');
-    CurrentSession::start(
-        intval($_COOKIE["{$cookiePrefix}id"] ?? 0),
-        $_COOKIE["{$cookiePrefix}session"] ?? '',
-        Net::ip()
-    );
-
-    // Start templating engine and set base variables
-    Template::set(CurrentSession::$user->design());
-    Template::vars([
-        'get' => $_GET,
-        'user' => CurrentSession::$user,
-        'post' => $_POST,
-        'server' => $_SERVER,
-        'request' => $_REQUEST,
-        'session' => $_SESSION,
-    ]);
-}
