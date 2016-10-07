@@ -24,6 +24,15 @@ class ExceptionHandler
     private static $disableTemplate = false;
 
     /**
+     * Register as the error and exception handler.
+     */
+    public static function register()
+    {
+        set_exception_handler([static::class, 'exception']);
+        set_error_handler([static::class, 'error']);
+    }
+
+    /**
      * The entry point for set_exception_handler.
      * @param Throwable $ex
      */

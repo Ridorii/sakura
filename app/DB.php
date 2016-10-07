@@ -18,6 +18,17 @@ use Illuminate\Database\Migrations\DatabaseMigrationRepository;
 class DB extends Manager
 {
     /**
+     * Start the database module.
+     * @param array $details
+     */
+    public static function connect($details)
+    {
+        $capsule = new static;
+        $capsule->addConnection($details);
+        $capsule->setAsGlobal();
+    }
+
+    /**
      * Gets the migration repository (surprise surprise).
      * @return DatabaseMigrationRepository
      */

@@ -24,12 +24,12 @@ class Config
     private static $config = [];
 
     /**
-     * Initialiser, parses the configuration.
+     * Loads and parses the configuration file.
      * @throws ConfigNonExistentException
      * @throws ConfigParseException
      * @param string $path
      */
-    public static function init($path)
+    public static function load($path)
     {
         // Check if the configuration file exists
         if (!file_exists($path)) {
