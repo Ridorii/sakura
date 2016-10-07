@@ -13,8 +13,6 @@
 # OS specific shit
 [Tt]humbs.db
 [Dd]esktop.ini
-$RECYCLE.BIN/
-.DS_Store
 
 # Compiled/copied assets
 /public/js
