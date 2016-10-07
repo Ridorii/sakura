@@ -45,7 +45,7 @@ class DatabaseMigrateCommand extends Command
             return;
         }
 
-        $migrator->run(ROOT . self::MIGRATIONS);
+        $migrator->run(path(self::MIGRATIONS));
 
         foreach ($migrator->getNotes() as $note) {
             $this->getLogger()->writeln(strip_tags($note));

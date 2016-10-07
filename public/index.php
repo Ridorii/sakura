@@ -14,7 +14,7 @@ ob_start(config('performance.compression') ? 'ob_gzhandler' : null);
 
 // Initialise the router and include the routes file
 Routerv1::init();
-include_once ROOT . 'routes.php';
+include_once path('routes.php');
 
 // Initialise the current session
 $cookiePrefix = config('cookie.prefix');

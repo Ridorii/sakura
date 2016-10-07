@@ -21,7 +21,7 @@ class Application extends \CLIFramework\Application
     /**
      * CLI Application version.
      */
-    const VERSION = SAKURA_VERSION;
+    const VERSION = 9001;
 
     /**
      * Enable command autoloading.

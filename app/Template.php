@@ -25,7 +25,7 @@ class Template
     const FILE_EXT = '.twig';
 
     /**
-     * The path relative to ROOT.
+     * The path relative to the root.
      */
     const VIEWS_DIR = 'resources/views/';
 
@@ -84,7 +84,7 @@ class Template
      */
     public static function init()
     {
-        $views_dir = ROOT . self::VIEWS_DIR;
+        $views_dir = path(self::VIEWS_DIR);
 
         // Initialise Twig Filesystem Loader
         $loader = new Twig_Loader_Filesystem();
@@ -102,7 +102,7 @@ class Template
         // Environment variable
         $env = [
             'cache' => config("performance.template_cache")
-            ? realpath(ROOT . config("performance.cache_dir") . 'views')
+            ? path(config("performance.cache_dir") . 'views')
             : false,
             'auto_reload' => true,
             'debug' => config("dev.twig_debug"),
@@ -159,6 +159,6 @@ class Template
      */
     public static function exists($name)
     {
-        return ctype_alnum($name) && file_exists(ROOT . self::VIEWS_DIR . $name . "/");
+        return ctype_alnum($name) && file_exists(path(self::VIEWS_DIR . $name . "/"));
     }
 }

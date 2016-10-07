@@ -5,6 +5,7 @@
 
 use Sakura\Config;
 use Sakura\Exceptions\ConfigValueNotFoundException;
+use Sakura\FileSystem;
 use Sakura\Net;
 use Sakura\Routerv1;
 use Sakura\Template;
@@ -50,6 +51,12 @@ function view($name, $vars = [])
 {
     Template::vars($vars);
     return Template::render($name);
+}
+
+// Get a path
+function path($path)
+{
+    return FileSystem::getPath($path);
 }
 
 function clean_string($string, $lower = false, $noSpecial = false, $replaceSpecial = '')

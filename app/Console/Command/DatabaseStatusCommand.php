@@ -55,7 +55,7 @@ class DatabaseStatusCommand extends Command
             'Migration',
         ]);
 
-        foreach ($migrator->getMigrationFiles(ROOT . self::MIGRATIONS) as $migration) {
+        foreach ($migrator->getMigrationFiles(path(self::MIGRATIONS)) as $migration) {
             $migrations->addRow([in_array($migration, $ran) ? 'Y' : 'N', $migration]);
         }
 

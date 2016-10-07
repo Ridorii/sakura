@@ -6,10 +6,6 @@
 
 namespace Sakura;
 
-// Define version and root path
-define('SAKURA_VERSION', 20160913);
-define('ROOT', __DIR__ . '/');
-
 // Turn error reporting on regardless of anything
 error_reporting(-1);
 
@@ -26,19 +22,19 @@ if (version_compare(phpversion(), '7.0.0', '<')) {
 }
 
 // Check if the composer autoloader exists
-if (!file_exists(ROOT . 'vendor/autoload.php')) {
+if (!file_exists('vendor/autoload.php')) {
     die('Autoloader not found, did you run composer install?');
 }
 
 // Include the autoloader
-require_once ROOT . 'vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
 // Register the handlers
 set_exception_handler([ExceptionHandler::class, 'exception']);
 set_error_handler([ExceptionHandler::class, 'error']);
 
 // Load the configuration
-Config::init(ROOT . 'config/config.ini');
+Config::init(path('config/config.ini'));
 
 // Start the database module
 $capsule = new DB;

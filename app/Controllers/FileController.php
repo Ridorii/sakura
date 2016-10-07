@@ -188,11 +188,11 @@ class FileController extends Controller
             }
         }
 
-        $noFile = ROOT . 'public/' . str_replace(
+        $noFile = path('public/' . str_replace(
             '%tplname%',
             Template::$name,
             config("user.{$method}_none")
-        );
+        ));
         $none = [
             'name' => basename($noFile),
             'data' => file_get_contents($noFile),

@@ -219,7 +219,7 @@ class Net
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CONNECTTIMEOUT => 2,
             CURLOPT_TIMEOUT => 4,
-            CURLOPT_USERAGENT => 'Sakura/' . SAKURA_VERSION,
+            CURLOPT_USERAGENT => 'Sakura/1.0 (+https://sakura.flash.moe)',
         ]);
 
         switch (strtolower($method)) {

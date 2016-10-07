@@ -29,8 +29,8 @@ class ServeCommand extends Command
      */
     public function execute()
     {
-        $document_root = addslashes(ROOT . 'public/');
-        $router_proxy = addslashes(ROOT . 'server.php');
+        $document_root = addslashes(path('public'));
+        $router_proxy = addslashes(path('server.php'));
         $php_dir = PHP_BINDIR;
         $host = config('dev.host');
 
