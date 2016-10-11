@@ -940,7 +940,7 @@ class User
      */
     public function userPage()
     {
-        return BBCode\Parser::toHTML(htmlentities($this->page));
+        return BBCode\Parser::toHTML(htmlentities($this->page), $this);
     }
 
     /**
@@ -949,7 +949,7 @@ class User
      */
     public function signature()
     {
-        return BBCode\Parser::toHTML(htmlentities($this->signature));
+        return BBCode\Parser::toHTML(htmlentities($this->signature), $this);
     }
 
     /**

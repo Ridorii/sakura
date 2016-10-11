@@ -7,6 +7,7 @@
 namespace Sakura\Controllers;
 
 use Sakura\BBCode\Parser as BBParser;
+use Sakura\CurrentSession;
 
 /**
  * Helper controller.
@@ -21,6 +22,6 @@ class HelperController extends Controller
      */
     public function bbcodeParse()
     {
-        return BBParser::toHTML(htmlentities($_POST['text'] ?? ''));
+        return BBParser::toHTML(htmlentities($_POST['text'] ?? ''), CurrentSession::$user);
     }
 }
