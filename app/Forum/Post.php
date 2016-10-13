@@ -171,7 +171,7 @@ class Post
                 'post_time' => time(),
                 'post_subject' => $subject,
                 'post_text' => $text,
-                'post_text_parsed' => BBParser::toHTML(htmlentities($text), $this->poster),
+                'post_text_parsed' => BBParser::toHTML(htmlentities($text), $poster),
             ]);
 
         // Update the last post date

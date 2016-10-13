@@ -68,6 +68,11 @@ class Parser
 
         // Parse all emoticons
         foreach ($emotes as $emote) {
+            if ($poster === null) {
+                // eventually check for hierarchies here
+                continue;
+            }
+
             $image = "<img src='{$emote->emote_path}' alt='{$emote->emote_string}' class='emoticon'>";
             $icon = preg_quote($emote->emote_string, '#');
             $text = preg_replace("#{$icon}#", $image, $text);

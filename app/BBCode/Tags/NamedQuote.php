@@ -7,7 +7,6 @@
 namespace Sakura\BBCode\Tags;
 
 use Sakura\BBCode\TagBase;
-use Sakura\CurrentSession;
 use Sakura\Forum\Forum;
 use Sakura\Forum\Post;
 use Sakura\Perms\Forum as ForumPerms;
