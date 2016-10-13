@@ -56,20 +56,19 @@ class Collection
 
     /**
      * Resolve route by path and method.
-     * @param string $method
-     * @param string $path
+     * @param Request $request
      * @return mixed
      */
-    public function resolve($method, $path)
+    public function resolve(Request $request)
     {
-        $path = trim(parse_url($path, PHP_URL_PATH), '/');
+        $path = trim(parse_url($request->path, PHP_URL_PATH), '/');
 
-        if (!array_key_exists($method, $this->paths)
-            || !array_key_exists($path, $this->paths[$method])) {
+        if (!array_key_exists($request->method, $this->paths)
+            || !array_key_exists($path, $this->paths[$request->method])) {
             throw new \Exception;
         }
 
-        return $this->paths[$method][$path]->fire();
+        return $this->paths[$request->method][$path]->fire();
     }
 
     /**
