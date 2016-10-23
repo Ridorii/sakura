@@ -218,25 +218,43 @@ class User
      * Title of the track this user last listened to.
      * @var string
      */
-    public $musicTrack;
+    public $musicTrack = '';
 
     /**
      * Artist of the track this user last listened to.
      * @var string
      */
-    public $musicArtist;
+    public $musicArtist = '';
 
     /**
      * Last time this was updated.
      * @var int
      */
-    public $musicCheck;
+    public $musicCheck = 0;
 
     /**
      * Whether the user is actively listening.
      * @var bool
      */
-    public $musicListening;
+    public $musicListening = false;
+
+    /**
+     * Is this user active?
+     * @var bool
+     */
+    public $activated = false;
+
+    /**
+     * Is this user verified?
+     * @var bool
+     */
+    public $verified = false;
+
+    /**
+     * Is this user restricted?
+     * @var bool
+     */
+    public $restricted = false;
 
     /**
      * The user's birthday.
@@ -364,6 +382,9 @@ class User
             $this->musicArtist = $userRow->user_music_artist;
             $this->musicListening = boolval($userRow->user_music_listening);
             $this->musicCheck = intval($userRow->user_music_check);
+            $this->activated = boolval($userRow->user_activated);
+            $this->verified = boolval($userRow->user_verified);
+            $this->restricted = boolval($userRow->user_restricted);
 
             // Temporary backwards compatible IP storage system
             try {
