@@ -9,7 +9,6 @@ namespace Sakura\Controllers\Settings;
 use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
 use Sakura\CurrentSession;
 use Sakura\DB;
-use Sakura\Perms\Site;
 
 /**
  * Account settings.
@@ -24,8 +23,7 @@ class AccountController extends Controller
      */
     public function profile()
     {
-        // Check permission
-        if (!CurrentSession::$user->permission(Site::ALTER_PROFILE)) {
+        if (!CurrentSession::$user->perms->changeProfile) {
             throw new HttpMethodNotAllowedException();
         }
 
@@ -92,12 +90,8 @@ class AccountController extends Controller
     public function details()
     {
         $user = CurrentSession::$user;
-
-        // Check permissions
-        $edit_email = $user->permission(Site::CHANGE_EMAIL);
-        $edit_usern = $user->permission(Site::CHANGE_USERNAME);
-        $edit_title = $user->permission(Site::CHANGE_USERTITLE);
-        $edit_passw = $user->permission(Site::CHANGE_PASSWORD);
+        $edit_usern = $user->perms->changeUsername;
+        $edit_title = $user->perms->changeUserTitle;
         $last_name_change = 0;
 
         if ($edit_usern) {
@@ -222,10 +216,8 @@ class AccountController extends Controller
         }
 
         return view('settings/account/details', compact(
-            'edit_email',
             'edit_usern',
             'edit_title',
-            'edit_passw',
             'last_name_change',
             'username_allow'
         ));
@@ -237,8 +229,7 @@ class AccountController extends Controller
      */
     public function ranks()
     {
-        // Check permission
-        if (!CurrentSession::$user->permission(Site::ALTER_RANKS)) {
+        if (!CurrentSession::$user->perms->manageRanks) {
             throw new HttpMethodNotAllowedException();
         }
 
@@ -287,11 +278,7 @@ class AccountController extends Controller
      */
     public function userpage()
     {
-        // Check permission
-        if (!(
-            CurrentSession::$user->page
-            && CurrentSession::$user->permission(Site::CHANGE_USERPAGE)
-        ) && !CurrentSession::$user->permission(Site::CREATE_USERPAGE)) {
+        if (!CurrentSession::$user->perms->changeUserpage) {
             throw new HttpMethodNotAllowedException();
         }
 
@@ -325,8 +312,7 @@ class AccountController extends Controller
      */
     public function signature()
     {
-        // Check permission
-        if (!CurrentSession::$user->permission(Site::CHANGE_SIGNATURE)) {
+        if (!CurrentSession::$user->perms->changeSignature) {
             throw new HttpMethodNotAllowedException();
         }
 

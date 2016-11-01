@@ -11,7 +11,6 @@ use Phroute\Phroute\Exception\HttpRouteNotFoundException;
 use Sakura\Config;
 use Sakura\CurrentSession;
 use Sakura\DB;
-use Sakura\Perms\Site;
 use Sakura\Rank;
 use Sakura\User;
 
@@ -86,8 +85,7 @@ class UserController extends Controller
      */
     public function members($rank = null)
     {
-        // Check permission
-        if (!CurrentSession::$user->permission(Site::VIEW_MEMBERLIST)) {
+        if (!CurrentSession::$user->activated) {
             throw new HttpMethodNotAllowedException;
         }
 

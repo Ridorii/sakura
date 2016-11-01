@@ -13,9 +13,6 @@ use Sakura\CurrentSession;
 use Sakura\DB;
 use Sakura\Exceptions\FileException;
 use Sakura\File;
-use Sakura\Perms;
-use Sakura\Perms\Manage;
-use Sakura\Perms\Site;
 use Sakura\Template;
 use Sakura\User;
 
@@ -163,11 +160,13 @@ class FileController extends Controller
         $user = User::construct($params[0] ?? 0);
 
         if (session_check()) {
-            if (!CurrentSession::$user->permission(Manage::CHANGE_IMAGES, Perms::MANAGE)
+            $perm_var = "change" . ucfirst(strtolower($method));
+
+            if (!CurrentSession::$user->perms->manageProfileImages
                 && ($user->id !== CurrentSession::$user->id
-                    || !$user->permission(constant("Sakura\Perms\Site::CHANGE_" . strtoupper($method)))
-                    || $user->permission(Site::DEACTIVATED)
-                    || $user->permission(Site::RESTRICTED))
+                    || !$user->perms->{$perm_var}
+                    || !$user->activated
+                    || $user->restricted)
             ) {
                 throw new HttpMethodNotAllowedException;
             }
@@ -199,8 +198,8 @@ class FileController extends Controller
             'mime' => getimagesizefromstring($noFile)['mime'],
         ];
 
-        if ($user->permission(Site::DEACTIVATED)
-            || $user->permission(Site::RESTRICTED)
+        if (!$user->activated
+            || $user->restricted
             || !$user->{$method}) {
             return $this->serve($none['data'], $none['mime'], $none['name']);
         }

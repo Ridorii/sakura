@@ -106,7 +106,7 @@
                     {% for post in posts[get.page|default(1) - 1] %}
                         <tr class="post" id="p{{ post.id }}">
                             <td class="userpanel">
-                                {% if not post.poster.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) or post.poster.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}<a href="{{ route('user.profile', post.poster.id) }}" class="default username" style="color: {{ post.poster.colour }}; text-shadow: 0 0 5px {% if post.poster.colour != 'inherit' %}{{ post.poster.colour }}{% else %}#222{% endif %};" title="Go to {{ post.poster.username }}'s profile">{{ post.poster.username }}</a>
+                                {% if post.poster.activated or post.poster.restricted %}<a href="{{ route('user.profile', post.poster.id) }}" class="default username" style="color: {{ post.poster.colour }}; text-shadow: 0 0 5px {% if post.poster.colour != 'inherit' %}{{ post.poster.colour }}{% else %}#222{% endif %};" title="Go to {{ post.poster.username }}'s profile">{{ post.poster.username }}</a>
                                 <img src="{{ route('user.avatar', post.poster.id) }}" alt="{{ post.poster.username }}" class="avatar" style="box-shadow: 0 3px 7px #{% if post.poster.isOnline %}484{% else %}844{% endif %};">
                                 {% else %}
                                 <a class="username">[deleted user]</a>
@@ -122,7 +122,7 @@
                                         {% if (user.id == post.poster.id and forum.permission(constant('Sakura\\Perms\\Forum::DELETE_OWN'), user.id)) or forum.permission(constant('Sakura\\Perms\\Forum::DELETE_ANY'), user.id) %}
                                             <a class="fa fa-trash" title="Delete this post" href="javascript:;" onclick="deletePost({{ post.id }})"></a>
                                         {% endif %}
-                                        {% if not (post.poster.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) or post.poster.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) or user.id == post.poster.id) %}
+                                        {% if not (post.poster.activated or post.poster.restricted or user.id == post.poster.id) %}
                                             <a class="fa fa-{% if user.isFriends(post.poster.id) == 2 %}heart{% else %}star{% endif %} friend-{{ post.poster.id }}-level" title="You are friends" {% if user.isFriends(post.poster.id) == 0 %}style="display: none;"{% endif %}></a>
                                             <a class="fa fa-user-{% if user.isFriends(post.poster.id) == 0 %}plus{% else %}times{% endif %} forum-friend-toggle friend-{{ post.poster.id }}-toggle" title="{% if user.isFriends(post.poster.id) == 0 %}Add {{ post.poster.username }} as a friend{% else %}Remove friend{% endif %}" href="javascript:void(0);" onclick="Sakura.Friend.{% if user.isFriends(post.poster.id) == 0 %}Add({{ post.poster.id }}){% else %}Remove({{ post.poster.id }}){% endif %}"></a>
                                             <a class="fa fa-flag" title="Report {{ post.poster.username }}" href="{{ route('user.report', post.poster.id) }}"></a>
@@ -145,7 +145,7 @@
                                 <div class="post-text bbcode">
                                     {{ post.parsed|raw }}
                                 </div>
-                                {% if post.poster.signature and post.poster.permission(constant('Sakura\\Perms\\Site::CHANGE_SIGNATURE')) %}
+                                {% if post.poster.signature and post.poster.perms.changeSignature %}
                                 <div class="clear"></div>
                                 <div class="signature bbcode">
                                     {{ post.poster.signature()|raw|nl2br }}
@@ -176,7 +176,7 @@
                                 <div class="clear"></div>
                             </div>
                             <div class="post-text bbcode" id="previewText"></div>
-                            {% if user.signature and user.permission(constant('Sakura\\Perms\\Site::CHANGE_SIGNATURE')) %}
+                            {% if user.signature and user.perms.changeSignature %}
                                 <div class="clear"></div>
                                 <div class="signature bbcode">
                                     {{ user.signature()|raw|nl2br }}

@@ -8,7 +8,6 @@ namespace Sakura\Controllers\Settings;
 
 use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
 use Sakura\CurrentSession;
-use Sakura\Perms\Site;
 use Sakura\Session;
 
 /**
@@ -24,11 +23,6 @@ class AdvancedController extends Controller
      */
     public function sessions()
     {
-        // Check permission
-        if (!CurrentSession::$user->permission(Site::MANAGE_SESSIONS)) {
-            throw new HttpMethodNotAllowedException();
-        }
-
         $id = $_POST['id'] ?? null;
         $all = isset($_POST['all']);
 
@@ -70,7 +64,7 @@ class AdvancedController extends Controller
      */
     public function deactivate()
     {
-        if (!CurrentSession::$user->permission(Site::DEACTIVATE_ACCOUNT)) {
+        if (!CurrentSession::$user->perms->deactivateAccount) {
             throw new HttpMethodNotAllowedException();
         }
 

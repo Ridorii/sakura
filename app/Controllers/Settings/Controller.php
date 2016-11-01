@@ -8,7 +8,6 @@ namespace Sakura\Controllers\Settings;
 
 use Sakura\Controllers\Controller as BaseController;
 use Sakura\CurrentSession;
-use Sakura\Perms\Site;
 use Sakura\Template;
 
 /**
@@ -35,39 +34,29 @@ class Controller extends BaseController
         $nav = [];
 
         // Account
-        if (CurrentSession::$user->permission(Site::ALTER_PROFILE)) {
+        if (CurrentSession::$user->perms->changeProfile) {
             $nav["Account"]["Profile"] = route('settings.account.profile');
         }
-        if (CurrentSession::$user->permission(Site::CHANGE_EMAIL)
-            || CurrentSession::$user->permission(Site::CHANGE_USERNAME)
-            || CurrentSession::$user->permission(Site::CHANGE_USERTITLE)
-            || CurrentSession::$user->permission(Site::CHANGE_PASSWORD)) {
-            $nav["Account"]["Details"] = route('settings.account.details');
-        }
-        if (CurrentSession::$user->permission(Site::ALTER_RANKS)) {
+        $nav["Account"]["Details"] = route('settings.account.details');
+        if (CurrentSession::$user->perms->manageRanks) {
             $nav["Account"]["Ranks"] = route('settings.account.ranks');
         }
-        if ((
-            CurrentSession::$user->page
-            && CurrentSession::$user->permission(Site::CHANGE_USERPAGE)
-        ) || CurrentSession::$user->permission(Site::CREATE_USERPAGE)) {
+        if (CurrentSession::$user->perms->changeUserpage) {
             $nav["Account"]["Userpage"] = route('settings.account.userpage');
         }
-        if (CurrentSession::$user->permission(Site::CHANGE_SIGNATURE)) {
+        if (CurrentSession::$user->perms->changeSignature) {
             $nav["Account"]["Signature"] = route('settings.account.signature');
         }
 
         // Friends
-        if (CurrentSession::$user->permission(Site::MANAGE_FRIENDS)) {
+        if (CurrentSession::$user->perms->manageFriends) {
             $nav["Friends"]["Listing"] = route('settings.friends.listing');
             $nav["Friends"]["Requests"] = route('settings.friends.requests');
         }
 
         // Advanced
-        if (CurrentSession::$user->permission(Site::MANAGE_SESSIONS)) {
-            $nav["Advanced"]["Sessions"] = route('settings.advanced.sessions');
-        }
-        if (CurrentSession::$user->permission(Site::DEACTIVATE_ACCOUNT)) {
+        $nav["Advanced"]["Sessions"] = route('settings.advanced.sessions');
+        if (CurrentSession::$user->perms->deactivateAccount) {
             $nav["Advanced"]["Deactivate"] = route('settings.advanced.deactivate');
         }
 

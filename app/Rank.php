@@ -7,7 +7,6 @@
 namespace Sakura;
 
 use Sakura\Perms;
-use Sakura\Perms\Site;
 
 /**
  * Serves Rank data.
@@ -116,9 +115,6 @@ class Rank
             $this->description = $rankRow->rank_description;
             $this->title = $rankRow->rank_title;
         }
-
-        // Init the permissions
-        $this->permissions = new Perms(Perms::SITE);
     }
 
     /**
@@ -137,7 +133,7 @@ class Rank
      */
     public function hidden()
     {
-        return $this->hidden || $this->permission(Site::DEACTIVATED) || $this->permission(Site::RESTRICTED);
+        return $this->hidden;
     }
 
     /**

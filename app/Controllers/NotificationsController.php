@@ -8,7 +8,6 @@ namespace Sakura\Controllers;
 
 use Sakura\CurrentSession;
 use Sakura\Notification;
-use Sakura\Perms\Site;
 
 /**
  * Notification stuff.
@@ -34,8 +33,7 @@ class NotificationsController extends Controller
      */
     public function mark($id = 0)
     {
-        // Check permission
-        if (CurrentSession::$user->permission(Site::DEACTIVATED)) {
+        if (!CurrentSession::$user->activated) {
             return '0';
         }
 

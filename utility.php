@@ -59,6 +59,12 @@ function path($path)
     return FileSystem::getPath($path);
 }
 
+// Convert camel case to snake case
+function camel_to_snake($text)
+{
+    return ltrim(strtolower(preg_replace('#[A-Z]#', '_$0', $text)), '_');
+}
+
 function clean_string($string, $lower = false, $noSpecial = false, $replaceSpecial = '')
 {
     // Run common sanitisation function over string

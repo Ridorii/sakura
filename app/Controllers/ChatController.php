@@ -10,9 +10,6 @@ use Sakura\Chat\LinkInfo;
 use Sakura\Chat\Settings;
 use Sakura\Chat\URLResolver;
 use Sakura\DB;
-use Sakura\Perms;
-use Sakura\Perms\Manage;
-use Sakura\Perms\Site;
 use Sakura\Session;
 use Sakura\User;
 
@@ -111,13 +108,14 @@ class ChatController extends Controller
         $session = new Session($_GET['arg2'] ?? null);
 
         if ($session->validate($user->id)
-            && !$user->permission(Site::DEACTIVATED)
-            && !$user->permission(Site::RESTRICTED)) {
+            && !$user->activated
+            && $user->verified
+            && !$user->restricted) {
             $hierarchy = $user->hierarchy();
-            $moderator = $user->permission(Manage::USE_MANAGE, Perms::MANAGE) ? 1 : 0;
-            $changeName = $user->permission(Site::CHANGE_USERNAME) ? 1 : 0;
-            $createChans = $user->permission(Site::MULTIPLE_GROUPS) ? 2 : (
-                $user->permission(Site::CREATE_GROUP) ? 1 : 0
+            $moderator = $user->perms->isMod || $user->perms->isAdmin ? 1 : 0;
+            $changeName = $user->perms->changeUsername ? 1 : 0;
+            $createChans = $user->perms->isAdmin ? 2 : (
+                $user->perms->isMod ? 1 : 0
             );
 
             // The single 0 in here is used to determine log access, which isn't supported by sakurako anymore since it

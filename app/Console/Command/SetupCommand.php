@@ -112,48 +112,82 @@ class SetupCommand extends Command
             DB::table('ranks')->insert($rank);
         }
 
-        // Permission data (alumni doesn't have special privs)
-        $permissions = [
-            [
-                'rank_id' => config('rank.inactive'),
-                'permissions_site' => '00000000000000000000000000000001',
-                'permissions_manage' => '000',
-            ],
+        // Permission data
+        $perms = [
             [
                 'rank_id' => config('rank.regular'),
-                'permissions_site' => '11110000111111111100111101101100',
-                'permissions_manage' => '000',
+                'perm_change_profile' => true,
+                'perm_change_avatar' => true,
+                'perm_change_userpage' => true,
+                'perm_change_signature' => true,
+                'perm_deactivate_account' => true,
+                'perm_view_user_links' => true,
+                'perm_manage_ranks' => true,
+                'perm_manage_friends' => true,
+                'perm_comments_create' => true,
+                'perm_comments_edit' => true,
+                'perm_comments_delete' => true,
+                'perm_comments_vote' => true,
             ],
             [
                 'rank_id' => config('rank.mod'),
-                'permissions_site' => '11110001111111111111111111111100',
-                'permissions_manage' => '111',
+                'perm_change_background' => true,
+                'perm_change_header' => true,
+                'perm_change_username' => true,
+                'perm_change_user_title' => true,
+                'perm_view_user_details' => true,
+                'perm_is_mod' => true,
+                'perm_can_restrict' => true,
+                'perm_manage_profile_images' => true,
             ],
             [
                 'rank_id' => config('rank.admin'),
-                'permissions_site' => '11110111111111111111111111111100',
-                'permissions_manage' => '111',
-            ],
-            [
-                'rank_id' => config('rank.bot'),
-                'permissions_site' => '11110000111111111100111101101100',
-                'permissions_manage' => '000',
+                'perm_change_background' => true,
+                'perm_change_header' => true,
+                'perm_change_username' => true,
+                'perm_change_user_title' => true,
+                'perm_view_user_details' => true,
+                'perm_is_mod' => true,
+                'perm_is_admin' => true,
+                'perm_can_restrict' => true,
+                'perm_manage_profile_images' => true,
             ],
             [
                 'rank_id' => config('rank.premium'),
-                'permissions_site' => '11110001111111111111111111111100',
-                'permissions_manage' => '000',
+                'perm_change_background' => true,
+                'perm_change_header' => true,
+                'perm_change_username' => true,
+                'perm_change_user_title' => true,
             ],
             [
                 'rank_id' => config('rank.banned'),
-                'permissions_site' => '11110000000011010100101000100010',
-                'permissions_manage' => '000',
+                'perm_change_profile' => false,
+                'perm_change_avatar' => false,
+                'perm_change_background' => false,
+                'perm_change_header' => false,
+                'perm_change_userpage' => false,
+                'perm_change_signature' => false,
+                'perm_change_username' => false,
+                'perm_change_user_title' => false,
+                'perm_deactivate_account' => false,
+                'perm_view_user_links' => false,
+                'perm_view_user_details' => false,
+                'perm_manage_ranks' => false,
+                'perm_manage_friends' => false,
+                'perm_comments_create' => false,
+                'perm_comments_edit' => false,
+                'perm_comments_delete' => false,
+                'perm_comments_vote' => false,
+                'perm_is_mod' => false,
+                'perm_is_admin' => false,
+                'perm_can_restrict' => false,
+                'perm_manage_profile_images' => false,
             ],
         ];
 
-        // Insert all the permission strings into the database
-        foreach ($permissions as $perm) {
-            DB::table('permissions')->insert($perm);
+        // Insert all the permissions into the database
+        foreach ($perms as $perm) {
+            DB::table('perms')->insert($perm);
         }
 
         // Forum data
@@ -194,58 +228,93 @@ class SetupCommand extends Command
             [
                 'forum_id' => 1,
                 'rank_id' => config('rank.inactive'),
-                'forum_perms' => '00000000001',
+                'perm_view' => true,
             ],
             [
                 'forum_id' => 3,
                 'rank_id' => config('rank.inactive'),
-                'forum_perms' => '00000000000',
+                'perm_view' => false,
             ],
             [
                 'forum_id' => 1,
                 'rank_id' => config('rank.regular'),
                 'forum_perms' => '00000011111',
+                'perm_view' => true,
+                'perm_reply' => true,
+                'perm_topic_create' => true,
+                'perm_edit' => true,
+                'perm_delete' => true,
             ],
             [
                 'forum_id' => 3,
                 'rank_id' => config('rank.regular'),
-                'forum_perms' => '00000000000',
+                'perm_view' => false,
             ],
             [
                 'forum_id' => 1,
                 'rank_id' => config('rank.mod'),
-                'forum_perms' => '11111111111',
+                'perm_topic_delete' => true,
+                'perm_topic_move' => true,
+                'perm_edit_any' => true,
+                'perm_delete_any' => true,
+                'perm_change_type' => true,
+                'perm_change_status' => true,
             ],
             [
                 'forum_id' => 3,
                 'rank_id' => config('rank.mod'),
-                'forum_perms' => '00000111111',
+                'perm_topic_delete' => true,
+                'perm_topic_move' => true,
+                'perm_edit_any' => true,
+                'perm_delete_any' => true,
+                'perm_change_type' => true,
             ],
             [
-                'forum_id' => 1,
+                'forum_id' => 0,
                 'rank_id' => config('rank.admin'),
-                'forum_perms' => '11111111111',
+                'perm_view' => true,
+                'perm_reply' => true,
+                'perm_topic_create' => true,
+                'perm_topic_delete' => true,
+                'perm_topic_move' => true,
+                'perm_edit' => true,
+                'perm_edit_any' => true,
+                'perm_delete' => true,
+                'perm_delete_any' => true,
+                'perm_bypass_rules' => true,
+                'perm_change_type' => true,
+                'perm_change_status' => true,
             ],
             [
-                'forum_id' => 3,
-                'rank_id' => config('rank.admin'),
-                'forum_perms' => '11111111111',
+                'forum_id' => 0,
+                'rank_id' => config('rank.banned'),
+                'perm_reply' => false,
+                'perm_topic_create' => false,
+                'perm_topic_delete' => false,
+                'perm_topic_move' => false,
+                'perm_edit' => false,
+                'perm_edit_any' => false,
+                'perm_delete' => false,
+                'perm_delete_any' => false,
+                'perm_bypass_rules' => false,
+                'perm_change_type' => false,
+                'perm_change_status' => false,
             ],
             [
                 'forum_id' => 1,
                 'rank_id' => config('rank.banned'),
-                'forum_perms' => '00000000001',
+                'perm_view' => true,
             ],
             [
                 'forum_id' => 3,
                 'rank_id' => config('rank.banned'),
-                'forum_perms' => '00000000000',
+                'perm_view' => false,
             ],
         ];
 
         // Insert all the forum permissions into the database
         foreach ($forum_perms as $fperm) {
-            DB::table('forum_permissions')->insert($fperm);
+            DB::table('forum_perms')->insert($fperm);
         }
 
         // Bot user
@@ -259,6 +328,8 @@ class SetupCommand extends Command
             'user_registered' => time(),
             'user_last_online' => 0,
             'user_country' => 'JP',
+            'user_activated' => true,
+            'user_verified' => true,
         ]);
 
         // Create the actual user object

@@ -7,7 +7,7 @@
 namespace Sakura\Forum;
 
 use Sakura\DB;
-use Sakura\Perms;
+use Sakura\CurrentSession;
 
 /**
  * Used to serve forums.
@@ -65,6 +65,12 @@ class Forum
     public $icon = "";
 
     /**
+     * Holds the permission handler.
+     * @var ForumPerms
+     */
+    public $perms;
+
+    /**
      * A cached instance of the first post in this forum.
      * @var Post
      */
@@ -89,12 +95,6 @@ class Forum
     private $topicsCache = [];
 
     /**
-     * The permission container.
-     * @var Perms
-     */
-    private $permissionsCache;
-
-    /**
      * Constructor.
      * @param int $forumId
      */
@@ -104,9 +104,6 @@ class Forum
         $forumRow = DB::table('forums')
             ->where('forum_id', $forumId)
             ->first();
-
-        // Create permissions object
-        $this->permissionsCache = new Perms(Perms::FORUM);
 
         // Populate the variables
         if ($forumRow) {
@@ -121,6 +118,8 @@ class Forum
         } elseif ($forumId !== 0) {
             $this->id = -1;
         }
+
+        $this->perms = new ForumPerms($this, CurrentSession::$user);
     }
 
     /**
@@ -132,18 +131,7 @@ class Forum
      */
     public function permission($flag, $user, $raw = false)
     {
-        // Set default permission value
-        $perm = 0;
-
-        // Get the permissions of the parent forum if there is one
-        if ($this->category) {
-            $perm = $perm | (new Forum($this->category))->permission($flag, $user, true);
-        }
-
-        // Bitwise OR it with the permissions for this forum
-        $perm = $perm | $this->permissionsCache->user($user, ['forum_id' => [$this->id, '=']]);
-
-        return $raw ? $perm : $this->permissionsCache->check($flag, $perm);
+        return $raw ? 1024 : true;
     }
 
     /**

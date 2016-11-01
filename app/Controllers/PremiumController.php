@@ -11,7 +11,6 @@ use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
 use Sakura\Config;
 use Sakura\CurrentSession;
 use Sakura\Payments;
-use Sakura\Perms\Site;
 
 /**
  * Premium pages controller.
@@ -56,8 +55,9 @@ class PremiumController extends Controller
 
         // Check if the session is valid
         if (!session_check()
-            || CurrentSession::$user->permission(Site::DEACTIVATED)
-            || !CurrentSession::$user->permission(Site::OBTAIN_PREMIUM)) {
+            || !CurrentSession::$user->activated
+            || !CurrentSession::$user->verified
+            || CurrentSession::$user->restricted) {
             throw new HttpMethodNotAllowedException();
         }
 

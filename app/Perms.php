@@ -14,16 +14,6 @@ namespace Sakura;
 class Perms
 {
     /**
-     * SITE permission mode, used for general permissions.
-     */
-    const SITE = 'permissions\permissions_site';
-
-    /**
-     * MANAGE permission mode, used for site management actions.
-     */
-    const MANAGE = 'permissions\permissions_manage';
-
-    /**
      * FORUM permission mode, used per forum.
      */
     const FORUM = 'forum_permissions\forum_perms';

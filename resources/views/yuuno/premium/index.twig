@@ -2,8 +2,6 @@
 
 {% set title %}Support {{ config('general.name') }}{% endset %}
 
-{% set persistentPremium = user.permission(constant('Sakura\\Perms\\Site::STATIC_PREMIUM')) %}
-
 {% set features = {
     "money": "Helping us pay for the bills to survive",
     "certificate": "A <span style='font-weight: bold; color: #EE9400'>special</span> name colour to stand out in the crowd",
@@ -24,8 +22,8 @@
                 Your current Tenshi tag
             </div>
             <div style="margin-bottom: 10px;">
-                <h3>{% if persistentPremium %}Your rank has persistent Tenshi.{% else %}Your Tenshi tag is valid till {{ user.premiumInfo.expire|date(config('general.date_format')) }}.{% endif %}</h3>
-                <progress value="{{ persistentPremium ? 100 : (100 - (((date().timestamp - user.premiumInfo.start) / (user.premiumInfo.expire - user.premiumInfo.start)) * 100)) }}" max="100" style="width: 100%"></progress>
+                <h3>Your Tenshi tag is valid till {{ user.premiumInfo.expire|date(config('general.date_format')) }}.</h3>
+                <progress value="{{ 100 - (((date().timestamp - user.premiumInfo.start) / (user.premiumInfo.expire - user.premiumInfo.start)) * 100) }}" max="100" style="width: 100%"></progress>
             </div>
         {% endif %}
         <div class="sectionHeader">
@@ -60,7 +58,7 @@
                 </div>
             </div>
         </div>
-        {% if user.isActive and user.permission(constant('Sakura\\Perms\\Site::OBTAIN_PREMIUM')) %}
+        {% if user.isActive and user.verified %}
             <div class="slider">
                 <input class="inputStyling" type="range" min="1" max="{{ amountLimit }}" value="1" onchange="document.getElementById('monthsNo').value = this.value; document.getElementById('monthNoBtn').innerText = this.value; document.getElementById('monthsTrailingS').innerText = (this.value == 1 ? '' : 's'); document.getElementById('totalAmount').innerText = (this.value * {{ price }});">
             </div>
@@ -79,7 +77,7 @@
             <h1 style="text-align: center; margin: 1em auto;" class="stylised">You need to be logged in to get Tenshi!</h1>
         {% endif %}
     </div>
-    {% if user.isActive and user.permission(constant('Sakura\\Perms\\Site::OBTAIN_PREMIUM')) %}
+    {% if user.isActive and user.verified %}
         <form action="{{ route('premium.purchase') }}" method="post" id="purchaseForm" class="hidden">
             <input type="hidden" name="mode" value="purchase">
             <input type="hidden" name="time" value="{{ date().timestamp }}">

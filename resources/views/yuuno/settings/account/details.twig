@@ -8,12 +8,10 @@
 
 {% block settingsContent %}
     <form enctype="multipart/form-data" method="post" action="javascript:;" onsubmit="updateSettingsConfirm(this, '{{ route('settings.account.details') }}');">
-        {% if edit_email %}
-            <div class="profile-field">
-                <div><h2>E-mail address</h2></div>
-                <div><input type="text" name="email" placeholder="{{ user.email }}" class="inputStyling"></div>
-            </div>
-        {% endif %}
+        <div class="profile-field">
+            <div><h2>E-mail address</h2></div>
+            <div><input type="text" name="email" placeholder="{{ user.email }}" class="inputStyling"></div>
+        </div>
         {% if edit_usern %}
             <div class="profile-field">
                 <div><h2>Username {% if last_name_change %}(last change was <time class="time-ago" datetime="{{ last_name_change|date('r') }}">{{ last_name_change|date(config('general.date_format')) }}</time>){% endif %}</h2></div>
@@ -26,12 +24,10 @@
                 <div><input type="text" name="title" placeholder="Max 64 characters, leaving this empty will actually reset it" class="inputStyling" value="{{ user.title }}"></div>
             </div>
         {% endif %}
-        {% if edit_passw %}
-            <div class="profile-field">
-                <div><h2>Password</h2></div>
-                <div><input type="password" name="password" placeholder="Must be at least decently strong, size doesn't matter" class="inputStyling"></div>
-            </div>
-        {% endif %}
+        <div class="profile-field">
+            <div><h2>Password</h2></div>
+            <div><input type="password" name="password" placeholder="Must be at least decently strong, size doesn't matter" class="inputStyling"></div>
+        </div>
         <div class="profile-save">
             <button value="{{ session_id() }}" name="session" class="inputStyling">Save</button>
             <button type="reset" class="inputStyling">Reset</button>

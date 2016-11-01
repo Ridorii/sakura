@@ -9,7 +9,6 @@ namespace Sakura\Controllers;
 use Sakura\Comment;
 use Sakura\Config;
 use Sakura\CurrentSession;
-use Sakura\Perms\Site;
 
 /**
  * Handles comment stuff.
@@ -33,7 +32,7 @@ class CommentsController extends Controller
         }
 
         // Check if the user can comment
-        if (!CurrentSession::$user->permission(Site::CREATE_COMMENTS)) {
+        if (!CurrentSession::$user->perms->commentsCreate) {
             $error = "You aren't allowed to make comments!";
             return $this->json(compact('error'));
         }
@@ -74,7 +73,7 @@ class CommentsController extends Controller
     public function delete($id = 0)
     {
         // Check if the user can delete comments
-        if (!CurrentSession::$user->permission(Site::DELETE_COMMENTS)) {
+        if (!CurrentSession::$user->perms->commentsDelete) {
             $error = "You aren't allowed to delete comments!";
             return $this->json(compact('error'));
         }
@@ -109,7 +108,7 @@ class CommentsController extends Controller
         $vote = $vote != 0;
 
         // Check if the user can delete comments
-        if (!CurrentSession::$user->permission(Site::VOTE_COMMENTS)) {
+        if (!CurrentSession::$user->perms->commentsVote) {
             $error = "You aren't allowed to vote on comments!";
             return $this->json(compact('error'));
         }

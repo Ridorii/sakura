@@ -11,7 +11,6 @@ use Sakura\Config;
 use Sakura\CurrentSession;
 use Sakura\DB;
 use Sakura\Net;
-use Sakura\Perms\Site;
 use Sakura\User;
 
 /**
@@ -107,7 +106,7 @@ class AuthController extends Controller
         }
 
         // Check if the user has the required privs to log in
-        if ($user->permission(Site::DEACTIVATED)) {
+        if (!$user->activated) {
             $this->touchRateLimit($user->id);
             $message = 'Your account is deactivated, activate it first!';
             $redirect = route('auth.reactivate');
@@ -284,7 +283,7 @@ class AuthController extends Controller
         }
 
         // Check if the user is already active
-        if (!$user->permission(Site::DEACTIVATED)) {
+        if (!$user->activated) {
             $message = "Your account is already activated! Why are you here?";
             return view('global/information', compact('message', 'redirect'));
         }
@@ -345,7 +344,7 @@ class AuthController extends Controller
         $user = User::construct($getUser[0]->user_id);
 
         // Check if a user is activated
-        if (!$user->permission(Site::DEACTIVATED)) {
+        if (!$user->activated) {
             $message = "Your account is already activated! Why are you here?";
             return view('global/information', compact('message', 'redirect'));
         }
@@ -389,7 +388,7 @@ class AuthController extends Controller
         }
 
         // Check if the user is active
-        if ($user->permission(Site::DEACTIVATED)) {
+        if (!$user->activated) {
             $message = "Your account is deactivated, go activate it first...";
             return view('global/information', compact('message', 'redirect'));
         }

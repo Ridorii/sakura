@@ -1,14 +1,12 @@
 {% extends 'master.twig' %}
 
-{% set profileHidden = profile.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) or (profile.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) and (user.id != profile.id and not user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')))) %}
+{% set profileHidden = not profile.activated and (user.id != profile.id and not (user.perms.isMod or user.perms.isAdmin)) %}
 
 {% set noUserpage = profile.userPage|length < 1 %}
 
 {% set title = profileHidden ? 'User not found!' : 'Profile of ' ~ profile.username %}
 
 {% set youtubeIsChannelId = profile.youtube|slice(0, 2) == 'UC' and profile.youtube|length == 24 %}
-
-{% set canViewSecret = user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
 
 {% set fields = {
     "website": {
@@ -59,16 +57,16 @@
     },
     "email": {
         "title": "E-mail address",
-        "value": canViewSecret ? profile.email : null,
+        "value": user.perms.viewUserDetails ? profile.email : null,
         "link": "mailto:%s"
     },
     "registerip": {
         "title": "Register IP",
-        "value": canViewSecret ? profile.registerIp : null,
+        "value": user.perms.viewUserDetails ? profile.registerIp : null,
     },
     "lastip": {
         "title": "Last IP",
-        "value": canViewSecret ? profile.lastIp : null,
+        "value": user.perms.viewUserDetails ? profile.lastIp : null,
     },
 } %}
 
@@ -191,7 +189,7 @@
                         <a class="fa fa-reply" title="View {{ profile.username }}'s posts" href="#_posts" onclick="profileMode('posts');"></a>
                         <a class="fa fa-star" title="View {{ profile.username }}'s friends" href="#_friends" onclick="profileMode('friends');"></a>
                         <a class="fa fa-comments-o" title="View {{ profile.username }}'s profile comments" href="#_comments" onclick="profileMode('comments');"></a>
-                        {% if (profile.isActive and profile.id == user.id) or user.permission(constant('Sakura\\Perms\\Manage::CHANGE_IMAGES'), constant('Sakura\\Perms::MANAGE')) %}
+                        {% if (profile.isActive and profile.id == user.id) or user.perms.manageProfileImages %}
                             <a class="fa fa-picture-o" title="Edit your avatar, background and header" href="#_images" onclick="profileMode('images');"></a>
                         {% endif %}
                     </div>
@@ -204,7 +202,7 @@
                         <a class="fa fa-user-{% if user.isFriends(profile.id) == 0 %}plus{% else %}times{% endif %}" title="{% if user.isFriends(profile.id) == 0 %}Add {{ profile.username }} as a friend{% else %}Remove friend{% endif %}" href="javascript:void(0);" onclick="Sakura.Friend.{% if user.isFriends(profile.id) == 0 %}Add({{ profile.id }}){% else %}Remove({{ profile.id }}){% endif %}"></a>
                         <a class="fa fa-exclamation-circle" title="Report {{ profile.username }}" href="{{ route('user.report', profile.id) }}"></a>
                         {% endif %}
-                        {% if user.permission(constant('Sakura\\Perms\\Manage::CAN_RESTRICT_USERS'), constant('Sakura\\Perms::MANAGE')) %}
+                        {% if user.perms.canRestrict %}
                             <a class="fa fa-trash" title="Restrict {{ profile.username }}" href="?restrict={{ session_id() }}"></a>
                         {% endif %}
                     </div>
@@ -265,6 +263,7 @@
                         </table>
                         <hr class="default">
                         {% if user.isActive %}
+                        {# if user.perms.viewUserLinks or user.perms.viewUserDetails #}
                             <table style="width: 100%;">
                             {% for id, data in fields %}
                                 {% if data.value != null %}
@@ -287,9 +286,9 @@
                             <b>Log in to view the full profile!</b>
                         {% endif %}
                         <b>Account Standing</b>
-                        {% if profile.permission(constant('Sakura\\Perms\\Site::DEACTIVATED')) %}
+                        {% if not profile.activated %}
                             <h2 style="color: #888; text-shadow: 0 0 7px #888; margin-top: 0;">Deactivated</h2>
-                        {% elseif profile.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}
+                        {% elseif profile.restricted %}
                             <h2 style="color: #222; text-shadow: 0 0 7px #800; margin-top: 0;">Restricted</h2>
                         {% elseif false %}
                             <h2 style="color: #A00; text-shadow: 0 0 7px #A00; margin-top: 0;">Bad</h2>

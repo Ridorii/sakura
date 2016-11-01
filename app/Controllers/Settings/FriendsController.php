@@ -8,7 +8,6 @@ namespace Sakura\Controllers\Settings;
 
 use Phroute\Phroute\Exception\HttpMethodNotAllowedException;
 use Sakura\CurrentSession;
-use Sakura\Perms\Site;
 
 /**
  * Friends settings.
@@ -23,8 +22,7 @@ class FriendsController extends Controller
      */
     public function listing()
     {
-        // Check permission
-        if (!CurrentSession::$user->permission(Site::MANAGE_FRIENDS)) {
+        if (!CurrentSession::$user->perms->manageFriends) {
             throw new HttpMethodNotAllowedException();
         }
 
@@ -37,8 +35,7 @@ class FriendsController extends Controller
      */
     public function requests()
     {
-        // Check permission
-        if (!CurrentSession::$user->permission(Site::MANAGE_FRIENDS)) {
+        if (!CurrentSession::$user->perms->manageFriends) {
             throw new HttpMethodNotAllowedException();
         }
 

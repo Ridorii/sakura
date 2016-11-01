@@ -12,7 +12,6 @@ use LastFmApi\Api\UserApi;
 use LastFmApi\Exception\LastFmApiExeption;
 use Sakura\Exceptions\NetAddressTypeException;
 use Sakura\Perms;
-use Sakura\Perms\Site;
 use stdClass;
 
 /**
@@ -263,10 +262,10 @@ class User
     private $birthday = '0000-00-00';
 
     /**
-     * The user's permission container.
-     * @var Perms
+     * Holds the permission checker for this user.
+     * @var UserPerms
      */
-    private $permissions;
+    public $perms;
 
     /**
      * The User instance cache array.
@@ -445,7 +444,7 @@ class User
         $this->title = $this->title ? $this->title : $this->mainRank->title;
 
         // Init the permissions
-        $this->permissions = new Perms(Perms::SITE);
+        $this->perms = new UserPerms($this);
     }
 
     /**
@@ -542,7 +541,7 @@ class User
      */
     public function isActive()
     {
-        return $this->id !== 0 && !$this->permission(Site::DEACTIVATED);
+        return $this->id !== 0 && $this->activated;
     }
 
     /**
@@ -911,7 +910,7 @@ class User
         $expire = $this->premiumInfo()->expire;
 
         // Check if the user has static premium
-        if (!$expire && $this->permission(Site::STATIC_PREMIUM)) {
+        if (!$expire) {
             $expire = time() + 1;
         }
 

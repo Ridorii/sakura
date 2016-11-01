@@ -6,8 +6,6 @@
 
 namespace Sakura;
 
-use Sakura\Perms\Site;
-
 /**
  * Information about the current active user and session.
  * @package Sakura
@@ -48,7 +46,7 @@ class CurrentSession
 
         // Check if the session exists and check if the user is activated
         if (self::$session->validate($user->id, $ip)
-            && !$user->permission(Site::DEACTIVATED)) {
+            && $user->activated) {
             // Assign the user object
             self::$user = $user;
         } else {

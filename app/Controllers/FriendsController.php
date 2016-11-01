@@ -8,7 +8,6 @@ namespace Sakura\Controllers;
 
 use Sakura\CurrentSession;
 use Sakura\Notification;
-use Sakura\Perms\Site;
 use Sakura\User;
 
 /**
@@ -57,8 +56,7 @@ class FriendsController extends Controller
 
         $friend = User::construct($id);
 
-        if ($friend->permission(Site::DEACTIVATED)
-            || $user->permission(Site::DEACTIVATED)) {
+        if (!$friend->activated || !$user->activated) {
             $error = "The user you tried to add does not exist!";
             return $this->json(compact('error'));
         }
@@ -119,8 +117,7 @@ class FriendsController extends Controller
 
         $friend = User::construct($id);
 
-        if ($friend->permission(Site::DEACTIVATED)
-            || $user->permission(Site::DEACTIVATED)) {
+        if (!$friend->activated || !$user->activated) {
             $error = "The user you tried to remove does not exist!";
             return $this->json(compact('error'));
         }

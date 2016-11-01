@@ -13,7 +13,7 @@
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="/css/yuuno.css">
 {{ block('css') }}
-        <script type="text/javascript" src="/js/app.js"></script>
+        <script type="text/javascript" src="/js/sakura.js"></script>
         <script type="text/javascript" src="/js/yuuno.js"></script>
 {{ block('js') }}
     </head>
@@ -47,7 +47,7 @@
                             <a class="menu-item avatar" href="{{ route('user.profile', user.id) }}" title="Logged in as {{ user.username }}" style="background-image: url('{{ route('user.avatar', user.id) }}'); width: auto; color: {{ user.colour }}; border-color: {{ user.colour }}; font-weight: 700;"></a>
                             <a class="menu-item fa-envelope" href="#" title="Messages"></a>
                             <a class="menu-item fa-bell" href="javascript:;" title="Notifications"></a>
-                            {% if user.permission(constant('Sakura\\Perms\\Manage::USE_MANAGE'), constant('Sakura\\Perms::MANAGE')) %}
+                            {% if user.perms.isMod or user.perms.isAdmin %}
                                 <a class="menu-item fa-gavel" href="{{ route('manage.index') }}" title="Manage"></a>
                             {% endif %}
                             <a class="menu-item fa-cogs" href="{{ route('settings.index') }}" title="Settings"></a>
@@ -62,7 +62,7 @@
             <div id="contentwrapper">
                 <div id="notifications" class="alerts"></div>
                 <div id="dialogues" class="dialogues"></div>
-                {% if profile is defined ? profile.background : (user.permission(constant('Sakura\\Perms\\Site::CHANGE_BACKGROUND')) and (user.backgroundSitewide or showBG) and user.background) %}
+                {% if profile is defined ? profile.background : (user.perms.changeBackground and (user.backgroundSitewide or showBG) and user.background) %}
                     <div id="userBackground" style="background-image: url('{{ route('user.background', (profile is defined ? profile : user).id) }}');"></div>
                 {% endif %}
                 {% if not user.isActive and server['REQUEST_URI'] != route('auth.login') %}
@@ -87,7 +87,7 @@
                     </form>
                 </div>
                 {% endif %}
-                {% if user.permission(constant('Sakura\\Perms\\Site::RESTRICTED')) %}
+                {% if user.restricted %}
                     <div class="headerNotify" style="background: repeating-linear-gradient(-45deg, #B33, #B33 10px, #B00 10px, #B00 20px); color: #FFF; border: 1px solid #C00; box-shadow: 0 0 3px #C00;">
                         <h1>Your account is currently in <span style="font-weight: 700 !important;">restricted mode</span>!</h1>
                         <div>A staff member has set your account to restricted mode most likely due to violation of the rules. While restricted you won't be able to use most public features of the site. If you think this is a mistake please <a href="{{ route('info.contact') }}" style="color: inherit;">get in touch with one of our staff members</a>.</div>
