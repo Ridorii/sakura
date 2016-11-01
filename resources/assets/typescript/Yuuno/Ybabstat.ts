@@ -1,5 +1,3 @@
-/// <reference path="../Sakura.ts" />
-
 namespace Yuuno
 {
     export class Ybabstat

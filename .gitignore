@@ -17,6 +17,7 @@
 # Compiled/copied assets
 /public/js
 /public/css
+/resources/assets/typescript/*.d.ts
 
 # User assets
 /uploads/*

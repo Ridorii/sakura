@@ -1,4 +1,4 @@
-/// <reference path="../Sakura.ts" />
+/// <reference path="../Sakura.d.ts" />
 
 namespace Yuuno
 {
