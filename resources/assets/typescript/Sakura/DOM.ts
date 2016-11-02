@@ -55,8 +55,8 @@ namespace Sakura
             element.parentNode.removeChild(element);
         }
 
-        public static Class(className: string): NodeListOf<HTMLElement> {
-            return <NodeListOf<HTMLElement>>document.getElementsByClassName(className);
+        public static Class(className: string): HTMLCollectionOf<HTMLElement> {
+            return <HTMLCollectionOf<HTMLElement>>document.getElementsByClassName(className);
         }
 
         public static Prepend(target: HTMLElement, element: HTMLElement | Text, before: HTMLElement | Node = null): void {

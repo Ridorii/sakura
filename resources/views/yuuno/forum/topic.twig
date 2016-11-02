@@ -5,35 +5,31 @@
 {% set title %}{% if topic is defined %}{{ topic.title }}{% else %}Creating topic in {{ forum.name }}{% endif %}{% endset %}
 
 {% if topic is defined %}
-    {% if forum.permission(constant('Sakura\\Perms\\Forum::REPLY'), user.id)
+    {% if forum.perms.reply
         and (
         topic.status != 1
-        or forum.permission(constant('Sakura\\Perms\\Forum::LOCK'), user.id)
+        or forum.perms.changeStatus
         ) %}
         {% set forumReplyLink %}#reply{% endset %}
     {% endif %}
 
-    {% if forum.permission(constant('Sakura\\Perms\\Forum::STICKY'), user.id)
-        or forum.permission(constant('Sakura\\Perms\\Forum::ANNOUNCEMENT'), user.id)
-        or forum.permission(constant('Sakura\\Perms\\Forum::LOCK'), user.id)
-        or forum.permission(constant('Sakura\\Perms\\Forum::MOVE'), user.id)
-        or forum.permission(constant('Sakura\\Perms\\Forum::DELETE_ANY'), user.id) %}
+    {% if forum.perms.changeType
+        or forum.perms.changeStatus
+        or forum.perms.topicMove
+        or forum.perms.deleteAny %}
         {% set showMod = true %}
     {% endif %}
 
-    {% if forum.permission(constant('Sakura\\Perms\\Forum::STICKY'), user.id) %}
+    {% if forum.perms.changeType %}
         {% set forumSticky = topic.type == 1 ? true : false %}
-    {% endif %}
-
-    {% if forum.permission(constant('Sakura\\Perms\\Forum::ANNOUNCEMENT'), user.id) %}
         {% set forumAnnounce = topic.type == 2 ? true : false %}
     {% endif %}
 
-    {% if forum.permission(constant('Sakura\\Perms\\Forum::LOCK'), user.id) %}
+    {% if forum.perms.changeStatus %}
         {% set forumLock = topic.status == 1 ? true : false %}
     {% endif %}
 
-    {% if forum.permission(constant('Sakura\\Perms\\Forum::MOVE'), user.id) %}
+    {% if forum.perms.topicMove %}
         {% if topic.oldForum %}
             {% set forumRestore = true %}
         {% endif %}
@@ -43,7 +39,7 @@
         {% endif %}
     {% endif %}
 
-    {% if forum.permission(constant('Sakura\\Perms\\Forum::DELETE_ANY'), user.id) %}
+    {% if forum.perms.deleteAny %}
         {% if topic.forum == config('forum.trash') %}
             {% set forumPrune = true %}
         {% endif %}
@@ -116,10 +112,10 @@
                                     <img src="/images/tenshi.png" alt="Tenshi"{% if not post.poster.isPremium %} style="opacity: 0;"{% endif %}> <img src="/images/flags/{{ post.poster.country|lower }}.png" alt="{{ post.poster.country(true) }}">{% if post.poster.id == (topic.posts|first).poster.id %} <img src="/images/op.png" alt="OP" title="Original Poster">{% endif %}
                                     {% if user.isActive %}
                                     <div class="actions">
-                                        {% if (user.id == post.poster.id and forum.permission(constant('Sakura\\Perms\\Forum::EDIT_OWN'), user.id)) or forum.permission(constant('Sakura\\Perms\\Forum::EDIT_ANY'), user.id) %}
+                                        {% if (user.id == post.poster.id and forum.perms.edit) or forum.perms.editAny %}
                                             <a class="fa fa-pencil-square-o" title="Edit this post" href="javascript:void(0);" onclick="editPost({{ post.id }});"></a>
                                         {% endif %}
-                                        {% if (user.id == post.poster.id and forum.permission(constant('Sakura\\Perms\\Forum::DELETE_OWN'), user.id)) or forum.permission(constant('Sakura\\Perms\\Forum::DELETE_ANY'), user.id) %}
+                                        {% if (user.id == post.poster.id and forum.perms.delete) or forum.perms.deleteAny %}
                                             <a class="fa fa-trash" title="Delete this post" href="javascript:;" onclick="deletePost({{ post.id }})"></a>
                                         {% endif %}
                                         {% if not (post.poster.activated or post.poster.restricted or user.id == post.poster.id) %}

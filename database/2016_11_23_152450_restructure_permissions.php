@@ -24,6 +24,9 @@ class RestructurePermissions extends Migration
                 ->default(0);
         });
 
+        $schema->drop('forum_permissions');
+        $schema->drop('permissions');
+
         $schema->create('perms', function (Blueprint $table) {
             $table->integer('user_id')->default(0);
             $table->integer('rank_id')->default(0);
@@ -88,8 +91,41 @@ class RestructurePermissions extends Migration
     public function down()
     {
         $schema = DB::getSchemaBuilder();
+
         $schema->drop('forum_perms');
         $schema->drop('perms');
+
+        $schema->create('permissions', function (Blueprint $table) {
+            $table->integer('rank_id')
+                ->unsigned()
+                ->default(0);
+
+            $table->integer('user_id')
+                ->unsigned()
+                ->default(0);
+
+            $table->string('permissions_site', 255)
+                ->default(0);
+
+            $table->string('permissions_manage', 255)
+                ->default(0);
+        });
+
+        $schema->create('forum_permissions', function (Blueprint $table) {
+            $table->integer('forum_id')
+                ->unsigned();
+
+            $table->integer('rank_id')
+                ->unsigned()
+                ->default(0);
+
+            $table->integer('user_id')
+                ->unsigned()
+                ->default(0);
+
+            $table->string('forum_perms', 255);
+        });
+
         $schema->table('users', function (Blueprint $table) {
             $table->dropColumn([
                 'user_activated',

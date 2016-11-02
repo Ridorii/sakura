@@ -14,7 +14,6 @@ use Sakura\DB;
 use Sakura\Forum\Forum;
 use Sakura\Forum\Post;
 use Sakura\Forum\Topic;
-use Sakura\Perms\Forum as ForumPerms;
 use Sakura\User;
 
 /**
@@ -45,7 +44,7 @@ class ForumController extends Controller
             $forum = new Forum($topic->forum);
 
             // Check if we have permission to view it
-            if (!$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
+            if (!$forum->perms->view) {
                 $fetch = DB::table('posts')
                     ->groupBy('topic_id')
                     ->orderByRaw('COUNT(*) DESC')
@@ -75,7 +74,7 @@ class ForumController extends Controller
             $forum = new Forum($post->forum);
 
             // Check if we have permission to view it
-            if (!$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
+            if (!$forum->perms->view) {
                 $fetch = DB::table('posts')
                     ->orderBy('post_id', 'desc')
                     ->skip(11 + $_n)
@@ -124,7 +123,7 @@ class ForumController extends Controller
 
         // Check if the forum exists
         if ($forum->id < 0
-            || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
+            || !$forum->perms->view) {
             throw new HttpRouteNotFoundException();
         }
 
@@ -152,7 +151,7 @@ class ForumController extends Controller
 
         // Check if the forum exists
         if ($forum->id < 1
-            || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
+            || !$forum->perms->view) {
             throw new HttpRouteNotFoundException();
         }
 

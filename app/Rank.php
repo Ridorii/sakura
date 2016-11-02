@@ -6,8 +6,6 @@
 
 namespace Sakura;
 
-use Sakura\Perms;
-
 /**
  * Serves Rank data.
  * @package Sakura
@@ -62,12 +60,6 @@ class Rank
      * @var bool
      */
     private $hidden = true;
-
-    /**
-     * Permission container.
-     * @var Perms
-     */
-    private $permissions;
 
     /**
      * Instance cache container.
@@ -134,22 +126,6 @@ class Rank
     public function hidden()
     {
         return $this->hidden;
-    }
-
-    /**
-     * Check permissions.
-     * @param int $flag
-     * @return bool
-     */
-    public function permission($flag)
-    {
-        // Set default permission value
-        $perm = 0;
-
-        // Bitwise OR it with the permissions for this forum
-        $perm = $perm | $this->permissions->rank($this->id);
-
-        return $this->permissions->check($flag, $perm);
     }
 
     /**

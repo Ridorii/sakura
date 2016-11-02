@@ -1,4 +1,4 @@
-{% if forum.permission(constant('Sakura\\Perms\\Forum::VIEW'), user.id) %}
+{% if forum.perms.view %}
     <div class="forumForum">
         <div class="forumIcon {% if forum.unread(user.id) %}unread {% endif %}fa fa-3x {% if forum.icon %}{{ forum.icon }}{% else %}{% if forum.type == 2 %}fa-chevron-circle-right{% elseif forum.type == 1 %}fa-folder{% else %}fa-comments{% endif %}{% endif %}"></div>
         <div class="forumTitle">

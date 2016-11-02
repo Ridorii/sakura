@@ -11,7 +11,6 @@ use LastFmApi\Api\AuthApi;
 use LastFmApi\Api\UserApi;
 use LastFmApi\Exception\LastFmApiExeption;
 use Sakura\Exceptions\NetAddressTypeException;
-use Sakura\Perms;
 use stdClass;
 
 /**
@@ -816,26 +815,6 @@ class User
 
         // Return the objects
         return $objects;
-    }
-
-    /**
-     * Check if the user has a certaing permission flag.
-     * @param int $flag
-     * @param string $mode
-     * @return bool
-     */
-    public function permission($flag, $mode = null)
-    {
-        // Set mode
-        $this->permissions->mode($mode ? $mode : Perms::SITE);
-
-        // Set default permission value
-        $perm = 0;
-
-        // Bitwise OR it with the permissions for this forum
-        $perm = $this->permissions->user($this->id);
-
-        return $this->permissions->check($flag, $perm);
     }
 
     /**

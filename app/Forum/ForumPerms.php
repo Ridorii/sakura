@@ -6,6 +6,7 @@
 
 namespace Sakura\Forum;
 
+use Sakura\DB;
 use Sakura\User;
 
 /**
@@ -15,14 +16,16 @@ use Sakura\User;
  */
 class ForumPerms
 {
-    private $forum = [];
+    private $forums = [];
     private $user = 0;
     private $ranks = [];
     private $cache = [];
 
     public function __construct(Forum $forum, User $user)
     {
-        //
+        $this->forums = [0, $forum->id, $forum->category];
+        $this->user = $user->id;
+        $this->ranks = array_keys($user->ranks);
     }
 
     public function __get($name)
@@ -31,7 +34,7 @@ class ForumPerms
             $column = 'perm_' . camel_to_snake($name);
 
             $result = array_column(DB::table('forum_perms')
-                ->whereIn('forum_id', $this->forum)
+                ->whereIn('forum_id', $this->forums)
                 ->where(function ($query) {
                     $query->whereIn('rank_id', $this->ranks)
                         ->orWhere('user_id', $this->user);

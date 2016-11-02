@@ -12,7 +12,6 @@ use Sakura\CurrentSession;
 use Sakura\Forum\Forum;
 use Sakura\Forum\Post;
 use Sakura\Forum\Topic;
-use Sakura\Perms\Forum as ForumPerms;
 
 /**
  * Topic controller.
@@ -34,7 +33,7 @@ class TopicController extends Controller
 
         // Check if the forum exists
         if ($topic->id === 0
-            || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
+            || !$forum->perms->view) {
             throw new HttpRouteNotFoundException;
         }
 
@@ -56,7 +55,7 @@ class TopicController extends Controller
         $forum = new Forum($topic->forum);
 
         if ($topic->id !== 0
-            || $forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)
+            || $forum->perms->view
             || session_check()) {
             return compact('topic', 'forum');
         }
@@ -74,7 +73,7 @@ class TopicController extends Controller
     {
         extract($this->modBase($id));
 
-        if (!$forum->permission(ForumPerms::STICKY, CurrentSession::$user->id)) {
+        if (!$forum->perms->changeType) {
             throw new HttpMethodNotAllowedException;
         }
 
@@ -94,7 +93,7 @@ class TopicController extends Controller
     {
         extract($this->modBase($id));
 
-        if (!$forum->permission(ForumPerms::ANNOUNCEMENT, CurrentSession::$user->id)) {
+        if (!$forum->perms->changeType) {
             throw new HttpMethodNotAllowedException;
         }
 
@@ -114,7 +113,7 @@ class TopicController extends Controller
     {
         extract($this->modBase($id));
 
-        if (!$forum->permission(ForumPerms::LOCK, CurrentSession::$user->id)) {
+        if (!$forum->perms->changeStatus) {
             throw new HttpMethodNotAllowedException;
         }
 
@@ -137,10 +136,10 @@ class TopicController extends Controller
         $trash = intval(config('forum.trash'));
 
         if ($topic->forum === $trash
-            && $forum->permission(ForumPerms::DELETE_ANY, CurrentSession::$user->id)) {
+            && $forum->perms->deleteAny) {
             $redirect = route('forums.forum', $trash);
             $topic->delete();
-        } elseif ($forum->permission(ForumPerms::MOVE, CurrentSession::$user->id)) {
+        } elseif ($forum->perms->topicMove) {
             $redirect = route('forums.topic', $topic->id);
             $topic->move($trash);
         } else {
@@ -160,7 +159,7 @@ class TopicController extends Controller
     {
         extract($this->modBase($id));
 
-        if (!$forum->permission(ForumPerms::MOVE, CurrentSession::$user->id)) {
+        if (!$forum->perms->topicMove) {
             throw new HttpMethodNotAllowedException;
         }
 
@@ -182,9 +181,9 @@ class TopicController extends Controller
         extract($this->modBase($id));
         $dest_forum = new Forum($_REQUEST['forum_id'] ?? 0);
 
-        if (!$forum->permission(ForumPerms::MOVE, CurrentSession::$user->id)
+        if (!$forum->perms->topicMove
             || $dest_forum->id === 0
-            || $dest_forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
+            || $dest_forum->perms->view) {
             throw new HttpMethodNotAllowedException;
         }
 
@@ -211,7 +210,7 @@ class TopicController extends Controller
         // Check if the topic exists
         if ($topic->id === 0
             || $forum->type !== 0
-            || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
+            || !$forum->perms->view) {
             $message = "This post doesn't exist or you don't have access to it!";
             $redirect = route('forums.index');
 
@@ -219,10 +218,10 @@ class TopicController extends Controller
         }
 
         // Check if the topic exists
-        if (!$forum->permission(ForumPerms::REPLY, CurrentSession::$user->id)
+        if (!$forum->perms->reply
             || (
                 $topic->status === 1
-                && !$forum->permission(ForumPerms::LOCK, CurrentSession::$user->id)
+                && !$forum->perms->changeStatus
             )) {
             $message = "You are not allowed to post in this topic!";
             $redirect = route('forums.topic', $topic->id);
@@ -292,9 +291,9 @@ class TopicController extends Controller
         // Check if the forum exists
         if ($forum->id === 0
             || $forum->type !== 0
-            || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)
-            || !$forum->permission(ForumPerms::REPLY, CurrentSession::$user->id)
-            || !$forum->permission(ForumPerms::CREATE_THREADS, CurrentSession::$user->id)) {
+            || !$forum->perms->view
+            || !$forum->perms->reply
+            || !$forum->perms->topicCreate) {
             $message = "This forum doesn't exist or you don't have access to it!";
             $redirect = route('forums.index');
 

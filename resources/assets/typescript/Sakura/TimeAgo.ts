@@ -28,7 +28,7 @@ namespace Sakura
                 return none;
             }
 
-            var times: Object = {
+            var times: any = {
                 31536000: ['year', 'a'],
                 2592000: ['month', 'a'],
                 604800: ['week', 'a'],

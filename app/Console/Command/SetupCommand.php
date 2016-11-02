@@ -238,7 +238,6 @@ class SetupCommand extends Command
             [
                 'forum_id' => 1,
                 'rank_id' => config('rank.regular'),
-                'forum_perms' => '00000011111',
                 'perm_view' => true,
                 'perm_reply' => true,
                 'perm_topic_create' => true,

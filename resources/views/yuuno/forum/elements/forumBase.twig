@@ -1,8 +1,9 @@
 <div class="head">{{ title }}</div>
 <div class="forumList">
     {% for forum in forum.forums %}
+    {{ forum.perms.view ? 'yay' : 'no'}}
         {% if forum.type == 1 %}
-            {% if forum.forums|length and forum.permission(constant('Sakura\\Perms\\Forum::VIEW'), user.id) %}
+            {% if forum.forums|length and forum.perms.view %}
                 <div class="forumCategory">
                     {% if forum.type != 1 %}Subforums{% else %}<a href="{{ route('forums.forum', forum.id) }}" class="clean">{{ forum.name }}</a>{% endif %}
                 </div>

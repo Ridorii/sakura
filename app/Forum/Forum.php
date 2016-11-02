@@ -123,18 +123,6 @@ class Forum
     }
 
     /**
-     * Checking a permission flag.
-     * @param int $flag
-     * @param int $user
-     * @param bool $raw
-     * @return bool|int
-     */
-    public function permission($flag, $user, $raw = false)
-    {
-        return $raw ? 1024 : true;
-    }
-
-    /**
      * Gets all subforums of this forum.
      * @return array
      */
@@ -157,12 +145,9 @@ class Forum
             }
 
             $this->forumsCache = $forums;
-        } else {
-            $forums = $this->forumsCache;
         }
 
-        // Return the forum objects
-        return $forums;
+        return $this->forumsCache;
     }
 
     /**

@@ -9,7 +9,6 @@ namespace Sakura\BBCode\Tags;
 use Sakura\BBCode\TagBase;
 use Sakura\Forum\Forum;
 use Sakura\Forum\Post;
-use Sakura\Perms\Forum as ForumPerms;
 use Sakura\User;
 
 /**
@@ -36,7 +35,7 @@ class NamedQuote extends TagBase
                     $post = new Post(intval($matches[2]));
                     $forum = new Forum($post->forum);
 
-                    if ($post->id !== 0 && $forum->permission(ForumPerms::VIEW, $poster->id)) {
+                    if ($post->id !== 0 && $forum->perms->view) {
                         $link = route('forums.post', $post->id);
 
                         $quoting = "<a href='{$link}' style='color: {$post->poster->colour}' class='bbcode__quote-post'>{$post->poster->username}</a>";

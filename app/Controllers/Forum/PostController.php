@@ -13,8 +13,6 @@ use Sakura\DB;
 use Sakura\Forum\Forum;
 use Sakura\Forum\Post;
 use Sakura\Forum\Topic;
-use Sakura\Perms;
-use Sakura\Perms\Forum as ForumPerms;
 
 /**
  * Topic controller.
@@ -37,7 +35,7 @@ class PostController extends Controller
         // Check if the forum exists
         if ($post->id === 0
             || $topic->id === 0
-            || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
+            || !$forum->perms->view) {
             throw new HttpRouteNotFoundException();
         }
 
@@ -74,7 +72,7 @@ class PostController extends Controller
         // Check if the forum exists
         if ($post->id === 0
             || $topic->id === 0
-            || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id)) {
+            || !$forum->perms->view) {
             return "";
         }
 
@@ -98,15 +96,15 @@ class PostController extends Controller
         // Check permissions
         $noAccess = $post->id === 0
         || $topic->id === 0
-        || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id);
+        || !$forum->perms->view;
 
         $noEdit = (
             $post->poster->id === CurrentSession::$user->id
-            ? !CurrentSession::$user->permission(ForumPerms::EDIT_OWN, Perms::FORUM)
-            : !$forum->permission(ForumPerms::EDIT_ANY, CurrentSession::$user->id)
+            ? !$forum->perms->edit
+            : !$forum->perms->editAny
         ) || (
             $topic->status === 1
-            && !$forum->permission(ForumPerms::LOCK, CurrentSession::$user->id)
+            && !$forum->perms->changeStatus
         );
 
         // Check if the forum exists
@@ -195,15 +193,20 @@ class PostController extends Controller
         // Check permissions
         $noAccess = $post->id === 0
         || $topic->id === 0
-        || !$forum->permission(ForumPerms::VIEW, CurrentSession::$user->id);
+        || !$forum->perms->view;
+
+        $replies = $topic->replyCount();
 
         $noDelete = (
             $post->poster->id === CurrentSession::$user->id
-            ? !CurrentSession::$user->permission(ForumPerms::DELETE_OWN, Perms::FORUM)
-            : !$forum->permission(ForumPerms::DELETE_ANY, CurrentSession::$user->id)
+            ? !$forum->perms->delete
+            : !$forum->perms->deleteAny
         ) || (
             $topic->status === 1
-            && !$forum->permission(ForumPerms::LOCK, CurrentSession::$user->id)
+            && !$forum->perms->changeStatus
+        ) || (
+            $replies === 1 &&
+            !$forum->perms->topicDelete
         );
 
         // Check if the forum exists
@@ -212,7 +215,7 @@ class PostController extends Controller
         }
 
         // Check if the topic only has 1 post
-        if ($topic->replyCount() === 1) {
+        if ($replies === 1) {
             // Delete the entire topic
             $topic->delete();
         } else {
