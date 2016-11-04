@@ -19,7 +19,7 @@
         "nesbot/carbon": "^1.21",
         "swiftmailer/swiftmailer": "^5.4",
         "corneltek/cliframework": "^3.0",
-        "illuminate/filesystem": "^5.2",
+        "illuminate/filesystem": "5.2.*",
         "erusev/parsedown": "^1.6",
         "matto1990/lastfm-api": "^1.5"
     },

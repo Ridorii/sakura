@@ -1,20 +1,6 @@
-<h1>Avatar</h1>
-<form enctype="multipart/form-data" method="post" action="{{ route('user.avatar', user.id) }}" style="margin: 1em">
-    <input type="hidden" name="MAX_FILE_SIZE" value="{{ config('file.avatar.max_file_size') }}">
-    <input type="hidden" name="session" value="{{ session_id() }}">
-    <input type="file" name="file">
-    <button>upload</button>
-</form>
 <h1>Background</h1>
 <form enctype="multipart/form-data" method="post" action="{{ route('user.background', user.id) }}" style="margin: 1em">
     <input type="hidden" name="MAX_FILE_SIZE" value="{{ config('file.background.max_file_size') }}">
-    <input type="hidden" name="session" value="{{ session_id() }}">
-    <input type="file" name="file">
-    <button>upload</button>
-</form>
-<h1>Header</h1>
-<form enctype="multipart/form-data" method="post" action="{{ route('user.header', user.id) }}" style="margin: 1em">
-    <input type="hidden" name="MAX_FILE_SIZE" value="{{ config('file.header.max_file_size') }}">
     <input type="hidden" name="session" value="{{ session_id() }}">
     <input type="file" name="file">
     <button>upload</button>

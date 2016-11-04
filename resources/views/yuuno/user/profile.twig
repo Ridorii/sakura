@@ -138,6 +138,33 @@
             // Set the new to active
             newMode.className = 'profile-mode-current';
         }
+
+        function handleImageChange(elem, cont) {
+            var ajax = new Sakura.AJAX(),
+                target = elem.getAttribute('data-target'),
+                formData = new FormData(),
+                file = elem.files[0];
+
+            formData.append('session', Sakura.Config.SessionId);
+            formData.append('file', file, file.name);
+            ajax.SetFormData(formData);
+            ajax.SetUrl(target);
+            ajax.AddCallback(200, function () {
+                var result = ajax.JSON();
+
+                if (result.error) {
+                    var diag = new Sakura.Dialogue;
+                    diag.Text = result.error;
+                    diag.AddCallback(Sakura.DialogueButton.Ok, function () {
+                        this.Close();
+                    });
+                    diag.Display();
+                }
+
+                cont.style.backgroundImage = "url('" + target + "?" + Date.now() + ")";
+            });
+            ajax.Start(Sakura.HTTPMethod.POST);
+        }
     </script>
     {% endif %}
 {% endblock %}
@@ -160,8 +187,15 @@
         <div class="content new-profile">
             <div class="new-profile-container">
                 <div class="new-profile-header" style="background-image: url({{ route('user.header', profile.id) }});">
+                    <label class="uploader__label">
+                        <input type="file" data-target="{{ route('user.header', user.id) }}" class="uploader" onchange="handleImageChange(this, this.parentElement.parentElement)">
+                    </label>
                     <div class="new-profile-info">
-                        <div class="default-avatar-setting new-profile-avatar" style="background-image: url({{ route('user.avatar', profile.id) }}); box-shadow: 0 0 5px #{% if profile.isOnline %}484{% else %}844{% endif %};"></div>
+                        <div class="default-avatar-setting new-profile-avatar" style="background-image: url({{ route('user.avatar', profile.id) }}); box-shadow: 0 0 5px #{% if profile.isOnline %}484{% else %}844{% endif %};">
+                            <label class="uploader__label">
+                                <input type="file" data-target="{{ route('user.avatar', user.id) }}" class="uploader" onchange="handleImageChange(this, this.parentElement.parentElement)">
+                            </label>
+                        </div>
                         <div class="new-profile-username">
                             <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px {% if profile.colour != 'inherit' %}{{ profile.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;" {% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0].username_old }} before {{ profile.getUsernameHistory[0].change_time|date(config('general.date_format')) }}." {% endif %}>{{ profile.username }}</h1>
                             {% if profile.isPremium %}<img src="/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;"> {% endif %}<img src="/images/flags/{{ profile.country|lower }}.png" alt="{{ profile.country }}" style="vertical-align: middle;" title="{{ profile.country(true) }}"> <span style="font-size: .8em;">{{ profile.title }}</span>

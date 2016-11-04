@@ -9,6 +9,7 @@
 @import "dropdown";
 @import "np";
 @import "dialogue";
+@import "uploader";
 
 /*
  * Animation Keyframes
@@ -1035,7 +1036,6 @@ a.default:active {
     height: 200px;
     background: no-repeat center center / cover transparent;
     width: 100%;
-    display: flex;
     align-items: center;
     border-bottom: 1px solid #9475b2;
 }
@@ -1047,6 +1047,15 @@ a.default:active {
     width: 100%;
     display: flex;
     align-items: center;
+
+    // hackjob
+    pointer-events: none;
+    position: relative;
+    top: -100%;
+
+    > * {
+        pointer-events: auto;
+    }
 }
 
 .new-profile .new-profile-avatar {

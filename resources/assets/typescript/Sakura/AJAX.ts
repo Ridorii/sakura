@@ -8,6 +8,7 @@ namespace Sakura
         private Headers: any;
         private URL: string;
         private Send: string = null;
+        private FormData: FormData = null;
         private Asynchronous: boolean = true;
 
         // Prepares the XMLHttpRequest and stuff
@@ -42,7 +43,7 @@ namespace Sakura
                 }
             }
 
-            this.Request.send(this.Send);
+            this.Request.send(this.FormData || this.Send);
         }
 
         // Stop
@@ -72,6 +73,11 @@ namespace Sakura
         // Set raw post
         public SetRawSend(data: string): void {
             this.Send = data;
+        }
+
+        // Set form data
+        public SetFormData(data: FormData): void {
+            this.FormData = data;
         }
 
         // Get response
