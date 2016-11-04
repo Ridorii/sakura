@@ -32,4 +32,4 @@ Template::vars([
 ]);
 
 // Handle requests
-echo Routerv1::handle($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+echo Router::handle($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

@@ -283,7 +283,7 @@ class AuthController extends Controller
         }
 
         // Check if the user is already active
-        if (!$user->activated) {
+        if ($user->activated) {
             $message = "Your account is already activated! Why are you here?";
             return view('global/information', compact('message', 'redirect'));
         }
@@ -344,7 +344,7 @@ class AuthController extends Controller
         $user = User::construct($getUser[0]->user_id);
 
         // Check if a user is activated
-        if (!$user->activated) {
+        if ($user->activated) {
             $message = "Your account is already activated! Why are you here?";
             return view('global/information', compact('message', 'redirect'));
         }

@@ -12,5 +12,5 @@ ExceptionHandler::register();
 Config::load(path('config/config.ini'));
 DB::connect(config('database'));
 
-Routerv1::init();
+Router::init();
 include_once path('routes.php');

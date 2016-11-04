@@ -1,8 +1,8 @@
-{% set paginationSeparator %}{% if '%3F' in paginationUrl|url_encode %}&amp;{% else %}?{% endif %}{% endset %}
+{% set paginationSeparator %}{% if '%3F' in paginationUrl|default('')|url_encode %}&amp;{% else %}?{% endif %}{% endset %}
 {% set paginationPage = get.page|default(1) %}
 
 <div class="pagination{% if paginationClass %} {{ paginationClass }}{% endif %}">
-    {% if paginationPages|length > 1 %}
+    {% if paginationPages is defined and paginationPages|length > 1 %}
         {% if paginationPage > 1 %}
             {% if paginationPages|length > 2 %}
                 <a href="{{ paginationUrl }}{{ paginationSeparator }}page=1" title="Jump to first page"><span class="fa fa-fast-backward"></span></a>

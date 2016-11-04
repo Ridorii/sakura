@@ -92,7 +92,7 @@
 {% block content %}
     <div class="content homepage forum viewtopic">
         <div class="content-column">
-            <div class="head">{{ forum.name }} / <span id="topicTitle">{{ topic.title }}</span></div>
+            <div class="head">{{ forum.name }} / <span id="topicTitle">{{ topic.title|default(null) }}</span></div>
             {% include 'forum/elements/forumBtns.twig' %}
             <table class="posts">
                 {% if topic is defined %}
@@ -151,8 +151,8 @@
                         </tr>
                     {% endfor %}
                 {% else %}
-                    {% set titleCache = session.replyText['f' ~ forum.id].title %}
-                    {% set textCache = session.replyText['f' ~ forum.id].text %}
+                    {% set titleCache = session.replyText['f' ~ forum.id].title|default('') %}
+                    {% set textCache = session.replyText['f' ~ forum.id].text|default('') %}
                     {% set postingAction = route('forums.new', forum.id) %}
                 {% endif %}
                 {% if forumReplyLink is defined or topic is not defined %}
@@ -162,7 +162,7 @@
                             <img src="{{ route('user.avatar', user.id) }}" alt="{{ user.username }}" class="avatar" style="box-shadow: 0 3px 7px #484;">
                             <div class="userdata">
                                 <div class="usertitle">{{ user.title }}</div>
-                                <img src="/images/tenshi.png" alt="Tenshi"{% if not user.isPremium %} style="opacity: 0;"{% endif %}> <img src="/images/flags/{{ user.country|lower }}.png" alt="{{ user.country(true) }}">{% if user.id == (topic.posts|first).poster.id %} <img src="/images/op.png" alt="OP" title="Original Poster">{% endif %}
+                                <img src="/images/tenshi.png" alt="Tenshi"{% if not user.isPremium %} style="opacity: 0;"{% endif %}> <img src="/images/flags/{{ user.country|lower }}.png" alt="{{ user.country(true) }}">{% if topic is defined and user.id == (topic.posts|first).poster.id %} <img src="/images/op.png" alt="OP" title="Original Poster">{% endif %}
                             </div>
                         </td>
                         <td class="post-content">
