@@ -106,6 +106,7 @@ class Template
             : false,
             'auto_reload' => true,
             'debug' => config("dev.twig_debug"),
+            'strict_variables' => true,
         ];
 
         // And now actually initialise the templating engine

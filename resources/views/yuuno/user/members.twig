@@ -1,7 +1,7 @@
 {% extends 'master.twig' %}
 
 {% set sorts = ['boxes', 'rectangles', 'list'] %}
-{% set sort = get.sort in sorts ? get.sort : sorts[0] %}
+{% set sort = get is defined and get.sort is defined and get.sort in sorts ? get.sort : sorts[0] %}
 
 {% set notfound = rank == 0 %}
 
@@ -33,14 +33,14 @@
                 <a class="dropDownDesc">Rank:</a>
                 {% for r in ranks %}
                     {% if not r.hidden or (r.hidden and rank == r.id) %}
-                        <a href="{{ route('members.rank', r.id) }}{{ server['QUERY_STRING'] ? '?' : '' }}{{ server['QUERY_STRING'] }}" style="color: {{ r.colour }};"{% if rank == r.id %} class="dropDownSelected"{% endif %}>{{ r.id == 0 ? 'Not found' : r.name(true) }}</a>
+                        <a href="{{ route('members.rank', r.id) }}{{ server['QUERY_STRING'] is defined ? '?' : '' }}{{ server['QUERY_STRING']|default('') }}" style="color: {{ r.colour }};"{% if rank == r.id %} class="dropDownSelected"{% endif %}>{{ r.id == 0 ? 'Not found' : r.name(true) }}</a>
                     {% endif %}
                 {% endfor %}
             </div>
             <div class="dropDownInner" style="float: left;">
                 <a class="dropDownDesc">View:</a>
                 {% for s in sorts %}
-                <a href="?{{ server['QUERY_STRING'] }}{{ server['QUERY_STRING'] ? '&' : '' }}sort={{ s }}"{% if s == sort %} class="dropDownSelected"{% endif %}>{{ s|capitalize }}</a>
+                <a href="?{{ server['QUERY_STRING']|default('') }}{{ server['QUERY_STRING']|default('') ? '&' : '' }}sort={{ s }}"{% if s == sort %} class="dropDownSelected"{% endif %}>{{ s|capitalize }}</a>
                 {% endfor %}
             </div>
         </div>

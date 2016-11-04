@@ -272,10 +272,10 @@
                                             {{ data.title }}
                                         </td>
                                         <td style="text-align: right;">
-                                            {% if data.link %}
-                                                <a href="{{ data.link|format(data.value) }}" class="default">{{ (data.disp ? data.disp : '%s')|format(data.value) }}</a>
+                                            {% if data.link is defined %}
+                                                <a href="{{ data.link|format(data.value) }}" class="default">{{ (data.disp is defined ? data.disp : '%s')|format(data.value) }}</a>
                                             {% else %}
-                                                {{ (data.disp ? data.disp : '%s')|format(data.value) }}
+                                                {{ (data.disp is defined ? data.disp : '%s')|format(data.value) }}
                                             {% endif %}
                                         </td>
                                     </tr>

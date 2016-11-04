@@ -11,5 +11,5 @@
     <a class="forumbtn" title="Restore" href="{{ route('forums.topic.restore', topic.id) }}?session={{ session_id() }}"><span class="fa fa-history"></span></a>
 {% endif %}
 {% if forumTrash is defined or forumPrune is defined %}
-    <a class="forumbtn" title="{{ forumPrune ? 'Prune' : 'Trash' }}" href="{{ route('forums.topic.delete', topic.id) }}?session={{ session_id() }}"><span class="fa fa-{{ forumPrune ? 'bomb' : 'trash' }}"></span></a>
+    <a class="forumbtn" title="{{ forumPrune is defined ? 'Prune' : 'Trash' }}" href="{{ route('forums.topic.delete', topic.id) }}?session={{ session_id() }}"><span class="fa fa-{{ forumPrune is defined ? 'bomb' : 'trash' }}"></span></a>
 {% endif %}

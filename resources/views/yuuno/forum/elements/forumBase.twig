@@ -1,7 +1,6 @@
 <div class="head">{{ title }}</div>
 <div class="forumList">
     {% for forum in forum.forums %}
-    {{ forum.perms.view ? 'yay' : 'no'}}
         {% if forum.type == 1 %}
             {% if forum.forums|length and forum.perms.view %}
                 <div class="forumCategory">

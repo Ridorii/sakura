@@ -16,24 +16,46 @@ use Sakura\User;
  */
 class ForumPerms
 {
+    private static $table = 'forum_perms';
     private $forums = [];
     private $user = 0;
     private $ranks = [];
-    private $cache = [];
+    private $permCache = [];
+    private $validCache = [];
 
     public function __construct(Forum $forum, User $user)
     {
-        $this->forums = [0, $forum->id, $forum->category];
+        $this->forums = [0, $forum->id, $forum->category]; // make this inherit everything before release
         $this->user = $user->id;
         $this->ranks = array_keys($user->ranks);
     }
 
     public function __get($name)
     {
-        if (!array_key_exists($name, $this->cache)) {
+        return $this->check($name);
+    }
+
+    public function __isset($name)
+    {
+        return $this->valid($name);
+    }
+
+    public function valid($name)
+    {
+        if (!array_key_exists($name, $this->validCache)) {
+            $column = 'perm_' . camel_to_snake($name);
+            $this->validCache[$name] =  DB::getSchemaBuilder()->hasColumn(static::$table, $column);
+        }
+
+        return $this->validCache[$name];
+    }
+
+    public function check($name)
+    {
+        if (!array_key_exists($name, $this->permCache)) {
             $column = 'perm_' . camel_to_snake($name);
 
-            $result = array_column(DB::table('forum_perms')
+            $result = array_column(DB::table(static::$table)
                 ->whereIn('forum_id', $this->forums)
                 ->where(function ($query) {
                     $query->whereIn('rank_id', $this->ranks)
@@ -41,9 +63,9 @@ class ForumPerms
                 })
                 ->get([$column]), $column);
 
-            $this->cache[$name] = !in_array('0', $result, true) && in_array('1', $result, true);
+            $this->permCache[$name] = !in_array('0', $result, true) && in_array('1', $result, true);
         }
 
-        return $this->cache[$name];
+        return $this->permCache[$name];
     }
 }

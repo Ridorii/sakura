@@ -129,9 +129,9 @@
             <div class="platform profile__platform profile__accounts">{#
                 #}{% for id, data in fields %}{#
                     #}{% if data.value != null %}
-                        <a class="profile__account profile__account--{{ id }}"{% if data.link %} href="{{ data.link|format(data.value) }}"{% endif %}>
+                        <a class="profile__account profile__account--{{ id }}"{% if data.link is defined %} href="{{ data.link|format(data.value) }}"{% endif %}>
                             <div class="profile__account-icon fa-fw {{ data.icon }}"></div>
-                            <div class="profile__account-text">{{ (data.disp ? data.disp : '%s')|format(data.value) }}</div>
+                            <div class="profile__account-text">{{ (data.disp is defined ? data.disp : '%s')|format(data.value) }}</div>
                         </a>
                     {% endif %}{#
                 #}{% endfor %}{#

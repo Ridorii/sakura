@@ -96,7 +96,7 @@
             {% include 'forum/elements/forumBtns.twig' %}
             <table class="posts">
                 {% if topic is defined %}
-                    {% set textCache = session.replyText['t' ~ topic.id] %}
+                    {% set textCache = session.replyText['t' ~ topic.id]|default(null) %}
                     {% set postingAction = route('forums.topic.reply', topic.id) %}
 
                     {% for post in posts[get.page|default(1) - 1] %}

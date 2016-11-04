@@ -5,8 +5,8 @@
         <title>{{ title|default(config('general.name')) }}</title>
         <meta name="description" content="{{ description|default(config('general.description')) }}">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-{% if redirect %}
-        <meta http-equiv="refresh" content="{{ redirectTimeout ? redirectTimeout : '3' }}; URL={{ redirect }}">
+{% if redirect is defined %}
+        <meta http-equiv="refresh" content="{{ redirectTimeout is defined ? redirectTimeout : '3' }}; URL={{ redirect }}">
 {% endif %}
 {{ block('meta') }}
         <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
@@ -62,7 +62,7 @@
             <div id="contentwrapper">
                 <div id="notifications" class="alerts"></div>
                 <div id="dialogues" class="dialogues"></div>
-                {% if profile is defined ? profile.background : (user.perms.changeBackground and (user.backgroundSitewide or showBG) and user.background) %}
+                {% if profile is defined ? profile.background : (user.perms.changeBackground and (user.backgroundSitewide or showBG|default(false)) and user.background) %}
                     <div id="userBackground" style="background-image: url('{{ route('user.background', (profile is defined ? profile : user).id) }}');"></div>
                 {% endif %}
                 {% if not user.isActive and server['REQUEST_URI'] != route('auth.login') %}
@@ -148,7 +148,7 @@
 
         Yuuno.Main.Startup();
 
-        {% if config('dev.show_changelog') and stats %}
+        {% if config('dev.show_changelog') and stats is defined %}
             Sakura.Changelog.Build(Sakura.DOM.ID('indexPanel'));
         {% endif %}
 

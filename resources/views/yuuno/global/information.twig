@@ -7,8 +7,8 @@
         <div>
             <h1>Information</h1>
             <hr class="default">
-            {{ message }}
-            {% if redirect %}<br><a href="{{ redirect }}" class="default">Click here if you aren't being redirected.</a>{% endif %}
+            {{ message|default('') }}
+            {% if redirect is defined %}<br><a href="{{ redirect }}" class="default">Click here if you aren't being redirected.</a>{% endif %}
         </div>
     </div>
 {% endblock %}
