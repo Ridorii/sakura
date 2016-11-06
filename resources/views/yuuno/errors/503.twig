@@ -15,9 +15,11 @@
                 The page you are looking for is temporarily unavailable.
             </p>
             <hr>
-            <h2>
-                {{ message }}
-            </h2>
+            {% if message is defined %}
+                <h2>
+                    {{ message }}
+                </h2>
+            {% endif %}
             <h3>
                 HTTP 503 - Service unavailable
                 <br>

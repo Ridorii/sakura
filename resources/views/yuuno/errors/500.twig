@@ -14,13 +14,13 @@
             <p>
                 The page you are looking for experienced a severe explosion.
             </p>
-            {% if reported %}
+            {% if reported is defined and reported %}
                 <p>
                     The developers have been notified of this issue, sorry for the inconvenience!
                 </p>
             {% endif %}
             <hr>
-            {% if message %}
+            {% if message is defined %}
                 <h2>
                     {{ message }}
                 </h2>
