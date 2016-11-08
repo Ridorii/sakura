@@ -38,13 +38,13 @@ class ExceptionHandler
      */
     public static function exception(Throwable $ex)
     {
-        $report = config('dev.report_host');
+        $report = strlen(config('dev.report_host')) > 0;
 
-        if ($report !== null) {
+        if ($report) {
             self::report($ex, $report);
         }
 
-        self::view($ex, $report !== null);
+        self::view($ex, $report);
     }
 
     /**
