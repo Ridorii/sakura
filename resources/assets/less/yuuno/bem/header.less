@@ -1,0 +1,114 @@
+.header {
+    text-align: center;
+    background: linear-gradient(180deg, #C2AFFE, #CCBAFE);
+    box-shadow: 0 0 5px #8364A1;
+
+    &__logo {
+        background: none;
+        height: auto;
+        width: auto;
+        display: inline-block;
+        text-decoration: none;
+        font: 100 70px/80px "Open Sans", sans-serif;
+        color: #B06AC4;
+        transition: color .2s, text-shadow .2s;
+
+        &:hover {
+            color: #C17BD5;
+            text-shadow: 0 0 .1em #C17BD5;
+        }
+
+        &:active {
+            color: #A059B3;
+            text-shadow: 0 0 .1em #A059B3;
+        }
+
+        @media (max-width: 768px) {
+            font-size: 50px;
+            line-height: 60px;
+        }
+    }
+
+    &__menu {
+        border-bottom: 2px solid #9475B2;
+        display: block;
+
+        &--left {
+            float: left;
+        }
+
+        &--right {
+            float: right;
+        }
+
+        &:after {
+            clear: both;
+            content: " ";
+            display: block;
+            height: 0;
+            visibility: hidden;
+        }
+
+        &-item {
+            margin: 0 7px -2px 6px;
+            display: inline-block;
+            border-bottom: 2px solid #8364A1;
+            text-decoration: none;
+            text-align: center;
+            transition: background .3s, border-color .3s;
+            height: 30px;
+            width: 30px;
+            line-height: 30px;
+            vertical-align: middle;
+            font-size: 1.6em;
+            color: #75569B;
+            background: linear-gradient(180deg, transparent 0%, transparent 50%, #8364A1 100%);
+            background-size: 100% 200%;
+
+            &:hover {
+                background-position: 0 50%;
+            }
+
+            &:active {
+                background-position: 0 100%;
+            }
+
+            &--avatar {
+                padding-left: 30px;
+                background: url('/images/pixel.png') no-repeat scroll left center / contain transparent;
+            }
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .header__menu {
+        border: 0;
+        padding: 10px 0 5px;
+        margin: 0 auto;
+        width: auto;
+        text-align: center;
+
+        &-item {
+            border: 0;
+            height: 50px;
+            width: 50px;
+            line-height: 50px;
+            font-size: 2em;
+            display: inline-block;
+
+            &:hover {
+                background: transparent;
+            }
+
+            &:active {
+                background: #75569B;
+                color: #9575B2;
+            }
+
+            &--avatar {
+                padding-left: 50px;
+            }
+        }
+    }
+}

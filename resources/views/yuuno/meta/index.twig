@@ -2,10 +2,10 @@
 
 {% block content %}
     <div class="content homepage">
-        <div class="content-right content-column">
+        <div class="content__right">
             {% include 'elements/indexPanel.twig' %}
         </div>
-        <div class="content-left content-column">
+        <div class="content__left">
             <div class="head">News</div>
             {% for post in news %}
                 {% include 'elements/newsPost.twig' %}

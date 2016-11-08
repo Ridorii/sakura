@@ -28,24 +28,24 @@
         <h3>{{ rankDescription }}</h3>
     </div>
     <div class="membersPage" style="min-height: 500px;">
-        <div class="dropDown" style="margin: 0 auto; font-size: 1.5em; line-height: 1.5em; height: 30px;">
-            <div class="dropDownInner" style="float: left; color: #FFF;">
-                <a class="dropDownDesc">Rank:</a>
+        <div style="display: inline-block; margin: 0 auto; font-size: 1.5em; line-height: 1.5em; height: 30px;">
+            <div class="dropdown" style="float: left; color: #FFF;">
+                <a class="dropdown__title">Rank:</a>
                 {% for r in ranks %}
                     {% if not r.hidden or (r.hidden and rank == r.id) %}
-                        <a href="{{ route('members.rank', r.id) }}{{ server['QUERY_STRING'] is defined ? '?' : '' }}{{ server['QUERY_STRING']|default('') }}" style="color: {{ r.colour }};"{% if rank == r.id %} class="dropDownSelected"{% endif %}>{{ r.id == 0 ? 'Not found' : r.name(true) }}</a>
+                        <a class="dropdown__option{% if rank == r.id %} dropdown__option--selected{% endif %}" href="{{ route('members.rank', r.id) }}{{ server['QUERY_STRING'] is defined ? '?' : '' }}{{ server['QUERY_STRING']|default('') }}" style="color: {{ r.colour }};">{{ r.id == 0 ? 'Not found' : r.name(true) }}</a>
                     {% endif %}
                 {% endfor %}
             </div>
-            <div class="dropDownInner" style="float: left;">
-                <a class="dropDownDesc">View:</a>
+            <div class="dropdown" style="float: left;">
+                <a class="dropdown__title">View:</a>
                 {% for s in sorts %}
-                <a href="?{{ server['QUERY_STRING']|default('') }}{{ server['QUERY_STRING']|default('') ? '&' : '' }}sort={{ s }}"{% if s == sort %} class="dropDownSelected"{% endif %}>{{ s|capitalize }}</a>
+                    <a class="dropdown__option {% if s == sort %} dropdown__option--selected{% endif %}" href="?{{ server['QUERY_STRING']|default('') }}{{ server['QUERY_STRING']|default('') ? '&' : '' }}sort={{ s }}">{{ s|capitalize }}</a>
                 {% endfor %}
             </div>
         </div>
         {% if not users|length %}
-            <h1 class="stylised" style="margin: 2em 0;">This rank has no members!</h1>
+            <h1 style="margin: 2em 0;">This rank has no members!</h1>
         {% elseif not notfound %}
             <div class="membersPageList {{ sort }}">
                 {% if sort == sorts[2] %}

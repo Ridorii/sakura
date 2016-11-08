@@ -4,7 +4,7 @@
 {% set paginationUrl %}{{ route('user.profile', profile.id) }}{% endset %}
 
 <div class="new-profile-mode-title">
-    <h1 class="stylised">Friends</h1>
+    <h1>Friends</h1>
 </div>
 <div class="profile-friends">
     {% if friends|length > 0 %}
@@ -18,7 +18,7 @@
         {% endfor %}
     <div class="clear"></div>
     {% else %}
-        <h1 class="stylised" style="text-align: center; margin: 2em auto;">This user has no friends :(</h1>
+        <h1 style="text-align: center; margin: 2em auto;">This user has no friends :(</h1>
     {% endif %}
 </div>
 {% if friends|length > 1 %}

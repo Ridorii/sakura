@@ -1,0 +1,27 @@
+.busy {
+    background: #222;
+    background: linear-gradient(0deg, rgba(0, 0, 0, .4), transparent) rgba(0, 0, 0, .8);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 5;
+    text-align: center;
+    opacity: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &__content {
+        line-height: 2em;
+        color: #FFF;
+        display: inline-block;
+        padding: 10px 20px 15px;
+        border-radius: 10px;
+    }
+
+    &__text {
+        line-height: 2em;
+    }
+}

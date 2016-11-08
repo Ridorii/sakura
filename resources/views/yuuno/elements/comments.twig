@@ -8,7 +8,7 @@
                 <button class="comment-submit new" name="session" value="{{ session_id() }}" onclick="commentPost(this.parentNode, '{{ route('comments.category.post', commentsCategory) }}');">&#xf1d8;</button>
             </div>
         {% else %}
-            <h1 class="stylised" style="text-align: center; padding: 10px 0">Log in to comment!</h1>
+            <h1 style="text-align: center; padding: 10px 0">Log in to comment!</h1>
         {% endif %}
     </div>
     <div class="comments-discussion">
@@ -18,7 +18,7 @@
                     {% include 'elements/comment.twig' %}
                 {% endfor %}
             {% else %}
-                <h1 class="stylised" style="text-align: center; padding: 10px 0">There are no comments yet!</h1>
+                <h1 style="text-align: center; padding: 10px 0">There are no comments yet!</h1>
             {% endif %}
         </ul>
     </div>

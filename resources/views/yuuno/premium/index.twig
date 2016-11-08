@@ -64,7 +64,7 @@
             </div>
             <div class="checkout" style="line-height: 28px;">
                 <div style="float: left;">
-                    <h1 class="stylised">Total: &#8364;<span id="totalAmount"></span></h1>
+                    <h1>Total: &#8364;<span id="totalAmount"></span></h1>
                 </div>
                 <div style="float: right;">
                     <button class="inputStyling" onclick="Yuuno.Busy.Show(Yuuno.BusyMode.BUSY, 'Please wait...');document.getElementById('purchaseForm').submit();">Get <span id="monthNoBtn">1</span> month<span id="monthsTrailingS"></span> of Tenshi</button>
@@ -72,9 +72,9 @@
                 <div class="clear"></div>
             </div>
         {% elseif user.isActive %}
-            <h1 style="text-align: center; margin: 1em auto;" class="stylised">You can't get Tenshi at the current moment!</h1>
+            <h1 style="text-align: center; margin: 1em auto;">You can't get Tenshi at the current moment!</h1>
         {% else %}
-            <h1 style="text-align: center; margin: 1em auto;" class="stylised">You need to be logged in to get Tenshi!</h1>
+            <h1 style="text-align: center; margin: 1em auto;">You need to be logged in to get Tenshi!</h1>
         {% endif %}
     </div>
     {% if user.isActive and user.verified %}

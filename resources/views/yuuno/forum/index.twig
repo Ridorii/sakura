@@ -4,7 +4,7 @@
 
 {% block content %}
     <div class="content homepage forum">
-        <div class="content-right content-column">
+        <div class="content__right">
             <div id="forumIndexPopularTopics">
                 <div class="head">Popular topics</div>
                 <table class="panelTable" style="border-spacing: 0;">
@@ -54,11 +54,11 @@
                         </div>
                     </a>
                 {% else %}
-                    <h1 class="stylised" style="margin: 1em 0; text-align: center;">No one yet!</h1>
+                    <h1 style="margin: 1em 0; text-align: center;">No one yet!</h1>
                 {% endif %}
             </div>
         </div>
-        <div class="content-left content-column">
+        <div class="content__left">
             {% include 'forum/elements/forumBase.twig' %}
         </div>
         <div class="clear"></div>
