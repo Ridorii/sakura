@@ -184,76 +184,83 @@
             </div>
         </div>
     {% else %}
-        <div class="content new-profile">
-            <div class="new-profile-container">
-                <div class="new-profile-header" style="background-image: url({{ route('user.header', profile.id) }});">
+        <div class="content profile">
+            <div class="profile__container">
+                <div class="profile__header" style="background-image: url({{ route('user.header', profile.id) }});">
                     <label class="uploader__label">
                         <input type="file" data-target="{{ route('user.header', user.id) }}" class="uploader" onchange="handleImageChange(this, this.parentElement.parentElement)">
                     </label>
-                    <div class="new-profile-info">
-                        <div class="default-avatar-setting new-profile-avatar" style="background-image: url({{ route('user.avatar', profile.id) }}); box-shadow: 0 0 5px #{% if profile.isOnline %}484{% else %}844{% endif %};">
+                    <div class="profile__info">
+                        <div class="avatar avatar--border profile__avatar" style="background-image: url({{ route('user.avatar', profile.id) }}); box-shadow: 0 0 5px #{% if profile.isOnline %}484{% else %}844{% endif %};">
                             <label class="uploader__label">
                                 <input type="file" data-target="{{ route('user.avatar', user.id) }}" class="uploader" onchange="handleImageChange(this, this.parentElement.parentElement)">
                             </label>
                         </div>
-                        <div class="new-profile-username">
+                        <div class="profile__username">
                             <h1 style="color: {{ profile.colour }}; text-shadow: 0 0 7px {% if profile.colour != 'inherit' %}{{ profile.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;" {% if profile.getUsernameHistory %} title="Known as {{ profile.getUsernameHistory[0].username_old }} before {{ profile.getUsernameHistory[0].change_time|date(config('general.date_format')) }}." {% endif %}>{{ profile.username }}</h1>
                             {% if profile.isPremium %}<img src="/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;"> {% endif %}<img src="/images/flags/{{ profile.country|lower }}.png" alt="{{ profile.country }}" style="vertical-align: middle;" title="{{ profile.country(true) }}"> <span style="font-size: .8em;">{{ profile.title }}</span>
                         </div>
-                        <div class="new-profile-dates">
-                            <b>Joined</b> <time class="time-ago" datetime="{{ profile.registered|date('r') }}">{{ profile.registered|date(config('general.date_format')) }}</time>
-                            <br>
-                            {% if profile.lastOnline < 1 %}
-                            <b>{{ profile.username }} hasn't logged in yet.</b>
-                            {% else %}
-                            <b>Last online</b> <time class="time-ago" datetime="{{ profile.lastOnline|date('r') }}">{{ profile.lastOnline|date(config('general.date_format')) }}</time>
-                            {% endif %}
+                        <div class="profile__dates">
+                            {% spaceless %}
+                            <div class="profile__date">
+                                <b>Joined</b>&nbsp;<time class="time-ago" datetime="{{ profile.registered|date('r') }}">{{ profile.registered|date(config('general.date_format')) }}</time>
+                            </div>
+                            <div class="profile__date">
+                                {% if profile.lastOnline < 1 %}
+                                    <b>{{ profile.username }} hasn't logged in yet.</b>
+                                {% else %}
+                                    <b>Last online</b>&nbsp;<time class="time-ago" datetime="{{ profile.lastOnline|date('r') }}">{{ profile.lastOnline|date(config('general.date_format')) }}</time>
+                                {% endif %}
+                            </div>
                             {% if profile.birthday != '0000-00-00' and profile.birthday|split('-')[0] > 0 %}
-                            <br><b>Age</b> <span title="{{ profile.birthday }}">{{ profile.birthday(true) }} years old</span>&nbsp;
+                                <div class="profile__date">
+                                    <b>Age</b>&nbsp;<span title="{{ profile.birthday }}">{{ profile.birthday(true) }} years old</span>
+                                </div>
                             {% endif %}
+                            {% endspaceless %}
                         </div>
                     </div>
                 </div>
-                <div class="new-profile-interactions">
-                    <div class="new-profile-navigation">
+                <div class="profile__interactions">
+                    <div class="profile__navigation">
                         {% if not noUserpage %}
-                            <a class="fa fa-file-text-o" title="View {{ profile.username }}'s user page" href="#_userpage" onclick="profileMode('userpage');"></a>
+                            <a class="profile__interactions-item fa fa-file-text-o" title="View {{ profile.username }}'s user page" href="#_userpage" onclick="profileMode('userpage');"></a>
                         {% endif %}
-                        <a class="fa fa-list" title="View {{ profile.username }}'s topics" href="#_topics" onclick="profileMode('topics');"></a>
-                        <a class="fa fa-reply" title="View {{ profile.username }}'s posts" href="#_posts" onclick="profileMode('posts');"></a>
-                        <a class="fa fa-star" title="View {{ profile.username }}'s friends" href="#_friends" onclick="profileMode('friends');"></a>
-                        <a class="fa fa-comments-o" title="View {{ profile.username }}'s profile comments" href="#_comments" onclick="profileMode('comments');"></a>
+                        <a class="profile__interactions-item fa fa-list" title="View {{ profile.username }}'s topics" href="#_topics" onclick="profileMode('topics');"></a>
+                        <a class="profile__interactions-item fa fa-reply" title="View {{ profile.username }}'s posts" href="#_posts" onclick="profileMode('posts');"></a>
+                        <a class="profile__interactions-item fa fa-star" title="View {{ profile.username }}'s friends" href="#_friends" onclick="profileMode('friends');"></a>
+                        <a class="profile__interactions-item fa fa-comments-o" title="View {{ profile.username }}'s profile comments" href="#_comments" onclick="profileMode('comments');"></a>
                         {% if (profile.isActive and profile.id == user.id) or user.perms.manageProfileImages %}
-                            <a class="fa fa-picture-o" title="Edit your avatar, background and header" href="#_images" onclick="profileMode('images');"></a>
+                            <a class="profile__interactions-item fa fa-picture-o" title="Edit your avatar, background and header" href="#_images" onclick="profileMode('images');"></a>
                         {% endif %}
                     </div>
                     {% if user.isActive %}
-                    <div class="new-profile-actions">
+                    <div class="profile__actions">
                         {% if user.id == profile.id %}
-                        <a class="fa fa-pencil-square-o" title="Edit your profile" href="{{ route('settings.account.profile') }}"></a>
+                        <a class="profile__interactions-item fa fa-pencil-square-o" title="Edit your profile" href="{{ route('settings.account.profile') }}"></a>
                         {% else %}
                         {% if user.isFriends(profile.id) != 0 %}<a class="fa fa-{% if user.isFriends(profile.id) == 2 %}heart{% else %}star{% endif %}" title="You are friends"></a>{% endif %}
-                        <a class="fa fa-user-{% if user.isFriends(profile.id) == 0 %}plus{% else %}times{% endif %}" title="{% if user.isFriends(profile.id) == 0 %}Add {{ profile.username }} as a friend{% else %}Remove friend{% endif %}" href="javascript:void(0);" onclick="Sakura.Friend.{% if user.isFriends(profile.id) == 0 %}Add({{ profile.id }}){% else %}Remove({{ profile.id }}){% endif %}"></a>
-                        <a class="fa fa-exclamation-circle" title="Report {{ profile.username }}" href="{{ route('user.report', profile.id) }}"></a>
+                        <a class="profile__interactions-item fa fa-user-{% if user.isFriends(profile.id) == 0 %}plus{% else %}times{% endif %}" title="{% if user.isFriends(profile.id) == 0 %}Add {{ profile.username }} as a friend{% else %}Remove friend{% endif %}" href="javascript:void(0);" onclick="Sakura.Friend.{% if user.isFriends(profile.id) == 0 %}Add({{ profile.id }}){% else %}Remove({{ profile.id }}){% endif %}"></a>
+                        <a class="profile__interactions-item fa fa-exclamation-circle" title="Report {{ profile.username }}" href="{{ route('user.report', profile.id) }}"></a>
                         {% endif %}
                         {% if user.perms.canRestrict %}
-                            <a class="fa fa-trash" title="Restrict {{ profile.username }}" href="?restrict={{ session_id() }}"></a>
+                            <a class="profile__interactions-item fa fa-trash" title="Restrict {{ profile.username }}" href="?restrict={{ session_id() }}"></a>
                         {% endif %}
                     </div>
                     {% endif %}
                 </div>
-                <div class="new-profile-content">
-                    <div class="new-profile-mode">
+                <div class="profile__content">
+                    <div class="profile__mode">
                         {% if profile.lastfm %}
-                        <div class="np">
+                        <div class="profile__now-playing">
                             <div class="np-icon">
                                 <span class="fa fa-music"></span>
                             </div>
                             <div class="np-text">
                                 <span class="fa fa-ellipsis-h" id="np-state"></span>
-                                <a href="#" id="np-track"></a>
+                                <a href="#" id="np-track" class="profile__now-playing-link"></a>
                                 <span id="np-by" class="hidden">by</span>
-                                <a href="#" id="np-artist"></a>
+                                <a href="#" id="np-artist" class="profile__now-playing-link"></a>
                             </div>
                         </div>
                         {% endif %}
@@ -280,7 +287,7 @@
                             {% include 'profile/images.twig' %}
                         </div>
                     </div>
-                    <div class="new-profile-data">
+                    <div class="profile__data">
                         <table style="width: 100%;">
                             <tr>
                                 <td style="text-align: left; font-weight: bold;">Topics</td>
@@ -295,7 +302,7 @@
                                 <td style="text-align: right;">{{ profile.friends(2)|length }}</td>
                             </tr>
                         </table>
-                        <hr class="default">
+                        <hr>
                         {% if user.isActive %}
                         {# if user.perms.viewUserLinks or user.perms.viewUserDetails #}
                             <table style="width: 100%;">
@@ -307,7 +314,7 @@
                                         </td>
                                         <td style="text-align: right;">
                                             {% if data.link is defined %}
-                                                <a href="{{ data.link|format(data.value) }}" class="default">{{ (data.disp is defined ? data.disp : '%s')|format(data.value) }}</a>
+                                                <a href="{{ data.link|format(data.value) }}">{{ (data.disp is defined ? data.disp : '%s')|format(data.value) }}</a>
                                             {% else %}
                                                 {{ (data.disp is defined ? data.disp : '%s')|format(data.value) }}
                                             {% endif %}

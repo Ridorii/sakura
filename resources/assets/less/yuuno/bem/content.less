@@ -1,20 +1,56 @@
 .content {
     margin: 10px auto;
     padding: 2px 3px;
-    width: 1024px;
+    max-width: 1024px;
     border: 1px solid #9475B2;
     box-shadow: 0 0 3px #9475B2;
     border-radius: 3px;
     background: #D3BFFF;
 
-    &__left {
+    &__header {
+        margin: -1px -2px;
+        padding: 4px 5px 5px;
+        font-weight: 700;
+        font-size: 20px;
+        color: #306;
+        background: linear-gradient(90deg, rgba(148, 117, 178, .7), rgba(148, 117, 178, 0)) #C2AFFE;
+        border-radius: 2px;
+        word-wrap: break-word;
+        text-align: left;
+
+        &--alt {
+            margin: -1px -2px -1px;
+            padding: 4px 5px 5px;
+            background: linear-gradient(270deg, rgba(148, 117, 178, .7), rgba(148, 117, 178, 0)) #C2AFFE;
+            text-align: right;
+        }
+    }
+
+    &--auth {
+        text-align: center;
+        width: auto;
+        max-width: 400px;
+    }
+
+    &--left {
         float: left;
         width: 688px;
     }
 
-    &__right {
+    &--right {
         float: right;
         width: 334px;
+    }
+
+    @media (max-width: 1064px) {
+        &--left,
+        &--right {
+            width: 100%;
+        }
+
+        &--left {
+            border-top: 1px solid #9475B2;
+        }
     }
 
     &--alt {

@@ -1,0 +1,32 @@
+.header-login {
+    background: rgba(211, 191, 255, .8);
+    border: 1px solid #9475B2;
+    box-shadow: 0 0 3px #8364A1;
+    text-align: center;
+    max-width: 1024px;
+    margin: 10px auto 0;
+    padding: 6px 3px;
+    border-radius: 3px;
+
+    &__text {
+        width: auto !important;
+        display: inline-block;
+    }
+
+    &__button {
+        margin: 0 !important;
+        padding: 2px 8px !important;
+    }
+
+    &__label {
+        font-family: "Open Sans", sans-serif;
+        font-weight: 100;
+        font-size: 15px;
+    }
+
+    @media (max-width: 640px) {
+        &__label {
+            display: block;
+        }
+    }
+}

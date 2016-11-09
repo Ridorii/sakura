@@ -97,7 +97,7 @@
                     <h2>{{ vars.title }}</h2>
                 </div>
                 <div>
-                    <input class="inputStyling"
+                    <input class="input__text"
                         {% for name, value in vars %}
                             {% if name != 'title' %}
                                 {{ name }}="{{ value }}"
@@ -112,29 +112,38 @@
                 <h2>Birthday</h2>
             </div>
             <div style="text-align: center;">
-                Day: <select name="birthday_day">
-                    <option value="0"{% if birthday[2] is not defined %} selected="selected"{% endif %}>--</option>
-                    {% for i in 1..31 %}
-                        <option{% if birthday[2]|default(-1) == i %} selected="selected"{% endif %}>{{ i }}</option>
-                    {% endfor %}
-                </select>
-                Month: <select name="birthday_month">
-                    <option value="0"{% if not birthday[1] is not defined %} selected="selected"{% endif %}>--</option>
-                    {% for i in 1..12 %}
-                        <option value="{{ i }}"{% if birthday[1]|default(-1) == i %} selected="selected"{% endif %}>{{ months[i - 1] }}</option>
-                    {% endfor %}
-                </select>
-                Year: <select name="birthday_year">
-                    <option value="0"{% if not birthday[0] is not defined %} selected="selected"{% endif %}>----</option>
-                    {% for i in "now"|date('Y')..("now"|date('Y') - 100) %}
-                        <option{% if birthday[0]|default(-1) == i %} selected="selected"{% endif %}>{{ i }}</option>
-                    {% endfor %}
-                </select>
+                <label>
+                    Day:
+                    <select name="birthday_day" class="input__select">
+                        <option value="0"{% if birthday[2] is not defined %} selected="selected"{% endif %}>--</option>
+                        {% for i in 1..31 %}
+                            <option{% if birthday[2]|default(-1) == i %} selected="selected"{% endif %}>{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>
+                    Month:
+                    <select name="birthday_month" class="input__select">
+                        <option value="0"{% if not birthday[1] is not defined %} selected="selected"{% endif %}>--</option>
+                        {% for i in 1..12 %}
+                            <option value="{{ i }}"{% if birthday[1]|default(-1) == i %} selected="selected"{% endif %}>{{ months[i - 1] }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>
+                    Year:
+                    <select name="birthday_year" class="input__select">
+                        <option value="0"{% if not birthday[0] is not defined %} selected="selected"{% endif %}>----</option>
+                        {% for i in "now"|date('Y')..("now"|date('Y') - 100) %}
+                            <option{% if birthday[0]|default(-1) == i %} selected="selected"{% endif %}>{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
             </div>
         </div>
         <div class="profile-save">
-            <button name="session" value="{{ session_id() }}" class="inputStyling">Save</button>
-            <button type="reset" class="inputStyling">Reset</button>
+            <button name="session" value="{{ session_id() }}" class="input__button">Save</button>
+            <button type="reset" class="input__button">Reset</button>
         </div>
     </form>
 {% endblock %}

@@ -6,9 +6,9 @@
     <div class="content content--alt">
         <div>
             <h1>Information</h1>
-            <hr class="default">
+            <hr>
             {{ message|default('') }}
-            {% if redirect is defined %}<br><a href="{{ redirect }}" class="default">Click here if you aren't being redirected.</a>{% endif %}
+            {% if redirect is defined %}<br><a href="{{ redirect }}">Click here if you aren't being redirected.</a>{% endif %}
         </div>
     </div>
 {% endblock %}

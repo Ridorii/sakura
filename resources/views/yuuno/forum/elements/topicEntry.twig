@@ -3,11 +3,11 @@
         <div class="fa fa-2x fa-{% if topic.type == 1 %}thumb-tack{% elseif topic.type == 2 %}bullhorn{% elseif topic.status == 1 %}lock{% else %}navicon{% endif %}"></div>
     </td>
     <td class="topicTitle{% if topic.type == 2 %} topicAnnouncement{% endif %}">
-        <a href="{{ route('forums.topic', topic.id) }}" class="default">{{ topic.title }}</a>
+        <a href="{{ route('forums.topic', topic.id) }}">{{ topic.title }}</a>
     </td>
     <td class="topicAuthor{% if topic.type == 2 %} topicAnnouncement{% endif %}">
         {% if topic.firstPost.poster.id %}
-            <a href="{{ route('user.profile', topic.firstPost.poster.id) }}" class="default" style="color: {{ topic.firstPost.poster.colour }}; text-shadow: 0 0 5px {% if topic.firstPost.poster.colour != 'inherit' %}{{ topic.firstPost.poster.colour }}{% else %}#222{% endif %};">{{ topic.firstPost.poster.username }}</a>
+            <a href="{{ route('user.profile', topic.firstPost.poster.id) }}" style="color: {{ topic.firstPost.poster.colour }}; text-shadow: 0 0 5px {% if topic.firstPost.poster.colour != 'inherit' %}{{ topic.firstPost.poster.colour }}{% else %}#222{% endif %};">{{ topic.firstPost.poster.username }}</a>
         {% else %}
             [deleted user]
         {% endif %}
@@ -18,10 +18,10 @@
     </td>
     <td class="topicLast{% if topic.type == 2 %} topicAnnouncement{% endif %}">
         {% if topic.lastPost.poster.id %}
-            <a href="{{ route('user.profile', topic.lastPost.poster.id) }}" class="default" style="color: {{ topic.lastPost.poster.colour }}; text-shadow: 0 0 5px {% if topic.lastPost.poster.colour != 'inherit' %}{{ topic.lastPost.poster.colour }}{% else %}#222{% endif %};">{{ topic.lastPost.poster.username }}</a>
+            <a href="{{ route('user.profile', topic.lastPost.poster.id) }}" style="color: {{ topic.lastPost.poster.colour }}; text-shadow: 0 0 5px {% if topic.lastPost.poster.colour != 'inherit' %}{{ topic.lastPost.poster.colour }}{% else %}#222{% endif %};">{{ topic.lastPost.poster.username }}</a>
         {% else %}
             [deleted user]
-        {% endif %} <a href="{{ route('forums.post', topic.lastPost.id) }}" class="default fa fa-tag"></a><br>
+        {% endif %} <a href="{{ route('forums.post', topic.lastPost.id) }}" class="fa fa-tag"></a><br>
         <time class="time-ago" datetime="{{ topic.lastPost.time|date('r') }}">{{ topic.lastPost.time|date(config('general.date_format')) }}</time>
     </td>
 </tr>

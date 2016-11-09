@@ -13,7 +13,7 @@
 
 {% block content %}
     <div class="content support">
-        <div class="head">Support {{ config('general.name') }}</div>
+        <div class="content__header">Support {{ config('general.name') }}</div>
         <div style="font-size: .9em; margin-bottom: 10px;">
             <p>To keep the site and everything surrounding it running I need money to pay the bills, however instead of just having a donate button I decided on adding a premium system to the site which gives you a few extras. The premium rank is indentified on the site by Tenshi. More stuff that literally doesn't exist yet will be added to the list of featuring down the line but in order, the stuff that already exist can be seen further down on this page. With your help we can keep adding new stuff, get new hardware and keep the site awesome!</p>
         </div>
@@ -60,14 +60,14 @@
         </div>
         {% if user.isActive and user.verified %}
             <div class="slider">
-                <input class="inputStyling" type="range" min="1" max="{{ amountLimit }}" value="1" onchange="document.getElementById('monthsNo').value = this.value; document.getElementById('monthNoBtn').innerText = this.value; document.getElementById('monthsTrailingS').innerText = (this.value == 1 ? '' : 's'); document.getElementById('totalAmount').innerText = (this.value * {{ price }});">
+                <input class="input__range" type="range" min="1" max="{{ amountLimit }}" value="1" onchange="document.getElementById('monthsNo').value = this.value; document.getElementById('monthNoBtn').innerText = this.value; document.getElementById('monthsTrailingS').innerText = (this.value == 1 ? '' : 's'); document.getElementById('totalAmount').innerText = (this.value * {{ price }});">
             </div>
             <div class="checkout" style="line-height: 28px;">
                 <div style="float: left;">
                     <h1>Total: &#8364;<span id="totalAmount"></span></h1>
                 </div>
                 <div style="float: right;">
-                    <button class="inputStyling" onclick="Yuuno.Busy.Show(Yuuno.BusyMode.BUSY, 'Please wait...');document.getElementById('purchaseForm').submit();">Get <span id="monthNoBtn">1</span> month<span id="monthsTrailingS"></span> of Tenshi</button>
+                    <button class="input__button" onclick="Yuuno.Busy.Show(Yuuno.BusyMode.BUSY, 'Please wait...');document.getElementById('purchaseForm').submit();">Get <span id="monthNoBtn">1</span> month<span id="monthsTrailingS"></span> of Tenshi</button>
                 </div>
                 <div class="clear"></div>
             </div>

@@ -1,9 +1,9 @@
-{% if newsHideTitle is not defined %}<a href="{{ route('news.post', post.id) }}" class="news-head" id="p{{ post.id }}">{{ post.title }}</a>{% endif %}
-<div class="news-body">
-    <a class="no-underline" href="{{ route('user.profile', post.userData.id) }}">
-        <div class="news-poster">
-            <img src="{{ route('user.avatar', post.userData.id) }}" alt="{{ post.userData.username }}" class="default-avatar-setting">
-            <h1 style="color: {{ post.userData.colour }}; text-shadow: 0 0 7px {% if post.userData.colour != 'inherit' %}{{ post.userData.colour }}{% else %}#222{% endif %}; padding: 0 0 10px;">{{ post.userData.username }}</h1>
+{% if newsHideTitle is not defined %}<a href="{{ route('news.post', post.id) }}" class="news__head" id="p{{ post.id }}">{{ post.title }}</a>{% endif %}
+<div class="news__body">
+    <a class="news__poster" href="{{ route('user.profile', post.userData.id) }}">
+        <div class="avatar avatar--border news__avatar" style="background-image: url('{{ route('user.avatar', post.userData.id) }}')"></div>
+        <div class="news__username" style="color: {{ post.userData.colour }}; text-shadow: 0 0 7px {% if post.userData.colour != 'inherit' %}{{ post.userData.colour }}{% else %}#222{% endif %}">
+            {{ post.userData.username }}
         </div>
     </a>
     <div class="bbcode">
@@ -11,7 +11,7 @@
     </div>
 </div>
 <div class="clear"></div>
-<div class="news-post-time">
+<div class="news__date">
     Posted <time class="time-ago" datetime="{{ post.time|date('r') }}">{{ post.time|date(config('general.date_format')) }}</time>
-    {% if newsHideCommentCount is not defined %}<a class="default" href="{{ route('news.post', post.id) }}#comments">{{ post.commentCount }} comment{% if post.commentCount != 1 %}s{% endif %}</a>{% endif %}
+    {% if newsHideCommentCount is not defined %}<a href="{{ route('news.post', post.id) }}#comments">{{ post.commentCount }} comment{% if post.commentCount != 1 %}s{% endif %}</a>{% endif %}
 </div>

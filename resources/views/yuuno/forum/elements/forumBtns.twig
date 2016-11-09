@@ -1,18 +1,18 @@
 {% set paginationClass = 'rightSide' %}
 
-<div class="buttonRow pagination">
+<div class="buttonRow">
     <div class="leftSide">
         {% if forumBackLink is defined %}
-            <a href="{{ forumBackLink }}" class="forumbtn"><span class="fa fa-backward"></span> Back</a>
+            <a href="{{ forumBackLink }}" class="input__button"><span class="fa fa-backward"></span> Back</a>
         {% endif %}
         {% if forumReplyLink is defined %}
-            <a href="{{ forumReplyLink }}" class="forumbtn"><span class="fa fa-reply-all"></span> Reply</a>
+            <a href="{{ forumReplyLink }}" class="input__button"><span class="fa fa-reply-all"></span> Reply</a>
         {% endif %}
         {% if forumNewLink is defined %}
-            <a href="{{ forumNewLink }}" class="forumbtn"><span class="fa fa-pencil-square-o"></span> New Topic</a>
+            <a href="{{ forumNewLink }}" class="input__button"><span class="fa fa-pencil-square-o"></span> New Topic</a>
         {% endif %}
         {% if forumMarkRead is defined %}
-            <a href="{{ forumMarkRead }}" class="forumbtn"><span class="fa fa-check-square-o"></span> Mark as Read</a>
+            <a href="{{ forumMarkRead }}" class="input__button"><span class="fa fa-check-square-o"></span> Mark as Read</a>
         {% endif %}
         {% if topic.id is defined and showMod is defined %}
             {% include 'forum/elements/forumMod.twig' %}

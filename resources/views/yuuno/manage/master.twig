@@ -3,9 +3,9 @@
 {% set title = category ~ ' / ' ~ mode %}
 
 {% block content %}
-<div class="content settings messages">
-    <div class="content__right">
-        <div class="head">
+<div class="content settings">
+    <div class="content--right">
+        <div class="content__header content__header--alt">
             Navigation
         </div>
         <div class="right-menu-nav">
@@ -17,8 +17,8 @@
             {% endfor %}
         </div>
     </div>
-    <div class="content__left">
-        <div class="head">{{ title }}</div>
+    <div class="content--left">
+        <div class="content__header">{{ title }}</div>
         <div class="settings-explanation">{{ block('description') }}</div>
         {{ block('manageContent') }}
     </div>

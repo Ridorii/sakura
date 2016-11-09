@@ -5,19 +5,19 @@
     {% if paginationPages is defined and paginationPages|length > 1 %}
         {% if paginationPage > 1 %}
             {% if paginationPages|length > 2 %}
-                <a href="{{ paginationUrl }}{{ paginationSeparator }}page=1" title="Jump to first page"><span class="fa fa-fast-backward"></span></a>
+                <a class="input__button" href="{{ paginationUrl }}{{ paginationSeparator }}page=1" title="Jump to first page"><span class="fa fa-fast-backward"></span></a>
             {% endif %}
-            <a href="{{ paginationUrl }}{{ paginationSeparator }}page={{ paginationPage - 1 }}" title="Previous page"><span class="fa fa-step-backward"></span></a>
+            <a class="input__button" href="{{ paginationUrl }}{{ paginationSeparator }}page={{ paginationPage - 1 }}" title="Previous page"><span class="fa fa-step-backward"></span></a>
         {% endif %}
         {% for id,page in paginationPages %}
             {% if (id + 1) > (paginationPage - 3) and (id + 1) < (paginationPage + 3) %}
-                <a href="{{ paginationUrl }}{{ paginationSeparator }}page={{ id + 1 }}"{% if id == paginationPage - 1 %} class="current"{% endif %} title="Page {{ id + 1 }}">{{ id + 1 }}</a>
+                <a class="input__button{% if id == paginationPage - 1 %} input__button--current{% endif %}" href="{{ paginationUrl }}{{ paginationSeparator }}page={{ id + 1 }}" title="Page {{ id + 1 }}">{{ id + 1 }}</a>
             {% endif %}
         {% endfor %}
         {% if paginationPage < paginationPages|length %}
-            <a href="{{ paginationUrl }}{{ paginationSeparator }}page={{ paginationPage + 1 }}" title="Next page"><span class="fa fa-step-forward"></span></a>
+            <a class="input__button" href="{{ paginationUrl }}{{ paginationSeparator }}page={{ paginationPage + 1 }}" title="Next page"><span class="fa fa-step-forward"></span></a>
             {% if paginationPages|length > 2 %}
-                <a href="{{ paginationUrl }}{{ paginationSeparator }}page={{ paginationPages|length }}" title="Jump to last page"><span class="fa fa-fast-forward"></span></a>
+                <a class="input__button" href="{{ paginationUrl }}{{ paginationSeparator }}page={{ paginationPages|length }}" title="Jump to last page"><span class="fa fa-fast-forward"></span></a>
             {% endif %}
         {% endif %}
     {% endif %}

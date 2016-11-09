@@ -14,7 +14,7 @@
         padding: 0 1px 0 4px;
         display: none;
         color: #FFF;
-        text-decoration: none;
+        text-decoration: none !important;
         clear: both;
         transition: background .2s;
 
@@ -24,6 +24,7 @@
 
         &:active {
             background: fade(#151515, 70%);
+            color: inherit;
         }
 
         &--selected {
@@ -49,7 +50,7 @@
         }
     }
 
-    @media (max-width: 1024px) {
+    @media (max-width: 1064px) {
         float: none !important;
         margin-bottom: 5px;
         text-align: center;

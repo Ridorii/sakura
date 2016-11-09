@@ -3,37 +3,34 @@
 {% set title = 'Login' %}
 
 {% block content %}
-    <div class="loginPage">
-        <div class="loginForm">
-            <div class="head">
-                Login
-            </div>
-            <form method="post" action="{{ route('auth.login') }}" id="loginForm">
-                <input type="hidden" name="redirect" value="{{ server['HTTP_REFERER'] ? server['HTTP_REFERER'] : route('main.index') }}">
-                <div class="leftAlign">
-                    <label for="loginUserName">Username:</label>
-                </div>
-                <div class="centreAlign">
-                    <input class="inputStyling" type="text" id="loginUserName" name="username" autofocus="true">
-                </div>
-                <div class="leftAlign">
-                    <label for="loginPassword">Password:</label>
-                </div>
-                <div class="centreAlign">
-                    <input class="inputStyling" type="password" id="loginPassword" name="password">
-                </div>
-                <div class="subLinks centreAlign">
-                    <input class="inputStyling" name="remember" type="checkbox" class="ignore-css" id="loginRemember"><label for="loginRemember">Remember Me</a>
-                </div>
-                <div class="centreAlign">
-                    <button class="inputStyling" id="loginButton" name="session" value="{{ session_id() }}"><i class="fa fa-sign-in"></i> Login</button>
-                </div>
-                <div class="subLinks centreAlign" style="line-height: 1.5em;">
-                    <p><a href="{{ route('auth.register') }}" class="default">I don't have an account yet!</a></p>
-                    <p><a href="{{ route('auth.resetpassword') }}" class="default">I forgot my password!</a></p>
-                    <p><a href="{{ route('auth.reactivate') }}" class="default">I want to reactivate my account!</a></p>
-                </div>
-            </form>
+    <div class="auth content content--auth">
+        <div class="content__header">
+            Login
         </div>
+        <form method="post" action="{{ route('auth.login') }}">
+            <input type="hidden" name="redirect" value="{{ server['HTTP_REFERER']|default(route('main.index')) }}">
+            <label>
+                <div class="auth__label">Username</div>
+                <input class="input__text" type="text" name="username" autofocus>
+            </label>
+            <label>
+                <div class="auth__label">Password</div>
+                <input class="input__text" type="password" name="password">
+            </label>
+            <label>
+                <div class="auth__label auth__label--checkbox">
+                    <input name="remember" type="checkbox">
+                    Remember me!
+                </div>
+            </label>
+            <button class="input__button auth__button" name="session" value="{{ session_id() }}">
+                <i class="fa fa-sign-in"></i> Login
+            </button>
+            <div class="auth__subtext">
+                <a href="{{ route('auth.register') }}">I don't have an account yet!</a><br>
+                <a href="{{ route('auth.resetpassword') }}">I forgot my password!</a><br>
+                <a href="{{ route('auth.reactivate') }}">I want to reactivate my account!</a>
+            </div>
+        </form>
     </div>
 {% endblock %}

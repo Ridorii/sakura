@@ -4,19 +4,19 @@
 
 {% block content %}
     <div class="content settings">
-        <div class="content-right content-column">
-            <div class="head">
+        <div class="content--right">
+            <div class="content__header content__header--alt">
                 Frequently Asked Questions
             </div>
             <div class="right-menu-nav">
             {% for question in page.questions %}
-            <a href="#{{ question.faq_shorthand }}" class="default">{{ question.faq_question }}</a>
+            <a href="#{{ question.faq_shorthand }}">{{ question.faq_question }}</a>
             {% endfor %}
             </div>
         </div>
-        <div class="content__left">
+        <div class="content--left">
             {% for question in page.questions %}
-            <div class="head" id="{{ question.faq_shorthand }}">
+            <div class="content__header" id="{{ question.faq_shorthand }}">
                 {{ question.faq_question }}
                 <a href="#{{ question.faq_shorthand }}" class="fa fa-quote-right news-rss default"></a>
             </div>

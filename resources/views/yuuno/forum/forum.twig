@@ -7,9 +7,7 @@
 {% set forumMarkRead %}{{ route('forums.mark', forum.id) }}?s={{ session_id() }}{% endset %}
 
 {% block content %}
-    <div class="content homepage forum viewforum">
-        <div class="content-column">
-            {% include 'forum/elements/forumBase.twig' %}
-        </div>
+    <div class="content forum">
+        {% include 'forum/elements/forumBase.twig' %}
     </div>
 {% endblock %}

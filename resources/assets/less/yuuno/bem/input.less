@@ -1,0 +1,69 @@
+.input {
+    &__button {
+        box-sizing: border-box;
+        background: linear-gradient(0deg, #9475B2 10%, #C2AFFE 90%);
+        color: #306;
+        padding: 4px 8px;
+        text-decoration: none;
+        border-radius: 2px;
+        margin: 4px 2px;
+        display: inline-block;
+        font-size: 1.3em;
+        border: 1px solid #9475B2;
+        cursor: pointer;
+        text-decoration: none !important;
+
+        &--disabled {
+            background: linear-gradient(180deg, #858585 0%, #858585 50%, #787878 50%) #858585 !important;
+            box-shadow: inset #222 0 0 1px !important;
+            text-shadow: #888 0 0 2px !important;
+        }
+
+        &--current {
+            background: linear-gradient(0deg, #A586C3, #D3BFFF);
+        }
+
+        &:hover {
+            color: #306;
+            background: linear-gradient(0deg, #9475B2 30%, #C2AFFE 70%);
+        }
+
+        &:active {
+            color: #306;
+            background: linear-gradient(180deg, #9475B2 30%, #C2AFFE 70%);
+        }
+    }
+
+    &__select {
+        box-sizing: border-box;
+        background: linear-gradient(180deg, #FFF 0%, #EEE 50%, #E5E5E5 50%) #FFF;
+        border: 1px solid #CCC;
+        box-shadow: inset #DDD 0 0 5px;
+        padding: 3px 4px;
+        vertical-align: middle;
+    }
+
+    &__text {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 3px 4px;
+        border: 1px solid #CCC;
+        box-shadow: inset #DDD 0 0 5px;
+        background: linear-gradient(180deg, #FFF 0%, #EEE 50%, #E5E5E5 50%) #FFF;
+
+        &--red {
+            box-shadow: inset 0 0 7px #EB5959;
+        }
+
+        &--green {
+            box-shadow: inset 0 0 7px #A9EC8B;
+        }
+    }
+
+    &__range {
+        border: 0;
+        width: 100%;
+        font-size: 1.5em;
+        margin: 5px 0;
+    }
+}

@@ -3,16 +3,14 @@
 {% set title = 'Logout' %}
 
 {% block content %}
-    <div class="loginPage">
-        <div class="loginForm">
-            <div class="head">
-                Are you sure?
-            </div>
-            <form method="post" action="{{ route('auth.logout') }}" id="logoutForm">
-                <div class="centreAlign">
-                    <button class="inputStyling" id="loginButton" name="session" value="{{ session_id() }}"><i class="fa fa-sign-out"></i> Logout</button>
-                </div>
-            </form>
+    <div class="auth content content--auth">
+        <div class="content__header">
+            Are you sure?
         </div>
+        <form method="post" action="{{ route('auth.logout') }}" id="logoutForm">
+            <button class="input__button auth__button" name="session" value="{{ session_id() }}">
+                <i class="fa fa-sign-out"></i> Logout
+            </button>
+        </form>
     </div>
 {% endblock %}

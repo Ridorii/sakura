@@ -1,7 +1,6 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
     position: relative;
 }
 
@@ -34,6 +33,19 @@ h1 {
     color: #614390;
 }
 
+a {
+    color: #22E;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &:active {
+        color: #E22;
+    }
+}
+
 hr {
     border: 0;
     height: 1px;
@@ -58,4 +70,54 @@ img {
 .hidden {
     display: none !important;
     visibility: hidden !important;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInFromRight {
+    0% {
+        right: -100%;
+    }
+
+    100% {
+        right: 0;
+    }
+}
+
+@keyframes slideOutToBottom {
+    0% {
+        bottom: 0;
+    }
+
+    100% {
+        bottom: -100%;
+    }
 }

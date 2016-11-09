@@ -4,9 +4,9 @@
 
 {% block content %}
     <div class="content homepage forum">
-        <div class="content__right">
+        <div class="content--right">
             <div id="forumIndexPopularTopics">
-                <div class="head">Popular topics</div>
+                <div class="content__header content__header--alt">Popular topics</div>
                 <table class="panelTable" style="border-spacing: 0;">
                     <tr>
                         <th>Title</th>
@@ -15,15 +15,15 @@
                     {% for _t in activeTopics %}
                         <tr {% if _t.unread(user.id) %}style="font-weight: bold;"{% endif %}>
                             <td style="text-align: left; border-bottom: 1px solid #9475b2;">
-                                <a href="{{ route('forums.topic', _t.id) }}" class="default">{{ _t.title }}</a>
+                                <a href="{{ route('forums.topic', _t.id) }}">{{ _t.title }}</a>
                             </td>
-                            <td class="rightAlign" style="border-bottom: 1px solid #9475b2;"><time class="time-ago" datetime="{{ _t.lastPost.time|date('r') }}">{{ _t.lastPost.time|date(config('general.date_format')) }}</time></td>
+                            <td style="text-align: right; border-bottom: 1px solid #9475b2;"><time class="time-ago" datetime="{{ _t.lastPost.time|date('r') }}">{{ _t.lastPost.time|date(config('general.date_format')) }}</time></td>
                         </tr>
                     {% endfor %}
                 </table>
             </div>
             <div id="forumIndexNewPosts">
-                <div class="head">Latest posts</div>
+                <div class="content__header content__header--alt">Latest posts</div>
                 <table class="panelTable" style="border-spacing: 0;">
                     <tr>
                         <th>Title &amp; user</th>
@@ -32,22 +32,22 @@
                     {% for _p in latestPosts %}
                         <tr {% if _p.unread(user.id) %}style="font-weight: bold;"{% endif %}>
                             <td style="text-align: left; border-bottom: 1px solid #9475b2;">
-                                <a href="{{ route('forums.post', _p.id) }}" class="default">{{ _p.subject }}</a>
+                                <a href="{{ route('forums.post', _p.id) }}">{{ _p.subject }}</a>
                                 by
-                                <a href="{{ route('user.profile', _p.poster.id) }}" class="default"><span style="color: {{ _p.poster.colour }};">{{ _p.poster.username }}</span></a>
+                                <a href="{{ route('user.profile', _p.poster.id) }}"><span style="color: {{ _p.poster.colour }};">{{ _p.poster.username }}</span></a>
                             </td>
-                            <td class="rightAlign" style="border-bottom: 1px solid #9475b2;"><time class="time-ago" datetime="{{ _p.time|date('r') }}">{{ _p.time|date(config('general.date_format')) }}</time></td>
+                            <td style="text-align: right; border-bottom: 1px solid #9475b2;"><time class="time-ago" datetime="{{ _p.time|date('r') }}">{{ _p.time|date(config('general.date_format')) }}</time></td>
                         </tr>
                     {% endfor %}
                 </table>
             </div>
             <div id="forumMostActivePoster">
-                <div class="head">Today's most active poster</div>
+                <div class="content__header content__header--alt">Today's most active poster</div>
                 {% if activePoster.id %}
-                    <a class="clean" href="{{ route('user.profile', activePoster.id) }}">
-                        <div class="user-container" style="background-image: url({{ route('user.header', activePoster.id) }});">
-                            <div class="default-avatar-setting user-container-avatar" style="background-image: url({{ route('user.avatar', activePoster.id) }}); box-shadow: 0 0 5px #{% if activePoster.isOnline %}484{% else %}844{% endif %};"></div>
-                            <div class="user-container-info">
+                    <a href="{{ route('user.profile', activePoster.id) }}" class="link link--clean">
+                        <div class="user" style="background-image: url({{ route('user.header', activePoster.id) }});">
+                            <div class="avatar avatar--border user__avatar" style="background-image: url({{ route('user.avatar', activePoster.id) }}); box-shadow: 0 0 5px #{% if activePoster.isOnline %}484{% else %}844{% endif %};"></div>
+                            <div class="user__info">
                                 <h1 style="color: {{ activePoster.colour }}; text-shadow: 0 0 7px {% if activePoster.colour != 'inherit' %}{{ activePoster.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;" {% if activePoster.getUsernameHistory %} title="Known as {{ activePoster.getUsernameHistory[0].username_old }} before {{ activePoster.getUsernameHistory[0].change_time|date(config('general.date_format')) }}." {% endif %}>{{ activePoster.username }}</h1>
                                 {% if activePoster.isPremium %}<img src="/images/tenshi.png" alt="Tenshi" style="vertical-align: middle;"> {% endif %}<img src="/images/flags/{{ activePoster.country|lower }}.png" alt="{{ activePoster.country }}" style="vertical-align: middle;" title="{{ activePoster.country(true) }}"> <span style="font-size: .8em;">{{ activePoster.title }}</span>
                             </div>
@@ -58,7 +58,7 @@
                 {% endif %}
             </div>
         </div>
-        <div class="content__left">
+        <div class="content--left">
             {% include 'forum/elements/forumBase.twig' %}
         </div>
         <div class="clear"></div>

@@ -18,7 +18,13 @@
 {{ block('js') }}
     </head>
     <body>
-        <div id="container" class="container">
+        <div
+            id="container"
+            class="container"
+            {% if profile is defined ? profile.background : (user.perms.changeBackground and (user.backgroundSitewide or showBG|default(false)) and user.background) %}
+                style="background-image: url('{{ route('user.background', (profile is defined ? profile : user).id) }}'); "
+            {% endif %}
+        >
             <span id="top"></span>
             <div id="busy-window" class="busy hidden">
                 <div class="busy__content">
@@ -36,31 +42,29 @@
                 </a>
                 <div class="header__menu">
                     <div class="header__menu--left" id="navMenuSite">
-                        <!-- Navigation menu, displayed on left side of the bar. -->
-                        <a class="header__menu-item fa-home" href="{{ route('main.index') }}" title="Home"></a>
-                        <a class="header__menu-item fa-newspaper-o" href="{{ route('news.category') }}" title="News"></a>
-                        <a class="header__menu-item fa-commenting" href="{{ route('chat.redirect') }}" title="Chat"></a>
-                        <a class="header__menu-item fa-list" href="{{ route('forums.index') }}" title="Forums"></a>
-                        <a class="header__menu-item fa-search" href="{{ route('main.search') }}" title="Search"></a>
+                        <a class="header__menu-item fa fa-home" href="{{ route('main.index') }}" title="Home"></a>
+                        <a class="header__menu-item fa fa-newspaper-o" href="{{ route('news.category') }}" title="News"></a>
+                        <a class="header__menu-item fa fa-commenting" href="{{ route('chat.redirect') }}" title="Chat"></a>
+                        <a class="header__menu-item fa fa-list" href="{{ route('forums.index') }}" title="Forums"></a>
+                        <a class="header__menu-item fa fa-search" href="{{ route('main.search') }}" title="Search"></a>
                         {% if user.isActive %}
-                            <a class="header__menu-item fa-users" href="{{ route('members.index') }}" title="Members"></a>
-                            <a class="header__menu-item fa-heart" href="{{ route('premium.index') }}" title="Support us"></a>
+                            <a class="header__menu-item fa fa-users" href="{{ route('members.index') }}" title="Members"></a>
+                            <a class="header__menu-item fa fa-heart" href="{{ route('premium.index') }}" title="Support us"></a>
                         {% endif %}
                     </div>
                     <div class="header__menu--right" id="navMenuUser">
-                        <!-- User menu, displayed on right side of the bar. -->
                         {% if user.isActive %}
-                            <a class="header__menu-item header__menu-item--avatar" href="{{ route('user.profile', user.id) }}" title="Logged in as {{ user.username }}" style="background-image: url('{{ route('user.avatar', user.id) }}'); width: auto; color: {{ user.colour }}; border-color: {{ user.colour }}; font-weight: 700;"></a>
-                            <a class="header__menu-item fa-envelope" href="#" title="Messages"></a>
-                            <a class="header__menu-item fa-bell" href="javascript:;" title="Notifications"></a>
+                            <a class="header__menu-item header__menu-item--avatar avatar" href="{{ route('user.profile', user.id) }}" title="Logged in as {{ user.username }}" style="background-image: url('{{ route('user.avatar', user.id) }}'); width: auto; color: {{ user.colour }}; border-color: {{ user.colour }}; font-weight: 700;"></a>
+                            <a class="header__menu-item fa fa-envelope" href="#" title="Messages"></a>
+                            <a class="header__menu-item fa fa-bell" href="javascript:;" title="Notifications"></a>
                             {% if user.perms.isMod or user.perms.isAdmin %}
-                                <a class="header__menu-item fa-gavel" href="{{ route('manage.index') }}" title="Manage"></a>
+                                <a class="header__menu-item fa fa-gavel" href="{{ route('manage.index') }}" title="Manage"></a>
                             {% endif %}
-                            <a class="header__menu-item fa-cogs" href="{{ route('settings.index') }}" title="Settings"></a>
-                            <a class="header__menu-item fa-sign-out" href="{{ route('auth.logout') }}" title="Logout"></a>
+                            <a class="header__menu-item fa fa-cogs" href="{{ route('settings.index') }}" title="Settings"></a>
+                            <a class="header__menu-item fa fa-sign-out" href="{{ route('auth.logout') }}" title="Logout"></a>
                         {% else %}
-                            <a class="header__menu-item fa-magic" href="{{ route('auth.register') }}" title="Register"></a>
-                            <a class="header__menu-item fa-sign-in" href="{{ route('auth.login') }}" title="Login"></a>
+                            <a class="header__menu-item fa fa-magic" href="{{ route('auth.register') }}" title="Register"></a>
+                            <a class="header__menu-item fa fa-sign-in" href="{{ route('auth.login') }}" title="Login"></a>
                         {% endif %}
                     </div>
                 </div>
@@ -69,49 +73,45 @@
                 <div id="notifications" class="alerts"></div>
                 <div id="dialogues" class="dialogues"></div>
 
-                {% if profile is defined ? profile.background : (user.perms.changeBackground and (user.backgroundSitewide or showBG|default(false)) and user.background) %}
-                    <div id="userBackground" style="background-image: url('{{ route('user.background', (profile is defined ? profile : user).id) }}');"></div>
-                {% endif %}
-
                 {% if not user.isActive and server['REQUEST_URI'] != route('auth.login') %}
-                <div class="headerLoginContainer">
-                    <form method="post" action="{{ route('auth.login') }}" id="headerLoginForm">
+                <div class="header-login">
+                    <form method="post" action="{{ route('auth.login') }}">
                         <input type="hidden" name="redirect" value="{{ server['REQUEST_URI'] }}">
-                        <div>
-                            <label for="headerLoginUserName">Username:</label>
-                            <input type="text" id="headerLoginUserName" name="username" class="inputStyling" placeholder="Username">
-                        </div>
-                        <div>
-                            <label for="headerLoginPassword">Password:</label>
-                            <input type="password" id="headerLoginPassword" name="password" class="inputStyling" placeholder="Password">
-                        </div>
-                        <div>
-                            <input type="checkbox" name="remember" id="headerLoginRemember">
-                            <label for="headerLoginRemember">Remember me</label>
-                        </div>
-                        <div>
-                            <button class="inputStyling small" name="session" value="{{ session_id() }}"><i class="fa fa-sign-in"></i> Login</button>
-                        </div>
+                        <label class="header-login__label">
+                            Username:
+                            <input type="text" name="username" class="input__text header-login__text" placeholder="Username">
+                        </label>
+                        <label class="header-login__label">
+                            Password:
+                            <input type="password" name="password" class="input__text header-login__text" placeholder="Password">
+                        </label>
+                        <label class="header-login__label">
+                            <input type="checkbox" name="remember">
+                            Remember me
+                        </label>
+                        <button class="input__button header-login__button" name="session" value="{{ session_id() }}">
+                            <i class="fa fa-sign-in"></i> Login
+                        </button>
                     </form>
                 </div>
                 {% endif %}
 
                 {% if user.restricted %}
-                    <div class="headerNotify" style="background: repeating-linear-gradient(-45deg, #B33, #B33 10px, #B00 10px, #B00 20px); color: #FFF; border: 1px solid #C00; box-shadow: 0 0 3px #C00;">
+                    <div class="announce-box announce-box--restricted" style="background: repeating-linear-gradient(-45deg, #B33, #B33 10px, #B00 10px, #B00 20px); color: #FFF; border: 1px solid #C00; box-shadow: 0 0 3px #C00;">
                         <h1>Your account is currently in <span style="font-weight: 700 !important;">restricted mode</span>!</h1>
                         <div>A staff member has set your account to restricted mode most likely due to violation of the rules. While restricted you won't be able to use most public features of the site. If you think this is a mistake please <a href="{{ route('info.contact') }}" style="color: inherit;">get in touch with one of our staff members</a>.</div>
                     </div>
                 {% endif %}
 
                 <noscript>
-                    <div class="headerNotify">
+                    <div class="announce-box">
                         <h1>You have JavaScript disabled!</h1>
                         <div>A lot of things are not going to work without it so I recommend you turn it on or use a capable browser.</div>
                     </div>
                 </noscript>
 
                 {% if config('general.cover') %}
-                    <div class="headerAnnouncement" style="background-image: url('{{ config('general.cover') }}');"></div>
+                    <div class="announce-box announce-box--header" style="background-image: url('{{ config('general.cover') }}');"></div>
                 {% endif %}
 
                 {% block content %}
@@ -120,30 +120,30 @@
             </div>
             <div class="footer">
                 <div class="footer__sections">
-                    <div class="footer__copyright">Powered by <a href="https://github.com/flashwave/sakura/">Sakura</a> &copy; 2013-2016 <a href="http://aitemu.moe/">Aitemu</a></div>
+                    <div class="footer__copyright">Powered by <a class="footer__link" href="https://github.com/flashwave/sakura/">Sakura</a> &copy; 2013-2016 <a class="footer__link" href="https://flash.moe/">flash.moe</a></div>
                     <ul class="footer__section">
-                        <li class="footer_item footer_item--head">General</li>
-                        <li class="footer_item"><a class="footer_link" href="{{ route('main.index') }}">Home</a></li>
-                        <li class="footer_item"><a class="footer_link" href="{{ route('news.category') }}">News</a></li>
-                        <li class="footer_item"><a class="footer_link" href="{{ route('main.search') }}">Search</a></li>
-                        <li class="footer_item"><a class="footer_link" href="{{ route('info.contact') }}">Contact</a></li>
-                        <li class="footer_item"><a class="footer_link" href="https://sakura.flash.moe">Changelog</a></li>
-                        <li class="footer_item"><a class="footer_link" href="{{ route('premium.index') }}">Support us</a></li>
+                        <li class="footer__item footer__item--head">General</li>
+                        <li class="footer__item"><a class="footer__link" href="{{ route('main.index') }}">Home</a></li>
+                        <li class="footer__item"><a class="footer__link" href="{{ route('news.category') }}">News</a></li>
+                        <li class="footer__item"><a class="footer__link" href="{{ route('main.search') }}">Search</a></li>
+                        <li class="footer__item"><a class="footer__link" href="{{ route('info.contact') }}">Contact</a></li>
+                        <li class="footer__item"><a class="footer__link" href="https://sakura.flash.moe">Changelog</a></li>
+                        <li class="footer__item"><a class="footer__link" href="{{ route('premium.index') }}">Support us</a></li>
                     </ul>
                     <ul class="footer__section">
-                        <li class="footer_item footer_item--head">Community</li>
-                        <li class="footer_item"><a class="footer_link" href="{{ route('forums.index') }}">Forums</a></li>
-                        <li class="footer_item"><a class="footer_link" href="https://twitter.com/_flashii">Twitter</a></li>
-                        <li class="footer_item"><a class="footer_link" href="https://youtube.com/user/flashiinet">YouTube</a></li>
-                        <li class="footer_item"><a class="footer_link" href="https://steamcommunity.com/groups/flashiinet">Steam</a></li>
-                        <li class="footer_item"><a class="footer_link" href="https://github.com/aitemu">GitHub</a></li>
+                        <li class="footer__item footer__item--head">Community</li>
+                        <li class="footer__item"><a class="footer__link" href="{{ route('forums.index') }}">Forums</a></li>
+                        <li class="footer__item"><a class="footer__link" href="https://twitter.com/_flashii">Twitter</a></li>
+                        <li class="footer__item"><a class="footer__link" href="https://youtube.com/user/flashiinet">YouTube</a></li>
+                        <li class="footer__item"><a class="footer__link" href="https://steamcommunity.com/groups/flashiinet">Steam</a></li>
+                        <li class="footer__item"><a class="footer__link" href="https://github.com/aitemu">GitHub</a></li>
                     </ul>
                     <ul class="footer__section">
-                        <li class="footer_item footer_item--head">Information</li>
-                        <li class="footer_item"><a class="footer_link" href="{{ route('main.faq') }}">FAQ</a></li>
-                        <li class="footer_item"><a class="footer_link" href="{{ route('info.rules') }}">Rules</a></li>
-                        <li class="footer_item"><a class="footer_link" href="{{ route('status.index') }}">Server Status</a></li>
-                        <li class="footer_item"><a class="footer_link" href="{{ route('info.terms') }}">Terms of Service</a></li>
+                        <li class="footer__item footer__item--head">Information</li>
+                        <li class="footer__item"><a class="footer__link" href="{{ route('main.faq') }}">FAQ</a></li>
+                        <li class="footer__item"><a class="footer__link" href="{{ route('info.rules') }}">Rules</a></li>
+                        <li class="footer__item"><a class="footer__link" href="{{ route('status.index') }}">Server Status</a></li>
+                        <li class="footer__item"><a class="footer__link" href="{{ route('info.terms') }}">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>

@@ -10,27 +10,27 @@
     <form enctype="multipart/form-data" method="post" action="javascript:;" onsubmit="updateSettingsConfirm(this, '{{ route('settings.account.details') }}');">
         <div class="profile-field">
             <div><h2>E-mail address</h2></div>
-            <div><input type="text" name="email" placeholder="{{ user.email }}" class="inputStyling"></div>
+            <div><input type="text" name="email" placeholder="{{ user.email }}" class="input__text"></div>
         </div>
         {% if edit_usern %}
             <div class="profile-field">
                 <div><h2>Username {% if last_name_change %}(last change was <time class="time-ago" datetime="{{ last_name_change|date('r') }}">{{ last_name_change|date(config('general.date_format')) }}</time>){% endif %}</h2></div>
-                <div><input type="text" name="username"{% if username_allow %} placeholder="At least {{ config('user.name_min') }} and at most {{ config('user.name_max') }} characters!"{% else %}disabled placeholder="You can't change your name right now!" {% endif %} class="inputStyling"></div>
+                <div><input type="text" name="username"{% if username_allow %} placeholder="At least {{ config('user.name_min') }} and at most {{ config('user.name_max') }} characters!"{% else %}disabled placeholder="You can't change your name right now!" {% endif %} class="input__text{% if username_allow %} input__text--disabled{% endif %}"></div>
             </div>
         {% endif %}
         {% if edit_title %}
             <div class="profile-field">
                 <div><h2>Title</h2></div>
-                <div><input type="text" name="title" placeholder="Max 64 characters, leaving this empty will actually reset it" class="inputStyling" value="{{ user.title }}"></div>
+                <div><input type="text" name="title" placeholder="Max 64 characters, leaving this empty will actually reset it" class="input__text" value="{{ user.title }}"></div>
             </div>
         {% endif %}
         <div class="profile-field">
             <div><h2>Password</h2></div>
-            <div><input type="password" name="password" placeholder="Must be at least decently strong, size doesn't matter" class="inputStyling"></div>
+            <div><input type="password" name="password" placeholder="Must be at least decently strong, size doesn't matter" class="input__text"></div>
         </div>
         <div class="profile-save">
-            <button value="{{ session_id() }}" name="session" class="inputStyling">Save</button>
-            <button type="reset" class="inputStyling">Reset</button>
+            <button value="{{ session_id() }}" name="session" class="input__button">Save</button>
+            <button type="reset" class="input__button">Reset</button>
         </div>
     </form>
 {% endblock %}

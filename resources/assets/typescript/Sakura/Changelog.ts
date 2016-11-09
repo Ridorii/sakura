@@ -22,7 +22,7 @@ namespace Sakura
 
             this.Element.style.borderSpacing = '0 1px';
 
-            var title: HTMLDivElement = <HTMLDivElement>DOM.Create('div', 'head'),
+            var title: HTMLDivElement = <HTMLDivElement>DOM.Create('div', 'content__header content__header--alt'),
                 link: HTMLLinkElement = <HTMLLinkElement>DOM.Create('a', 'underline');
 
             title.style.marginBottom = '1px';
@@ -30,6 +30,7 @@ namespace Sakura
             link.innerText = 'Changelog';
             link.href = Config.ChangelogUrl;
             link.target = '_blank';
+            link.style.color = 'inherit';
 
             DOM.Append(title, link);
             DOM.Append(target, title);

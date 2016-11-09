@@ -1,18 +1,18 @@
             <li id="comment-{{ comment.id }}">
                 <div class="comment">
-                    <a class="comment-avatar clean" href="{{ route('user.profile', comment.userData.id) }}" style="background-image: url('{{ route('user.avatar', comment.userData.id) }}');"><span style="color: {{ comment.userData.colour }};">{{ comment.userData.username }}</span></a>
+                    <a class="comment-avatar" href="{{ route('user.profile', comment.userData.id) }}" style="background-image: url('{{ route('user.avatar', comment.userData.id) }}');"><span style="color: {{ comment.userData.colour }};">{{ comment.userData.username }}</span></a>
                     <div class="comment-pointer"></div>
                     <div class="comment-content">
                         <div class="comment-controls">
                             <ul>
                                 {% if comment.userData.id == user.id %}
-                                    <li><a href="javascript:void(0);" onclick="commentDelete({{ comment.id }});" class="clean fa fa-trash-o" title="Delete"></a></li>
+                                    <li><a href="javascript:void(0);" onclick="commentDelete({{ comment.id }});" class="fa fa-trash-o" title="Delete"></a></li>
                                 {% else %}
-                                    <li><a href="{{ route('user.report', comment.userData.id) }}" class="clean fa fa-exclamation-circle" title="Report"></a></li>
+                                    <li><a href="{{ route('user.report', comment.userData.id) }}" class="fa fa-exclamation-circle" title="Report"></a></li>
                                 {% endif %}
-                                <li><a href="javascript:void(0);" onclick="commentReply({{ comment.id }}, '{{ session_id() }}', '{{ route('user.avatar', user.id) }}');" class="clean fa fa-reply" title="Reply" id="comment-action-reply-{{ comment.id }}"></a></li>
-                                <li class="shown voting like"><a href="javascript:void(0);" onclick="commentVote({{ comment.id }}, 1);" class="clean"><span class="fa fa-thumbs-up"></span> <span id="comment-{{ comment.id }}-likes">{{ comment.upvotes }}</span></a></li>
-                                <li class="shown voting dislike"><a href="javascript:void(0);" onclick="commentVote({{ comment.id }}, 0);" class="clean"><span class="fa fa-thumbs-down"></span> <span id="comment-{{ comment.id }}-dislikes">{{ comment.downvotes }}</span></a></li>
+                                <li><a href="javascript:void(0);" onclick="commentReply({{ comment.id }}, '{{ session_id() }}', '{{ route('user.avatar', user.id) }}');" class="fa fa-reply" title="Reply" id="comment-action-reply-{{ comment.id }}"></a></li>
+                                <li class="shown voting like"><a href="javascript:void(0);" onclick="commentVote({{ comment.id }}, 1);"><span class="fa fa-thumbs-up"></span> <span id="comment-{{ comment.id }}-likes">{{ comment.upvotes }}</span></a></li>
+                                <li class="shown voting dislike"><a href="javascript:void(0);" onclick="commentVote({{ comment.id }}, 0);"><span class="fa fa-thumbs-down"></span> <span id="comment-{{ comment.id }}-dislikes">{{ comment.downvotes }}</span></a></li>
                             </ul>
                             <div class="clear"></div>
                         </div>

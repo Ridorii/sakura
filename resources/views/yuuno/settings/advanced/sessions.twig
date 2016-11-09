@@ -34,7 +34,7 @@
                 <td style="width: 90px;">
                     <form method="post" action="{{ route('settings.advanced.sessions') }}">
                         <input type="hidden" name="id" value="{{ usession.id }}">
-                        <button class="inputStyling small" name="session" value="{{ session_id() }}">Kill</button>
+                        <button class="input__button" name="session" value="{{ session_id() }}">Kill</button>
                     </form>
                 </td>
             </tr>
@@ -44,7 +44,7 @@
     <div class="profile-save">
         <form method="post" action="{{ route('settings.advanced.sessions') }}">
             <input type="hidden" name="all" value="1">
-            <button class="inputStyling" name="session" value="{{ session_id() }}">Kill all active sessions</button>
+            <button class="input__button" name="session" value="{{ session_id() }}">Kill all active sessions</button>
         </form>
     </div>
 {% endblock %}

@@ -4,14 +4,8 @@
 {% set sort = get is defined and get.sort is defined and get.sort in sorts ? get.sort : sorts[0] %}
 
 {% set notfound = rank == 0 %}
-
-{% set rankTitle %}
-{% if notfound %}Not found{% else %}{{ ranks[rank].name(true) }}{% endif %}
-{% endset %}
-
-{% set rankDescription %}
-{% if notfound %}The requested rank could not be found!{% else %}{{ ranks[rank].description }}{% endif %}
-{% endset %}
+{% set title = notfound ? 'Not found' : ranks[rank].name(true) %}
+{% set description = notfound ? 'The requested rank could not be found!' : ranks[rank].description %}
 
 {% set users = ranks[rank].users|batch(30) %}
 
@@ -20,17 +14,15 @@
 {% set paginationPages = users %}
 {% set paginationUrl %}{% if rank %}{{ route('members.rank', rank) }}{% else %}{{ route('members.index') }}{% endif %}{% endset %}
 
-{% set title = rankTitle %}
-
 {% block content %}
-    <div class="headerNotify" style="margin-bottom: 1px;">
-        <h1 style="{% if rank %}text-shadow: 0 0 5px {{ ranks[rank].colour }}; color: {{ ranks[rank].colour }};{% else %}text-shadow: 0 0 5px #555;{% endif %}">{{ rankTitle }}</h1>
-        <h3>{{ rankDescription }}</h3>
+    <div class="announce-box" style="margin-bottom: 1px;">
+        <h1 style="{% if rank %}text-shadow: 0 0 5px {{ ranks[rank].colour }}; color: {{ ranks[rank].colour }};{% else %}text-shadow: 0 0 5px #555;{% endif %}">{{ title }}</h1>
+        <h3>{{ description }}</h3>
     </div>
-    <div class="membersPage" style="min-height: 500px;">
+    <div class="members" style="min-height: 500px;">
         <div style="display: inline-block; margin: 0 auto; font-size: 1.5em; line-height: 1.5em; height: 30px;">
             <div class="dropdown" style="float: left; color: #FFF;">
-                <a class="dropdown__title">Rank:</a>
+                <span class="dropdown__title">Rank:</span>
                 {% for r in ranks %}
                     {% if not r.hidden or (r.hidden and rank == r.id) %}
                         <a class="dropdown__option{% if rank == r.id %} dropdown__option--selected{% endif %}" href="{{ route('members.rank', r.id) }}{{ server['QUERY_STRING'] is defined ? '?' : '' }}{{ server['QUERY_STRING']|default('') }}" style="color: {{ r.colour }};">{{ r.id == 0 ? 'Not found' : r.name(true) }}</a>
@@ -38,73 +30,67 @@
                 {% endfor %}
             </div>
             <div class="dropdown" style="float: left;">
-                <a class="dropdown__title">View:</a>
+                <span class="dropdown__title">View:</span>
                 {% for s in sorts %}
                     <a class="dropdown__option {% if s == sort %} dropdown__option--selected{% endif %}" href="?{{ server['QUERY_STRING']|default('') }}{{ server['QUERY_STRING']|default('') ? '&' : '' }}sort={{ s }}">{{ s|capitalize }}</a>
                 {% endfor %}
             </div>
         </div>
-        {% if not users|length %}
+        {% if users|length < 1 %}
             <h1 style="margin: 2em 0;">This rank has no members!</h1>
         {% elseif not notfound %}
-            <div class="membersPageList {{ sort }}">
+            <div class="members__list members__list--{{ sort }}">
                 {% if sort == sorts[2] %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Username</th>
-                            <th>Registered</th>
-                            <th>Last online</th>
-                            <th>User title</th>
-                            <th>Country</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>No.</th>
-                            <th>Username</th>
-                            <th>Registered</th>
-                            <th>Last online</th>
-                            <th>User title</th>
-                            <th>Country</th>
-                        </tr>
-                    </tfoot>
-                    {% for count,user in users[currPage] %}
-                    <tbody>
-                        <tr>
-                            <td>
-                                #{{ rank ? count + 1 : count }}
-                            </td>
-                            <td>
-                                <a href="{{ route('user.profile', user.id) }}" class="default" style="font-weight: bold; color: {{ user.colour }}; text-shadow: 0 0 5px {{ user.colour }};">{{ user.username }}</a>
-                            </td>
-                            <td>
-                                <time class="time-ago" datetime="{{ user.registered|date('r') }}">{{ user.registered|date(config('general.date_format')) }}</time>
-                            </td>
-                            <td>
-                                {% if user.lastOnline == 0 %}<i>Never logged in.</i>{% else %}<time class="time-ago" datetime="{{ user.lastOnline|date('r') }}">{{ user.lastOnline|date(config('general.date_format')) }}</time>{% endif %}
-                            </td>
-                            <td>
-                                {{ user.title }}
-                            </td>
-                            <td>
-                                <img src="/images/flags/{{ user.country|lower }}.png" alt="{% if user.country|lower == 'xx' %}?{% else %}{{ user.country(true) }}{% endif %}" title="{% if user.country|lower == 'xx' %}Unknown{% else %}{{ user.country(true) }}{% endif %}">
-                            </td>
-                        </tr>
-                    </tbody>
-                    {% endfor %}
-                </table>
+                    <table class="members__table">
+                        {% for elem in ['thead', 'tfoot'] %}
+                            <{{ elem }}>
+                                <tr>
+                                    <th class="members__table-column members__table-column--legend members__table-column--{{ elem }}">No.</th>
+                                    <th class="members__table-column members__table-column--legend members__table-column--{{ elem }}">Username</th>
+                                    <th class="members__table-column members__table-column--legend members__table-column--{{ elem }}">Registered</th>
+                                    <th class="members__table-column members__table-column--legend members__table-column--{{ elem }}">Last online</th>
+                                    <th class="members__table-column members__table-column--legend members__table-column--{{ elem }}">User title</th>
+                                    <th class="members__table-column members__table-column--legend members__table-column--{{ elem }}">Country</th>
+                                </tr>
+                            </{{ elem }}>
+                        {% endfor %}
+                        {% for count, user in users[currPage] %}
+                            <tbody>
+                                <tr>
+                                    <td class="members__table-column">
+                                        #{{ count }}
+                                    </td>
+                                    <td class="members__table-column">
+                                        <a href="{{ route('user.profile', user.id) }}" style="font-weight: bold; color: {{ user.colour }}; text-shadow: 0 0 5px {{ user.colour }};">{{ user.username }}</a>
+                                    </td>
+                                    <td class="members__table-column">
+                                        <time class="time-ago" datetime="{{ user.registered|date('r') }}">{{ user.registered|date(config('general.date_format')) }}</time>
+                                    </td>
+                                    <td class="members__table-column">
+                                        {% if user.lastOnline == 0 %}<i>Never logged in.</i>{% else %}<time class="time-ago" datetime="{{ user.lastOnline|date('r') }}">{{ user.lastOnline|date(config('general.date_format')) }}</time>{% endif %}
+                                    </td>
+                                    <td class="members__table-column">
+                                        {{ user.title }}
+                                    </td>
+                                    <td class="members__table-column">
+                                        <img src="/images/flags/{{ user.country|lower }}.png" alt="{% if user.country|lower == 'xx' %}?{% else %}{{ user.country(true) }}{% endif %}" title="{% if user.country|lower == 'xx' %}Unknown{% else %}{{ user.country(true) }}{% endif %}">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        {% endfor %}
+                    </table>
                 {% else %}
                     {% for user in users[currPage] %}
-                        <a href="{{ route('user.profile', user.id) }}">{# These comment tags are here to prevent the link extending too far
-                            #}<div class="userBox" id="u{{ user.id }}">{#
-                                #}<img src="/images/pixel.png" alt="{{ user.username }}"  style="background: url('{{ route('user.avatar', user.id) }}') no-repeat center / contain;">{#
-                                #}<span class="userBoxUserName" style="color: {{ user.colour }};">{#
-                                    #}{{ user.username }}{#
-                                #}</span>{#
-                            #}</div>{#
-                        #}</a>
+                        {% spaceless %}
+                            <a href="{{ route('user.profile', user.id) }}">
+                                <div class="members__box" id="u{{ user.id }}">
+                                    <div class="avatar members__box-avatar" style="background-image: url('{{ route('user.avatar', user.id) }}')"></div>
+                                    <span class="members__box-text" style="color: {{ user.colour }};">
+                                        {{ user.username }}
+                                    </span>
+                                </div>
+                            </a>
+                        {% endspaceless %}
                     {% endfor %}
                 {% endif %}
             </div>

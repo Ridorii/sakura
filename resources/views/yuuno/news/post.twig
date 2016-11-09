@@ -9,12 +9,10 @@
 {% set newsHideCommentCount = true %}
 
 {% block content %}
-    <div class="content">
-        <div class="content-column news">
-            <div class="head">{{ post.title }}</div>
-            {% include 'elements/newsPost.twig' %}
-            {% include 'elements/comments.twig' %}
-        </div>
+    <div class="content news">
+        <div class="content__header">{{ post.title }}</div>
+        {% include 'elements/newsPost.twig' %}
+        {% include 'elements/comments.twig' %}
     </div>
 {% endblock %}
 

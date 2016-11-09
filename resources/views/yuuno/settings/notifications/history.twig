@@ -23,7 +23,7 @@
     {% if alerts %}
         <div class="notification-history">
             {% for alert in alerts[get.page|default(1) - 1] %}
-            <a id="notif-hist-{{ alert.id }}" class="clean {% if alert.read %}read{% endif %}"{% if alert.link %} href="{{ alert.link }}"{% endif %}>
+            <a id="notif-hist-{{ alert.id }}" class="{% if alert.read %}read{% endif %}"{% if alert.link %} href="{{ alert.link }}"{% endif %}>
                 <div class="notif-hist-icon">
                 {% if 'FONT:' in alert.image %}
                     <div class="font-icon fa {{ alert.image|replace({'FONT:': ''}) }} fa-4x"></div>

@@ -1,10 +1,10 @@
-<div class="head">{{ title }}</div>
+<div class="content__header">{{ title }}</div>
 <div class="forumList">
     {% for forum in forum.forums %}
         {% if forum.type == 1 %}
             {% if forum.forums|length and forum.perms.view %}
                 <div class="forumCategory">
-                    {% if forum.type != 1 %}Subforums{% else %}<a href="{{ route('forums.forum', forum.id) }}" class="clean">{{ forum.name }}</a>{% endif %}
+                    {% if forum.type != 1 %}Subforums{% else %}<a href="{{ route('forums.forum', forum.id) }}">{{ forum.name }}</a>{% endif %}
                 </div>
                 {% for forum in forum.forums %}
                     {% include 'forum/elements/forumEntry.twig' %}

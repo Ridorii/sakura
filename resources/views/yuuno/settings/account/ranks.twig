@@ -12,7 +12,7 @@
             <form method="post" action="{{ route('settings.account.ranks') }}" class="friend-container {% if rank.id == user.mainRankId %}active{% endif %}">
                 <input type="hidden" name="session" value="{{ session_id() }}">
                 <input type="hidden" name="rank" value="{{ rank.id }}">
-                <button class="friends-list-data clean" name="mode" value="main">
+                <button class="friends-list-data" name="mode" value="main">
                     <div class="friends-list-name" style="color: {{ rank.colour }};">{{ rank.name }}</div>
                 </button>
                 <div class="friends-list-actions">

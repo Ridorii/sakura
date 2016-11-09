@@ -3,62 +3,36 @@
 {% set title = 'Register' %}
 
 {% block content %}
+    <div class="auth content content--auth">
     {% if config('user.disable_registration') %}
-    <div class="loginPage">
-        <div class="registerForm" id="registerWarn" style="display: block;">
-            <div class="centreAlign">
-                <div class="fa fa-remove fa-5x" style="display: block; margin: 10px 0 0;"></div>
-                <h1>Registration is disabled.</h1>
-                <p>Please try again later.</p>
-            </div>
-        </div>
-    </div>
+        <div class="fa fa-remove fa-5x" style="display: block; margin: 10px 0 0;"></div>
+        <h1>Registration is disabled.</h1>
+        <p>Please try again later.</p>
     {% else %}
-    <div class="loginPage">
-        <div class="registerForm">
-            <div class="head">
-                Register
-            </div>
-            <form id="registerForm" method="post" action="{{ route('auth.register') }}" style="display:{% if haltRegistration %}none{% else %}block{% endif %};">
-                <input type="hidden" name="session" value="{{ session_id() }}">
-                <div class="leftAlign">
-                    <label for="registerUserName">Username:</label>
-                </div>
-                <div class="centreAlign">
-                    <input class="inputStyling" type="text" id="registerUserName" name="username" placeholder="Any character"{% if get.username %} value="{{ get.username }}"{% endif %}>
-                </div>
-                <div class="leftAlign">
-                    <label for="registerEmail">E-mail:</label>
-                </div>
-                <div class="centreAlign">
-                    <input class="inputStyling" type="text" id="registerEmail" name="email" placeholder="Used for e.g. password retrieval"{% if get.email %} value="{{ get.email }}"{% endif %}>
-                </div>
-                <div class="leftAlign">
-                    <label for="registerPassword">Password:</label>
-                </div>
-                <div class="centreAlign">
-                    <input class="inputStyling" type="password" id="registerPassword" name="password" placeholder="Using special characters is recommended">
-                </div>
-                <div class="centreAlign">
-                    <input class="inputStyling" type="submit" name="submit" value="Register" id="registerAccBtn">
-                </div>
-                <div class="subLinks centreAlign">
-                    By creating an account you agree to the <a href="#" class="default">Terms of Service</a>.
-                </div>
-            </form>
-            <div class="registerForm" id="registerWarn" style="display: {% if not haltRegistration %}none{% else %}block{% endif %};">
-                <div class="centreAlign">
-                    <h1 class="fa fa-warning fa-5x" style="display: block; margin: 10px 0 0;"></h1>
-                    <h1>Are you {{ haltName }}?</h1>
-                    <p>Making more than one account is not permitted.</p>
-                    <p>If you lost your password please use the reset password form but if you don't already have an account you can go ahead and click the link below to show the registration form this check is based on your IP so in some cases someone may have registered/used the site on this IP already.</p>
-                    <p>If we find out that you already have an account we may question you about it, if you can give a good reason we'll let it slide otherwise we may issue a temporary ban.</p>
-                </div>
-                <div class="subLinks centreAlign">
-                    <a href="javascript:void(0);" class="default" onclick="document.getElementById('registerWarn').style.display='none'; document.getElementById('registerForm').style.display='block';">This is a mistake, let me register anyway!</a>
-                </div>
-            </div>
+        <div class="content__header">
+            Register
         </div>
-    </div>
+        <form id="registerForm" method="post" action="{{ route('auth.register') }}">
+            <label>
+                <div class="auth__label">Username</div>
+                <input class="input__text" type="text" name="username" autofocus placeholder="Any character"{% if get.username is defined %} value="{{ get.username }}"{% endif %}>
+            </label>
+            <label>
+                <div class="auth__label">E-mail</div>
+                <input class="input__text" type="text" name="email" placeholder="Used for e.g. password retrieval"{% if get.email is defined %} value="{{ get.email }}"{% endif %}>
+            </label>
+            <label>
+                <div class="auth__label">Password</div>
+                <input class="input__text" type="password" name="password" placeholder="Using special characters is recommended">
+            </label>
+            <button class="input__button auth__button" name="session" value="{{ session_id() }}">
+                <i class="fa fa-magic"></i> Register
+            </button>
+            <div class="auth__subtext">
+                By creating an account you agree to the <a href="{{ route('info.terms') }}">Terms of Service</a>.<br>
+                You are only allowed to make a single account.
+            </div>
+        </form>
     {% endif %}
+    </div>
 {% endblock %}

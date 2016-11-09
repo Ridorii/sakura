@@ -1,26 +1,26 @@
 <div id="indexPanel">
     {% if user.isActive %}
-        <div class="user-container" style="background-image: url({{ route('user.header', user.id) }});">
-            <div class="default-avatar-setting user-container-avatar" style="background-image: url({{ route('user.avatar', user.id) }}); box-shadow: 0 0 5px {{ user.colour }};"><a href="{{ route('user.profile', user.id) }}" class="clean" style="display: block; height: 100%; width: 100%;"></a></div>
-            <div class="user-container-info">
-                <a href="{{ route('user.profile', user.id) }}" class="clean"><h1 style="color: {{ user.colour }}; text-shadow: 0 0 7px {% if user.colour != 'inherit' %}{{ user.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;">{{ user.username }}</h1></a>
+        <div class="user" style="background-image: url({{ route('user.header', user.id) }});">
+            <div class="avatar avatar--border user__avatar" style="background-image: url({{ route('user.avatar', user.id) }}); box-shadow: 0 0 5px {{ user.colour }};"><a href="{{ route('user.profile', user.id) }}" style="display: block; height: 100%; width: 100%;"></a></div>
+            <div class="user__info">
+                <a href="{{ route('user.profile', user.id) }}" class="link link--clean"><h1 style="color: {{ user.colour }}; text-shadow: 0 0 7px {% if user.colour != 'inherit' %}{{ user.colour }}{% else %}#222{% endif %}; padding: 0 0 2px;">{{ user.username }}</h1></a>
                 {% set friendRequests = user.friends(-1, true)|length %}
                 {% if friendRequests %}
-                    <a class="default" href="{{ route('settings.friends.requests') }}" title="Pending friend requests">{{ friendRequests }} new friend requests</a>
+                    <a href="{{ route('settings.friends.requests') }}" title="Pending friend requests">{{ friendRequests }} new friend requests</a>
                 {% endif %}
             </div>
         </div>
     {% endif %}
-    <div class="head">Stats</div>
+    <div class="content__header content__header--alt">Stats</div>
     We have <b>{{ stats.userCount }} user{% if stats.userCount != 1 %}s{% endif %}</b>,
-    <b><a href="{{ route('user.profile', stats.newestUser.id) }}" style="color: {{ stats.newestUser.colour }};" class="default">{{ stats.newestUser.username }}</a></b> is the newest user,
+    <b><a href="{{ route('user.profile', stats.newestUser.id) }}" style="color: {{ stats.newestUser.colour }};">{{ stats.newestUser.username }}</a></b> is the newest user,
     it has been <b>{{ stats.lastRegDate }} day{{ stats.lastRegDate == 1 ? '' : 's' }}</b> since the last user registered and the forum has <b>{{ stats.topicCount }} topic{% if stats.topicCount != 1 %}s{% endif %}</b> and <b>{{ stats.postCount }} post{% if stats.postCount != 1 %}s{% endif %}</b>.
-    <div class="head">Online Users</div>
+    <div class="content__header content__header--alt">Online Users</div>
     {% if stats.onlineUsers %}
         All active users in the past 2 minutes
         <table class="panelTable">
             {% for amount,onlineUser in stats.onlineUsers %}
-            <tr><td style="text-align: left;"><a href="{{ route('user.profile', onlineUser.id) }}" style="font-weight: bold; color: {{ onlineUser.colour }};" class="default">{{ onlineUser.username }}</a></td><td style="text-align: right;"><time class="time-ago" datetime="{{ onlineUser.lastOnline|date('r') }}">{{ onlineUser.lastOnline|date(config('general.date_format')) }}</time></td></tr>
+            <tr><td style="text-align: left;"><a href="{{ route('user.profile', onlineUser.id) }}" style="font-weight: bold; color: {{ onlineUser.colour }};">{{ onlineUser.username }}</a></td><td style="text-align: right;"><time class="time-ago" datetime="{{ onlineUser.lastOnline|date('r') }}">{{ onlineUser.lastOnline|date(config('general.date_format')) }}</time></td></tr>
             {% endfor %}
         </table>
     {% else %}

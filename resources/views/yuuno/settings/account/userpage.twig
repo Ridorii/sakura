@@ -8,13 +8,13 @@
 
 {% block settingsContent %}
     <div class="bbcode" id="settingsPreview" style="max-height: 500px; overflow-y: auto; background: #C2AEEE; box-shadow: inset 0 0 1em 1em #D3BFFF;">{{ user.userPage()|raw|nl2br }}</div>
-    <hr class="default">
+    <hr>
     <form enctype="multipart/form-data" method="post" action="{{ route('settings.account.userpage') }}">
-        <div><textarea name="userpage" id="settingsEditor" class="inputStyling" style="width: calc(100% - 12px); height: 400px;">{% if user.page %}{{ user.page }}{% else %}[header]Welcome to my userpage![/header]{% endif %}</textarea></div>
+        <div><textarea name="userpage" id="settingsEditor" class="input__text" style="height: 400px;">{% if user.page %}{{ user.page }}{% else %}[header]Welcome to my userpage![/header]{% endif %}</textarea></div>
         <div class="profile-save">
-            <button value="{{ session_id() }}" name="session" class="inputStyling">Save</button>
-            <button type="reset" class="inputStyling">Reset</button>
-            <button type="button" class="inputStyling" onclick="settingsPreview();">Preview</button>
+            <button value="{{ session_id() }}" name="session" class="input__button">Save</button>
+            <button type="reset" class="input__button">Reset</button>
+            <button type="button" class="input__button" onclick="settingsPreview();">Preview</button>
         </div>
     </form>
     {% include 'settings/account/_preview.twig' %}

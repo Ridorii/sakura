@@ -16,8 +16,8 @@
         <div class="friends-list">
             {% for friend in friends[get.page|default(1) - 1] %}
                 <div class="friend-container" id="friendslist-friend-{{ friend.id }}">
-                    <a class="friends-list-data clean" href="{{ route('user.profile', friend.id) }}">
-                        <img src="{{ route('user.avatar', friend.id) }}" alt="{{ friend.username }}" class="friends-list-avatar default-avatar-setting" style="width: 150px; height: 150px;">
+                    <a class="friends-list-data" href="{{ route('user.profile', friend.id) }}">
+                        <img src="{{ route('user.avatar', friend.id) }}" alt="{{ friend.username }}" class="friends-list-avatar avatar avatar--border" style="width: 150px; height: 150px;">
                         <div class="friends-list-name" style="color: {{ friend.colour }};">{{ friend.username }}</div>
                     </a>
                     <div class="friends-list-actions">
