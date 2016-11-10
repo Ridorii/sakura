@@ -8,10 +8,10 @@
             <div class="content__header content__header--alt">
                 Frequently Asked Questions
             </div>
-            <div class="right-menu-nav">
-            {% for question in page.questions %}
-            <a href="#{{ question.faq_shorthand }}">{{ question.faq_question }}</a>
-            {% endfor %}
+            <div class="settings__navigation">
+                {% for question in page.questions %}
+                    <a href="#{{ question.faq_shorthand }}" class="settings__navigation-link">{{ question.faq_question }}</a>
+                {% endfor %}
             </div>
         </div>
         <div class="content--left">

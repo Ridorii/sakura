@@ -48,22 +48,22 @@
 
 {% block content %}
     <div class="content settings">
-        <div class="content--right">
+        <div class="content--right settings--right">
             <div class="content__header content__header--alt">
                 Navigation
             </div>
-            <div class="right-menu-nav">
+            <div class="settings__navigation">
                 {% for name, links in navigation %}
-                    <div>{{ name }}</div>
-                    {% for name, link in links %}
-                        <a href="{{ link }}">{{ name }}</a>
+                    <div class="settings__navigation-header">{{ name }}</div>
+                    {% for name,link in links %}
+                        <a href="{{ link }}" class="settings__navigation-link">{{ name }}</a>
                     {% endfor %}
                 {% endfor %}
             </div>
         </div>
-        <div class="content--left">
+        <div class="content--left settings--left">
             <div class="content__header">{{ title }}</div>
-            <div class="settings-explanation">{{ block('description') }}</div>
+            <div class="settings__explanation">{{ block('description') }}</div>
             {{ block('settingsContent') }}
         </div>
         <div class="clear"></div>

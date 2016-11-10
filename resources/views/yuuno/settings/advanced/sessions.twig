@@ -9,29 +9,34 @@
 {% endblock %}
 
 {% block settingsContent %}
-    <table class="settings-table">
-        <thead>
-            <tr><th style="width: 100px;">IP</th><th>Useragent</th><th>Country</th><th style="width: 120px;">Login time</th><th></th></tr>
-        </thead>
-        <tfoot>
-            <tr><th>IP</th><th>Useragent</th><th>Country</th><th>Login time</th><th></th></tr>
-        </tfoot>
+    <table class="settings__table">
+        {% for elem in ['thead', 'tfoot'] %}
+            <{{ elem }}>
+                <tr>
+                    <th class="settings__table-head" style="width: 100px;">IP</th>
+                    <th class="settings__table-head">Useragent</th>
+                    <th class="settings__table-head">Country</th>
+                    <th class="settings__table-head" style="width: 120px;">Login time</th>
+                    <th class="settings__table-head" style="width: 90px;"></th>
+                </tr>
+            </{{ elem }}>
+        {% endfor %}
         <tbody>
             {% for usession in sessions %}
-            <tr {% if usession.id == active %} class="current-session"{% endif %}>
-                <td>
+            <tr class="settings__table-row {% if usession.id == active %}settings__table-row--current{% endif %}">
+                <td class="settings__table-column">
                     {{ usession.ip }}
                 </td>
-                <td>
+                <td class="settings__table-column">
                     {{ usession.agent }}
                 </td>
-                <td>
+                <td class="settings__table-column">
                     <img src="/images/flags/{{ usession.country|lower }}.png" alt="{{ usession.country }}"> {{ usession.country(true) }}
                 </td>
-                <td>
+                <td class="settings__table-column">
                     <time class="time-ago" datetime="{{ usession.start|date('r') }}">{{ usession.start|date(config('general.date_format')) }}</time>
                 </td>
-                <td style="width: 90px;">
+                <td class="settings__table-column">
                     <form method="post" action="{{ route('settings.advanced.sessions') }}">
                         <input type="hidden" name="id" value="{{ usession.id }}">
                         <button class="input__button" name="session" value="{{ session_id() }}">Kill</button>
@@ -41,10 +46,8 @@
             {% endfor %}
         </tbody>
     </table>
-    <div class="profile-save">
-        <form method="post" action="{{ route('settings.advanced.sessions') }}">
-            <input type="hidden" name="all" value="1">
-            <button class="input__button" name="session" value="{{ session_id() }}">Kill all active sessions</button>
-        </form>
-    </div>
+    <form method="post" action="{{ route('settings.advanced.sessions') }}">
+        <input type="hidden" name="all" value="1">
+        <button class="input__button" name="session" value="{{ session_id() }}">Kill all active sessions</button>
+    </form>
 {% endblock %}

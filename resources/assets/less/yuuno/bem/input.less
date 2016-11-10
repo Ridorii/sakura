@@ -23,6 +23,19 @@
             background: linear-gradient(0deg, #A586C3, #D3BFFF);
         }
 
+        &--danger {
+            background: repeating-linear-gradient(-45deg, #B33, #B33 10px, #B00 10px, #B00 20px);
+            color: #fff;
+            border: 1px solid #C00;
+            box-shadow: 0 0 3px #C00, inset 0 0 3px #C00;
+
+            &:hover,
+            &:active {
+                color: #fff !important;
+                background: repeating-linear-gradient(-45deg, #B00, #B00 10px, #B33 10px, #B33 20px) !important;
+            }
+        }
+
         &:hover {
             color: #306;
             background: linear-gradient(0deg, #9475B2 30%, #C2AFFE 70%);

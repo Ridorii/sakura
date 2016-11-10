@@ -225,15 +225,6 @@ Router::group(['before' => 'maintenance'], function () {
             Router::get('/requests', 'Settings.FriendsController@requests', 'settings.friends.requests');
         });
 
-        // Notifications section
-        Router::group(['prefix' => 'notifications'], function () {
-            Router::get('/', function () {
-                redirect(route('settings.account.history'));
-            });
-
-            Router::get('/history', 'Settings.NotificationsController@history', 'settings.notifications.history');
-        });
-
         // Advanced section
         Router::group(['prefix' => 'advanced'], function () {
             Router::get('/', function () {

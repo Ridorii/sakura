@@ -28,9 +28,7 @@
             <div><h2>Password</h2></div>
             <div><input type="password" name="password" placeholder="Must be at least decently strong, size doesn't matter" class="input__text"></div>
         </div>
-        <div class="profile-save">
-            <button value="{{ session_id() }}" name="session" class="input__button">Save</button>
-            <button type="reset" class="input__button">Reset</button>
-        </div>
+        <button value="{{ session_id() }}" name="session" class="input__button">Save</button>
+        <button type="reset" class="input__button">Reset</button>
     </form>
 {% endblock %}

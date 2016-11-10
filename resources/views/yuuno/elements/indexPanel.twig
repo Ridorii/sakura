@@ -18,9 +18,20 @@
     <div class="content__header content__header--alt">Online Users</div>
     {% if stats.onlineUsers %}
         All active users in the past 2 minutes
-        <table class="panelTable">
+        <table class="sidepanel-table">
             {% for amount,onlineUser in stats.onlineUsers %}
-            <tr><td style="text-align: left;"><a href="{{ route('user.profile', onlineUser.id) }}" style="font-weight: bold; color: {{ onlineUser.colour }};">{{ onlineUser.username }}</a></td><td style="text-align: right;"><time class="time-ago" datetime="{{ onlineUser.lastOnline|date('r') }}">{{ onlineUser.lastOnline|date(config('general.date_format')) }}</time></td></tr>
+            <tr>
+                <td class="sidepanel-table__column" style="text-align: left;">
+                    <a href="{{ route('user.profile', onlineUser.id) }}" style="font-weight: bold; color: {{ onlineUser.colour }};">
+                        {{ onlineUser.username }}
+                    </a>
+                </td>
+                <td class="sidepanel-table__column" style="text-align: right;">
+                    <time class="time-ago" datetime="{{ onlineUser.lastOnline|date('r') }}">
+                        {{ onlineUser.lastOnline|date(config('general.date_format')) }}
+                    </time>
+                </td>
+            </tr>
             {% endfor %}
         </table>
     {% else %}

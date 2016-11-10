@@ -7,36 +7,40 @@
         <div class="content--right">
             <div id="forumIndexPopularTopics">
                 <div class="content__header content__header--alt">Popular topics</div>
-                <table class="panelTable" style="border-spacing: 0;">
+                <table class="sidepanel-table" style="border-spacing: 0;">
                     <tr>
-                        <th>Title</th>
-                        <th>Last reply</th>
+                        <th class="sidepanel-table__head">Title</th>
+                        <th class="sidepanel-table__head">Last reply</th>
                     </tr>
                     {% for _t in activeTopics %}
                         <tr {% if _t.unread(user.id) %}style="font-weight: bold;"{% endif %}>
-                            <td style="text-align: left; border-bottom: 1px solid #9475b2;">
+                            <td class="sidepanel-table__column" style="text-align: left; border-bottom: 1px solid #9475b2;">
                                 <a href="{{ route('forums.topic', _t.id) }}">{{ _t.title }}</a>
                             </td>
-                            <td style="text-align: right; border-bottom: 1px solid #9475b2;"><time class="time-ago" datetime="{{ _t.lastPost.time|date('r') }}">{{ _t.lastPost.time|date(config('general.date_format')) }}</time></td>
+                            <td class="sidepanel-table__column" style="text-align: right; border-bottom: 1px solid #9475b2;"><time class="time-ago" datetime="{{ _t.lastPost.time|date('r') }}">{{ _t.lastPost.time|date(config('general.date_format')) }}</time></td>
                         </tr>
                     {% endfor %}
                 </table>
             </div>
             <div id="forumIndexNewPosts">
                 <div class="content__header content__header--alt">Latest posts</div>
-                <table class="panelTable" style="border-spacing: 0;">
+                <table class="sidepanel-table" style="border-spacing: 0;">
                     <tr>
-                        <th>Title &amp; user</th>
-                        <th>Posted</th>
+                        <th class="sidepanel-table__head">Title &amp; user</th>
+                        <th class="sidepanel-table__head">Posted</th>
                     </tr>
                     {% for _p in latestPosts %}
                         <tr {% if _p.unread(user.id) %}style="font-weight: bold;"{% endif %}>
-                            <td style="text-align: left; border-bottom: 1px solid #9475b2;">
+                            <td class="sidepanel-table__column" style="text-align: left; border-bottom: 1px solid #9475b2;">
                                 <a href="{{ route('forums.post', _p.id) }}">{{ _p.subject }}</a>
                                 by
                                 <a href="{{ route('user.profile', _p.poster.id) }}"><span style="color: {{ _p.poster.colour }};">{{ _p.poster.username }}</span></a>
                             </td>
-                            <td style="text-align: right; border-bottom: 1px solid #9475b2;"><time class="time-ago" datetime="{{ _p.time|date('r') }}">{{ _p.time|date(config('general.date_format')) }}</time></td>
+                            <td class="sidepanel-table__column" style="text-align: right; border-bottom: 1px solid #9475b2;">
+                                <time class="time-ago" datetime="{{ _p.time|date('r') }}">
+                                    {{ _p.time|date(config('general.date_format')) }}
+                                </time>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>

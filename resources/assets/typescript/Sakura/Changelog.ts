@@ -18,7 +18,7 @@ namespace Sakura
         public static Build(target: HTMLElement)
         {
             this.Client = new AJAX;
-            this.Element = <HTMLDivElement>DOM.Create('table', 'changelog panelTable');
+            this.Element = <HTMLDivElement>DOM.Create('table', 'changelog sidepanel-table');
 
             this.Element.style.borderSpacing = '0 1px';
 
@@ -55,7 +55,7 @@ namespace Sakura
         private static Add(changelog: IChangelogDate)
         {
             var header: HTMLTableRowElement = <HTMLTableRowElement>DOM.Create('tr', 'changelog__row changelog__row--header'),
-                headerInner: HTMLTableHeaderCellElement = <HTMLTableHeaderCellElement>DOM.Create('th', 'changelog__header');
+                headerInner: HTMLTableHeaderCellElement = <HTMLTableHeaderCellElement>DOM.Create('th', 'changelog__header sidepanel-table__head');
 
             headerInner.innerText = changelog.date;
             headerInner.style.fontSize = '1.2em';
@@ -68,8 +68,8 @@ namespace Sakura
             {
                 var change: IChangelogChange = changelog.changes[_i],
                     row: HTMLTableRowElement = <HTMLTableRowElement>DOM.Create('tr', 'changelog__row'),
-                    action: HTMLTableCellElement = <HTMLTableCellElement>DOM.Create('td', 'changelog__column'),
-                    message: HTMLTableCellElement = <HTMLTableCellElement>DOM.Create('td', 'changelog__column');
+                    action: HTMLTableCellElement = <HTMLTableCellElement>DOM.Create('td', 'changelog__column sidepanel-table__column'),
+                    message: HTMLTableCellElement = <HTMLTableCellElement>DOM.Create('td', 'changelog__column sidepanel-table__column');
 
                 action.innerText = change.action.name;
                 action.style.backgroundColor = this.Colours[change.action.id];
@@ -77,6 +77,7 @@ namespace Sakura
 
                 message.innerText = change.message;
                 message.style.borderBottom = '1px solid ' + this.Colours[change.action.id];
+                message.style.textAlign = 'left';
 
                 DOM.Append(row, action);
                 DOM.Append(row, message);
