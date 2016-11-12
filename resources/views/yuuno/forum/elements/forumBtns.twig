@@ -1,7 +1,7 @@
 {% set paginationClass = 'rightSide' %}
 
-<div class="buttonRow">
-    <div class="leftSide">
+<div class="forum-list__buttons">
+    <div>
         {% if forumBackLink is defined %}
             <a href="{{ forumBackLink }}" class="input__button"><span class="fa fa-backward"></span> Back</a>
         {% endif %}
@@ -19,5 +19,4 @@
         {% endif %}
     </div>
     {% include 'elements/pagination.twig' %}
-    <div class="clear"></div>
 </div>

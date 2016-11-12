@@ -14,9 +14,9 @@
         text-decoration: none !important;
 
         &--disabled {
-            background: linear-gradient(180deg, #858585 0%, #858585 50%, #787878 50%) #858585 !important;
-            box-shadow: inset #222 0 0 1px !important;
-            text-shadow: #888 0 0 2px !important;
+            background: linear-gradient(0deg, #787878 10%, #858585 90%) #858585 !important;
+            color: #444 !important;
+            cursor: not-allowed;
         }
 
         &--current {
@@ -36,14 +36,20 @@
             }
         }
 
-        &:hover {
-            color: #306;
-            background: linear-gradient(0deg, #9475B2 30%, #C2AFFE 70%);
+        &--frozen {
+            color: #306 !important;
         }
 
-        &:active {
-            color: #306;
-            background: linear-gradient(180deg, #9475B2 30%, #C2AFFE 70%);
+        &:not(.input__button--frozen) {
+            &:hover {
+                color: #306;
+                background: linear-gradient(0deg, #9475B2 30%, #C2AFFE 70%);
+            }
+
+            &:active {
+                color: #306;
+                background: linear-gradient(180deg, #9475B2 30%, #C2AFFE 70%);
+            }
         }
     }
 

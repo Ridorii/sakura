@@ -2,19 +2,31 @@
     <div class="comment-input-section">
         {% if user.isActive %}
             <div class="comment">
-                <div class="comment-avatar" style="background-image: url('{{ route('user.avatar', user.id) }}');"></div>
-                <div class="comment-pointer"></div>
-                <textarea class="comment-content" name="text" placeholder="Join the conversation..."></textarea>
-                <button class="comment-submit new" name="session" value="{{ session_id() }}" onclick="commentPost(this.parentNode, '{{ route('comments.category.post', commentsCategory) }}');">&#xf1d8;</button>
+                <div class="avatar avatar--border comment__avatar comment__avatar--big" style="background-image: url('{{ route('user.avatar', user.id) }}');">
+                    <span class="comment__username">
+                        {{ user.username }}
+                    </span>
+                </div>
+                <div class="comment__pointer"></div>
+                <textarea class="comment__content comment__content--create" name="text" placeholder="Join the conversation..."></textarea>
+                <button
+                    class="comment__submit comment__submit--new"
+                    name="session"
+                    value="{{ session_id() }}"
+                    onclick="commentPost(this.parentNode, '{{ route('comments.category.post', commentsCategory) }}');"
+                >
+                    &#xf1d8;
+                </button>
             </div>
         {% else %}
             <h1 style="text-align: center; padding: 10px 0">Log in to comment!</h1>
         {% endif %}
     </div>
-    <div class="comments-discussion">
-        <ul class="comments-list">
+    <div class="comments">
+        <ul class="comments__list">
             {% if comments %}
                 {% for comment in comments %}
+                    {% set comment_depth = 0 %}
                     {% include 'elements/comment.twig' %}
                 {% endfor %}
             {% else %}
@@ -162,7 +174,7 @@
             replies.className = 'comment-replies';
             container.appendChild(replies);
 
-            var discussion = document.getElementById('comments').querySelector('.comments-list');
+            var discussion = document.getElementById('comments').querySelector('.comments__list');
 
             if (obj.reply) {
                 discussion = document.getElementById('comment-' + obj.reply).querySelector('.comment-replies');
