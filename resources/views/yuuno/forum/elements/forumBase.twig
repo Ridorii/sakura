@@ -1,10 +1,16 @@
 <div class="content__header">{{ title }}</div>
-<div class="forumList">
+<div class="forum-list">
     {% for forum in forum.forums %}
         {% if forum.type == 1 %}
             {% if forum.forums|length and forum.perms.view %}
-                <div class="forumCategory">
-                    {% if forum.type != 1 %}Subforums{% else %}<a href="{{ route('forums.forum', forum.id) }}">{{ forum.name }}</a>{% endif %}
+                <div class="forum-list__category">
+                    {% if forum.type != 1 %}
+                        Subforums
+                    {% else %}
+                        <a class="forum-list__category-link" href="{{ route('forums.forum', forum.id) }}">
+                            {{ forum.name }}
+                        </a>
+                    {% endif %}
                 </div>
                 {% for forum in forum.forums %}
                     {% include 'forum/elements/forumEntry.twig' %}
@@ -22,34 +28,14 @@
     {% set paginationUrl %}{{ route('forums.forum', forum.id) }}{% endset %}
 
     {% include 'forum/elements/forumBtns.twig' %}
+
     {% if forum.topics %}
-        <table class="topicList">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Topic</th>
-                    <th>Author</th>
-                    <th></th>
-                    <th>Last post</th>
-                </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <th></th>
-                    <th>Topic</th>
-                    <th>Author</th>
-                    <th></th>
-                    <th>Last post</th>
-                </tr>
-            </tfoot>
-            <tbody>
-                {% for topic in topics[get.page|default(1) - 1] %}
-                    {% include 'forum/elements/topicEntry.twig' %}
-                {% endfor %}
-            </tbody>
-        </table>
+        {% for topic in topics[get.page|default(1) - 1] %}
+            {% include 'forum/elements/topicEntry.twig' %}
+        {% endfor %}
     {% else %}
         <h1 style="margin: 2em auto; text-align: center;">There are no posts in this forum!</h1>
     {% endif %}
+
     {% include 'forum/elements/forumBtns.twig' %}
 {% endif %}

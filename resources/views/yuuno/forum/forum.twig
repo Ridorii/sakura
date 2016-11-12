@@ -1,13 +1,12 @@
 {% extends 'master.twig' %}
 
-{% set title %}Forums / {{ forum.name }}{% endset %}
-
-{% set forumBackLink %}{{ route('forums.index') }}{% endset %}
-{% set forumNewLink %}{{ route('forums.new', forum.id) }}{% endset %}
-{% set forumMarkRead %}{{ route('forums.mark', forum.id) }}?s={{ session_id() }}{% endset %}
+{% set title = 'Forums / ' ~ forum.name %}
+{% set forumBackLink = route('forums.index') %}
+{% set forumNewLink = route('forums.new', forum.id) %}
+{% set forumMarkRead = route('forums.mark', forum.id) ~ '?s=' ~ session_id() %}
 
 {% block content %}
-    <div class="content forum">
+    <div class="content">
         {% include 'forum/elements/forumBase.twig' %}
     </div>
 {% endblock %}

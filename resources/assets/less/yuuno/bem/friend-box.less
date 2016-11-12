@@ -11,6 +11,20 @@
     text-decoration: none !important;
     transition: background .2s, box-shadow .2s;
 
+    &__container {
+        display: block;
+        text-decoration: none !important;
+        color: #000;
+        margin: 5px auto;
+        background-color: transparent;
+        border: 0;
+
+        &:active {
+            color: inherit;
+        }
+    }
+
+    &--active,
     &:hover {
         background: #C2AFFE;
         box-shadow: inset 0 0 2px #9475B2;
@@ -30,5 +44,50 @@
         width: 150px;
         height: 150px;
         display: inline-block;
+    }
+
+    &__actions {
+        display: flex;
+        background: linear-gradient(0deg, #9475B2, transparent) transparent;
+    }
+
+    &__action {
+        flex-grow: 1;
+        color: #222;
+        font-size: 2em;
+        line-height: 1em;
+        text-decoration: none !important;
+        padding: 5px 0;
+        background-color: transparent;
+        border: 0;
+        transition: color .2s;
+
+        &:hover {
+            color: #333;
+        }
+
+        &:active {
+            color: #111;
+        }
+
+        &--green {
+            &:hover {
+                color: #0d0;
+            }
+
+            &:active {
+                color: #0a0;
+            }
+        }
+
+        &--red {
+            &:hover {
+                color: #d00;
+            }
+
+            &:active {
+                color: #a00;
+            }
+        }
     }
 }

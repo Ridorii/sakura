@@ -1,35 +1,58 @@
 {% if forum.perms.view %}
-    <div class="forumForum">
-        <div class="forumIcon {% if forum.unread(user.id) %}unread {% endif %}fa fa-3x {% if forum.icon %}{{ forum.icon }}{% else %}{% if forum.type == 2 %}fa-chevron-circle-right{% elseif forum.type == 1 %}fa-folder{% else %}fa-comments{% endif %}{% endif %}"></div>
-        <div class="forumTitle">
-            <div class="name"><a href="{% if forum.type == 2 %}{{ forum.link }}{% else %}{{ route('forums.forum', forum.id) }}{% endif %}">{{ forum.name }}</a></div>
-            <div class="desc">
+    <div class="forum">
+        <div class="forum__icon {% if forum.unread(user.id) %}forum__icon--unread {% endif %}fa fa-3x {% if forum.icon %}{{ forum.icon }}{% else %}{% if forum.type == 2 %}fa-chevron-circle-right{% elseif forum.type == 1 %}fa-folder{% else %}fa-comments{% endif %}{% endif %}"></div>
+        <div class="forum__info">
+            <a class="forum__name" href="{% if forum.type == 2 %}{{ forum.link }}{% else %}{{ route('forums.forum', forum.id) }}{% endif %}">
+                {{ forum.name }}
+            </a>
+            <div class="forum__description">
                 {{ forum.description }}
                 {% if forum.forums|length %}
-                    <div class="subforums">
+                    <div class="forum__subforums">
                         Subforums:
                         {% for forum in forum.forums %}
-                            {% if forum.unread(user.id) %}<span style="font-variant: small-caps; color: #6C5D7B; text-shadow: 0px 0px 5px #9475B2;">[!]</span>{% endif %} <a href="{% if forum.type == 2 %}{{ forum.link }}{% else %}{{ route('forums.forum', forum.id) }}{% endif %}">{{ forum.name }}</a>
+                            <a class="forum__subforum{% if forum.unread(user.id) %} forum__subforum--unread{% endif %}" href="{% if forum.type == 2 %}{{ forum.link }}{% else %}{{ route('forums.forum', forum.id) }}{% endif %}">
+                                {{ forum.name }}
+                            </a>
                         {% endfor %}
                     </div>
                 {% endif %}
             </div>
         </div>
         {% if forum.type != 2 %}
-        <div class="forumCount">
-            <div class="topics" title="Amount of topics in this forum.">{{ forum.topicCount }}</div>
-            <div class="posts" title="Amount of posts in this forum.">{{ forum.postCount }}</div>
-        </div>
-        <div class="forumLastPost">
-            <div>
+            <div class="forum__stats">
+                <div class="forum__stat--big" title="Topics">
+                    {{ forum.topicCount }}
+                </div>
+                <div class="forum__stat" title="Posts">
+                    {{ forum.postCount }}
+                </div>
+            </div>
+            <div class="forum__recent">
                 {% if forum.lastPost.id %}
-                    <a href="{{ route('forums.topic', forum.lastPost.topic) }}">{{ forum.lastPost.subject|slice(0, 30) }}{% if forum.lastPost.subject|length > 30 %}...{% endif %}</a><br>
-                    <time class="time-ago" datetime="{{ forum.lastPost.time|date('r') }}">{{ forum.lastPost.time|date(config('general.date_format')) }}</time> by {% if forum.lastPost.poster.id %}<a href="{{ route('user.profile', forum.lastPost.poster.id) }}" style="color: {{ forum.lastPost.poster.colour }}; text-shadow: 0 0 5px {% if forum.lastPost.poster.colour != 'inherit' %}{{ forum.lastPost.poster.colour }}{% else %}#222{% endif %};">{{ forum.lastPost.poster.username }}</a>{% else %}[deleted user]{% endif %} <a href="{{ route('forums.post', forum.lastPost.id) }}" class="fa fa-tag"></a>
+                    <div class="forum__preview">
+                        <div class="forum__preview-avatar avatar avatar--border" style="background-image: url('{{ route('user.avatar', forum.lastPost.poster.id) }}')"></div>
+                        <div class="forum__preview-info">
+                            <div class="forum__preview-info-row">
+                                <a href="forum__post-link" href="{{ route('forums.post', forum.lastPost.id) }}">
+                                    {{ forum.lastPost.subject|slice(0, 30)|trim }}{% if forum.lastPost.subject|length > 30 %}...{% endif %}
+                                </a>
+                            </div>
+                            <div class="forum__preview-info-row">
+                                <time class="time-ago" datetime="{{ forum.lastPost.time|date('r') }}">
+                                    {{ forum.lastPost.time|date(config('general.date_format')) }}
+                                </time>
+                                by
+                                <a href="{{ route('user.profile', forum.lastPost.poster.id) }}" style="color: {{ forum.lastPost.poster.colour }}; text-shadow: 0 0 5px {% if forum.lastPost.poster.colour != 'inherit' %}{{ forum.lastPost.poster.colour }}{% else %}#222{% endif %}">
+                                    {{ forum.lastPost.poster.username }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 {% else %}
-                    There are no posts in this forum.<br>&nbsp;
+                    <i>There are no posts in this forum.</i>
                 {% endif %}
             </div>
-        </div>
         {% endif %}
     </div>
 {% endif %}

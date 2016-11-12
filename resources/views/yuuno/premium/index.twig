@@ -14,6 +14,7 @@
 {% block content %}
     <div class="content support">
         <div class="content__header">Support {{ config('general.name') }}</div>
+        <h1 style="font-size: 10em; line-height: 1.5em">redo this entirely</h1>
         <div style="font-size: .9em; margin-bottom: 10px;">
             <p>To keep the site and everything surrounding it running I need money to pay the bills, however instead of just having a donate button I decided on adding a premium system to the site which gives you a few extras. The premium rank is indentified on the site by Tenshi. More stuff that literally doesn't exist yet will be added to the list of featuring down the line but in order, the stuff that already exist can be seen further down on this page. With your help we can keep adding new stuff, get new hardware and keep the site awesome!</p>
         </div>
@@ -23,14 +24,15 @@
             </div>
             <div style="margin-bottom: 10px;">
                 <h3>Your Tenshi tag is valid till {{ user.premiumInfo.expire|date(config('general.date_format')) }}.</h3>
-                <progress value="{{ 100 - (((date().timestamp - user.premiumInfo.start) / (user.premiumInfo.expire - user.premiumInfo.start)) * 100) }}" max="100" style="width: 100%"></progress>
+                {# the progress bar is completely broken, not fixing it until i completely reviewed the premium system #}
+                {#<progress value="{{ 100 - (((date().timestamp - user.premiumInfo.start) / (user.premiumInfo.expire - user.premiumInfo.start)) * 100) }}" max="100" style="width: 100%"></progress>#}
             </div>
         {% endif %}
         <div class="sectionHeader">
             Why should I get Tenshi?
         </div>
         <div class="featureParent">
-            {% for k,v in features %}
+            {% for k, v in features %}
                 <div class="featureBox">
                     <div class="featureBoxIcon fa fa-{{ k }}"></div>
                     <div class="featureBoxDesc">{{ v|raw }}</div>
@@ -48,14 +50,6 @@
             Payment Options
             <div style="float: right; font-size: 10px; text-align: right;">
                 Our transactions are handled through PayPal.
-                <div class="paymentOptions fa">
-                    <div class="fa-cc-paypal"></div>
-                    <div class="fa-cc-visa"></div>
-                    <div class="fa-cc-mastercard"></div>
-                    <div class="fa-cc-discover"></div>
-                    <div class="fa-cc-amex"></div>
-                    <div class="clear"></div>
-                </div>
             </div>
         </div>
         {% if user.isActive and user.verified %}

@@ -1,27 +1,48 @@
-<tr>
-    <td class="topicIcon{% if topic.unread(user.id) %} unread{% endif %}{% if topic.type == 2 %} topicAnnouncement{% endif %}">
-        <div class="fa fa-2x fa-{% if topic.type == 1 %}thumb-tack{% elseif topic.type == 2 %}bullhorn{% elseif topic.status == 1 %}lock{% else %}navicon{% endif %}"></div>
-    </td>
-    <td class="topicTitle{% if topic.type == 2 %} topicAnnouncement{% endif %}">
-        <a href="{{ route('forums.topic', topic.id) }}">{{ topic.title }}</a>
-    </td>
-    <td class="topicAuthor{% if topic.type == 2 %} topicAnnouncement{% endif %}">
+<div class="topic{% if topic.type == 2 %} topic--highlight{% endif %}">
+    <div class="
+        topic__icon
+        fa fa-2x
+        {% if topic.unread(user.id) %}topic__icon--unread{% endif %}
+        fa-{% if topic.type == 1 %}thumb-tack{% elseif topic.type == 2 %}bullhorn{% elseif topic.status == 1 %}lock{% else %}navicon{% endif %}
+    "></div>
+    <div class="topic__info">
+        <a class="topic__title" href="{{ route('forums.topic', topic.id) }}">
+            {{ topic.title }}
+        </a>
         {% if topic.firstPost.poster.id %}
-            <a href="{{ route('user.profile', topic.firstPost.poster.id) }}" style="color: {{ topic.firstPost.poster.colour }}; text-shadow: 0 0 5px {% if topic.firstPost.poster.colour != 'inherit' %}{{ topic.firstPost.poster.colour }}{% else %}#222{% endif %};">{{ topic.firstPost.poster.username }}</a>
-        {% else %}
-            [deleted user]
+            <div class="topic__author">
+                by
+                <a class="topic__author-link" href="{{ route('user.profile', topic.firstPost.poster.id) }}" style="color: {{ topic.firstPost.poster.colour }}; text-shadow: 0 0 5px {% if topic.firstPost.poster.colour != 'inherit' %}{{ topic.firstPost.poster.colour }}{% else %}#222{% endif %}">
+                    {{ topic.firstPost.poster.username }}
+                </a>
+            </div>
         {% endif %}
-    </td>
-    <td class="topicCounts{% if topic.type == 2 %} topicAnnouncement{% endif %}">
-        <div class="replies" title="Amount of replies to this topic.">{{ topic.replyCount }}</div>
-        <div class="views" title="Amount of times this topic has been viewed.">{{ topic.views }}</div>
-    </td>
-    <td class="topicLast{% if topic.type == 2 %} topicAnnouncement{% endif %}">
-        {% if topic.lastPost.poster.id %}
-            <a href="{{ route('user.profile', topic.lastPost.poster.id) }}" style="color: {{ topic.lastPost.poster.colour }}; text-shadow: 0 0 5px {% if topic.lastPost.poster.colour != 'inherit' %}{{ topic.lastPost.poster.colour }}{% else %}#222{% endif %};">{{ topic.lastPost.poster.username }}</a>
-        {% else %}
-            [deleted user]
-        {% endif %} <a href="{{ route('forums.post', topic.lastPost.id) }}" class="fa fa-tag"></a><br>
-        <time class="time-ago" datetime="{{ topic.lastPost.time|date('r') }}">{{ topic.lastPost.time|date(config('general.date_format')) }}</time>
-    </td>
-</tr>
+    </div>
+    <div class="topic__stats">
+        <div class="topic__stat--big" title="Replies">
+            {{ topic.replyCount }}
+        </div>
+        <div class="topic__stat" title="Views">
+            {{ topic.views }}
+        </div>
+    </div>
+    <div class="topic__recent">
+        <div class="topic__recent-avatar avatar avatar--border" style="background-image: url('{{ route('user.avatar', topic.lastPost.poster.id) }}')"></div>
+        <div class="topic__recent-info">
+            <div class="topic__recent-info-row">
+                <a href="{{ route('forums.post', topic.lastPost.id) }}">Last reply</a>
+                by
+                {% if topic.lastPost.poster.id %}
+                    <a href="{{ route('user.profile', topic.lastPost.poster.id) }}" style="color: {{ topic.lastPost.poster.colour }}; text-shadow: 0 0 5px {% if topic.lastPost.poster.colour != 'inherit' %}{{ topic.lastPost.poster.colour }}{% else %}#222{% endif %};">{{ topic.lastPost.poster.username }}</a>
+                {% else %}
+                    [deleted user]
+                {% endif %}
+            </div>
+            <div class="topic__recent-info-row">
+                <time class="time-ago" datetime="{{ topic.lastPost.time|date('r') }}">
+                    {{ topic.lastPost.time|date(config('general.date_format')) }}
+                </time>
+            </div>
+        </div>
+    </div>
+</div>

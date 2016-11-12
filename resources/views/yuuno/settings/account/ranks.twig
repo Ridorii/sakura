@@ -7,17 +7,16 @@
 {% endblock %}
 
 {% block settingsContent %}
-    <div class="friends-list">
+    <div style="text-align: center">
         {% for rank in user.ranks %}
-            <form method="post" action="{{ route('settings.account.ranks') }}" class="friend-container {% if rank.id == user.mainRankId %}active{% endif %}">
+            <form method="post" action="{{ route('settings.account.ranks') }}" class="friend-box {% if rank.id == user.mainRankId %}friend-box--active{% endif %}">
                 <input type="hidden" name="session" value="{{ session_id() }}">
                 <input type="hidden" name="rank" value="{{ rank.id }}">
-                <button class="friends-list-data" name="mode" value="main">
-                    <div class="friends-list-name" style="color: {{ rank.colour }};">{{ rank.name }}</div>
+                <button class="friend-box__container" name="mode" value="main">
+                    <div class="friend-box__name" style="color: {{ rank.colour }}">{{ rank.name }}</div>
                 </button>
-                <div class="friends-list-actions">
-                    <button title="{% if rank.id in locked %}You can't leave this rank{% else %}Leave rank{% endif %}" class="remove fill fa fa-{% if rank.id in locked %}shield{% else %}remove{% endif %}" name="mode" value="remove" {% if rank.id in locked %}disabled{% endif %}></button>
-                    <div class="clear"></div>
+                <div class="friend-box__actions">
+                    <button title="{% if rank.id in locked %}You can't leave this rank{% else %}Leave rank{% endif %}" class="friend-box__action friend-box__action--red fa fa-{% if rank.id in locked %}shield{% else %}remove{% endif %}" name="mode" value="remove" {% if rank.id in locked %}disabled{% endif %}></button>
                 </div>
             </form>
         {% endfor %}

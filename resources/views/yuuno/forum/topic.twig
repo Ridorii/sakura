@@ -1,8 +1,7 @@
 {% extends 'master.twig' %}
 
-{% set forumBackLink %}{{ route('forums.forum', forum.id) }}{% endset %}
-
-{% set title %}{% if topic is defined %}{{ topic.title }}{% else %}Creating topic in {{ forum.name }}{% endif %}{% endset %}
+{% set forumBackLink = route('forums.forum', forum.id) %}
+{% set title = topic is defined ? topic.title : 'Creating topic in ' ~ forum.name %}
 
 {% if topic is defined %}
     {% if forum.perms.reply
@@ -48,11 +47,11 @@
     {% set posts = topic.posts|batch(10) %}
 
     {% set paginationPages = posts %}
-    {% set paginationUrl %}{{ route('forums.topic', topic.id) }}{% endset %}
+    {% set paginationUrl = route('forums.topic', topic.id) %}
 {% endif %}
 
 {% block css %}
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/default.min.css">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/default.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block js %}
@@ -90,11 +89,18 @@
 {% endblock %}
 
 {% block content %}
-    <div class="content forum viewtopic">
-        <div class="content__header">{{ forum.name }} / <span id="topicTitle">{{ topic.title|default(null) }}</span></div>
+    <div class="content">
+        <div class="content__header">
+            {{ forum.name }} / <span id="topicTitle">
+                {{ topic.title|default(null) }}
+            </span>
+        </div>
+
         {% include 'forum/elements/forumBtns.twig' %}
+
         <table class="posts">
             {% if topic is defined %}
+
                 {% set textCache = session.replyText['t' ~ topic.id]|default(null) %}
                 {% set postingAction = route('forums.topic.reply', topic.id) %}
 
@@ -149,11 +155,15 @@
                         </td>
                     </tr>
                 {% endfor %}
+
             {% else %}
+
                 {% set titleCache = session.replyText['f' ~ forum.id].title|default('') %}
                 {% set textCache = session.replyText['f' ~ forum.id].text|default('') %}
                 {% set postingAction = route('forums.new', forum.id) %}
+
             {% endif %}
+
             {% if forumReplyLink is defined or topic is not defined %}
                 <tr class="post" id="postingPreview" style="display: none;">
                     <td class="userpanel">
@@ -181,9 +191,11 @@
                 </tr>
             {% endif %}
         </table>
+
         {% if forumReplyLink is defined or topic is not defined %}
             {% include 'forum/elements/replyForm.twig' %}
         {% endif %}
+
         {% include 'forum/elements/forumBtns.twig' %}
     </div>
 {% endblock %}

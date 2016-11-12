@@ -13,16 +13,15 @@
 
 {% block settingsContent %}
     {% if friends|length %}
-        <div class="friends-list">
+        <div style="text-align: center">
             {% for friend in friends[get.page|default(1) - 1] %}
-                <div class="friend-container" id="friendslist-friend-{{ friend.id }}">
-                    <a class="friends-list-data" href="{{ route('user.profile', friend.id) }}">
-                        <img src="{{ route('user.avatar', friend.id) }}" alt="{{ friend.username }}" class="friends-list-avatar avatar avatar--border" style="width: 150px; height: 150px;">
-                        <div class="friends-list-name" style="color: {{ friend.colour }};">{{ friend.username }}</div>
+                <div class="friend-box" id="friendslist-friend-{{ friend.id }}">
+                    <a class="friend-box__container" href="{{ route('user.profile', friend.id) }}">
+                        <div class="friend-box__avatar avatar avatar--border" style="background-image: url('{{ route('user.avatar', friend.id) }}')"></div>
+                        <div class="friend-box__name" style="color: {{ friend.colour }};">{{ friend.username }}</div>
                     </a>
-                    <div class="friends-list-actions">
-                        <a class="remove fill fa fa-remove" title="Remove friend" href="javascript:void(0);" onclick="Sakura.Friend.Remove({{ friend.id }});"></a>
-                        <div class="clear"></div>
+                    <div class="friend-box__actions">
+                        <a class="friend-box__action friend-box__action--red fa fa-remove" title="Remove friend" href="javascript:void(0);" onclick="Sakura.Friend.Remove({{ friend.id }});"></a>
                     </div>
                 </div>
             {% endfor %}
