@@ -27,7 +27,8 @@ class FilesBelongOnTheFilesystem extends Migration
         $schema = DB::getSchemaBuilder();
 
         $schema->table('uploads', function (Blueprint $table) {
-            $table->binary('file_data');
+            $table->binary('file_data')
+                ->nullable();
         });
     }
 }
