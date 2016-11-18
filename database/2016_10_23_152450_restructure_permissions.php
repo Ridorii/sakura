@@ -14,13 +14,13 @@ class RestructurePermissions extends Migration
         $schema = DB::getSchemaBuilder();
 
         $schema->table('users', function (Blueprint $table) {
-            $table->text('user_activated')
+            $table->boolean('user_activated')
                 ->default(0);
 
-            $table->text('user_verified')
+            $table->boolean('user_verified')
                 ->default(0);
 
-            $table->text('user_restricted')
+            $table->boolean('user_restricted')
                 ->default(0);
         });
 
