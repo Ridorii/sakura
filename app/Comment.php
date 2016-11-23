@@ -143,20 +143,14 @@ class Comment
      */
     private function getVotes()
     {
-        $votes = DB::table('comment_votes')
+        $this->upvotes = intval(DB::table('comment_votes')
             ->where('vote_comment', $this->id)
-            ->get();
-
-        $this->upvotes = 0;
-        $this->downvotes = 0;
-
-        foreach ($votes as $vote) {
-            if (intval($vote->vote_state) !== 0) {
-                $this->upvotes += 1;
-            } else {
-                $this->downvotes += 1;
-            }
-        }
+            ->where('vote_state', 1)
+            ->count());
+        $this->downvotes = intval(DB::table('comment_votes')
+            ->where('vote_comment', $this->id)
+            ->where('vote_state', 0)
+            ->count());
     }
 
     /**
