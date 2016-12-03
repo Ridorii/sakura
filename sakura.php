@@ -1,7 +1,7 @@
 <?php
 /*
  * Community Management System
- * (c) 2013-2016 Julian van de Groep <http://flash.moe>
+ * (c) 2013-2016 Julian van de Grope Me <http://flash.moe>
  */
 
 namespace Sakura;
